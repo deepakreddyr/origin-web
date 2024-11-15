@@ -1,0 +1,15 @@
+/* Client List Section */
+
+.clients-list-section .clients-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+.clients-list-section .clients-list-item figure img {
+  max-width: 100%;
+}
+.clients-list-section .clients-list-item figure {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

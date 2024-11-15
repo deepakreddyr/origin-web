@@ -1,0 +1,66 @@
+/* App Pocket */
+
+.market-image .arrow {
+  position: absolute;
+  top: -90px;
+  left: -146px;
+  max-width: 160px;
+}
+.market-section .market-image:before,
+.market-section .market-image:after {
+  content: "";
+  position: absolute;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: "center";
+}
+.market-section .market-image:before {
+  background-image: url(../svg/app-pattern-left.svg);
+  left: -75px;
+  bottom: 24px;
+  width: 55px;
+  height: 51px;
+}
+.market-section .market-image:after {
+  background-image: url(../svg/app-pattern-right.svg);
+  width: 36px;
+  height: 53px;
+  right: -40px;
+  top: -5px;
+}
+@media (max-width: 1400px) {
+  .market-section .market-image:before {
+    bottom: 60px;
+  }
+}
+@media (max-width: 991px) {
+  .market-image .arrow {
+    transform: rotate(110deg);
+    left: initial;
+    right: 0;
+    right: 70px;
+    top: -115px;
+    max-width: 145px;
+  }
+  .market-section .market-image:after {
+    right: -25px;
+    top: 15px;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .market-image .arrow {
+    right: 30px;
+  }
+  .market-section .market-image:after {
+    right: -18px;
+    top: 3px;
+    width: 23px;
+    height: 34px;
+  }
+  .market-section .market-image:before {
+    left: -45px;
+    bottom: 15px;
+    width: 34px;
+    height: 32px;
+  }
+}

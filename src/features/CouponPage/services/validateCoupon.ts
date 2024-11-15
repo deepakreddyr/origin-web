@@ -1,0 +1,42 @@
+import { header, request } from "../../../utils/request";
+import type { AppliedCoupon } from "../context/atoms";
+
+export const validateCoupon = async (payload: any, set: any) => {
+  try {
+    set((prevState: AppliedCoupon) => ({
+      ...prevState,
+      loading: true,
+      error: false,
+      success: true,
+    }));
+
+    const response: any = await request(`/api/v3/user/coupons/validate`, {
+      method: "POST",
+      headers: {
+        Authorization: header(),
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    set((prevState: AppliedCoupon) => ({
+      ...prevState,
+      loading: false,
+      success: true,
+      coupon: response.data,
+      isApplied: true,
+    }));
+    return true;
+  } catch (error: any) {
+    const message = await error.response.json();
+
+    set((prevState: AppliedCoupon) => ({
+      ...prevState,
+      error: message,
+      success: false,
+      loading: false,
+    }));
+    return false;
+  }
+};

@@ -1,0 +1,115 @@
+/* Shadow Box*/
+.business-section .business-feedback {
+  width: calc(25% - 16px);
+}
+
+/* Testimonial Section */
+
+.testimonial-section .slick-dots {
+  bottom: -40px;
+}
+.testimonial-section .slick-dots li {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+.testimonial-section .slick-dots li.slick-active button {
+  background-color: #febf43;
+}
+.testimonial-section .slick-dots li button {
+  background-color: #c5c5c7;
+  border-radius: 50%;
+}
+.testimonial-section .slick-dots li button,
+.testimonial-section .slick-dots li {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+}
+.testimonial-section .slick-dots li button:before {
+  display: none;
+}
+.testimonial-section .slick-list .wrapper {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+.testimonial-section .testimonial:before {
+  content: "";
+  position: absolute;
+  width: 60%;
+  height: 1px;
+  background-color: #d1d1d6;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+}
+@media only screen and (max-width: 991px) {
+  .testimonial-section .slick-list .wrapper {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .testimonial-section .slick-list .wrapper {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Intro */
+
+.intro-section .intro-block {
+  position: relative;
+}
+.intro-block figure img {
+  max-width: 100%;
+  display: block;
+}
+.intro-section .business-intro-details {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+/* bg-divider-primary */
+
+.bg-divider-primary {
+  position: relative;
+}
+.bg-divider-primary > * {
+  position: relative;
+}
+.bg-divider-primary:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 40px;
+  bottom: 40px;
+  width: calc(50% - 12px);
+  background-color: #e4f3ea;
+}
+.get-in-touch-content,
+.get-in-touch-content > * {
+  position: relative;
+}
+.get-in-touch-content:before {
+  content: "";
+  left: -16px;
+  right: -16px;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  background-color: #e4f3ea;
+}
+@media only screen and (max-width: 1199px) {
+  .bg-divider-primary:before {
+    top: 32px;
+    bottom: 32px;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .bg-divider-primary:before {
+    display: none;
+  }
+}

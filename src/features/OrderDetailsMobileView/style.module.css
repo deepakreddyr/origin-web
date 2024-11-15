@@ -1,0 +1,26 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 4rem;
+  background: #fffcf4;
+  margin-top: -100px;
+}
+
+.container::-webkit-scrollbar {
+  display: none;
+  scrollbar-width: none;
+}
+
+.container::-webkit-scrollbar {
+  display: none;
+}
+
+.container::-moz-scrollbar {
+  display: none;
+}
+
+.container {
+  overflow: auto;
+  -ms-overflow-style: none;
+  scrollbar-color: transparent transparent;
+}

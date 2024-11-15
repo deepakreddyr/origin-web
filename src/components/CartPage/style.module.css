@@ -1,0 +1,21 @@
+/* Cart.module.css */
+.noGlobalScrollbar {
+  scrollbar-width: auto; /* Firefox */
+  scrollbar-color: auto; /* Firefox */
+}
+
+.noGlobalScrollbar::-webkit-scrollbar {
+  width: 12px;
+}
+
+.noGlobalScrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.noGlobalScrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+.noGlobalScrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

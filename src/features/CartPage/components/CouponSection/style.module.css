@@ -1,0 +1,43 @@
+.coupon-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background-color: #f2eee4;
+  border: none;
+  padding: 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  margin-top: 0.6rem;
+}
+
+.coupon-applied-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background-color: #25874d1f;
+  border: 2px solid #25874d;
+  padding: 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  margin-top: 0.6rem;
+  .title {
+    font-family: SofiaPro;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .description {
+    font-family: SofiaPro;
+    font-size: 14px;
+    font-weight: 500;
+    color: #231f2099;
+  }
+  .remove-button {
+    background-color: #d0583f;
+    color: #ffffff;
+    border-radius: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}

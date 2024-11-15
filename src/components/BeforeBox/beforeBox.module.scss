@@ -1,0 +1,37 @@
+.beforeBox {
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    @apply absolute block left-0 w-full z-0 md:rounded-[50px] rounded-[20px];
+  }
+
+  &::before {
+    height: calc(100% + var(--md-top-offset, 100px));
+    top: 0;
+    z-index: -1;
+
+    @media screen and (min-width: 320px) {
+      @apply bg-primary-100 -z-[1] bg-noise bg-repeat mix-blend-soft-light;
+      top: calc(-1 * var(--md-top-offset, 100px));
+    }
+    @media screen and (max-width: 640px) {
+      bottom: calc(-1 * var(--md-top-offset, 100px));
+    }
+  }
+
+  &::after {
+    height: calc(100% + var(--md-bottom-offset, 100px));
+    bottom: 0;
+    z-index: 0;
+
+    @media screen and (min-width: 320px) {
+      @apply bg-primary-100 -z-[1] bg-noise bg-repeat mix-blend-lighten;
+      bottom: calc(-1 * var(--md-bottom-offset, 100px));
+    }
+    @media screen and (max-width: 640px) {
+      top: var(--md-bottom-offset, 100px);
+    }
+  }
+}

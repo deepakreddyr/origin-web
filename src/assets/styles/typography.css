@@ -1,0 +1,98 @@
+h1,
+.MuiTypography-h1 {
+  font-size: 62px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h2,
+.MuiTypography-h2 {
+  font-size: 55px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h3,
+.MuiTypography-h3 {
+  font-size: 45px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h4,
+.MuiTypography-h4 {
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h5,
+.MuiTypography-h5 {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h6,
+.MuiTypography-h6 {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+p,
+.MuiTypography-p {
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+@media screen and (max-width: 640px) {
+  h1,
+  .MuiTypography-h1 {
+    font-size: 62px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  h2,
+  .MuiTypography-h2 {
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  h3,
+  .MuiTypography-h3 {
+    font-size: 44px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  h4,
+  .MuiTypography-h4 {
+    font-size: 38px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  h5,
+  .MuiTypography-h5 {
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  h6,
+  .MuiTypography-h6 {
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  p,
+  .MuiTypography-p {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+}

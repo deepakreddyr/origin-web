@@ -1,0 +1,410 @@
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100;200;300;400;500;600;700;800;900&family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+.noscrollbar::-webkit-scrollbar {
+  display: none;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.swiper-button,
+.swiper-button-disabled {
+  @apply transition-opacity duration-200 ease-in-out pointer-events-none opacity-40;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family:
+    "Lexend",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Roboto",
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue";
+  color: #000;
+  /* background-color: #f9f0da; */
+  font-size: 16px;
+}
+
+body {
+  min-height: 100svh;
+}
+
+body.no-scroll {
+  overflow: hidden;
+}
+
+button {
+  font-family:
+    "Lexend",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Roboto",
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue";
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+main {
+  padding-top: 160px;
+}
+
+mark {
+  color: #febf43;
+  background-color: transparent;
+}
+
+address {
+  line-height: 1.6;
+}
+
+/* .MuiContainer-root {
+  max-width: 1368px;
+}
+
+@media only screen and (max-width: 1400px) {
+  .MuiContainer-root {
+    max-width: 1150px;
+  }
+}
+@media only screen and (max-width: 1199px) {
+  .MuiContainer-root {
+    max-width: 960px;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .MuiContainer-root {
+    max-width: 720px;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .MuiContainer-root {
+    max-width: 540px;
+  }
+} */
+
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #26b45f #fff;
+  }
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  @media screen and (max-width: 768px) {
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+    html {
+      scrollbar-width: none;
+    }
+  }
+}
+
+@import url("./sliders.css");
+.b1 {
+  border: 1px solid red;
+}
+
+.df {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@layer base {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+@import url("./sliders.css");
+
+/* hide scroll bar */
+.noscrollbar {
+  scrollbar-width: none;
+}
+.noscrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+/* swiper custom */
+.swiper-button,
+.swiper-button-disabled {
+  @apply opacity-40 transition-opacity duration-200 ease-in-out pointer-events-none;
+}
+
+/* @media screen and (max-width: 768px) {
+  .swiper-wrapper {
+    touch-action: pan-x;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .swiper-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+} */
+
+.howItWorksBg {
+  background-image: url("/assets/images/howitworks.svg");
+  background-repeat: no-repeat;
+}
+
+@media screen and (max-width: 600px) {
+  .howItWorksBg {
+    background-image: url("/assets/images/howitworksMob.svg");
+  }
+}
+
+@keyframes marquee-left {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+.animate-marquee-left {
+  animation: marquee-left var(--duration, 40s) linear infinite;
+}
+
+/* 
+h1,
+.MuiTypography-h1 {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h2,
+.MuiTypography-h2 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h3,
+.MuiTypography-h3 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h4,
+.MuiTypography-h4 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h5,
+.MuiTypography-h5 {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+h6,
+.MuiTypography-h6 {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+p,
+.MuiTypography-p {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+@media screen and (max-width: 640px) {
+  h1,
+  .MuiTypography-h1 {
+    font-size: 62px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  h2,
+  .MuiTypography-h2 {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  h3,
+  .MuiTypography-h3 {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  h4,
+  .MuiTypography-h4 {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  h5,
+  .MuiTypography-h5 {
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  h6,
+  .MuiTypography-h6 {
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  p,
+  .MuiTypography-p {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+} */
+
+/* Stinger Font Import */
+/* styles/globals.css */
+
+/* StingerFit Fonts */
+@font-face {
+  font-family: "Stinger";
+  src: url("/assets/fonts/stinger/Stinger-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Stinger";
+  src: url("/assets/fonts/stinger/Stinger-Italic.woff") format("woff");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Stinger";
+  src: url("/assets/fonts/stinger/Stinger-LightItalic.woff") format("woff");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Stinger";
+  src: url("/assets/fonts/stinger/Stinger-Heavy.woff") format("woff");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Stinger";
+  src: url("/assets/fonts/stinger/Stinger-ThinItalic.woff") format("woff");
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Stinger";
+  src: url("/assets/fonts/stinger/Stinger-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Stinger";
+  src: url("/assets/fonts/stinger/Stinger-Thin.woff") format("woff");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Stinger";
+  src: url("/assets/fonts/stinger/Stinger-HeavyItalic.woff") format("woff");
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Stinger";
+  src: url("/assets/fonts/stinger/Stinger-BoldItalic.woff") format("woff");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Stinger";
+  src: url("/assets/fonts/stinger/Stinger-Light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}

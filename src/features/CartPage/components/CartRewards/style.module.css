@@ -1,0 +1,37 @@
+.rewards {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background-color: #fff9eb;
+  border: 2px solid #f4e7c5;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.checkbox-reward {
+  display: flex;
+  /* align-items: center; */
+  /* margin-top: -0.5rem; */
+  margin-left: -1rem;
+}
+
+.unlock-text {
+  font-size: 16px;
+  font-family: Lexend;
+  font-weight: 600;
+}
+
+.balance-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.coin-container {
+  display: flex;
+}
+
+.coin-text {
+  margin-left: 0.3rem;
+}

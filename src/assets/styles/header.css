@@ -1,0 +1,51 @@
+header.header {
+  z-index: auto;
+  box-shadow: none;
+  /* border-bottom: 1px solid #f9f0da; */
+}
+header .navigation {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+header .desktop-menu {
+  min-height: 80px;
+}
+header .desktop-menu a button {
+  font-weight: 500;
+  font-size: 14px;
+}
+header .desktop-menu a {
+  display: flex;
+}
+header .desktop-menu a.active {
+  /* box-shadow: inset 0px -4px 0px #00855b; */
+}
+.drawer-left .MuiDrawer-paperAnchorLeft {
+  right: 0;
+}
+.drawer-left .MuiDrawer-paperAnchorLeft .active h5 {
+  color: #00855b;
+}
+@media only screen and (max-width: 1199px) {
+  header .navigation {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+}
+@media only screen and (max-width: 991px) {
+  header .toolbar,
+  header .desktop-menu {
+    min-height: 56px;
+  }
+  header .header-right a {
+    border: 0;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  header .header-right a:hover {
+    background-color: transparent;
+    color: #00855b;
+    border: 0;
+  }
+}

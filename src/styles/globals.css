@@ -1,0 +1,116 @@
+@import "./sofia-style.css";
+@import "./stinger-style.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* typography styles */
+@layer utilities {
+  @import url("./typography.css");
+}
+
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #26b45f #fff;
+    list-style: none;
+  }
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  @media screen and (max-width: 768px) {
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+    html {
+      scrollbar-width: none;
+    }
+  }
+
+  ul {
+    @apply list-disc list-inside ps-4;
+  }
+  ol li:has(ol, ul),
+  ul li:has(ol, ul) {
+    @apply list-none;
+  }
+  ol {
+    @apply list-decimal list-inside marker:me-4 ps-4;
+  }
+}
+
+@import url("./sliders.css");
+.b1 {
+  border: 1px solid red;
+}
+
+.df {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@layer base {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+@import url("./sliders.css");
+
+/* hide scroll bar */
+.noscrollbar {
+  scrollbar-width: none;
+}
+.noscrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* swiper custom */
+.swiper-button,
+.swiper-button-disabled {
+  @apply opacity-40 transition-opacity duration-200 ease-in-out pointer-events-none;
+}
+
+.howItWorksBg {
+  background-image: url("/assets/images/howitworks.svg");
+  background-repeat: no-repeat;
+}
+
+@media screen and (max-width: 600px) {
+  .howItWorksBg {
+    background-image: url("/assets/images/howitworksMob.svg");
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .carouselButtons {
+    display: none;
+  }
+}
+
+@keyframes marquee-left {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+.animate-marquee-left {
+  animation: marquee-left var(--duration, 40s) linear infinite;
+}

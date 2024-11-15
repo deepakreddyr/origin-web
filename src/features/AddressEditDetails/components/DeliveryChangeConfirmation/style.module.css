@@ -1,0 +1,21 @@
+.main-container {
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  .delivery-change-heading {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .delivery-change-content {
+    font-size: 14px;
+    font-weight: 400;
+    color: #5a5a5a;
+  }
+  .review-cart-content {
+    font-size: 14px;
+    font-weight: 400;
+    color: #5a5a5a;
+  }
+}

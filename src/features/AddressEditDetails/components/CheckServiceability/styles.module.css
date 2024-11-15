@@ -1,0 +1,23 @@
+.mapColor {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+}
+.current-location-button {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  background-color: #ffffff;
+  /* padding: 12px; */
+  border-radius: 50%;
+}
+
+.mapActive {
+  box-shadow: inset 0 0 15px #00855b;
+}
+
+.mapInActive {
+  box-shadow: inset 0 0 15px #885241;
+}

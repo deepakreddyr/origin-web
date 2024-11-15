@@ -1,0 +1,33 @@
+/* Remove default styles applied to the wrapper div */
+
+.refund-container {
+  padding: 1rem;
+  width: 90%;
+  background: #f9f0da;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  margin-top: 2rem;
+  border-radius: 8px;
+  .refund-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    .refund-text {
+      color: #d25337;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    .refund-text-details {
+      font-weight: 400;
+      font-size: 12px;
+      color: #414141;
+    }
+  }
+  .refund-price {
+    color: #d25337;
+    font-weight: 700;
+    font-size: 14px;
+  }
+}

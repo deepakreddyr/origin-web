@@ -1,0 +1,21 @@
+/* Remove default styles applied to the wrapper div */
+
+.image-wrapper {
+  /* width: 100%; */
+  width: calc(100% - 2rem);
+  height: 100%;
+}
+
+.map-btn {
+  position: absolute;
+  top: 12px;
+  left: 8px;
+  z-index: 10;
+  background: #fff;
+  color: #000;
+}
+
+.map-btn-text {
+  margin-right: 0.3rem;
+  font-weight: 600;
+}

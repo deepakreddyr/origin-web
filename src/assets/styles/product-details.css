@@ -1,0 +1,73 @@
+.carousel-product-details {
+  margin-left: -12px;
+  margin-right: -12px;
+}
+.carousel-product-details .slick-next {
+  right: 12px;
+}
+.carousel-product-details .slick-prev {
+  left: initial;
+  right: 68px;
+}
+.carousel-product-details .slick-arrow:before {
+  display: none;
+}
+.carousel-product-details .slick-arrow {
+  width: 40px;
+  height: 40px;
+  background: #ffffff;
+  border: 1px solid #e5e5ea;
+  border-radius: 4px;
+  top: -50px;
+  transform: none;
+}
+.carousel-product-details .slick-prev:focus:hover,
+.carousel-product-details .slick-prev:active:hover,
+.carousel-product-details .slick-prev:active,
+.carousel-product-details .slick-prev:focus,
+.carousel-product-details .slick-prev:hover,
+.carousel-product-details .slick-prev {
+  background-image: url("../svg/chevron-left.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.carousel-product-details .slick-next:focus:hover,
+.carousel-product-details .slick-next:active:hover,
+.carousel-product-details .slick-next:active,
+.carousel-product-details .slick-next:focus,
+.carousel-product-details .slick-next:hover,
+.carousel-product-details .slick-next {
+  background-image: url("../svg/chevron-right.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+}
+@media only screen and (max-width: 767px) {
+  .carousel-product-details {
+    margin-left: -8px;
+    margin-right: -8px;
+  }
+}
+
+/* Why Madras Mandi */
+
+.mm-list .mm-list-item {
+  border-left: 1px solid #febf43;
+}
+@media only screen and (max-width: 991px) {
+  .mm-list .mm-list-item:nth-child(1) {
+    border-left: none;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .mm-list {
+    margin-left: -16px;
+    margin-right: -16px;
+    flex: 100%;
+  }
+  .mm-list .mm-list-item {
+    width: 50%;
+  }
+  .mm-list .mm-list-item:nth-child(3) {
+    border-left: none;
+  }
+}

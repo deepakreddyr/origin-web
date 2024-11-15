@@ -1,0 +1,40 @@
+.cancel-modal {
+}
+
+.cancel-container {
+}
+.cancel-heading {
+  font-size: 16px;
+}
+
+.cancel-btn-container {
+  display: flex;
+  margin-top: 1rem;
+  justify-content: space-between;
+}
+.cancel-text {
+  font-size: 13px;
+  font-weight: 400;
+  margin-top: 1rem;
+  color: #5a5a5a;
+}
+.cancel-btn {
+  border: none;
+  background-color: rgba(136, 84, 69, 0.3);
+  padding: 1rem;
+  font-size: 12px;
+  font-weight: 600;
+  color: #885445;
+  width: 45%;
+  border-radius: 10px;
+}
+.go-btn {
+  border: none;
+  border-radius: 10px;
+  background-color: #00855b;
+  padding: 1rem;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  width: 45%;
+}

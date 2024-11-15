@@ -1,0 +1,11 @@
+.poProducts-slider.swiper {
+  @apply px-5 transition ease-in-out duration-[0.25s];
+}
+.poBlogs-slider.swiper {
+  padding-inline:calc(var(--slider-margin-left) + 24px)
+}
+@media screen and (min-width: 640px) {
+  .poProducts-slider.swiper {
+    @apply pe-11 transition ease-in-out duration-[0.25s];
+  }
+}

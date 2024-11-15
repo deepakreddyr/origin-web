@@ -1,0 +1,127 @@
+@font-face {
+  font-family: "SofiaPro";
+  src: url('/assets/fonts/sofia-pro/SofiaPro-Black.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SofiaPro";
+  src: url('/assets/fonts/sofia-pro/SofiaPro-BlackItalic.woff') format('woff');
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SofiaPro";
+  src: url('/assets/fonts/sofia-pro/SofiaPro-Bold.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SofiaPro";
+  src: url('/assets/fonts/sofia-pro/SofiaPro.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SofiaPro";
+  src: url('/assets/fonts/sofia-pro/SofiaPro-BoldItalic.woff') format('woff');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SofiaPro";
+  src: url('/assets/fonts/sofia-pro/SofiaPro-Italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SofiaPro";
+  src: url('/assets/fonts/sofia-pro/SofiaPro-Bold.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SofiaPro";
+  src: url('/assets/fonts/sofia-pro/SofiaPro-ExtraLight.woff') format('woff');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SofiaPro";
+  src: url('/assets/fonts/sofia-pro/SofiaPro-Bold.woff') format('woff');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SofiaPro";
+  src: url('/assets/fonts/sofia-pro/SofiaPro-LightItalic.woff') format('woff');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SofiaPro";
+  src: url('/assets/fonts/sofia-pro/SofiaPro-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SofiaPro";
+  src: url('/assets/fonts/sofia-pro/SofiaPro-ExtraLight.woff') format('woff');
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SofiaPro";
+  src: url('/assets/fonts/sofia-pro/SofiaPro-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SofiaPro";
+  src: url('/assets/fonts/sofia-pro/SofiaPro-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SofiaPro";
+  src: url('/assets/fonts/sofia-pro/SofiaPro-UltraLight.woff') format('woff');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SofiaPro";
+  src: url('/assets/fonts/sofia-pro/SofiaPro-UltraLightItalic.woff') format('woff');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}

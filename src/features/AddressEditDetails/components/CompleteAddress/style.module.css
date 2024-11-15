@@ -1,0 +1,50 @@
+.main-container {
+  position: relative;
+  height: 90vh;
+
+  .text {
+    background-color: #231f20;
+    color: #fff;
+    font-size: 12px;
+    padding: 0.8rem;
+    font-weight: 400;
+    text-align: center;
+    border-radius: 8px;
+    font-family: "SofiaPro";
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    gap: 2;
+    margin-top: 1rem;
+    align-items: center;
+    .form {
+      width: 100%;
+    font-family: "SofiaPro";
+
+      display: flex;
+      flex-direction: column;
+      gap: 4;
+      .form-input {
+        display: flex;
+        flex-direction: column;
+        gap: 2;
+        .form-group {
+          margin-top: 1rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          .input {
+            position: relative;
+            display: flex;
+            transform: initial;
+            font-size: 12;
+            font-weight: medium;
+            color: #000;
+
+          }
+        }
+      }
+    }
+  }
+}

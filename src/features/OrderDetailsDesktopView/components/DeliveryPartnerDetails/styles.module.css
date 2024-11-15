@@ -1,0 +1,56 @@
+.delivery-partner-container {
+  background: #f9f0da;
+  border: 1px solid #f2e7cb;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  width: 55%;
+
+  .delivery-partner-heading {
+    font-weight: 600;
+    font-size: 18px;
+    color: #000000;
+  }
+  .delivery-partner-details-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .delivery-partner-details {
+      align-items: center;
+      display: flex;
+      .delivery-partner-image {
+        margin: 0.3rem;
+        padding: 0.5rem;
+
+        border-radius: 100%;
+        border: 1px solid #000;
+      }
+    }
+    .delivery-partner-name {
+      font-weight: 400;
+      font-size: 16px;
+      color: #000000;
+    }
+
+    .delivery-partner-text {
+      font-weight: 400;
+      font-size: 14px;
+      color: #484848;
+    }
+    .call-container {
+      display: flex;
+      .call-button {
+        background: #00855b;
+        color: #fff;
+        justify-content: space-evenly;
+        border: none;
+        align-items: center;
+        border-radius: 4px;
+        padding: 0.8rem;
+        width: 80px;
+        display: flex;
+      }
+    }
+  }
+}

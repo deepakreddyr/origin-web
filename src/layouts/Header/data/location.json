@@ -1,0 +1,48 @@
+[
+  {
+    "state": "Karnataka",
+    "city": "Bangalore",
+    "areas": [
+      {
+        "id": 1,
+        "name": "Indranagar",
+        "latitude": "12.9783692",
+        "longitude": "77.6408356",
+        "place_id": "ChIJkQN3GKQWrjsRNhBQJrhGD7U",
+        "formatted_address": "Indiranagar, Bengaluru, Karnataka, India"
+      },
+      {
+        "id": 2,
+        "name": "Kormangala",
+        "latitude": "12.9351929",
+        "longitude": "77.62448069999999",
+        "place_id": "ChIJLfyY2E4UrjsRVq4AjI7zgRY",
+        "formatted_address": "Koramangala, Bengaluru, Karnataka, India"
+      },
+      {
+        "id": 3,
+        "name": "HSR Layout",
+        "latitude": "12.9121181",
+        "longitude": "77.6445548",
+        "place_id": "ChIJzW7cv5EUrjsRecj7OYRxMvI",
+        "formatted_address": "HSR Layout, Bengaluru, Karnataka, India"
+      },
+      {
+        "id": 4,
+        "name": "BTM Layout",
+        "latitude": "12.9165757",
+        "longitude": "77.6101163",
+        "place_id": "ChIJMTCpkfwUrjsRP9zLdiXmr_A",
+        "formatted_address": "BTM Layout, Bengaluru, Karnataka, India"
+      },
+      {
+        "id": 5,
+        "name": "Electronic City",
+        "latitude": "12.8452145",
+        "longitude": "77.6601695",
+        "place_id": "ChIJw-FQd4psrjsRHfdazg_8XEo",
+        "formatted_address": "Electronic City, Bengaluru, Karnataka, India"
+      }
+    ]
+  }
+]

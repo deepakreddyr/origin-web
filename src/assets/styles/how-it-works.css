@@ -1,0 +1,61 @@
+.how-it-works-section ul li {
+  position: relative;
+}
+.how-it-works-section ul li:not(:first-child):before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(calc(-50% + 12px));
+  left: -45px;
+  height: 0px;
+  width: 100px;
+  border-bottom: 2px dashed #512b0b;
+}
+@media only screen and (max-width: 1199px) {
+  .how-it-works-section ul li:nth-child(1) {
+    order: 1;
+  }
+  .how-it-works-section ul li:nth-child(2) {
+    order: 2;
+  }
+  .how-it-works-section ul li:nth-child(3) {
+    order: 4;
+  }
+  .how-it-works-section ul li:nth-child(4) {
+    order: 3;
+  }
+  .how-it-works-section ul li:nth-child(3):before {
+    width: 0;
+    height: 100px;
+    left: 50%;
+    transform: translateX(calc(-50% + 12px));
+    border-left: 2px dashed #512b0b;
+    top: -45px;
+  }
+  .how-it-works-section ul li:nth-child(4):before {
+    left: initial;
+    right: -45px;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .how-it-works-section .how-it-works {
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .how-it-works-section ul li:nth-child(3) {
+    order: 3;
+  }
+  .how-it-works-section ul li:nth-child(4) {
+    order: 4;
+  }
+  .how-it-works-section ul li:nth-child(2):before,
+  .how-it-works-section ul li:nth-child(4):before {
+    width: 0;
+    height: 100px;
+    left: 50%;
+    transform: translateX(calc(-50% + 8px));
+    border-left: 2px dashed #512b0b;
+    top: -45px;
+  }
+}

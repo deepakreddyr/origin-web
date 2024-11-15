@@ -1,0 +1,90 @@
+import { Box, Typography } from "@mui/material";
+import { useAtom } from "jotai";
+import React, { useEffect, useState } from "react";
+
+import { header, request } from "../../../../utils/request";
+import CancelOrderModal from "../../../OrderDetailsMobileView/components/CancelOrderPopUp";
+// import { orderDetailsAtom } from '../../../OrderDetailsMobileView/context/atoms';
+import { orderDetailsAtom } from "../../context/atoms";
+import { getOrderDetails } from "../../services/getOrderDetails";
+import styles from "./styles.module.css";
+
+const CancelOrderCounter = () => {
+  const [cancelModal, setCancelModal] = useState(false);
+  const [orderDetails] = useAtom(orderDetailsAtom);
+  const [, setOrderDetails] = useAtom(orderDetailsAtom);
+
+  const [orderCancellationTime, setOrderCancellationTime] = useState<number>(
+    orderDetails?.data?.order_cancellation_time || 0
+  );
+
+  const currentTime = Math.floor(Date.now() / 1000);
+  const orderCreatedAt = orderDetails?.data?.order_created_at || 0;
+  const elapsedTime = Math.max(0, currentTime - orderCreatedAt);
+  const remainingTime = Math.max(0, orderCancellationTime - elapsedTime);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setOrderCancellationTime((prevTime) => Math.max(0, prevTime - 1));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [orderDetails]);
+
+  const onConfirm = async () => {
+    const id = orderDetails.data?.order_id;
+    await request(`/api/v5/user/order-cancel/${id}`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        Authorization: header(),
+        "Delivery-Type": "app",
+        "MM-Device-Type": "web",
+        "MM-Build-Version": "1.0.1",
+      },
+    });
+    setCancelModal(false);
+    getOrderDetails(setOrderDetails, {
+      id: String(id),
+    });
+  };
+
+  const renderModal = () => {
+    if (cancelModal)
+      return (
+        <CancelOrderModal
+          isOpen={cancelModal}
+          onClose={() => {
+            setCancelModal(false);
+          }}
+          onConfirm={onConfirm}
+        />
+      );
+    return <></>;
+  };
+
+  if (remainingTime === 0) return <></>;
+
+  return (
+    <>
+      <Box
+        className={styles["cancel-container"]}
+        onClick={() => setCancelModal(true)}
+      >
+        <Typography className={styles["cancel-text"]}>CANCEL ORDER</Typography>
+        <Box className={styles["counter-container"]}>
+          <Typography className={styles["cancel-counter"]}>
+            {`${Math.floor(remainingTime / 60)
+              .toString()
+              .padStart(2, "0")}:${(remainingTime % 60)
+              .toString()
+              .padStart(2, "0")} sec`}
+          </Typography>
+        </Box>
+      </Box>
+
+      {renderModal()}
+    </>
+  );
+};
+
+export default CancelOrderCounter;

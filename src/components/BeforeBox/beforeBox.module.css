@@ -1,0 +1,39 @@
+.beforeBox {
+  position: relative;
+}
+.beforeBox::before, .beforeBox::after {
+  content: "";
+  @apply absolute block left-0 w-full z-0 md:rounded-[50px] rounded-[20px];
+}
+.beforeBox::before {
+  height: calc(100% + var(--md-top-offset, 100px));
+  top: 0;
+  z-index: -1;
+}
+@media screen and (min-width: 320px) {
+  .beforeBox::before {
+    @apply bg-primary-100 -z-[1] bg-noise bg-repeat mix-blend-soft-light;
+    top: calc(-1 * var(--md-top-offset, 100px));
+  }
+}
+@media screen and (max-width: 640px) {
+  .beforeBox::before {
+    bottom: calc(-1 * var(--md-top-offset, 100px));
+  }
+}
+.beforeBox::after {
+  height: calc(100% + var(--md-bottom-offset, 100px));
+  bottom: 0;
+  z-index: 0;
+}
+@media screen and (min-width: 320px) {
+  .beforeBox::after {
+    @apply bg-primary-100 -z-[1] bg-noise bg-repeat mix-blend-lighten;
+    bottom: calc(-1 * var(--md-bottom-offset, 100px));
+  }
+}
+@media screen and (max-width: 640px) {
+  .beforeBox::after {
+    top: var(--md-bottom-offset, 100px);
+  }
+}/*# sourceMappingURL=beforeBox.module.css.map */

@@ -1,0 +1,96 @@
+/* Top Read */
+
+.carousel-top-read.carousel-indicator .slick-dots {
+  bottom: -2.5rem;
+}
+.carousel-top-read.carousel-indicator .slick-arrow.slick-prev {
+  left: -64px;
+  background-image: url("../svg/blog-prev.svg");
+}
+.carousel-top-read.carousel-indicator .slick-arrow.slick-next {
+  right: -64px;
+  background-image: url("../svg/blog-next.svg");
+}
+.carousel-top-read.carousel-indicator .slick-arrow {
+  width: 48px;
+  height: 48px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.carousel-top-read.carousel-indicator .slick-arrow:before {
+  display: none;
+}
+.carousel-top-read .slick-slide > div {
+  margin-left: 12px;
+  margin-right: 12px;
+}
+@media only screen and (max-width: 991px) {
+  .carousel-top-read.carousel-indicator .slick-dots {
+    bottom: -1.5rem;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .carousel-top-read.carousel-indicator .slick-arrow {
+    top: inherit;
+    bottom: -70px;
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border: 1px solid #e5e5ea;
+  }
+  .carousel-top-read.carousel-indicator .slick-arrow.slick-prev {
+    left: calc(50% - 52px);
+    background-image: url("../svg/chevron-left.svg");
+  }
+  .carousel-top-read.carousel-indicator .slick-arrow.slick-next {
+    right: calc(50% - 52px);
+    background-image: url("../svg/chevron-right.svg");
+  }
+}
+
+/* Recent Post */
+
+.blog-updates > span:not(:last-child) {
+  padding-right: 20px;
+  position: relative;
+}
+.blog-updates > span:not(:last-child):before {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #acacac;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.pagination-stack .pagination ul li button {
+  font-weight: 600;
+  margin-right: 8px;
+  margin-left: 8px;
+}
+.pagination-stack .pagination ul li button.Mui-disabled {
+  background-color: #e5e5ea;
+}
+.pagination-stack .pagination ul li button:hover,
+.pagination-stack .pagination ul li button.Mui-selected {
+  background-color: white;
+  border-color: #00855b;
+  color: #00855b;
+}
+
+/* blog details */
+.blog-detail-page .blog-content img {
+  max-width: 100%;
+  display: block;
+}
+.dangerously-set-inner-html p:empty {
+  margin: 0;
+}
+.dangerously-set-inner-html p > br {
+  display: none;
+}
+.blog-meta .duration:not(:empty):before {
+  content: "";
+}

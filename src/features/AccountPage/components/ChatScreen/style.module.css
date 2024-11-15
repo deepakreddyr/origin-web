@@ -1,0 +1,45 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.chat-question {
+  background-color: #ffecbd;
+  border-radius: 5px;
+  padding: 0.2rem;
+  margin-right: auto;
+  max-width: 80%;
+}
+
+.chat-option-box {
+  background-color: #ffecbd;
+  border-radius: 8px;
+}
+
+.chat-option {
+  border-radius: 8px;
+  background-color: #fff3d6;
+  padding: 0.5rem;
+  font-size: 12px;
+  font-weight: 400;
+  color: #00855b;
+  width: 70%;
+  margin-top: 0.5rem;
+  margin-left: 0.8rem;
+  cursor: pointer;
+}
+.question {
+  font-size: 12px;
+  font-weight: 400;
+  padding: 0.5rem;
+  background-color: #ffecbd;
+}
+
+.chat-message {
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 0.5rem;
+  background-color: #fbe4ab;
+}

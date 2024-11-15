@@ -1,0 +1,31 @@
+.poProducts-slider.swiper {
+  @apply px-5 transition ease-in-out duration-[0.25s];
+}
+.poBlogs-slider.swiper {
+  padding-inline: calc(var(--slider-margin-left) + 24px);
+}
+@media screen and (min-width: 640px) {
+  .poProducts-slider.swiper {
+    @apply pe-11 transition ease-in-out duration-[0.25s];
+  }
+
+  .poProducts-slider.swiper {
+    .swiper-slide {
+      transition: 0.25s ease;
+
+      &:first-of-type.swiper-slide-active {
+        margin-left: 2.75rem;
+      }
+    }
+  }
+}
+/*
+  element.style {
+    left: -7.35rem;
+    position: relative;
+    max-width: calc(100dvw);
+    transform: translateX(7.35rem);
+  }
+  .swiper-slide.swiper-slide-active:first-of-type {
+    margin-left: 7.35rem;
+  } */

@@ -1,0 +1,135 @@
+[
+  {
+    "description": "India",
+    "placeId": "ChIJkbeSa_BfYzARphNChaFPjNc",
+    "active": false,
+    "index": 0,
+    "formattedSuggestion": {
+      "mainText": "India"
+    },
+    "matchedSubstrings": [
+      {
+        "length": 3,
+        "offset": 0
+      }
+    ],
+    "terms": [
+      {
+        "offset": 0,
+        "value": "India"
+      }
+    ],
+    "types": ["country", "political", "geocode"]
+  },
+  {
+    "description": "Indonesia",
+    "placeId": "ChIJtwRkSdcHTCwRhfStG-dNe-M",
+    "active": true,
+    "index": 1,
+    "formattedSuggestion": {
+      "mainText": "Indonesia"
+    },
+    "matchedSubstrings": [
+      {
+        "length": 3,
+        "offset": 0
+      }
+    ],
+    "terms": [
+      {
+        "offset": 0,
+        "value": "Indonesia"
+      }
+    ],
+    "types": ["country", "political", "geocode"]
+  },
+  {
+    "description": "Indore, Madhya Pradesh, India",
+    "placeId": "ChIJ2w1BG638YjkR9EBiNdrEbgk",
+    "active": false,
+    "index": 2,
+    "formattedSuggestion": {
+      "mainText": "Indore",
+      "secondaryText": "Madhya Pradesh, India"
+    },
+    "matchedSubstrings": [
+      {
+        "length": 3,
+        "offset": 0
+      }
+    ],
+    "terms": [
+      {
+        "offset": 0,
+        "value": "Indore"
+      },
+      {
+        "offset": 8,
+        "value": "Madhya Pradesh"
+      },
+      {
+        "offset": 24,
+        "value": "India"
+      }
+    ],
+    "types": ["locality", "political", "geocode"]
+  },
+  {
+    "description": "Indiana, USA",
+    "placeId": "ChIJHRv42bxQa4gRcuwyy84vEH4",
+    "active": false,
+    "index": 3,
+    "formattedSuggestion": {
+      "mainText": "Indiana",
+      "secondaryText": "USA"
+    },
+    "matchedSubstrings": [
+      {
+        "length": 3,
+        "offset": 0
+      }
+    ],
+    "terms": [
+      {
+        "offset": 0,
+        "value": "Indiana"
+      },
+      {
+        "offset": 9,
+        "value": "USA"
+      }
+    ],
+    "types": ["administrative_area_level_1", "political", "geocode"]
+  },
+  {
+    "description": "Indianapolis, IN, USA",
+    "placeId": "ChIJA2p5p_9Qa4gRfOq5QPadjtY",
+    "active": false,
+    "index": 4,
+    "formattedSuggestion": {
+      "mainText": "Indianapolis",
+      "secondaryText": "IN, USA"
+    },
+    "matchedSubstrings": [
+      {
+        "length": 3,
+        "offset": 0
+      }
+    ],
+    "terms": [
+      {
+        "offset": 0,
+        "value": "Indianapolis"
+      },
+      {
+        "offset": 14,
+        "value": "IN"
+      },
+      {
+        "offset": 18,
+        "value": "USA"
+      }
+    ],
+    "types": ["locality", "political", "geocode"]
+  }
+]

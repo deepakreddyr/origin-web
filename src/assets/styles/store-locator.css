@@ -1,0 +1,25 @@
+.store-tab .Mui-selected .icon {
+  filter: grayscale(0);
+}
+.store-tab .Mui-selected p {
+  color: #00855b;
+  position: relative;
+}
+.store-tab button {
+  border-bottom: 1px solid #e9ecf0;
+  margin-bottom: 2px;
+}
+.store-tab .MuiTabs-indicator {
+  display: none;
+}
+.store-tab .Mui-selected p:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -12px;
+  height: 2px;
+  width: 30px;
+  background-color: #00855b;
+  border-radius: 2px;
+}
