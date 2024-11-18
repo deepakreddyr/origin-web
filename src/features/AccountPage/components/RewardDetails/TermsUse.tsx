@@ -1,22 +1,22 @@
-import { Box, Typography } from '@mui/material';
-import React from 'react';
+import { Box, Typography } from "@mui/material";
+import React from "react";
 
 const RewardCoin = () => {
   const list = [
     {
-      title: 'Customers can earn MM coins from the first order onwards.',
+      title: "Customers can earn MM coins from the first order onwards.",
     },
     {
       title:
-        'Customers will earn MM coins only when their order is delivered only, not upon payment of order.',
+        "Customers will earn MM coins only when their order is delivered only, not upon payment of order.",
     },
     {
       title:
-        'Can be earned and redeemed on all products except milk or milk products',
+        "Can be earned and redeemed on all products except milk or milk products",
     },
     {
       title:
-        'Reward coins cannot be exchanged or redeemed for cash in-part or full & do not carry any real money value.',
+        "Reward coins cannot be exchanged or redeemed for cash in-part or full & do not carry any real money value.",
     },
   ];
 
@@ -24,9 +24,9 @@ const RewardCoin = () => {
     <Box
       className="terms-use"
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '12px',
+        display: "flex",
+        flexDirection: "column",
+        gap: "12px",
       }}
     >
       <Typography variant="body1" component="h4" sx={{ fontWeight: 600 }}>
@@ -36,8 +36,8 @@ const RewardCoin = () => {
         component="ol"
         className="reward-coin-list"
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
+          display: "flex",
+          flexDirection: "column",
           margin: 0,
           paddingLeft: 3,
           gap: 1,
@@ -48,12 +48,12 @@ const RewardCoin = () => {
             key={`${item}-${i}`}
             component="li"
             className="reward-coin-list-item"
-            sx={{ fontWeight: 400, color: 'rgba(0, 0, 0, 0.60)', fontSize: 12 }}
+            sx={{ fontWeight: 400, color: "rgba(0, 0, 0, 0.60)", fontSize: 12 }}
           >
             <Typography
               component="span"
               variant="body2"
-              sx={{ fontWeight: 400, color: 'rgba(0, 0, 0, 0.60)' }}
+              sx={{ fontWeight: 400, color: "rgba(0, 0, 0, 0.60)" }}
             >
               {item.title}
             </Typography>

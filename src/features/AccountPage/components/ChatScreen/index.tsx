@@ -1,16 +1,16 @@
-import { Box, CircularProgress, Typography } from '@mui/material';
-import { useAtom } from 'jotai';
-import React from 'react';
+import { Box, CircularProgress, Typography } from "@mui/material";
+import { useAtom } from "jotai";
+import React from "react";
 
 import {
   activeSupportChatAtom,
   postSupportChatAtom,
   recentOrderAtom,
   supportChatAtom,
-} from '../../context/atoms';
-import { getSupportChat } from '../../services/getSupprtChat';
-import { postMessage } from '../../services/postSupportChat';
-import styles from './style.module.css';
+} from "../../context/atoms";
+import { getSupportChat } from "../../services/getSupprtChat";
+import { postMessage } from "../../services/postSupportChat";
+import styles from "./style.module.css";
 
 const ChatScreen = () => {
   const [supportChat, setSupportChat] = useAtom(supportChatAtom);
@@ -39,7 +39,7 @@ const ChatScreen = () => {
       const payload = {
         message: optionId,
         ticket_id: chat.data?.id,
-        type: 'option',
+        type: "option",
       };
       await postMessage(payload, orderId, setPostSupportChat);
       await getSupportChat(setSupportChat, orderId);
@@ -59,17 +59,18 @@ const ChatScreen = () => {
 
             if (
               !!item.message &&
-              item.type === 'message' &&
-              item.user_type === 'user'
+              item.type === "message" &&
+              item.user_type === "user"
             )
               return (
                 <Box
                   sx={{
-                    marginLeft: 'auto',
-                    maxWidth: '80%',
+                    marginLeft: "auto",
+                    maxWidth: "80%",
                   }}
+                  key={index}
                 >
-                  <Typography className={styles['chat-message']}>
+                  <Typography className={styles["chat-message"]}>
                     {item.message}
                   </Typography>
                 </Box>
@@ -77,7 +78,7 @@ const ChatScreen = () => {
 
             if (item.question) {
               return (
-                <Box key={item.id} className={styles['chat-question']}>
+                <Box key={item.id} className={styles["chat-question"]}>
                   <Typography className={styles.question}>
                     {item.question}
                   </Typography>
@@ -86,11 +87,11 @@ const ChatScreen = () => {
                     item?.options.map((option: any) => (
                       <Box
                         key={option.id}
-                        className={styles['chat-option-box']}
+                        className={styles["chat-option-box"]}
                       >
                         {option.message && (
                           <Typography
-                            className={styles['chat-option']}
+                            className={styles["chat-option"]}
                             onClick={() =>
                               message(String(chat.data?.order_id), option.id)
                             } // Pass the option.id here

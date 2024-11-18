@@ -1,4 +1,4 @@
-import type TransactionListResponse from './TransactionList';
+import type TransactionListResponse from "./TransactionList";
 
 type TransactionListAtom = {
   loading: boolean;

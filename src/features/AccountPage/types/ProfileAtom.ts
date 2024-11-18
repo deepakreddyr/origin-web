@@ -1,4 +1,4 @@
-import type User from './User';
+import type User from "./User";
 
 type ProfileAtom = {
   loading: boolean;

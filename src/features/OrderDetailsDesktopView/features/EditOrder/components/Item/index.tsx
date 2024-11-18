@@ -1,10 +1,10 @@
-import { Box, Typography } from "@mui/material";
-import { useAtom } from "jotai";
-import React from "react";
+import { Box, Typography } from '@mui/material';
+import { useAtom } from 'jotai';
+import React from 'react';
 
-import { CounterUOM } from "../../../../../../components/UOMCounter";
-import { editOrderAtom } from "../../context/atoms";
-import styles from "./style.module.css";
+import { CounterUOM } from '@/components/CartPage/components/UOMCounter';
+import { editOrderAtom } from '../../context/atoms';
+import styles from './style.module.css';
 
 interface Props {
   item: any;
@@ -19,14 +19,12 @@ const Item = (props: Props) => {
   const setEditCartItems = (editCartItems: any) => {
     setEditOrder((prevState: any) => ({
       ...prevState,
-      orderItems: editCartItems,
+      orderItems: editCartItems
     }));
   };
 
   const cartItem = React.useMemo(() => {
-    const cartItemTemp = editOrder.orderItems?.find(
-      (item: any) => item.id === product.id
-    );
+    const cartItemTemp = editOrder.orderItems?.find((item: any) => item.id === product.id);
     if (cartItemTemp) return cartItemTemp;
     return {};
   }, [editOrder.orderItems]);
@@ -34,9 +32,7 @@ const Item = (props: Props) => {
   const generateUomPayload = (uomPayload: any) => {
     if (!cartItem || !cartItem.uom) return [uomPayload];
 
-    const restPayload = cartItem.uom.filter(
-      (item: any) => item.id !== uomPayload.id
-    );
+    const restPayload = cartItem.uom.filter((item: any) => item.id !== uomPayload.id);
 
     // If Qty is 0 then we will remove that uom from the array
     if (uomPayload.qty === 0) {
@@ -46,18 +42,13 @@ const Item = (props: Props) => {
   };
 
   const addItemToCart = (cartValueToBeSet: any) => {
-    const totalQty = cartValueToBeSet.uom.reduce(
-      (previousValue: any, currentValue: any) => {
-        const totalQtyVal = previousValue + currentValue.qty;
-        return totalQtyVal;
-      },
-      0
-    );
+    const totalQty = cartValueToBeSet.uom.reduce((previousValue: any, currentValue: any) => {
+      const totalQtyVal = previousValue + currentValue.qty;
+      return totalQtyVal;
+    }, 0);
     if (totalQty !== 0) {
       const tempItems = editOrder.orderItems.slice();
-      const index = tempItems.findIndex(
-        (e: any) => e.item_code === cartValueToBeSet.item_code
-      );
+      const index = tempItems.findIndex((e: any) => e.item_code === cartValueToBeSet.item_code);
       if (index !== -1) {
         tempItems[index] = cartValueToBeSet;
         setEditCartItems(tempItems);
@@ -66,9 +57,7 @@ const Item = (props: Props) => {
         setEditCartItems(newCartItem);
       }
     } else {
-      const newCartItem = editOrder.orderItems.filter(
-        (e: any) => e.id !== cartValueToBeSet.id
-      );
+      const newCartItem = editOrder.orderItems.filter((e: any) => e.id !== cartValueToBeSet.id);
       setEditCartItems(newCartItem);
     }
     // debouncedCartAPI();
@@ -95,8 +84,8 @@ const Item = (props: Props) => {
               price: parseFloat(multiUom.price),
               qty: val,
               availability: multiUom.is_available || true,
-              visibility: multiUom.is_visible || true,
-            }),
+              visibility: multiUom.is_visible || true
+            })
           };
           addItemToCart(cartItemToBeAdded);
         }}
@@ -112,41 +101,32 @@ const Item = (props: Props) => {
         className="review-cart-list"
         component="li"
         sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
         }}
       >
-        <Box
-          className="review-cart-info"
-          sx={{ display: "flex", gap: "12px", alignItems: "center" }}
-        >
+        <Box className="review-cart-info" sx={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
           <Box
             component="figure"
             sx={{
               width: 58,
               height: 52,
-              borderRadius: "6px",
-              backgroundColor: "#F2E7CB",
+              borderRadius: '6px',
+              backgroundColor: '#F2E7CB',
               flexShrink: 0,
               margin: 0,
               padding: 1,
-              overflow: "hidden",
+              overflow: 'hidden'
             }}
           >
-            <img
-              className={styles.img}
-              height="100%"
-              width="100%"
-              src={image}
-              alt="potato"
-            />
+            <img className={styles.img} height="100%" width="100%" src={image} alt="potato" />
           </Box>
           <Box
             className="review-cart-information"
             sx={{
-              display: "flex",
-              flexDirection: "column",
+              display: 'flex',
+              flexDirection: 'column'
             }}
           >
             <Typography component="h4" variant="body2">
@@ -156,9 +136,9 @@ const Item = (props: Props) => {
               component="span"
               variant="body2"
               sx={{
-                color: "rgba(0, 0, 0, 0.60)",
-                fontFamily: "Roboto Mono",
-                fontWeight: "normal",
+                color: 'rgba(0, 0, 0, 0.60)',
+                fontFamily: 'Roboto Mono',
+                fontWeight: 'normal'
               }}
             >
               {`${uom.qty}${uom.unit} `}
@@ -168,17 +148,13 @@ const Item = (props: Props) => {
         <Box
           className="review-cart-counter"
           sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px'
           }}
         >
           {renderCounter(uom)}
-          <Typography
-            component="span"
-            variant="body1"
-            sx={{ fontFamily: "Roboto Mono" }}
-          >
+          <Typography component="span" variant="body1" sx={{ fontFamily: 'Roboto Mono' }}>
             ₹ {uom.price}
           </Typography>
         </Box>

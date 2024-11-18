@@ -28,10 +28,11 @@ const ShopPage = ({
   return (
     <Layout mainMenuItems={mainMenuItems} footerData={footerData}>
       <CategorySection categories={categories} />
+      {/*
       <Box className="h-16 lg:h-[113px]" />
       <ProductsFilterSlider productsList={productsList} />
       <Box className="h-10 lg:h-[102px]" />
-      <ProductList categories={categories} productsList={productsList} />
+      <ProductList categories={categories} productsList={productsList} /> */}
     </Layout>
   );
 };

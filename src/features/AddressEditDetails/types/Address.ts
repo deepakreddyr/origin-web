@@ -1,6 +1,6 @@
 export default interface Address {
-  address_name: String;
-  formatted_address: String;
+  address_name: any;
+  formatted_address: any;
   address: any;
   door_no: any;
   locality: any;

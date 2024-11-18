@@ -1,18 +1,18 @@
-import type { SxProps, Theme } from '@mui/material';
-import { Box, Button, Tab, Tabs, Typography } from '@mui/material';
-import { useAtom } from 'jotai';
-import * as React from 'react';
-import Lottie from 'react-lottie';
+import type { SxProps, Theme } from "@mui/material";
+import { Box, Button, Tab, Tabs, Typography } from "@mui/material";
+import { useAtom } from "jotai";
+import * as React from "react";
+import Lottie from "react-lottie";
 
-import { activeAccountsPageAtom, rateOrderAtom } from '../../context/atoms';
-import ActiveSidebar from '../../enums/ActiveSidebar';
-import { rateOrderApi } from '../../services/rateOrder';
-import styles from '../../style.module.css';
-import type { RateOrderPayload } from '../../types/RateOrderPayload';
-import HappyAnimation from './assets/Starstuck.json';
-import SadAnimation from './assets/Straightface.json';
-import RatingHappy from './RatingHappy';
-import RatingSad from './RatingSad';
+import { activeAccountsPageAtom, rateOrderAtom } from "../../context/atoms";
+import ActiveSidebar from "../../enums/ActiveSidebar";
+import { rateOrderApi } from "../../services/rateOrder";
+import styles from "../../style.module.css";
+import type { RateOrderPayload } from "../../types/RateOrderPayload";
+import HappyAnimation from "./assets/Starstuck.json";
+import SadAnimation from "./assets/Straightface.json";
+import RatingHappy from "./RatingHappy";
+import RatingSad from "./RatingSad";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -26,7 +26,7 @@ function CustomTabPanel(props: TabPanelProps) {
   return (
     <div
       role="tabpanel"
-      className={`rating-tab-panel ${styles['rating-tab-panel']}`}
+      className={`rating-tab-panel ${styles["rating-tab-panel"]}`}
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
@@ -40,14 +40,14 @@ function CustomTabPanel(props: TabPanelProps) {
 const a11yProps = (index: number) => {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 };
 
 const RatingTabs = () => {
   const [value, setValue] = React.useState<number | null>(null);
 
-  const [message, setMessage] = React.useState<string>('');
+  const [message, setMessage] = React.useState<string>("");
   const [selectedText, setSelectedText] = React.useState<string[]>([]);
   const [rateOrder, setRateOrder] = useAtom(rateOrderAtom);
 
@@ -59,7 +59,7 @@ const RatingTabs = () => {
 
   const onSubmit = async () => {
     try {
-      let feedback = '';
+      let feedback = "";
       selectedText.forEach((item, index) => {
         if (index === 0) {
           feedback += item;
@@ -104,21 +104,21 @@ const RatingTabs = () => {
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
-    handleMessageChange('');
+    handleMessageChange("");
     setSelectedText([]);
   };
 
   const buttonCss = React.useMemo((): SxProps<Theme> | undefined => {
     const css: SxProps<Theme> = {
-      width: '100%',
-      textTransform: 'uppercase',
+      width: "100%",
+      textTransform: "uppercase",
       fontSize: 14,
-      marginTop: '0.5rem',
+      marginTop: "0.5rem",
     };
 
     if (value === null) {
-      css.position = 'absolute';
-      css.bottom = '0';
+      css.position = "absolute";
+      css.bottom = "0";
     }
 
     return css;
@@ -130,7 +130,7 @@ const RatingTabs = () => {
       autoplay: true,
       animationData: HappyAnimation,
       rendererSettings: {
-        preserveAspectRatio: 'xMidYMid slice',
+        preserveAspectRatio: "xMidYMid slice",
       },
     };
 
@@ -143,7 +143,7 @@ const RatingTabs = () => {
       autoplay: true,
       animationData: SadAnimation,
       rendererSettings: {
-        preserveAspectRatio: 'xMidYMid slice',
+        preserveAspectRatio: "xMidYMid slice",
       },
     };
 
@@ -154,7 +154,7 @@ const RatingTabs = () => {
     value={value}
     onChange={handleChange}
     aria-label="basic tabs example"
-    className={`rating-tabs-list ${styles['rating-tabs-list']}`}
+    className={`rating-tabs-list ${styles["rating-tabs-list"]}`}
   >
     <Tab icon={<HappyTabAnimation />} {...a11yProps(0)} />
     <Tab icon={<SadTabAnimation />} {...a11yProps(1)} />
@@ -164,16 +164,16 @@ const RatingTabs = () => {
     <Box
       className="rating-happy"
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         flexGrow: 1,
-        paddingTop: '20px',
-        paddingBottom: '20px',
+        paddingTop: "20px",
+        paddingBottom: "20px",
       }}
     >
       <Box
         className="rating-intro-text"
-        sx={{ display: 'flex', flexDirection: 'column' }}
+        sx={{ display: "flex", flexDirection: "column" }}
       >
         <Typography variant="h4" sx={{ fontWeight: 500, lineHeight: 1.1 }}>
           Rate your
@@ -183,24 +183,24 @@ const RatingTabs = () => {
           sx={{
             fontWeight: 500,
             lineHeight: 1.1,
-            color: '#00855B',
+            color: "#00855B",
           }}
         >
           Order Experience!
         </Typography>
       </Box>
       <Box
-        className={`rating-tabs ${styles['rating-tabs']}`}
+        className={`rating-tabs ${styles["rating-tabs"]}`}
         sx={{
-          position: !value ? 'relative' : 'none',
-          '.rating-tabs-list': {
-            '.Mui-selected': {
-              backgroundColor: '#F2EAD4',
+          position: !value ? "relative" : "none",
+          ".rating-tabs-list": {
+            ".Mui-selected": {
+              backgroundColor: "#F2EAD4",
             },
-            '.MuiTabs-indicator': {
-              display: 'none',
+            ".MuiTabs-indicator": {
+              display: "none",
             },
-            '.MuiTabs-flexContainer': {},
+            ".MuiTabs-flexContainer": {},
           },
         }}
       >
@@ -208,7 +208,7 @@ const RatingTabs = () => {
           value={value}
           onChange={handleChange}
           aria-label="basic tabs example"
-          className={`rating-tabs-list ${styles['rating-tabs-list']}`}
+          className={`rating-tabs-list ${styles["rating-tabs-list"]}`}
         >
           <Tab icon={<HappyTabAnimation />} {...a11yProps(0)} />
           <Tab icon={<SadTabAnimation />} {...a11yProps(1)} />

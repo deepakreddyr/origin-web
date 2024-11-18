@@ -69,6 +69,10 @@ const AccountSettings = ({
           }}
         >
           <Box
+            onClick={() => {
+              router.push("/terms-and-conditions");
+              setIsOpen(false);
+            }}
             className="account-related-list-item"
             component="li"
             sx={{

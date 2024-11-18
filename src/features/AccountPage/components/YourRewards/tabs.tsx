@@ -1,13 +1,13 @@
-import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import { useAtom } from 'jotai';
-import * as React from 'react';
+import Box from "@mui/material/Box";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import { useAtom } from "jotai";
+import * as React from "react";
 
-import { transactionListAtom } from '../../context/atoms';
-import styles from '../../style.module.css';
-import All from './All';
-import NoData from './NoData';
+import { transactionListAtom } from "../../context/atoms";
+import styles from "../../style.module.css";
+import All from "./All";
+import NoData from "./NoData";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -35,7 +35,7 @@ function CustomTabPanel(props: TabPanelProps) {
 const a11yProps = (index: number) => {
   return {
     id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 };
 
@@ -49,14 +49,14 @@ const RewardsTabs = () => {
 
   return (
     <Box
-      className={`custom-tabs ${styles['custom-tabs']}`}
+      className={`custom-tabs ${styles["custom-tabs"]}`}
       sx={{
-        '.tabs-list': {
-          '.MuiTabs-indicator': {
+        ".tabs-list": {
+          ".MuiTabs-indicator": {
             height: 3,
-            borderRadius: '4px 4px 0px 0px',
+            borderRadius: "4px 4px 0px 0px",
           },
-          '.MuiTabs-flexContainer': {
+          ".MuiTabs-flexContainer": {
             gap: 1,
           },
         },
@@ -66,7 +66,7 @@ const RewardsTabs = () => {
         value={value}
         onChange={handleChange}
         aria-label="basic tabs example"
-        className={`tabs-list ${styles['tabs-list']}`}
+        className={`tabs-list ${styles["tabs-list"]}`}
       >
         <Tab label="All" {...a11yProps(0)} />
         <Tab label="Online" {...a11yProps(1)} />

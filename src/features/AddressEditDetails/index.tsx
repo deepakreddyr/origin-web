@@ -1,22 +1,22 @@
-import { Box } from "@mui/material";
-import { useAtom } from "jotai";
+import { Box } from '@mui/material';
+import { useAtom } from 'jotai';
 
-import { isAddressListIsOpen } from "../Address/context/atoms";
-import { isCartPageIsOpen } from "../CartPage/context/atoms";
-import CheckServiceability from "./components/CheckServiceability";
-import CompleteAddress from "./components/CompleteAddress";
-import DeliveryChangeConfirmation from "./components/DeliveryChangeConfirmation";
+import { isAddressListIsOpen } from '../Address/context/atoms';
+import { isCartPageIsOpen } from '../CartPage/context/atoms';
+import CheckServiceability from './components/CheckServiceability';
+import CompleteAddress from './components/CompleteAddress';
+import DeliveryChangeConfirmation from './components/DeliveryChangeConfirmation';
 import {
   addressDetailsAtom,
   addressSidebarDetails,
   goBackToAddressAtom,
   isAddressIsOpen,
   isEditingAddress,
-  saveAddressAtom,
-} from "./context/atoms";
-import GoBack from "./enums/GoBack";
-import TabType from "./enums/TabType";
-import AddressSidebarLayout from "@/components/CartLayout/AddressSidebarLayout";
+  saveAddressAtom
+} from './context/atoms';
+import GoBack from './enums/GoBack';
+import TabType from './enums/TabType';
+import AddressSidebarLayout from '@/components/CartLayout/AddressSidebarLayout';
 
 const Address = () => {
   const [isOpen, setIsOpen] = useAtom(isAddressIsOpen);
@@ -40,9 +40,9 @@ const Address = () => {
 
       case GoBack.PAYMENT_SIDEBAR: {
         if (addressAtom.isSaved) {
-          setAddressAtom((prevState) => ({
+          setAddressAtom((prevState: any) => ({
             ...prevState,
-            isSaved: false,
+            isSaved: false
           }));
           return;
         }
@@ -54,9 +54,9 @@ const Address = () => {
             break;
           }
           case TabType.COMPLETE_ADDRESS: {
-            setSidebarDetails((prevProps) => ({
+            setSidebarDetails((prevProps: any) => ({
               ...prevProps,
-              tabType: TabType.ADDRESS_SELECTION,
+              tabType: TabType.ADDRESS_SELECTION
             }));
             break;
           }
@@ -69,27 +69,27 @@ const Address = () => {
 
       case GoBack.MANAGE_ADDRESS_PAGE: {
         if (sidebarDetails.tabType === TabType.COMPLETE_ADDRESS) {
-          setSidebarDetails((prevProps) => ({
+          setSidebarDetails((prevProps: any) => ({
             ...prevProps,
-            tabType: TabType.ADDRESS_SELECTION,
+            tabType: TabType.ADDRESS_SELECTION
           }));
           return;
         }
         setIsEditingAddress({
           isActive: false,
-          addressDetails: null,
+          addressDetails: null
         });
         setAddressDetails(() => ({
-          address_name: "",
-          address: "",
-          door_no: "",
-          locality: "",
-          landmark: "",
+          address_name: '',
+          address: '',
+          door_no: '',
+          locality: '',
+          landmark: '',
           latitude: 0,
           longitude: 0,
-          formatted_address: "",
+          formatted_address: '',
           deliverable: false,
-          address_id: null,
+          address_id: null
         }));
         setIsOpen(false);
         break;
@@ -100,31 +100,19 @@ const Address = () => {
       }
     }
   };
-  const renderComponent = () => {
-    switch (sidebarDetails.tabType) {
-      case TabType.ADDRESS_SELECTION: {
-        return <CheckServiceability />;
-      }
-      case TabType.COMPLETE_ADDRESS: {
-        return <CompleteAddress />;
-      }
-      default: {
-        return <CheckServiceability />;
-      }
-    }
-  };
 
   return (
     <AddressSidebarLayout
       isOpen={isOpen}
-      title={addressAtom.isSaved ? "" : sidebarDetails.tabType}
+      title={addressAtom.isSaved ? '' : sidebarDetails.tabType}
       onClose={() => {
         setIsOpen(false);
       }}
       onBack={onBack}
       isBackEnable={true}
     >
-      <Box
+      to be removed
+      {/* <Box
         className="body-inner"
         sx={{
           display: "flex",
@@ -132,8 +120,7 @@ const Address = () => {
           gap: "20px",
         }}
       >
-        {/* {renderComponent()} */}
-      </Box>
+      </Box> */}
     </AddressSidebarLayout>
   );
 };

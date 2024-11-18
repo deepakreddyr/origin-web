@@ -1,32 +1,23 @@
-import GpsFixedIcon from "@mui/icons-material/GpsFixed";
-import { Box } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import InputBase from "@mui/material/InputBase";
-import Paper from "@mui/material/Paper";
-import { useAtom, useSetAtom } from "jotai";
-import * as React from "react";
-import usePlacesAutocomplete, {
-  getGeocode,
-  getLatLng,
-} from "use-places-autocomplete";
+import GpsFixedIcon from '@mui/icons-material/GpsFixed';
+import { Box } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import InputBase from '@mui/material/InputBase';
+import Paper from '@mui/material/Paper';
+import { useAtom, useSetAtom } from 'jotai';
+import * as React from 'react';
+import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 
-import { dropdownTop } from "../../constants/dropdownTop";
-import {
-  activeDropdownTop,
-  isDropdownActive,
-  serviceabilityCheck,
-  suggestionsList,
-} from "../../context/atoms";
-import { checkServiceability } from "../../services/checkServiceability";
-import type { ServiceabilityPayload } from "../../types/ServiceabilityPayload";
-import AreaLocation from "../AreaLocation";
-import MajorAreaLocation from "../MajorAreaDropDown";
+import { dropdownTop } from '../../constants/dropdownTop';
+import { activeDropdownTop, isDropdownActive, serviceabilityCheck, suggestionsList } from '../../context/atoms';
+import { checkServiceability } from '../../services/checkServiceability';
+import type { ServiceabilityPayload } from '../../types/ServiceabilityPayload';
+import AreaLocation from '../AreaLocation';
+import MajorAreaLocation from '../MajorAreaDropDown';
 
 export default function LocationInput() {
   const [isDropdownOpen, setIsDropdownOpen] = useAtom(isDropdownActive);
   const setServiceData = useSetAtom(serviceabilityCheck);
-  const [activeDropdownTopValue, setActiveDropdownTop] =
-    useAtom(activeDropdownTop);
+  const [activeDropdownTopValue, setActiveDropdownTop] = useAtom(activeDropdownTop);
   const setSuggestions = useSetAtom(suggestionsList);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const hoverDropdownRef = React.useRef<HTMLDivElement>(null);
@@ -36,10 +27,10 @@ export default function LocationInput() {
     value,
     suggestions: { status, data },
     setValue,
-    clearSuggestions,
+    clearSuggestions
   } = usePlacesAutocomplete({
     requestOptions: {},
-    debounce: 300,
+    debounce: 300
   });
 
   React.useEffect(() => {
@@ -91,6 +82,7 @@ export default function LocationInput() {
         longitude: String(lng),
         name,
         formatted_address: description,
+        address_id: ''
       });
     });
   };
@@ -101,9 +93,9 @@ export default function LocationInput() {
   };
 
   React.useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
@@ -111,20 +103,20 @@ export default function LocationInput() {
     <Box
       className="location-input"
       sx={{
-        position: "relative",
-        maxWidth: { ml: "100%", md: 400 },
-        width: "100%",
+        position: 'relative',
+        maxWidth: { ml: '100%', md: 400 },
+        width: '100%'
       }}
       ref={dropdownRef}
     >
       <Paper
         elevation={0}
         sx={{
-          backgroundColor: "#F9F0DA",
-          borderRadius: "10px",
-          display: "flex",
-          alignItems: "center",
-          flexDirection: "row",
+          backgroundColor: '#F9F0DA',
+          borderRadius: '10px',
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'row'
         }}
         onClick={onInputAreaClick}
         onMouseEnter={handleMouseEnter}
@@ -133,10 +125,10 @@ export default function LocationInput() {
         <InputBase
           sx={{
             paddingLeft: 2,
-            flex: 1,
+            flex: 1
           }}
           placeholder="Search Google Maps"
-          inputProps={{ "aria-label": "search google maps" }}
+          inputProps={{ 'aria-label': 'search google maps' }}
           value={value}
           onChange={handleInput}
           onFocus={onInputFocus}
@@ -144,14 +136,11 @@ export default function LocationInput() {
         <IconButton
           color="primary"
           sx={{
-            p: "10px",
-            borderRadius: "0",
-            borderTopRightRadius: "10px",
-            borderBottomRightRadius: "10px",
-            backgroundColor:
-              activeDropdownTopValue === dropdownTop.DETECT_LOCATION
-                ? "rgba(0, 0, 0, 0.06)"
-                : "",
+            p: '10px',
+            borderRadius: '0',
+            borderTopRightRadius: '10px',
+            borderBottomRightRadius: '10px',
+            backgroundColor: activeDropdownTopValue === dropdownTop.DETECT_LOCATION ? 'rgba(0, 0, 0, 0.06)' : ''
           }}
           aria-label="directions"
           onClick={onDetectLocationClick}
@@ -159,25 +148,16 @@ export default function LocationInput() {
           <GpsFixedIcon />
         </IconButton>
       </Paper>
-      {isDropdownOpen && (
-        <AreaLocation
-          handleSelect={handleSelect}
-          triggerServiceability={triggerServiceability}
-        />
-      )}
+      {isDropdownOpen && <AreaLocation handleSelect={handleSelect} triggerServiceability={triggerServiceability} />}
       {!isDropdownOpen && isHovered && (
-        <Box
-          ref={hoverDropdownRef}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
+        <Box ref={hoverDropdownRef} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
           <Box
             sx={{
-              position: "absolute",
-              height: "1rem",
-              margin: "0",
-              width: "100%",
-              xIndex: "10",
+              position: 'absolute',
+              height: '1rem',
+              margin: '0',
+              width: '100%',
+              xIndex: '10'
             }}
           ></Box>
           <MajorAreaLocation handleSelect={handleSelect} />

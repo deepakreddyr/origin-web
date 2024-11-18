@@ -26,14 +26,14 @@ const HelpFaq = () => {
   const [recentOrder] = useAtom(recentOrderAtom);
   const [, setActiveAccountsPage] = useAtom(activeAccountsPageAtom);
 
-  const faqs = recentOrder.data?.map((item: any) => item.faqs) || [];
-  const orders = recentOrder.data?.map((item: any) => item.order) || [];
+  const faqs = recentOrder?.data?.map((item: any) => item.faqs) || [];
+  const orders = recentOrder?.data?.map((item: any) => item.order) || [];
 
   React.useEffect(() => {
     getRecentOrders(setRecentOrderAtom);
   }, []);
 
-  const orderCreatedTime: any = orders.map((order) => order.order_created_at);
+  const orderCreatedTime: any = orders.map((order) => order?.order_created_at);
   const orderCreatedAtTimestamp = orderCreatedTime * 1000; // Convert seconds to milliseconds
   const orderCreatedAtDate = new Date(orderCreatedAtTimestamp);
 

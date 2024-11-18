@@ -1,5 +1,5 @@
-import { getOrderDetailsForReorder } from '../services/getOrderDetailsForReorder';
-import { getProductItem } from '../services/getProductItem';
+import { getOrderDetailsForReorder } from "../services/getOrderDetailsForReorder";
+import { getProductItem } from "../services/getProductItem";
 
 const createSingleUom = (multiple_uoms: any) => (ordered_uom: any) => {
   const multiUom = multiple_uoms.find(

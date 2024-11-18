@@ -1,5 +1,5 @@
-import { header, request } from "../../../utils/request";
-import type { AppliedCoupon } from "../context/atoms";
+import { request, header } from '@/utilities/request';
+import type { AppliedCoupon } from '../context/atoms';
 
 export const validateCoupon = async (payload: any, set: any) => {
   try {
@@ -7,17 +7,17 @@ export const validateCoupon = async (payload: any, set: any) => {
       ...prevState,
       loading: true,
       error: false,
-      success: true,
+      success: true
     }));
 
     const response: any = await request(`/api/v3/user/coupons/validate`, {
-      method: "POST",
+      method: 'POST',
       headers: {
         Authorization: header(),
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payload)
     });
 
     set((prevState: AppliedCoupon) => ({
@@ -25,7 +25,7 @@ export const validateCoupon = async (payload: any, set: any) => {
       loading: false,
       success: true,
       coupon: response.data,
-      isApplied: true,
+      isApplied: true
     }));
     return true;
   } catch (error: any) {
@@ -35,7 +35,7 @@ export const validateCoupon = async (payload: any, set: any) => {
       ...prevState,
       error: message,
       success: false,
-      loading: false,
+      loading: false
     }));
     return false;
   }

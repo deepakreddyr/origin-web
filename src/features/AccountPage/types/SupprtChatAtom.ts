@@ -1,4 +1,4 @@
-import type SupportChatResponse from './SupportChatResponse';
+import type SupportChatResponse from "./SupportChatResponse";
 
 type SupportChatAtom = {
   loading: boolean;

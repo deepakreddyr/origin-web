@@ -1,13 +1,13 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
-import { useAtom } from "jotai";
-import Image from "next/image";
-import React from "react";
+import { Box, Button, Grid, Typography } from '@mui/material';
+import { useAtom } from 'jotai';
+import Image from 'next/image';
+import React from 'react';
 
-import { CounterUOM } from "../../../../../../components/UOMCounter";
-import Arrow from "../../../../../Homepage/assets/downArrow.svg";
-import { editOrderAtom } from "../../../EditOrder/context/atoms";
-import UomModel from "../UomModel";
-import styles from "./style.module.css";
+import Arrow from '../../../../../Homepage/assets/downArrow.svg';
+import { editOrderAtom } from '../../../EditOrder/context/atoms';
+import UomModel from '../UomModel';
+import styles from './style.module.css';
+import { CounterUOM } from '@/components/CartPage/components/UOMCounter';
 
 interface Props {
   product: any;
@@ -19,9 +19,7 @@ const Product = (props: Props) => {
   const [editOrder, setEditOrder] = useAtom(editOrderAtom);
 
   const cartItem = React.useMemo(() => {
-    const cartItemTemp = editOrder.orderItems.find(
-      (item: any) => item.id === product.id
-    );
+    const cartItemTemp = editOrder.orderItems.find((item: any) => item.id === product.id);
     if (cartItemTemp) return cartItemTemp;
     return {};
   }, [editOrder.orderItems]);
@@ -39,9 +37,7 @@ const Product = (props: Props) => {
   const generateUomPayload = (uomPayload: any) => {
     if (!cartItem || !cartItem.uom) return [uomPayload];
 
-    const restPayload = cartItem.uom.filter(
-      (item: any) => item.id !== uomPayload.id
-    );
+    const restPayload = cartItem.uom.filter((item: any) => item.id !== uomPayload.id);
 
     // If Qty is 0 then we will remove that uom from the array
     if (uomPayload.qty === 0) {
@@ -53,23 +49,18 @@ const Product = (props: Props) => {
   const setOrderedItemDetails = (items: any) => {
     setEditOrder((prevState) => ({
       ...prevState,
-      orderItems: items,
+      orderItems: items
     }));
   };
 
   const addItemToCart = (cartValueToBeSet: any) => {
-    const totalQty = cartValueToBeSet.uom.reduce(
-      (previousValue: any, currentValue: any) => {
-        const totalQtyVal = previousValue + currentValue.qty;
-        return totalQtyVal;
-      },
-      0
-    );
+    const totalQty = cartValueToBeSet.uom.reduce((previousValue: any, currentValue: any) => {
+      const totalQtyVal = previousValue + currentValue.qty;
+      return totalQtyVal;
+    }, 0);
     if (totalQty !== 0) {
       const tempItems = editOrder.orderItems.slice();
-      const index = tempItems.findIndex(
-        (e: any) => e.item_code === cartValueToBeSet.item_code
-      );
+      const index = tempItems.findIndex((e: any) => e.item_code === cartValueToBeSet.item_code);
       if (index !== -1) {
         tempItems[index] = cartValueToBeSet;
         setOrderedItemDetails(tempItems);
@@ -78,9 +69,7 @@ const Product = (props: Props) => {
         setOrderedItemDetails(newCartItem);
       }
     } else {
-      const newCartItem = editOrder.orderItems.filter(
-        (e: any) => e.id !== cartValueToBeSet.id
-      );
+      const newCartItem = editOrder.orderItems.filter((e: any) => e.id !== cartValueToBeSet.id);
       setOrderedItemDetails(newCartItem);
     }
   };
@@ -95,11 +84,7 @@ const Product = (props: Props) => {
   const renderButton = (multiUom: any) => {
     const enableAddButton = !(cartItem?.item_code === product?.item_code);
 
-    if (
-      Array.isArray(product.multiple_uoms) &&
-      product.multiple_uoms.length === 1 &&
-      enableAddButton
-    )
+    if (Array.isArray(product.multiple_uoms) && product.multiple_uoms.length === 1 && enableAddButton)
       return (
         <Button
           className={styles.btn}
@@ -116,8 +101,8 @@ const Product = (props: Props) => {
                 price: parseFloat(multiUom.price),
                 qty: multiUom.minimum_quantity,
                 availability: multiUom.is_available || true,
-                visibility: multiUom.is_visible || true,
-              }),
+                visibility: multiUom.is_visible || true
+              })
             };
             addItemToCart(cartItemToBeAdded);
           }}
@@ -142,10 +127,7 @@ const Product = (props: Props) => {
         stepCount={multiUom?.stepper_quantity}
         minValue={multiUom.minimum_quantity}
         maxValue={multiUom.maximum_quantity}
-        isMultipleUomInAPI={
-          Array.isArray(product.multiple_uoms) &&
-          product.multiple_uoms.length > 1
-        }
+        isMultipleUomInAPI={Array.isArray(product.multiple_uoms) && product.multiple_uoms.length > 1}
         onOpenUomModal={onOpenUomModal}
         onChange={(val: number) => {
           const cartItemToBeAdded = {
@@ -160,8 +142,8 @@ const Product = (props: Props) => {
               price: parseFloat(multiUom.price),
               qty: val,
               availability: multiUom.is_available || true,
-              visibility: multiUom.is_visible || true,
-            }),
+              visibility: multiUom.is_visible || true
+            })
           };
           addItemToCart(cartItemToBeAdded);
         }}
@@ -171,44 +153,35 @@ const Product = (props: Props) => {
 
   return (
     <>
-      <Grid
-        item
-        className={styles["product-container"]}
-        key={product.id}
-        xs={6}
-      >
-        <Box className={`product-list-item ${styles["product-list-item"]}`}>
-          <Box component="figure" className={styles["img-container"]}>
-            <img
-              className={styles.img}
-              src={`https://admin.madrasmandi.in/${product.image}`}
-              alt={product.name}
-            />
+      <Grid item className={styles['product-container']} key={product.id} xs={6}>
+        <Box className={`product-list-item ${styles['product-list-item']}`}>
+          <Box component="figure" className={styles['img-container']}>
+            <img className={styles.img} src={`https://admin.madrasmandi.in/${product.image}`} alt={product.name} />
           </Box>
-          <Box className={styles["details-container"]}>
+          <Box className={styles['details-container']}>
             <Typography component="h3" className={styles.name}>
               {product.name}
             </Typography>
             {product.multiple_uoms.map((uom: any, index: number) => {
               if (index === 0)
                 return (
-                  <Box className={styles["price-details"]} key={uom.uom_id}>
+                  <Box className={styles['price-details']} key={uom.uom_id}>
                     <Typography
                       component="span"
                       variant="body2"
                       className={styles.qty}
                       sx={{
-                        fontWeight: "normal",
+                        fontWeight: 'normal'
                       }}
                     >
                       {uom.minimum_quantity} {uom.unit}
                     </Typography>
-                    <Box className={styles["price-btn-container"]}>
+                    <Box className={styles['price-btn-container']}>
                       <Typography
                         component="span"
                         variant="body1"
                         sx={{
-                          fontFamily: "Roboto Mono",
+                          fontFamily: 'Roboto Mono'
                         }}
                       >
                         {uom.formatted_price}
@@ -222,13 +195,7 @@ const Product = (props: Props) => {
           </Box>
         </Box>
       </Grid>
-      {isUomModalOpen && (
-        <UomModel
-          isOpen={isUomModalOpen}
-          onClose={onCloseUomModal}
-          product={product}
-        />
-      )}
+      {isUomModalOpen && <UomModel isOpen={isUomModalOpen} onClose={onCloseUomModal} product={product} />}
     </>
   );
 };

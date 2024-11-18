@@ -1,15 +1,15 @@
-import { header, request } from "../../../utils/request";
-import { getCart } from "./getCart";
+import { header, request } from '@/utilities/request';
+import { getCart } from './getCart';
 
 export const addToCart = async (cartItems: any[], cartSet: any) => {
   try {
     await request(`/api/v1/user/cart/clear`, {
-      method: "GET",
+      method: 'GET',
       headers: {
         Authorization: header(),
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
     });
 
     if (Array.isArray(cartItems) && cartItems.length > 0) {
@@ -20,20 +20,20 @@ export const addToCart = async (cartItems: any[], cartSet: any) => {
           uom: e.uom.map((uomItem: any) => {
             return {
               id: uomItem.variant_id,
-              qty: uomItem.qty,
+              qty: uomItem.qty
             };
-          }),
-        })),
+          })
+        }))
       };
 
       await request(requestURL, {
-        method: "POST",
+        method: 'POST',
         headers: {
           Authorization: header(),
-          Accept: "application/json",
-          "Content-Type": "application/json",
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(addPayload),
+        body: JSON.stringify(addPayload)
       });
       getCart(cartSet);
     }

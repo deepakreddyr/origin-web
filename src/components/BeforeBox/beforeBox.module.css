@@ -1,7 +1,8 @@
 .beforeBox {
   position: relative;
 }
-.beforeBox::before, .beforeBox::after {
+.beforeBox::before,
+.beforeBox::after {
   content: "";
   @apply absolute block left-0 w-full z-0 md:rounded-[50px] rounded-[20px];
 }
@@ -36,4 +37,4 @@
   .beforeBox::after {
     top: var(--md-bottom-offset, 100px);
   }
-}/*# sourceMappingURL=beforeBox.module.css.map */
+} /*# sourceMappingURL=beforeBox.module.css.map */

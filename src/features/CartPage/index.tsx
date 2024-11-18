@@ -1,24 +1,24 @@
-import { Box, Button, Typography } from '@mui/material';
-import { useAtom, useAtomValue } from 'jotai';
-import React, { useState } from 'react';
+import { Box, Button, Typography } from "@mui/material";
+import { useAtom, useAtomValue } from "jotai";
+import React, { useState } from "react";
 
-import CartSidebarLayout from '../../components/CartLayout/CartSidebarLayout';
-import { addressAtom, isAddressListIsOpen } from '../Address/context/atoms';
-import { isAddressAndTimeSlotIsOpen } from '../AddressAndTimeSlot/context/atoms';
+import CartSidebarLayout from "../../components/CartLayout/CartSidebarLayout";
+import { addressAtom, isAddressListIsOpen } from "../Address/context/atoms";
+import { isAddressAndTimeSlotIsOpen } from "../AddressAndTimeSlot/context/atoms";
 import {
   addressSidebarDetails,
   isAddressIsOpen,
-} from '../AddressEditDetails/context/atoms';
-import TabType from '../AddressEditDetails/enums/TabType';
-import BillDetails from './components/BillDetails';
-import CancellationPolicy from './components/CancellationPolicy';
-import CartRewards from './components/CartRewards';
-import CouponSection from './components/CouponSection';
-import DeliveryInstruction from './components/DeliveryInstruction';
-import EmptyCart from './components/EmptyCart';
-import ItemsList from './components/ItemsList';
-import { cartAtom, cartItems, isCartPageIsOpen } from './context/atoms';
-import { addToCart } from './services/addToCart';
+} from "../AddressEditDetails/context/atoms";
+import TabType from "../AddressEditDetails/enums/TabType";
+import BillDetails from "./components/BillDetails";
+import CancellationPolicy from "./components/CancellationPolicy";
+import CartRewards from "./components/CartRewards";
+import CouponSection from "./components/CouponSection";
+import DeliveryInstruction from "./components/DeliveryInstruction";
+import EmptyCart from "./components/EmptyCart";
+import ItemsList from "./components/ItemsList";
+import { cartAtom, cartItems, isCartPageIsOpen } from "./context/atoms";
+import { addToCart } from "./services/addToCart";
 
 const Cart = () => {
   const [isOpen, setIsOpen] = useAtom(isCartPageIsOpen);
@@ -64,12 +64,12 @@ const Cart = () => {
       <>
         <Box
           sx={{
-            height: 'calc(100vh - 100px - 5rem)',
-            overflowY: 'auto',
-            overflowX: 'hidden',
-            mt: '-1rem',
-            '&::-webkit-scrollbar': {
-              display: 'none',
+            height: "calc(100vh - 100px - 5rem)",
+            overflowY: "auto",
+            overflowX: "hidden",
+            mt: "-1rem",
+            "&::-webkit-scrollbar": {
+              display: "none",
             },
           }}
         >
@@ -82,29 +82,29 @@ const Cart = () => {
         </Box>
         <Box
           sx={{
-            backgroundColor: '#FFDD00',
-            border: 'none',
-            borderRadius: '58px',
-            position: 'absolute',
-            bottom: '0',
-            width: '90%',
+            backgroundColor: "#FFDD00",
+            border: "none",
+            borderRadius: "58px",
+            position: "absolute",
+            bottom: "0",
+            width: "90%",
             zIndex: 1000,
-            padding: '0.8rem',
+            padding: "0.8rem",
           }}
         >
           <Box
             sx={{
-              display: 'flex',
-              width: '100%',
-              justifyContent: 'space-between',
+              display: "flex",
+              width: "100%",
+              justifyContent: "space-between",
             }}
           >
             <Box>
               <Typography
                 variant="subtitle2"
                 sx={{
-                  fontSize: '12px',
-                  color: '#231F2099',
+                  fontSize: "12px",
+                  color: "#231F2099",
                 }}
               >{`${cart
                 .map((i) => i?.uom?.length)
@@ -112,26 +112,26 @@ const Cart = () => {
               <Typography
                 variant="subtitle2"
                 sx={{
-                  fontSize: '16px',
-                  color: '#231F20',
+                  fontSize: "16px",
+                  color: "#231F20",
                 }}
               >{`₹ ${toPay}`}</Typography>
             </Box>
             <Button
               onClick={onProceed}
               sx={{
-                color: '#ffdd00',
-                backgroundColor: '#231F20',
-                padding: '0.5rem 1rem 0.5rem 1rem',
-                border: 'none',
-                borderRadius: '36px',
-                ':disabled': {
-                  color: '#ffdd00',
-                  backgroundColor: '#636363',
+                color: "#ffdd00",
+                backgroundColor: "#231F20",
+                padding: "0.5rem 1rem 0.5rem 1rem",
+                border: "none",
+                borderRadius: "36px",
+                ":disabled": {
+                  color: "#ffdd00",
+                  backgroundColor: "#636363",
                 },
-                ':hover': {
-                  color: '#ffdd00',
-                  backgroundColor: '#231F20',
+                ":hover": {
+                  color: "#ffdd00",
+                  backgroundColor: "#231F20",
                 },
               }}
             >
@@ -154,9 +154,9 @@ const Cart = () => {
       <Box
         className="body-inner"
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '20px',
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
         }}
       >
         {cart.length > 0 ? renderCartItems() : <EmptyCart />}

@@ -1,13 +1,13 @@
-import Box from '@mui/material/Box';
-import { useAtom } from 'jotai';
-import React from 'react';
+import Box from "@mui/material/Box";
+import { useAtom } from "jotai";
+import React from "react";
 
-import AccountSidebarLayout from '../../../../components/AccountLayout/AccountSidebarLayout';
-import { activeAccountsPageAtom, isAccountIsOpen } from '../../context/atoms';
-import ActiveSidebar from '../../enums/ActiveSidebar';
-import BreakdownCoin from './BreakdownCoin';
-import RewardCoin from './RewardCoin';
-import TermsUse from './TermsUse';
+import AccountSidebarLayout from "../../../../components/AccountLayout/AccountSidebarLayout";
+import { activeAccountsPageAtom, isAccountIsOpen } from "../../context/atoms";
+import ActiveSidebar from "../../enums/ActiveSidebar";
+import BreakdownCoin from "./BreakdownCoin";
+import RewardCoin from "./RewardCoin";
+import TermsUse from "./TermsUse";
 
 const RewardDetails = () => {
   const [isOpen, setIsOpen] = useAtom(isAccountIsOpen);
@@ -27,11 +27,11 @@ const RewardDetails = () => {
       <Box
         className="reward-details"
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
+          display: "flex",
+          flexDirection: "column",
           gap: 3,
-          paddingTop: '20px',
-          paddingBottom: '20px',
+          paddingTop: "20px",
+          paddingBottom: "20px",
         }}
       >
         <RewardCoin />

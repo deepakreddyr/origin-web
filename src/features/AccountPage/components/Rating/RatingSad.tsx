@@ -1,5 +1,5 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
-import React from 'react';
+import { Box, Button, TextField, Typography } from "@mui/material";
+import React from "react";
 
 interface Props {
   selectedText: string[];
@@ -18,42 +18,42 @@ const RatingSad = (props: Props) => {
 
   const list = [
     {
-      name: 'Late Delivery',
+      name: "Late Delivery",
     },
     {
-      name: 'Took Longer Route',
+      name: "Took Longer Route",
     },
     {
-      name: 'Bad Service',
+      name: "Bad Service",
     },
     {
-      name: 'Called multiple Times',
+      name: "Called multiple Times",
     },
     {
-      name: 'Delivery person was Rude',
+      name: "Delivery person was Rude",
     },
   ];
   return (
     <Box
       className="rating-happy-content"
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
       }}
     >
       <Box
         component="ul"
         className="pick-list"
         sx={{
-          display: 'flex',
-          flexWrap: 'wrap',
+          display: "flex",
+          flexWrap: "wrap",
           gap: 1,
           margin: 0,
-          padding: '12px',
-          listStyleType: 'none',
-          backgroundColor: '#F2EAD4',
-          borderRadius: '0 16px 16px',
+          padding: "12px",
+          listStyleType: "none",
+          backgroundColor: "#F2EAD4",
+          borderRadius: "0 16px 16px",
         }}
       >
         {list.map((item, i) => {
@@ -69,14 +69,14 @@ const RatingSad = (props: Props) => {
               }}
               sx={{
                 padding: 1,
-                cursor: 'pointer',
-                backgroundColor: '#E7E1CB',
-                border: '#E7E1CB 1px solid',
-                borderRadius: '6px',
-                borderColor: isSelected ? '#00855B' : 'none',
+                cursor: "pointer",
+                backgroundColor: "#E7E1CB",
+                border: "#E7E1CB 1px solid",
+                borderRadius: "6px",
+                borderColor: isSelected ? "#00855B" : "none",
               }}
             >
-              <Typography sx={{ fontWeight: 400, color: '#00855B' }}>
+              <Typography sx={{ fontWeight: 400, color: "#00855B" }}>
                 {item.name}
               </Typography>
             </Box>
@@ -86,19 +86,19 @@ const RatingSad = (props: Props) => {
       <Box
         className="submit-feedback"
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
+          display: "flex",
+          flexDirection: "column",
           gap: 2,
-          marginTop: 'auto',
-          position: 'sticky',
+          marginTop: "auto",
+          position: "sticky",
           bottom: 0,
         }}
       >
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
           <Typography
             component="span"
             variant="h6"
-            sx={{ textAlign: 'center', display: 'block' }}
+            sx={{ textAlign: "center", display: "block" }}
           >
             Write a few lines about your experience
           </Typography>
@@ -109,13 +109,13 @@ const RatingSad = (props: Props) => {
             multiline
             rows={2}
             sx={{
-              borderRadius: '10px',
-              border: '1px solid rgba(0, 0, 0, 0.10)',
-              boxShadow: 'none',
-              width: '100%',
-              '&:focus': {
-                borderWidth: '1px',
-                boxShadow: 'none',
+              borderRadius: "10px",
+              border: "1px solid rgba(0, 0, 0, 0.10)",
+              boxShadow: "none",
+              width: "100%",
+              "&:focus": {
+                borderWidth: "1px",
+                boxShadow: "none",
               },
             }}
           />
@@ -123,9 +123,9 @@ const RatingSad = (props: Props) => {
             component="small"
             variant="body2"
             sx={{
-              textAlign: 'center',
-              display: 'block',
-              color: 'rgba(0, 0, 0, 0.50)',
+              textAlign: "center",
+              display: "block",
+              color: "rgba(0, 0, 0, 0.50)",
               fontWeight: 400,
             }}
           >
@@ -135,9 +135,9 @@ const RatingSad = (props: Props) => {
         <Box
           className="facing-issus"
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             gap: 3,
           }}
         >

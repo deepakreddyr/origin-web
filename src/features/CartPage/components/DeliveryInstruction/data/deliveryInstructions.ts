@@ -1,12 +1,12 @@
-import NotRingBell from '../../../assets/avoid-bell.svg';
-import NoCalling from '../../../assets/avoid-calling.svg';
-import LeaveAtGate from '../../../assets/leave-at-gate.svg';
-import TypeOfDeliveryInstruction from './typeOfDeliveryInstruction';
+import NotRingBell from "../../../assets/avoid-bell.svg";
+import NoCalling from "../../../assets/avoid-calling.svg";
+import LeaveAtGate from "../../../assets/leave-at-gate.svg";
+import TypeOfDeliveryInstruction from "./typeOfDeliveryInstruction";
 
 const { AVOID_CALLING, DO_NOT_RING_BILL, GIVE_TO_SECURITY, LEAVE_AT_DOOR } =
   TypeOfDeliveryInstruction;
 
-export const slugGenerator = (name: string) => name.split(' ').join('_');
+export const slugGenerator = (name: string) => name.split(" ").join("_");
 
 export type SingleDeliveryInstruction = {
   slug: string;

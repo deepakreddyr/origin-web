@@ -1,27 +1,27 @@
-import { useAtom } from "jotai";
-import React from "react";
+import { useAtom } from 'jotai';
+import React from 'react';
 
-import AccountEdit from "./components/AccountEdit";
-import AccountMain from "./components/AccountMain";
-import HelpFaq from "./components/HelpFaq";
-import ManageAddress from "./components/ManageAddress";
-import Rating from "./components/Rating";
-import ReferEarn from "./components/ReferEarn";
+import AccountEdit from './components/AccountEdit';
+import AccountMain from './components/AccountMain';
+import HelpFaq from './components/HelpFaq';
+import ManageAddress from './components/ManageAddress';
+import Rating from './components/Rating';
+import ReferEarn from './components/ReferEarn';
 // import RewardDetails from './components/RewardDetails';
-import Settings from "./components/Settings";
-import SupportChat from "./components/SupportSystem";
-import YourOrders from "./components/YourOrders";
-import YourRewards from "./components/YourRewards";
-import { activeAccountsPageAtom, profileAtom } from "./context/atoms";
-import ActiveSidebar from "./enums/ActiveSidebar";
-import { getProfile } from "./services/getProfile";
+import Settings from './components/Settings';
+import SupportChat from './components/SupportSystem';
+import YourOrders from './components/YourOrders';
+import YourRewards from './components/YourRewards';
+import { activeAccountsPageAtom, profileAtom } from './context/atoms';
+import ActiveSidebar from './enums/ActiveSidebar';
+import { getProfile } from './services/getProfile';
 
 const Account = () => {
   const [, setProfileAtom] = useAtom(profileAtom);
   const [activeAccountsPage] = useAtom(activeAccountsPageAtom);
 
   React.useEffect(() => {
-    const token = localStorage.getItem("user_token");
+    const token = localStorage.getItem('user_token');
     if (token) {
       getProfile(setProfileAtom);
     }

@@ -51,12 +51,12 @@ const ManageAddress = () => {
 
   useEffect(() => {
     getAddress(setAddress);
-    if (!address.loading) {
-      if (address?.data?.length === 0 || !address?.data) {
-        setActiveScreen(manageAddressScreens.NO_DATA);
-      }
-    }
-    setGoBackAddress(GoBack.MANAGE_ADDRESS_PAGE);
+    // if (!address.loading) {
+    //   if (address?.data?.length === 0 || !address?.data) {
+    //     // setActiveScreen(manageAddressScreens.NO_DATA);
+    //   }
+    // }
+    // setGoBackAddress(GoBack.MANAGE_ADDRESS_PAGE);
   }, []);
 
   const onEditAddress = () => {
@@ -230,7 +230,7 @@ const ManageAddress = () => {
           {addAdressCTA()}
         </>
       )}
-      {isAddressOpen && <Address />}
+      {/* {isAddressOpen && <Address />} */}
       {activeScreen === manageAddressScreens.ADDRESS_LIST &&
         !deletingAddressA.isActive &&
         address?.data &&

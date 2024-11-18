@@ -54,7 +54,6 @@ const BillDetails = (props: Props) => {
     },
   ];
 
-
   const renderBill = (bill: IBillDetails) => {
     let color = "#000000";
     switch (bill.variant) {

@@ -1,4 +1,4 @@
-import type RecentOrderResponse from './RecentOrder';
+import type RecentOrderResponse from "./RecentOrder";
 
 type RecentOrderAtom = {
   loading: boolean;

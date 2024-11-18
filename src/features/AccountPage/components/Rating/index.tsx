@@ -1,15 +1,15 @@
-import { useAtom } from 'jotai';
-import React from 'react';
+import { useAtom } from "jotai";
+import React from "react";
 
-import AccountSidebarLayout from '../../../../components/AccountLayout/AccountSidebarLayout';
+import AccountSidebarLayout from "../../../../components/AccountLayout/AccountSidebarLayout";
 import {
   activeAccountsPageAtom,
   isAccountIsOpen,
   rateOrderAtom,
-} from '../../context/atoms';
-import ActiveSidebar from '../../enums/ActiveSidebar';
+} from "../../context/atoms";
+import ActiveSidebar from "../../enums/ActiveSidebar";
 // import Rate from './Rate';
-import RatingTabs from './RatingTabs';
+import RatingTabs from "./RatingTabs";
 
 const Rating = () => {
   const [isOpen, setIsOpen] = useAtom(isAccountIsOpen);

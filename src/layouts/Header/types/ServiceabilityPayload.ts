@@ -1,7 +1,7 @@
 export interface ServiceabilityPayload {
   latitude: any;
   longitude: any;
-  name: string;
-  formatted_address: string;
+  name: any;
+  formatted_address: any;
   address_id: any;
 }

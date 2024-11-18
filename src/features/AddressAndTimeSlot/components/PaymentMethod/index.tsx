@@ -1,28 +1,20 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography } from '@mui/material';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { useAtom } from "jotai";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import React from "react";
+import { useAtom } from 'jotai';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import React from 'react';
 
-import { header, request } from "../../../../utils/request";
-import {
-  cartAtom,
-  cartItems,
-  checkoutExtraDetailsAtom,
-} from "../../../CartPage/context/atoms";
-import { isCouponApplied } from "../../../CouponPage/context/atoms";
-import Arrow from "../../assets/arrow.svg";
-import Cards from "../../assets/cards.svg";
-import NetBanking from "../../assets/netBanking.svg";
-import PayLater from "../../assets/paylater.svg";
-import Cash from "../../assets/payOnDelivery.svg";
-import UPI from "../../assets/upi.svg";
-import {
-  FailOrSuccess,
-  failOrSuccess,
-  razorPayObjectAtom,
-} from "../../context/atoms";
+import { cartAtom, cartItems, checkoutExtraDetailsAtom } from '../../../CartPage/context/atoms';
+import { isCouponApplied } from '../../../CouponPage/context/atoms';
+import Arrow from '../../assets/arrow.svg';
+import Cards from '../../assets/cards.svg';
+import NetBanking from '../../assets/netBanking.svg';
+import PayLater from '../../assets/paylater.svg';
+import Cash from '../../assets/payOnDelivery.svg';
+import UPI from '../../assets/upi.svg';
+import { FailOrSuccess, failOrSuccess, razorPayObjectAtom } from '../../context/atoms';
+import { header, request } from '@/utilities/request';
 // import { checkoutAPI } from '../../context/atoms';
 
 const PaymentMethod = () => {
@@ -69,11 +61,11 @@ const PaymentMethod = () => {
 
     if (appliedCoupon.isApplied && appliedCoupon.coupon) {
       switch (appliedCoupon.coupon.discount_type) {
-        case "fixed": {
+        case 'fixed': {
           total += appliedCoupon.coupon.discount;
           break;
         }
-        case "percentage": {
+        case 'percentage': {
           total += (appliedCoupon.coupon.discount * total) / 100;
           break;
         }
@@ -82,11 +74,7 @@ const PaymentMethod = () => {
       }
     }
 
-    if (
-      checkoutExtraDetails.isRewardsEnabledInCart &&
-      cart.cart?.reward_enabled &&
-      cart.cart?.max_redeemable_rewards
-    ) {
+    if (checkoutExtraDetails.isRewardsEnabledInCart && cart.cart?.reward_enabled && cart.cart?.max_redeemable_rewards) {
       total -= cart.cart.max_redeemable_rewards;
     }
 
@@ -101,7 +89,7 @@ const PaymentMethod = () => {
 
   const onClick = (paymentMethodPrefill: string) => async () => {
     try {
-      const isCash = paymentMethodPrefill.toLowerCase() === "cash";
+      const isCash = paymentMethodPrefill.toLowerCase() === 'cash';
       const payload: any = {
         items:
           cartItemsAtom?.map((e) => ({
@@ -110,26 +98,26 @@ const PaymentMethod = () => {
               .map((uomItem: any) => {
                 return {
                   variant_id: uomItem.variant_id,
-                  qty: uomItem.qty,
+                  qty: uomItem.qty
                 };
               })
-              .filter((uomItem: any) => uomItem.qty !== 0),
+              .filter((uomItem: any) => uomItem.qty !== 0)
           })) || [],
         delivery_fee: 0,
-        delivery_type: "normal",
+        delivery_type: 'normal',
         individual_package_enabled: false,
         delivery_date: 1691785531,
         sub_total: subTotal,
         tax: 0,
         total,
-        payment_method: isCash ? paymentMethodPrefill : "razorpay",
+        payment_method: isCash ? paymentMethodPrefill : 'razorpay',
         time_slot_id: cart.cartValues?.timeSlotId,
-        uuid: "18925c07-21f7-4af7-96bc-249479e5f92b",
+        uuid: '18925c07-21f7-4af7-96bc-249479e5f92b',
         is_exotel_enabled: true,
         instructions: checkoutExtraDetails.instructions,
         meta: {
-          device_type: "web",
-        },
+          device_type: 'web'
+        }
       };
 
       if (!isCash) {
@@ -143,13 +131,13 @@ const PaymentMethod = () => {
       }
 
       const orderResponse: any = await request(`/api/v3/user/orders`, {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify(payload),
         headers: {
           Authorization: header(),
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        }
       });
 
       if (isCash) {
@@ -160,14 +148,14 @@ const PaymentMethod = () => {
       const razorpayOptions = {
         key: razKey,
         amount: String(total),
-        currency: "INR",
-        name: "Madras Mandi",
-        description: "Madras Mandi",
+        currency: 'INR',
+        name: 'Madras Mandi',
+        description: 'Madras Mandi',
         prefill: {
-          name: "name",
-          email: "email",
-          contact: "9999999999",
-          method: paymentMethodPrefill,
+          name: 'name',
+          email: 'email',
+          contact: '9999999999',
+          method: paymentMethodPrefill
         },
         order_id: orderResponse?.data?.razorpay_order_id,
         handler() {
@@ -176,11 +164,11 @@ const PaymentMethod = () => {
         modal: {
           ondismiss() {
             onFailure();
-          },
+          }
         },
         theme: {
-          color: "#EAE5CF",
-        },
+          color: '#EAE5CF'
+        }
       };
 
       setRazorPayObject(razorpayOptions);
@@ -193,47 +181,39 @@ const PaymentMethod = () => {
     }
   };
 
-  const renderMethod = (
-    title: string,
-    img: any,
-    paymentPrefill: string,
-    description = ""
-  ) => {
+  const renderMethod = (title: string, img: any, paymentPrefill: string, description = '') => {
     return (
       <Box
         className="payment-method-list-item"
         sx={{
-          borderRadius: "10px",
-          backgroundColor: "#FFF6DE",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          borderRadius: '10px',
+          backgroundColor: '#FFF6DE',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           padding: 1,
-          cursor: "pointer",
-          border: "1px solid #FFF6DE",
+          cursor: 'pointer',
+          border: '1px solid #FFF6DE',
           minHeight: 62,
-          "&:hover": {
-            border: "1px solid #00855B",
-          },
+          '&:hover': {
+            border: '1px solid #00855B'
+          }
         }}
         onClick={onClick(paymentPrefill)}
       >
-        <Box
-          className="payment-method-name"
-          sx={{ display: "flex", alignItems: "center", gap: 1 }}
-        >
+        <Box className="payment-method-name" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Box
             component="figure"
             sx={{
               margin: 0,
               width: 75,
               height: 42,
-              backgroundColor: "#FFFEFA",
+              backgroundColor: '#FFFEFA',
               flexShrink: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: "6px",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '6px'
             }}
           >
             <Image src={img} alt={title?.toLowerCase()} />
@@ -241,9 +221,9 @@ const PaymentMethod = () => {
           <Box
             className="payment-method-info"
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "4px",
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px'
             }}
           >
             <Typography variant="body2" component="h5">
@@ -254,9 +234,9 @@ const PaymentMethod = () => {
                 variant="caption"
                 component="small"
                 sx={{
-                  fontWeight: "normal",
-                  display: "block",
-                  color: "#737373",
+                  fontWeight: 'normal',
+                  display: 'block',
+                  color: '#737373'
                 }}
               >
                 {description}
@@ -270,10 +250,10 @@ const PaymentMethod = () => {
             flexShrink: 0,
             width: 12,
             height: 12,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            margin: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: 0
           }}
         >
           <Image src={Arrow} alt="Arrow" />
@@ -285,44 +265,35 @@ const PaymentMethod = () => {
     <Box
       className="payment-method"
       sx={{
-        display: "flex",
-        flexDirection: "column",
+        display: 'flex',
+        flexDirection: 'column',
         gap: 1,
-        borderTop: "1px solid #EAE5CF",
-        marginTop: "1.25rem",
-        paddingTop: "1.25rem",
+        borderTop: '1px solid #EAE5CF',
+        marginTop: '1.25rem',
+        paddingTop: '1.25rem'
       }}
     >
-      <Typography
-        variant="body2"
-        component="h4"
-        sx={{ fontWeight: 700, textTransform: "uppercase" }}
-      >
+      <Typography variant="body2" component="h4" sx={{ fontWeight: 700, textTransform: 'uppercase' }}>
         Payment methods
       </Typography>
       <Box
         className="payment-method-list"
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1
         }}
       >
         {renderMethod(
-          "Pay Later",
+          'Pay Later',
           PayLater,
-          "paylater",
-          "At no extra charge - buy now & Pay later with available list of providers"
+          'paylater',
+          'At no extra charge - buy now & Pay later with available list of providers'
         )}
-        {renderMethod("UPI Payment", UPI, "upi", "")}
-        {renderMethod("Debit/Credit Card", Cards, "card", "")}
-        {renderMethod(
-          "Pay on Delivery",
-          Cash,
-          "cash",
-          "Pay in cash or pay online when its delivered"
-        )}
-        {renderMethod("Net Banking", NetBanking, "netbanking", "")}
+        {renderMethod('UPI Payment', UPI, 'upi', '')}
+        {renderMethod('Debit/Credit Card', Cards, 'card', '')}
+        {renderMethod('Pay on Delivery', Cash, 'cash', 'Pay in cash or pay online when its delivered')}
+        {renderMethod('Net Banking', NetBanking, 'netbanking', '')}
       </Box>
     </Box>
   );

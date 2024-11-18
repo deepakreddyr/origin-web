@@ -1,6 +1,6 @@
-import { atom } from 'jotai';
+import { atom } from "jotai";
 
-import type CartAtomI from '../types/CartAtomI';
+import type CartAtomI from "../types/CartAtomI";
 
 export const isCartPageIsOpen = atom<boolean>(false);
 
@@ -20,6 +20,6 @@ type CheckoutExtraDetails = {
 };
 
 export const checkoutExtraDetailsAtom = atom<CheckoutExtraDetails>({
-  instructions: '',
+  instructions: "",
   isRewardsEnabledInCart: false,
 });

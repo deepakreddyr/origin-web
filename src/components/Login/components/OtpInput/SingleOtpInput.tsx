@@ -1,47 +1,63 @@
-/* eslint-disable class-methods-use-this */
-/* eslint-disable unused-imports/no-unused-vars */
-// @ts-nocheck
-import React, { PureComponent } from 'react';
+import React, { PureComponent, RefObject } from 'react';
 
-// Doesn't really check if it's a style Object
-// Basic implementation to check if it's not a string
-// of classNames and is an Object
-// TODO: Better implementation
-const isStyleObject = (obj) => typeof obj === 'object';
+interface SingleOtpInputProps {
+  focus?: boolean;
+  shouldAutoFocus?: any;
+  placeholder?: string;
+  separator?: React.ReactNode;
+  isLastChild?: boolean;
+  inputStyle?: React.CSSProperties | string;
+  focusStyle?: React.CSSProperties | string;
+  errorStyle?: React.CSSProperties | string;
+  disabledStyle?: React.CSSProperties | string;
+  isDisabled?: boolean;
+  hasErrored?: boolean;
+  isInputNum?: boolean;
+  isInputSecure?: boolean;
+  className?: string;
+  index: number;
+  value?: string;
+  onChange?: any; // Your custom handler
+  onKeyDown: any;
+  onInput: any;
+  onFocus?: any;
+  onPaste: any;
+  onBlur: any;
+}
 
-class SingleOtpInput extends PureComponent {
-  constructor(props) {
+class SingleOtpInput extends PureComponent<SingleOtpInputProps> {
+  private input: RefObject<HTMLInputElement>;
+
+  constructor(props: SingleOtpInputProps) {
     super(props);
     this.input = React.createRef();
   }
 
-  // Focus on first render
-  // Only when shouldAutoFocus is true
   componentDidMount() {
     const { focus, shouldAutoFocus } = this.props;
-    const { current: inputEl } = this.input;
+    const inputEl = this.input.current;
 
     if (inputEl && focus && shouldAutoFocus) {
       inputEl.focus();
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: SingleOtpInputProps) {
     const { focus } = this.props;
-    const { current: inputEl } = this.input;
+    const inputEl = this.input.current;
 
-    // Check if focusedInput changed
-    // Prevent calling function if input already in focus
     if (prevProps.focus !== focus && inputEl && focus) {
       inputEl.focus();
       inputEl.select();
     }
   }
 
-  getClasses = (...classes) =>
-    classes.filter((c) => !isStyleObject(c) && c !== false).join(' ');
+  private isStyleObject = (obj: unknown): obj is React.CSSProperties => typeof obj === 'object' && obj !== null;
 
-  getType = () => {
+  private getClasses = (...classes: (string | boolean | React.CSSProperties | undefined)[]) =>
+    classes.filter((c) => typeof c === 'string').join(' ');
+
+  private getType = (): string => {
     const { isInputSecure, isInputNum } = this.props;
 
     if (isInputSecure) {
@@ -53,6 +69,16 @@ class SingleOtpInput extends PureComponent {
     }
 
     return 'text';
+  };
+
+  private handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { onChange, index } = this.props;
+    const value = event.target.value;
+
+    // If there's a custom onChange handler, call it with value and index
+    if (onChange) {
+      onChange(value, index);
+    }
   };
 
   render() {
@@ -67,20 +93,15 @@ class SingleOtpInput extends PureComponent {
       errorStyle,
       focusStyle,
       disabledStyle,
-      shouldAutoFocus,
+      className,
       isInputNum,
       index,
       value,
-      className,
-      isInputSecure,
       ...rest
     } = this.props;
 
     return (
-      <div
-        className={className}
-        style={{ display: 'flex', alignItems: 'center' }}
-      >
+      <div className={className} style={{ display: 'flex', alignItems: 'center' }}>
         <input
           aria-label={`${
             index === 0 ? 'Please enter verification code. ' : ''
@@ -89,10 +110,10 @@ class SingleOtpInput extends PureComponent {
           style={{
             width: '1em',
             textAlign: 'center',
-            ...(isStyleObject(inputStyle) && inputStyle),
-            ...(focus && isStyleObject(focusStyle) && focusStyle),
-            ...(isDisabled && isStyleObject(disabledStyle) && disabledStyle),
-            ...(hasErrored && isStyleObject(errorStyle) && errorStyle),
+            ...(this.isStyleObject(inputStyle) && inputStyle),
+            ...(focus && this.isStyleObject(focusStyle) && focusStyle),
+            ...(isDisabled && this.isStyleObject(disabledStyle) && disabledStyle),
+            ...(hasErrored && this.isStyleObject(errorStyle) && errorStyle)
           }}
           placeholder={placeholder}
           className={this.getClasses(
@@ -102,10 +123,11 @@ class SingleOtpInput extends PureComponent {
             hasErrored && errorStyle
           )}
           type={this.getType()}
-          maxLength="1"
+          maxLength={1}
           ref={this.input}
           disabled={isDisabled}
           value={value || ''}
+          onChange={this.handleChange} // Use the custom handler for onChange
           {...rest}
         />
         {!isLastChild && separator}

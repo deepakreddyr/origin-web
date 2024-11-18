@@ -1,11 +1,6 @@
-/* eslint-disable no-console */
-/* eslint-disable no-lonely-if */
-/* eslint-disable no-plusplus */
-/* eslint-disable prefer-destructuring */
-// @ts-nocheck
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import SingleOtpInput from "./SingleOtpInput";
+import SingleOtpInput from './SingleOtpInput';
 
 // keyCode constants
 const BACKSPACE = 8;
@@ -14,65 +9,55 @@ const RIGHT_ARROW = 39;
 const DELETE = 46;
 const SPACEBAR = 32;
 
-// Doesn't really check if it's a style Object
-// Basic implementation to check if it's not a string
-// of classNames and is an Object
-// TODO: Better implementation
-const isStyleObject = (obj) => typeof obj === "object";
+const isStyleObject = (obj: any) => typeof obj === 'object';
 
 class ReactOtpInput extends Component<any, any> {
   static defaultProps = {
     numInputs: 4,
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    onChange: (otp) => {},
+    onChange: (otp: any) => {},
     isDisabled: false,
     shouldAutoFocus: false,
-    value: "",
-    isInputSecure: false,
+    value: '',
+    isInputSecure: false
   };
 
   state = {
-    activeInput: 0,
+    activeInput: 0
   };
 
-  getOtpValue = () =>
-    this.props.value ? this.props.value.toString().split("") : [];
+  getOtpValue = () => (this.props.value ? this.props.value.toString().split('') : []);
 
   // eslint-disable-next-line consistent-return
   getPlaceholderValue = () => {
     const { placeholder, numInputs } = this.props;
 
-    if (typeof placeholder === "string") {
+    if (typeof placeholder === 'string') {
       if (placeholder.length === numInputs) {
         return placeholder;
       }
 
       if (placeholder.length > 0) {
-        console.error(
-          "Length of the placeholder should be equal to the number of inputs."
-        );
+        console.error('Length of the placeholder should be equal to the number of inputs.');
       }
     }
   };
 
   // Helper to return OTP from input
-  handleOtpChange = (otp) => {
+  handleOtpChange = (otp: any) => {
     const { onChange } = this.props;
-    const otpValue = otp.join("");
+    const otpValue = otp.join('');
 
     onChange(otpValue);
   };
 
-  isInputValueValid = (value) => {
-    const isTypeValid = this.props.isInputNum
-      ? !Number.isNaN(parseInt(value, 10))
-      : typeof value === "string";
+  isInputValueValid = (value: any) => {
+    const isTypeValid = this.props.isInputNum ? !Number.isNaN(parseInt(value, 10)) : typeof value === 'string';
 
     return isTypeValid && value.trim().length === 1;
   };
 
   // Focus on input by index
-  focusInput = (input) => {
+  focusInput = (input: any) => {
     const { numInputs } = this.props;
     const activeInput = Math.max(Math.min(numInputs - 1, input), 0);
 
@@ -92,7 +77,7 @@ class ReactOtpInput extends Component<any, any> {
   };
 
   // Change OTP value at focused input
-  changeCodeAtFocus = (value) => {
+  changeCodeAtFocus = (value: any) => {
     const { activeInput } = this.state;
     const otp = this.getOtpValue();
     otp[activeInput] = value[0];
@@ -101,7 +86,7 @@ class ReactOtpInput extends Component<any, any> {
   };
 
   // Handle pasted OTP
-  handleOnPaste = (e) => {
+  handleOnPaste = (e: any) => {
     e.preventDefault();
 
     const { activeInput } = this.state;
@@ -116,9 +101,9 @@ class ReactOtpInput extends Component<any, any> {
 
     // Get pastedData in an array of max size (num of inputs - current position)
     const pastedData = e.clipboardData
-      .getData("text/plain")
+      .getData('text/plain')
       .slice(0, numInputs - activeInput)
-      .split("");
+      .split('');
 
     // Paste data from focused input onwards
     for (let pos = 0; pos < numInputs; ++pos) {
@@ -134,7 +119,7 @@ class ReactOtpInput extends Component<any, any> {
     });
   };
 
-  handleOnChange = (e) => {
+  handleOnChange = (e: any) => {
     const { value } = e.target;
 
     if (this.isInputValueValid(value)) {
@@ -143,29 +128,24 @@ class ReactOtpInput extends Component<any, any> {
   };
 
   // Handle cases of backspace, delete, left arrow, right arrow, space
-  handleOnKeyDown = (e) => {
-    if (e.keyCode === BACKSPACE || e.key === "Backspace") {
+  handleOnKeyDown = (e: any) => {
+    if (e.keyCode === BACKSPACE || e.key === 'Backspace') {
       e.preventDefault();
-      this.changeCodeAtFocus("");
+      this.changeCodeAtFocus('');
       this.focusPrevInput();
-    } else if (e.keyCode === DELETE || e.key === "Delete") {
+    } else if (e.keyCode === DELETE || e.key === 'Delete') {
       e.preventDefault();
-      this.changeCodeAtFocus("");
-    } else if (e.keyCode === LEFT_ARROW || e.key === "ArrowLeft") {
+      this.changeCodeAtFocus('');
+    } else if (e.keyCode === LEFT_ARROW || e.key === 'ArrowLeft') {
       e.preventDefault();
       this.focusPrevInput();
-    } else if (e.keyCode === RIGHT_ARROW || e.key === "ArrowRight") {
+    } else if (e.keyCode === RIGHT_ARROW || e.key === 'ArrowRight') {
       e.preventDefault();
       this.focusNextInput();
-    } else if (
-      e.keyCode === SPACEBAR ||
-      e.key === " " ||
-      e.key === "Spacebar" ||
-      e.key === "Space"
-    ) {
+    } else if (e.keyCode === SPACEBAR || e.key === ' ' || e.key === 'Spacebar' || e.key === 'Space') {
       e.preventDefault();
     }
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       if (this.props.onEnter) {
         this.props.onEnter();
       }
@@ -173,7 +153,7 @@ class ReactOtpInput extends Component<any, any> {
   };
 
   // The content may not have changed, but some input took place hence change the focus
-  handleOnInput = (e) => {
+  handleOnInput = (e: any) => {
     if (this.isInputValueValid(e.target.value)) {
       this.focusNextInput();
     } else {
@@ -182,12 +162,9 @@ class ReactOtpInput extends Component<any, any> {
       if (!this.props.isInputNum) {
         const { nativeEvent } = e;
 
-        if (
-          nativeEvent.data === null &&
-          nativeEvent.inputType === "deleteContentBackward"
-        ) {
+        if (nativeEvent.data === null && nativeEvent.inputType === 'deleteContentBackward') {
           e.preventDefault();
-          this.changeCodeAtFocus("");
+          this.changeCodeAtFocus('');
           this.focusPrevInput();
         }
       }
@@ -208,14 +185,14 @@ class ReactOtpInput extends Component<any, any> {
       shouldAutoFocus,
       isInputNum,
       isInputSecure,
-      className,
+      className
     } = this.props;
 
     const inputs = [];
     const otp = this.getOtpValue();
     const placeholder = this.getPlaceholderValue();
-    const dataCy = this.props["data-cy"];
-    const dataTestId = this.props["data-testid"];
+    const dataCy = this.props['data-cy'];
+    const dataTestId = this.props['data-testid'];
 
     for (let i = 0; i < numInputs; i++) {
       inputs.push(
@@ -229,7 +206,7 @@ class ReactOtpInput extends Component<any, any> {
           onKeyDown={this.handleOnKeyDown}
           onInput={this.handleOnInput}
           onPaste={this.handleOnPaste}
-          onFocus={(e) => {
+          onFocus={(e: any) => {
             this.setState({ activeInput: i });
             e.target.select();
           }}
@@ -261,10 +238,10 @@ class ReactOtpInput extends Component<any, any> {
     return (
       <div
         style={{
-          display: "flex",
-          ...(isStyleObject(containerStyle) && containerStyle),
+          display: 'flex',
+          ...(isStyleObject(containerStyle) && containerStyle)
         }}
-        className={!isStyleObject(containerStyle) ? containerStyle : ""}
+        className={!isStyleObject(containerStyle) ? containerStyle : ''}
       >
         {this.renderInputs()}
       </div>

@@ -20,7 +20,7 @@
     align-items: center;
     .form {
       width: 100%;
-    font-family: "SofiaPro";
+      font-family: "SofiaPro";
 
       display: flex;
       flex-direction: column;
@@ -41,7 +41,6 @@
             font-size: 12;
             font-weight: medium;
             color: #000;
-
           }
         }
       }

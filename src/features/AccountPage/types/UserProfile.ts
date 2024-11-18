@@ -3,7 +3,7 @@ type UserProfile = {
   address: string;
   latitude: string;
   longitude: string;
-  user_type: 'individual';
+  user_type: "individual";
   deliverable: 1;
   wallet_enabled: boolean;
   reward_enabled: boolean;

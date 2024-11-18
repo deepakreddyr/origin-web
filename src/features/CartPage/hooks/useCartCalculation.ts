@@ -1,12 +1,12 @@
-import { useAtom } from 'jotai';
-import React from 'react';
+import { useAtom } from "jotai";
+import React from "react";
 
-import { isCouponApplied } from '../../CouponPage/context/atoms';
+import { isCouponApplied } from "../../CouponPage/context/atoms";
 import {
   cartAtom,
   cartItems,
   checkoutExtraDetailsAtom,
-} from '../context/atoms';
+} from "../context/atoms";
 
 export default function useCartCalculation() {
   const [cartItemsDetails] = useAtom(cartItems);
@@ -64,11 +64,11 @@ export default function useCartCalculation() {
     ) {
       const coupon = appliedCoupon.coupon[0];
       switch (coupon.discount_type) {
-        case 'fixed': {
+        case "fixed": {
           couponDiscountedPrice += coupon.discount;
           break;
         }
-        case 'percentage': {
+        case "percentage": {
           couponDiscountedPrice += (coupon.discount * subTotal) / 100;
           break;
         }

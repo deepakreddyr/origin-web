@@ -1,16 +1,16 @@
-import { Box, Button, Typography } from "@mui/material";
-import { useAtom } from "jotai";
+import { Box, Button, Typography } from '@mui/material';
+import { useAtom } from 'jotai';
 
-import { isCartPageIsOpen } from "../../../CartPage/context/atoms";
+import { isCartPageIsOpen } from '../../../CartPage/context/atoms';
 import {
   addressDetailsAtom,
   addressSidebarDetails,
   isAddressIsOpen,
   isEditingAddress,
-  saveAddressAtom,
-} from "../../context/atoms";
-import TabType from "../../enums/TabType";
-import styles from "./style.module.css";
+  saveAddressAtom
+} from '../../context/atoms';
+import TabType from '../../enums/TabType';
+import styles from './style.module.css';
 
 export default function DeliveryChangeConfirmation() {
   const [, setIsOpen] = useAtom(isAddressIsOpen);
@@ -25,28 +25,30 @@ export default function DeliveryChangeConfirmation() {
       if (sidebarDetails.tabType === TabType.COMPLETE_ADDRESS) {
         setSidebarDetails((prevProps) => ({
           ...prevProps,
-          tabType: TabType.ADDRESS_SELECTION,
+          tabType: TabType.ADDRESS_SELECTION
         }));
         return;
       }
       setIsEditingAddress({
         isActive: false,
-        addressDetails: null,
+        addressDetails: null
       });
       setAddressDetails(() => ({
-        address_name: "",
-        address: "",
-        door_no: "",
-        locality: "",
-        landmark: "",
+        address_name: '',
+        address_id: '',
+        address: '',
+        door_no: '',
+        locality: '',
+        landmark: '',
         latitude: 0,
         longitude: 0,
-        deliverable: false,
+        formatted_address: '',
+        deliverable: false
       }));
       setIsOpen(false);
-      setAddressAtom((prevState) => ({
+      setAddressAtom((prevState: any) => ({
         ...prevState,
-        isSaved: false,
+        isSaved: false
       }));
       return;
     }
@@ -56,17 +58,12 @@ export default function DeliveryChangeConfirmation() {
   };
 
   return (
-    <Box className={styles["main-container"]}>
-      <Typography className={styles["delivery-change-heading"]}>
-        Delivery Location changed!
+    <Box className={styles['main-container']}>
+      <Typography className={styles['delivery-change-heading']}>Delivery Location changed!</Typography>
+      <Typography className={styles['delivery-change-content']}>
+        This might affect the maximum item limit, prices and availability based on changed location.
       </Typography>
-      <Typography className={styles["delivery-change-content"]}>
-        This might affect the maximum item limit, prices and availability based
-        on changed location.
-      </Typography>
-      <Typography className={styles["review-cart-content"]}>
-        Please review your cart & continue.
-      </Typography>
+      <Typography className={styles['review-cart-content']}>Please review your cart & continue.</Typography>
       <Button onClick={onClose}>Alright</Button>
     </Box>
   );

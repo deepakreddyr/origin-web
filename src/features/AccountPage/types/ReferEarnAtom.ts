@@ -1,4 +1,4 @@
-import type ReferEarnResponse from './ReferEarnResponse';
+import type ReferEarnResponse from "./ReferEarnResponse";
 
 type ReferEarnAtom = {
   loading: boolean;

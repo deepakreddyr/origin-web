@@ -12,7 +12,7 @@ interface Transaction {
   total_wallet_balance: number;
   total_reward_balance: number;
   created_at: number;
-  payment_status: 'complete';
+  payment_status: "complete";
   transaction_message: string;
 }
 

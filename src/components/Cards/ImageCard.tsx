@@ -22,18 +22,21 @@ const ImageCard = ({ ICardData, className }: IMAGE_CARD_PROPS) => {
     >
       <Typography
         variant="body1"
-        className="block mb-2 md:mb-3 px-6 md:px-14 p-5 md:pt-14 w-full md:w-auto font-medium text-base text-left md:text-center md:text-lg cursor-pointer"
+        className="block mb-2 md:mb-3 px-6 md:px-14 p-5 md:pt-14 w-full md:w-auto font-[SofiaPro] font-medium text-base text-left md:text-center md:text-lg cursor-pointer"
       >
         {title}
       </Typography>
-      <Image
-        className="group-hover:scale-105 -right-12 -bottom-12 absolute w-40 sm:w-44 md:w-48 h-auto origin-center transition-transform duration-200 aspect-square ease-in-out"
-        src={image}
-        alt={category}
-        width={250}
-        height={250}
-        priority={true}
-      />
+      <div className="relative w-[250px] h-[250px] ">
+        <Image
+          className="group-hover:scale-105 -right-12 -bottom-12 absolute w-40 sm:w-44 md:w-48 h-auto origin-center transition-transform duration-200 aspect-square ease-in-out"
+          src={image}
+          alt={category}
+          // width={250}
+          // height={250}
+          priority={true}
+          fill
+        />
+      </div>
       <OriginButton
         buttonText={actionLabel}
         handleClick={() => {

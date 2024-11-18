@@ -1,16 +1,16 @@
-import { Box, Button, Typography } from '@mui/material';
-import { useAtom } from 'jotai';
-import Image from 'next/image';
+import { Box, Button, Typography } from "@mui/material";
+import { useAtom } from "jotai";
+import Image from "next/image";
 
-import type { AppliedCoupon } from '../../../CouponPage/context/atoms';
+import type { AppliedCoupon } from "../../../CouponPage/context/atoms";
 import {
   isCouponApplied,
   isCouponPageIsOpen,
-} from '../../../CouponPage/context/atoms';
-import Arrow from '../../assets/arrowCoupon.svg';
-import Coupon from '../../assets/coupon.svg';
-import useCartCalculation from '../../hooks/useCartCalculation';
-import styles from './style.module.css';
+} from "../../../CouponPage/context/atoms";
+import Arrow from "../../assets/arrowCoupon.svg";
+import Coupon from "../../assets/coupon.svg";
+import useCartCalculation from "../../hooks/useCartCalculation";
+import styles from "./style.module.css";
 
 const CouponSection = () => {
   const [isCouponPageOpen, setIsCouponPageOpen] = useAtom(isCouponPageIsOpen);
@@ -19,12 +19,12 @@ const CouponSection = () => {
 
   if (appliedCoupon.isApplied) {
     return (
-      <Box className={`coupon-section ${styles['coupon-applied-container']}`}>
+      <Box className={`coupon-section ${styles["coupon-applied-container"]}`}>
         <Box
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
           }}
         >
           <Box
@@ -34,17 +34,17 @@ const CouponSection = () => {
               margin: 0,
               width: 28,
               height: 28,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             <Image src={Coupon} alt="coupon" />
           </Box>
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
+              display: "flex",
+              flexDirection: "column",
             }}
           >
             <Typography className={styles.title}>
@@ -58,7 +58,7 @@ const CouponSection = () => {
         </Box>
         <Button
           variant="text"
-          className={styles['remove-button']}
+          className={styles["remove-button"]}
           onClick={() => {
             setAppliedCoupon((prevState: AppliedCoupon) => ({
               ...prevState,
@@ -75,16 +75,16 @@ const CouponSection = () => {
   const renderCoupon = () => {
     return (
       <Box
-        className={`coupon-section ${styles['coupon-container']}`}
+        className={`coupon-section ${styles["coupon-container"]}`}
         onClick={() => {
           setIsCouponPageOpen(!isCouponPageOpen);
         }}
       >
         <Box
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
           }}
         >
           <Box
@@ -94,17 +94,17 @@ const CouponSection = () => {
               margin: 0,
               width: 28,
               height: 28,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             <Image src={Coupon} alt="coupon" />
           </Box>
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
+              display: "flex",
+              flexDirection: "column",
             }}
           >
             <Typography variant="body1" component="span">
@@ -112,9 +112,9 @@ const CouponSection = () => {
             </Typography>
             <Typography
               sx={{
-                color: '#D78204',
-                fontWeight: 'normal',
-                fontFamily: 'Roboto Mono, monospace',
+                color: "#D78204",
+                fontWeight: "normal",
+                fontFamily: "Roboto Mono, monospace",
               }}
               variant="body2"
               component="span"
@@ -123,7 +123,7 @@ const CouponSection = () => {
             </Typography>
           </Box>
         </Box>
-        <Image className={styles['arrow-img']} src={Arrow} alt="coupon" />
+        <Image className={styles["arrow-img"]} src={Arrow} alt="coupon" />
       </Box>
     );
   };
@@ -131,15 +131,15 @@ const CouponSection = () => {
     <Box
       className="delivery-instruction"
       sx={{
-        backgroundColor: 'rgba(242, 238, 228, 0.3)',
-        display: 'flex',
-        flexDirection: 'column',
-        border: '2px solid #F2EEE4',
-        padding: '1rem',
+        backgroundColor: "rgba(242, 238, 228, 0.3)",
+        display: "flex",
+        flexDirection: "column",
+        border: "2px solid #F2EEE4",
+        padding: "1rem",
 
-        margin: ' 0.8rem 0.3rem 0.3rem 0.3rem',
+        margin: " 0.8rem 0.3rem 0.3rem 0.3rem",
 
-        borderRadius: '16px',
+        borderRadius: "16px",
       }}
     >
       <Typography component="h3" variant="body1" sx={{ fontWeight: 600 }}>

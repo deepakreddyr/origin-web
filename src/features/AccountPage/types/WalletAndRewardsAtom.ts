@@ -1,4 +1,4 @@
-import type WalletAndRewardsResponse from './WalletAndRewardsResponse';
+import type WalletAndRewardsResponse from "./WalletAndRewardsResponse";
 
 type WalletAndRewardsAtom = {
   loading: boolean;

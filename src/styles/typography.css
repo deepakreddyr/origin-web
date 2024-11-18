@@ -40,8 +40,9 @@ h6,
   line-height: 1.2;
 }
 
-p,.MuiTypography-p {
-  font-size: 1.25rem;
+p,
+.MuiTypography-p {
+  font-size: 1.15rem;
   font-weight: 400;
   line-height: 1.2;
 }
@@ -88,7 +89,8 @@ p,.MuiTypography-p {
     font-weight: 600;
     line-height: 1.2;
   }
-  p,.MuiTypography-p {
+  p,
+  .MuiTypography-p {
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.2;

@@ -5,14 +5,14 @@ interface Transaction {
   wallet_id: number;
   reward_id: null;
   gift_card_id: null;
-  transaction_type: 'minus';
-  transaction_mode: 'reward';
+  transaction_type: "minus";
+  transaction_mode: "reward";
   wallet_amount: null;
   reward_amount: number;
   total_wallet_balance: number;
   total_reward_balance: number;
   created_at: number;
-  payment_status: 'complete';
+  payment_status: "complete";
   transaction_message: string;
 }
 

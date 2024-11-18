@@ -1,13 +1,13 @@
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import * as React from 'react';
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import * as React from "react";
 
-import styles from '../../style.module.css';
+import styles from "../../style.module.css";
 
 function createData(rewards: string, minCartValue: any, coin: any) {
   return { rewards, minCartValue, coin };
@@ -15,20 +15,20 @@ function createData(rewards: string, minCartValue: any, coin: any) {
 
 const rows = [
   createData(
-    'From 1st order 10% from 199 and above',
+    "From 1st order 10% from 199 and above",
     199,
-    '10% of coins on order value'
+    "10% of coins on order value"
   ),
-  createData('Referral Rewards', '', '50 Reward Coins'),
-  createData('Second Time Slot', 199, '5% of coins on order value'),
-  createData('In Store', 1, '10% of coins on order value'),
+  createData("Referral Rewards", "", "50 Reward Coins"),
+  createData("Second Time Slot", 199, "5% of coins on order value"),
+  createData("In Store", 1, "10% of coins on order value"),
 ];
 
 export default function RewardsDetailsTable() {
   return (
     <TableContainer
       component={Paper}
-      className={`table-container ${styles['table-container']}`}
+      className={`table-container ${styles["table-container"]}`}
     >
       <Table sx={{ minWidth: 100 }} aria-label="simple table">
         <TableHead>
@@ -46,7 +46,7 @@ export default function RewardsDetailsTable() {
           {rows.map((row) => (
             <TableRow
               key={row.rewards}
-              sx={{ '&:last-child td, &:last-child td': { border: 0 } }}
+              sx={{ "&:last-child td, &:last-child td": { border: 0 } }}
             >
               <TableCell component="td" scope="row">
                 {row.rewards}

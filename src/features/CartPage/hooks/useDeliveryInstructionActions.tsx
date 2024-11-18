@@ -1,15 +1,15 @@
-import { useAtom } from 'jotai';
-import React from 'react';
+import { useAtom } from "jotai";
+import React from "react";
 
 import type {
   DeliveryInstructionType,
   SingleDeliveryInstruction,
-} from '../components/DeliveryInstruction/data/deliveryInstructions';
+} from "../components/DeliveryInstruction/data/deliveryInstructions";
 import deliveryInstructionDefault, {
   slugGenerator,
-} from '../components/DeliveryInstruction/data/deliveryInstructions';
-import TypeOfDeliveryInstruction from '../components/DeliveryInstruction/data/typeOfDeliveryInstruction';
-import { checkoutExtraDetailsAtom } from '../context/atoms';
+} from "../components/DeliveryInstruction/data/deliveryInstructions";
+import TypeOfDeliveryInstruction from "../components/DeliveryInstruction/data/typeOfDeliveryInstruction";
+import { checkoutExtraDetailsAtom } from "../context/atoms";
 
 const { AVOID_CALLING, DO_NOT_RING_BILL, GIVE_TO_SECURITY, LEAVE_AT_DOOR } =
   TypeOfDeliveryInstruction;
@@ -31,7 +31,7 @@ const useDeliveryInstructionActions = () => {
     const deliveryInstructionName = [...deliveryInstruction]
       .filter((item) => item.isActivated && !item.isDisabled)
       .map((item) => item.name);
-    let deliveryInstructionString = '';
+    let deliveryInstructionString = "";
     deliveryInstructionName.forEach((item, index) => {
       if (
         index === deliveryInstructionName.length - 1 &&
@@ -51,7 +51,7 @@ const useDeliveryInstructionActions = () => {
 
   const swapStateValues = (
     itemInstruction: SingleDeliveryInstruction,
-    slugChange: string = ''
+    slugChange: string = ""
   ) => {
     if (slugChange) {
       const matchingSlug = [...deliveryInstruction].find(
