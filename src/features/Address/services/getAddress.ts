@@ -1,6 +1,6 @@
-import { header, request } from "@/utilities/request";
-import type AddressAtomI from "../types/AddressAtomI";
-import { mainApiUrl } from "@/url";
+import { header, request } from '@/utilities/request';
+import type AddressAtomI from '../types/AddressAtomI';
+import { mainApiUrl } from '@/url';
 
 export const getAddress = async (set: any) => {
   try {
@@ -9,37 +9,49 @@ export const getAddress = async (set: any) => {
       loading: true,
       error: false,
       success: false,
-      address: null,
+      address: null
     }));
 
     const response: any = await request(mainApiUrl.getAddress, {
-      method: "GET",
+      method: 'GET',
       headers: {
         Authorization: header(),
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
     });
+    if (response.data.length > 0) {
+      const defaultAddress = response.data.find((item: any) => item.is_default);
 
-    const defaultAddress = response.data.find((item: any) => item.is_default);
-
-    localStorage.setItem("store-id", JSON.stringify(defaultAddress?.store_id));
-
-    set((prevState: AddressAtomI) => ({
-      ...prevState,
-      loading: false,
-      error: false,
-      success: false,
-      address: response.data,
-      defaultAddress,
-    }));
+      localStorage.setItem('store-id', JSON.stringify(defaultAddress?.store_id));
+      localStorage.setItem('selected_address', JSON.stringify(defaultAddress)),
+        set((prevState: AddressAtomI) => ({
+          ...prevState,
+          loading: false,
+          error: false,
+          success: false,
+          address: response.data,
+          data: response.data, // kept on intention for immeditate fix
+          defaultAddress
+        }));
+    } else {
+      set((prevState: AddressAtomI) => ({
+        ...prevState,
+        loading: false,
+        error: false,
+        success: false,
+        address: null,
+        data: null, // kept on intention for immeditate fix
+        defaultAddress: null
+      }));
+    }
   } catch (error) {
     set((prevState: AddressAtomI) => ({
       ...prevState,
       loading: false,
       error: false,
       success: false,
-      address: null,
+      address: null
     }));
   }
 };

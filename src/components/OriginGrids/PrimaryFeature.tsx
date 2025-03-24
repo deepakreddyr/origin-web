@@ -1,52 +1,37 @@
-import { Marquee } from "@devnomic/marquee";
-import {
-  Box,
-  Container,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
+import { Marquee } from '@devnomic/marquee';
+import { Box, Container, Typography, useTheme } from '@mui/material';
 
-const featureList = [
-  "🥑 More than 500 products",
-  "⏰ Priority Deliveries",
-  "🚛 Easy Refunds/Returns",
-];
+const featureList = ['🥑 More than 500 products', '⏰ Priority Deliveries', '🚛 Easy Refunds/Returns'];
 
 const PrimaryFeature = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
+  const mobile = useMediaQuery(600);
   return (
-    <Container className="relative z-10 flex md:justify-evenly gap-11 bg-primary-100 mt-[-57.5px] px-0 md:px-20 py-11 rounded-none lg:rounded-[210px] md:overflow-[unset] overflow-x-auto noscrollbar">
-      {isMobile ? (
-        <Marquee
-          className="gap-[3rem] [--duration:15s] text-nowrap"
-          innerClassName="gap-[3rem] [--gap:3rem]"
-        >
-          {featureList.map((text, index) => (
-            <Typography
-              key={index}
-              variant="body1"
-              className="flex items-center gap-3 w-max text-[18px] text-nowrap"
-            >
-              <span>{text.split(" ")[0]}</span>
+    <div className="flex items-center justify-center">
+      <div className="relative flex items-center justify-around px-[3.3vw] w-[80vw] mob:w-screen mob:h-[15vw] bg-primary-100 top-[-5vw] h-[7vw] rounded-full mob:rounded-none md:overflow-[unset] overflow-x-auto noscrollbar">
+        {mobile ? (
+          <Marquee className="gap-[3rem] [--duration:15s] text-nowrap" innerClassName="gap-[3rem] [--gap:3rem]">
+            {featureList.map((text, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-3 w-max text-[1.25vw] font-[SofiaPro] whitespace-nowrap"
+              >
+                <span className="font-[SofiaPro] text-[5vw] font-medium">{text.split(' ')[0]}</span>
+                {text.slice(2)}
+              </div>
+            ))}
+          </Marquee>
+        ) : (
+          featureList.map((text, index) => (
+            <div key={index} className="flex items-center gap-3 font-[SofiaPro] w-max text-[1.25vw] whitespace-nowrap">
+              <span className="text-[1.389vw]  font-[SofiaPro] font-medium ">{text.split(' ')[0]}</span>
               {text.slice(2)}
-            </Typography>
-          ))}
-        </Marquee>
-      ) : (
-        featureList.map((text, index) => (
-          <Typography
-            key={index}
-            variant="body1"
-            className="flex items-center gap-3 w-max text-[18px] text-nowrap"
-          >
-            <span className="text-3xl">{text.split(" ")[0]}</span>
-            {text.slice(2)}
-          </Typography>
-        ))
-      )}
-    </Container>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
   );
 };
 export default PrimaryFeature;

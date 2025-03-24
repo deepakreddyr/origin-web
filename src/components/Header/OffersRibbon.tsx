@@ -1,23 +1,45 @@
-import React, { useEffect, useRef, useState } from "react";
-import { AppBar, Toolbar, IconButton, Typography } from "@mui/material";
-import { Badge, Box, Menu, MenuItem, Container } from "@mui/material";
-import { useMediaQuery, useTheme } from "@mui/material";
-import classNames from "classnames";
-import { Marquee } from "@devnomic/marquee";
-import OriginButton from "../OriginButton";
-import { Download } from "@mui/icons-material";
-import Dropdown from "../OriginDropDown";
-import {
-  OriginCartIcon,
-  OriginChevronDown,
-  OriginMenuIcon,
-} from "@/Icons/OriginIcons";
+import React, { useEffect, useRef, useState } from 'react';
+import { AppBar, Toolbar, IconButton, Typography } from '@mui/material';
+import { Badge, Box, Menu, MenuItem, Container } from '@mui/material';
+import { useTheme } from '@mui/material';
+import classNames from 'classnames';
+import { Marquee } from '@devnomic/marquee';
+import OriginButton from '../OriginButton';
+import { Download } from '@mui/icons-material';
+import Dropdown from '../OriginDropDown';
+import { OriginCartIcon, OriginChevronDown, OriginMenuIcon } from '@/Icons/OriginIcons';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsSidebarOpen, setTabType } from '@/store/slice/loginSlice';
+import { TabTypeConstant } from '../Login/constants/tabTypeContent';
+import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
+import { getAddressAndStoreId } from '@/utilities/utils';
+import type Address from '@/features/Address/types/Address';
+import Image from 'next/image';
+import whiteDropdownIcon from '/public/assets/images/whiteDropdown.png';
+import { useAtom } from 'jotai';
+import { addressAtom } from '@/features/Address/context/atoms';
+import { profileAtom } from '@/features/AccountPage/context/atoms';
+
 const OffersRibbon = () => {
+  const [address, setAddress] = useAtom(addressAtom);
+  const [profile, setProfileAtom] = useAtom(profileAtom);
+
   const [topBarTransition, setTopBarTransition] = useState(false);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
+  const isMobile = useMediaQuery(600);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch();
+  const [localStorageAddress, setAddressFromLs] = useState<any>();
+  const loginDetails = useSelector((state: any) => state.loginDetails);
+
+  useEffect(() => {
+    let addressFromLs;
+    addressFromLs = getAddressAndStoreId();
+    setAddressFromLs({
+      ...addressFromLs
+    });
+  }, [loginDetails.tabType]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,88 +51,102 @@ const OffersRibbon = () => {
     };
 
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        !isMobile &&
-        menuRef.current &&
-        !menuRef.current.contains(event.target as Node)
-      ) {
+      if (!isMobile && menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setOpenSubmenu(null);
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    document.addEventListener("mousedown", handleClickOutside);
+    window.addEventListener('scroll', handleScroll);
+    document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener('scroll', handleScroll);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isMobile]);
+  const handleSelectAddress = () => {
+    if (loginDetails.isLogin) {
+      dispatch(setIsSidebarOpen(true));
 
+      if (!profile?.data?.profile) {
+        dispatch(setTabType(TabTypeConstant.REGISTER));
+        return;
+      }
+      if (address.address.length > 0) {
+        dispatch(setTabType(TabTypeConstant.SELECT_ADDRESS));
+      }
+      if (profile?.data?.profile) {
+        if (!address.address) {
+          // dispatch(setTabType(TabTypeConstan));
+        }
+      }
+      // dispatch(setTabType(TabTypeConstant.SELECT_ADDRESS));
+
+      // if(!profile.data.profile)
+      // if (!address.address) {
+      //   dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
+      // }
+    } else {
+      if (!address.address) {
+        // dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
+      }
+      dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
+    }
+  };
   return (
-    <Box
-      className={classNames(
-        "transition-all ease-in-out duration-200",
-        topBarTransition
-          ? "bg-transparent opacity-0 -translate-y-5"
-          : "bg-secondary-300 opacity-1 translate-y-0"
-      )}
+    <div
+      className={`flex px-[10.15vw] mob:px-0 items-center justify-between w-full mob:w-screen transition-all ease-in-out duration-200 ${
+        topBarTransition ? 'bg-transparent opacity-0 -translate-y-5' : 'bg-secondary-300 opacity-1 translate-y-0'
+      }`}
     >
-      <Container
-        className={classNames(
-          "relative topBar z-[1399] flex justify-between items-center px-5 py-2 h-[40px]"
-        )}
-      >
-        <Typography
-          variant="body1"
-          className="w-[45%] md:w-auto font-light text-white text-xs"
-        >
-          {isMobile ? (
-            <Marquee
-              className="gap-[3rem] [--duration:5s] text-nowrap"
-              innerClassName="gap-[3rem] [--gap:3rem]"
+      <div className="h-[2vw] mob:h-[10vw] flex items-center mob:w-[50%] text-black">
+        {isMobile ? (
+          <div className="relative w-full overflow-hidden">
+            <div
+              className="flex whitespace-nowrap animate-scroll"
+              style={{
+                animation: 'scroll 10s linear infinite'
+              }}
             >
-              Download the App and Get FLAT 20% Off on 1st Order
-            </Marquee>
+              <p className="text-white font-[SofiaPro] font-medium text-[3vw] px-4">
+                Download the App and Get FLAT 20% Off on 1st Order
+              </p>
+              {/* <p className="text-white font-[SofiaPro] font-medium text-[3vw] px-4">
+                Download the App and Get FLAT 20% Off on 1st Order
+              </p> */}
+            </div>
+          </div>
+        ) : (
+          <p className="text-white font-[SofiaPro] text-[.97vw] font-medium">
+            Download the App and Get FLAT 20% Off on 1st Order
+          </p>
+        )}
+      </div>
+      <div>
+        <button
+          onClick={handleSelectAddress}
+          className="bg-black-op-30 gap-[.6vw] items-center justify-center whitespace-nowrap truncate rounded-full h-[1.508vw] mob:h-[8vw] px-[.83vw] flex mob:px-[3vw] mob:w-[48vw] mob:mr-[4vw]"
+        >
+          {address.defaultAddress?.address_name ? (
+            <div className="flex">
+              <p className="text-[.78vw] mob:text-[3vw]  truncate font-bold text-[SofiaPro] text-white">
+                {address.defaultAddress?.address_name} -
+              </p>
+              <p className="font-light text-[.78vw] mob:text-[3vw] w-[15vw] mob:w-[30vw] truncate  font-[SofiaPro] text-white">
+                &nbsp;
+                {address.defaultAddress.address}
+              </p>
+            </div>
           ) : (
-            <span>Download the App and Get FLAT 20% Off on 1st Order </span>
+            <p className="text-[.78vw] mob:text-[3vw] truncate font-bold font-[SofiaPro] text-white">Select Address</p>
           )}
-        </Typography>
-        <OriginButton
-          variant={"textOnly"}
-          classes={{
-            iconButton:
-              "px-2 rounded-full whitespace-nowrap gap-2.5 py-1 border-0 bg-black-op-30 ms-3 xs:ms-auto",
-            buttonText: "text-white text-xs hidden md:block",
-            iconOne: "block md:hidden w-3.5 h-auto text-white",
-          }}
-          IconOne={Download}
-          buttonText={"Download Origin"}
-        />
-        <Box className="flex ms-3">
-          <Dropdown
-            btnVariant="textOnly"
-            onSelect={() => {}}
-            label="Select location"
-            options={[
-              "Koramangala, 560068",
-              "Bangalore, 560068",
-              "Hyderabad, 560068",
-            ]}
-            classes={{
-              iconButton: "px-2.5 py-1 bg-black-op-30 gap-2 rounded-[26px]",
-              buttonText: "text-xs text-nowrap text-white",
-              iconOne: "w-[12px] h-[6px] fill-[#fff_!important]",
-              menuPaper: "p-0 md:p-0",
-              menuList: "px-2 py-2 md:px-2 md:py-2",
-              menuOption:
-                "first-of-type:rounded-t-lg last-of-type:rounded-b-lg",
-            }}
-            IconOne={OriginChevronDown}
-          />
-        </Box>
-      </Container>
-    </Box>
+
+          <div className="relative w-[.83vw] mob:w-[3vw] mob:h-[3vw] h-[.83vw]">
+            <Image src={whiteDropdownIcon} alt="" />
+          </div>
+        </button>
+      </div>
+    </div>
   );
 };
 

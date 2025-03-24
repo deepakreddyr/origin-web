@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-import { Box, Collapse, useMediaQuery, useTheme } from "@mui/material";
-import OriginButton from "../OriginButton"; // Adjust the path as necessary
-import classNames from "classnames";
-import useShowMore from "../../hooks/useShowMore";
+import React, { useEffect } from 'react';
+import { Box, Collapse, useMediaQuery, useTheme } from '@mui/material';
+import OriginButton from '../OriginButton'; // Adjust the path as necessary
+import classNames from 'classnames';
+import useShowMore from '../../hooks/useShowMore';
 
 interface ShowMoreSectionProps {
   children: React.ReactNode;
@@ -10,7 +10,7 @@ interface ShowMoreSectionProps {
   totalItems: number;
   collapsedSize?: number | string | undefined;
   onShowAllChange?: (showAll: boolean) => void;
-  orientation?: "vertical" | "horizontal" | undefined;
+  orientation?: 'vertical' | 'horizontal' | undefined;
   classes?: {
     root?: string;
     collapse?: string;
@@ -28,12 +28,9 @@ const ShowMoreSection: React.FC<ShowMoreSectionProps> = ({
   onShowAllChange,
   collapsedSize = 500,
   classes,
-  orientation = "vertical",
+  orientation = 'vertical'
 }) => {
-  const { visibleItems, showAll, handleShowMore, handleShowLess } = useShowMore(
-    initialVisibleItems,
-    totalItems
-  );
+  const { visibleItems, showAll, handleShowMore, handleShowLess } = useShowMore(initialVisibleItems, totalItems);
 
   useEffect(() => {
     if (onShowAllChange) {
@@ -44,30 +41,25 @@ const ShowMoreSection: React.FC<ShowMoreSectionProps> = ({
   return (
     <Box className={classNames(classes?.root)}>
       <Collapse
-        className={classNames(classes?.collapse, "duration-500 transition-all")}
+        className={classNames(classes?.collapse, 'duration-500 transition-all')}
         in={showAll}
         collapsedSize={collapsedSize} // Disable collapsedSize on mobile
         orientation={orientation}
         timeout={1500}
         easing={{
-          enter: "easeInOut",
-          exit: "easeInOut",
+          enter: 'easeInOut',
+          exit: 'easeInOut'
         }}
       >
         {children}
       </Collapse>
-      <Box
-        className={classNames(
-          "flex justify-center w-full",
-          classes?.buttonsContainer
-        )}
-      >
+      <Box className={classNames('flex justify-center w-full', classes?.buttonsContainer)}>
         {!showAll && visibleItems < totalItems && (
           <OriginButton
             variant="primary"
             classes={{
-              buttonText: classNames("font-medium", classes?.btnText),
-              iconButton: classNames(classes?.showMorebtnClass),
+              buttonText: classNames('font-medium', classes?.btnText),
+              iconButton: classNames(classes?.showMorebtnClass)
             }}
             handleClick={handleShowMore}
             buttonText={`Show More (${totalItems})`}
@@ -77,11 +69,11 @@ const ShowMoreSection: React.FC<ShowMoreSectionProps> = ({
           <OriginButton
             variant="primary"
             classes={{
-              buttonText: classNames("font-medium", classes?.btnText),
-              iconButton: classNames(classes?.showLessbtnClass),
+              buttonText: classNames('font-medium', classes?.btnText),
+              iconButton: classNames(classes?.showLessbtnClass)
             }}
             handleClick={handleShowLess}
-            buttonText={"Show less"}
+            buttonText={'Show less'}
           />
         )}
       </Box>

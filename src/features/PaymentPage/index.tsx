@@ -1,42 +1,36 @@
-import { Box, Typography } from "@mui/material";
-import { useAtom } from "jotai";
-import Image from "next/image";
-import React from "react";
+import { Box, Typography } from '@mui/material';
+import { useAtom } from 'jotai';
+import Image from 'next/image';
+import React from 'react';
 
-import PaymentSidebarLayout from "../../components/PaymentLayout/PaymentSidebarLayout";
-import { addressAtom } from "../Address/context/atoms";
-import { cartAtom } from "../CartPage/context/atoms";
-import Home from "./assets/home.svg";
+import PaymentSidebarLayout from '../../components/PaymentLayout/PaymentSidebarLayout';
+import { addressAtom } from '../Address/context/atoms';
+import { cartAtom } from '../CartPage/context/atoms';
+import Home from './assets/home.svg';
 // import CartValue from './components/CartValue';
-import Fail from "./components/Fail";
-import PaymentMethod from "./components/PaymentMethod";
-import Success from "./components/Success";
-import {
-  checkoutAPI,
-  FailOrSuccess,
-  failOrSuccess,
-  isPaymentIsOpen,
-  razorPayObjectAtom,
-} from "./context/atoms";
-import { getCheckout } from "./services/getCheckout";
-import { isAddressAndTimeSlotIsOpen } from "../AddressAndTimeSlot/context/atoms";
+import Fail from './components/Fail';
+import PaymentMethod from './components/PaymentMethod';
+import Success from './components/Success';
+import { checkoutAPI, FailOrSuccess, failOrSuccess, isPaymentIsOpen, razorPayObjectAtom } from './context/atoms';
+import { getCheckout } from './services/getCheckout';
+import { isAddressAndTimeSlotIsOpen } from '../AddressAndTimeSlot/context/atoms';
 function convertDateFormat(dateString?: string): string {
-  if (!dateString) return "";
-  const [day, month, year] = dateString.replace(/\*/g, "").split("-");
+  if (!dateString) return '';
+  const [day, month, year] = dateString.replace(/\*/g, '').split('-');
 
   const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
   ];
 
   const monthName = months[parseInt(month, 10) - 1];
@@ -52,6 +46,7 @@ const PaymentPage = () => {
   const [isFailOrSuccess, setFailOrSuccess] = useAtom(failOrSuccess);
   const [, setRazorPayObject] = useAtom(razorPayObjectAtom);
   const [cart] = useAtom(cartAtom);
+
   React.useEffect(() => {
     getCheckout(setCheckout);
     return () => {
@@ -60,9 +55,7 @@ const PaymentPage = () => {
   }, []);
 
   const renderAddress = () => {
-    const timeSlot = checkout?.data?.data?.find(
-      (slot: any) => slot.id === cart.cartValues?.timeSlotId
-    );
+    const timeSlot = checkout?.data?.data?.find((slot: any) => slot.id === cart.cartValues?.timeSlotId);
 
     const formatDate = (dateString: number | string): string => {
       const dateStr = dateString?.toString();
@@ -71,74 +64,66 @@ const PaymentPage = () => {
       const day = parseInt(dateStr?.substring(6, 8), 10);
 
       const date = new Date(year, month, day);
-      return date.toLocaleDateString("en-GB");
+      return date.toLocaleDateString('en-GB');
     };
 
     return (
       <Box
         className="delivering-to"
         sx={{
-          marginTop: "10px",
-          display: "flex",
-          flexDirection: "column",
+          marginTop: '10px',
+          display: 'flex',
+          flexDirection: 'column',
           gap: 1,
-          backgroundColor: "#F2EEE44D",
-          border: "1px solid #F2EEE4",
-          padding: "0.5rem",
-          borderRadius: "10px",
+          backgroundColor: '#F2EEE44D',
+          border: '1px solid #F2EEE4',
+          padding: '0.5rem',
+          borderRadius: '10px'
         }}
       >
-        <Typography
-          variant="body2"
-          component="h5"
-          sx={{ fontWeight: 700, textTransform: "uppercase" }}
-        >
+        <Typography variant="body2" component="h5" sx={{ fontWeight: 700, textTransform: 'uppercase' }}>
           Delivering to
         </Typography>
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            paddingBottom: "0.8rem",
-            borderBottom: "1px solid #F2EEE4",
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            paddingBottom: '0.8rem',
+            borderBottom: '1px solid #F2EEE4'
           }}
         >
           <Box
             component="figure"
             sx={{
-              width: "46px",
-              height: "46px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              width: '46px',
+              height: '46px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               flexShrink: 0,
               margin: 0,
-              borderRadius: "6px",
-              border: "1px solid #F6F0E0",
+              borderRadius: '6px',
+              border: '1px solid #F6F0E0'
             }}
           >
             <Image width={23} height={22} src={Home} alt="orderPlaced" />
           </Box>
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "column",
+              display: 'flex',
+              flexDirection: 'column'
             }}
           >
-            <Typography
-              component="span"
-              variant="body2"
-              sx={{ fontWeight: "600" }}
-            >
+            <Typography component="span" variant="body2" sx={{ fontWeight: '600' }}>
               {address.defaultAddress?.address_name}
             </Typography>
             <Typography
               component="span"
               variant="body2"
               sx={{
-                color: "rgba(0, 0, 0, 0.60)",
-                fontWeight: "normal",
+                color: 'rgba(0, 0, 0, 0.60)',
+                fontWeight: 'normal'
               }}
             >
               {address.defaultAddress?.address}
@@ -148,20 +133,20 @@ const PaymentPage = () => {
         {!!cart.cartValues?.timeSlotId && (
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              width: "100%",
-              padding: "0 1rem",
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              width: '100%',
+              padding: '0 1rem'
             }}
           >
             <Box
               sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                width: "100%",
-                alignItems: "center",
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: '100%',
+                alignItems: 'center'
               }}
             >
               <Typography
@@ -169,9 +154,9 @@ const PaymentPage = () => {
                 variant="button"
                 sx={{
                   // fontFamily: "Sofia Pro",
-                  fontWeight: "500",
-                  fontSize: "12px",
-                  color: "#231F2099",
+                  fontWeight: '500',
+                  fontSize: '12px',
+                  color: '#231F2099'
                 }}
               >
                 TIME SLOT
@@ -182,19 +167,15 @@ const PaymentPage = () => {
                   variant="body1"
                   sx={{
                     // fontFamily: "Sofia Pro",
-                    color: "#231F20",
-                    fontWeight: "500",
-                    fontSize: "12px",
+                    color: '#231F20',
+                    fontWeight: '500',
+                    fontSize: '12px'
                   }}
                 >
                   {checkout?.data?.delivery_date[0] && (
-                    <span>
-                      {convertDateFormat(
-                        checkout?.data?.formatted_delivery_date[0]
-                      )}
-                    </span>
+                    <span>{convertDateFormat(checkout?.data?.formatted_delivery_date[0])}</span>
                   )}
-                  {", "}
+                  {', '}
                   {timeSlot.from} - {timeSlot.to}
                 </Typography>
               ) : (
@@ -202,10 +183,10 @@ const PaymentPage = () => {
                   component="span"
                   variant="body1"
                   sx={{
-                    fontFamily: "Sofia Pro",
-                    color: "#231F20",
-                    fontWeight: "500",
-                    fontSize: "12px",
+                    fontFamily: 'Sofia Pro',
+                    color: '#231F20',
+                    fontWeight: '500',
+                    fontSize: '12px'
                   }}
                 >
                   Dash Delivery

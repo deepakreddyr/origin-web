@@ -1,39 +1,14 @@
-import {
-  Box,
-  Container,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
-import Layout from "@/components/Layout";
-import { GetServerSideProps } from "next";
-import {
-  Blog,
-  Categories,
-  FooterDataType,
-  MainMenuType,
-  Products,
-  Testimonial,
-  UspCardsData,
-} from "@/utilities/types";
-import {
-  USPGrid,
-  CategoriesGrid,
-  PopularItemsSlider as PopularProducts,
-  PopularBlogsSection,
-  TestimonialsSection,
-  OriginHero,
-} from "@/components/OriginGrids";
-import SideBySide from "@/components/SideBySide";
-import BeforeBox from "@/components/BeforeBox";
-import LinkButton from "@/components/LinkButton/LinkButton";
-import { OriginRightArrow } from "@/Icons/OriginIcons";
-import { Marquee } from "@devnomic/marquee";
-import { ProductCard } from "@/components/Cards";
-import FilterButtons from "@/components/FilterButtons";
-import OriginButton from "@/components/OriginButton";
-import PrimaryFeature from "@/components/OriginGrids/PrimaryFeature";
-
+import { Box, Container, Typography, useMediaQuery, useTheme } from '@mui/material';
+import Layout from '@/components/Layout';
+import { GetServerSideProps } from 'next';
+import { Blog, Categories, FooterDataType, MainMenuType, Products, Testimonial, UspCardsData } from '@/utilities/types';
+import { PopularItemsSlider as PopularProducts, TestimonialsSection, OriginHero } from '@/components/OriginGrids';
+import SideBySide from '@/components/SideBySide';
+import BeforeBox from '@/components/BeforeBox';
+import LinkButton from '@/components/LinkButton/LinkButton';
+import { OriginRightArrow } from '@/Icons/OriginIcons';
+import PrimaryFeature from '@/components/OriginGrids/PrimaryFeature';
+import { UspCard } from '@/components/Cards';
 interface HomeProps {
   uspCardsData: UspCardsData;
   categories: Categories;
@@ -51,87 +26,23 @@ const Home = ({
   blogs,
   testimonials,
   mainMenuItems,
-  footerData,
+  footerData
 }: HomeProps) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
-
-  const CategoriesFirstGridItem = () => (
-    <Box className="flex flex-col justify-between bg-primary px-5 pt-10 pb-5 rounded-[20px] md:rounded-[30px] w-full h-full">
-      <Typography
-        variant={isMobile ? "h5" : "h3"}
-        className="md:ps-6 mb-6 md:mb-11 sm:max-w-full md:max-w-[310px]"
-      >
-        Your freshest finds
-      </Typography>
-      <LinkButton
-        href="/shop"
-        text="Shop all categories"
-        icon={OriginRightArrow}
-      />
-    </Box>
-  );
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
 
   return (
-    <Layout mainMenuItems={mainMenuItems} footerData={footerData}>
+    <Layout isHeaderSticky={true} mainMenuItems={mainMenuItems} footerData={footerData}>
       <OriginHero />
       <PrimaryFeature />
 
-      <Box className="h-16 lg:h-[75px]" />
-
-      <Container maxWidth="lg">
-        <USPGrid uspCardsData={uspCardsData} />
-        <Box className="h-16 lg:h-[105px]" />
-        <CategoriesGrid
-          categories={categories.slice(0, 6)}
-          firstGridItem={<CategoriesFirstGridItem />}
-          fxs={12}
-          fsm={8}
-          fmd={8}
-          flg={6}
-        />
-        <Box className="h-16 lg:h-[125px]" />
-      </Container>
-      <Container maxWidth="lg" classes={{ maxWidthLg: "px-0 md:px-6" }}>
-        <PopularProducts
-          title="Popular produce"
-          classes={{ root: "z-[0]" }}
-          spaceBetween={53}
-          slidesPerView={3.8}
-          slidesOffsetBefore={24}
-          slides={productsList.map((product) => (
-            <ProductCard
-              className="flex-[0_0_250px] md:flex-auto pt-7 md:pt-8 pb-5"
-              key={product.sku}
-              product={product}
-            />
-          ))}
-          primaryActions={
-            <FilterButtons
-              classes={{
-                root: "w-full whitespace-nowrap md:w-auto mt-0",
-              }}
-              buttons={["Get it today", "Get it tomorrow"]}
-              condition={["get-sameday"]} //TODO: add conditional events
-            />
-          }
-          secondaryActions={
-            <OriginButton
-              variant="outlined"
-              buttonText="Shop all products"
-              classes={{
-                iconButton: "py-2 px-4 md:py-4 md:px-7 mb-10 md:mb-0",
-              }}
-            />
-          }
-        />
-      </Container>
-      <BeforeBox
-        mdTopOffset={isMobile ? -124 : 100}
-        mdBottomOffset={isMobile ? 110 : 220}
-      >
-        <Box className="h-0 md:h-[142px]" />
-        <Container maxWidth="lg" className="relative z-10">
+      <div className="flex items-center justify-center w-full pb-[10vw]">
+        <div className="flex items-center justify-between w-[80vw] mob:w-full mob:grid grid-cols-2 mob:gap-[5vw] ">
+          {uspCardsData?.map((card) => <UspCard cardData={card} key={card.title} />)}
+        </div>
+      </div>
+      <BeforeBox mdTopOffset={isMobile ? -124 : 100} mdBottomOffset={isMobile ? 110 : 220}>
+        <Container className="relative z-[2]">
           <SideBySide
             variant="normal"
             imageSrc="/assets/images/commitment.png"
@@ -140,14 +51,14 @@ const Home = ({
             imageHeight={499}
             imageClass="object-cover w-full max-h-[200px] md:max-h-max"
             title={`It's not just a commitment, it's a responsibility`}
-            titleVariant={isMobile ? "h4" : "h2"}
+            titleVariant={isMobile ? 'h4' : 'h2'}
             description={`We are dedicated to making 'fresh' a standard and not just a buzzword`}
             buttonText="Know more"
             buttonVariant="tertiary"
             rootClass="bg-secondary-200"
           />
         </Container>
-        <Container maxWidth="lg" className="relative z-[1]">
+        <Container maxWidth="lg" className="relative z-[0]">
           <SideBySide
             variant="parallax"
             parallaxTopImageSrc="/assets/images/parallaxImages/top-1.png"
@@ -155,7 +66,7 @@ const Home = ({
             parallaxBottomImageSrc="/assets/images/parallaxImages/bottom-1.png"
             parallaxImageAlt="carefully handpicked"
             title={`Carefully Handpicked`}
-            titleVariant={isMobile ? "h4" : "h1"}
+            titleVariant={isMobile ? 'h4' : 'h1'}
             description={`Indulge in the essence of pure goodness with our products, a delight for your plate and a boon for the planet.`}
             buttonText="Know more"
             buttonVariant="tertiary"
@@ -175,10 +86,10 @@ const Home = ({
           />
           <Box className="h-16 md:h-0" />
         </Container>
-        <Container maxWidth="lg" className="relative z-10">
+        <Container maxWidth="lg" className="relative ">
           <SideBySide
             title={`It's a small world after all`}
-            titleVariant={isMobile ? "h4" : "h2"}
+            titleVariant={isMobile ? 'h4' : 'h2'}
             titleClass="text-black"
             description={`We like to bring people together and what's better than food?! Join us in supporting, cheering and discussing with the fresh team. Let's make fresh food accessible to all!`}
             buttonText="Know more"
@@ -203,7 +114,7 @@ const Home = ({
             imageClass="object-cover md:min-h-full min-h-full aspect-square md:aspect-auto"
             imageContainerClass="aspect-square lg:aspect-auto max-h-[auto] lg:max-w-full"
             title={`Largest B2B fresh produce distributor`}
-            titleVariant={isMobile ? "h4" : "h2"}
+            titleVariant={isMobile ? 'h4' : 'h2'}
             description={`Our business is our passion and that is why we leave no stone unturned when it comes to quality and customer service!`}
             buttonText="Get in touch"
             buttonVariant="tertiary"
@@ -212,11 +123,8 @@ const Home = ({
         </Container>
         <Box className="h-16 lg:h-[128px]" />
       </BeforeBox>
-      <PopularBlogsSection
-        popularBlogs={blogs?.filter((blog) => blog.popular)}
-      />
-      <Box className="h-16 lg:h-[104px]" />
-      <Container className="px-0 md:px-6">
+      <Box className="h-16  lg:h-[104px]" />
+      <Container className="px-0 md:px-6 relative z-0">
         <TestimonialsSection testimonials={testimonials} />
       </Container>
       <Container>
@@ -245,19 +153,9 @@ const Home = ({
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/originApi`
-    );
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/originApi`);
     const originApiData = await response.json();
-    const {
-      uspCardsData,
-      categories,
-      products,
-      blogs,
-      testimonials,
-      mainMenuItems,
-      footerData,
-    } = originApiData;
+    const { uspCardsData, categories, products, blogs, testimonials, mainMenuItems, footerData } = originApiData;
     return {
       props: {
         uspCardsData,
@@ -266,11 +164,11 @@ export const getServerSideProps: GetServerSideProps = async () => {
         blogs,
         testimonials,
         mainMenuItems,
-        footerData,
-      },
+        footerData
+      }
     };
   } catch (error) {
-    console.error("Error fetching USP card data:", error);
+    console.error('Error fetching USP card data:', error);
     return {
       props: {
         uspCardsData: [],
@@ -279,8 +177,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
         popularBlogs: [],
         testimonials: [],
         mainMenuItems: [],
-        footerData: {},
-      },
+        footerData: {}
+      }
     };
   }
 };

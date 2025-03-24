@@ -1,8 +1,8 @@
-import { Box } from "@mui/material";
-import React from "react";
-import AutoCompleteAddress from "./components/AutoCompleteAddress";
-import AutoCompleteInputField from "./components/AutoCompleteInputField";
-import SavedAddressList from "./components/SavedAddressList";
+import { Box } from '@mui/material';
+import React from 'react';
+import AutoCompleteAddress from './components/AutoCompleteAddress';
+import AutoCompleteInputField from './components/AutoCompleteInputField';
+import SavedAddressList from './components/SavedAddressList';
 
 interface Props {
   setActiveScreen: any;
@@ -18,9 +18,9 @@ const AddressList = (props: Props) => {
     <Box
       className="body-inner"
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "20px",
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px'
       }}
     >
       <AutoCompleteInputField />

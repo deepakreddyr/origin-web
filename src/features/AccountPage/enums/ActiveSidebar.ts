@@ -1,31 +1,31 @@
 enum ActiveSidebar {
-  SETTING,
-  EDIT_ACCOUNT,
-  ACCOUNT_MAIN,
-  MANAGE_ADDRESS,
-  YOUR_ORDERS,
-  RATING,
-  YOUR_REWARDS,
-  REWARD_DETAILS,
-  HELP_FAQ,
-  REFER_EARN,
-  SUPPORT_CHAT,
-  REVIEW_RATING,
-  ADDRESS_LIST,
-  SERVICEABILITY,
-  COMPLETE_ADDRESS,
-  MANUAL_ADDRESS,
-  NO_DATA,
+    SETTING,
+    EDIT_ACCOUNT,
+    ACCOUNT_MAIN,
+    MANAGE_ADDRESS,
+    YOUR_ORDERS,
+    RATING,
+    YOUR_REWARDS,
+    REWARD_DETAILS,
+    HELP_FAQ,
+    REFER_EARN,
+    SUPPORT_CHAT,
+    REVIEW_RATING,
+    ADDRESS_LIST,
+    SERVICEABILITY,
+    COMPLETE_ADDRESS,
+    MANUAL_ADDRESS,
+    NO_DATA,
 }
 
 export const manageAddressScreens = {
-  ADDRESS_LIST: "ADDRESS_LIST",
-  SERVICEABILITY: "SERVICEABILITY",
-  COMPLETE_ADDRESS: "COMPLETE_ADDRESS",
-  MANUAL_ADDRESS: "MANUAL_ADDRESS",
-  NO_DATA: "NO_DATA",
-} as const;
+    ADDRESS_LIST: 'ADDRESS_LIST',
+    SERVICEABILITY: 'SERVICEABILITY',
+    COMPLETE_ADDRESS: 'COMPLETE_ADDRESS',
+    MANUAL_ADDRESS: 'MANUAL_ADDRESS',
+    NO_DATA: 'NO_DATA',
+} as const
 
-export type ManageAddressScreenKeys = keyof typeof manageAddressScreens;
+export type ManageAddressScreenKeys = keyof typeof manageAddressScreens
 
-export default ActiveSidebar;
+export default ActiveSidebar

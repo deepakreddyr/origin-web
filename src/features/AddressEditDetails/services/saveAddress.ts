@@ -1,40 +1,44 @@
-import { header, request } from "@/utilities/request";
-import type Address from "../types/Address";
-import type SaveAddressAtomI from "../types/SaveAddressAtomI";
+import { header, request } from '@/utilities/request';
+import type SaveAddressAtomI from '../types/SaveAddressAtomI';
+import type AddressResponse from '../../AccountPage/types/Address';
 
-export const saveAddress = async (payload: Address, set: any) => {
+export const saveAddress = async (payload: any, set: any) => {
   try {
     set(() => ({
       isSaved: false,
       loading: true,
       error: false,
       success: true,
-      address: null,
+      address: null
     }));
 
     const response: any = await request(`/api/v1/user/address`, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify(payload),
       headers: {
         Authorization: header(),
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
     });
-
-    set((prevState: SaveAddressAtomI) => ({
-      ...prevState,
-      loading: false,
-      success: true,
-      data: response.data,
-    }));
+    const defaultAddress = response.data.find((item: any) => item.is_default);
+    localStorage.setItem('store-id', JSON.stringify(defaultAddress?.store_id));
+    localStorage.setItem('selected_address', JSON.stringify(defaultAddress)),
+      set((prevState: SaveAddressAtomI) => ({
+        ...prevState,
+        loading: false,
+        success: true,
+        data: response.data,
+        address: response.data,
+        defaultAddress
+      }));
   } catch (error) {
     set((prevState: SaveAddressAtomI) => ({
       ...prevState,
       error: true,
       success: false,
       loading: false,
-      isSaved: true,
+      isSaved: true
     }));
   }
 };

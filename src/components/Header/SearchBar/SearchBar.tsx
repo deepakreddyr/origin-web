@@ -1,7 +1,7 @@
-import React from "react";
-import { Box, InputBase } from "@mui/material";
-import { OriginSearch } from "../../../Icons/OriginIcons";
-import classNames from "classnames";
+import React from 'react';
+import { Box, InputBase } from '@mui/material';
+import { OriginSearch } from '../../../Icons/OriginIcons';
+import classNames from 'classnames';
 type Props = {
   classes?: {
     root?: string;
@@ -10,14 +10,8 @@ type Props = {
   className?: string;
 };
 const SearchBar = ({ className, classes }: Props) => (
-  <Box
-    className={classNames(
-      "relative w-full max-w-full md:max-w-sm",
-      classes?.root,
-      className
-    )}
-  >
-    <InputBase
+  <Box className={classNames('relative w-full max-w-full md:max-w-sm', classes?.root, className)}>
+    {/* <InputBase
       placeholder="Search products"
       classes={{
         input:
@@ -31,7 +25,7 @@ const SearchBar = ({ className, classes }: Props) => (
     />
     <div className="right-0 absolute inset-y-0 flex items-center pe-5">
       <OriginSearch className="w-4 h-4 text-black" />
-    </div>
+    </div> */}
   </Box>
 );
 

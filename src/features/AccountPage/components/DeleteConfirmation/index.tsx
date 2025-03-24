@@ -1,7 +1,7 @@
-import { Box, Button, Typography } from "@mui/material";
-import React from "react";
-import { deleteAddress } from "../../services/deleteAddress";
-import type AddressAtom from "../../types/AddressAtom";
+import { Box, Button, Typography } from '@mui/material';
+import React from 'react';
+import { deleteAddress } from '../../services/deleteAddress';
+import type AddressAtom from '../../types/AddressAtom';
 
 interface Props {
   text?: string;
@@ -19,32 +19,28 @@ const DeleteConfirmation = (props: Props) => {
     text,
     desc,
     deletingAddressA,
-    setAddress,
+    setAddress
   } = props;
 
   const onCancel = () => {
     setDeletingAddress({
       isActive: false,
-      addressDetails: null,
+      addressDetails: null
     });
   };
 
   const onDelete = async () => {
-    if (
-      deletingAddressA.isActive &&
-      deletingAddressA.addressDetails?.address_id
-    ) {
+    if (deletingAddressA.isActive && deletingAddressA.addressDetails?.address_id) {
       try {
-        const res = await deleteAddress(
-          deletingAddressA.addressDetails?.address_id
-        );
+        const res = await deleteAddress(deletingAddressA.addressDetails?.address_id);
         setAddress((prevState: AddressAtom) => ({
           ...prevState,
           data: res,
+          address: res
         }));
         setDeletingAddress({
           isActive: false,
-          addressDetails: null,
+          addressDetails: null
         });
       } catch (e) {
         //
@@ -54,37 +50,33 @@ const DeleteConfirmation = (props: Props) => {
   return (
     <Box
       sx={{
-        justifyContent: "center",
-        alignItems: "center",
-        height: "80vh",
-        textAlign: "center",
-        gap: "1rem",
-        display: "flex",
-        flexDirection: "column",
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '80vh',
+        textAlign: 'center',
+        gap: '1rem',
+        display: 'flex',
+        flexDirection: 'column'
       }}
     >
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
+          display: 'flex',
+          flexDirection: 'column'
           // Add some space between elements
         }}
       >
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{ fontWeight: "500", fontFamily: "SofiaPro" }}
-        >
+        <Typography variant="h6" component="div" sx={{ fontWeight: '500', fontFamily: 'SofiaPro' }}>
           {text}
         </Typography>
         <Typography
           variant="body1"
           component="div"
           sx={{
-            marginBottom: "1rem",
-            color: "rgba(35, 31, 32, 0.8)",
-            fontSize: "14px",
-            fontFamily: "SofiaPro",
+            marginBottom: '1rem',
+            color: 'rgba(35, 31, 32, 0.8)',
+            fontSize: '14px',
+            fontFamily: 'SofiaPro'
           }}
         >
           {desc}
@@ -92,22 +84,22 @@ const DeleteConfirmation = (props: Props) => {
       </Box>
       <Box
         sx={{
-          display: "flex",
-          alignItems: "flex-start",
+          display: 'flex',
+          alignItems: 'flex-start'
         }}
       >
         {onDelete && (
           <Button
             sx={{
-              color: "#C70000",
-              border: "2px solid #C70000",
-              borderRadius: "48px",
-              fontSize: "14px",
-              padding: "0.7rem 1.5rem",
-              fontWeight: "600",
-              marginBottom: "1rem",
-              fontFamily: "SofiaPro",
-              textTransform: "capitalize",
+              color: '#C70000',
+              border: '2px solid #C70000',
+              borderRadius: '48px',
+              fontSize: '14px',
+              padding: '0.7rem 1.5rem',
+              fontWeight: '600',
+              marginBottom: '1rem',
+              fontFamily: 'SofiaPro',
+              textTransform: 'capitalize'
             }}
             onClick={onDelete}
           >
@@ -117,15 +109,15 @@ const DeleteConfirmation = (props: Props) => {
         {onCancel && (
           <Button
             sx={{
-              color: "#231F20",
-              border: "2px solid #231F20",
-              borderRadius: "48px",
-              fontSize: "14px",
-              fontWeight: "600",
-              padding: "0.7rem 2.5rem",
-              marginLeft: "1rem",
-              fontFamily: "SofiaPro",
-              textTransform: "capitalize",
+              color: '#231F20',
+              border: '2px solid #231F20',
+              borderRadius: '48px',
+              fontSize: '14px',
+              fontWeight: '600',
+              padding: '0.7rem 2.5rem',
+              marginLeft: '1rem',
+              fontFamily: 'SofiaPro',
+              textTransform: 'capitalize'
             }}
             onClick={onCancel}
           >

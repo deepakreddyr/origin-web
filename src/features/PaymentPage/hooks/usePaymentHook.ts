@@ -1,26 +1,21 @@
-import { useAtom } from "jotai";
-import React from "react";
+import { useAtom } from 'jotai';
+import React from 'react';
 import {
   checkoutAPI,
   FailOrSuccess,
   failOrSuccess,
   isPaymentIsOpen,
   paymentPrefillAtom,
-  razorPayObjectAtom,
-} from "../context/atoms";
-import {
-  cartAtom,
-  cartItems,
-  checkoutExtraDetailsAtom,
-  isCartPageIsOpen,
-} from "@/features/CartPage/context/atoms";
-import { useRouter } from "next/router";
-import useCartCalculation from "@/features/CartPage/hooks/useCartCalculation";
-import toast from "react-hot-toast";
-import { isAddressAndTimeSlotIsOpen } from "@/features/AddressAndTimeSlot/context/atoms";
-import { header, request } from "@/utilities/request";
-import { mainApiUrl } from "@/url";
-import { isCouponApplied } from "@/features/CouponPage/context/atoms";
+  razorPayObjectAtom
+} from '../context/atoms';
+import { cartAtom, cartItems, checkoutExtraDetailsAtom, isCartPageIsOpen } from '@/features/CartPage/context/atoms';
+import { useRouter } from 'next/router';
+import useCartCalculation from '@/features/CartPage/hooks/useCartCalculation';
+import toast from 'react-hot-toast';
+import { isAddressAndTimeSlotIsOpen } from '@/features/AddressAndTimeSlot/context/atoms';
+import { header, request } from '@/utilities/request';
+import { mainApiUrl } from '@/url';
+import { isCouponApplied } from '@/features/CouponPage/context/atoms';
 
 const usePaymentHook = () => {
   const razKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY;
@@ -30,9 +25,7 @@ const usePaymentHook = () => {
   const router = useRouter();
   const [, setRazorPayObject] = useAtom(razorPayObjectAtom);
   const [cart, setCart] = useAtom(cartAtom);
-  const [checkoutExtraDetails, setCheckoutExtraDetails] = useAtom(
-    checkoutExtraDetailsAtom
-  );
+  const [checkoutExtraDetails, setCheckoutExtraDetails] = useAtom(checkoutExtraDetailsAtom);
   const [checkoutDetails] = useAtom(checkoutAPI);
   const [, setIsOpen] = useAtom(isAddressAndTimeSlotIsOpen);
   const [, setIsCartPageOpen] = useAtom(isCartPageIsOpen);
@@ -61,11 +54,11 @@ const usePaymentHook = () => {
       success: false,
       error: false,
       cart: null,
-      cartValues: null,
+      cartValues: null
     });
     setCheckoutExtraDetails({
-      instructions: "",
-      isRewardsEnabledInCart: false,
+      instructions: '',
+      isRewardsEnabledInCart: false
     });
     setCartItems([]);
     setFailOrSuccess(FailOrSuccess.NONE);
@@ -75,14 +68,14 @@ const usePaymentHook = () => {
   };
 
   const getTimeSlot = () => {
-    if (!cart.cartValues?.timeSlotId) return "";
-    if (cart.cartValues?.timeSlotId === "instant") return null;
+    if (!cart.cartValues?.timeSlotId) return '';
+    if (cart.cartValues?.timeSlotId === 'instant') return null;
     return cart.cartValues?.timeSlotId;
   };
 
   const onInitiatePayment = async () => {
     try {
-      const isCash = paymentPrefill.toLowerCase() === "cash";
+      const isCash = paymentPrefill.toLowerCase() === 'cash';
       const payload: any = {
         items:
           cartItemsAtom?.map((e) => ({
@@ -91,28 +84,26 @@ const usePaymentHook = () => {
               .map((uomItem: any) => {
                 return {
                   variant_id: uomItem.variant_id,
-                  qty: uomItem.qty,
+                  qty: uomItem.qty
                 };
               })
-              .filter((uomItem: any) => uomItem.qty !== 0),
+              .filter((uomItem: any) => uomItem.qty !== 0)
           })) || [],
         delivery_fee: 0,
-        delivery_type: "normal",
+        delivery_type: 'normal',
         individual_package_enabled: false,
-        delivery_date: checkoutDetails.data?.delivery_date
-          ? checkoutDetails.data?.delivery_date[0]
-          : 0,
+        delivery_date: checkoutDetails.data?.delivery_date ? checkoutDetails.data?.delivery_date[0] : 0,
         sub_total: subTotal,
         tax: 0,
         total,
-        payment_method: isCash ? paymentPrefill : "razorpay",
+        payment_method: isCash ? paymentPrefill : 'razorpay',
         time_slot_id: getTimeSlot(),
-        uuid: "18925c07-21f7-4af7-96bc-249479e5f92b",
+        uuid: '18925c07-21f7-4af7-96bc-249479e5f92b',
         is_exotel_enabled: true,
         instructions: checkoutExtraDetails.instructions,
         meta: {
-          device_type: "web",
-        },
+          device_type: 'web'
+        }
       };
 
       if (!isCash) {
@@ -125,14 +116,14 @@ const usePaymentHook = () => {
         }
       }
 
-      const orderResponse: any = await request(mainApiUrl.fetchOrders, {
-        method: "POST",
+      const orderResponse: any = await request(mainApiUrl.ordersActions, {
+        method: 'POST',
         body: JSON.stringify(payload),
         headers: {
           Authorization: header(),
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        }
       });
 
       if (isCash) {
@@ -143,14 +134,14 @@ const usePaymentHook = () => {
       const razorpayOptions = {
         key: razKey,
         amount: String(total),
-        currency: "INR",
-        name: "Madras Mandi",
-        description: "Madras Mandi",
+        currency: 'INR',
+        name: 'Madras Mandi',
+        description: 'Madras Mandi',
         prefill: {
-          name: "name",
-          email: "email",
-          contact: "9999999999",
-          method: paymentPrefill,
+          name: 'name',
+          email: 'email',
+          contact: '9999999999',
+          method: paymentPrefill
         },
         order_id: orderResponse?.data?.razorpay_order_id,
         handler() {
@@ -159,11 +150,11 @@ const usePaymentHook = () => {
         modal: {
           ondismiss() {
             onFailure();
-          },
+          }
         },
         theme: {
-          color: "#EAE5CF",
-        },
+          color: '#EAE5CF'
+        }
       };
 
       setRazorPayObject(razorpayOptions);
@@ -176,19 +167,16 @@ const usePaymentHook = () => {
         try {
           // Attempt to extract JSON error message
           const errorData = await err.response?.json();
-          console.error(
-            "Parsed error message:",
-            errorData.message || "Unknown error response"
-          );
+          console.error('Parsed error message:', errorData.message || 'Unknown error response');
           if (errorData.message) {
             toast.error(errorData.message);
           }
         } catch (jsonError) {
-          console.error("Error parsing JSON:", jsonError);
-          console.error("Raw error response:", await err);
+          console.error('Error parsing JSON:', jsonError);
+          console.error('Raw error response:', await err);
         }
       } else {
-        console.error("Fetch failed:", err.message || err);
+        console.error('Fetch failed:', err.message || err);
       }
     }
   };
@@ -199,7 +187,7 @@ const usePaymentHook = () => {
     onInitiatePayment,
     isFailOrSuccess,
     setFailOrSuccess,
-    resetPaymentStates,
+    resetPaymentStates
   };
 };
 

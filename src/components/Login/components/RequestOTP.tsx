@@ -1,22 +1,15 @@
-import {
-  Box,
-  InputLabel,
-  Typography,
-  styled,
-  InputBase,
-  Button,
-} from "@mui/material";
-import React, { useState } from "react";
-import NextLink from "next/link";
-import { TabTypeConstant } from "../constants/tabTypeContent";
-import { request, header } from "@/utilities/request";
-import PrimaryRoundedCta from "@/components/shared/PrimaryRoundedCta";
-import TermsAndConditions from "../TermsAndConditions";
-import { mainApiUrl } from "@/url";
+import { Box, InputLabel, Typography, styled, InputBase, Button } from '@mui/material';
+import React, { useState } from 'react';
+import NextLink from 'next/link';
+import { TabTypeConstant } from '../constants/tabTypeContent';
+import { request, header } from '@/utilities/request';
+import PrimaryRoundedCta from '@/components/shared/PrimaryRoundedCta';
+import TermsAndConditions from '../TermsAndConditions';
+import { mainApiUrl } from '@/url';
+import { useDispatch } from 'react-redux';
+import { setTabType } from '@/store/slice/loginSlice';
 
 interface Props {
-  setLoginDetails: any;
-  setTabType: any;
   mobileNumber: string;
   setMobileNumber: any;
   otpErrors: any;
@@ -24,11 +17,12 @@ interface Props {
 }
 
 const RequestOTP = (props: Props) => {
-  const { setTabType, setLoginDetails, mobileNumber, setMobileNumber } = props;
+  const { mobileNumber, setMobileNumber } = props;
   const { otpErrors, setOtpErrors } = props;
-  const [mobileNumberErrors, setMobileNumberErrors] = useState("");
+  const [mobileNumberErrors, setMobileNumberErrors] = useState('');
   const [isNumberDisabled, setIsNumberDisabled] = useState(true);
   // const [otpErrors, setOtpErrors] = useState("");
+  const dispatch = useDispatch();
 
   const isMobileNumberValid = (number: any) => {
     const phoneRegex = /^[0-9]\d{9}$/;
@@ -38,32 +32,33 @@ const RequestOTP = (props: Props) => {
 
   const onSubmitMobileNumber = async () => {
     if (!isMobileNumberValid(mobileNumber)) {
-      setMobileNumberErrors("Incorrect mobile number");
+      setMobileNumberErrors('Incorrect mobile number');
       return;
     }
     try {
-      setOtpErrors("");
+      setOtpErrors('');
       const formData = new FormData();
       const requestURL = mainApiUrl.requestOtp;
-      formData.append("phone", mobileNumber);
-      formData.append("scope", "client");
+      formData.append('phone', mobileNumber);
+      formData.append('scope', 'client');
       await request(requestURL, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          Accept: "application/json",
+          Accept: 'application/json'
         },
-        body: formData,
+        body: formData
       });
-      setTabType(TabTypeConstant.ENTER_OTP);
-      setMobileNumberErrors("");
+      dispatch(setTabType(TabTypeConstant.ENTER_OTP));
+
+      setMobileNumberErrors('');
     } catch (error) {
-      setMobileNumberErrors("Unable to login please try later");
+      setMobileNumberErrors('Unable to login please try later');
     }
   };
 
   const onChangeNumber = (event: any) => {
     const { value } = event.target;
-    const inputPhoneNumber = value.replace(/\D/g, "");
+    const inputPhoneNumber = value.replace(/\D/g, '');
     if (inputPhoneNumber.length > 10) {
       return;
     }
@@ -71,7 +66,7 @@ const RequestOTP = (props: Props) => {
   };
 
   return (
-    <div>
+    <div className="">
       <div className="flex flex-col gap-[2.2vw] ">
         <div>
           <p className="font-[SofiaPro] sm:pb-[.78vw] xs:pb-[3vw] font-semibold text-[16px] text-black">
@@ -83,35 +78,38 @@ const RequestOTP = (props: Props) => {
               className="border-none outline-none w-full bg-primary-100 placeholder:text-[#231F2099] font-[SofiaPro] text-[14px]"
               placeholder="10 Digit Mobile Number"
               type="number"
-              value={mobileNumber ? mobileNumber : ""}
+              value={mobileNumber ? mobileNumber : ''}
               onChange={onChangeNumber}
+              onKeyDown={(e) => {
+                if (
+                  ['e', 'E', '+', '-', '.'].includes(e.key) ||
+                  (e.keyCode >= 65 && e.keyCode <= 90) // Prevent letters A-Z
+                ) {
+                  e.preventDefault();
+                }
+              }}
             />
           </div>
           <Typography
             variant="body2"
             sx={{
-              fontSize: "12px",
-              color: "#C70000",
-              fontWeight: "normal",
-              display: "block",
-              fontFamily: "SofiaPro",
-              paddingTop: "10px",
+              fontSize: '12px',
+              color: '#C70000',
+              fontWeight: 'normal',
+              display: 'block',
+              fontFamily: 'SofiaPro',
+              paddingTop: '10px'
             }}
           >
             {mobileNumberErrors}
           </Typography>
         </div>
 
-        <div className={"mt-[24px]"}>
-          <PrimaryRoundedCta
-            style=""
-            name="Get OTP"
-            handler={onSubmitMobileNumber}
-            isDisabled={isButtonDisabled}
-          />
+        <div className={'mt-[24px]'}>
+          <PrimaryRoundedCta style="" name="Get OTP" handler={onSubmitMobileNumber} isDisabled={isButtonDisabled} />
         </div>
       </div>
-      <TermsAndConditions setLoginDetails={setLoginDetails} />
+      <TermsAndConditions />
     </div>
   );
 };

@@ -1,12 +1,13 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Stack from "@mui/material/Stack";
-import { Box, Typography } from "@mui/material";
+import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
+import Stack from '@mui/material/Stack';
+import { Box, Typography } from '@mui/material';
 
 type AvatarProps = {
   avatar: { image: string; title: string; subtitle: string };
 };
-export default function OriginAvatar({ avatar }: AvatarProps) {
+export default function OriginAvatar(props: any) {
+  const { avatar } = props;
   return (
     <Stack direction="row" className="gap-[18px]">
       <Avatar
@@ -17,13 +18,10 @@ export default function OriginAvatar({ avatar }: AvatarProps) {
       />
       <Box className="flex flex-col">
         <Typography variant="body1" className="font-normal text-black text-sm">
-          {avatar.title}
+          {avatar.client_name}
         </Typography>
-        <Typography
-          variant="body1"
-          className="font-light text-gray-600 text-xs"
-        >
-          {avatar.subtitle}
+        <Typography variant="body1" className="font-light text-gray-600 text-xs">
+          {avatar.company}
         </Typography>
       </Box>
     </Stack>

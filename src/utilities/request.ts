@@ -29,11 +29,11 @@ function checkStatus(response: Response) {
  * @return {object} Returns an object with header if logged in.
  */
 export function header() {
-  const userToken = localStorage.getItem("user_token");
+  const userToken = localStorage ? localStorage.getItem('user_token') : null;
   if (userToken) {
     return `Bearer ${userToken}`;
   }
-  return "";
+  return '';
 }
 
 export async function request(
@@ -43,21 +43,20 @@ export async function request(
   options?: RequestInit
 ): Promise<{} | { err: ResponseError }> {
   let requestUrl = url;
-  if (url.startsWith("/")) {
+  if (url.startsWith('/')) {
     requestUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}${url}`;
   }
 
   const headers: any = {
     ...options?.headers,
-    "MM-Device-Type": "web",
-    "MM-Build-Version": "1.0.1",
+    'MM-Device-Type': 'web',
+    'MM-Build-Version': '1.0.1'
   };
 
-  if (typeof window !== "undefined") {
-    headers["Delivery-Type"] =
-      localStorage.getItem("Delivery-Type") || "instant";
+  if (typeof window !== 'undefined') {
+    headers['Delivery-Type'] = localStorage.getItem('Delivery-Type') || 'instant';
 
-    headers["store-id"] = "1";
+    // headers['store-id'] = '1'
 
     // const storeId = localStorage.getItem('store-id');
     // if (storeId && storeId !== 'null') {
@@ -67,7 +66,7 @@ export async function request(
 
   const fetchResponse = await fetch(requestUrl, {
     ...options,
-    headers,
+    headers
   });
   const response = checkStatus(fetchResponse);
   return parseJSON(response);

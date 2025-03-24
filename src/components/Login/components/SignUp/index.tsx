@@ -1,63 +1,38 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  InputBase,
-  InputLabel,
-  MenuItem,
-  styled,
-  Typography,
-} from "@mui/material";
-import { useSetAtom } from "jotai";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
+import { Box, Button, FormControl, InputBase, InputLabel, MenuItem, styled, Typography } from '@mui/material';
+import { useAtom, useSetAtom } from 'jotai';
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
 
-import Gift from "../../../../assets/svg/gift.svg";
-import { request, header } from "@/utilities/request";
+import Gift from '../../../../assets/svg/gift.svg';
+import { request, header } from '@/utilities/request';
 
-import { login } from "../../context/atom";
-import type { LoginAtom } from "../../types/LoginAtom";
-import PrimaryRoundedCta from "@/components/shared/PrimaryRoundedCta";
-import TermsAndConditions from "../../TermsAndConditions";
-import SelectDropdown from "./Select";
-
-const BootstrapInput = styled(InputBase)(() => ({
-  width: "100%",
-  input: {
-    paddingLeft: "12px",
-    paddingRight: "12px",
-    width: "100%",
-    height: 48,
-    marginTop: "0.3rem",
-    borderRadius: "48px",
-    backgroundColor: "#F8F4E9",
-    boxSizing: "border-box",
-  },
-}));
-
-const MenuProps = {
-  PaperProps: {
-    sx: {
-      bgcolor: "#000",
-
-      "& .MuiMenuItem-root": {
-        color: "#fff",
-      },
-    },
-  },
-};
+import { login } from '../../context/atom';
+import type { LoginAtom } from '../../types/LoginAtom';
+import PrimaryRoundedCta from '@/components/shared/PrimaryRoundedCta';
+import TermsAndConditions from '../../TermsAndConditions';
+import SelectDropdown from './Select';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsLogin, setLoginDetails, setTabType, setUser } from '@/store/slice/loginSlice';
+import { TabTypeConstant } from '../../constants/tabTypeContent';
+import { profileAtom } from '@/features/AccountPage/context/atoms';
+import ProfileAtom from '@/features/AccountPage/types/ProfileAtom';
 
 const SignUp = () => {
-  const setLoginDetails = useSetAtom(login);
-  const [name, setName] = React.useState("");
-  const [gender, setGender] = React.useState("");
-  const [email, setEmail] = React.useState("");
+  // const setLoginDetails = useSetAtom(login)
+  const [profileDetails, setProfileAtom] = useAtom(profileAtom);
+
+  const [name, setName] = React.useState('');
+  const [gender, setGender] = React.useState('');
+  const [email, setEmail] = React.useState('');
   const [errors, setErrors] = React.useState({
-    name: "",
-    gender: "",
-    email: "",
+    name: '',
+    gender: '',
+    email: ''
   });
+  const dispatch = useDispatch();
+
+  const loginDetails = useSelector((state: any) => state.loginDetails);
 
   const hasSpecialCharsOrNumbers = (str: string) => {
     return /[^a-zA-Z0-9\s]/.test(str);
@@ -65,23 +40,23 @@ const SignUp = () => {
 
   const validateFields = () => {
     let valid = true;
-    const newErrors = { name: "", gender: "", email: "" };
+    const newErrors = { name: '', gender: '', email: '' };
 
     // Name validation
     if (!name) {
-      newErrors.name = "Name is required.";
+      newErrors.name = 'Name is required.';
       valid = false;
     } else if (hasSpecialCharsOrNumbers(name)) {
-      newErrors.name = "Name cannot contain special characters or numbers.";
+      newErrors.name = 'Name cannot contain special characters or numbers.';
       valid = false;
     } else if (name.length > 26) {
-      newErrors.name = "Name cannot be more than 50 characters.";
+      newErrors.name = 'Name cannot be more than 50 characters.';
       valid = false;
     }
 
     // Gender validation
     if (!gender) {
-      newErrors.gender = "Gender is required.";
+      newErrors.gender = 'Gender is required.';
       valid = false;
     }
 
@@ -97,41 +72,45 @@ const SignUp = () => {
       const formData = new FormData();
       const requestURL = `/api/v1/user/profile`;
 
-      formData.append("name", name);
-      formData.append("email", email);
-      formData.append("gender", gender);
-      formData.append("user_type", "individual");
-      formData.append("scope", "client");
-      formData.append("address_name", "");
-      formData.append("client_id", process.env.NEXT_PUBLIC_CLIENT_ID || "");
-      formData.append(
-        "client_secret",
-        process.env.NEXT_PUBLIC_CLIENT_SECRET || ""
-      );
-      formData.append("scope", "*");
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('gender', gender);
+      formData.append('user_type', 'individual');
+      formData.append('scope', 'client');
+      formData.append('address_name', '');
+      formData.append('client_id', process.env.NEXT_PUBLIC_CLIENT_ID || '');
+      formData.append('client_secret', process.env.NEXT_PUBLIC_CLIENT_SECRET || '');
+      formData.append('scope', '*');
 
-      await request(requestURL, {
-        method: "POST",
+      const response: any = await request(requestURL, {
+        method: 'POST',
         headers: {
-          Authorization: header(),
-          Accept: "application/json",
+          Authorization: `Bearer ${loginDetails.user}`,
+          Accept: 'application/json'
         },
-        body: formData,
+        body: formData
       });
 
-      setLoginDetails((prevDetails: LoginAtom) => ({
-        ...prevDetails,
-        isLoginSidebarOpen: false,
-        isLogin: true,
-      }));
+      if (response.data) {
+        setProfileAtom((prev: ProfileAtom) => ({
+          ...prev,
+          data: response.data
+        }));
+        const userToken = localStorage.setItem('user_token', loginDetails.user);
+        // dispatch(setUser(userToken));
+        dispatch(setIsLogin(true));
+        const { profile } = response.data;
+        if (!profile.address) {
+          dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
+        }
+      }
 
-      if (window) window.location.reload();
+      // if (window) window.location.reload()
     } catch (error: any) {
       if (error?.response?.status === 500) {
         setErrors((prev) => ({
           ...prev,
-          email:
-            "This email is already registered. Please use a different email.",
+          email: 'This email is already registered. Please use a different email.'
         }));
       }
     }
@@ -145,43 +124,43 @@ const SignUp = () => {
     <>
       <Typography
         sx={{
-          color: "#231F20CC",
-          fontSize: "14px",
-          fontWeight: "400",
-          margin: "0rem 0 2rem 0",
-          fontFamily: "SofiaPro",
+          color: '#231F20CC',
+          fontSize: '14px',
+          fontWeight: '400',
+          margin: '0rem 0 2rem 0',
+          fontFamily: 'SofiaPro'
         }}
       >
-        Complete registration to unlock exclusive discounts and coupons{" "}
+        Complete registration to unlock exclusive discounts and coupons{' '}
       </Typography>
 
       <Box>
         <FormControl
           variant="standard"
           sx={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            gap: 4,
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 4
           }}
         >
           <Box
             className="signup-main"
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 2
             }}
           >
             <Box className="form-group">
               <Typography
                 sx={{
-                  fontSize: "16px",
-                  lineHeight: "1.6",
+                  fontSize: '16px',
+                  lineHeight: '1.6',
                   fontWeight: 600,
-                  fontFamily: "SofiaPro",
-                  color: "#231F20",
-                  paddingBottom: "12px",
+                  fontFamily: 'SofiaPro',
+                  color: '#231F20',
+                  paddingBottom: '12px'
                 }}
               >
                 Name
@@ -198,7 +177,10 @@ const SignUp = () => {
                   onChange={(e) => {
                     setName(e.target.value);
                     if (errors.name) {
-                      setErrors((prev) => ({ ...prev, name: "" }));
+                      setErrors((prev) => ({
+                        ...prev,
+                        name: ''
+                      }));
                     }
                   }}
                 />
@@ -207,10 +189,10 @@ const SignUp = () => {
                 <Typography
                   variant="body2"
                   sx={{
-                    color: "#C70000",
-                    fontWeight: "normal",
-                    display: "block",
-                    fontFamily: "SofiaPro",
+                    color: '#C70000',
+                    fontWeight: 'normal',
+                    display: 'block',
+                    fontFamily: 'SofiaPro'
                   }}
                 >
                   {errors.name}
@@ -228,12 +210,12 @@ const SignUp = () => {
             <Box className="form-group pt-[14px] ">
               <Typography
                 sx={{
-                  fontSize: "16px",
-                  lineHeight: "1.6",
+                  fontSize: '16px',
+                  lineHeight: '1.6',
                   fontWeight: 600,
-                  fontFamily: "SofiaPro",
-                  color: "#231F20",
-                  paddingBottom: "12px",
+                  fontFamily: 'SofiaPro',
+                  color: '#231F20',
+                  paddingBottom: '12px'
                 }}
               >
                 Email (Optional)
@@ -241,12 +223,15 @@ const SignUp = () => {
 
               <div className="bg-primary-100 min-h-[48px]  px-[3.6vw] md:px-[1.67vw] flex items-center gap-[5px] rounded-full">
                 <input
-                  className="border-none outline-none bg-primary-100 placeholder:text-[#231F2099] placeholder:text-[14px] md:placeholder:text-[.97vw]  font-[SofiaPro] text-[14px]"
+                  className="border-none outline-none bg-primary-100 placeholder:text-[#231F2099] placeholder:text-[14px] md:placeholder:text-[.97vw] w-full font-[SofiaPro] text-[14px]"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
                     if (errors.email) {
-                      setErrors((prev) => ({ ...prev, email: "" }));
+                      setErrors((prev) => ({
+                        ...prev,
+                        email: ''
+                      }));
                     }
                   }}
                   placeholder="yourname@mail.com"
@@ -258,9 +243,9 @@ const SignUp = () => {
                 <Typography
                   variant="body2"
                   sx={{
-                    color: "#C70000",
-                    fontWeight: "normal",
-                    display: "block",
+                    color: '#C70000',
+                    fontWeight: 'normal',
+                    display: 'block'
                   }}
                 >
                   {errors.email}
@@ -269,15 +254,10 @@ const SignUp = () => {
             </Box>
           </Box>
           <div>
-            <PrimaryRoundedCta
-              style=""
-              name="Proceed"
-              handler={onSubmitRegister}
-              isDisabled={false}
-            />
+            <PrimaryRoundedCta style="" name="Proceed" handler={onSubmitRegister} isDisabled={false} />
           </div>
         </FormControl>
-        <TermsAndConditions setLoginDetails={() => {}} />
+        <TermsAndConditions />
       </Box>
     </>
   );

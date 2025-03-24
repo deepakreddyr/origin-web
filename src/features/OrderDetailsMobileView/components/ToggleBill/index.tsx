@@ -1,11 +1,11 @@
-import { Box, IconButton, Typography } from "@mui/material";
-import { useAtomValue } from "jotai";
-import Image from "next/image";
-import { useState } from "react";
+import { Box, IconButton, Typography } from '@mui/material';
+import { useAtomValue } from 'jotai';
+import Image from 'next/image';
+import { useState } from 'react';
 
-import Toggle from "../../assets/toggle.svg";
-import { orderDetailsAtom } from "../../context/atoms";
-import type { Bill } from "../../types/Bill";
+import Toggle from '../../assets/toggle.svg';
+import { orderDetailsAtom } from '../../context/atoms';
+import type { Bill } from '../../types/Bill';
 
 interface Props {
   bill: Bill;
@@ -26,28 +26,28 @@ const ToggleBill = (props: Props) => {
     return (
       <Box
         sx={{
-          padding: "0rem 1rem 0.3rem 1rem",
+          padding: '0rem 1rem 0.3rem 1rem'
         }}
       >
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
+            display: 'flex',
+            justifyContent: 'space-between'
           }}
         >
           <Typography
             sx={{
-              fontWeight: "500",
-              fontSize: "12px",
-              color: "#414141",
+              fontWeight: '500',
+              fontSize: '12px',
+              color: '#414141'
             }}
           >
             Item Total
           </Typography>
           <Typography
             sx={{
-              fontWeight: "600",
-              fontSize: "12px",
+              fontWeight: '600',
+              fontSize: '12px'
             }}
           >
             ₹{bill.sub_total}
@@ -56,26 +56,26 @@ const ToggleBill = (props: Props) => {
         {!!totalSavings && (
           <Box
             sx={{
-              display: "flex",
-              justifyContent: "space-between",
+              display: 'flex',
+              justifyContent: 'space-between'
             }}
           >
             <Typography
               sx={{
-                fontWeight: "500",
-                fontSize: "12px",
-                color: "#00855B",
-                marginTop: "0.3rem",
+                fontWeight: '500',
+                fontSize: '12px',
+                color: '#00855B',
+                marginTop: '0.3rem'
               }}
             >
               Savings
             </Typography>
             <Typography
               sx={{
-                fontWeight: "600",
-                fontSize: "12px",
-                color: "#00855B",
-                marginTop: "0.3rem",
+                fontWeight: '600',
+                fontSize: '12px',
+                color: '#00855B',
+                marginTop: '0.3rem'
               }}
             >
               - ₹{totalSavings}
@@ -86,26 +86,26 @@ const ToggleBill = (props: Props) => {
         {bill.reward_spent !== null && (
           <Box
             sx={{
-              display: "flex",
-              justifyContent: "space-between",
+              display: 'flex',
+              justifyContent: 'space-between'
             }}
           >
             <Typography
               sx={{
-                fontWeight: "500",
-                fontSize: "12px",
-                marginTop: "0.3rem",
-                color: "#00855B",
+                fontWeight: '500',
+                fontSize: '12px',
+                marginTop: '0.3rem',
+                color: '#00855B'
               }}
             >
               Rewards
             </Typography>
             <Typography
               sx={{
-                fontWeight: "600",
-                fontSize: "12px",
-                marginTop: "0.3rem",
-                color: "#00855B",
+                fontWeight: '600',
+                fontSize: '12px',
+                marginTop: '0.3rem',
+                color: '#00855B'
               }}
             >
               -₹{bill.reward_spent}
@@ -113,26 +113,26 @@ const ToggleBill = (props: Props) => {
             {orderDetails.data?.coupon ? (
               <Box
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
+                  display: 'flex',
+                  justifyContent: 'space-between'
                 }}
               >
                 <Typography
                   sx={{
-                    fontWeight: "500",
-                    fontSize: "12px",
-                    color: "#00855b",
-                    marginTop: "0.3rem",
+                    fontWeight: '500',
+                    fontSize: '12px',
+                    color: '#00855b',
+                    marginTop: '0.3rem'
                   }}
                 >
                   Coupon Applied {orderDetails.data?.coupon.code}
                 </Typography>
                 <Typography
                   sx={{
-                    fontWeight: "600",
-                    fontSize: "12px",
-                    marginTop: "0.3rem",
-                    color: "#00855b",
+                    fontWeight: '600',
+                    fontSize: '12px',
+                    marginTop: '0.3rem',
+                    color: '#00855b'
                   }}
                 >
                   -₹{bill.discount}
@@ -151,24 +151,24 @@ const ToggleBill = (props: Props) => {
     return (
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          padding: "0rem 1rem 0.3rem 1rem",
+          display: 'flex',
+          justifyContent: 'space-between',
+          padding: '0rem 1rem 0.3rem 1rem'
         }}
       >
         <Typography
           sx={{
-            fontWeight: "500",
-            fontSize: "12px",
-            color: "#414141",
+            fontWeight: '500',
+            fontSize: '12px',
+            color: '#414141'
           }}
         >
           TO PAY
         </Typography>
         <Typography
           sx={{
-            fontWeight: "600",
-            fontSize: "14px",
+            fontWeight: '600',
+            fontSize: '14px'
           }}
         >
           ₹{bill?.total}
@@ -181,16 +181,16 @@ const ToggleBill = (props: Props) => {
       <Box>
         <Box
           sx={{
-            display: "flex",
-            alignItems: "flex-start",
+            display: 'flex',
+            alignItems: 'flex-start'
           }}
         >
           <Typography
             sx={{
-              fontWeight: "600",
-              fontSize: "12px",
-              padding: "0rem 0.3rem 0.3rem 1rem",
-              marginTop: "0.3rem",
+              fontWeight: '600',
+              fontSize: '12px',
+              padding: '0rem 0.3rem 0.3rem 1rem',
+              marginTop: '0.3rem'
             }}
           >
             Bill ID: {bill.bill_id}

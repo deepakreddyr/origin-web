@@ -15,10 +15,13 @@ import YourRewards from './components/YourRewards';
 import { activeAccountsPageAtom, profileAtom } from './context/atoms';
 import ActiveSidebar from './enums/ActiveSidebar';
 import { getProfile } from './services/getProfile';
+import { useSelector } from 'react-redux';
+import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 
 const Account = () => {
   const [, setProfileAtom] = useAtom(profileAtom);
   const [activeAccountsPage] = useAtom(activeAccountsPageAtom);
+  const loginDetails = useSelector((state: any) => state.loginDetails);
 
   React.useEffect(() => {
     const token = localStorage.getItem('user_token');
@@ -27,50 +30,50 @@ const Account = () => {
     }
   }, []);
   const renderAccountSidebars = () => {
-    switch (activeAccountsPage) {
-      case ActiveSidebar.ACCOUNT_MAIN: {
+    switch (loginDetails.tabType) {
+      case TabTypeConstant.ACCOUNT_MAIN: {
         return <AccountMain />;
       }
-      case ActiveSidebar.SETTING: {
+      case TabTypeConstant.SETTING: {
         return <Settings />;
       }
-      case ActiveSidebar.EDIT_ACCOUNT: {
+      case TabTypeConstant.EDIT_ACCOUNT: {
         return <AccountEdit />;
       }
-      case ActiveSidebar.MANAGE_ADDRESS: {
+      case TabTypeConstant.MANAGE_ADDRESS: {
         return <ManageAddress />;
       }
-      case ActiveSidebar.YOUR_ORDERS: {
+      case TabTypeConstant.YOUR_ORDERS: {
         return <YourOrders />;
       }
-      case ActiveSidebar.RATING: {
+      case TabTypeConstant.RATING: {
         return <Rating />;
       }
-      case ActiveSidebar.YOUR_REWARDS: {
+      case TabTypeConstant.YOUR_REWARDS: {
         return <YourRewards />;
       }
-      case ActiveSidebar.REFER_EARN: {
+      case TabTypeConstant.REFER_EARN: {
         return <ReferEarn />;
       }
-      case ActiveSidebar.SUPPORT_CHAT: {
+      case TabTypeConstant.SUPPORT_CHAT: {
         return <SupportChat />;
       }
-      case ActiveSidebar.REVIEW_RATING: {
+      case TabTypeConstant.REVIEW_RATING: {
         return <Rating />;
       }
 
       // case ActiveSidebar.REWARD_DETAILS: {
       //   return <RewardDetails />;
       // }
-      case ActiveSidebar.HELP_FAQ: {
+      case TabTypeConstant.HELP_FAQ: {
         return <HelpFaq />;
       }
       default: {
-        return <AccountMain />;
+        break;
+        // return <AccountMain />
       }
     }
   };
-
   return <>{renderAccountSidebars()}</>;
 };
 

@@ -1,189 +1,96 @@
-import { ArrowBack } from "@mui/icons-material";
-import { Box, Drawer, IconButton, styled, Typography } from "@mui/material";
-import { useAtom } from "jotai";
-import Image from "next/image";
-import React from "react";
-
-import LocationIcon from "../../../../../public/assets/svg/location-serviceable.svg";
-import Cross from "../../../../../public/assets/svg/xmark.svg";
-import { login } from "../../context/atom";
-import type { LoginAtom } from "../../types/LoginAtom";
-import { TabTypeConstant } from "../../constants/tabTypeContent";
-
-const CustomSidebarDrawer = styled(Drawer)({
-  "& .MuiDrawer-paper": {
-    maxWidth: 480,
-    width: "100%",
-    backgroundColor: "none",
-    boxShadow: "-5px 0px 14px 0px rgba(0, 0, 0, 0.12)",
-    display: "flex",
-    flexDirection: "column",
-    height: "100svh",
-    overflow: "auto",
-  },
-});
+import React, { useEffect, useRef } from 'react';
+import Image from 'next/image';
+import Cross from '../../../../../public/assets/svg/xmark.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsSidebarOpen, setTabType } from '@/store/slice/loginSlice';
+import backIcon from '/public/assets/icons/backIcon.png';
+import { TabTypeConstant } from '../../constants/tabTypeContent';
 
 interface Props {
-  children: any;
+  children: React.ReactNode;
   onClickBackButton: () => void;
   isBackButtonEnable: boolean;
-  loginDetails: any;
+  headerTitle: string;
 }
 
 const SidebarWrapper = (props: Props) => {
-  const { children, onClickBackButton, isBackButtonEnable } = props;
-  const [loginDetails, setLoginDetails] = useAtom(login);
+  const { children, onClickBackButton, isBackButtonEnable, headerTitle } = props;
+  const loginDetails = useSelector((state: any) => state.loginDetails);
+  const dispatch = useDispatch();
 
-  const getHeaderSidebarName = () => {
-    switch (loginDetails.tabType) {
-      case TabTypeConstant.ENTER_MOBILE_NUMBER:
-        return "Login / Sign up";
-
-      case TabTypeConstant.ENTER_OTP:
-        return "Login / Sign up";
-
-      case TabTypeConstant.REGISTER:
-        return "Registration";
-
-      default:
-        return "Login / Sign up";
+  useEffect(() => {
+    if (loginDetails.isSidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+      dispatch(setTabType(''));
     }
-  };
-
-  if (!loginDetails.isLoginSidebarOpen) return <React.Fragment />;
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [loginDetails.isSidebarOpen]);
 
   return (
-    <CustomSidebarDrawer
-      anchor="right"
-      className="sidebar sidebar-right"
-      open={loginDetails.isLoginSidebarOpen}
-      onClose={() => {
-        setLoginDetails((prevDetails: LoginAtom) => ({
-          ...prevDetails,
-          isLoginSidebarOpen: false,
-        }));
-      }}
-    >
-      <Box
-        className="sidebar_header"
-        sx={{
-          height: 78,
-          display: "flex",
-          alignItems: "flex-center",
-          justifyContent: "center",
-          width: "100%",
-          position: "sticky",
-          paddingLeft: 2,
-          paddingRight: 2,
-          top: 0,
-          borderBottom: "1px solid #F2EEE4",
-          padding: "1rem",
-          backgroundColor: "#fff",
-          boxShadow: "0px 4px 32px rgba(0, 0, 0, 0.08)",
-        }}
+    <div className="">
+      {loginDetails.isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-[10]"
+          onClick={() => dispatch(setIsSidebarOpen(false))}
+        ></div>
+      )}
+      <div
+        className={`fixed top-0 ${
+          loginDetails.isSidebarOpen ? 'right-0' : '-right-full'
+        } w-[30vw] mob:w-screen h-screen bg-white shadow-md flex flex-col 
+    transition-all duration-300 ease-in-out z-[20]`}
       >
-        {isBackButtonEnable && (
-          <Box
-            className="sidebar_header_inner"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              mr: "10px",
-            }}
+        {loginDetails.isHeaderVisible && (
+          <div
+            className="h-[5.0vw] mob:h-[15vw] flex items-center justify-between w-full gap-[.6vw] mob:gap-[2vw] px-4 sticky top-0 z-[1] 
+                border-b border-[#F2EEE4] bg-white shadow-md"
           >
-            <IconButton
-              onClick={() => {
-                onClickBackButton();
-              }}
-            >
-              <ArrowBack />
-            </IconButton>
-          </Box>
+            {isBackButtonEnable && (
+              <div className="flex items-center justify-end ">
+                <button
+                  onClick={onClickBackButton}
+                  className="relative w-[2.5vw] mob:w-[6vw] mob:h-[6vw] h-[2.5vw] cursor-pointer bg-transparent border-none rounded-full flex items-center justify-center
+        hover:bg-gray-100 active:bg-gray-100 transition-colors duration-200"
+                >
+                  <div className="relative w-[1.25vw] mob:w-[5vw] mob:h-[5vw] h-[1.25vw]">
+                    <Image src={backIcon} alt="back" />
+                  </div>
+                </button>
+              </div>
+            )}
+            <div className="flex items-center justify-between w-full">
+              <p className="font-[Stinger] text-[1.67vw] mob:text-[5vw] font-bold mt-[.6vw] mob:mt-[3vw] ">
+                {headerTitle}
+              </p>
+              <button
+                onClick={() => {
+                  dispatch(setIsSidebarOpen(false));
+                  if (
+                    loginDetails.tabType === TabTypeConstant.SELECT_ADDRESS ||
+                    loginDetails.tabType === TabTypeConstant.CART
+                  ) {
+                    dispatch(setTabType(''));
+                  }
+                }}
+                className="w-[2.5vw] h-[2.5vw] mob:w-[6vw] mob:h-[6vw] rounded-full flex items-center justify-center hover:bg-gray-100 active:bg-gray-100 transition-colors duration-200"
+              >
+                <div className="w-[1.67vw] h-[1.67vw] mob:w-[6vw] mob:h-[6vw] relative ">
+                  <Image src={Cross} alt="close" fill />
+                </div>
+              </button>
+            </div>
+          </div>
         )}
-        <Box
-          className="sidebar_header_inner"
-          sx={{
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            width: "100%",
-          }}
-        >
-          <Typography
-            variant="h5"
-            component="h5"
-            sx={{
-              fontFamily: "Stinger",
-              fontSize: "24px !important",
-              fontWeight: 700,
-            }}
-          >
-            {getHeaderSidebarName()}
-          </Typography>
-          <IconButton
-            onClick={() => {
-              setLoginDetails((prevDetails: LoginAtom) => ({
-                ...prevDetails,
-                isLoginSidebarOpen: false,
-              }));
-            }}
-          >
-            <Image src={Cross} alt="cross" />
-          </IconButton>
-        </Box>
-      </Box>
-      <Box
-        className="sidebar_body"
-        sx={{
-          display: "flex",
-          marginTop: "2rem",
-          justifyContent: "center",
-          flex: 1,
-          paddingLeft: 2,
-          paddingRight: 2,
-          width: "100%",
-        }}
-      >
-        <Box
-          className="sidebar_body_inner"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            maxWidth: 400,
-            width: "100%",
-          }}
-        >
+        {/* */}
+        <div className="p-[1.1vw] mob:p-[4.1vw] h-[calc(100vh-5vw)] overflow-auto flex flex-col grow gap-[1.1vw]">
           {children}
-        </Box>
-      </Box>
-      {/* this is kept on intention */}
-      {/* <Box
-        className="sidebar_footer"
-        sx={{
-          height: 120,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Button
-          size="small"
-          sx={{
-            gap: 1,
-            fontSize: 12,
-            border: "none",
-            borderRadius: "48px",
-            backgroundColor: "#F2EEE4",
-            color: "#231F20",
-            padding: "0.7rem",
-          }}
-        >
-          <Image src={LocationIcon} alt="Location Icon" />
-          Let’s check your location is serviceable
-        </Button>
-      </Box> */}
-    </CustomSidebarDrawer>
+        </div>
+      </div>
+    </div>
   );
 };
 

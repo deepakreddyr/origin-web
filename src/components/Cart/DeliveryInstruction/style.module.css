@@ -1,0 +1,72 @@
+.delivery-instruction-list-item figure {
+  margin: 0;
+  max-width: 32px;
+  max-height: 23px;
+  flex-shrink: 0;
+}
+
+.delivery-instruction-list-item span {
+  font-size: 10px;
+  font-weight: 500;
+  color: #025235;
+  display: block;
+  line-height: 1.4;
+}
+
+.delivery-instruction-list-item {
+  cursor: pointer;
+  display: flex;
+  min-width: 100px;
+  flex-direction: column;
+  flex: 0 0 auto;
+  justify-content: flex-start;
+  gap: 8px;
+  border-radius: 8px;
+  border: 1px solid #f4e7c5;
+  background-color: #fff;
+  padding: 12px;
+  flex: 1;
+
+  /* Hide scrollbar for IE and Edge */
+  -ms-overflow-style: none;
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar for WebKit browsers */
+.delivery-instruction-list::-webkit-scrollbar {
+  display: none;
+}
+
+.delivery-instruction-list-item:hover {
+  border-radius: 8px;
+  border: 1px solid #00855b;
+  background: rgba(0, 133, 91, 0.1);
+}
+
+.delivery-instruction-list-active-item {
+  border-radius: 8px !important;
+  border: 1px solid #00855b !important;
+  background: rgba(0, 133, 91, 0.1) !important;
+}
+
+.delivery-instruction-list {
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+  overflow-x: auto; /* Horizontal scrolling */
+  gap: 12px;
+  margin: 0;
+  margin-top: 0.8rem;
+  padding: 0;
+  list-style-type: none;
+
+  /* Ensure scrollbars do not appear */
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
+
+/* Hide scrollbar for WebKit browsers */
+.delivery-instruction-list::-webkit-scrollbar {
+  display: none;
+}

@@ -1,10 +1,10 @@
 // import { Box } from '@mui/material';
-import { useAtomValue } from "jotai";
-import React from "react";
+import { useAtomValue } from 'jotai';
+import React from 'react';
 
-import { orderDetailsAtom } from "../../context/atoms";
-import type { Bill } from "../../types/Bill";
-import ToggleBill from "../ToggleBill";
+import { orderDetailsAtom } from '../../context/atoms';
+import type { Bill } from '../../types/Bill';
+import ToggleBill from '../ToggleBill';
 
 const Bills = () => {
   const orderDetails = useAtomValue(orderDetailsAtom);
@@ -16,16 +16,11 @@ const Bills = () => {
       return savings + itemSavings;
     }, 0);
   }, [orderDetails]);
+
   return (
     <>
       {orderDetails?.data?.bills.map((bill: Bill) => {
-        return (
-          <ToggleBill
-            bill={bill}
-            key={bill.bill_id}
-            totalSavings={totalSavings}
-          />
-        );
+        return <ToggleBill bill={bill} key={bill.bill_id} totalSavings={totalSavings} />;
       })}
     </>
   );

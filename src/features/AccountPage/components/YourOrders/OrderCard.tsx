@@ -1,15 +1,20 @@
-import { Box, Typography } from "@mui/material";
-import { useRouter } from "next/router";
-import React from "react";
-import { Order } from "../../types/Order";
-import ActiveSidebar from "../../enums/ActiveSidebar";
-import styles from "./style.module.css";
-import { useAtom } from "jotai";
-import { activeAccountsPageAtom, isAccountIsOpen } from "../../context/atoms";
-import { DateTime } from "luxon"; // Import DateTime from Luxon
+import React from 'react';
+import { useRouter } from 'next/router';
+import { DateTime } from 'luxon'; // Import DateTime from Luxon
+import { activeAccountsPageAtom, isAccountIsOpen } from '../../context/atoms';
+import { useAtom } from 'jotai';
+import ActiveSidebar from '../../enums/ActiveSidebar';
+import { useDispatch } from 'react-redux';
+import { setIsSidebarOpen } from '@/store/slice/loginSlice';
 
 interface Props {
-  order: Order;
+  order: {
+    order_id: string;
+    created_at: number;
+    status: string;
+    item_details: string;
+    total: number;
+  };
 }
 
 const OrderCard = (props: Props) => {
@@ -17,144 +22,49 @@ const OrderCard = (props: Props) => {
   const router = useRouter();
   const [, setActiveAccountsPage] = useAtom(activeAccountsPageAtom);
   const [, setIsOpen] = useAtom(isAccountIsOpen);
-
+  const dispatch = useDispatch();
   const formattedDate = order.created_at
-    ? DateTime.fromMillis(order.created_at * 1000).toFormat(
-        "h:mm a '-' MMM  d, yyyy "
-      )
-    : "";
+    ? DateTime.fromMillis(order.created_at * 1000).toFormat("h:mm a '-' MMM  d, yyyy ")
+    : '';
 
-  const redirectOnClick = () => {
-    // router.push(`/home/orders/${order.order_id}`);
-    alert("to be integrated the product details pages");
+  const redirectOnClick = (orderId: any) => {
+    router.push(`/orders/${orderId}`);
     setActiveAccountsPage(ActiveSidebar.ACCOUNT_MAIN);
+    dispatch(setIsSidebarOpen(false));
     setIsOpen(false);
   };
-  const renderStatus = () => {
-    if (order.status === "Delivered") {
-      return (
-        <Typography
-          sx={{
-            background: "rgba(35, 31, 32, 0.12)",
-            color: "#231F20",
-            padding: "0.3rem 0.7rem",
-            border: "none",
-            borderRadius: "6px",
-            fontSize: "12px",
-            fontWeight: 700,
-            fontFamily: "SofiaPro",
-          }}
-        >
-          DELIVERED
-        </Typography>
-      );
-    }
-    if (
-      order.status === "Not Delivered" ||
-      order.status === "Rejected by admin"
-    ) {
-      return (
-        <Typography
-          sx={{
-            background: "rgba(199, 0, 0, 0.12)",
-            color: "#C70000",
-            padding: "0.3rem 0.7rem",
-            border: "none",
-            borderRadius: "6px",
-            fontSize: "12px",
-            fontWeight: 700,
-            fontFamily: "SofiaPro",
-          }}
-        >
-          NOT DELIVERED
-        </Typography>
-      );
-    }
-    return (
-      <Typography
-        sx={{
-          background: "rgba(37, 135, 77, 0.12)",
-          color: "#25874D",
-          padding: "0.3rem 0.7rem",
-          border: "none",
-          borderRadius: "624px",
-          fontSize: "12px",
-          fontWeight: 700,
-          fontFamily: "SofiaPro",
-        }}
-      >
-        IN PROGRESS
-      </Typography>
-    );
-  };
+
   return (
-    <Box
+    <div
       key={order.order_id}
-      component="ul"
-      className={`order-list ${styles["order-list"]}`}
-      onClick={redirectOnClick}
-      sx={{ cursor: "pointer", background: "var(--Beige-Light-100, #F8F4E9)" }}
+      className="cursor-pointer bg-[#F8F4E9] p-[1.1vw] mob:p-[4.1vw] mob:rounded-[3vw] rounded-[.83vw] "
+      onClick={() => redirectOnClick(order.order_id)}
     >
-      <Box
-        component="li"
-        className={`order-list-item ${styles["order-list-item"]}`}
-      >
-        <Box
-          className={`order-list-item-body ${styles["order-list-item-body"]}`}
-        >
-          <Box
-            className={`order-list-item-order-id ${styles["order-list-item-order-id"]}`}
-          >
-            <Typography
-              variant="body2"
-              component="span"
-              sx={{ fontWeight: 700, fontFamily: "SofiaPro", fontSize: "14px" }}
-            >
-              {`ORDER ID ${order.order_id}`}
-            </Typography>
-            {renderStatus()}
-          </Box>
-          <Typography
-            variant="body2"
-            sx={{
-              fontWeight: 400,
-              fontFamily: "SofiaPro",
-              fontSize: "13px",
-              color: "#000000CC",
-              display: "-webkit-box",
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              WebkitLineClamp: 2,
-            }}
-          >
-            {order.item_details}
-          </Typography>
-        </Box>
-        <Box
-          className={`order-list-item-footer ${styles["order-list-item-footer"]}`}
-        >
-          <Typography
-            sx={{
-              color: "#231F2099",
-              fontSize: "13px",
-              fontFamily: "SofiaPro",
-              fontWeight: 500,
-            }}
-          >{` Ordered at  ${formattedDate}`}</Typography>
-          <Typography
-            variant="body2"
-            component="span"
-            sx={{
-              fontWeight: 700,
-              fontSize: "13px",
-            }}
-          >
-            Total ₹{order.total}
-          </Typography>
-        </Box>
-      </Box>
-    </Box>
+      <div className="flex justify-between items-center mob:pb-[2.5vw] pb-[.6vw]">
+        <span className="font-bold text-[.97vw] mob:text-[3.6vw] font-[SofiaPro] ">{`ORDER ID ${order.order_id}`}</span>
+
+        <div>
+          {order.status === 'Delivered' ? (
+            <div className="bg-[#231F201A] px-[1.1vw] mob:px-[4.1vw] mob:py-[1.5vw] py-[.4vw] mob:rounded-[2vw] rounded-[.6vw]">
+              <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold text-black">DELIVERED</p>
+            </div>
+          ) : order.status === 'Not Delivered' || order.status === 'Rejected by admin' ? (
+            <div className="bg-[#C700001A] px-[1.1vw] mob:px-[4.1vw] mob:py-[1.5vw] py-[.4vw] mob:rounded-[2vw] rounded-[.6vw]">
+              <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold text-danger">NOT DELIVERED</p>
+            </div>
+          ) : (
+            <div className=" bg-[#25874D1A] px-[1.1vw] mob:px-[4.1vw] mob:py-[1.5vw] py-[.4vw] mob:rounded-[2vw] rounded-[.6vw] ">
+              <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold text-secondary">IN PROGRESS</p>
+            </div>
+          )}
+        </div>
+      </div>
+      <p className="text-sm text-gray-700 line-clamp-2 overflow-hidden">{order.item_details}</p>
+      <div className="flex justify-between text-[.83vw] mob:text-[3vw] text-gray-600 font-medium">
+        <span className="">{`Ordered at ${formattedDate}`}</span>
+        <span className="font-bold text-black text-[.83vw] mob:text-[3vw]">{`Total ₹${order.total}`}</span>
+      </div>
+    </div>
   );
 };
 

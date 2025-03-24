@@ -1,12 +1,12 @@
-import React, { ReactNode } from "react";
-import { Box, Typography } from "@mui/material";
-import OriginButton from "@/components/OriginButton";
-import ParallaxImageBox from "@/components/SideBySide/ParallaxImageBox"; // Assuming you have a Parallax component
-import CA from "classnames";
-import Image from "next/image";
-import ParallaxProvider from "@/components/ParallaxProvider/ParallaxProvider";
-import { Variant } from "@mui/material/styles/createTypography";
-import HTMLReactParser from "html-react-parser/lib/index";
+import React, { ReactNode } from 'react';
+import { Box, Typography } from '@mui/material';
+import OriginButton from '@/components/OriginButton';
+import ParallaxImageBox from '@/components/SideBySide/ParallaxImageBox'; // Assuming you have a Parallax component
+import CA from 'classnames';
+import Image from 'next/image';
+import ParallaxProvider from '@/components/ParallaxProvider/ParallaxProvider';
+import { Variant } from '@mui/material/styles/createTypography';
+import HTMLReactParser from 'html-react-parser/lib/index';
 
 type SideBySideProps = {
   title: string;
@@ -16,14 +16,14 @@ type SideBySideProps = {
   buttonClick1?: any;
   buttonClick2?: any;
   buttonText?: string;
-  buttonVariant?: "primary" | "secondary" | "tertiary" | "textOnly";
+  buttonVariant?: 'primary' | 'secondary' | 'tertiary' | 'textOnly';
   buttonText2?: string;
-  buttonVariant2?: "primary" | "secondary" | "tertiary" | "textOnly";
+  buttonVariant2?: 'primary' | 'secondary' | 'tertiary' | 'textOnly';
   rootClass?: string;
   imageContainerClass?: string;
   titleContainerClass?: string;
   reverse?: boolean;
-  variant?: "parallax" | "normal" | "vertical" | "hero";
+  variant?: 'parallax' | 'normal' | 'vertical' | 'hero';
   // Parallax props
   parallaxTopImageSrc?: string;
   parallaxMainImageSrc?: string;
@@ -49,7 +49,7 @@ type SideBySideProps = {
 };
 
 const SideBySide: React.FC<SideBySideProps> = ({
-  variant = "normal",
+  variant = 'normal',
   parallaxTopImageSrc,
   parallaxMainImageSrc,
   parallaxBottomImageSrc,
@@ -59,7 +59,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
   parallaxMainImageHeight = 300,
   parallaxBottomImageWidth = 100,
   parallaxBottomImageHeight = 100,
-  parallaxImageAlt = "parallax-image",
+  parallaxImageAlt = 'parallax-image',
   parallaxTopImgClass,
   parallaxMainImgClass,
   parallaxBottomImgClass,
@@ -71,8 +71,8 @@ const SideBySide: React.FC<SideBySideProps> = ({
   imageWidth = 100,
   imageHeight = 100,
   title,
-  titleVariant = "h2",
-  titleClass = "text-secondary",
+  titleVariant = 'h2',
+  titleClass = 'text-secondary',
   description,
   buttonText,
   buttonClick1,
@@ -80,27 +80,23 @@ const SideBySide: React.FC<SideBySideProps> = ({
   buttonVariant,
   buttonText2,
   buttonVariant2,
-  rootClass = "bg-secondary-200",
+  rootClass = 'bg-secondary-200',
   imageContainerClass,
   titleContainerClass,
   reverse = false,
-  imageClass,
+  imageClass
 }) => {
-  if (variant === "parallax") {
+  if (variant === 'parallax') {
     return (
       <TwoRowFlex reverse={reverse} rootClass={rootClass}>
         <Box
-          className={CA(
-            "w-full lg:w-1/2",
-            reverse ? "mt-5 lg:mt-0 " : "pe-0 lg:pe-[100px]",
-            parallaxImgContainerClass
-          )}
+          className={CA('w-full lg:w-1/2', reverse ? 'mt-5 lg:mt-0 ' : 'pe-0 lg:pe-[100px]', parallaxImgContainerClass)}
         >
           <ParallaxProvider>
             <ParallaxImageBox
-              topImageSrc={parallaxTopImageSrc || ""}
-              mainImageSrc={parallaxMainImageSrc || ""}
-              bottomImageSrc={parallaxBottomImageSrc || ""}
+              topImageSrc={parallaxTopImageSrc || ''}
+              mainImageSrc={parallaxMainImageSrc || ''}
+              bottomImageSrc={parallaxBottomImageSrc || ''}
               topImageWidth={parallaxTopImageWidth}
               topImageHeight={parallaxTopImageHeight}
               mainImageWidth={parallaxMainImageWidth}
@@ -118,80 +114,58 @@ const SideBySide: React.FC<SideBySideProps> = ({
         </Box>
         <Box
           className={CA(
-            "px-0 lg:px-0 py-0 lg:py-16 pt-6 w-full lg:w-1/2 z-[1]",
-            reverse ? "ps-0 lg:ps-[90px]" : "lg:pe-[90px]"
+            'px-0 lg:px-0 py-0 lg:py-16 pt-6 w-full lg:w-1/2 z-[1]',
+            reverse ? 'ps-0 lg:ps-[90px]' : 'lg:pe-[90px]'
           )}
         >
-          <Typography
-            variant={titleVariant}
-            className={CA(titleClass, "font-bold")}
-          >
+          <Typography variant={titleVariant} className={CA(titleClass, 'font-bold')}>
             {HTMLReactParser(title)}
           </Typography>
-          <Typography
-            variant="body1"
-            className="lg:my-6 mt-4 mb-6 font-light text-lg"
-          >
+          <Typography variant="body1" className="lg:my-6 mt-4 mb-6 font-light text-lg">
             {description}
           </Typography>
-          <OriginButton
-            handleClick={buttonClick1}
-            variant={buttonVariant}
-            buttonText={buttonText}
-          />
+          {/* <OriginButton handleClick={buttonClick1} variant={buttonVariant} buttonText={buttonText} /> */}
         </Box>
       </TwoRowFlex>
     );
   }
 
-  if (variant === "normal") {
+  if (variant === 'normal') {
     return (
       <TwoRowFlex reverse={reverse} rootClass={rootClass}>
         <Box
           className={CA(
-            "w-full lg:w-1/2",
-            reverse ? "mt-5 lg:mt-0 ps-0 lg:ps-[100px]" : "pe-0 lg:pe-[100px]",
+            'w-full lg:w-1/2',
+            reverse ? 'mt-5 lg:mt-0 ps-0 lg:ps-[100px]' : 'pe-0 lg:pe-[100px]',
             imageContainerClass
           )}
         >
           <Image
-            src={imageSrc || ""}
+            src={imageSrc || ''}
             width={imageWidth}
             height={imageHeight}
-            alt={imageAlt || ""}
+            alt={imageAlt || ''}
             className={CA(
-              "rounded-[10px] lg:rounded-[46px] w-full sm:h-[200px] md:h-[300px] lg:w-auto lg:h-auto",
+              'rounded-[10px] lg:rounded-[46px] w-full sm:h-[200px] md:h-[300px] lg:w-auto lg:h-auto',
               imageClass
             )}
           />
         </Box>
         <Box
           className={CA(
-            "px-0 lg:px-0 py-0 lg:py-16 pt-6 w-full lg:w-1/2",
-            reverse ? "ps-0 lg:ps-[100px]" : "lg:pe-[100px]",
+            'px-0 lg:px-0 py-0 lg:py-16 pt-6 w-full lg:w-1/2',
+            reverse ? 'ps-0 lg:ps-[100px]' : 'lg:pe-[100px]',
             titleContainerClass
           )}
         >
-          <Typography
-            variant={titleVariant}
-            className={CA(titleClass, "font-bold")}
-          >
+          <Typography variant={titleVariant} className={CA(titleClass, 'font-bold')}>
             {HTMLReactParser(title)}
           </Typography>
-          <Typography
-            variant="body1"
-            className="lg:my-6 mt-4 mb-6 font-light text-lg"
-          >
+          <Typography variant="body1" className="lg:my-6 mt-0 mb-6 font-light text-lg">
             {description}
           </Typography>
           <Box className="flex items-center gap-5">
-            {buttonText && (
-              <OriginButton
-                handleClick={buttonClick1}
-                variant={buttonVariant}
-                buttonText={buttonText}
-              />
-            )}
+            {/* {buttonText && <OriginButton handleClick={buttonClick1} variant={buttonVariant} buttonText={buttonText} />} */}
             {buttonText2 && (
               <Typography className="text-sm md:text-base" variant="body1">
                 {buttonText2}
@@ -203,58 +177,33 @@ const SideBySide: React.FC<SideBySideProps> = ({
     );
   }
 
-  if (variant === "vertical") {
+  if (variant === 'vertical') {
     return (
       <TwoColFlex reverse={reverse} rootClass={rootClass}>
-        <Box
-          className={CA(
-            "w-full",
-            reverse ? "mt-5 lg:mt-0 pt-0 lg:pt-10" : "pb-0 lg:pb-10"
-          )}
-        >
+        <Box className={CA('w-full', reverse ? 'mt-5 lg:mt-0 pt-0 lg:pt-10' : 'pb-0 lg:pb-10')}>
           <Image
-            src={imageSrc || ""}
+            src={imageSrc || ''}
             width={imageWidth}
             height={imageHeight}
-            alt={imageAlt || ""}
+            alt={imageAlt || ''}
             className={CA(
               imageClass,
-              "rounded-[10px] lg:rounded-[46px] w-full sm:h-[200px] md:h-[300px] lg:w-full lg:h-[256px] object-cover"
+              'rounded-[10px] lg:rounded-[46px] w-full sm:h-[200px] md:h-[300px] lg:w-full lg:h-[256px] object-cover'
             )}
           />
         </Box>
-        <Box
-          className={CA(
-            "py-0 lg:py-0 px-0 lg:px-16 pt-6 w-full flex",
-            reverse ? "pt-0 lg:pt-[0]" : "lg:pb-[0]"
-          )}
-        >
-          <TwoRowFlex
-            rootClass={CA("items-start px-0 py-0 lg:gap-12", rootClass)}
-          >
-            <Typography
-              variant={titleVariant}
-              className={CA(
-                titleClass,
-                "w-full lg:w-[calc(50%-3rem)] font-bold"
-              )}
-            >
+        <Box className={CA('py-0 lg:py-0 px-0 lg:px-16 pt-6 w-full flex', reverse ? 'pt-0 lg:pt-[0]' : 'lg:pb-[0]')}>
+          <TwoRowFlex rootClass={CA('items-start px-0 py-0 lg:gap-12', rootClass)}>
+            <Typography variant={titleVariant} className={CA(titleClass, 'w-full lg:w-[calc(50%-3rem)] font-bold')}>
               {HTMLReactParser(title)}
             </Typography>
             <Box className="w-full lg:w-[calc(50%-3rem)]">
-              <Typography
-                variant="body1"
-                className="mt-0 mb-6 lg:mb-6 font-light text-lg"
-              >
+              <Typography variant="body1" className="mt-0 mb-6 lg:mb-6 font-light text-lg">
                 {description}
               </Typography>
-              {buttonText && (
-                <OriginButton
-                  handleClick={buttonClick1}
-                  variant={buttonVariant}
-                  buttonText={buttonText}
-                />
-              )}
+              {/* {buttonText && (
+                <OriginButton handleClick={buttonClick1} variant={buttonVariant} buttonText={buttonText} />
+              )} */}
               {buttonText2 && (
                 <Typography className="text-sm md:text-base" variant="body1">
                   {buttonText2}
@@ -267,59 +216,36 @@ const SideBySide: React.FC<SideBySideProps> = ({
     );
   }
 
-  if (variant === "hero") {
+  if (variant === 'hero') {
     return (
-      <Box
-        className={CA(
-          "flex flex-wrap p-6 rounded-3xl lg:rounded-[64px]",
-          rootClass
-        )}
-      >
-        <Box
-          className={CA(
-            "w-full lg:w-1/2",
-            reverse ? "mt-5 lg:mt-0 ps-0" : "pe-0",
-            imageContainerClass
-          )}
-        >
+      <Box className={CA('flex flex-wrap p-6 rounded-3xl lg:rounded-[64px]', rootClass)}>
+        <Box className={CA('w-full lg:w-1/2', reverse ? 'mt-5 lg:mt-0 ps-0' : 'pe-0', imageContainerClass)}>
           <Image
-            src={imageSrc || ""}
+            src={imageSrc || ''}
             width={imageWidth}
             height={imageHeight}
-            alt={imageAlt || ""}
+            alt={imageAlt || ''}
             className={CA(
-              "rounded-[10px] lg:rounded-[46px] w-full sm:h-[200px] md:h-[300px] lg:w-auto lg:h-auto",
+              'rounded-[10px] lg:rounded-[46px] w-full sm:h-[200px] md:h-[300px] lg:w-auto lg:h-auto',
               imageClass
             )}
           />
         </Box>
         <Box
           className={CA(
-            "px-0 lg:px-0 py-0 lg:py-16 mg:pt-6 w-full lg:w-1/2",
-            reverse ? "ps-0 lg:ps-[100px]" : "lg:pe-[100px]",
+            'px-0 lg:px-0 py-0 lg:py-16 mg:pt-6 w-full lg:w-1/2',
+            reverse ? 'ps-0 lg:ps-[100px]' : 'lg:pe-[100px]',
             titleContainerClass
           )}
         >
-          <Typography
-            variant={titleVariant}
-            className={CA(titleClass, "font-bold leading-[44px]")}
-          >
+          <Typography variant={titleVariant} className={CA(titleClass, 'font-bold leading-[44px]')}>
             {HTMLReactParser(title)}
           </Typography>
-          <Typography
-            variant="body1"
-            className="lg:my-6 mt-2 lg:mt-4 mb-4 font-light text-lg"
-          >
+          <Typography variant="body1" className="lg:my-6 mt-2 lg:mt-4 mb-4 font-light text-lg">
             {description}
           </Typography>
           <Box className="flex items-center gap-5">
-            {buttonText && (
-              <OriginButton
-                handleClick={buttonClick1}
-                variant={buttonVariant}
-                buttonText={buttonText}
-              />
-            )}
+            {buttonText && <OriginButton handleClick={buttonClick1} variant={buttonVariant} buttonText={buttonText} />}
             {buttonText2 && (
               <Typography className="text-sm md:text-base" variant="body1">
                 {buttonText2}
@@ -338,7 +264,7 @@ export default SideBySide;
 const TwoColFlex = ({
   children,
   reverse,
-  rootClass,
+  rootClass
 }: {
   children: ReactNode;
   reverse?: boolean;
@@ -348,8 +274,8 @@ const TwoColFlex = ({
     <Box
       className={CA(
         rootClass,
-        "flex flex-wrap p-6 rounded-3xl lg:rounded-[64px]",
-        reverse ? "lg:flex-col-reverse" : "lg:flex-col"
+        'flex flex-wrap p-6 rounded-3xl lg:rounded-[64px]',
+        reverse ? 'lg:flex-col-reverse' : 'lg:flex-col'
       )}
     >
       {children}
@@ -359,7 +285,7 @@ const TwoColFlex = ({
 const TwoRowFlex = ({
   children,
   reverse = false,
-  rootClass,
+  rootClass
 }: {
   children: ReactNode;
   reverse?: boolean;
@@ -368,8 +294,8 @@ const TwoRowFlex = ({
   return (
     <Box
       className={CA(
-        "flex flex-wrap p-6 rounded-3xl lg:rounded-[64px]",
-        reverse ? "lg:flex-row-reverse" : "lg:flex-row",
+        'flex flex-wrap p-6 rounded-3xl lg:rounded-[64px]',
+        reverse ? 'lg:flex-row-reverse' : 'lg:flex-row',
         rootClass
       )}
     >

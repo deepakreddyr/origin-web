@@ -13,16 +13,19 @@ export const addressSidebarDetails = atom<{ tabType: TabType }>({
 });
 
 export const addressDetailsAtom = atom<Address>({
+  address: '',
   address_name: '',
   formatted_address: '',
-  address: '',
   door_no: '',
   locality: '',
   landmark: '',
   latitude: 0,
   longitude: 0,
   deliverable: false,
-  address_id: null
+  address_id: null,
+  earliest_timeslot: '',
+  store_id: '',
+  is_default: ''
 });
 
 export const saveAddressAtom = atom<SaveAddressAtomI>({

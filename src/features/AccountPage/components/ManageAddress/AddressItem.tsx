@@ -1,23 +1,24 @@
-import { Box, Button, Typography } from "@mui/material";
-import { useAtom } from "jotai";
-import Image from "next/image";
+import { Box, Button, Typography } from '@mui/material';
+import { useAtom } from 'jotai';
+import Image from 'next/image';
 
-import Friends from "/public/assets/svg/familyTag.svg";
-import Home from "/public/assets/svg/HouseTag.svg";
-import Office from "/public/assets/svg/OfficeTag.svg";
-import Other from "/public/assets/svg/OthersTag.svg";
-import type { ServiceabilityPayload } from "../../../../layouts/Header/types/ServiceabilityPayload";
+import Friends from '/public/assets/svg/familyTag.svg';
+import Home from '/public/assets/svg/HouseTag.svg';
+import Office from '/public/assets/svg/OfficeTag.svg';
+import Other from '/public/assets/svg/OthersTag.svg';
+import type { ServiceabilityPayload } from '../../../../layouts/Header/types/ServiceabilityPayload';
+import { editAddress } from '@/features/AddressEditDetails/services/editAddress';
 
-import Edit from "../../assets/edit.svg";
-import { addressAtom, deletingAddressAtom } from "../../context/atoms";
-import type Address from "../../types/Address";
-import styles from "./style.module.css";
-import {
-  addressDetailsAtom,
-  isAddressIsOpen,
-  isEditingAddress,
-} from "@/features/AddressEditDetails/context/atoms";
-import { manageAddressScreens } from "../../enums/ActiveSidebar";
+import Edit from '../../assets/edit.svg';
+import { deletingAddressAtom } from '../../context/atoms';
+import type Address from '../../types/Address';
+import styles from './style.module.css';
+import { addressDetailsAtom, isAddressIsOpen, isEditingAddress } from '@/features/AddressEditDetails/context/atoms';
+import { manageAddressScreens } from '../../enums/ActiveSidebar';
+import { addressAtom } from '@/features/Address/context/atoms';
+import { useDispatch } from 'react-redux';
+import { setTabType } from '@/store/slice/loginSlice';
+import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 
 interface Props {
   address: Address;
@@ -31,11 +32,13 @@ function AddressItem(props: Props) {
   const [, setAddressDetails] = useAtom(addressDetailsAtom);
   const [, setIsEditingAddress] = useAtom(isEditingAddress);
   const [deletingOrder, setDeletingOrder] = useAtom(deletingAddressAtom);
+  const dispatch = useDispatch();
 
-  const onDeleteAddress = async () => {
+  const onDeleteAddress = async (e: any) => {
+    e.stopPropagation();
     setDeletingOrder({
       isActive: true,
-      addressDetails: address,
+      addressDetails: address
     });
     // try {
     //   const res = await deleteAddress(address.address_id);
@@ -54,108 +57,120 @@ function AddressItem(props: Props) {
       latitude: address.latitude,
       longitude: address.longitude,
       name: address.address_name,
-      address_id: address.address_id,
+      address_id: address.address_id
     };
-    localStorage.setItem("address", JSON.stringify(payload));
+    localStorage.setItem('address', JSON.stringify(payload));
   };
 
   const onEditAddress = () => {
     saveAddressInLocalStorage();
-    setAddressDetails((prevState) => ({
+    setAddressDetails((prevState: any) => ({
       ...prevState,
-      address_name: String(address.address_name || ""),
-      door_no: String(address.door_no || ""),
-      landmark: String(address.landmark || ""),
-      locality: String(address.locality || ""),
+      address_name: String(address.address_name || ''),
+      door_no: String(address.door_no || ''),
+      landmark: String(address.landmark || ''),
+      locality: String(address.locality || ''),
       latitude: address.latitude,
       longitude: address.longitude,
-      formatted_address: address.address || "",
+      formatted_address: address.address || '',
       address: address.address,
-      address_id: address.address_id,
+      address_id: address.address_id
     }));
 
     setIsEditingAddress({
       isActive: true,
-      addressDetails: address,
+      addressDetails: address
     });
     setActiveScreen(manageAddressScreens.SERVICEABILITY);
     // setIsAddressOpen(true);
   };
 
   const renderImages = () => {
-    if (address.address_name === "Home") {
+    if (address.address_name === 'Home') {
       return <Image width={30} src={Home} alt="Home" />;
     }
-    if (address.address_name === "Office") {
+    if (address.address_name === 'Office') {
       return <Image width={30} src={Office} alt="Home" />;
     }
-    if (address.address_name === "Friends & Family") {
+    if (address.address_name === 'Friends & Family') {
       return <Image width={30} src={Friends} alt="Home" />;
     }
     return <Image width={30} src={Other} alt="Home" />;
   };
 
+  const handleSetAddress = async (address: any) => {
+    let apiData = {
+      ...address,
+      is_default: true
+    };
+    await editAddress(apiData as Address, setAddress);
+    dispatch(setTabType(TabTypeConstant.ACCOUNT_MAIN));
+    // setTimeSelectorOrListTab(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR);
+    // dispatch(setCartTabType(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR));
+  };
+
   return (
     <Box
+      // onClick={(e) =>{
+
+      //   handleSetAddress(address)}}
       component="li"
-      className={`address-list-item ${styles["address-list-item"]}`}
+      className={`address-list-item ${styles['address-list-item']}`}
     >
-      <Box
-        className={`address-list-item-header ${styles["address-list-item-header"]}`}
-      >
+      <Box className={`address-list-item-header ${styles['address-list-item-header']}`}>
         <Box
           sx={{
-            border: "1px solid #F2EEE4",
-            borderRadius: "6px",
-            padding: "0.3rem 0.4rem",
+            border: '1px solid #F2EEE4',
+            borderRadius: '6px',
+            padding: '0.3rem 0.4rem'
           }}
         >
           {renderImages()}
         </Box>
-        <Box sx={{ display: "flex", flexDirection: "column", width: "350px" }}>
-          <Typography
-            variant="body1"
-            sx={{ fontFamily: "SofiaPro", fontWeight: 600 }}
-            component="span"
-          >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '350px'
+          }}
+        >
+          <Typography variant="body1" sx={{ fontFamily: 'SofiaPro', fontWeight: 600 }} component="span">
             {address.address_name}
           </Typography>
           <Typography
             variant="body2"
             component="span"
             sx={{
-              color: "rgba(0, 0, 0, 0.60)",
+              color: 'rgba(0, 0, 0, 0.60)',
               fontWeight: 400,
-              fontFamily: "SofiaPro",
+              fontFamily: 'SofiaPro'
             }}
           >
             {address.address}
           </Typography>
         </Box>
       </Box>
-      <Box
-        className={`address-list-item-body ${styles["address-list-item-body"]}`}
-      >
+      <Box className={`address-list-item-body ${styles['address-list-item-body']}`}>
         <Box
           className="button-group"
           sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
             button: {
               gap: 1,
               marginTop: 1,
-              backgroundColor: "#F8F4E9",
+              backgroundColor: '#F8F4E9',
               fontSize: 12,
-              padding: "7px 12px",
-              borderRadius: "20px",
-              "&:hover": {
-                color: "white",
-                ".fill-green, .fill-red": {
-                  fill: "white",
-                },
-              },
-            },
+              padding: '7px 12px',
+              borderRadius: '20px',
+              '&:hover': {
+                color: 'white',
+                '.fill-green, .fill-red': {
+                  fill: 'white'
+                }
+              }
+            }
           }}
         >
           <Button
@@ -163,18 +178,18 @@ function AddressItem(props: Props) {
             color="success"
             size="small"
             sx={{
-              fontFamily: "SofiaPro",
+              fontFamily: 'SofiaPro',
               fontWeight: 600,
-              textTransform: "capitalize",
-              fontSize: "12px",
-              boxShadow: "none",
-              color: "#00855B",
-              "&:hover": {
-                boxShadow: "none",
+              textTransform: 'capitalize',
+              fontSize: '12px',
+              boxShadow: 'none',
+              color: '#00855B',
+              '&:hover': {
+                boxShadow: 'none'
               },
-              ".fill-green": {
-                fill: "#00855B",
-              },
+              '.fill-green': {
+                fill: '#00855B'
+              }
             }}
             onClick={onEditAddress}
           >
@@ -187,18 +202,18 @@ function AddressItem(props: Props) {
               color="error"
               size="small"
               sx={{
-                fontFamily: "SofiaPro",
+                fontFamily: 'SofiaPro',
                 fontWeight: 600,
-                textTransform: "capitalize",
-                fontSize: "12px",
-                boxShadow: "none",
-                "&:hover": {
-                  boxShadow: "none",
+                textTransform: 'capitalize',
+                fontSize: '12px',
+                boxShadow: 'none',
+                '&:hover': {
+                  boxShadow: 'none'
                 },
-                color: "#FF453A",
-                ".fill-red": {
-                  fill: "#FF453A",
-                },
+                color: '#FF453A',
+                '.fill-red': {
+                  fill: '#FF453A'
+                }
               }}
               onClick={onDeleteAddress}
             >

@@ -1,5 +1,5 @@
-@import "./sofia-style.css";
-@import "./stinger-style.css";
+@import './sofia-style.css';
+@import './stinger-style.css';
 
 @tailwind base;
 @tailwind components;
@@ -7,7 +7,14 @@
 
 /* typography styles */
 @layer utilities {
-  @import url("./typography.css");
+  @import url('./typography.css');
+}
+#nprogress .spinner {
+  display: none !important;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
 
 @layer base {
@@ -42,7 +49,7 @@
   }
 }
 
-@import url("./sliders.css");
+@import url('./sliders.css');
 .b1 {
   border: 1px solid red;
 }
@@ -59,7 +66,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 }
-@import url("./sliders.css");
+@import url('./sliders.css');
 
 /* hide scroll bar */
 .noscrollbar {
@@ -75,7 +82,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-input[type="number"] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 
@@ -86,19 +93,19 @@ input[type="number"] {
 }
 
 .howItWorksBg {
-  background-image: url("/assets/images/howitworks.svg");
+  background-image: url('/assets/images/howitworks.svg');
   background-repeat: no-repeat;
 }
 
 @media screen and (max-width: 600px) {
   .howItWorksBg {
-    background-image: url("/assets/images/howitworksMob.svg");
+    background-image: url('/assets/images/howitworksMob.svg');
   }
 }
 
 @media screen and (max-width: 1280px) {
   .carouselButtons {
-    display: none;
+    /* display: none; */
   }
 }
 
@@ -113,4 +120,17 @@ input[type="number"] {
 }
 .animate-marquee-left {
   animation: marquee-left var(--duration, 40s) linear infinite;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+div[style*='animation: scroll'] {
+  width: max-content; /* Ensure the container stretches to fit content */
 }
