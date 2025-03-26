@@ -134,3 +134,20 @@ input[type='number'] {
 div[style*='animation: scroll'] {
   width: max-content; /* Ensure the container stretches to fit content */
 }
+
+.hero-section {
+  background:  url('../assets/svg/hero/illustration.svg'), url('../assets/svg/hero/bg-color.jpg');
+  background-size: 45%, cover;
+  background-position: bottom right,  center center;
+  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section img {
+  position: absolute;
+  width: 50%;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}

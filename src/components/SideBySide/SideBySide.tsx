@@ -135,7 +135,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
       <TwoRowFlex reverse={reverse} rootClass={rootClass}>
         <Box
           className={CA(
-            'w-full lg:w-1/2',
+            'w-full lg:w-1/2 ',
             reverse ? 'mt-5 lg:mt-0 ps-0 lg:ps-[100px]' : 'pe-0 lg:pe-[100px]',
             imageContainerClass
           )}
@@ -220,7 +220,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
     return (
       <Box className={CA('flex flex-wrap p-6 rounded-3xl lg:rounded-[64px]', rootClass)}>
         <Box className={CA('w-full lg:w-1/2', reverse ? 'mt-5 lg:mt-0 ps-0' : 'pe-0', imageContainerClass)}>
-          <Image
+          {/* <Image
             src={imageSrc || ''}
             width={imageWidth}
             height={imageHeight}
@@ -229,7 +229,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
               'rounded-[10px] lg:rounded-[46px] w-full sm:h-[200px] md:h-[300px] lg:w-auto lg:h-auto',
               imageClass
             )}
-          />
+          /> */}
         </Box>
         <Box
           className={CA(
@@ -238,7 +238,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
             titleContainerClass
           )}
         >
-          <Typography variant={titleVariant} className={CA(titleClass, 'font-bold leading-[44px]')}>
+          <Typography variant={titleVariant} className={CA(titleClass, 'font-bold')}>
             {HTMLReactParser(title)}
           </Typography>
           <Typography variant="body1" className="lg:my-6 mt-2 lg:mt-4 mb-4 font-light text-lg">
