@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.originfresh.user",
+            "sha256_cert_fingerprints": [
+                "2F:B5:11:90:AE:82:52:CF:57:EE:19:B4:2F:DF:EB:FC:5B:1E:61:4A:83:F9:CB:43:AF:59:4B:83:AD:2C:C2:09"
+            ]
+        }
+    }
+]
