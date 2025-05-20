@@ -54,7 +54,10 @@ jobs:
           cat > containers.json <<EOF
           {
             "${{ env.CONTAINER_LABEL }}": {
-              "image": "${IMAGE_NAME}"
+              "image": "${IMAGE_NAME}",
+              "ports": {
+                "3000": "HTTP"
+              }
             }
           }
           EOF
