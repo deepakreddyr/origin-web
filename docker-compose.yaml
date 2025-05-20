@@ -1,0 +1,35 @@
+services:
+  web-dev:
+    build:
+      context: .
+      target: deps
+    command: yarn dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+
+  web-prod:
+    build:
+      context: .
+      target: runner
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+
+      - NEXT_PUBLIC_API_URL=https://originfresh.in
+      - NEXT_PUBLIC_BACKEND_API_URL=https://api.originfresh.in
+
+      - NEXT_PUBLIC_CLIENT_ID=2
+      - NEXT_PUBLIC_CLIENT_SECRET=YXrikViaqsvtULY7cqcn6ylzSHq4YlfwJsrPgq8d
+
+      - NEXT_PUBLIC_MAP_KEY=AIzaSyC_FlD8xBUY0nNq742uGiCQXGB7FNLIZ_A
+      - NEXT_PUBLIC_RAZORPAY_KEY=rzp_live_4V4cZJ9tm7Cq7v
+
+      - NEXT_TELEMETRY_DISABLED=1

@@ -1,0 +1,76 @@
+name: Build & Deploy to Lightsail Container (No ECR)
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  AWS_REGION: ap-south-1
+  LIGHTSAIL_SERVICE: originfresh-in
+  CONTAINER_LABEL: originfresh-in
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies & build
+        run: |
+          yarn --frozen-lockfile
+          yarn build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Build Docker image
+        # use GITHUB_SHA short as your image tag to ensure uniqueness
+        run: |
+          TAG=${GITHUB_SHA::8}
+          IMAGE_NAME=${{ env.CONTAINER_LABEL }}:$TAG
+          docker build -t $IMAGE_NAME .
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+
+      - name: Push container image to Lightsail
+        run: |
+          aws lightsail push-container-image \
+            --region      ${{ env.AWS_REGION }} \
+            --service-name ${{ env.LIGHTSAIL_SERVICE }} \
+            --label        ${{ env.CONTAINER_LABEL }} \
+            --image        $IMAGE_NAME
+
+      - name: Deploy new revision to Lightsail
+        run: |
+          # Create containers spec
+          cat > containers.json <<EOF
+          {
+            "${{ env.CONTAINER_LABEL }}": {
+              "image": "${IMAGE_NAME}"
+            }
+          }
+          EOF
+
+          # Configure public endpoint (Next.js defaults to port 3000)
+          cat > endpoint.json <<EOF
+          {
+            "containerName": "${{ env.CONTAINER_LABEL }}",
+            "port": 3000
+          }
+          EOF
+
+          aws lightsail create-container-service-deployment \
+            --region          ${{ env.AWS_REGION }} \
+            --service-name    ${{ env.LIGHTSAIL_SERVICE }} \
+            --containers      file://containers.json \
+            --public-endpoint file://endpoint.json
