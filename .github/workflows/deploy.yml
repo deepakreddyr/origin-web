@@ -19,6 +19,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Log in to Amazon Lightsail (Install lightsailctl)
+        run: |
+          curl -Lo lightsailctl https://amazonlightsail.com/ls/docs/en_us/articles/amazon-lightsail-install-software/_jcr_content/root/main_responsivegrid/container_253673722/container-par/section_copy_copy/download/file.res/lightsailctl-linux-x86_64
+          chmod +x lightsailctl
+          sudo mv lightsailctl /usr/local/bin
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
