@@ -1,10 +1,10 @@
+import MapLocator from '@/assets/OrderStatusAnimations/map.json';
 import { DeliveryStatusDetails } from '@/constants/orderDetailsConstants';
+import Lottie from 'lottie-react';
 import Image from 'next/image';
-import React, { useMemo, useState } from 'react';
-import Lottie from 'react-lottie';
+import { useMemo, useState } from 'react';
 import MapContainer from './MapContainer';
 import StatusBanner from './StatusBanner';
-import MapLocator from '@/assets/OrderStatusAnimations/map.json';
 import arrivedAtLocation from '/public/assets/images/arrivedAtLocation.png';
 import closeIcon from '/public/assets/images/closeIcon.png';
 
@@ -23,12 +23,10 @@ const OrderStatusIllustration = (props: any) => {
       lat: Number(driver?.latitude || 0),
       lng: Number(driver?.longitude || 0)
     };
-
     const customerLocation = {
       lat: Number(latitude || 0),
       lng: Number(longitude || 0)
     };
-
     return { isMapDetailsExist, driverLocation, customerLocation };
   }, [driver, latitude, longitude, mapToggle]);
 
@@ -38,22 +36,16 @@ const OrderStatusIllustration = (props: any) => {
 
   const renderIllustration = () => {
     const lastStatus = status_list && status_list.length > 0 ? status_list[status_list.length - 1] : null;
-
     if (!lastStatus) {
       return (
         <Lottie
-          options={{
-            loop: true,
-            autoplay: true,
-            animationData: DeliveryStatusDetails['confirmed'].illustration,
-            rendererSettings: {
-              preserveAspectRatio: 'xMidYMid slice'
-            }
-          }}
+          animationData={DeliveryStatusDetails['confirmed'].illustration}
+          loop={true}
+          autoplay={true}
+          style={{ width: '100%', height: '100%' }}
         />
       );
     }
-
     const currentStatus = lastStatus.status_message?.toLowerCase() || 'out for delivery';
     if (currentStatus === 'on the way') {
       return (
@@ -70,14 +62,10 @@ const OrderStatusIllustration = (props: any) => {
               ) : (
                 <div className="w-[1.5vw] mob:w-[6vw] mob:h-[6vw] h-[1.5vw] ">
                   <Lottie
-                    options={{
-                      loop: true,
-                      autoplay: true,
-                      animationData: MapLocator,
-                      rendererSettings: {
-                        preserveAspectRatio: 'xMidYMid slice'
-                      }
-                    }}
+                    animationData={MapLocator}
+                    loop={true}
+                    autoplay={true}
+                    style={{ width: '100%', height: '100%' }}
                   />
                 </div>
               )}
@@ -86,27 +74,20 @@ const OrderStatusIllustration = (props: any) => {
               </span>
             </button>
           )}
-
           {mapDetails.isMapDetailsExist &&
-          mapDetails.driverLocation.lat !== 0 &&
-          mapDetails.driverLocation.lng !== 0 ? (
+            mapDetails.driverLocation.lat !== 0 &&
+            mapDetails.driverLocation.lng !== 0 ? (
             <MapContainer
               driverLocation={mapDetails.driverLocation}
               customerLocation={mapDetails.customerLocation}
               fetchOrderdetails={fetchOrderdetails}
-              // driverLocation={{ lat: 40.743817, lng: -73.985428 }}
-              // customerLocation={{ lat: 40.73061, lng: -73.935242 }}
             />
           ) : (
             <Lottie
-              options={{
-                loop: true,
-                autoplay: true,
-                animationData: DeliveryStatusDetails['out for delivery'].illustration,
-                rendererSettings: {
-                  preserveAspectRatio: 'xMidYMid slice'
-                }
-              }}
+              animationData={DeliveryStatusDetails['out for delivery'].illustration}
+              loop={true}
+              autoplay={true}
+              style={{ width: '100%', height: '100%' }}
             />
           )}
         </div>
@@ -118,17 +99,12 @@ const OrderStatusIllustration = (props: any) => {
         </div>
       );
     }
-
     return (
       <Lottie
-        options={{
-          loop: true,
-          autoplay: true,
-          animationData: DeliveryStatusDetails[currentStatus]?.illustration,
-          rendererSettings: {
-            preserveAspectRatio: 'xMidYMid slice'
-          }
-        }}
+        animationData={DeliveryStatusDetails[currentStatus]?.illustration}
+        loop={true}
+        autoplay={true}
+        style={{ width: '100%', height: '100%' }}
       />
     );
   };
@@ -141,7 +117,7 @@ const OrderStatusIllustration = (props: any) => {
         </div>
         {!mapToggle && (
           <div className="absolute bottom-[1vw] mob:bottom-[3vw] flex items-center justify-between w-full pr-[1.1vw] mob:px-[3vw] ">
-            <div className="  px-[1.1vw]">
+            <div className="px-[1.1vw]">
               <p className="font-semibold font-[SofiaPro] text-gray-500 pb-[.4vw] text-[.97vw] mob:text-[3.6vw]">
                 {!orderDetailsData.time_slot ? 'Dash Delivery' : 'Time Slot'}
               </p>
