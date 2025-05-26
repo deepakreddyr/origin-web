@@ -83,7 +83,7 @@ jobs:
               "successCodes": "200",
               "timeoutSeconds": 5,
               "intervalSeconds": 30,
-              "healthyThreshold": 1,
+              "healthyThreshold": 2,
               "unhealthyThreshold": 10
             }
           }
