@@ -77,7 +77,15 @@ jobs:
           cat > endpoint.json <<EOF
           {
             "containerName": "${{ env.CONTAINER_LABEL }}",
-            "containerPort": 3000
+            "containerPort": 3000,
+            "healthCheck": {
+              "path": "/api/health",
+              "successCodes": "200",
+              "timeoutSeconds": 5,
+              "intervalSeconds": 30,
+              "healthyThreshold": 1,
+              "unhealthyThreshold": 10
+            }
           }
           EOF
 
