@@ -28,6 +28,9 @@ import CardsWrapper from '@/components/ShopV2/shopDetails/CardsWrapper';
 import { setIsProductListLoading, setProductList } from '@/store/slice/productsSlice';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import DownloadAppWrapper from '@/components/downloadApp/DownloadAppWrapper';
+import ShopHero from '@/components/ShopV2/ShopHero';
+import FeatureStrip from '@/components/ShopV2/FeatureStrip';
+import FeaturedProduct from '@/components/ShopV2/FeaturedProduct';
 
 interface HomeProps {
   mainMenuItems: MainMenuType[];
@@ -95,10 +98,11 @@ const ShopDetails = (props: HomeProps) => {
       const successHandler = (data: any) => {
         // dispatch(setShopCategories(data.items))
         // dispatch(setIsShopCategoriesFetched(true))
-        dispatch(setProductList(data.items));
+        
+        dispatch(setProductList(data?.items));
         dispatch(setIsProductListLoading(false));
 
-        dispatch(setShopSubCategories(data.sub_categories));
+        dispatch(setShopSubCategories(data?.sub_categories));
         dispatch(setIsShopSubCategoriesFetched(false));
       };
       const failureHandler = (data: any) => {};
@@ -122,7 +126,7 @@ const ShopDetails = (props: HomeProps) => {
         apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['getShopDetails'];
       }
       const successHandler = (data: any) => {
-        dispatch(setShopCategories(data.data));
+        dispatch(setShopCategories(data?.data));
         dispatch(setIsProductListLoading(false));
         dispatch(setIsShopCategoriesFetched(true));
       };
@@ -143,6 +147,9 @@ const ShopDetails = (props: HomeProps) => {
   // if (mobile) return <DownloadAppWrapper />;
   return (
     <Layout mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={true}>
+      <ShopHero />
+      <FeatureStrip />
+      <FeaturedProduct />
       <div className="flex flex-col items-center justify-center mob:pt-[20vw]">
         <div className="flex flex-col gap-[2.2vw] w-[80.7vw] mob:w-full  mob:px-[4vw] pb-[10vw] relative ">
           <CategoryAndSubCategory filters={filters} setFilters={setFilters} />

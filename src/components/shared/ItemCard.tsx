@@ -1,57 +1,64 @@
 import Image from 'next/image';
 import React from 'react';
 import AddItemBtn from './AddItemBtn/AddItemBtn';
-import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import sampleimg from '/public/assets/images/shop/sampleimg.png';
 
 const ItemCard = (props: any) => {
   const { itemDetails } = props;
   const router = useRouter();
+
   const defaultUOM = itemDetails?.multiple_uoms.find((uom: any) =>
     uom?.is_default === true ? uom : itemDetails.multiple_uoms[0]
   );
-  if (!defaultUOM) return;
+
+  if (!defaultUOM) return null;
+
   return (
-    <button
-      disabled={!defaultUOM.is_available}
-      onClick={() => {
-        router.push(`/${itemDetails.item_name.replace(/ /g, '-').toLowerCase()}/${itemDetails.id}`);
-      }}
-      className={`cursor-pointer w-[16.67vw] mob:w-[40vw] text-start ${!defaultUOM.is_available ? 'opacity-50' : 'opacity-100'}`}
-    >
-      <div
-        className={`relative bg-primary-100 flex items-center justify-center w-[16.67vw] mob:h-[38vw] mob:w-[40vw] h-[14.5vw] rounded-[1.67vw] mob:rounded-[4.1vw] `}
+    <div className="rounded-[1.5vw] bg-white shadow-[0_-2px_6px_rgba(0,0,0,0.05),0_10px_12px_-6px_rgba(0,0,0,0.2)] mob:shadow-md p-[1.5vw] mob:p-[4vw]">
+      <button
+        disabled={!defaultUOM.is_available}
+        onClick={() =>
+          router.push(`/${itemDetails.item_name.replace(/ /g, '-').toLowerCase()}/${itemDetails.id}`)
+        }
+        className={`cursor-pointer w-full text-start ${!defaultUOM.is_available ? 'opacity-50' : 'opacity-100'}`}
       >
-        <div className="relative w-[12.6vw] h-[12vw] mob:w-[24vw] mob:h-[22vw] ">
-          <Image src={itemDetails.image} alt={itemDetails.name ? itemDetails.name : 'cart image'} fill />
-        </div>
-        {!defaultUOM.is_available && (
-          <div className="bg-black-op-50 absolute bottom-0 px-[1.1vw] mob:px-[4.1vw] py-[.7vw] mob:py-[2vw] rounded-t-[1.1vw] mob:rounded-t-[4.1vw] ">
-            <p className="text-[.78vw] mob:text-[3vw] font-[SofiaPro] font-semibold text-white ">OUT OF STOCK</p>
+        {/* Product Image */}
+        <div className="relative bg-white w-full aspect-[1/1] rounded-[1vw] flex items-center justify-center overflow-hidden">
+          <div className="relative w-[100%] h-[100%]">
+            <Image
+              src= {sampleimg}
+              // src={itemDetails.image}
+              alt={itemDetails.name || 'cart image'}
+              fill
+              className="object-contain"
+            />
           </div>
-        )}
-      </div>
-      <div className="h-[5.5vw] mob:h-[15vw]">
-        <p className="font-[SofiaPro] font-semibold text-[1.25vw] mob:text-[3.6vw] pt-[1.389vw] ">{itemDetails.name}</p>
-      </div>
-      <div className="flex items-end justify-between ">
-        <div>
-          <p className="font-[SofiaPro] text-[.97vw] mob:text-[2.8vw]  text-black-op-50 ">{defaultUOM.unit}</p>
-          <p className="font-[SofiaPro] font-medium text-[1.25vw] mob:text-[3vw] mob:pt-[01vw] pt-[.4vw] text-black ">
-            {defaultUOM.formatted_price}
-          </p>
         </div>
-        <div>
+
+        {/* Product Name */}
+        <div className="pt-[1vw]">
+          <p className="font-[SofiaPro] font-semibold text-[1vw] mob:text-[3.2vw]">{itemDetails.name}</p>
+        </div>
+
+        {/* Price & Quantity in same row */}
+        <div className="flex justify-between items-center mt-[0.3vw]">
+          <p className="text-black font-bold text-[0.95vw] mob:text-[3vw]">{defaultUOM.formatted_price}</p>
+          <p className="text-gray-500 text-[0.85vw] mob:text-[2.5vw]">{defaultUOM.unit}</p>
+        </div>
+
+        {/* Add Button */}
+        <div className="mt-[1vw]">
           <AddItemBtn
             product={itemDetails}
             varientId={defaultUOM.variant_id}
             varientPrice={defaultUOM.price}
             stepperQuantity={defaultUOM.stepper_quantity}
-            buttonType={'white'}
+            buttonType="yellow"
           />
         </div>
-      </div>
-    </button>
+      </button>
+    </div>
   );
 };
 

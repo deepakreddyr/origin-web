@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/originApi`);
     const originApiData = await response.json();
-
+    
     const { mainMenuItems, footerData } = originApiData;
     return {
       props: {

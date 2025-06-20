@@ -7,8 +7,17 @@ import FooterNav from './FooterNav';
 import NewsletterSubscription from '../NewsSubscription';
 import { FooterDataType } from '../../utilities/types';
 
-const Footer = (footerData: FooterDataType) => {
+type FooterProps = {
+  footerData?: FooterDataType;
+};
+
+const Footer: React.FC<FooterProps> = ({ footerData }) => {
+
+   if (!footerData) {
+    return null; // or render fallback footer
+  }
   const { footerLinksPrimary, footerLinksSecondary, contactDetails } = footerData;
+
   return (
     <Box className="bg-secondary py-[60px] md:pt-[80px] md:pb-[75px] rounded-t-[20px] lg:rounded-t-[80px]">
       <Container>
@@ -34,6 +43,7 @@ const Footer = (footerData: FooterDataType) => {
               <FooterNav xs={12} links={footerLinksSecondary} />
             </Grid>
           </Grid>
+
           <Grid item md={12} className="mt-5 md:mt-8 text-center">
             <Typography variant="body1" className="text-sm text-white">
               © 2024, Origin. All rights reserved.

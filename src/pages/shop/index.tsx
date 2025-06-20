@@ -82,18 +82,20 @@ const ShopPage = (props: HomeProps) => {
   const LoadedUI = () => {
     return (
       <div className="flex flex-col items-center pb-[20vw] mob:pb-[45vw] overflow-hidden">
-        <div className="flex flex-col gap-[6vw] pl-[10.6vw] mob:pl-[0vw]  relative top-[12vw] mob:top-[32vw] ">
+        <div className="flex flex-col gap-[6vw] pl-[10.6vw] mob:pl-[0vw] relative top-[12vw] mob:top-[32vw]">
           <div className="">
             <CategorySection />
           </div>
           {subCategories.length > 0 &&
-            subCategories.map((category: any) => <PopularProduce categoryDetail={category} />)}
+            subCategories.map((category: any) => (
+              <PopularProduce key={category.id} categoryDetail={category} />
+            ))}
         </div>
       </div>
     );
   };
 
-  // if (mobile) return <DownloadAppWrapper />;
+
   return (
     <Layout mainMenuItems={mainMenuItems} isHeaderSticky={true} footerData={footerData}>
       {loading ? <PageLoader /> : <LoadedUI />}

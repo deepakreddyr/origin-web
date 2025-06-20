@@ -22,8 +22,8 @@ export type ContactDetailsType = {
 }
 
 export type FooterDataType = {
-    footerLinksPrimary: FooterLink[]
-    footerLinksSecondary: FooterLink[]
+    footerLinksPrimary: any[]
+    footerLinksSecondary: any[]
     contactDetails: ContactDetailsType
 }
 export type UspCardsData = Array<{

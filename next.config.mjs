@@ -8,11 +8,32 @@ const nextConfig = {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL
   },
   images: {
-    domains: [
-      'via.placeholder.com',
-      's3-alpha-sig.figma.com',
-      'cdn.originfresh.in',
-      'mm-devlopment.s3.ap-south-1.amazonaws.com'
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+        pathname: '/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 's3-alpha-sig.figma.com',
+        pathname: '/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.originfresh.in',
+        pathname: '/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'mm-devlopment.s3.ap-south-1.amazonaws.com',
+        pathname: '/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.madrasmandi.in',
+        pathname: '/**'
+      }
     ]
   },
   async headers() {

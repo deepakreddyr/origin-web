@@ -137,6 +137,7 @@ div[style*='animation: scroll'] {
 
 .hero-section {
   background:  url('../assets/svg/hero/illustration.svg'), url('../assets/svg/hero/bg-color.jpg');
+  /* background: url(),url('../assets/svg/hero/newHeroBanner.png'); */
   background-size: 45%, cover;
   background-position: bottom right,  center center;
   background-repeat: no-repeat;
@@ -151,3 +152,21 @@ div[style*='animation: scroll'] {
   top: 0;
   bottom: 0;
 }
+
+.carousel .control-dots {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+}
+
+.carousel .control-dots .dot {
+  box-shadow: none;
+}
+

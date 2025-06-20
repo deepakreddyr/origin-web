@@ -9,6 +9,7 @@ import LinkButton from '@/components/LinkButton/LinkButton';
 import { OriginRightArrow } from '@/Icons/OriginIcons';
 import PrimaryFeature from '@/components/OriginGrids/PrimaryFeature';
 import { UspCard } from '@/components/Cards';
+ 
 interface HomeProps {
   uspCardsData: UspCardsData;
   categories: Categories;
@@ -30,6 +31,7 @@ const Home = ({
 }: HomeProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+  console.log(uspCardsData, 'uspCardsData');
 
   return (
     <Layout isHeaderSticky={true} mainMenuItems={mainMenuItems} footerData={footerData}>
@@ -39,6 +41,7 @@ const Home = ({
       <div className="flex items-center justify-center w-full pb-[10vw]">
         <div className="flex items-center justify-between w-[80vw] mob:w-full mob:grid grid-cols-2 mob:gap-[5vw] ">
           {uspCardsData?.map((card) => <UspCard cardData={card} key={card.title} />)}
+          
         </div>
       </div>
       <BeforeBox mdTopOffset={isMobile ? -124 : 100} mdBottomOffset={isMobile ? 110 : 220}>
@@ -155,6 +158,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/originApi`);
     const originApiData = await response.json();
+    console.log("SHOP ALL RESPONSE",originApiData);
     const { uspCardsData, categories, products, blogs, testimonials, mainMenuItems, footerData } = originApiData;
     return {
       props: {
