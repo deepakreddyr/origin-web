@@ -136,18 +136,36 @@ div[style*='animation: scroll'] {
 }
 
 .hero-section {
-  background:  url('../assets/svg/hero/illustration.svg'), url('../assets/svg/hero/bg-color.jpg');
+  background: url(''), url('../assets/svg/hero/OriginBanner.png');
   background-size: 45%, cover;
-  background-position: bottom right,  center center;
+  background-position: bottom right, center center;
   background-repeat: no-repeat;
   position: relative;
   overflow: hidden;
+  width: 100%;
+  padding: 0;
+  margin: 0;
 }
 
-.hero-section img {
-  position: absolute;
-  width: 50%;
-  right: 0;
-  top: 0;
-  bottom: 0;
+@media (max-width: 1024px) {
+  .hero-section {
+    background-size: 60%, cover;
+    background-position: bottom right, center;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    background-size: 70%, cover;
+    background-position: bottom center, center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    background-size: 100%, cover;
+    background-position: bottom center, center;
+  }
 }
