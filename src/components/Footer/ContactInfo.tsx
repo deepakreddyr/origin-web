@@ -14,6 +14,7 @@ type ContactInfoProps = {
 };
 
 const ContactInfo: React.FC<ContactInfoProps> = ({ contactDetails }) => {
+  if (!contactDetails) return null;
   const { address, phone, email, whatsapp } = contactDetails;
   return (
     <Grid item xs={12} className="flex flex-col gap-2 text-white">
