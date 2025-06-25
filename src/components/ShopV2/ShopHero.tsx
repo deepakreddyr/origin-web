@@ -4,9 +4,12 @@ import React from 'react';
 import Image from 'next/image';
 import desktopHero from '/public/assets/images/shop/heroBannerShop.png';
 import { Carousel } from 'react-responsive-carousel';
+import { useMediaQuery } from '@mui/material';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 
 const ShopHero = () => {
+  const isMobile = useMediaQuery('(max-width:768px)');
+
   return (
     <div className="relative w-full overflow-hidden">
       <Carousel
@@ -29,25 +32,38 @@ const ShopHero = () => {
             role="button"
           />
         )}
-      >{[
-        <div className="relative w-full">
+      >
+        {[<div className="relative w-full aspect-[2.4/1] mob:aspect-[1/1]">
           <Image
             src={desktopHero}
             alt="Shop Hero Banner"
-            layout="responsive"
-            width={1440}
-            height={609}
-            className="object-cover w-full"
+            fill
+            className="object-cover"
             priority
           />
 
-          {/* Adjusted text position */}
-          <div className="absolute inset-0 z-10 flex items-center justify-end">
-            <div className="text-white text-right max-w-md mr-[16vw] mt-[-3vh]">
-              <h1 className="font-[Stinger] text-[3.5vw] leading-tight font-bold">
+          {/* Text and Button */}
+          <div
+            className={`
+              absolute inset-0 z-10 flex items-start pt-[200px]
+              ${isMobile ? 'justify-center px-[5vw]' : 'justify-end pr-[18vw]'}
+            `}
+          >
+            <div
+              className={`
+                ${isMobile ? 'text-center max-w-[80vw]' : 'text-right max-w-[28vw]'}
+              `}
+            >
+              <h1 className={`text-white font-bold leading-tight ${isMobile ? 'text-[6vw]' : 'text-[2.8vw]'}`}>
                 Exotics <br /> Have <br /> Landed
               </h1>
-              <button className="mt-6 bg-[#FFD600] text-black font-semibold py-2 px-6 rounded-lg hover:bg-[#ffcd00] transition">
+              <button
+                className={`
+                  mt-[2vw] mob:mt-[4vw] bg-[#FFD600] text-black font-semibold py-2 px-6 rounded-lg
+                  hover:bg-[#ffcd00] transition
+                  ${isMobile ? 'text-[4vw]' : 'text-[1vw]'}
+                `}
+              >
                 Shop Now
               </button>
             </div>

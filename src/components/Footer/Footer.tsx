@@ -19,7 +19,7 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
   const { footerLinksPrimary, footerLinksSecondary, contactDetails } = footerData;
 
   return (
-    <Box className="bg-secondary py-[60px] md:pt-[80px] md:pb-[75px] rounded-t-[20px] lg:rounded-t-[80px]">
+    <Box className="bg-secondary py-[60px] md:pt-[80px] md:pb-[75px]">
       <Container>
         <Grid container>
           {/* <Grid container className="justify-between items-center border-secondary-200 mb-10 pb-10 border-b">

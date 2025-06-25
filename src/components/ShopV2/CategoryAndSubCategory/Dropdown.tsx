@@ -9,7 +9,7 @@ const Dropdown = (props: any) => {
   return (
     <div className="relative">
       <div onClick={() => setShowDropdown(!showDropdown)} className="flex items-center gap-[.97vw] mob:gap-[2vw]">
-        <p className="font-[Stinger] font-semibold text-[1.67vw] mob:text-[5.1vw]">{value}</p>
+        <p className="text-black font-semibold text-[1.67vw] mob:text-[5.1vw]">{value}</p>
         <div>
           <div
             className={`w-[1.6vw] mob:w-[4.6vw] mon:h-[4vw] h-[1.4vw] mob:mt-[-3vw] relative ${showDropdown ? 'rotate-180' : 'rotate-0'} `}
