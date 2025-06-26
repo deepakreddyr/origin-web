@@ -10,13 +10,13 @@ const OriginHero = () => {
   const router = useRouter();
 
   return (
-    <Box sx={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
+    <Box sx={{ position: 'relative', width: '100%', overflow: 'hidden',pt: { xs: 12, sm: 0 }}}>
       {/* Banner Image */}
       <Box
         sx={{
           position: 'relative',
           width: '100%',
-          height: { xs: '400px', sm: '500px', md: '650px' },
+          height: { xs: '200px', sm: '500px', md: '650px' },
         }}
       >
         <Image
@@ -28,33 +28,39 @@ const OriginHero = () => {
         />
 
         <Box
+  sx={{
+    position: 'absolute',
+    top: '62%',
+    left: {
+      xs: 'calc(1% + 40px)',
+      sm: 'calc(4% + 40px)',
+      md: 'calc(6% + 50px)',
+    },
+    zIndex: 2,
+    transform: 'translateY(-50%)',
+  }}
+>
+        <Button
+          variant="contained"
+          onClick={() => router.push('/shop/exotics/3/ultra-exotics/26')}
           sx={{
-            position: 'absolute',
-            top: { xs: '60%', md: '62%' }, // Raised a bit for mobile
-            left: { xs: 'calc(10% + 20px)', md: 'calc(6% + 50px)' }, // Adjusted horizontally on mobile
-            zIndex: 2,
+            backgroundColor: '#000',
+            color: '#fff',
+            borderRadius: '30px',
+            textTransform: 'none',
+            fontWeight: 'bold',
+            px: { xs: 3, sm: 4 },
+            py: { xs: 1, sm: 1.5 },
+            fontSize: { xs: '0.75rem', sm: '0.875rem', md: '1rem' },
+            boxShadow: 4,
+            '&:hover': {
+              backgroundColor: '#333',
+            },
           }}
         >
-          <Button
-            variant="contained"
-            onClick={() => router.push('/shop')}
-            sx={{
-              backgroundColor: '#000',
-              color: '#fff',
-              borderRadius: '30px',
-              textTransform: 'none',
-              fontWeight: 'bold',
-              px: 4,
-              py: 1.5,
-              boxShadow: 4,
-              '&:hover': {
-                backgroundColor: '#333',
-              },
-            }}
-          >
-            Shop Now
-          </Button>
-        </Box>
+          Shop Now
+        </Button>
+      </Box>
       </Box>
     </Box>
   );

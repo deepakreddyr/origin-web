@@ -39,7 +39,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.52.1",
     "react-hot-toast": "^2.4.1",
-    "react-lottie": "^1.2.3",
+    "react-lottie": "^1.2.10",
     "react-places-autocomplete": "^7.3.0",
     "react-redux": "^9.1.2",
     "react-scroll-parallax": "^3.4.5",
