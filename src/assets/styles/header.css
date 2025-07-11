@@ -24,7 +24,7 @@ header .desktop-menu a.active {
   right: 0;
 }
 .drawer-left .MuiDrawer-paperAnchorLeft .active h5 {
-  color: #00855b;
+  color: #146321;
 }
 @media only screen and (max-width: 1199px) {
   header .navigation {
@@ -45,7 +45,7 @@ header .desktop-menu a.active {
   }
   header .header-right a:hover {
     background-color: transparent;
-    color: #00855b;
+    color: #146321;
     border: 0;
   }
 }

@@ -1,62 +1,40 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  Badge,
-  Box,
-  Menu,
-  MenuItem,
-  Container,
-  useTheme
-} from '@mui/material';
-import originLogo from '/public/assets/images/originLogo.png';
-import hamberger from '/public/assets/images/hamberger.png';
-import Link from 'next/link';
-import { OriginCartIcon, OriginChevronDown, OriginLogoDark, OriginMenuIcon } from '@/Icons/OriginIcons';
-import classNames from 'classnames';
-import { MobileDrawer, Submenu, Logo, MenuItems, SearchBar } from '.';
-import OriginButton from '../OriginButton';
-import { MainMenuType } from '@/utilities/types';
-import { Marquee } from '@devnomic/marquee';
-import { TabTypeConstant } from '../Login/constants/tabTypeContent';
-import { login } from '../Login/context/atom';
-import type { LoginAtom } from '../Login/types/LoginAtom';
-import userIcon from '/public/assets/images/userIcon.png';
-import Dropdown from '../OriginDropDown/OriginDropDown';
-import { useAtom } from 'jotai';
-import OffersRibbon from './OffersRibbon';
-import useDeviceType from '@/hooks/useDeviceType';
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { activeAccountsPageAtom, isAccountIsOpen, profileAtom } from '@/features/AccountPage/context/atoms';
-import ActiveSidebar from '@/features/AccountPage/enums/ActiveSidebar';
+import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
-import { isCartPageIsOpen } from '@/features/CartPage/context/atoms';
-import cartIcon from '/public/assets/icons/cartIcon.png';
-import { setIsSidebarOpen, setLoginDetails, setTabType } from '@/store/slice/loginSlice';
-import { useServerInsertedHTML } from 'next/navigation';
-import { setCartItems, setCartTabType } from '@/store/slice/CartSlice';
-import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import { useRouter } from 'next/router';
-import InputSearchbar from './InputSearchbar';
+import hamberger from '/public/assets/images/hamberger.png';
+import originLogo from '/public/assets/images/originLogo.png';
+import userIcon from '/public/assets/images/userIcon.png';
+import cartIcon from '/public/assets/icons/cartIcon.png';
+
+import { MobileDrawer, Submenu } from '.';
+import OffersRibbon from './OffersRibbon';
+import { setCartItems, setCartTabType } from '@/store/slice/CartSlice';
+import { setIsSidebarOpen, setLoginDetails, setTabType } from '@/store/slice/loginSlice';
+import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
+import { TabTypeConstant } from '../Login/constants/tabTypeContent';
+import { MainMenuType } from '@/utilities/types';
+
 type Props = {
   mainMenuItems: MainMenuType[];
   isHeaderSticky: any;
 };
 
 const Header = ({ mainMenuItems, isHeaderSticky }: Props) => {
-  const [profile, setProfileAtom] = useAtom(profileAtom);
-  const cart = useSelector((state: any) => state.cart);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [topBarTransition, setTopBarTransition] = useState(false);
-  const dispatch = useDispatch();
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const dispatch = useDispatch();
   const loginDetails = useSelector((state: any) => state.loginDetails);
-  const isMobile = useMediaQuery(600);
+  const cart = useSelector((state: any) => state.cart);
+
   const router = useRouter();
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const isMobile = useMediaQuery(600);
+
+  const handleProfileMenuOpen = () => {
     dispatch(
       setLoginDetails({
         ...loginDetails,
@@ -66,20 +44,39 @@ const Header = ({ mainMenuItems, isHeaderSticky }: Props) => {
     );
   };
 
-  const handleSubmenuToggle = (label: string) => {
-    setOpenSubmenu((prev) => (prev === label ? null : label));
+  const openAccount = () => {
+    dispatch(setTabType(TabTypeConstant.ACCOUNT_MAIN));
+    dispatch(setIsSidebarOpen(true));
   };
-  const handleMobileMenuOpen = () => {
-    setDrawerOpen(!drawerOpen);
+
+  const handleCartOpen = () => {
+    dispatch(
+      setLoginDetails({
+        ...loginDetails,
+        isSidebarOpen: true,
+        tabType: TabTypeConstant.CART
+      })
+    );
+
+    if (cart?.items?.length === 0) {
+      const cartItemFromLs = localStorage.getItem('cart_items');
+      const cartItemsParsed = cartItemFromLs ? JSON.parse(cartItemFromLs) : [];
+      if (cartItemsParsed.length > 0) {
+        dispatch(setCartItems(cartItemsParsed));
+        dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
+      } else {
+        dispatch(setCartTabType(TabTypeConstant.EMPTY_CART));
+      }
+    } else {
+      dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
+    }
   };
 
   useEffect(() => {
     const handleScroll = () => {
       const position = window.scrollY;
       setTopBarTransition(position > 40 && !isMobile);
-      if (position > 40) {
-        setOpenSubmenu(null);
-      }
+      if (position > 40) setOpenSubmenu(null);
     };
 
     const handleClickOutside = (event: MouseEvent) => {
@@ -90,133 +87,110 @@ const Header = ({ mainMenuItems, isHeaderSticky }: Props) => {
 
     window.addEventListener('scroll', handleScroll);
     document.addEventListener('mousedown', handleClickOutside);
-
     return () => {
       window.removeEventListener('scroll', handleScroll);
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isMobile]);
 
-  const openAccount = () => {
-    dispatch(setTabType(TabTypeConstant.ACCOUNT_MAIN));
-    dispatch(setIsSidebarOpen(true));
-    // setIsAccountOpen(true)
-    // setActiveAccountsPageAtom(ActiveSidebar.ACCOUNT_MAIN)
-  };
   return (
-    <div
-      ref={menuRef}
-      className={` z-[10] ${isHeaderSticky ? 'fixed top-[0]' : 'absolute'}  flex items-center flex-col w-full transform `}
-    >
+    <div ref={menuRef} className={`z-[10] ${isHeaderSticky ? 'fixed top-[0]' : 'absolute'} flex items-center flex-col w-full`}>
       <OffersRibbon />
+
+      {/* Header bar */}
       <div
-        className={`bg-white shadow-[4px_4px_32px_0px_rgba(0,0,0,0.08)] w-[80vw] mob:w-full mob:py-[4.1vw] mob:px-[5vw] px-[1.6vw] py-[1vw]  ${topBarTransition ? 'mt-[-1vw]' : 'mt-[1.1vw] mob:mt-0 '} transition-all  rounded-full mob:rounded-none flex items-center justify-between`}
+        className={`bg-white shadow-[4px_4px_32px_0px_rgba(0,0,0,0.08)] w-[80vw] mob:w-full mob:py-[4.1vw] mob:px-[5vw] px-[1.6vw] py-[1vw] ${
+          topBarTransition ? 'mt-[-1vw]' : 'mt-[1.1vw] mob:mt-0'
+        } transition-all rounded-full mob:rounded-none flex items-center justify-between`}
       >
-        <div className="flex items-center gap-[3vw] ">
+        <div className="flex items-center gap-[3vw]">
           <button onClick={() => setDrawerOpen(!drawerOpen)} className="w-[5vw] hidden mob:block h-[4vw] relative">
             <Image src={hamberger} alt="hamberger" />
           </button>
-          <div className="flex items-center">
-            <button
-              onClick={() => router.push('/')}
-              className="w-[7vw] mob:w-[16vw] mob:h-[8vw] h-[4vw] mr-[4vw] top-[.2vw] relative "
-            >
-              <Image src={originLogo} alt="" />
-            </button>
-          </div>
-          {/* {!isMobile && <InputSearchbar />} */}
+
+          <button
+            onClick={() => router.push('/')}
+            className="w-[7vw] mob:w-[16vw] mob:h-[8vw] h-[4vw] mr-[4vw] top-[.2vw] relative"
+          >
+            <Image src={originLogo} alt="logo" />
+          </button>
         </div>
-        <div className="flex items-center gap-[1.1vw] ">
+
+        <div className="flex items-center gap-[1.1vw]">
           <div className="flex items-center gap-[2vw] pr-[5vw] mob:hidden">
             <Link
-              href={'/shop'}
-              className=" h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full bg-primary text-black text-[1.1vw] font-medium font-[SofiaPro]"
+              href="/shop"
+              className="h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full bg-primary text-black text-[1.1vw] font-medium font-[SofiaPro]"
             >
               Shop All
             </Link>
-            <Link href={'/about'} className="  text-black text-[1.1vw] font-medium font-[SofiaPro]">
+            <Link href="/about" className="text-black text-[1.1vw] font-medium font-[SofiaPro]">
               About us
             </Link>
-            {/* <Link href={'/'} className=" text-black text-[1.1vw] font-medium font-[SofiaPro]">
-              Stores
-            </Link> */}
           </div>
 
-          {loginDetails.isLogin && (
-            <div className="flex items-center jutq">
-              {/* {profile?.data?.profile && ( */}
-              <button onClick={openAccount}>
-                <div className="w-[1.25vw] mob:w-[5.128vw] mob:h-[5.128vw] h-[1.25vw] relative ">
-                  <Image src={userIcon} alt="account icon" />
-                </div>
-              </button>
-              {/* )} */}
-            </div>
-          )}
-          {!loginDetails.isLogin && (
+          {loginDetails.isLogin ? (
+            <button onClick={openAccount}>
+              <div className="w-[1.25vw] mob:w-[5.128vw] mob:h-[5.128vw] h-[1.25vw] relative">
+                <Image src={userIcon} alt="account icon" />
+              </div>
+            </button>
+          ) : (
             <button
               onClick={handleProfileMenuOpen}
-              className="border-[1px]  border-black h-[2.4vw] mob:h-max px-[1.17vw] mob:px-[5.1vw] mob:py-[1.5vw] rounded-full text-black text-[1.1vw] mob:text-[4.1vw] font-medium font-[SofiaPro]"
+              className="border-[1px] border-black h-[2.4vw] mob:h-max px-[1.17vw] mob:px-[5.1vw] mob:py-[1.5vw] rounded-full text-black text-[1.1vw] mob:text-[4.1vw] font-medium font-[SofiaPro]"
             >
               Login
             </button>
           )}
-          <>
-            {!isMobile && (
-              <div className="h-[1.67vw] relative w-[.1vw] mob:w-[.3vw] mob:mx-[2vw] mob:h-[7vw] bg-black-op-30"></div>
-            )}
-            {!isMobile && (
-              <button
-                // onClick={() => setIsCartOpen(true)}
-                onClick={() => {
-                  dispatch(
-                    setLoginDetails({
-                      ...loginDetails,
-                      isSidebarOpen: true,
-                      tabType: TabTypeConstant.CART
-                    })
-                  );
-                  if (cart?.items?.length === 0) {
-                    let cartItemFromLs = localStorage.getItem('cart_items');
-                    let cartItemsParsed: any;
-                    if (cartItemFromLs) {
-                      cartItemsParsed = JSON.parse(cartItemFromLs);
-                    }
-                    if (cartItemsParsed?.length > 0) {
-                      dispatch(setCartItems(cartItemsParsed));
-                      dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
-                      return;
-                    } else {
-                      dispatch(setCartTabType(TabTypeConstant.EMPTY_CART));
-                    }
-                  } else {
-                    dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
-                  }
-                }}
-                className="relative pr-[1.67vw]"
-              >
+
+          {!isMobile && (
+            <>
+              <div className="h-[1.67vw] mob:h-[7vw] w-[.1vw] mob:w-[.3vw] mob:mx-[2vw] bg-black-op-30"></div>
+              <button onClick={handleCartOpen} className="relative pr-[1.67vw]">
                 {cart?.items?.length > 0 && (
-                  <div className="absolute top-[-.6vw] mob:top-[-3vw] mob:left-[3vw] left-[.7vw] w-[1.25vw] h-[1.25vw] mob:w-[5.128vw] mob:h-[5.128vw] text-[.78vw] mob:text-[3vw] rounded-full bg-secondary-300 z-[1] text-white font-[sofiaPro] flex items-center justify-center">
+                  <div className="absolute top-[-.6vw] left-[.7vw] w-[1.25vw] h-[1.25vw] text-[.78vw] rounded-full bg-secondary-300 z-[1] text-white font-[sofiaPro] flex items-center justify-center">
                     {cart?.items?.length}
                   </div>
                 )}
-                <div className="relative  w-[1.25vw] h-[1.25vw] mob:w-[5.128vw] mob:h-[5.128vw] z-0 ">
+                <div className="relative w-[1.25vw] h-[1.25vw] z-0">
                   <Image src={cartIcon} alt="cart-icon" />
                 </div>
               </button>
-            )}
-          </>
+            </>
+          )}
         </div>
       </div>
+
+      {/* Floating Cart on Bottom Right for Mobile */}
+      {isMobile && (
+        <button
+          onClick={handleCartOpen}
+          className="fixed bottom-[5vw] right-[5vw] z-[99] bg-white p-[4vw] rounded-full shadow-xl border border-gray-200"
+        >
+          {cart?.items?.length > 0 && (
+            <div className="absolute top-[-2vw] left-[7vw] w-[6vw] h-[6vw] text-[3vw] rounded-full bg-secondary-300 z-[1] text-white flex items-center justify-center">
+              {cart.items.length}
+            </div>
+          )}
+          <div className="relative w-[6vw] h-[6vw]">
+            <Image src={cartIcon} alt="cart-icon" />
+          </div>
+        </button>
+      )}
+
+      {/* Mobile Drawer */}
       <MobileDrawer
         drawerOpen={drawerOpen}
-        handleMobileMenuOpen={handleMobileMenuOpen}
+        handleMobileMenuOpen={() => setDrawerOpen(!drawerOpen)}
         mainMenuItems={mainMenuItems}
         openSubmenu={openSubmenu}
-        handleSubmenuToggle={handleSubmenuToggle}
+        handleSubmenuToggle={(label: string) => setOpenSubmenu((prev) => (prev === label ? null : label))}
         isMobile={isMobile}
         topBarTransition={topBarTransition}
       />
+
+      {/* Desktop Submenus */}
       {!isMobile &&
         mainMenuItems.map(
           (item) =>
@@ -235,6 +209,8 @@ const Header = ({ mainMenuItems, isHeaderSticky }: Props) => {
 };
 
 export default Header;
+
+
 
 // <div
 //   className={`bg-white rounded-full flex px-[2.5vw] py-[1vw] w-[80vw] shadow-[4px_4px_32px_0px_rgba(0,0,0,0.08)] `}

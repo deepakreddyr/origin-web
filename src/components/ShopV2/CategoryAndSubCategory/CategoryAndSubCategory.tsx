@@ -49,7 +49,7 @@ const CategoryAndSubCategory = (props: Props) => {
       const defaultSubCategoryList = categories.data.find((item: any) => item.name === value.name);
       let subCategoryName = defaultSubCategoryList.sub_categories[0].name;
       let subCategoryId = defaultSubCategoryList.sub_categories[0].id;
-
+      console.log(categories);
       url = `/shop/${value.name}/${value.id}/${subCategoryName}/${subCategoryId}`;
     } else if (name === 'subCategory') {
       url = `/shop/${filters.category}/${filters.cid}/${value.name}/${value.id}`;
@@ -80,7 +80,7 @@ const CategoryAndSubCategory = (props: Props) => {
 
   return (
     <div
-      className="sticky pt-[10vw] border-b  
+      className="sticky pt-[4vw] border-b  
  border-b-[#F2EEE4] mob:pb-[3vw] mob:mb-[4.1vw] p-[1.1vw] top-[0] flex flex-col gap-[1.1vw] bg-white z-[1]"
     >
       {products.isProductListLoading ? (

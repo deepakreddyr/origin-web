@@ -31,6 +31,7 @@ import DownloadAppWrapper from '@/components/downloadApp/DownloadAppWrapper';
 import ShopHero from '@/components/ShopV2/ShopHero';
 import FeatureStrip from '@/components/ShopV2/FeatureStrip';
 import FeaturedProduct from '@/components/ShopV2/FeaturedProduct';
+import WhyOriginAndTestimonial from '@/components/ShopV2/WhyOriginAndTestimonial';
 
 interface HomeProps {
   mainMenuItems: MainMenuType[];
@@ -150,11 +151,14 @@ const ShopDetails = (props: HomeProps) => {
       <ShopHero />
       <FeatureStrip />
       <FeaturedProduct />
-      <div className="flex flex-col items-center justify-center mob:pt-[20vw]">
+      <div className="flex flex-col items-center justify-center mob:pt-[10vw]">
         <div className="flex flex-col gap-[2.2vw] w-[80.7vw] mob:w-full  mob:px-[4vw] pb-[10vw] relative ">
           <CategoryAndSubCategory filters={filters} setFilters={setFilters} />
           <CardsWrapper />
         </div>
+      </div>
+      <div className="flex flex-col gap-[2.2vw] w-[80.7vw] mob:w-full mob:px-[4vw] pb-[10vw] relative mx-auto">
+        <WhyOriginAndTestimonial />
       </div>
     </Layout>
   );

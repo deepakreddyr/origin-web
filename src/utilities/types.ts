@@ -52,6 +52,7 @@ export interface Category {
     name: string
     type: string
     image: string
+    website_image: string
     bg_color: string
     navigation: Navigation
     header: Header

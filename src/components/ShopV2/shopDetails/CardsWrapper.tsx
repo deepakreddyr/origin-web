@@ -9,7 +9,7 @@ const CardsWrapper = () => {
   if (products.isProductListLoading) return <ProductCardLoader />;
 
   return (
-    <div className="grid grid-cols-4 mob:grid-cols-2 gap-[1.5vw] mob:gap-[3.2vw]">
+    <div className="grid grid-cols-4 md:grid-cols-4 sm:grid-cols-3 mob:grid-cols-2 gap-[1.5vw] mob:gap-[4.5vw]">
       {products.productsList?.map((item: any) => (
         <div key={item.id}>
           <ItemCard itemDetails={item} />

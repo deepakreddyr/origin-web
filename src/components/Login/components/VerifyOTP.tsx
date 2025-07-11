@@ -15,6 +15,7 @@ import { setLoginDetails, setTabType, setUser } from '@/store/slice/loginSlice';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { removeRouteSourceFromLs } from '@/utilities/utils';
+import { access } from 'fs';
 
 interface Props {
   mobileNumber: any;
@@ -116,15 +117,16 @@ const VerifyOTP = (props: Props) => {
       });
 
       dispatch(setUser(response.access_token));
-
-      // localStorage.setItem('user_token', response.access_token);
-
+      // console.log("TOKEN ",response.access_token);
+      localStorage.setItem('user_token', response.access_token);
+      // console.log(localStorage.getItem('user_token'));
+      const token = localStorage.getItem('user_token')
       const requestURLProfile = mainApiUrl.getProfileDetails;
 
       const profileResponse: any = await request(requestURLProfile, {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${response.access_token}`,
+          Authorization: `Bearer ${token}`,
           Accept: 'application/json'
         }
       });

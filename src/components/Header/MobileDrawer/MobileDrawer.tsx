@@ -1,9 +1,8 @@
 import React from 'react';
-import { Drawer, Container, Typography } from '@mui/material';
+import { Drawer, Container, Typography, Box } from '@mui/material';
 import classNames from 'classnames';
 import OriginButton from '../../OriginButton';
-import { OriginCloseIcon, OriginChevronDown } from '../../../Icons/OriginIcons';
-import { Submenu } from '..';
+import { OriginCloseIcon } from '../../../Icons/OriginIcons';
 import { useRouter } from 'next/router';
 
 interface MobileDrawerProps {
@@ -26,70 +25,72 @@ const MobileDrawer: React.FC<MobileDrawerProps> = ({
   topBarTransition
 }) => {
   const router = useRouter();
+
+  const handleRouteChange = (path: string) => {
+    router.push(path);
+    handleMobileMenuOpen(); // Close drawer after navigating
+  };
+
   return (
     <Drawer
       anchor="top"
       open={drawerOpen}
       onClose={handleMobileMenuOpen}
-      className="py-8"
       classes={{
         paper: 'rounded-b-3xl shadow-sm border border-primary-200 z-[1300] mt-[0vw]'
       }}
       sx={{ '.MuiModal-backdrop': { marginTop: '40px' } }}
     >
-      <Container className="relative pt-[70px] pb-10 divide-y divide-y-reverse divide-solid divide-oGrey-100">
+      <Container className="relative pt-[5vw] pb-[6vw]">
+        {/* Close Icon */}
         <OriginButton
           variant="iconOnly"
           handleClick={handleMobileMenuOpen}
           classes={{
-            iconButton: 'absolute left-3 top-3 p-2 hover:shadow-none'
+            iconButton: 'absolute left-[4vw] top-[4vw] p-[2vw] hover:shadow-none'
           }}
         >
-          <OriginCloseIcon className="w-4 h-4" />
+          <OriginCloseIcon className="w-[4vw] h-[4vw]" />
         </OriginButton>
-        {mainMenuItems.map((item) => (
-          <Typography
-            key={item.label}
-            variant="body1"
-            className={classNames('mr-4 group pt-5 first-of-type:pt-0 pb-5')}
-          >
-            <OriginButton
-              variant="textOnly"
-              handleClick={() => {
-                router.push(item.link);
 
-                // if (item.submenu) {
-                //   handleSubmenuToggle(item.label);
-                // } else {
-                //   router.push(item.link);
-                // }
-              }}
+        {/* Static Items: Shop All, About Us */}
+        <Box className="flex flex-col divide-y divide-oGrey-100 mt-[12vw]">
+          {[
+            { label: 'Shop All', path: '/shop' },
+            { label: 'About Us', path: '/about' }
+          ].map((item) => (
+            <OriginButton
+              key={item.label}
+              variant="textOnly"
+              handleClick={() => handleRouteChange(item.path)}
               classes={{
-                iconButton: 'w-full flex justify-between items-center gap-2'
+                iconButton: 'w-full flex justify-start items-center py-[3.8vw]'
               }}
             >
-              <Typography variant="body1" component="span" className="text-[22px] text-black">
+              <Typography variant="body1" component="span" className="text-[4.4vw] text-black leading-[1.2]">
                 {item.label}
               </Typography>
-              {/* {item.submenu && (
-                <OriginChevronDown
-                  className={classNames(
-                    'w-3 h-2 transition duration-200 ease-in-out',
-                    openSubmenu === item.label ? 'rotate-180' : 'rotate-0'
-                  )}
-                />
-              )} */}
             </OriginButton>
-            {/* {item.submenu && (
-              <Submenu
-                submenu={item.submenu}
-                isOpen={openSubmenu === item.label}
-                isMobile={isMobile}
-                transitionBool={topBarTransition}
-              />
-            )} */}
-          </Typography>
-        ))}
+          ))}
+        </Box>
+
+        {/* Dynamic main menu items */}
+        <Box className="flex flex-col divide-y divide-oGrey-100">
+          {mainMenuItems.map((item) => (
+            <OriginButton
+              key={item.label}
+              variant="textOnly"
+              handleClick={() => handleRouteChange(item.link)}
+              classes={{
+                iconButton: 'w-full flex justify-start items-center py-[3.8vw]'
+              }}
+            >
+              <Typography variant="body1" component="span" className="text-[4.4vw] text-black leading-[1.2]">
+                {item.label}
+              </Typography>
+            </OriginButton>
+          ))}
+        </Box>
       </Container>
     </Drawer>
   );
