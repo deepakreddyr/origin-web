@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import Image from 'next/image';
 import Link from 'next/link';
+import catimg from '/public/assets/catimg1.png';
 
 const CategorySection = () => {
   const filteredCategories = useSelector((state: any) => state.shopCategories);
@@ -55,7 +56,7 @@ const CategorySection = () => {
               }/${category?.sub_categories[0].id}`}
             >
               <div key={index} className="relative w-full h-[25vw]">
-                <Image src={category.image} alt="" fill />
+                <Image src={catimg || category.website_image} alt="" fill />
               </div>
               <p className="font-[SofiaPro] text-[3vw] font-semibold text-center pt-[2vw]">{category.name}</p>
             </Link>

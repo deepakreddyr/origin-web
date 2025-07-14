@@ -113,7 +113,7 @@ const Footer = (footerData: FooterDataType) => {
               variant="body1"
               sx={{ fontSize: "0.875rem", color: "white" }}
             >
-              © 2024, Origin. All rights reserved.
+              © 2025, Origin. All rights reserved.
             </Typography>
           </Grid>
         </Grid>
