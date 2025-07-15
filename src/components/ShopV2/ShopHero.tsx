@@ -5,8 +5,9 @@ import Image from 'next/image';
 import { Carousel } from 'react-responsive-carousel';
 import { useMediaQuery } from '@mui/material';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { useRouter } from 'next/router';
 
-import banner1 from '/public/assets/images/shop/heroBannerShop1.png';
+import banner1 from '/public/assets/images/shop/heroBannerShop.png';
 import banner2 from '/public/assets/images/shop/heroBannerShop2.png';
 import banner3 from '/public/assets/images/shop/heroBannerShop3.png';
 
@@ -15,24 +16,28 @@ const bannerData = [
     image: banner1,
     title: 'Exotics\nHave\nLanded',
     button: 'Shop Now',
+    href: '/shop/global-veggies/8/european/48',
   },
   {
     image: banner2,
     title: 'Tiny.\nTasty.\nToo good.',
     button: 'Shop Now',
+    href: '/shop/hydro-micro-greens/9/hydroponics/49',
   },
   {
     image: banner3,
     title: 'Fruit\nGot\nFancy',
     button: 'Shop Now',
+    href: '/shop/world-fruits/3/berries/40',
   },
 ];
 
 const ShopHero = () => {
   const isMobile = useMediaQuery('(max-width:768px)');
+  const router = useRouter();
 
   return (
-    <div className="relative w-full overflow-hidden" style={{ paddingTop: isMobile ? '60px' : '0px' }}>
+    <div className="relative w-full overflow-hidden pt-[60px]">
       <Carousel
         autoPlay
         interval={5000}
@@ -58,43 +63,45 @@ const ShopHero = () => {
           <div
             key={index}
             className={`relative w-full ${
-              isMobile ? 'h-[calc(65vw+50px)] pt-[50px]' : 'aspect-[2.4/1]'
+              isMobile ? 'pt-[50px]' : 'aspect-[2.4/1]'
             }`}
           >
-            {/* Image Wrapper */}
-            <div className="absolute inset-0 z-0">
+            <div className="w-full relative">
               <Image
                 src={banner.image}
                 alt={`Shop Hero Banner ${index + 1}`}
-                fill
+                layout="responsive"
+                width={1920}
+                height={800}
                 className="object-cover"
                 priority
+                quality={100}
               />
             </div>
 
-            {/* Text and Button */}
             <div
               className="absolute inset-0 z-10 flex items-center justify-end"
               style={{ paddingRight: isMobile ? '6vw' : '250px' }}
             >
               <div
-                className={`text-right ${
-                  isMobile ? 'max-w-[60vw]' : 'max-w-[28vw]'
+                className={`text-left ${
+                  isMobile ? 'max-w-[60vw] pt-[8vw]' : 'max-w-[28vw]'
                 }`}
               >
                 <h1
                   className={`
-                    font-bold leading-tight text-black whitespace-pre-line
-                    ${isMobile ? 'text-[4.2vw]' : 'text-[2.8vw]'}
+                    font-[SofiaPro] font-bold leading-tight text-white whitespace-pre-line
+                    ${isMobile ? 'text-[4vw] leading-[1.1]' : 'text-[3.2vw] leading-[1.1]'}
                   `}
                 >
                   {banner.title}
                 </h1>
                 <button
+                  onClick={() => router.push(banner.href)}
                   className={`
-                    mt-[4vw] bg-[#FFD600] text-black font-semibold py-2 px-6 rounded-lg
+                    mt-[2vw] bg-[#FFD600] text-black font-[SofiaPro] font-semibold py-2 px-6 rounded-lg
                     hover:bg-[#ffcd00] transition
-                    ${isMobile ? 'text-[3.5vw]' : 'text-[1vw]'}
+                    ${isMobile ? 'text-[2.5vw] mt-[3vw]' : 'text-[1vw] mt-[1.5vw]'}
                   `}
                 >
                   {banner.button}

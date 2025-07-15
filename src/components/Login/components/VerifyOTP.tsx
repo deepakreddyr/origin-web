@@ -45,7 +45,8 @@ const VerifyOTP = (props: Props) => {
         address: data.data,
         defaultAddress
       });
-      localStorage.setItem('user_token', loginDetails.user);
+      // localStorage.setItem('user_token', loginDetails.user);
+      
       if (!data?.data) {
         dispatch(
           setLoginDetails({
@@ -117,9 +118,9 @@ const VerifyOTP = (props: Props) => {
       });
 
       dispatch(setUser(response.access_token));
-      // console.log("TOKEN ",response.access_token);
+      console.log("TOKEN ",response.access_token);
       localStorage.setItem('user_token', response.access_token);
-      // console.log(localStorage.getItem('user_token'));
+      console.log(localStorage.getItem('user_token'));
       const token = localStorage.getItem('user_token')
       const requestURLProfile = mainApiUrl.getProfileDetails;
 

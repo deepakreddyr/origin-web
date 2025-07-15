@@ -3,6 +3,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import YellowBtn from './YellowBtn';
 import WhiteBtn from './WhiteBtn';
+import BlackBtn from './BlackBtn';
 import { protectedUrl } from '@/url';
 import { getAddressAndStoreId, prepareCartItemsToApi } from '@/utilities/utils';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
@@ -138,6 +139,15 @@ const AddItemBtn = (props: any) => {
     ),
     white: (
       <WhiteBtn
+        isItemPresent={cartItem}
+        quantity={itemQuantity?.cart_quantity}
+        handleAddItem={handleAddItem}
+        handleIncrease={handleIncrease}
+        handleDecrease={handleDecrease}
+      />
+    ),
+    black: (
+      <BlackBtn
         isItemPresent={cartItem}
         quantity={itemQuantity?.cart_quantity}
         handleAddItem={handleAddItem}

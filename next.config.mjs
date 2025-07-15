@@ -60,7 +60,17 @@ const nextConfig = {
         ]
       }
     ];
-  }
+  },
+
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/',
+  //       destination: '/shop',
+  //       permanent: false 
+  //     }
+  //   ];
+  // }
 };
 
 export default nextConfig;

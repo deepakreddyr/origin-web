@@ -169,4 +169,6 @@ div[style*='animation: scroll'] {
 .carousel .control-dots .dot {
   box-shadow: none;
 }
-
+html, body {
+  overflow-x: hidden;
+}

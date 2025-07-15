@@ -4,6 +4,7 @@ import { FooterDataType, MainMenuType } from '@/utilities/types';
 import CategorySection from '@/components/ShopV2/CategorySection';
 import PopularProduce from '@/components/ShopV2/PopularProduce';
 import BestSellers from '@/components/ShopV2/BestSellers';
+import VideoBanner from '@/components/ShopV2/VideoBanner'; 
 import { useEffect, useState } from 'react';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
@@ -23,6 +24,7 @@ interface HomeProps {
   mainMenuItems: MainMenuType[];
   footerData: FooterDataType;
 }
+
 const ShopPage = (props: HomeProps) => {
   const { mainMenuItems, footerData } = props;
   const mobile = useMediaQuery(600);
@@ -32,7 +34,7 @@ const ShopPage = (props: HomeProps) => {
   const router = useRouter();
   const { query, isReady } = router;
   const getDataFromApi = useGetDataFromApi();
-  const [address, setAddress] = useAtom(addressAtom); //
+  const [address, setAddress] = useAtom(addressAtom);
 
   const filteredCategories = useSelector((state: any) => state.shopCategories);
   const { categories } = filteredCategories;
@@ -82,7 +84,22 @@ const ShopPage = (props: HomeProps) => {
   const LoadedUI = () => {
     return (
       <div className="flex flex-col items-center pb-[20vw] mob:pb-[45vw] overflow-hidden">
-        <div className="flex flex-col gap-[6vw] pl-[10.6vw] mob:pl-[0vw] relative top-[12vw] mob:top-[32vw]">
+        {/* Video Banner Section */}
+        <div className="w-full relative">
+          <VideoBanner
+            mobileVideoSrc="/assets/videos/mobile-banner.mp4" // 9:16 aspect ratio
+            desktopVideoSrc="/assets/videos/desktop-banner.mp4" // 16:9 aspect ratio
+            // poster="/assets/images/video-poster.jpg" // Optional poster image
+            autoPlay={true}
+            muted={true}
+            loop={true}
+            controls={false}
+            className=""
+          />
+        </div>
+        
+        {/* Existing Content */}
+        <div className="flex flex-col gap-[6vw] pl-[10.6vw] mob:pl-[0vw] w-full mt-[4vw] mob:mt-[8vw]">
           <div className="">
             <CategorySection />
           </div>
@@ -94,7 +111,6 @@ const ShopPage = (props: HomeProps) => {
       </div>
     );
   };
-
 
   return (
     <Layout mainMenuItems={mainMenuItems} isHeaderSticky={true} footerData={footerData}>
