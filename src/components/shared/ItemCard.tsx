@@ -11,7 +11,7 @@ const ItemCard = ({ itemDetails }: any) => {
     itemDetails?.multiple_uoms.find((uom: any) => uom?.is_default) || itemDetails?.multiple_uoms[0];
 
   if (!defaultUOM) return null;
-
+  console.log(itemDetails)
   return (
     <div className="bg-white rounded-[1.5rem] shadow-[0px_8px_24px_rgba(0,0,0,0.10),0px_2px_8px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col h-full">
       <button

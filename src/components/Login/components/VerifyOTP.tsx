@@ -118,9 +118,9 @@ const VerifyOTP = (props: Props) => {
       });
 
       dispatch(setUser(response.access_token));
-      console.log("TOKEN ",response.access_token);
+      // console.log("TOKEN ",response.access_token);
       localStorage.setItem('user_token', response.access_token);
-      console.log(localStorage.getItem('user_token'));
+      // console.log(localStorage.getItem('user_token'));
       const token = localStorage.getItem('user_token')
       const requestURLProfile = mainApiUrl.getProfileDetails;
 

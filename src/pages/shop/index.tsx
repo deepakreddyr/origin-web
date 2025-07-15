@@ -87,8 +87,8 @@ const ShopPage = (props: HomeProps) => {
         {/* Video Banner Section */}
         <div className="w-full relative">
           <VideoBanner
-            mobileVideoSrc="/assets/videos/mobile-banner.mp4" // 9:16 aspect ratio
-            desktopVideoSrc="/assets/videos/desktop-banner.mp4" // 16:9 aspect ratio
+            mobileVideoSrc="https://cdn.originfresh.in/website/Origin_Banner_9_16.mp4" // 9:16 aspect ratio
+            desktopVideoSrc="https://cdn.originfresh.in/website/Origin_Banner_16_9.mp4" // 16:9 aspect ratio
             // poster="/assets/images/video-poster.jpg" // Optional poster image
             autoPlay={true}
             muted={true}

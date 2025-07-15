@@ -117,7 +117,7 @@ export default function Layout({
         {query.type !== 'app' && <Header isHeaderSticky={isHeaderSticky} mainMenuItems={mainMenuItems} />}
         <SidebarScreen />
         {children}
-        {query.type !== 'app' && <Footer {...footerData} />}
+        {query.type !== 'app' && <Footer footerData={footerData} />}
       </ThemeProvider>
     </CacheProvider>
   );
