@@ -31,7 +31,7 @@ const Home = ({
 }: HomeProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
-  console.log(uspCardsData, 'uspCardsData');
+  // console.log(uspCardsData, 'uspCardsData');
 
   return (
     <Layout isHeaderSticky={true} mainMenuItems={mainMenuItems} footerData={footerData}>
@@ -158,7 +158,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/originApi`);
     const originApiData = await response.json();
-    console.log("SHOP ALL RESPONSE",originApiData);
+    // console.log("SHOP ALL RESPONSE",originApiData);
     const { uspCardsData, categories, products, blogs, testimonials, mainMenuItems, footerData } = originApiData;
     return {
       props: {

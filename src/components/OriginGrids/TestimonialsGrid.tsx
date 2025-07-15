@@ -48,7 +48,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials 
       setTestimonialsList(data?.data);
     };
     const failureHandler = (data: any) => {
-      console.log(data);
+      // console.log(data);
     };
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
   }, []);

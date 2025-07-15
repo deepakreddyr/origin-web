@@ -10,7 +10,7 @@ const DeliveryTimings = (props: any) => {
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
   const { checkoutDetails } = placeOrderDetails;
 
-  console.log(checkoutDetails.delivery_date);
+  // console.log(checkoutDetails.delivery_date);
 
   return (
     <div className="px-[1.25vw] mob:px-[5vw] mob:pt-[2.5vw] pt-[.5vw] relative ">

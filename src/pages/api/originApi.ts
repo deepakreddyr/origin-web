@@ -69,8 +69,8 @@ const data: Data = {
       { text: 'Contact', href: 'contact' }
     ],
     footerLinksSecondary: [
-      { text: 'Terms and Conditions', href: '/terms-and-conditions' },
-      { text: 'Privacy policy', href: '/privacy-policy' }
+      { text: 'Terms and Conditions', href: 'terms-and-conditions' },
+      { text: 'Privacy policy', href: 'privacy-policy' }
       //   { text: 'Shipping Details', href: '#' },
       //   { text: 'Refund Policy', href: '#' }
     ],

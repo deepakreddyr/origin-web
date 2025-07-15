@@ -46,7 +46,7 @@ const Cart = (props: any) => {
       };
     }
     const successHandler = (data: any) => {
-      console.log(data);
+      // console.log(data);
       dispatch(setCartItems(data.data));
       dispatch(setCartMinimum(data.cart_minimum));
       setBillDetails({
@@ -57,7 +57,7 @@ const Cart = (props: any) => {
       });
     };
     const failureHandler = (data: any) => {
-      console.log(data);
+      // console.log(data);
     };
     if (addressFromLs) getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
   };

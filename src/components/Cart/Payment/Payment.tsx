@@ -61,7 +61,7 @@ const Payment = (props: any) => {
 
     const successHandler = (data: any) => {};
     const failureHandler = (data: any) => {
-      console.log(data);
+      // console.log(data);
     };
     sendDataToApi(url, transformedData, 'POST', successHandler, failureHandler, additionalHeaders);
   };

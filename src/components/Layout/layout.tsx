@@ -82,7 +82,7 @@ export default function Layout({
       localStorage.setItem('cart_items', JSON.stringify(data.data));
     };
     const failureHandler = (data: any) => {
-      console.log(data);
+      // console.log(data);
     };
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
   };

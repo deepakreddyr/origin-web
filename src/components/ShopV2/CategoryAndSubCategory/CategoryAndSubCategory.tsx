@@ -49,7 +49,7 @@ const CategoryAndSubCategory = (props: Props) => {
       const defaultSubCategoryList = categories.data.find((item: any) => item.name === value.name);
       let subCategoryName = defaultSubCategoryList.sub_categories[0].name;
       let subCategoryId = defaultSubCategoryList.sub_categories[0].id;
-      console.log(categories);
+      // console.log(categories);
       url = `/shop/${value.name}/${value.id}/${subCategoryName}/${subCategoryId}`;
     } else if (name === 'subCategory') {
       url = `/shop/${filters.category}/${filters.cid}/${value.name}/${value.id}`;
