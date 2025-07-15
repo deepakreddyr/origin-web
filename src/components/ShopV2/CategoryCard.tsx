@@ -27,7 +27,7 @@ const CategoryCard = (props: Props) => {
       </p>
 
       {/* Image */}
-      <div className="relative w-full h-full rounded-br-[1.67vw]">
+      <div className="relative  h-full rounded-br-[1.67vw]">
         <Image
           src={cardDetails.website_image || cardDetails.image}
           // src={catimg}

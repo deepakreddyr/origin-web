@@ -67,6 +67,7 @@ const BillDetailsWrapper = (props: any) => {
     }
     dispatch(setIsProceedButtonEnabled(amountTobePaid > cart.cart_minimum));
     dispatch(setAmountToPay(amountTobePaid));
+    localStorage.setItem("total_to_pay",cart.amountToPay)
   }, [couponDetails, cart, billDetails]);
 
   return (

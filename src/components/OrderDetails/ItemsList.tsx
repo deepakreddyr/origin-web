@@ -44,10 +44,10 @@ const ItemsList = (props: any) => {
               </div>
               <div>
                 <p className="font-[SofiaPro] text-[.82vw] mob:text-[2.8vw] font-medium line-through text-black-op-60 ">
-                  {item.ordered_uoms[0].market_price_sub_total}
+                  ₹{item.ordered_uoms[0].market_price_sub_total}
                 </p>
                 <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-medium  ">
-                  {item.ordered_uoms[0].subtotal}
+                  ₹{item.ordered_uoms[0].subtotal}
                 </p>
               </div>
             </div>

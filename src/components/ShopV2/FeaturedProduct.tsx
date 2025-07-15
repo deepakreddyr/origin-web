@@ -76,7 +76,7 @@ const FeaturedProduct = () => {
         {/* Image Section */}
         <div className="w-full md:w-auto flex justify-center items-center pl-0 md:pl-8">
           <Image
-            src="/assets/images/shop/exotic-basil.png"
+            src="/assets/images/shop/EnokiMushrooms.webp"
             alt="Enoki Mushroom"
             width={350}
             height={350}

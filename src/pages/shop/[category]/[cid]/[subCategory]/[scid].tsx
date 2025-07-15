@@ -165,6 +165,8 @@ const ShopDetails = (props: HomeProps) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
+
+  // console.log("hello");
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/originApi`);
     const originApiData = await response.json();

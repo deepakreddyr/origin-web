@@ -109,7 +109,7 @@ const OffersRibbon = () => {
               }}
             >
               <p className="text-white font-[SofiaPro] font-medium text-[3vw] px-4">
-                Download the App and Get FLAT 20% Off on 1st Order
+                Download the App and Get FLAT 15% Off on 1st Order use coupon code "INSTALL15"
               </p>
               {/* <p className="text-white font-[SofiaPro] font-medium text-[3vw] px-4">
                 Download the App and Get FLAT 20% Off on 1st Order
@@ -118,7 +118,8 @@ const OffersRibbon = () => {
           </div>
         ) : (
           <p className="text-white font-[SofiaPro] text-[.97vw] font-medium">
-            Download the App and Get FLAT 20% Off on 1st Order
+                Download the App and Get FLAT 15% Off on 1st Order use coupon code "INSTALL15"
+            
           </p>
         )}
       </div>

@@ -19,8 +19,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.params || {};
   let productUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl.searchForProduct + `/${id}`;
   try {
-    // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/originApi`);
-    const response = await fetch(`localhost:3000/api/originApi`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/originApi`);
+    // const response = await fetch(`localhost:3000/api/originApi`);
 
     const originApiData = await response.json();
     

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateDeliveryType } from '@/store/slice/placeOrderDetails';
 import { setIsProceedButtonEnabled } from '@/store/slice/CartSlice';
+
 const ScheduledDeliveryBtn = (props: any) => {
   const { activeDeliveryType, setActiveDeliveryType } = props;
   const dispatch = useDispatch();
@@ -18,25 +19,41 @@ const ScheduledDeliveryBtn = (props: any) => {
         dispatch(updateDeliveryType('TIME_SLOT'));
       }}
       disabled={!isButtonEnabled}
-      className={`border ${isButtonEnabled ? `text-[#006C37] ${delivery_type === 'TIME_SLOT' ? 'border-[#006C37]' : 'border-[#006C3733]'}  bg-[#006C3733]` : 'text-[#231F204D] border-[#231F2005] bg-[#006C3733]'}  p-[.97vw] pt-[0vw] mob:p-[3.6vw]  mob:pr-[1.5vw] pr-[.5vw] rounded-[.97vw] mob:rounded-[3.6vw] mob:w-[42vw] mob:h-[25vw]  w-[13vw] h-[7vw]`}
+      className={`flex flex-col items-center justify-center text-center border ${
+        isButtonEnabled
+          ? `text-[#006C37] ${
+              delivery_type === 'TIME_SLOT' ? 'border-[#006C37]' : 'border-[#006C3733]'
+            } bg-[#006C3733]`
+          : 'text-[#231F204D] border-[#231F2005] bg-[#006C3733]'
+      } p-[1.5vw] mob:p-[5vw] rounded-[1.2vw] mob:rounded-[4vw] w-full`}
     >
-      <div className="w-[1.1vw] mob:w-[3.6vw] mob:h-[3.6vw] h-[1.1vw] relative">
-        <Image src={clock} alt="green clock" />
+      <div className="mb-[1vw] mob:mb-[3vw]">
+        <Image
+          src={clock}
+          alt="green clock"
+          width={40} // Adjust size as needed
+          height={40}
+        />
       </div>
-      <div className="text-start mob:pt-[3vw] pt-[.87vw]">
-        <p className="font-[Stinger] text-[.97vw] mob:text-[3.6vw] font-semibold ">Time slot delivery</p>
-        <p className="font-[SofiaPro] text-[.78vw] mob:text-[3vw] text-medium">
-          {isButtonEnabled ? (
-            <>
-              Pick a time slot between
-              <br />
-              {`${checkoutDetails.timeslots[0].from} - ${checkoutDetails.timeslots[checkoutDetails.timeslots.length - 1].to}`}
-            </>
-          ) : (
-            checkoutDetails.dash_delivery.timeslot_order_full_message
-          )}
-        </p>
-      </div>
+      <p className="font-[Stinger] text-[1.5vw] mob:text-[5vw] font-semibold mb-[0.8vw] mob:mb-[2vw]">
+        Time Slot Delivery
+      </p>
+      <p className="font-[SofiaPro] text-[1.2vw] mob:text-[3.8vw] text-medium leading-snug">
+        {isButtonEnabled ? (
+          <>
+            Pick a time slot between <br />
+            <span className="font-bold text-[1.4vw] mob:text-[4.5vw]">
+              {`${checkoutDetails.timeslots[0].from} - ${
+                checkoutDetails.timeslots[checkoutDetails.timeslots.length - 1].to
+              }`}
+            </span>
+          </>
+        ) : (
+          <span className="font-bold text-[1.4vw] mob:text-[4.5vw]">
+            {checkoutDetails.dash_delivery.timeslot_order_full_message}
+          </span>
+        )}
+      </p>
     </button>
   );
 };

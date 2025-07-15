@@ -13,7 +13,7 @@ type FooterProps = {
 
 const Footer: React.FC<FooterProps> = ({ footerData }) => {
 
-   if (!footerData) {
+  if (!footerData) {
     return null; // or render fallback footer
   }
   const { footerLinksPrimary, footerLinksSecondary, contactDetails } = footerData;

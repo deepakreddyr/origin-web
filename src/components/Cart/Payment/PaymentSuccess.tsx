@@ -11,6 +11,8 @@ const PaymentSuccess = (props: any) => {
   const [timer, setTimer] = useState(5);
   const router = useRouter();
   const dispatch = useDispatch();
+  const total_to_pay= localStorage.getItem("total_to_pay")
+  localStorage.removeItem("total_to_pay")
   useEffect(() => {
     if (timer > 0) {
       const countdown = setInterval(() => {
@@ -41,7 +43,7 @@ const PaymentSuccess = (props: any) => {
           Paid
           <span className="font-semibold text-[.97vw] mob:text-[3.6vw]">
             {' '}
-            ₹{paymentModalDetails.cartValue}{' '}
+            ₹{total_to_pay}{' '}
           </span>using{' '}
           <span className="font-semibold text-[.97vw] mob:text-[3.6vw]">{paymentModalDetails.paymentType}</span>
         </p>

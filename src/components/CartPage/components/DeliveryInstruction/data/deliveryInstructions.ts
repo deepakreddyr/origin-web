@@ -1,6 +1,7 @@
 import NotRingBell from "../../../assets/avoid-bell.svg";
 import NoCalling from "../../../assets/avoid-calling.svg";
 import LeaveAtGate from "../../../assets/leave-at-gate.svg";
+import GiveToSecurity from "../../../assets/give-to-security.svg"
 import TypeOfDeliveryInstruction from "./typeOfDeliveryInstruction";
 
 const { AVOID_CALLING, DO_NOT_RING_BILL, GIVE_TO_SECURITY, LEAVE_AT_DOOR } =
@@ -31,7 +32,7 @@ const deliveryInstructionDefault: DeliveryInstructionType = [
     name: GIVE_TO_SECURITY,
     isActivated: false,
     isDisabled: false,
-    image: LeaveAtGate,
+    image: GiveToSecurity,
   },
   {
     slug: slugGenerator(AVOID_CALLING),

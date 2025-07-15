@@ -163,7 +163,7 @@ const Cart = (props: any) => {
       <>
         <ReviewList />
         <DeliveryInstruction />
-        <CouponSection setShowCouponList={setShowCouponList} />
+        {/* <CouponSection setShowCouponList={setShowCouponList} /> */}
         {showAddressModal && (
           <div className="w-[30vw] flex items-end relative  justify-end">
             {<AddressAndTimeSlot showAddressModal={showAddressModal} setAddressModal={setAddressModal} />}
