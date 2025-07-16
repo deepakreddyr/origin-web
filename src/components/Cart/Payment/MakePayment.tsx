@@ -8,6 +8,8 @@ import { paymentTypeList } from '@/constants';
 const MakePayment = (props: any) => {
   const { placeOrderHandler } = props;
   const [showCodButton, setShowCodButton] = useState(false);
+  const [processing, setProcessing] = useState(false);
+
   let paymentFlow = localStorage.getItem('FLOW_TYPE') ? localStorage.getItem('FLOW_TYPE') : null;
 
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
@@ -24,6 +26,7 @@ const MakePayment = (props: any) => {
     placeOrderDetails.delivery_type === 'INSTANT'
       ? placeOrderDetails.checkoutDetails.cod_for_immediate_delivery
       : placeOrderDetails.checkoutDetails.enable_cod;
+
   return (
     <>
       <div className="">
@@ -50,14 +53,25 @@ const MakePayment = (props: any) => {
           <div className="flex flex-col gap-[1.1vw] mob:gap-[4.1vw]">
             {paymentTypeList.map((pay: any) => (
               <div
-                className={`${pay.sub_payment_method ? 'opacity-100' : `${isCodEnabled ? 'opacity-100' : 'opacity-30'}`} cursor-pointer border border-[#F2EEE44D] hover:border-primary-100 bg-[#F2EEE44D] py-[.97vw] mob:py-[3.6vw] mob:px-[4.1vw] px-[1.1vw] mob:rounded-[3.6vw] rounded-[.97vw]  `}
+                className={`${pay.sub_payment_method ? 'opacity-100' : `${isCodEnabled ? 'opacity-100' : 'opacity-30'}`} cursor-pointer border border-[#F2EEE44D] hover:border-primary-100 bg-[#F2EEE44D] py-[.97vw] mob:py-[3.6vw] mob:px-[4.1vw] px-[1.1vw] mob:rounded-[3.6vw] rounded-[.97vw]`}
                 key={pay.id}
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.stopPropagation();
+                  if (processing) return;
+
+                  setProcessing(true);
+
                   if (pay.sub_payment_method) {
-                    placeOrderHandler(pay);
+                    try {
+                      await placeOrderHandler(pay);
+                    } finally {
+                      // setProcessing(false);
+                    }
                   } else {
-                    if (isCodEnabled) setShowCodButton(!showCodButton);
+                    if (isCodEnabled) {
+                      setShowCodButton(!showCodButton);
+                    }
+                    // setProcessing(false); // No async operation here
                   }
                 }}
               >
@@ -76,15 +90,24 @@ const MakePayment = (props: any) => {
                     )}
                   </div>
                 </div>
+
                 {showCodButton && !pay.sub_payment_method && (
                   <button
-                    onClick={(e) => {
+                    onClick={async (e) => {
                       e.stopPropagation();
-                      if (!pay.sub_payment_method) {
-                        placeOrderHandler(pay);
+                      if (processing) return;
+
+                      setProcessing(true);
+                      try {
+                        await placeOrderHandler(pay);
+                      } finally {
+                        setProcessing(false);
                       }
                     }}
-                    className="font-[SofiaPro] mt-[1.1vw] mob:mt-[4.1vw]  font-semibold mob:px-[3vw] px-[.8vw] py-[.5vw] mob:py-[2vw] mob:text-[3vw] text-[.83vw] text-white bg-secondary rounded-[.8vw]"
+                    disabled={processing}
+                    className={`font-[SofiaPro] mt-[1.1vw] mob:mt-[4.1vw] font-semibold mob:px-[3vw] px-[.8vw] py-[.5vw] mob:py-[2vw] mob:text-[3vw] text-[.83vw] text-white bg-secondary rounded-[.8vw] ${
+                      processing ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
                   >
                     Pay on delivery
                   </button>
@@ -94,6 +117,7 @@ const MakePayment = (props: any) => {
           </div>
         </div>
       </div>
+
       <div className="flex items-center justify-center gap-[.4vw] mob:gap-[2vw]">
         <p className="font-[SofiaPro] text-[.7vw] mob:text-[3vw] text-[#231F20CC]  ">
           100% Secured payments powered by
