@@ -144,7 +144,7 @@ const AccountSettings = ({
                     </Box>
                 </Box>
             </Box>
-            <Box
+            {/* <Box
                 className="delete-account"
                 sx={{
                     borderTop: '#EAE5CF 1px solid',
@@ -192,7 +192,7 @@ const AccountSettings = ({
                     Deleting your account will remove all your orders & other
                     data from your account.
                 </Typography>
-            </Box>
+            </Box> */}
         </Box>
     )
 }
