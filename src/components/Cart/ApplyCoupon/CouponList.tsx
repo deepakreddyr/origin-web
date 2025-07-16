@@ -53,8 +53,10 @@ const CouponList = (props: any) => {
       };
     }
     const successHandler = (response: any) => {
+      let isValid = response?.data[0].isValid === 0 ? false : true;
+      
       // coupon to be fixed
-      if (response?.data) {
+      if (isValid) {
         dispatch(setCouponDetails({ ...response.data[0] }));
         dispatch(setCouponId(response.data[0].id));
         const disountedAmount = calculateCouponDiscount(cart.totalPrice, response.data[0]);
@@ -65,9 +67,8 @@ const CouponList = (props: any) => {
 
         dispatch(setDiscountAmount(Math.round(disountedAmount)));
         dispatch(setAmountToPay(finalCartAmount));
-      }
-      if (!response) {
-        setError(true);
+      } else {
+         setError(true);
       }
       setCouponsTab(COUPON_TABS.COUPON_APPLIED);
     };

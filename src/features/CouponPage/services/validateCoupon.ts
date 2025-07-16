@@ -19,13 +19,14 @@ export const validateCoupon = async (payload: any, set: any) => {
       },
       body: JSON.stringify(payload)
     });
-
     set((prevState: AppliedCoupon) => ({
       ...prevState,
       loading: false,
       success: true,
       coupon: response.data,
       isApplied: true
+      // commented for future ref
+      // isApplied: response.data[0].isValid === 0 ? false : true
     }));
     return true;
   } catch (error: any) {
