@@ -163,7 +163,7 @@ const Cart = (props: any) => {
       <>
         <ReviewList />
         <DeliveryInstruction />
-        {/* <CouponSection setShowCouponList={setShowCouponList} /> */}
+        <CouponSection setShowCouponList={setShowCouponList} />
         {showAddressModal && (
           <div className="w-[30vw] flex items-end relative  justify-end">
             {<AddressAndTimeSlot showAddressModal={showAddressModal} setAddressModal={setAddressModal} />}
@@ -172,7 +172,7 @@ const Cart = (props: any) => {
         <BillDetailsWrapper billDetails={billDetails} />
         {cart.cartTabType !== TabTypeConstant.CART_ADDRESS_LIST && (
           <ActionCtaWithItems
-            btnName={loginDetails.user ? 'PROCEED' : 'PROCEED'} // kept for future changes
+            btnName={loginDetails.user ? 'PROCEED' : 'LOGIN'} // kept for future changes
             handler={proceedButtonHandler}
             isDisabled={!cart.isProceedBtnEnabled}
           />

@@ -149,7 +149,7 @@ const PaymentFailure = (props: any) => {
             onClick={() => setActiveScreenIndex(1)}
             className="font-[SofiaPro] font-semibold text-[.97vw] mob:text-[3.6vw]  border-[2px] border-black px-[2.2vw] mob:px-[5vw] mob:py-[1.5vw] py-[.6vw] rounded-full "
           >
-            Demiss
+            Dismiss
           </button>
         </div>
       </div>

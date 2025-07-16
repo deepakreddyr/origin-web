@@ -79,6 +79,7 @@ const AccountSettings = () => {
           defaultAddress: null
         });
         setProfileAtom({ loading: false, success: false, error: false, data: null });
+        
       }
     }
     // {
