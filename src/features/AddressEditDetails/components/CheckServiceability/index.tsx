@@ -333,7 +333,7 @@ export default function CheckServiceability(props: Props) {
                 color: "#25874D",
               }}
             >
-              EDIT
+              Change Location
             </Typography>
           </Button>
         </Box>
