@@ -47,7 +47,7 @@ const ReviewItem = (props: any) => {
                     varientId={uom.variant_id}
                     varientPrice={uom.price}
                     stepperQuantity={uom.stepper_quantity}
-                    buttonType="yellow"
+                    buttonType="white"
                   />
                 </div>
                 <div className="review-cart-counter flex flex-col items-center w-[2vw] mob:w-[12vw] ">

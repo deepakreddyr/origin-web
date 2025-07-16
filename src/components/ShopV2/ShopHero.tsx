@@ -34,6 +34,7 @@ const bannerData = [
 
 const ShopHero = () => {
   const isMobile = useMediaQuery('(max-width:768px)');
+  const isTablet = useMediaQuery('(max-width:1024px)');
   const router = useRouter();
 
   return (
@@ -81,17 +82,24 @@ const ShopHero = () => {
 
             <div
               className="absolute inset-0 z-10 flex items-center justify-end"
-              style={{ paddingRight: isMobile ? '6vw' : '250px' }}
+              style={{ 
+                paddingRight: isMobile ? '6vw' : isTablet ? '120px' : '250px' 
+              }}
             >
               <div
                 className={`text-left ${
-                  isMobile ? 'max-w-[60vw] pt-[8vw]' : 'max-w-[28vw]'
+                  isMobile ? 'max-w-[60vw] pt-[8vw]' : isTablet ? 'max-w-[35vw]' : 'max-w-[28vw]'
                 }`}
               >
                 <h1
                   className={`
-                    font-[SofiaPro] font-bold leading-tight text-white whitespace-pre-line
-                    ${isMobile ? 'text-[4vw] leading-[1.1]' : 'text-[3.2vw] leading-[1.1]'}
+                    font-[SofiaPro] font-bold text-white whitespace-pre-line
+                    ${isMobile 
+                      ? 'text-[4vw] leading-[1.0]' 
+                      : isTablet 
+                        ? 'text-[4.5vw] leading-[0.9]' 
+                        : 'text-[3.8vw] leading-[1.1]'
+                    }
                   `}
                 >
                   {banner.title}
@@ -99,9 +107,14 @@ const ShopHero = () => {
                 <button
                   onClick={() => router.push(banner.href)}
                   className={`
-                    mt-[2vw] bg-[#FFD600] text-black font-[SofiaPro] font-semibold py-2 px-6 rounded-lg
+                    bg-[#FFD600] text-black font-[SofiaPro] font-semibold rounded-lg
                     hover:bg-[#ffcd00] transition
-                    ${isMobile ? 'text-[2.5vw] mt-[3vw]' : 'text-[1vw] mt-[1.5vw]'}
+                    ${isMobile 
+                      ? 'text-[2vw] mt-[3vw] py-1 px-4' 
+                      : isTablet 
+                        ? 'text-[1.2vw] mt-[1.8vw] py-2 px-6' 
+                        : 'text-[1vw] mt-[1.5vw] py-2 px-6'
+                    }
                   `}
                 >
                   {banner.button}

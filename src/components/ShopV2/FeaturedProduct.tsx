@@ -94,17 +94,16 @@ const FeaturedProduct = () => {
             <p className="text-gray-700 text-sm md:text-base leading-relaxed max-w-md mx-auto md:mx-0 mb-4 md:mb-6">
               At a real Chinese hot pot, you lower the enoki slowly, like a ritual. They soak in the spice, and you bite into a soft snap laced with fire.
             </p>
-          </div>
-
-          {/* Add Button */}
-          <div className="mt-[0.4rem] flex-shrink-0 rounded-[1.5rem] overflow-hidden">
-            <AddItemBtn
-              product={itemDetails}
-              varientId={1445}
-              varientPrice={"₹195"}
-              stepperQuantity={1}
-              buttonType="yellow"
-            />
+            {/* Add Button */}
+              <div className="mt-[0.4rem] flex-shrink-0 pt-7  overflow-hidden">
+                <AddItemBtn
+                  product={itemDetails}
+                  varientId={1445}
+                  varientPrice={"₹195"}
+                  stepperQuantity={1}
+                  buttonType="yellow"
+                />
+              </div>
           </div>
         </div>
       </div>

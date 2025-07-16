@@ -109,7 +109,7 @@ const Header = ({ mainMenuItems, isHeaderSticky }: Props) => {
           </button>
 
           <button
-            onClick={() => router.push('/')}
+            onClick={() => router.push('/shop')}
             className="w-[7vw] mob:w-[16vw] mob:h-[8vw] h-[4vw] mr-[4vw] top-[.2vw] relative"
           >
             <Image src={originLogo} alt="logo" />
