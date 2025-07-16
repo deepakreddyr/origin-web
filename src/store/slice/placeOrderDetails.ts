@@ -80,7 +80,6 @@ export const placeOrderDetailsSlice = createSlice({
     setCheckoutDetails(state, action) {
       state.checkoutDetails = action.payload;
     },
-
     resetOrderDetails(state) {
       Object.assign(state, initialState);
     }

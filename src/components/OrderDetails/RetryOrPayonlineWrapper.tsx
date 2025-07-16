@@ -32,6 +32,7 @@ const RetryOrPayonlineWrapper = () => {
   const { query } = router;
 
   const handlepayment = () => {
+
     localStorage.setItem('FLOW_TYPE', 'retry_payment');
 
     if (query.type === 'app') {

@@ -27,6 +27,7 @@ const MakePayment = (props: any) => {
       ? placeOrderDetails.checkoutDetails.cod_for_immediate_delivery
       : placeOrderDetails.checkoutDetails.enable_cod;
 
+    console.log(processing, "processing");
   return (
     <>
       <div className="">
@@ -58,12 +59,14 @@ const MakePayment = (props: any) => {
                 onClick={async (e) => {
                   e.stopPropagation();
                   if (processing) return;
-
-                  setProcessing(true);
+                  if (pay.name != "Pay On delivery") {
+                      setProcessing(true);
+                  }
 
                   if (pay.sub_payment_method) {
                     try {
                       await placeOrderHandler(pay);
+
                     } finally {
                       // setProcessing(false);
                     }
@@ -101,7 +104,7 @@ const MakePayment = (props: any) => {
                       try {
                         await placeOrderHandler(pay);
                       } finally {
-                        setProcessing(false);
+                        // setProcessing(false);
                       }
                     }}
                     disabled={processing}
