@@ -5,12 +5,21 @@ const ActionCtaWithItems = (props: any) => {
   const { btnName, handler, isDisabled } = props;
   const cart = useSelector((state: any) => state.cart);
 
-  // Check if any item has is_available false inside multiple_uoms
-  const hasUnavailableItems = cart.items?.some((item: any) =>
-    item.multiple_uoms?.some((uom: any) => uom.is_available === false)
+  let cartItemsFromLS: any[] = [];
+  if (typeof window !== 'undefined') {
+    const lsData = localStorage.getItem('cart_items');
+    cartItemsFromLS = lsData ? JSON.parse(lsData) : [];
+  }
+
+  // Disable if ANY UOM is unavailable OR cart_quantity > maximum_quantity
+  const shouldDisable = cartItemsFromLS.some((item: any) =>
+    item.multiple_uoms?.some(
+      (uom: any) =>
+        uom.is_available === false || uom.cart_quantity > uom.maximum_quantity
+    )
   );
-  
-  const finalIsDisabled = isDisabled || hasUnavailableItems;
+
+  const finalIsDisabled = isDisabled || shouldDisable;
 
   return (
     <div
