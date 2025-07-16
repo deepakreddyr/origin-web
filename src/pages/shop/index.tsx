@@ -82,35 +82,34 @@ const ShopPage = (props: HomeProps) => {
   };
 
   const LoadedUI = () => {
-    return (
-      <div className="flex flex-col items-center pb-[20vw] mob:pb-[45vw] overflow-hidden">
-        {/* Video Banner Section */}
-        <div className="w-full relative">
-          <VideoBanner
-            mobileVideoSrc="https://cdn.originfresh.in/website/Origin_Banner_9_16.mp4" // 9:16 aspect ratio
-            desktopVideoSrc="https://cdn.originfresh.in/website/Origin_Banner_16_9.mp4" // 16:9 aspect ratio
-            // poster="/assets/images/video-poster.jpg" // Optional poster image
-            autoPlay={true}
-            muted={true}
-            loop={true}
-            controls={false}
-            className=""
-          />
-        </div>
-        
-        {/* Existing Content */}
-        <div className="flex flex-col gap-[6vw] pl-[10.6vw] mob:pl-[0vw] w-full mt-[4vw] mob:mt-[8vw]">
-          <div className="">
-            <CategorySection />
-          </div>
-          {subCategories.length > 0 &&
-            subCategories.map((category: any) => (
-              <PopularProduce key={category.id} categoryDetail={category} />
-            ))}
-        </div>
+  return (
+    <div className="flex flex-col items-center pb-[20vw] mob:pb-[45vw] overflow-hidden pt-[80px] mob:pt-[60px]">
+      {/* Video Banner Section */}
+      <div className="w-full relative">
+        <VideoBanner
+          mobileVideoSrc="https://cdn.originfresh.in/website/Origin_Banner_9_16.mp4"
+          desktopVideoSrc="https://cdn.originfresh.in/website/Origin_Banner_16_9.mp4"
+          autoPlay={true}
+          muted={true}
+          loop={true}
+          controls={false}
+          className=""
+        />
       </div>
-    );
-  };
+
+      <div className="flex flex-col gap-[6vw] pl-[10.6vw] mob:pl-[0vw] w-full mt-[4vw] mob:mt-[8vw]">
+        <div className="">
+          <CategorySection />
+        </div>
+        {subCategories.length > 0 &&
+          subCategories.map((category: any) => (
+            <PopularProduce key={category.id} categoryDetail={category} />
+          ))}
+      </div>
+    </div>
+  );
+};
+
 
   return (
     <Layout mainMenuItems={mainMenuItems} isHeaderSticky={true} footerData={footerData}>

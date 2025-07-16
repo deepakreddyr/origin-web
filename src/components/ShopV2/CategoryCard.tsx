@@ -22,7 +22,7 @@ const CategoryCard = (props: Props) => {
       className="w-[15vw] mob:w-[40vw] mob:h-[48vw] h-[13.48vw] rounded-[1.67vw] overflow-hidden flex flex-col justify-start relative"
     >
       {/* Category Name */}
-      <p className="text-[1.528vw] mob:text-[4vw] absolute z-[10] font-[SofiaPro] font-semibold pl-[1.1vw] pt-[1.1vw]">
+      <p className="text-[1.528vw] mob:text-[4vw] absolute z-[1] font-[SofiaPro] font-semibold pl-[1.1vw] pt-[1.1vw]">
         {cardDetails.name}
       </p>
 
