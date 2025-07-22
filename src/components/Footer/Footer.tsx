@@ -46,7 +46,7 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
 
           <Grid item md={12} className="mt-5 md:mt-8 text-center">
             <Typography variant="body1" className="text-sm text-white">
-              © 2024, Origin. All rights reserved.
+              © 2025, Origin. All rights reserved.
             </Typography>
           </Grid>
         </Grid>
