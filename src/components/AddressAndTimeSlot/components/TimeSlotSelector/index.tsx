@@ -48,7 +48,7 @@ const InnerContainer = styled.div`
 `;
 
 const DateDisplay = styled.h3`
-  font-family: "Stinger";
+  font-family: "SofiaPro";
   font-weight: 600;
   font-size: 18px !important;
   color: #231f20cc;

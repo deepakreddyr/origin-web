@@ -7,7 +7,7 @@ const NutritionInfo = (props: any) => {
   if (nutritionInfo?.details?.length === 0) return;
   return (
     <div className=" border rounded-[1.1vw] mob:rounded-[4.1vw] mob:p-[4.1vw] border-beige-200 p-[1.1vw]">
-      <p className="font-[Stinger] text-[1.25vw] mob:text-[5.1vw] font-semibold text-black-op-80">
+      <p className="font-[SofiaPro] text-[1.25vw] mob:text-[5.1vw] font-semibold text-black-op-80">
         {nutritionInfo?.title}
       </p>
       <div className="flex after: flex-wrap gap-[.83vw] mob:gap-[3vw] pt-[1.1vw] mob:pt-[4.1vw]">

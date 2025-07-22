@@ -19,7 +19,7 @@ const ContactDetails = () => {
           <Typography className="text-[#00000099] text-lg font-[SofiaPro] font-light">
             Call us
           </Typography>
-          <Typography className="font-[Stinger] text-[28px] leading-[30px] text-black font-normal">
+          <Typography className="font-[SofiaPro] text-[28px] leading-[30px] text-black font-normal">
             04446276129
           </Typography>
         </Stack>
@@ -27,7 +27,7 @@ const ContactDetails = () => {
           <Typography className="text-[#00000099] text-lg font-[SofiaPro] font-light">
             Email us
           </Typography>
-          <Typography className="font-[Stinger] text-[28px] leading-[30px] text-black font-normal">
+          <Typography className="font-[SofiaPro] text-[28px] leading-[30px] text-black font-normal">
             support@madrasmandi.in
           </Typography>
         </Stack>

@@ -19,6 +19,8 @@ import MainCategorySkeleton from '@/components/skeletonLoaders/shop/MainCategory
 import PopularCarouselSkeleton from '@/components/skeletonLoaders/shop/PopularCarouselSkeleton';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import DownloadAppWrapper from '@/components/downloadApp/DownloadAppWrapper';
+import FeatureStrip from '@/components/ShopV2/FeatureStrip';
+import WhyOriginBanner from '@/components/ShopV2/WhyOriginBanner';
 
 interface HomeProps {
   mainMenuItems: MainMenuType[];
@@ -40,7 +42,7 @@ const ShopPage = (props: HomeProps) => {
   const { categories } = filteredCategories;
 
   const subCategories = categories?.filter((item: any) => item.type !== 'main-category' && item);
-
+  console.log(subCategories,"SUBCATS");
   useEffect(() => {
     const token = localStorage.getItem('user_token');
     const addressFromLs = getAddressAndStoreId();
@@ -87,28 +89,39 @@ const ShopPage = (props: HomeProps) => {
       {/* Video Banner Section */}
       <div className="w-full relative">
         <VideoBanner
-          mobileVideoSrc="https://cdn.originfresh.in/website/Origin_Banner_9_16.mp4"
-          desktopVideoSrc="https://cdn.originfresh.in/website/Origin_Banner_16_9.mp4"
+          mobileVideoSrc="https://cdn.originfresh.in/website/Origin_9_16_v1.mp4"
+          desktopVideoSrc="https://cdn.originfresh.in/website/Origin_16_9_v1.mp4"
           autoPlay={true}
           muted={true}
           loop={true}
           controls={false}
-          className=""
         />
+        <FeatureStrip />
       </div>
 
       <div className="flex flex-col gap-[6vw] pl-[10.6vw] mob:pl-[0vw] w-full mt-[4vw] mob:mt-[8vw]">
-        <div className="">
-          <CategorySection />
-        </div>
-        {subCategories.length > 0 &&
-          subCategories.map((category: any) => (
-            <PopularProduce key={category.id} categoryDetail={category} />
-          ))}
+        <CategorySection />
       </div>
+
+      {subCategories?.[0] && (
+        <div className="pt-[5vw]">
+          <PopularProduce categoryDetail={subCategories[0]} />
+        </div>
+      )}
+
+      <div className="">
+        <WhyOriginBanner />
+      </div>
+
+      {subCategories?.[1] && (
+        <div className="">
+          <PopularProduce categoryDetail={subCategories[1]} />
+        </div>
+      )}
     </div>
   );
 };
+
 
 
   return (

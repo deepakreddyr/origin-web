@@ -17,7 +17,7 @@ const BestSellers = (props: CategorySectionProps) => {
         shopData.find((item: any) => item.title === 'Best Sellers')?.data || []
     return (
         <div className="bg-[#F2EEE433] relative left-[7.5vw] border-r-0  border-primary-200 w-[83.6vw] bg-white py-0 md:py-9 border pt-[72px] md:pb-0 pl-[2.7vw] lg:rounded-l-[48px] ltransition-all duration-50 ease-in-out">
-            <p className="font-[Stinger] text-[1.944vw] font-bold py-[1.1vw] ">
+            <p className="font-[SofiaPro] text-[1.944vw] font-bold py-[1.1vw] ">
                 Bestsellers
             </p>
             <div className="">

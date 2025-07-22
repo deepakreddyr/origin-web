@@ -33,7 +33,7 @@ const MakePayment = (props: any) => {
       <div className="">
         {!paymentFlow && (
           <div className="bg-[#FFEB66] border border-[#FFDD0066] rounded-b-[1.1vw] mob:rounded-[4.1vw]  m-[-1.1vw] mob:m-[-4.1vw] mob:p-[4.2vw] p-[1.19vw] mob:mb-[4vw]  mb-[2vw] flex items-center justify-between  ">
-            <p className="font-[Stinger] text-[.97vw] mob:text-[3.6vw] font-semibold  text-[#231F20CC] ">
+            <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  text-[#231F20CC] ">
               {deliveryType}
             </p>
 
@@ -41,14 +41,14 @@ const MakePayment = (props: any) => {
               <div className="">
                 <Image src={''} alt="" />
               </div>
-              <p className="font-[Stinger] text-[.97vw] mob:text-[3.6vw] font-semibold  text-[#231F20CC] ">
+              <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  text-[#231F20CC] ">
                 {deliveryTime}
               </p>
             </div>
           </div>
         )}
         <div>
-          <p className="font-[Stinger] font-semibold text-[1vw] mob:text-[4vw] text-[#231F20CC] pb-[.97vw] mob:pb-[3.6vw] ">
+          <p className="font-[SofiaPro] font-semibold text-[1vw] mob:text-[4vw] text-[#231F20CC] pb-[.97vw] mob:pb-[3.6vw] ">
             Payment methods
           </p>
           <div className="flex flex-col gap-[1.1vw] mob:gap-[4.1vw]">

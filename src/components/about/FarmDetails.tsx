@@ -47,7 +47,7 @@ const FarmDetails = () => {
       </div>
       <div className="flex mob:flex-col mob:relative sticky top-0 pt-[20vw] mob:pt-[25vw] px-[7vw] mob:px-[4vw]  mob:h-full mob:justify-start justify-between">
         <div className="pl-[4vw] mob:pl-0 sticky mob:relative mob:top-0 top-[7vw] h-[12vh] mob:h-full pt-[1.1vw] ">
-          <p className="text-[4.4vw] mob:text-[10.2vw] font-[Stinger] text-secondary leading-none font-bold ">
+          <p className="text-[4.4vw] mob:text-[10.2vw] font-[SofiaPro] text-secondary leading-none font-bold ">
             Its a small <br /> world after all
           </p>
         </div>

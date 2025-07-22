@@ -6,13 +6,47 @@ import Script from 'next/script';
 import NextNProgress from 'nextjs-progressbar';
 import { useAtom } from 'jotai';
 import { isGMapLoadedAtom } from '@/context/global';
-
 import { Provider } from 'react-redux';
 import { wrapper } from '@/store/store';
+import { useEffect } from 'react';
+
+// --- Cache clear utility ---
+const APP_VERSION = '1.0.6';  // Increment this on each deployment
+
+const clearCacheAndReload = () => {
+  if (typeof window === 'undefined') return; // Prevent SSR crash
+
+  const currentVersion = localStorage.getItem('appVersion');
+  console.log("Current app version in storage:", currentVersion);
+  console.log("Latest APP_VERSION:", APP_VERSION);
+
+  if (currentVersion === null || currentVersion !== APP_VERSION) {
+    console.log(`Cache clear: old version=${currentVersion}, new version=${APP_VERSION}`);
+    
+    if ('caches' in window) {
+      caches.keys().then(names => {
+        names.forEach(name => caches.delete(name));
+      });
+    }
+
+    sessionStorage.clear();
+    localStorage.setItem('appVersion', APP_VERSION);
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
+  } else {
+    console.log("App version matches, no cache clear needed.");
+  }
+};
 
 export default function App({ Component, pageProps, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
   const [isGMapLoaded, setIsGMapLoaded] = useAtom(isGMapLoadedAtom);
+
+  useEffect(() => {
+    clearCacheAndReload();
+  }, []);
 
   return (
     <Provider store={store}>
@@ -28,7 +62,6 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
           strategy="lazyOnload"
           onLoad={() => console.log('Razorpay script loaded')}
         />
-
         <Component {...pageProps} />
       </LocalizationProvider>
     </Provider>

@@ -11,7 +11,7 @@ const DeliveryAddress = (props: any) => {
   return (
     <div className="border w-full h-max bg-[#F2EEE44D] border-[#F2EEE4] rounded-[1.1vw] mob:rounded-[4.1vw] mob:p-[4.1vw] p-[1.1vw] ">
       <div className="">
-        <p className="font-[stinger] font-semibold text-[1.25vw] mob:text-[5vw] text-black-op-80 pb-[1.1vw] mob:pb-[4.1vw]">
+        <p className="font-[SofiaPro] font-semibold text-[1.25vw] mob:text-[5vw] text-black-op-80 pb-[1.1vw] mob:pb-[4.1vw]">
           Delivering to
         </p>
         <div className="flex gap-[.5vw] mob:gap-[1.5vw] ">
@@ -33,7 +33,7 @@ const DeliveryAddress = (props: any) => {
         </div>
       </div>
       <div className="pt-[1.67vw] mob:pt-[8vw]">
-        <p className="font-[stinger] font-semibold text-[1.25vw] mob:text-[5vw] text-black-op-80 pb-[1.1vw] mob:pb-[4.1vw]">
+        <p className="font-[SofiaPro] font-semibold text-[1.25vw] mob:text-[5vw] text-black-op-80 pb-[1.1vw] mob:pb-[4.1vw]">
           Payment Type
         </p>
         <div className="flex items-center gap-[.5vw] mob:gap-[1.5vw]">

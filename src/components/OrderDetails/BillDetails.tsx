@@ -130,7 +130,7 @@ const BillDetails = (props: any) => {
   };
   return (
     <div className="bg-[#F2EEE44D] border border-[#F2EEE4] rounded-[1.1vw] mob:rounded-[4.1vw] mob:p-[4.1vw] p-[1.1vw]">
-      <p className="font-[Stinger] font-semibold text-[1.25vw] mob:text-[5vw]  pb-[1.1vw] mob:pb-[4.1vw] text-black opacity-80">
+      <p className="font-[SofiaPro] font-semibold text-[1.25vw] mob:text-[5vw]  pb-[1.1vw] mob:pb-[4.1vw] text-black opacity-80">
         Bill Details
       </p>
       {(orderDetails.bills.filter((bill: any) => bill.payment_method !== 'Refund') || []).length > 1 ? (

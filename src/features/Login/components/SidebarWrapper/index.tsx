@@ -100,7 +100,7 @@ const SidebarWrapper = (props: Props) => {
             variant="h5"
             component="h5"
             sx={{
-              fontFamily: 'Stinger',
+              fontFamily: 'SofiaPro',
               fontSize: '24px !important',
               fontWeight: 700
             }}

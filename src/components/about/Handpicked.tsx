@@ -24,7 +24,7 @@ const Handpicked = () => {
     <div className=" mob:h-max w-full rounded-[6.6vw] mob:rounded-t-[4vw] mob:top-0 relative pb-[0vw] ">
       <div className="flex items-center mob:flex-col-reverse justify-between pt-[6vw]  bg-beige-100 pb-[8vw]">
         <div className="w-[38vw] mob:w-full ml-[10vw] mob:ml-0 mob:p-[4.1vw] pb-[5vw] pt-[5vw] mob:pb-[15vw]">
-          <p className="text-[4.4vw] mob:text-[10.2vw] font-[Stinger] text-secondary leading-none font-bold pb-[4vw]">
+          <p className="text-[4.4vw] mob:text-[10.2vw] font-[SofiaPro] text-secondary leading-none font-bold pb-[4vw]">
             Carefully
             <br />
             Handpicked

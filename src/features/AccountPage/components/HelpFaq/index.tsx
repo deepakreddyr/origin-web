@@ -57,7 +57,7 @@ const HelpFaq = () => {
           <Box component="li" className={`weekly-list-item ${styles['weekly-list-item']}`}>
             <Typography
               sx={{
-                fontFamily: 'Stinger',
+                fontFamily: 'SofiaPro',
                 fontSize: '18px',
                 fontWeight: 600,
                 color: '#231F20CC'
@@ -114,7 +114,7 @@ const HelpFaq = () => {
           <Typography
             component="h1"
             sx={{
-              fontFamily: 'Stinger',
+              fontFamily: 'SofiaPro',
               fontSize: '18px',
               fontWeight: 600,
               color: '#000000'

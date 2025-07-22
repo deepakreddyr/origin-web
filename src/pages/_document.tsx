@@ -11,7 +11,7 @@ export default function Document() {
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <title>Origin Fresh</title>
       </Head>
-      <body>
+      <body style={{ backgroundColor: '#F2EEE3' }}>
         <Main />
         <NextScript />
       </body>

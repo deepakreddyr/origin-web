@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        SofiaPro: ['"Sofia Pro"', 'sans-serif']
+      },
       colors: {
         danger: '#C70000',
         error: '#D0583F',
@@ -54,14 +57,14 @@ const config: Config = {
       screens: {
         mob: { max: '600px' },
         xs: '390px',
-        sm: '600px', // Small screens, default mobile size
-        md: '900px', // Medium screens, tablets
-        lg: '1150px', // Large screens, laptops
-        xl: '1450px', // Extra large screens, desktops
-        '2xl': '1600px' // Double extra large screens, large desktops
+        sm: '600px',
+        md: '900px',
+        lg: '1150px',
+        xl: '1450px',
+        '2xl': '1600px'
       },
       backgroundImage: {
-        noise: "url('/assets/noise-texture.png')" // Replace with your noise texture URL
+        noise: "url('/assets/noise-texture.png')"
       },
       animation: {
         'infinite-scroll': 'infinite-scroll 25s linear infinite'

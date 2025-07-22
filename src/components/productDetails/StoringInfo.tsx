@@ -7,7 +7,7 @@ const StoringInfo = (props: any) => {
   const storingInfo = info?.info?.find((item: any) => (item.type === 'storage' ? item : null));
   return (
     <div className=" border mob:bg-[#F2EEE44D] rounded-[1.1vw] mob:rounded-[4.1vw] mob:p-[4.1vw] border-beige-200 p-[1.1vw]">
-      <p className="font-[Stinger] text-[1.25vw] mob:text-[5.1vw] font-semibold text-black-op-70">
+      <p className="font-[SofiaPro] text-[1.25vw] mob:text-[5.1vw] font-semibold text-black-op-70">
         {storingInfo?.title}
       </p>
       <div className="grid gap-[1.1vw] mob:gap-[4.1vw] grid-cols-2 pt-[1.1vw] mob:pt-[4.1vw]">

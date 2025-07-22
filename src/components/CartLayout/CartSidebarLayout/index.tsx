@@ -71,7 +71,7 @@ const CartSidebarLayout = (props: {
             component="h3"
             variant="h5"
             sx={{
-              fontFamily: "Stinger",
+              fontFamily: "SofiaPro",
               fontSize: "24px !important",
               fontWeight: "600",
             }}

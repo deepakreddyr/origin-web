@@ -76,7 +76,7 @@ const CategorySection = () => {
 
   return (
     <div>
-      <p className="font-[Stinger] text-start font-bold text-[2.08vw] mob:text-[5.1vw] pb-[2.1vw]">
+      <p className="font-[SofiaPro] text-start font-bold text-[2.08vw] mob:text-[5.1vw] pb-[2.1vw]">
         Shop by category
       </p>
       {mobile ? mobUI() : webUI()}

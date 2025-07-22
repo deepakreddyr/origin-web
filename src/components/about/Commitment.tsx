@@ -9,7 +9,7 @@ const Commitment = () => {
         <Image src={commitmentImg} alt="commitment image" fill />
       </div>
       <div className="w-[40.5vw] mob:w-full mr-[10vw] mob:mr-[0vw] mob:p-[4.1vw] ">
-        <p className="text-[4.4vw] mob:text-[10.2vw] font-[Stinger] leading-none font-bold  pb-[2vw] pt-[4vw]">
+        <p className="text-[4.4vw] mob:text-[10.2vw] font-[SofiaPro] leading-none font-bold  pb-[2vw] pt-[4vw]">
           Commitment <br /> to Freshness
         </p>
         <p className="font-[SofiaPro] font-light text-[1.25vw] mob:text-[4.1vw] leading-[2vw] mob:leading-[6vw]  ">

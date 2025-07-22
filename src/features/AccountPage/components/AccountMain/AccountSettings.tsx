@@ -61,26 +61,37 @@ const AccountSettings = () => {
       title: 'Log Out',
       desc: '',
       onClick: () => {
-        dispatch(
-          setLoginDetails({
-            isLogin: false,
-            user: null,
-            tabType: TabTypeConstant.ENTER_MOBILE_NUMBER,
-            isSidebarOpen: false
-          })
-        );
-        dispatch(clearCart());
-        localStorage.clear();
-        setAddress({
-          loading: false,
-          success: false,
-          error: false,
-          address: null,
-          defaultAddress: null
+      dispatch(
+        setLoginDetails({
+          isLogin: false,
+          user: null,
+          tabType: TabTypeConstant.ENTER_MOBILE_NUMBER,
+          isSidebarOpen: false
+        })
+      );
+      dispatch(clearCart());
+      localStorage.clear();
+      sessionStorage.clear();
+
+      // Clear CacheStorage
+      if ('caches' in window) {
+        caches.keys().then((names) => {
+          names.forEach((name) => caches.delete(name));
         });
-        setProfileAtom({ loading: false, success: false, error: false, data: null });
-        
       }
+
+      setAddress({
+        loading: false,
+        success: false,
+        error: false,
+        address: null,
+        defaultAddress: null
+      });
+
+      setProfileAtom({ loading: false, success: false, error: false, data: null });
+
+      // console.log('User logged out, cache and sessions cleared');
+    }
     }
     // {
     //   title: 'Rewards',

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import YellowBtn from './YellowBtn';
 import WhiteBtn from './WhiteBtn';
 import BlackBtn from './BlackBtn';
+import YellowAddCartBtm from './YellowAddCartBtm'
 import { protectedUrl } from '@/url';
 import { getAddressAndStoreId, prepareCartItemsToApi } from '@/utilities/utils';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
@@ -128,6 +129,15 @@ const AddItemBtn = (props: any) => {
     }
   };
   const BUTTON_MAP: any = {
+    yellowaddtocart:(
+      <YellowAddCartBtm
+        isItemPresent={cartItem}
+        quantity={itemQuantity?.cart_quantity}
+        handleAddItem={handleAddItem}
+        handleIncrease={handleIncrease}
+        handleDecrease={handleDecrease}
+      />
+    ),
     yellow: (
       <YellowBtn
         isItemPresent={cartItem}

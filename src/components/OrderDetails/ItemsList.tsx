@@ -11,7 +11,7 @@ const ItemsList = (props: any) => {
     >
       <div className="flex items-end justify-between border-b border-b-[#F2EEE4] pb-[.97vw] mob:pb-[3.6vw] mob:mb-[4.1vw] mb-[1.1vw] ">
         <div className="">
-          <p className="font-[Stinger] text-[1.25vw] mob:text-[5vw] font-semibold text-black-op-80 ">Order Details</p>
+          <p className="font-[SofiaPro] text-[1.25vw] mob:text-[5vw] font-semibold text-black-op-80 ">Order Details</p>
           <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-medium text-black-op-60 pt-[.4vw] ">
             Order ID {order_id}
           </p>

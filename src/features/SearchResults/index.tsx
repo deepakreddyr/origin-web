@@ -33,7 +33,7 @@ const SearchResults = () => {
               <Box>
                 <Typography
                   sx={{
-                    fontFamily: 'Stinger',
+                    fontFamily: 'SofiaPro',
                     fontWeight: 600,
                     fontSize: ' 20px',
                     color: '#231f20cc'
@@ -50,7 +50,7 @@ const SearchResults = () => {
               <Box>
                 <Typography
                   sx={{
-                    fontFamily: 'Stinger',
+                    fontFamily: 'SofiaPro',
                     fontWeight: 600,
                     fontSize: ' 20px',
                     color: '#231f20cc'

@@ -27,7 +27,7 @@ const ItemsList = () => {
                 component="h3"
                 variant="body1"
                 sx={{
-                    fontFamily: 'Stinger',
+                    fontFamily: 'SofiaPro',
                     fontSize: '18px',
                     fontWeight: 600,
                     color: '#231F20CC',

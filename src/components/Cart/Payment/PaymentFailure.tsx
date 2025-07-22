@@ -134,7 +134,7 @@ const PaymentFailure = (props: any) => {
   const cancelOrderConfirmationModal = () => {
     return (
       <div className="">
-        <p className="font-[Stinger] text-[1.1vw] mob:text-[4.1vw] font-semibold ">Cancel Order ?</p>
+        <p className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] font-semibold ">Cancel Order ?</p>
         <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] text-[#231F20CC] ">
           Are you sure you want to cancel this order?
         </p>

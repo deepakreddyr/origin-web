@@ -51,7 +51,7 @@ const PopularProducts = ({
           style.rootInner
         )}
       >
-        <Typography variant="h5" className="font-bold text-[32px]">
+        <Typography variant="h5" className="font-[SofiaPro] font-bold text-[32px]">
           Popular Produce
         </Typography>
         <FilterButtons

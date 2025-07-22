@@ -25,7 +25,7 @@ const DetailsHeader = (props: any) => {
         </button>
       </div>
       <div>
-        <p className="font-[Stinger] text-[1.389vw] mob:text-[5.12vw] font-semibold ">Order Details</p>
+        <p className="font-[SofiaPro] text-[1.389vw] mob:text-[5.12vw] font-semibold ">Order Details</p>
         <p className="font-[SofiaPro] font-medium text-[.97vw] mob:text-[3.6vw] text-[#231F2080] ">
           Order #{order_id}
           <span> | </span>

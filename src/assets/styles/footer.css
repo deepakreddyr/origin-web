@@ -15,6 +15,7 @@ footer .secondary-footer ul li:not(:last-child):after {
 }
 
 .bottom-footer {
+  background-color: #146321;
 }
 
 .bottom-footer .footer-list {

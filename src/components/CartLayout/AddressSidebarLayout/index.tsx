@@ -74,7 +74,7 @@ const AddressSidebarLayout = (props: Props) => {
             component="h5"
             variant="h5"
             sx={{
-              fontFamily: "Stinger",
+              fontFamily: "SofiaPro",
               fontSize: "24px !important",
               fontWeight: "600",
               paddingTop: ".8rem",

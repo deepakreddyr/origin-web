@@ -9,7 +9,7 @@ interface Props {
   filters: any;
   setFilters: any;
 }
-// let filtersInitialState = {}
+
 const CategoryAndSubCategory = (props: Props) => {
   const { filters, setFilters } = props;
   const [dropdownList, setDropdownList] = useState([]);
@@ -49,25 +49,10 @@ const CategoryAndSubCategory = (props: Props) => {
       const defaultSubCategoryList = categories.data.find((item: any) => item.name === value.name);
       let subCategoryName = defaultSubCategoryList.sub_categories[0].name;
       let subCategoryId = defaultSubCategoryList.sub_categories[0].id;
-      // console.log(categories);
       url = `/shop/${value.name}/${value.id}/${subCategoryName}/${subCategoryId}`;
     } else if (name === 'subCategory') {
       url = `/shop/${filters.category}/${filters.cid}/${value.name}/${value.id}`;
     }
-    // if (name === 'category') {
-    //     setFilters({
-    //         ...filters,
-    //         [name]: value.name,
-    //         cid: value.id,
-    //     })
-    // }
-    // if (name === 'subCategory') {
-    //     setFilters({
-    //         ...filters,
-    //         [name]: value.name,
-    //         scid: value.id,
-    //     })
-    // }
 
     router.push(url, undefined, { shallow: true });
   };
@@ -79,10 +64,7 @@ const CategoryAndSubCategory = (props: Props) => {
   };
 
   return (
-    <div
-      className="sticky pt-[4vw] border-b  
-  mob:pb-[3vw] mob:mb-[4.1vw] p-[1.1vw] top-[0] flex flex-col gap-[1.1vw] bg-white z-[1]"
-    >
+    <div className="sticky top-0 pt-4 md:pt-[4vw] pb-3 md:pb-[1.2vw] mb-0 px-4 md:p-[1.1vw] flex flex-col gap-3 md:gap-[1.1vw] bg-[#F2EEE3] z-[1]">
       {products.isProductListLoading ? (
         <DropdownAndPillsSkeleton />
       ) : (
@@ -95,7 +77,11 @@ const CategoryAndSubCategory = (props: Props) => {
             handler={handleStateChange}
             list={dropdownList}
           />
-          <SubCategoryPills value={filters.subCategory} name={'subCategory'} handler={handleStateChange} />
+          <SubCategoryPills 
+            value={filters.subCategory} 
+            name={'subCategory'} 
+            handler={handleStateChange} 
+          />
         </>
       )}
     </div>

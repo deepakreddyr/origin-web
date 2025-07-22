@@ -21,7 +21,7 @@ const RefundWrapper = (props: any) => {
     >
       <div className="flex items-center justify-between border-b border-b-[#F2EEE4] pb-[.83vw] mob:pb-[3vw] mob:mb-[3vw] mb-[.83vw] ">
         <div className="flex items-center gap-[1.1vw] mob:gap-[4.1vw] ">
-          <p className="font-[stinger] font-semibold text-[1.25vw] mob:text-[5vw] pt-[.3vw] mob:pt-[2vw] text-black-op-80">
+          <p className="font-[SofiaPro] font-semibold text-[1.25vw] mob:text-[5vw] pt-[.3vw] mob:pt-[2vw] text-black-op-80">
             Refund details
           </p>
           <div className="bg-[#DC6F3F1F] px-[.5vw] mob:px-[3vw] mob:py-[2vw] py-[.2vw] mob:rounded-full rounded-[.78vw] ">

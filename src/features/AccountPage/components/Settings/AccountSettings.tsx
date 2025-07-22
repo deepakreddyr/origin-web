@@ -114,8 +114,19 @@ const AccountSettings = ({
                                     isSidebarOpen: true,
                                 })
                             )
-
                             localStorage.clear()
+                            sessionStorage.clear()
+                            // Clear CacheStorage (site cache used by service workers, Next.js, etc.)
+                            if ('caches' in window) {
+                                caches.keys().then((names) => {
+                                    return Promise.all(names.map(name => caches.delete(name)))
+                                }).then(() => {
+                                    console.log('All site caches cleared.')
+                                })
+                            }
+
+                            // Redirect to home page
+                            window.location.href = '/'
                         }}
                         className="account-related-list-item"
                         component="li"

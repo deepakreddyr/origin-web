@@ -13,7 +13,7 @@ const theme = createTheme({
         },
     },
     typography: {
-        fontFamily: 'Stinger, sans-serif',
+        fontFamily: 'SofiaPro, sans-serif',
         body1: {
             fontFamily: 'SofiaPro, sans-serif',
         },

@@ -53,27 +53,6 @@ const MobileDrawer: React.FC<MobileDrawerProps> = ({
           <OriginCloseIcon className="w-[4vw] h-[4vw]" />
         </OriginButton>
 
-        {/* Static Items: Shop All, About Us */}
-        <Box className="flex flex-col divide-y divide-oGrey-100 mt-[12vw]">
-          {[
-            { label: 'Shop All', path: '/shop' },
-            { label: 'About Us', path: '/about' }
-          ].map((item) => (
-            <OriginButton
-              key={item.label}
-              variant="textOnly"
-              handleClick={() => handleRouteChange(item.path)}
-              classes={{
-                iconButton: 'w-full flex justify-start items-center py-[3.8vw]'
-              }}
-            >
-              <Typography variant="body1" component="span" className="text-[4.4vw] text-black leading-[1.2]">
-                {item.label}
-              </Typography>
-            </OriginButton>
-          ))}
-        </Box>
-
         {/* Dynamic main menu items */}
         <Box className="flex flex-col divide-y divide-oGrey-100">
           {mainMenuItems.map((item) => (

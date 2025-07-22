@@ -34,7 +34,7 @@ const WhyOriginAndTestimonial = () => {
           ))}
         </Box>
         <Typography fontWeight={700} fontSize="22px">
-          Anita R
+          Duhetha Philip
         </Typography>
         <Typography fontSize="14px" fontWeight={400}>
           Marketing Head, Agency
@@ -76,7 +76,7 @@ const WhyOriginAndTestimonial = () => {
             <Typography
             variant="h4"
             fontWeight={700}
-            sx={{ color: 'white', mb: 1 }}
+            sx={{ color: 'white', mb: 1, fontFamily: 'SofiaPro' }}
             >
             Why Origin
             </Typography>

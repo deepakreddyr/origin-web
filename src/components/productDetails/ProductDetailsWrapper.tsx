@@ -91,7 +91,7 @@ const ProductDetailsWrapper = () => {
         <button onClick={() => router.back()} className="relative w-[1.25vw] mob:w-[5vw] mob:h-[5vw] h-[1.25vw]">
           <Image src={backIcon} alt="back" />
         </button>
-        <p className="font-[Stinger] font-semibold mob:text-[5.1vw] mt-[2vw] text-[1.67vw]">
+        <p className="font-[SofiaPro] font-semibold mob:text-[5.1vw] mt-[2vw] text-[1.67vw]">
           {productDetails.item.name}
         </p>
       </div>
@@ -102,7 +102,7 @@ const ProductDetailsWrapper = () => {
           <StoringInfo productDetails={productDetails} />{' '}
         </div>
         <div className="w-[47.2vw] mob:w-full flex flex-col mob:Gap-[5.1vw] gap-[1.67vw]">
-          <p className="font-[Stinger] font-semibold text-[1.67vw] mob:hidden">{productDetails.item.name}</p>
+          <p className="font-[SofiaPro] font-semibold text-[1.67vw] mob:hidden">{productDetails.item.name}</p>
           {!mobile && <ItemQuantityAndCta productDetails={productDetails} />}
           <NutritionInfo productDetails={productDetails} />
           <AboutTheProduct productDetails={productDetails} />

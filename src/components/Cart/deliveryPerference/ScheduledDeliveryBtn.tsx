@@ -35,7 +35,7 @@ const ScheduledDeliveryBtn = (props: any) => {
           height={40}
         />
       </div>
-      <p className="font-[Stinger] text-[1.5vw] mob:text-[5vw] font-semibold mb-[0.8vw] mob:mb-[2vw]">
+      <p className="font-[SofiaPro] text-[1.5vw] mob:text-[5vw] font-semibold mb-[0.8vw] mob:mb-[2vw]">
         Time Slot Delivery
       </p>
       <p className="font-[SofiaPro] text-[1.2vw] mob:text-[3.8vw] text-medium leading-snug">

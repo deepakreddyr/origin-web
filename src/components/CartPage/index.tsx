@@ -183,7 +183,7 @@
 //             component="h3"
 //             variant="h5"
 //             sx={{
-//               fontFamily: 'Stinger',
+//               fontFamily: 'SofiaPro',
 //               fontSize: '20px !important',
 //               fontWeight: '600',
 //               color: '#231F20'

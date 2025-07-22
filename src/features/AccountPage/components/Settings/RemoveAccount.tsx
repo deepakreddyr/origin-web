@@ -48,7 +48,7 @@ const RemoveAccount = (props: Props) => {
           <Typography
             variant="h5"
             sx={{
-              fontFamily: "Stinger",
+              fontFamily: "SofiaPro",
               fontWeight: 600,
               fontSize: "18px",
             }}

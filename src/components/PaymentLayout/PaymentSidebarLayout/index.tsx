@@ -69,7 +69,7 @@ const PaymentSidebarLayout = (props: {
             sx={{
               padding: "0",
               margin: "0",
-              fontFamily: "Stinger",
+              fontFamily: "SofiaPro",
               fontSize: "24px !important",
               fontWeight: "600",
             }}

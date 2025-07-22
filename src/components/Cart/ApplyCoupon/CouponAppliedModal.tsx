@@ -20,7 +20,7 @@ const CouponAppliedModal = (props: any) => {
             <div className="relative w-[1.67vw] h-[1.67vw]   ">
               <Image src={error ? warningIcon : percentageIcon} alt="percentage icon" fill />{' '}
             </div>
-            <p className="font-[Stinger] font-semibold mt-[.4vw] text-[1.25vw] text-black ">
+            <p className="font-[SofiaPro] font-semibold mt-[.4vw] text-[1.25vw] text-black ">
               Oops! Coupon does not exist!
             </p>
           </div>
@@ -43,7 +43,7 @@ const CouponAppliedModal = (props: any) => {
             <div className="relative w-[1.67vw] h-[1.67vw]   ">
               <Image src={percentageIcon} alt="percentage icon" fill />{' '}
             </div>
-            <p className="font-[Stinger] font-semibold mt-[.4vw] text-[1.25vw] text-black ">
+            <p className="font-[SofiaPro] font-semibold mt-[.4vw] text-[1.25vw] text-black ">
               Coupon applied successfully!
             </p>
           </div>

@@ -83,7 +83,7 @@ const ShopHero = () => {
             <div
               className="absolute inset-0 z-10 flex items-center justify-end"
               style={{ 
-                paddingRight: isMobile ? '6vw' : isTablet ? '120px' : '250px' 
+                paddingRight: isMobile ? '50px' : isTablet ? '120px' : '200px' 
               }}
             >
               <div
@@ -95,10 +95,10 @@ const ShopHero = () => {
                   className={`
                     font-[SofiaPro] font-bold text-white whitespace-pre-line
                     ${isMobile 
-                      ? 'text-[4vw] leading-[1.0]' 
+                      ? 'text-[4.5vw] leading-[1.0]' 
                       : isTablet 
                         ? 'text-[4.5vw] leading-[0.9]' 
-                        : 'text-[3.8vw] leading-[1.1]'
+                        : 'text-[6vw] leading-[1.1]'
                     }
                   `}
                 >
