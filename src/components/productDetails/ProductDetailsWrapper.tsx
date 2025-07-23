@@ -87,7 +87,7 @@ const ProductDetailsWrapper = () => {
   if (productDetails.isLoading) return <ProductDetailsPageLoader />;
   return (
     <div className="pt-[12vw]  mob:pt-[28vw] mob:px-[4.1vw] px-[10vw] pb-[8vw] relative ">
-      <div className=" items-center gap-[3vw] mb-[4.1vw] mob:mb-0 sticky top-[0vw] bg-white z-[2]  py-[4vw] hidden mob:flex">
+      <div className=" items-center gap-[3vw] mb-[4.1vw] mob:mb-0 sticky top-[0vw] bg-[#F2EEE3] z-[2]  py-[4vw] hidden mob:flex">
         <button onClick={() => router.back()} className="relative w-[1.25vw] mob:w-[5vw] mob:h-[5vw] h-[1.25vw]">
           <Image src={backIcon} alt="back" />
         </button>
