@@ -24,7 +24,7 @@ const TermsAndConditions = () => {
             }}
         >
             By clicking, I accept the{' '}
-            <NextLink href="/terms-condition" passHref>
+            <NextLink href="/terms-and-conditions" passHref>
                 <Typography
                     sx={{ fontFamily: 'SofiaPro', fontWeight: '600' }}
                     component="a"

@@ -1,19 +1,13 @@
+'use client';
+
 import React, { useEffect, useRef, useState } from 'react';
-import { AppBar, Toolbar, IconButton, Typography } from '@mui/material';
-import { Badge, Box, Menu, MenuItem, Container } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useTheme } from '@mui/material';
-import classNames from 'classnames';
-import { Marquee } from '@devnomic/marquee';
-import OriginButton from '../OriginButton';
-import { Download } from '@mui/icons-material';
-import Dropdown from '../OriginDropDown';
-import { OriginCartIcon, OriginChevronDown, OriginMenuIcon } from '@/Icons/OriginIcons';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsSidebarOpen, setTabType } from '@/store/slice/loginSlice';
 import { TabTypeConstant } from '../Login/constants/tabTypeContent';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import { getAddressAndStoreId } from '@/utilities/utils';
-import type Address from '@/features/Address/types/Address';
 import Image from 'next/image';
 import whiteDropdownIcon from '/public/assets/images/whiteDropdown.png';
 import { useAtom } from 'jotai';
@@ -25,20 +19,22 @@ const OffersRibbon = () => {
   const [profile, setProfileAtom] = useAtom(profileAtom);
 
   const [topBarTransition, setTopBarTransition] = useState(false);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(600);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
-  const [localStorageAddress, setAddressFromLs] = useState<any>();
   const loginDetails = useSelector((state: any) => state.loginDetails);
+  const [localStorageAddress, setAddressFromLs] = useState<any>();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(600);
 
   useEffect(() => {
-    let addressFromLs;
-    addressFromLs = getAddressAndStoreId();
-    setAddressFromLs({
-      ...addressFromLs
-    });
+    let addressFromLs = getAddressAndStoreId();
+    setAddressFromLs({ ...addressFromLs });
+
+    const token = localStorage.getItem('user_token');
+    setIsLoggedIn(!!token); // set to true if token exists
   }, [loginDetails.tabType]);
 
   useEffect(() => {
@@ -64,6 +60,7 @@ const OffersRibbon = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isMobile]);
+
   const handleSelectAddress = () => {
     if (loginDetails.isLogin) {
       dispatch(setIsSidebarOpen(true));
@@ -72,81 +69,72 @@ const OffersRibbon = () => {
         dispatch(setTabType(TabTypeConstant.REGISTER));
         return;
       }
+
       if (address.address.length > 0) {
         dispatch(setTabType(TabTypeConstant.SELECT_ADDRESS));
+      } else {
+        dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
       }
-      if (profile?.data?.profile) {
-        if (!address.address) {
-          // dispatch(setTabType(TabTypeConstan));
-        }
-      }
-      // dispatch(setTabType(TabTypeConstant.SELECT_ADDRESS));
-
-      // if(!profile.data.profile)
-      // if (!address.address) {
-      //   dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
-      // }
     } else {
-      if (!address.address) {
-        // dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
-      }
       dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
     }
   };
+
   return (
     <div
       className={`flex px-[10.15vw] mob:px-0 items-center justify-between w-full mob:w-screen transition-all ease-in-out duration-200 ${
-        topBarTransition ? 'bg-transparent opacity-0 -translate-y-5' : 'bg-secondary-300 opacity-1 translate-y-0'
+        topBarTransition
+          ? 'bg-transparent opacity-0 -translate-y-5'
+          : 'bg-secondary-300 opacity-1 translate-y-0'
       }`}
     >
+      {/* Marquee or Offer Message */}
       <div className="h-[2vw] mob:h-[10vw] flex items-center mob:w-[50%] text-black">
         {isMobile ? (
           <div className="relative w-full overflow-hidden">
             <div
               className="flex whitespace-nowrap animate-scroll"
-              style={{
-                animation: 'scroll 10s linear infinite'
-              }}
+              style={{ animation: 'scroll 10s linear infinite' }}
             >
               <p className="text-white font-[SofiaPro] font-medium text-[3vw] px-4">
                 Download the App and Get FLAT 15% Off on 1st Order use coupon code "INSTALL15"
               </p>
-              {/* <p className="text-white font-[SofiaPro] font-medium text-[3vw] px-4">
-                Download the App and Get FLAT 20% Off on 1st Order
-              </p> */}
             </div>
           </div>
         ) : (
           <p className="text-white font-[SofiaPro] text-[.97vw] font-medium">
-                Download the App and Get FLAT 15% Off on 1st Order use coupon code "INSTALL15"
-            
+            Download the App and Get FLAT 15% Off on 1st Order use coupon code "INSTALL15"
           </p>
         )}
       </div>
-      <div>
-        <button
-          onClick={handleSelectAddress}
-          className="bg-black-op-30 gap-[.6vw] items-center justify-center whitespace-nowrap truncate rounded-full h-[1.508vw] mob:h-[8vw] px-[.83vw] flex mob:px-[3vw] mob:w-[48vw] mob:mr-[4vw]"
-        >
-          {address.defaultAddress?.address_name ? (
-            <div className="flex">
-              <p className="text-[.78vw] mob:text-[3vw]  truncate font-bold text-[SofiaPro] text-white">
-                {address.defaultAddress?.address_name} -
-              </p>
-              <p className="font-light text-[.78vw] mob:text-[3vw] w-[15vw] mob:w-[30vw] truncate  font-[SofiaPro] text-white">
-                &nbsp;
-                {address.defaultAddress.address}
-              </p>
-            </div>
-          ) : (
-            <p className="text-[.78vw] mob:text-[3vw] truncate font-bold font-[SofiaPro] text-white">Select Address</p>
-          )}
 
-          <div className="relative w-[.83vw] mob:w-[3vw] mob:h-[3vw] h-[.83vw]">
-            <Image src={whiteDropdownIcon} alt="" />
-          </div>
-        </button>
-      </div>
+      {/* Address Button */}
+      {isLoggedIn && (
+        <div>
+          <button
+            onClick={handleSelectAddress}
+            className="bg-black-op-30 gap-[.6vw] items-center justify-center whitespace-nowrap truncate rounded-full h-[1.508vw] mob:h-[8vw] px-[.83vw] flex mob:px-[3vw] mob:w-[48vw] mob:mr-[4vw]"
+          >
+            {address.defaultAddress?.address_name ? (
+              <div className="flex">
+                <p className="text-[.78vw] mob:text-[3vw] truncate font-bold text-[SofiaPro] text-white">
+                  {address.defaultAddress?.address_name} -
+                </p>
+                <p className="font-light text-[.78vw] mob:text-[3vw] w-[15vw] mob:w-[30vw] truncate font-[SofiaPro] text-white">
+                  &nbsp;{address.defaultAddress.address}
+                </p>
+              </div>
+            ) : (
+              <p className="text-[.78vw] mob:text-[3vw] truncate font-bold font-[SofiaPro] text-white">
+                Select Address
+              </p>
+            )}
+            <div className="relative w-[.83vw] mob:w-[3vw] mob:h-[3vw] h-[.83vw]">
+              <Image src={whiteDropdownIcon} alt="dropdown" />
+            </div>
+          </button>
+        </div>
+      )}
     </div>
   );
 };

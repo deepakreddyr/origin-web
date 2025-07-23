@@ -54,7 +54,7 @@ const PopularProduce = (props: categoryProp) => {
           onScroll={saveScrollPosition}
         >
           {categoryDetail.data?.map((item: any) => (
-            <div key={item.id} className="mob:w-[45vw] mob:min-w-[45vw] mob:max-w-[45vw] w-[17vw] min-w-[17vw] max-w-[17vw]">
+            <div key={item.id} className="mob:w-[50vw] mob:min-w-[50vw] mob:max-w-[45vw] mob:min-h-[260px] w-[17vw] min-w-[17vw] max-w-[17vw]">
               <ItemCard itemDetails={item} />
             </div>
           ))}

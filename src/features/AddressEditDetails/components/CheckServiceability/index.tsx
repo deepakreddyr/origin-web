@@ -17,6 +17,7 @@ import { checkServiceabilityAddress } from "../../services/checkServiceability";
 import AddressMapContainer from "../AddressMapContainer";
 import styles from "./styles.module.css";
 import { manageAddressScreens } from "@/features/AccountPage/enums/ActiveSidebar";
+import SearchIcon from "@mui/icons-material/Search";
 
 interface Props {
   setActiveScreen: any;
@@ -282,7 +283,7 @@ export default function CheckServiceability(props: Props) {
         >
           <AddressMapContainer />
         </Box>
-        <Box className={`${styles["current-location-button"]}`}>
+        {/* <Box className={`${styles["current-location-button"]}`}>
           <IconButton
             sx={{
               padding: "1rem",
@@ -299,44 +300,40 @@ export default function CheckServiceability(props: Props) {
               }}
             />
           </IconButton>
-        </Box>
+        </Box> */}
       </Box>
       <Box
         className="select-your-location-wrapper"
         sx={{ display: "flex", flexDirection: "column", gap: 2 }}
       >
         <Box
+          onClick={onTypingManually}
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            gap: "10px",
+            padding: "12px 20px",
+            borderRadius: "30px",
+            backgroundColor: "#F5F5F5",
+            cursor: "pointer",
             width: "100%",
+            boxShadow: "inset 0 1px 3px rgba(0,0,0,0.1)"
           }}
         >
+          {/* <Image src="/icons/search.svg" alt="Search" width={20} height={20} /> */}
+          <SearchIcon sx={{ color: "#231F20CC" }} />
           <Typography
-            variant="body2"
-            component="span"
             sx={{
-              textTransform: "uppercase",
+              fontWeight: "400",
               fontFamily: "SofiaPro",
-              fontWeight: 600,
-              color: "#747474",
+              color: "#231F20CC",
+              fontSize: "14px",
             }}
           >
             Select Your Location
           </Typography>
-          <Button variant="text" onClick={onTypingManually}>
-            <Typography
-              sx={{
-                fontWeight: "600",
-                fontFamily: "SofiaPro",
-                color: "#25874D",
-              }}
-            >
-              Change Location
-            </Typography>
-          </Button>
         </Box>
+
         {renderAddress()}
       </Box>
 

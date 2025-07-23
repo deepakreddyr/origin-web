@@ -162,7 +162,7 @@ const Login = () => {
         }}
       >
         By clicking, I accept the{' '}
-        <NextLink href="/terms-condition" passHref>
+        <NextLink href="/terms-and-conditions" passHref>
           <Typography
             component="a"
             onClick={() =>

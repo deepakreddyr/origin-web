@@ -76,7 +76,7 @@ const data: Data = {
     ],
     contactDetails: {
       address: '2nd floor, 838, 7th main road, 2nd stage, Indiranagar, Bengaluru, Bengaluru Urban, Karnataka, 560038',
-      phone: '9900508216',
+      phone: '+91 9900508216',
       email: 'support@originfresh.in',
       whatsapp: '+91 8344621039'
     }

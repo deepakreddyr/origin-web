@@ -39,30 +39,33 @@ const SignUp = () => {
   };
 
   const validateFields = () => {
-    let valid = true;
-    const newErrors = { name: '', gender: '', email: '' };
+  let valid = true;
+  const newErrors = { name: '', gender: '', email: '' };
 
-    // Name validation
-    if (!name) {
-      newErrors.name = 'Name is required.';
-      valid = false;
-    } else if (hasSpecialCharsOrNumbers(name)) {
-      newErrors.name = 'Name cannot contain special characters or numbers.';
-      valid = false;
-    } else if (name.length > 26) {
-      newErrors.name = 'Name cannot be more than 50 characters.';
-      valid = false;
-    }
+  // Name validation
+  if (!name) {
+    newErrors.name = 'Name is required.';
+    valid = false;
+  } else if (name.length < 3) {
+    newErrors.name = 'Name must be at least 3 characters long.';
+    valid = false;
+  } else if (hasSpecialCharsOrNumbers(name)) {
+    newErrors.name = 'Name cannot contain special characters or numbers.';
+    valid = false;
+  } else if (name.length > 26) {
+    newErrors.name = 'Name cannot be more than 50 characters.';
+    valid = false;
+  }
 
-    // Gender validation
-    if (!gender) {
-      newErrors.gender = 'Gender is required.';
-      valid = false;
-    }
+  // Gender validation
+  if (!gender) {
+    newErrors.gender = 'Gender is required.';
+    valid = false;
+  }
 
-    setErrors(newErrors);
-    return valid;
-  };
+  setErrors(newErrors);
+  return valid;
+};
 
   const onSubmitRegister = async () => {
     if (!validateFields()) {
