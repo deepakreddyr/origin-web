@@ -33,7 +33,7 @@ const CategorySection = () => {
             href={`/shop/${category.name.replace(/ /g, '-').toLowerCase()}/${category.id}/${category.sub_categories[0].name.replace(/ /g, '-').toLowerCase()}/${category.sub_categories[0].id}`}
             className={`${index === 0 ? 'col-span-2' : 'col-span-1'} flex flex-col items-center`}
           >
-            <div className="relative w-full h-[30vw]">
+            <div className="relative w-full h-[29vw] border border-[#E3E3E3] rounded-[2vw] shadow-sm hover:shadow-md transition-shadow duration-200">
               <Image
                 src={category.image || catimg}
                 alt={category.name}
@@ -57,7 +57,7 @@ const CategorySection = () => {
             href={`/shop/${category.name.replace(/ /g, '-').toLowerCase()}/${category.id}/${category.sub_categories[0].name.replace(/ /g, '-').toLowerCase()}/${category.sub_categories[0].id}`}
             className="flex flex-col items-center"
           >
-            <div className="relative w-full h-[26vw]">
+            <div className="relative w-full h-[30vw] border border-[#E3E3E3] rounded-[2vw] shadow-sm hover:shadow-md transition-shadow duration-200">
               <Image
                 src={category.image || catimg}
                 alt={category.name}
