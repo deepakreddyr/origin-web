@@ -41,24 +41,33 @@ const ItemCard = ({ itemDetails }: any) => {
           className="w-full flex-grow flex flex-col justify-between p-[1.2rem]"
           style={{
             background: 'linear-gradient(180deg, #fef3c7 0%, #fde047 50%, #facc15 100%)',
-            minHeight: '120px',
-            minWidth: 0,              // prevent shrink in Safari
-            WebkitTransform: 'translateZ(0)', // force layer render in Safari
+            minHeight: '90px',
+            minWidth: 0,
+            WebkitTransform: 'translateZ(0)',
             transform: 'translateZ(0)',
           }}
         >
           {/* Top section - Name */}
           <div className="flex-shrink-0">
-            <p className="font-[SofiaPro] font-semibold text-[0.9rem] leading-[1.2] line-clamp-2 mb-[0.5rem] text-black">
+            <p className="font-[SofiaPro] font-semibold text-[0.85rem] leading-[1.2] line-clamp-2 mb-[0] text-black">
               {itemDetails.name}
             </p>
           </div>
 
           {/* Bottom section - Price, Unit, and Button */}
           <div className="flex-shrink-0">
-            <div className="flex justify-between items-end mb-[0.5rem]">
-              <p className="text-black font-bold text-[0.95rem]">{defaultUOM.formatted_price}</p>
-              <p className="text-gray-600 text-[0.85rem] leading-tight">{defaultUOM.unit}</p>
+            <div className="flex justify-between items-center mb-[0.4rem]">
+              <div className="flex items-center gap-[0.3rem]">
+                {defaultUOM.market_price && defaultUOM.market_price > defaultUOM.price && (
+                  <p className="text-gray-400 line-through text-[0.7rem]">
+                    ₹{defaultUOM.market_price}
+                  </p>
+                )}
+                <p className="text-black font-semibold text-[0.7rem]">
+                  {defaultUOM.formatted_price}
+                </p>
+              </div>
+              <p className="text-right text-[#737373] text-[0.7rem]">{defaultUOM.unit}</p>
             </div>
 
             <div className="rounded-[1.5rem] overflow-hidden">

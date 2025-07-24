@@ -27,7 +27,7 @@ const MakePayment = (props: any) => {
       ? placeOrderDetails.checkoutDetails.cod_for_immediate_delivery
       : placeOrderDetails.checkoutDetails.enable_cod;
 
-    console.log(processing, "processing");
+    // console.log(processing, "processing");
   return (
     <>
       <div className="">

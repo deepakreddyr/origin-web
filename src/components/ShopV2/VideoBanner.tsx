@@ -37,7 +37,7 @@ const VideoBanner: React.FC<VideoBannerProps> = ({
 
   return (
     <div className={`relative w-full overflow-hidden m-0 p-0 ${className}`}>
-      <div className="relative w-full m-0 p-0">
+      <div className="relative w-full overflow-hidden m-0 p-0">
         {/* Mobile Video (9:16) */}
         <video
           ref={videoRef}

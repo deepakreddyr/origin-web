@@ -17,11 +17,11 @@ const clearCacheAndReload = () => {
   if (typeof window === 'undefined') return; // Prevent SSR crash
 
   const currentVersion = localStorage.getItem('appVersion');
-  console.log("Current app version in storage:", currentVersion);
-  console.log("Latest APP_VERSION:", APP_VERSION);
+  // console.log("Current app version in storage:", currentVersion);
+  // console.log("Latest APP_VERSION:", APP_VERSION);
 
   if (currentVersion === null || currentVersion !== APP_VERSION) {
-    console.log(`Cache clear: old version=${currentVersion}, new version=${APP_VERSION}`);
+    // console.log(`Cache clear: old version=${currentVersion}, new version=${APP_VERSION}`);
     
     if ('caches' in window) {
       caches.keys().then(names => {
@@ -36,7 +36,7 @@ const clearCacheAndReload = () => {
       window.location.reload();
     }, 500);
   } else {
-    console.log("App version matches, no cache clear needed.");
+    // console.log("App version matches, no cache clear needed.");
   }
 };
 

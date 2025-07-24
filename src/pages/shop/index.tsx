@@ -30,7 +30,6 @@ interface HomeProps {
 const ShopPage = (props: HomeProps) => {
   const { mainMenuItems, footerData } = props;
   const mobile = useMediaQuery(600);
-
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -85,9 +84,9 @@ const ShopPage = (props: HomeProps) => {
 
   const LoadedUI = () => {
   return (
-    <div className="flex flex-col items-center pb-[20vw] mob:pb-[45vw] overflow-hidden pt-[80px] mob:pt-[60px]">
+    <div className="flex flex-col items-center pb-[20vw] mob:pb-[45vw] overflow-hidden">
       {/* Video Banner Section */}
-      <div className="w-full relative">
+      <div className="w-full relative overflow-hidden m-0 p-0">
         <VideoBanner
           mobileVideoSrc="https://cdn.originfresh.in/website/Origin_9_16_v1.mp4"
           desktopVideoSrc="https://cdn.originfresh.in/website/Origin_16_9_v1.mp4"

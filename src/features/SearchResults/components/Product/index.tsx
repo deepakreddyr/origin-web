@@ -172,7 +172,7 @@ const Product = (props: Props) => {
       numericUnit = uom.minimum_quantity;
     }
     {
-      console.log(uom.qty);
+      // console.log(uom.qty);
     }
 
     // Check if the unit contains 'g'

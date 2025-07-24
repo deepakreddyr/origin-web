@@ -41,7 +41,7 @@ const WhyOriginAndTestimonial = () => {
         </Typography>
       </Box>
 
-      {/* Why Origin Image Section */}
+      {/* Why Origin Image Section
         <Box
         sx={{
             position: 'relative',
@@ -96,7 +96,7 @@ const WhyOriginAndTestimonial = () => {
             Learn More
             </Box>
         </Box>
-        </Box>
+        </Box> */}
 
     </Box>
   );
