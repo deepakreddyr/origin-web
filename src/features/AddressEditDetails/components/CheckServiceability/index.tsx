@@ -330,20 +330,20 @@ export default function CheckServiceability(props: Props) {
               fontSize: "14px",
             }}
           >
-            Select Your Location
+            Search Your Location
           </Typography>
         </Box>
 
         {renderAddress()}
       </Box>
-
+      
       <Button
         variant="contained"
         color="success"
         sx={{
           marginTop: "auto",
           backgroundColor: "#FFDD00",
-          color: "black",
+          color: !addressDetails.deliverable ? "#FFD700" : "black",
           fontFamily: "SofiaPro",
           fontSize: "16px",
           borderRadius: "100px",
@@ -360,7 +360,9 @@ export default function CheckServiceability(props: Props) {
         onClick={onConfirm}
         disabled={!addressDetails.deliverable}
       >
-        Confirm
+        {!addressDetails.deliverable
+      ? "Location not deliverable, try another address"
+      : "Confirm"}
       </Button>
     </Box>
   );

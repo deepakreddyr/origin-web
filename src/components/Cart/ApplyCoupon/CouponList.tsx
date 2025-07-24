@@ -1,12 +1,21 @@
 import { protectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
-import { calculateCouponDiscount, getAddressAndStoreId, prepareCartItemsToApi } from '@/utilities/utils';
+import {
+  calculateCouponDiscount,
+  getAddressAndStoreId,
+  prepareCartItemsToApi,
+} from '@/utilities/utils';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ApplyCouponInput from './ApplyCouponInput';
 import Coupon from './Coupon';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
-import { setAmountToPay, setCouponDetails, setDiscountAmount, setTotalPrice } from '@/store/slice/CartSlice';
+import {
+  setAmountToPay,
+  setCouponDetails,
+  setDiscountAmount,
+  setTotalPrice,
+} from '@/store/slice/CartSlice';
 import { COUPON_TABS } from '@/constants';
 import { setCouponId } from '@/store/slice/placeOrderDetails';
 import CouponListSkeleton from '@/components/skeletonLoaders/cart/CouponListSkeleton';
@@ -22,68 +31,81 @@ const CouponList = (props: any) => {
   const [manuallyAppliedCoupon, setManuallyAppliedCoupon] = useState('');
 
   useEffect(() => {
-    let apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getCoupons'] + `?sub_total=${cart.totalPrice}`;
+    const apiUrl =
+      process.env.NEXT_PUBLIC_BACKEND_API_URL +
+      protectedUrl['getCoupons'] +
+      `?sub_total=${cart.totalPrice}`;
 
     const addressFromLs = getAddressAndStoreId();
-    let additionalHeaders = {};
+    const additionalHeaders = addressFromLs
+      ? { 'store-id': addressFromLs.store_id }
+      : {};
 
-    if (addressFromLs) {
-      additionalHeaders = {
-        'store-id': addressFromLs.store_id
-      };
-    }
     const successHandler = (data: any) => {
       setCouponList(data.data);
       setIsLoading(false);
     };
-    const failureHandler = (data: any) => {
+
+    const failureHandler = () => {
       setIsLoading(false);
     };
+
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
   }, []);
 
-  const validateCoupon = (couponCode: any) => {
-    let apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['validateCoupon'];
+  const validateCoupon = (couponCode: string) => {
+    const apiUrl =
+      process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['validateCoupon'];
+
     const addressFromLs = getAddressAndStoreId();
-    let additionalHeaders = {};
+    const additionalHeaders = addressFromLs
+      ? { 'store-id': addressFromLs.store_id }
+      : {};
 
-    if (addressFromLs) {
-      additionalHeaders = {
-        'store-id': addressFromLs.store_id
-      };
-    }
     const successHandler = (response: any) => {
-      let isValid = response?.data[0].isValid === 0 ? false : true;
-      
-      // coupon to be fixed
-      if (isValid) {
-        dispatch(setCouponDetails({ ...response.data[0] }));
-        dispatch(setCouponId(response.data[0].id));
-        const disountedAmount = calculateCouponDiscount(cart.totalPrice, response.data[0]);
-        let finalCartAmount = cart.totalPrice - disountedAmount;
+      const couponData = response?.data[0];
+      const isValid = couponData?.isValid === 1;
 
-        // console.log(disountedAmount);
-        // console.log(finalCartAmount);
+      if (isValid) {
+        setError(false); // ✅ Clear error if coupon is valid
+
+        dispatch(setCouponDetails({ ...couponData }));
+        dispatch(setCouponId(couponData.id));
+
+        const disountedAmount = calculateCouponDiscount(
+          cart.totalPrice,
+          couponData
+        );
+        const finalCartAmount = cart.totalPrice - disountedAmount;
 
         dispatch(setDiscountAmount(Math.round(disountedAmount)));
         dispatch(setAmountToPay(finalCartAmount));
       } else {
-         setError(true);
+        setError(true); // ❌ Coupon invalid
       }
+
       setCouponsTab(COUPON_TABS.COUPON_APPLIED);
     };
-    const failureHandler = (response: any) => {
-      setError(true);
+
+    const failureHandler = () => {
+      setError(true); // ❌ API failure, show error
+      setCouponsTab(COUPON_TABS.COUPON_APPLIED);
     };
-    let cartItems = prepareCartItemsToApi(cart.items);
-    let apiData = { items: cartItems?.items, code: couponCode };
+
+    const cartItems = prepareCartItemsToApi(cart.items);
+    const apiData = {
+      items: cartItems?.items || [],
+      code: couponCode,
+    };
+
     sendDataToApi(apiUrl, apiData, 'POST', successHandler, failureHandler, additionalHeaders);
   };
 
   if (loading) return <CouponListSkeleton />;
+
   return (
     <div>
-      <div className="">
+      <div>
         <ApplyCouponInput
           manuallyAppliedCoupon={manuallyAppliedCoupon}
           setManuallyAppliedCoupon={setManuallyAppliedCoupon}
@@ -92,12 +114,12 @@ const CouponList = (props: any) => {
       </div>
       <ul className="pl-0">
         {couponList.length > 0 && (
-          <li className="flex flex-col gap-[1.1vw] mob:gap-[4.1vw] border-t mt-[1.1vw] mob:mt-[4.1vw] mob:first:pt-[4.1vw] first:pt-[1.1vw] ">
+          <li className="flex flex-col gap-[1.1vw] mob:gap-[4.1vw] border-t mt-[1.1vw] mob:mt-[4.1vw] mob:first:pt-[4.1vw] first:pt-[1.1vw]">
             {couponList.map((data: any) => (
               <Coupon
+                key={data.id}
                 validateCoupon={validateCoupon}
                 couponDetailsFromList={data}
-                key={data.id}
                 setCouponsTab={setCouponsTab}
               />
             ))}
