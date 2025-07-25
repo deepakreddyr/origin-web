@@ -33,6 +33,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'cdn.madrasmandi.in',
         pathname: '/**'
+      },
+      {
+      protocol: 'https',
+      hostname: 'admin.webdev.madrasmandi.in',
+      pathname: '/**' 
       }
     ]
   },
