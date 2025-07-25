@@ -58,7 +58,7 @@ const ItemCard = ({ itemDetails }: any) => {
           <div className="flex-shrink-0">
             <div className="flex justify-between items-center mb-[0.4rem]">
               <div className="flex items-center gap-[0.3rem]">
-                {defaultUOM.market_price && defaultUOM.market_price > defaultUOM.price && (
+                {defaultUOM.market_price && defaultUOM.market_price > defaultUOM.price && defaultUOM.market_price>0 &&(
                   <p className="text-gray-400 line-through text-[0.7rem]">
                     ₹{defaultUOM.market_price}
                   </p>

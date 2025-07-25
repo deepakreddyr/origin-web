@@ -59,105 +59,199 @@ const DownloadAppWrapper: React.FC<DownloadAppWrapperProps> = ({ onClose }) => {
       />
       
       {/* Modal Content */}
-      <div className={`fixed inset-0 z-[9999] flex items-end desktop:items-center justify-center transition-transform duration-300 ease-out ${
-        isVisible && !isClosing ? 'transform translate-y-0 desktop:scale-100' : 'transform translate-y-full desktop:scale-95'
+      <div className={`fixed inset-0 z-[9999] flex items-end lg:items-center justify-center transition-transform duration-300 ease-out ${
+        isVisible && !isClosing ? 'transform translate-y-0 lg:scale-100' : 'transform translate-y-full lg:scale-95'
       }`}>
-        <div className="bg-white w-full max-w-md desktop:max-w-lg mx-auto rounded-t-[8vw] mob:rounded-t-[10vw] desktop:rounded-2xl relative max-h-[90vh] desktop:max-h-[80vh] overflow-hidden shadow-2xl desktop:min-h-[600px]">
+        <div className="bg-white w-full max-w-md lg:max-w-4xl xl:max-w-5xl mx-auto rounded-t-[8vw] mob:rounded-t-[10vw] lg:rounded-3xl relative max-h-[90vh] lg:max-h-[90vh] overflow-hidden shadow-2xl">
           {/* Close Button */}
           <button
             onClick={handleClose}
-            className="absolute top-4 right-4 z-10 w-8 h-8 desktop:w-10 desktop:h-10 flex items-center justify-center bg-gray-100 rounded-full hover:bg-gray-200 transition-colors duration-200"
+            className="absolute top-4 right-4 z-10 w-8 h-8 lg:w-12 lg:h-12 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-full transition-colors duration-200"
             aria-label="Close modal"
           >
-            <svg className="w-5 h-5 desktop:w-6 desktop:h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 lg:w-7 lg:h-7 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
 
-          {/* Content */}
-          <div className="px-[8vw] pt-[8vw] mob:px-[6vw] mob:pt-[10vw] desktop:px-8 desktop:pt-8">
-            <p className="font-[SofiaPro] text-[5.12vw] mob:text-[4.5vw] desktop:text-2xl font-semibold text-black text-center leading-tight mb-4 desktop:mb-6">
-              Change your idea of fresh! Download the Origin app
-            </p>
-            
-            <div className="flex items-center justify-center gap-[3vw] py-[6vw] mob:py-[8vw] desktop:gap-4 desktop:py-6">
-              <div className="w-[9vw] h-[9vw] mob:w-[12vw] mob:h-[12vw] desktop:w-16 desktop:h-16 relative">
+          {/* Desktop Layout */}
+          <div className="hidden lg:flex lg:min-h-[550px] xl:min-h-[650px] 2xl:min-h-[700px]">
+            {/* Left Side - Content */}
+            <div className="flex-1 px-12 xl:px-16 py-12 xl:py-16 flex flex-col justify-center">
+              <h2 className="font-[SofiaPro] text-3xl xl:text-4xl font-semibold text-black leading-tight mb-8 xl:mb-12">
+                Change your idea of fresh!<br />
+                Download the Origin app
+              </h2>
+              
+              <div className="flex items-center gap-6 mb-8 xl:mb-12">
+                <div className="w-16 h-16 xl:w-20 xl:h-20 relative">
+                  <Image 
+                    src={originIcon} 
+                    alt="Origin Fresh icon" 
+                    fill
+                    className="object-contain"
+                    sizes="80px"
+                  />
+                </div>
+                <p className="font-[SofiaPro] text-2xl xl:text-3xl font-semibold text-black">
+                  Origin Fresh
+                </p>
+              </div>
+
+              <p className="font-[SofiaPro] text-xl xl:text-2xl font-medium mb-8 xl:mb-12 text-gray-800">
+                #FRESHORNOTHING
+              </p>
+              
+              {/* App Store Buttons */}
+              <div className="flex items-center gap-6 xl:gap-8 mb-8 xl:mb-12">
+                <button
+                  onClick={handleAppStoreClick}
+                  className="relative w-48 h-14 xl:w-56 xl:h-16 hover:scale-105 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded"
+                  aria-label="Download on App Store"
+                >
+                  <Image 
+                    src={appStore} 
+                    alt="Download on App Store" 
+                    fill
+                    className="object-contain"
+                    sizes="224px"
+                  />
+                </button>
+                <button
+                  onClick={handlePlayStoreClick}
+                  className="relative w-48 h-14 xl:w-56 xl:h-16 hover:scale-105 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded"
+                  aria-label="Get it on Google Play"
+                >
+                  <Image 
+                    src={googlePlaystore} 
+                    alt="Get it on Google Play" 
+                    fill
+                    className="object-contain"
+                    sizes="224px"
+                  />
+                </button>
+              </div>
+              
+              {/* Footer Links */}
+              <div className="font-[SofiaPro] font-medium text-gray-500 text-sm xl:text-base">
+                <Link 
+                  className="hover:underline hover:text-gray-600 transition-colors duration-200" 
+                  href="/terms-and-conditions"
+                >
+                  Terms and Conditions
+                </Link>
+                <span className="mx-3">|</span>
+                <Link 
+                  className="hover:underline hover:text-gray-600 transition-colors duration-200" 
+                  href="/privacy-policy"
+                >
+                  Privacy Policy
+                </Link>
+              </div>
+            </div>
+
+            {/* Right Side - Image */}
+            <div className="flex-1 flex items-center justify-center p-6 xl:p-8 bg-gradient-to-br from-green-50 to-blue-50">
+              <div className="relative w-full max-w-lg xl:max-w-xl h-[450px] xl:h-[550px] 2xl:h-[600px]">
                 <Image 
-                  src={originIcon} 
-                  alt="Origin Fresh icon" 
+                  src={mobileDownload} 
+                  alt="Download Origin Fresh app illustration" 
                   fill
                   className="object-contain"
-                  sizes="(max-width: 600px) 12vw, (max-width: 1200px) 9vw, 64px"
+                  priority
+                  sizes="600px"
                 />
               </div>
-              <p className="font-[SofiaPro] text-[3.6vw] mob:text-[4vw] desktop:text-xl font-semibold text-black">
-                Origin Fresh
+            </div>
+          </div>
+
+          {/* Mobile Layout */}
+          <div className="lg:hidden">
+            {/* Content */}
+            <div className="px-[8vw] pt-[8vw] mob:px-[6vw] mob:pt-[10vw]">
+              <p className="font-[SofiaPro] text-[5.12vw] mob:text-[4.5vw] font-semibold text-black text-center leading-tight mb-4">
+                Change your idea of fresh! Download the Origin app
               </p>
+              
+              <div className="flex items-center justify-center gap-[3vw] py-[6vw] mob:py-[8vw]">
+                <div className="w-[9vw] h-[9vw] mob:w-[12vw] mob:h-[12vw] relative">
+                  <Image 
+                    src={originIcon} 
+                    alt="Origin Fresh icon" 
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 600px) 12vw, 9vw"
+                  />
+                </div>
+                <p className="font-[SofiaPro] text-[3.6vw] mob:text-[4vw] font-semibold text-black">
+                  Origin Fresh
+                </p>
+              </div>
             </div>
-          </div>
 
-          {/* Mobile Download Image */}
-          <div className="relative w-full h-[40vh] mob:h-[35vh] desktop:h-[280px] mb-4 desktop:mb-6">
-            <Image 
-              src={mobileDownload} 
-              alt="Download Origin Fresh app illustration" 
-              fill
-              className="object-contain"
-              priority
-              sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 500px"
-            />
-          </div>
-
-          <div className="p-[4.1vw] mob:p-[6vw] desktop:px-8 desktop:pb-8">
-            <p className="font-[SofiaPro] text-center text-[4.1vw] mob:text-[3.5vw] desktop:text-lg font-medium mb-6 desktop:mb-8 text-gray-800">
-              #FRESHORNOTHING
-            </p>
-            
-            {/* App Store Buttons */}
-            <div className="flex items-center justify-center gap-[6vw] mob:gap-[4vw] desktop:gap-6 py-[3vw] mb-6 desktop:mb-8">
-              <button
-                onClick={handleAppStoreClick}
-                className="relative w-[28vw] h-[8vw] mob:w-[35vw] mob:h-[10vw] desktop:w-[160px] desktop:h-[48px] hover:scale-105 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded"
-                aria-label="Download on App Store"
-              >
-                <Image 
-                  src={appStore} 
-                  alt="Download on App Store" 
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 600px) 35vw, (max-width: 1200px) 28vw, 160px"
-                />
-              </button>
-              <button
-                onClick={handlePlayStoreClick}
-                className="relative w-[28vw] h-[8vw] mob:w-[35vw] mob:h-[10vw] desktop:w-[160px] desktop:h-[48px] hover:scale-105 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded"
-                aria-label="Get it on Google Play"
-              >
-                <Image 
-                  src={googlePlaystore} 
-                  alt="Get it on Google Play" 
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 600px) 35vw, (max-width: 1200px) 28vw, 160px"
-                />
-              </button>
+            {/* Mobile Download Image */}
+            <div className="relative w-full h-[40vh] mob:h-[35vh] mb-4">
+              <Image 
+                src={mobileDownload} 
+                alt="Download Origin Fresh app illustration" 
+                fill
+                className="object-contain"
+                priority
+                sizes="100vw"
+              />
             </div>
-            
-            {/* Footer Links */}
-            <div className="font-[SofiaPro] font-medium text-[#7B7979] text-[3vw] mob:text-[3.5vw] desktop:text-sm text-center">
-              <Link 
-                className="hover:underline hover:text-gray-600 transition-colors duration-200" 
-                href="/terms-and-conditions"
-              >
-                Terms and Conditions
-              </Link>
-              <span className="mx-2">|</span>
-              <Link 
-                className="hover:underline hover:text-gray-600 transition-colors duration-200" 
-                href="/privacy-policy"
-              >
-                Privacy Policy
-              </Link>
+
+            <div className="p-[4.1vw] mob:p-[6vw]">
+              <p className="font-[SofiaPro] text-center text-[4.1vw] mob:text-[3.5vw] font-medium mb-6 text-gray-800">
+                #FRESHORNOTHING
+              </p>
+              
+              {/* App Store Buttons */}
+              <div className="flex items-center justify-center gap-[6vw] mob:gap-[4vw] py-[3vw] mb-6">
+                <button
+                  onClick={handleAppStoreClick}
+                  className="relative w-[28vw] h-[8vw] mob:w-[35vw] mob:h-[10vw] hover:scale-105 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded"
+                  aria-label="Download on App Store"
+                >
+                  <Image 
+                    src={appStore} 
+                    alt="Download on App Store" 
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 600px) 35vw, 28vw"
+                  />
+                </button>
+                <button
+                  onClick={handlePlayStoreClick}
+                  className="relative w-[28vw] h-[8vw] mob:w-[35vw] mob:h-[10vw] hover:scale-105 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 rounded"
+                  aria-label="Get it on Google Play"
+                >
+                  <Image 
+                    src={googlePlaystore} 
+                    alt="Get it on Google Play" 
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 600px) 35vw, 28vw"
+                  />
+                </button>
+                </div>
+              
+              {/* Footer Links */}
+              <div className="font-[SofiaPro] font-medium text-[#7B7979] text-[3vw] mob:text-[3.5vw] text-center">
+                <Link 
+                  className="hover:underline hover:text-gray-600 transition-colors duration-200" 
+                  href="/terms-and-conditions"
+                >
+                  Terms and Conditions
+                </Link>
+                <span className="mx-2">|</span>
+                <Link 
+                  className="hover:underline hover:text-gray-600 transition-colors duration-200" 
+                  href="/privacy-policy"
+                >
+                  Privacy Policy
+                </Link>
+              </div>
             </div>
           </div>
         </div>

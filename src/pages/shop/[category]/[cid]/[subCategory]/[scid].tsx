@@ -144,7 +144,7 @@ const ShopDetails = (props: HomeProps) => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [query]);
-
+  console.log(filters);
   // if (mobile) return <DownloadAppWrapper />;
   return (
     <Layout mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={true}>
@@ -153,7 +153,9 @@ const ShopDetails = (props: HomeProps) => {
       <div className="flex flex-col items-center justify-center mob:pt-[10vw]">
         <FeaturedProduct />
         <div className="flex flex-col gap-[2.2vw] w-[80.7vw] mob:w-full  mob:px-[4vw] pb-[10vw] relative ">
-          <CategoryAndSubCategory filters={filters} setFilters={setFilters} />
+          {filters.category ? (
+            <CategoryAndSubCategory filters={filters} setFilters={setFilters} />
+          ) : null}
           <CardsWrapper />
         </div>
       </div>

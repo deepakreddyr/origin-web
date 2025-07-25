@@ -62,6 +62,14 @@ const CategoryAndSubCategory = (props: Props) => {
     url = `/shop/${filters.category}/${filters.cid}/${value.name}/${value.id}`;
     router.push(url, undefined, { shallow: true });
   };
+  const toTitleCase = (str: string) => {
+    console.log(str);
+    return str
+      .replace(/-/g, ' ')                   // Replace hyphens with spaces
+      .replace(/\w\S*/g, (txt) =>
+        txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+      );
+  };
 
   return (
     <div className="sticky top-0 pt-4 md:pt-[4vw] pb-3 md:pb-[1.2vw] mb-0 px-4 md:p-[1.1vw] flex flex-col gap-3 md:gap-[1.1vw] bg-[#F2EEE3] z-[1]">
@@ -70,7 +78,7 @@ const CategoryAndSubCategory = (props: Props) => {
       ) : (
         <>
           <Dropdown
-            value={filters.category}
+            value={toTitleCase(filters.category)}
             valueId={filters.scid}
             name={'category'}
             placeholder={''}

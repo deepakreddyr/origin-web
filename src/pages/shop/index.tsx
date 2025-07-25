@@ -75,11 +75,11 @@ const ShopPage = (props: HomeProps) => {
         const userToken = localStorage.getItem('user_token');
         // const hasSeenBanner = localStorage.getItem('has_seen_app_banner');
 
-        if ((!userToken && mobile)) {
+        // Show download app banner when user is not logged in (both mobile and desktop)
+        if (!userToken) {
           setShowDownloadApp(true);
           // localStorage.setItem('has_seen_app_banner', 'true');
         }
-
         setDownloadAppReady(true);
       } catch (error) {
         console.error('Error accessing localStorage:', error);
@@ -88,7 +88,7 @@ const ShopPage = (props: HomeProps) => {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, []); // Removed mobile dependency
 
   const handleCloseDownloadApp = () => setShowDownloadApp(false);
 
