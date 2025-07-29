@@ -76,9 +76,12 @@ export const placeOrderDetailsSlice = createSlice({
     setDeliverylotDetails(state, action) {
       state.deliverySlotDetails = action.payload;
     },
-
     setCheckoutDetails(state, action) {
       state.checkoutDetails = action.payload;
+    },
+    resetTimeSlotDetails(state) {
+      state.time_slot_id = '';
+      state.deliverySlotDetails = {};
     },
     resetOrderDetails(state) {
       Object.assign(state, initialState);
@@ -105,7 +108,8 @@ export const {
   resetOrderDetails,
   setCouponId,
   setDeliverylotDetails,
-  setCheckoutDetails
+  setCheckoutDetails,
+  resetTimeSlotDetails // ← export added
 } = placeOrderDetailsSlice.actions;
 
 export default placeOrderDetailsSlice.reducer;

@@ -64,7 +64,7 @@ const CategoryAndSubCategory = (props: Props) => {
     router.push(url, undefined, { shallow: true, scroll: false });
   };
   const toTitleCase = (str: string) => {
-    console.log(str);
+    // console.log(str);
     return str
       .replace(/-/g, ' ')                   // Replace hyphens with spaces
       .replace(/\w\S*/g, (txt) =>

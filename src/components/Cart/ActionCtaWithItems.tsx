@@ -41,11 +41,11 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
 
   // Force show popup for testing - remove this after testing
   useEffect(() => {
-    console.log('OrderRestrictionData received:', orderRestrictionData);
+    // console.log('OrderRestrictionData received:', orderRestrictionData);
     
     // Temporary test - force show popup if any order restriction data exists
     if (orderRestrictionData) {
-      console.log('Forcing popup to show for testing');
+      // console.log('Forcing popup to show for testing');
       setIsOrderRestricted(true);
       setShowPopup(true);
     } else {
@@ -56,17 +56,17 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
 
   const finalIsDisabled = isDisabled || shouldDisable || isOrderRestricted;
 
-  console.log('Button state:', {
-    isDisabled,
-    shouldDisable,
-    isOrderRestricted,
-    finalIsDisabled,
-    showPopup,
-    orderRestrictionData
-  });
+  // console.log('Button state:', {
+  //   isDisabled,
+  //   shouldDisable,
+  //   isOrderRestricted,
+  //   finalIsDisabled,
+  //   showPopup,
+  //   orderRestrictionData
+  // });
 
   const handleClick = () => {
-    console.log('Button clicked, finalIsDisabled:', finalIsDisabled);
+    // console.log('Button clicked, finalIsDisabled:', finalIsDisabled);
     if (!finalIsDisabled && handler) {
       handler();
     }
@@ -120,7 +120,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
               : 'bg-black text-primary cursor-pointer hover:opacity-90 transition-opacity'
           } rounded-full px-[2vw] mob:px-[6vw] mob:h-[11vw] h-[2.7vw]`}
         >
-          {finalIsDisabled ? 'DISABLED' : btnName}
+          {finalIsDisabled ? 'PROCEED' : btnName}
         </button>
       </div>
     </div>

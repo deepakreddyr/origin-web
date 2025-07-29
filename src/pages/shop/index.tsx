@@ -40,7 +40,7 @@ const ShopPage = (props: HomeProps) => {
 
   const filteredCategories = useSelector((state: any) => state.shopCategories);
   
-  console.log(filteredCategories,"Category");
+  // console.log(filteredCategories,"Category");
   const { categories } = filteredCategories;
 
   const subCategories = categories?.filter((item: any) => item.type !== 'main-category');
@@ -94,7 +94,7 @@ const ShopPage = (props: HomeProps) => {
     }
 
     const successHandler = (data: any) => {
-      console.log(data,"DATA");
+      // console.log(data,"DATA");
       dispatch(setShopCategories(data?.data));
       dispatch(setIsShopCategoriesFetched(true));
       setLoading(false);

@@ -67,7 +67,7 @@ const Cart = () => {
       : {};
 
     const successHandler = (data: any) => {
-      console.log('API Response:', data);
+      // console.log('API Response:', data);
       
       dispatch(setCartItems(data.data));
       dispatch(setCartMinimum(data.cart_minimum));
@@ -79,7 +79,7 @@ const Cart = () => {
 
       // Pass the complete order restriction data to ActionCtaWithItems
       if (data.order_restricted) {
-        console.log('Order restriction data found:', data.order_restricted);
+        // console.log('Order restriction data found:', data.order_restricted);
         setOrderRestrictionData({
           title: data.order_restricted.title,
           description: data.order_restricted.description,
@@ -87,7 +87,7 @@ const Cart = () => {
           is_available: data.order_restricted.is_available,
         });
       } else {
-        console.log('No order restriction data');
+        // console.log('No order restriction data');
         setOrderRestrictionData(null);
       }
     };

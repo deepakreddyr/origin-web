@@ -23,7 +23,7 @@ const DownloadAppWrapper: React.FC<DownloadAppWrapperProps> = ({ onClose }) => {
   }, []);
 
   const handleClose = () => {
-    console.log('Debug - Close button clicked');
+    // console.log('Debug - Close button clicked');
     setIsClosing(true);
     setTimeout(() => {
       if (onClose) {
@@ -39,12 +39,12 @@ const DownloadAppWrapper: React.FC<DownloadAppWrapperProps> = ({ onClose }) => {
   };
 
   const handleAppStoreClick = () => {
-    console.log('Debug - App Store button clicked');
+    // console.log('Debug - App Store button clicked');
     window.open('https://apps.apple.com/in/app/origin-fresh-fruits-veggies/id6505096700', '_blank');
   };
 
   const handlePlayStoreClick = () => {
-    console.log('Debug - Play Store button clicked');
+    // console.log('Debug - Play Store button clicked');
     window.open('https://play.google.com/store/apps/details?id=com.originfresh.user&hl=en_IN&pli=1', '_blank');
   };
 

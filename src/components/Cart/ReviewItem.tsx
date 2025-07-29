@@ -80,7 +80,7 @@ const ReviewItem = (props: any) => {
           {uom.maximum_quantity > 1 && uom.cart_quantity > uom.maximum_quantity && (
             <div>
               <p className="font-[SofiaPro] text-[.83vw] mt-[.4vw] font-medium text-semibold text-danger ">
-                Maximum available <span className="font-semibold">unit(s) is 1</span> . Please change the Quantity.{' '}
+                Maximum available <span className="font-semibold">{uom.maximum_quantity}</span> . Please change the Quantity.{' '}
               </p>
             </div>
           )}

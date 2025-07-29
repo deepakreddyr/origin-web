@@ -127,7 +127,7 @@ const ShopDetails = (props: HomeProps) => {
         apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['getShopDetails'];
       }
       const successHandler = (data: any) => {
-        console.log(data,"data")
+        // console.log(data,"data")
         dispatch(setShopCategories(data?.data));
         dispatch(setIsProductListLoading(false));
         dispatch(setIsShopCategoriesFetched(true));

@@ -293,7 +293,7 @@ const Item = (props: Props) => {
               </Box>
             )}
           </Grid>
-          {uom.qty > uom.maximum_quantity ? (
+          {Number(uom.qty) > Number(uom.maximum_quantity) ? (
             <Typography
               component="span"
               variant="body1"

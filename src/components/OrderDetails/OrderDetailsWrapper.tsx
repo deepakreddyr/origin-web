@@ -16,7 +16,7 @@ import RetryOrPayonlineWrapper from './RetryOrPayonlineWrapper';
 const OrderDetailsWrapper = () => {
   const getDataFromApi = useGetDataFromApi();
   const orderAndRefundDetails = useSelector((state: any) => state.orderAndRefundDetails);
-  console.log(orderAndRefundDetails,"DATA")
+  // console.log(orderAndRefundDetails,"DATA")
   const router = useRouter();
   const { isReady, query } = router;
   const refreshInterval = useRef<NodeJS.Timeout | null>(null);
