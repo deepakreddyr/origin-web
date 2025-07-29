@@ -35,9 +35,9 @@ const nextConfig = {
         pathname: '/**'
       },
       {
-      protocol: 'https',
-      hostname: 'admin.webdev.madrasmandi.in',
-      pathname: '/**' 
+        protocol: 'https',
+        hostname: 'admin.webdev.madrasmandi.in',
+        pathname: '/**' 
       }
     ]
   },
@@ -69,8 +69,27 @@ const nextConfig = {
 
   async redirects() {
     return [
+      // Invoice redirect - handle ?i=invoiceId parameter
       {
         source: '/',
+        has: [
+          {
+            type: 'query',
+            key: 'i',
+          },
+        ],
+        destination: '/invoice/:i',
+        permanent: false,
+      },
+      // Default homepage redirect (only when no 'i' parameter)
+      {
+        source: '/',
+        missing: [
+          {
+            type: 'query',
+            key: 'i',
+          },
+        ],
         destination: '/shop',
         permanent: false 
       }

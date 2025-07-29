@@ -9,7 +9,7 @@ const DeliveryTimings = (props: any) => {
   const dispatch = useDispatch();
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
   const { checkoutDetails } = placeOrderDetails;
-
+  console.log(checkoutDetails,"CHECKOUT");
   // console.log(checkoutDetails.delivery_date);
 
   return (
