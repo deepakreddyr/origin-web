@@ -19,6 +19,7 @@ import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import DownloadAppWrapper from '@/components/downloadApp/DownloadAppWrapper';
 import FeatureStrip from '@/components/ShopV2/FeatureStrip';
 import WhyOriginBanner from '@/components/ShopV2/WhyOriginBanner';
+import { log } from 'console';
 
 interface HomeProps {
   mainMenuItems: MainMenuType[];
@@ -27,19 +28,57 @@ interface HomeProps {
 
 const ShopPage = (props: HomeProps) => {
   const { mainMenuItems, footerData } = props;
-  const mobile = useMediaQuery(600);
+  const mobile = useMediaQuery(650);
   const [loading, setLoading] = useState(true);
   const [showDownloadApp, setShowDownloadApp] = useState(false);
   const [downloadAppReady, setDownloadAppReady] = useState(false);
+  const [videosPreloaded, setVideosPreloaded] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
   const getDataFromApi = useGetDataFromApi();
   const [address] = useAtom(addressAtom);
 
   const filteredCategories = useSelector((state: any) => state.shopCategories);
+  
+  console.log(filteredCategories,"Category");
   const { categories } = filteredCategories;
 
   const subCategories = categories?.filter((item: any) => item.type !== 'main-category');
+  
+  // Preload videos for better performance
+  useEffect(() => {
+    const preloadVideos = () => {
+      const mobileVideo = document.createElement('video');
+      const desktopVideo = document.createElement('video');
+      
+      mobileVideo.src = "https://cdn.originfresh.in/website/Origin_9_16_v1.mp4";
+      mobileVideo.preload = "metadata";
+      mobileVideo.muted = true;
+      
+      desktopVideo.src = "https://cdn.originfresh.in/website/Origin_16_9_v1.mp4";
+      desktopVideo.preload = "metadata";
+      desktopVideo.muted = true;
+      
+      let loadedCount = 0;
+      const handleLoad = () => {
+        loadedCount++;
+        if (loadedCount === 2) {
+          setVideosPreloaded(true);
+        }
+      };
+      
+      mobileVideo.addEventListener('loadedmetadata', handleLoad);
+      desktopVideo.addEventListener('loadedmetadata', handleLoad);
+      
+      // Cleanup
+      return () => {
+        mobileVideo.removeEventListener('loadedmetadata', handleLoad);
+        desktopVideo.removeEventListener('loadedmetadata', handleLoad);
+      };
+    };
+    
+    preloadVideos();
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('user_token');
@@ -55,6 +94,7 @@ const ShopPage = (props: HomeProps) => {
     }
 
     const successHandler = (data: any) => {
+      console.log(data,"DATA");
       dispatch(setShopCategories(data?.data));
       dispatch(setIsShopCategoriesFetched(true));
       setLoading(false);
@@ -73,12 +113,10 @@ const ShopPage = (props: HomeProps) => {
     const timer = setTimeout(() => {
       try {
         const userToken = localStorage.getItem('user_token');
-        // const hasSeenBanner = localStorage.getItem('has_seen_app_banner');
 
         // Show download app banner when user is not logged in (both mobile and desktop)
         if (!userToken) {
           setShowDownloadApp(true);
-          // localStorage.setItem('has_seen_app_banner', 'true');
         }
         setDownloadAppReady(true);
       } catch (error) {
@@ -88,7 +126,7 @@ const ShopPage = (props: HomeProps) => {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, []); // Removed mobile dependency
+  }, []);
 
   const handleCloseDownloadApp = () => setShowDownloadApp(false);
 

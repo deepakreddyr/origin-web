@@ -63,10 +63,10 @@ const data: Data = {
   ],
   footerData: {
     footerLinksPrimary: [
-      { text: 'How it works', href: 'how-it-works' },
-      { text: 'Blogs', href: 'blogs' },
-      { text: 'Careers', href: 'careers' },
-      { text: 'Contact', href: 'contact' }
+      { text: 'Home', href: 'shop' },
+      { text: 'About Us', href: 'about' },
+      { text: 'Shop All', href: 'shop' },
+      // { text: 'Contact', href: 'contact' }
     ],
     footerLinksSecondary: [
       { text: 'Terms and Conditions', href: 'terms-and-conditions' },

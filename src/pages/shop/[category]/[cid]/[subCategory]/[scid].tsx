@@ -127,6 +127,7 @@ const ShopDetails = (props: HomeProps) => {
         apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['getShopDetails'];
       }
       const successHandler = (data: any) => {
+        console.log(data,"data")
         dispatch(setShopCategories(data?.data));
         dispatch(setIsProductListLoading(false));
         dispatch(setIsShopCategoriesFetched(true));
@@ -139,13 +140,14 @@ const ShopDetails = (props: HomeProps) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (isReady) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [query]);
-  console.log(filters);
+  // useEffect(() => {
+  //   if (isReady) {
+  //     window.scrollTo({ top: 0, behavior: 'smooth' });
+  //   }
+  // }, [query]);
+  // console.log(filters);
   // if (mobile) return <DownloadAppWrapper />;
+  
   return (
     <Layout mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={true}>
       <ShopHero />

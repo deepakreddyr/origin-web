@@ -11,32 +11,47 @@ import { wrapper } from '@/store/store';
 import { useEffect } from 'react';
 
 // --- Cache clear utility ---
-const APP_VERSION = '1.0.6';  // Increment this on each deployment
+const APP_VERSION = '1.1.0';  // Increment this on each deployment
 
-const clearCacheAndReload = () => {
+const clearCacheAndReload = async () => {
   if (typeof window === 'undefined') return; // Prevent SSR crash
 
   const currentVersion = localStorage.getItem('appVersion');
-  // console.log("Current app version in storage:", currentVersion);
-  // console.log("Latest APP_VERSION:", APP_VERSION);
+  console.log("Current app version in storage:", currentVersion);
+  console.log("Latest APP_VERSION:", APP_VERSION);
 
   if (currentVersion === null || currentVersion !== APP_VERSION) {
     // console.log(`Cache clear: old version=${currentVersion}, new version=${APP_VERSION}`);
     
-    if ('caches' in window) {
-      caches.keys().then(names => {
-        names.forEach(name => caches.delete(name));
-      });
-    }
+    try {
+      // Clear all caches
+      if ('caches' in window) {
+        const cacheNames = await caches.keys();
+        await Promise.all(
+          cacheNames.map(cacheName => caches.delete(cacheName))
+        );
+        console.log('All caches cleared');
+      }
 
-    sessionStorage.clear();
-    localStorage.setItem('appVersion', APP_VERSION);
-
-    setTimeout(() => {
+      // Clear storage
+      sessionStorage.clear();
+      localStorage.clear(); // Clear everything first
+      
+      // Set new version
+      localStorage.setItem('appVersion', APP_VERSION);
+      
+      console.log('Storage cleared and version updated');
+      
+      // Force reload with cache bypass
       window.location.reload();
-    }, 500);
+      
+    } catch (error) {
+      console.error('Error clearing cache:', error);
+      // Fallback: just reload
+      window.location.reload();
+    }
   } else {
-    // console.log("App version matches, no cache clear needed.");
+    console.log("App version matches, no cache clear needed.");
   }
 };
 
@@ -45,6 +60,7 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
   const [isGMapLoaded, setIsGMapLoaded] = useAtom(isGMapLoadedAtom);
 
   useEffect(() => {
+    // Run cache clear check immediately
     clearCacheAndReload();
   }, []);
 

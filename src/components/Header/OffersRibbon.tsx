@@ -97,13 +97,13 @@ const OffersRibbon = () => {
               style={{ animation: 'scroll 10s linear infinite' }}
             >
               <p className="text-white font-[SofiaPro] font-medium text-[3vw] px-4">
-                Download the App and Get FLAT 15% Off on 1st Order use coupon code "INSTALL15"
+                {/* Download the App and Get FLAT 15% Off on 1st Order use coupon code "INSTALL15" */}
               </p>
             </div>
           </div>
         ) : (
           <p className="text-white font-[SofiaPro] text-[.97vw] font-medium">
-            Download the App and Get FLAT 15% Off on 1st Order use coupon code "INSTALL15"
+            {/* Download the App and Get FLAT 15% Off on 1st Order use coupon code "INSTALL15" */}
           </p>
         )}
       </div>

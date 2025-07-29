@@ -2,9 +2,7 @@ import { Box, Container, Grid, Typography } from '@mui/material';
 import React from 'react';
 import { OriginLogoWhite } from '../../Icons/OriginIcons';
 import SocialLinks from './SocialLinks';
-import ContactInfo from './ContactInfo';
 import FooterNav from './FooterNav';
-import NewsletterSubscription from '../NewsSubscription';
 import { FooterDataType } from '../../utilities/types';
 
 type FooterProps = {
@@ -12,46 +10,91 @@ type FooterProps = {
 };
 
 const Footer: React.FC<FooterProps> = ({ footerData }) => {
+  if (!footerData) return null;
 
-  if (!footerData) {
-    return null; // or render fallback footer
-  }
   const { footerLinksPrimary, footerLinksSecondary, contactDetails } = footerData;
 
   return (
-    <Box className="bg-secondary py-[60px] md:pt-[80px] md:pb-[75px]">
-      <Container>
-        <Grid container>
-          {/* <Grid container className="justify-between items-center border-secondary-200 mb-10 pb-10 border-b">
-            <Grid item xs={12} md={7} lg={7} className="mt-6 md:mt-10 mb-10 md:mb-0">
-              <NewsletterSubscription />
-            </Grid>
-            <Grid item xs={12} md={5} lg={5} className="flex flex-row flex-wrap justify-start items-start gap-y-4">
-              <FooterNav links={footerLinksPrimary} xs={12} md={6} />
-            </Grid>
-          </Grid> */}
+    <>
+      {/* Footer main */}
+      <Box className="bg-[#146321] py-[60px] md:pt-[20px]">
+        <Box className="min-h-[240px] flex items-center">
+          <Container maxWidth="lg">
+            <Grid container spacing={3}>
+              {/* Logo + Social Links */}
+              <Grid item xs={12} md={3.5}>
+                <Box className="h-full flex flex-col items-start justify-center space-y-6">
+                  <OriginLogoWhite className="w-44 h-auto pt-[50px]" />
+                  <SocialLinks />
+                </Box>
+              </Grid>
 
-          <Grid container className="flex flex-row flex-wrap justify-between items-start">
-            <Grid item xs={12} md={3} className="pt-2">
-              <OriginLogoWhite className="w-32 h-11" />
-              <SocialLinks />
-            </Grid>
-            <Grid item xs={12} md={5} className="my-[35px] md:my-0">
-              <ContactInfo contactDetails={contactDetails} />
-            </Grid>
-            <Grid item xs={12} md={2} className="flex flex-col justify-start items-start gap-y-4">
-              <FooterNav xs={12} links={footerLinksSecondary} />
-            </Grid>
-          </Grid>
+              {/* Navigation */}
+              <Grid item xs={12} md={2.5}>
+                <Box className="flex flex-col items-start space-y-4 mt-6 md:mt-10">
+                  <Typography
+                    variant="body2"
+                    className="text-white text-sm font-semibold uppercase tracking-wider mb-2"
+                  >
+                    Navigation
+                  </Typography>
+                  <FooterNav xs={12} links={footerLinksPrimary} />
+                </Box>
+              </Grid>
 
-          <Grid item md={12} className="mt-5 md:mt-8 text-center">
-            <Typography variant="body1" className="text-sm text-white">
-              © 2025, Origin. All rights reserved.
-            </Typography>
-          </Grid>
-        </Grid>
-      </Container>
-    </Box>
+              {/* Contact Us */}
+              <Grid item xs={12} md={3.5}>
+                <Box className="flex flex-col items-start space-y-4 mt-6 md:mt-10">
+                  <Typography
+                    variant="body2"
+                    className="text-white text-sm font-semibold uppercase tracking-wider mb-2"
+                  >
+                    Contact Us
+                  </Typography>
+                  <Typography
+                    component="a"
+                    href="tel:+919900508216"
+                    className="text-white text-base no-underline hover:text-green-100"
+                  >
+                    +91 9900508216
+                  </Typography>
+                  <Typography
+                    component="a"
+                    href="mailto:support@originfresh.in"
+                    className="text-white text-base no-underline hover:text-green-100"
+                  >
+                    support@originfresh.in
+                  </Typography>
+                  <Typography
+                    component="a"
+                    href="tel:+918344621039"
+                    className="text-white text-base no-underline hover:text-green-100"
+                  >
+                    +91 8344621039
+                  </Typography>
+                </Box>
+              </Grid>
+
+              {/* Terms and Policy Links */}
+              <Grid item xs={12} md={2.5}>
+                <Box className="flex flex-col items-start space-y-4 mt-6 md:mt-10">
+                  <FooterNav xs={12} links={footerLinksSecondary} />
+                </Box>
+              </Grid>
+            </Grid>
+
+            {/* Footer Bottom */}
+            <Grid container className="mt-5 pt-5">
+              <Grid item xs={12} className="text-center">
+                <Typography variant="body2" className="text-sm text-white opacity-90">
+                  © 2025, Origin. All rights reserved.
+                </Typography>
+              </Grid>
+            </Grid>
+          </Container>
+        </Box>
+      </Box>
+    </>
   );
 };
 

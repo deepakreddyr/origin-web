@@ -4,6 +4,7 @@ import Dropdown from './Dropdown';
 import { useRouter } from 'next/router';
 import SubCategoryPills from './SubCategoryPills';
 import DropdownAndPillsSkeleton from '@/components/skeletonLoaders/shop/DropdownAndPillsSkeleton';
+import { Flag } from '@mui/icons-material';
 
 interface Props {
   filters: any;
@@ -54,13 +55,13 @@ const CategoryAndSubCategory = (props: Props) => {
       url = `/shop/${filters.category}/${filters.cid}/${value.name}/${value.id}`;
     }
 
-    router.push(url, undefined, { shallow: true });
+    router.push(url, undefined, { shallow: true, scroll: false });
   };
 
   const handleSubCategoryChange = (value: any, name: any) => {
     let url: any;
     url = `/shop/${filters.category}/${filters.cid}/${value.name}/${value.id}`;
-    router.push(url, undefined, { shallow: true });
+    router.push(url, undefined, { shallow: true, scroll: false });
   };
   const toTitleCase = (str: string) => {
     console.log(str);
