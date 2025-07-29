@@ -147,6 +147,41 @@ const InvoicePage: React.FC = () => {
       </Head>
 
       <div className="min-h-screen bg-[#F7F5EE]">
+        {/* Header with actions - hidden when printing */}
+        <div className="print:hidden bg-white border-b border-gray-200 sticky top-0 z-10">
+          <div className="max-w-4xl mx-auto px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={goBack}
+                  className="flex items-center px-3 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-1" />
+                  Back
+                </button>
+                <h1 className="text-lg font-semibold text-gray-900">
+                  Invoice {displayId}
+                </h1>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={handleDownload}
+                  className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download
+                </button>
+                <button
+                  onClick={handlePrint}
+                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                >
+                  Print
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         {/* Invoice Content - PDF Viewer */}
         <div className="max-w-6xl mx-auto p-4">
           {invoiceContent && (
