@@ -16,7 +16,7 @@ const InvoicePage: React.FC = () => {
   // Fix 2: Ensure ID is a string
   const invoiceId = Array.isArray(id) ? id[0] : id;
   
-  const apiUrl = invoiceId ? `https://api.webdev.madrasmandi.in/api/v1/public/preview-store-invoice/${invoiceId}` : '';
+  const apiUrl = invoiceId ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/public/preview-store-invoice/${invoiceId}` : '';
 //   const apiUrl = invoiceId ? `https://api.webdev.madrasmandi.in/api/v1/public/preview-store-invoice/011c7093e29b@4398` : '';
     console.log(apiUrl,"API");
   useEffect(() => {
