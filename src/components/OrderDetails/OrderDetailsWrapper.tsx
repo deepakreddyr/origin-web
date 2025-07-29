@@ -16,6 +16,7 @@ import RetryOrPayonlineWrapper from './RetryOrPayonlineWrapper';
 const OrderDetailsWrapper = () => {
   const getDataFromApi = useGetDataFromApi();
   const orderAndRefundDetails = useSelector((state: any) => state.orderAndRefundDetails);
+  console.log(orderAndRefundDetails,"DATA")
   const router = useRouter();
   const { isReady, query } = router;
   const refreshInterval = useRef<NodeJS.Timeout | null>(null);
@@ -89,8 +90,7 @@ const OrderDetailsWrapper = () => {
             fetchOrderdetails={fetchOrderdetails}
           />
           <div className="w-full mob:block hidden mob:px-[4.1vw] ">
-            {/* (orderAndRefundDetails.) */}
-            <RetryOrPayonlineWrapper />
+            {(orderAndRefundDetails.orderDetailsData.status !== "Cancelled by user") && <RetryOrPayonlineWrapper />}
             <ItemsList orderDetailsData={orderAndRefundDetails.orderDetailsData} />
           </div>
           <div className="mob:px-[4.1vw] flex flex-col gap-[1.671vw] mob:gap-[4.1vw] ">
@@ -105,7 +105,7 @@ const OrderDetailsWrapper = () => {
           </div>
         </div>
         <div className="w-full flex flex-col mob:hidden gap-[1.67vw]">
-          <RetryOrPayonlineWrapper />
+          {(orderAndRefundDetails.orderDetailsData.status !== "Cancelled by user") && <RetryOrPayonlineWrapper />}
           <ItemsList orderDetailsData={orderAndRefundDetails.orderDetailsData} />
         </div>
       </div>

@@ -11,7 +11,7 @@ import { wrapper } from '@/store/store';
 import { useEffect } from 'react';
 
 // --- Cache clear utility ---
-const APP_VERSION = '1.1.0';  // Increment this on each deployment
+const APP_VERSION = '1.1.1';  // Increment this on each deployment
 
 const clearCacheAndReload = async () => {
   if (typeof window === 'undefined') return; // Prevent SSR crash
