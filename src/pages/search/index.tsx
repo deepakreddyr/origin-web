@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,8 +12,17 @@ import cartIcon from '/public/assets/icons/cartIcon.png';
 import { setCartItems, setCartTabType } from '@/store/slice/CartSlice';
 import { setIsSidebarOpen, setLoginDetails, setTabType } from '@/store/slice/loginSlice';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
+import Layout from '@/components/Layout';
+import { FooterDataType, MainMenuType } from '@/utilities/types';
+import { any } from 'zod';
 
 // Updated Product interface to match your API response
+
+interface HomeProps {
+  mainMenuItems: MainMenuType[];
+  footerData: FooterDataType;
+}
+
 interface Product {
   id: number;
   item_code: string;
@@ -368,11 +378,11 @@ const LoadingCard: React.FC = () => (
 );
 
 // Main SearchResults component
-const SearchResults: React.FC = () => {
+const SearchResults= (props: HomeProps) => {
   const router = useRouter();
   const { q: searchQuery } = router.query;
   const isMobile = useMediaQuery(600);
-  
+  const { mainMenuItems, footerData } = props;
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -563,10 +573,11 @@ const SearchResults: React.FC = () => {
   const canSearch = currentSearchQuery.trim().length >= 2;
 
   return (
+    // <Layout mainMenuItems={mainMenuItems} isHeaderSticky={true} footerData={footerData}>
     <div className="min-h-screen bg-[#FFF9E5]">
       {/* Header matching the provided design */}
       <div className="bg-[#FFF9E5] border-gray-200 w-full">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mt-5 mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             
             {/* Left Section - Logo */}
@@ -583,7 +594,7 @@ const SearchResults: React.FC = () => {
             </div>
 
             {/* Center Section - Search Bar */}
-            <div className="flex-1 max-w-2xl mx-2">
+            <div className="flex-1 mx-3">
               <form onSubmit={handleSearchSubmit} className="relative">
                 <div className="relative">
                   <input
@@ -680,7 +691,7 @@ const SearchResults: React.FC = () => {
       </div>
 
       {/* Mobile Floating Cart */}
-      {isMobile && (
+      {/* {isMobile && (
         <button
           onClick={handleCartOpen}
           className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-white shadow-xl 
@@ -698,7 +709,7 @@ const SearchResults: React.FC = () => {
             <Image src={cartIcon} alt="Cart" fill className="object-contain" />
           </div>
         </button>
-      )}
+      )} */}
 
       {/* Search Results */}
       <div className="max-w-[90vw] mx-auto px-[2vw] mob:px-[5vw] py-[3vw] mob:py-[6vw]">
@@ -777,6 +788,30 @@ const SearchResults: React.FC = () => {
       </div>
     </div>
   );
+};
+
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/originApi`);
+    const originApiData = await response.json();
+
+    const { mainMenuItems, footerData } = originApiData;
+    return {
+      props: {
+        mainMenuItems,
+        footerData
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching shop page data:', error);
+    return {
+      props: {
+        mainMenuItems: [],
+        footerData: {}
+      }
+    };
+  }
 };
 
 export default SearchResults;

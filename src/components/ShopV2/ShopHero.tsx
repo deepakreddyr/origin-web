@@ -46,7 +46,7 @@ const ShopHero = () => {
   const router = useRouter();
 
   return (
-    <div className="relative w-full overflow-hidden mob:pt-[65px]">
+    <div className="relative w-full overflow-hidden mob:pt-[20px]">
       <Carousel
         autoPlay
         interval={5000}
