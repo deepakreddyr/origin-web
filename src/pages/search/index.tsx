@@ -676,7 +676,7 @@ const SearchResults= (props: HomeProps) => {
                 aria-label={`Shopping cart ${cart?.items?.length > 0 ? `(${cart.items.length} items)` : ''}`}
               >
                 {cart?.items?.length > 0 && (
-                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white 
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-secondary-300 text-white 
                                 text-xs font-medium rounded-full flex items-center justify-center">
                     {cart.items.length > 99 ? '99+' : cart.items.length}
                   </div>

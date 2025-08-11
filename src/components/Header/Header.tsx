@@ -190,9 +190,9 @@ const Header = ({ mainMenuItems, isHeaderSticky }: Props) => {
             >
               Shop All
             </Link>
-            <Link href="/about" className="text-black text-[1.1vw] font-medium font-[SofiaPro]">
+            {/* <Link href="/about" className="text-black text-[1.1vw] font-medium font-[SofiaPro]">
               About us
-            </Link>
+            </Link> */}
           </div>
 
           {/* Enhanced Search Bar */}
