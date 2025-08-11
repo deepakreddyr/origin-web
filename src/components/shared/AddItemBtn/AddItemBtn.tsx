@@ -1,35 +1,41 @@
-import { addItemToCart, decreaseQuantity, increaseQuantity } from '@/store/slice/CartSlice';
+import { addItemToCart, decreaseQuantity, increaseQuantity, removeItemFromCart } from '@/store/slice/CartSlice';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import YellowBtn from './YellowBtn';
 import WhiteBtn from './WhiteBtn';
 import BlackBtn from './BlackBtn';
+import BlackAddCartBtm from './BlackAddCartBtm';
 import YellowAddCartBtm from './YellowAddCartBtm'
 import { protectedUrl } from '@/url';
 import { getAddressAndStoreId, prepareCartItemsToApi } from '@/utilities/utils';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
-// import {
-//     addItemToCart,
-//     increaseQuantity,
-//     decreaseQuantity,
-// } from '../../../store/slices/cartSlice'
-// import WhiteButton from './WhiteButton'
-// import YellowButton from '../buttonTypes/YellowButton'
-// import { BUTTON_TYPE_MAP } from '../../../constants/landingPageConstants'
 
 const AddItemBtn = (props: any) => {
   const { product, varientId, varientPrice, stepperQuantity, buttonType } = props;
 
   const dispatch = useDispatch();
   const cartItems = useSelector((state: any) => state.cart.items);
-  const cartItem = cartItems.find((item: any) => item.id === product.id);
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const sendDataToApi = useSendDataToApi();
   const getDataFromApi = useGetDataFromApi();
-  const itemQuantity = cartItem?.multiple_uoms.find((item: any) =>
-    item.variant_id === varientId ? item?.cart_quantity : null
+
+  // Find cart item for the current variant (now simplified with flat structure)
+  const cartItem = cartItems.find((item: any) => 
+    item.id === product.id && item.variant_id === varientId
   );
+  const itemQuantity = cartItem?.cart_quantity || 0;
+
+  console.log('AddItemBtn render:', {
+    productId: product.id,
+    varientId,
+    itemQuantity,
+    cartItem: cartItem ? { 
+      id: cartItem.id, 
+      variant_id: cartItem.variant_id, 
+      cart_quantity: cartItem.cart_quantity 
+    } : null
+  });
 
   const handleClearCartFromBackend = () => {
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['clearCartItems'];
@@ -41,31 +47,23 @@ const AddItemBtn = (props: any) => {
         'store-id': addressFromLs.store_id
       };
     }
-    const successHandler = (data: any) => {};
-    const failureHandler = (data: any) => {};
-    getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+
+    getDataFromApi(apiUrl, () => {}, () => {}, additionalHeaders);
   };
 
   const addItemsToApi = () => {
-    let apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['addToCart'];
-    let cartItemToApi: any;
-    let additionalHeaders = {};
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['addToCart'];
     const token = localStorage.getItem('user_token');
     const cartItemFromLs = localStorage.getItem('cart_items');
     const addressFromLs = getAddressAndStoreId();
-    if (!token) {
-      return;
-    }
-    if (addressFromLs) {
-      additionalHeaders = {
-        'store-id': addressFromLs.store_id
-      };
-    }
-    const successHandler = (data: any) => {};
-    const failureHandler = (data: any) => {};
+
+    if (!token) return;
+
+    const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
+
     if (loginDetails.isSidebarOpen && cartItemFromLs) {
-      let cartItemsParsed = JSON.parse(cartItemFromLs);
-      let cartItemsToApi = {
+      const cartItemsParsed = JSON.parse(cartItemFromLs);
+      const cartItemsToApi = {
         items: cartItemsParsed.map((item: any) => ({
           item_code: item.item_code,
           uom: item.multiple_uoms.map((uom: any) => ({
@@ -74,29 +72,39 @@ const AddItemBtn = (props: any) => {
           }))
         }))
       };
+
       if (cartItemsParsed?.length === 0) {
         handleClearCartFromBackend();
       } else {
-        sendDataToApi(apiUrl, cartItemsToApi, 'POST', successHandler, failureHandler, additionalHeaders);
+        sendDataToApi(apiUrl, cartItemsToApi, 'POST', () => {}, () => {}, additionalHeaders);
       }
     }
   };
+
   const handleAddItem = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    const updatedVariants = product.multiple_uoms.map((variant: any) => {
-      if (variant.variant_id === varientId) {
-        return { ...variant, cart_quantity: 1 };
+
+    console.log('handleAddItem called for variant:', varientId);
+
+    const selectedVariant = product.multiple_uoms.find(
+      (variant: any) => variant.variant_id === varientId
+    );
+
+    if (!selectedVariant) {
+      console.error('Selected variant not found');
+      return;
+    }
+
+    // Dispatch with the new flat structure
+    dispatch(addItemToCart({
+      product: product,
+      selectedUOM: {
+        ...selectedVariant,
+        stepper_quantity: stepperQuantity
       }
-      return variant;
-    });
+    }));
 
-    const productToStore = {
-      ...product,
-      multiple_uoms: updatedVariants
-    };
-
-    dispatch(addItemToCart(productToStore));
     if (loginDetails.user) {
       addItemsToApi();
     }
@@ -105,11 +113,8 @@ const AddItemBtn = (props: any) => {
   const handleIncrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    let productDetail = {
-      varientId,
-      stepperQuantity
-    };
-    dispatch(increaseQuantity(productDetail));
+    console.log('handleIncrease called for variant:', varientId);
+    dispatch(increaseQuantity({ varientId, stepperQuantity }));
     if (loginDetails.user) {
       addItemsToApi();
     }
@@ -118,58 +123,92 @@ const AddItemBtn = (props: any) => {
   const handleDecrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    let productDetail = {
-      varientId,
-      stepperQuantity
-    };
-
-    dispatch(decreaseQuantity(productDetail));
+    
+    console.log('handleDecrease called for variant:', varientId, 'current quantity:', itemQuantity);
+    
+    if (itemQuantity <= stepperQuantity) {
+      // If this will result in zero or negative quantity, remove the item
+      console.log('Removing item due to decrease to zero');
+      dispatch(removeItemFromCart(varientId));
+    } else {
+      // Otherwise just decrease
+      dispatch(decreaseQuantity({ varientId, stepperQuantity }));
+    }
+    
     if (loginDetails.user) {
       addItemsToApi();
     }
   };
+
+  // Explicit remove handler
+  const handleRemoveUOM = (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('handleRemoveUOM called for variant:', varientId);
+    dispatch(removeItemFromCart(varientId));
+    if (loginDetails.user) {
+      addItemsToApi();
+    }
+  };
+
+  const isVariantPresent = itemQuantity > 0;
+
+  console.log('isVariantPresent:', isVariantPresent, 'quantity:', itemQuantity);
+
   const BUTTON_MAP: any = {
-    yellowaddtocart:(
-      <YellowAddCartBtm
-        isItemPresent={cartItem}
-        quantity={itemQuantity?.cart_quantity}
+    blackaddtocart: (
+      <BlackAddCartBtm
+        isItemPresent={isVariantPresent}
+        quantity={itemQuantity}
         handleAddItem={handleAddItem}
         handleIncrease={handleIncrease}
         handleDecrease={handleDecrease}
+        handleRemove={handleRemoveUOM}
+      />
+    ),
+    yellowaddtocart: (
+      <YellowAddCartBtm
+        isItemPresent={isVariantPresent}
+        quantity={itemQuantity}
+        handleAddItem={handleAddItem}
+        handleIncrease={handleIncrease}
+        handleDecrease={handleDecrease}
+        handleRemove={handleRemoveUOM}
       />
     ),
     yellow: (
       <YellowBtn
-        isItemPresent={cartItem}
-        quantity={itemQuantity?.cart_quantity}
+        isItemPresent={isVariantPresent}
+        quantity={itemQuantity}
         handleAddItem={handleAddItem}
         handleIncrease={handleIncrease}
         handleDecrease={handleDecrease}
+        handleRemove={handleRemoveUOM}
       />
     ),
     white: (
       <WhiteBtn
-        isItemPresent={cartItem}
-        quantity={itemQuantity?.cart_quantity}
+        isItemPresent={isVariantPresent}
+        quantity={itemQuantity}
         handleAddItem={handleAddItem}
         handleIncrease={handleIncrease}
         handleDecrease={handleDecrease}
+        handleRemove={handleRemoveUOM}
       />
     ),
     black: (
       <BlackBtn
-        isItemPresent={cartItem}
-        quantity={itemQuantity?.cart_quantity}
+        isItemPresent={isVariantPresent}
+        quantity={itemQuantity}
         handleAddItem={handleAddItem}
         handleIncrease={handleIncrease}
         handleDecrease={handleDecrease}
+        handleRemove={handleRemoveUOM}
       />
     )
   };
 
-  //   return <div>{BUTTON_MAP[buttonType]}</div>;
   return <div>{BUTTON_MAP[buttonType]}</div>;
 };
 
 export default AddItemBtn;
-

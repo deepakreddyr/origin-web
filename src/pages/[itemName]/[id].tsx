@@ -3,6 +3,7 @@ import ProductDetailsWrapper from '@/components/productDetails/ProductDetailsWra
 import { mainApiUrl, protectedUrl } from '@/url';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import { GetServerSideProps } from 'next';
+import CategorySection from '@/components/ShopV2/CategorySection';
 
 const ProductDetailPage = (props: any) => {
   const { mainMenuItems, footerData, productData } = props;
@@ -11,6 +12,7 @@ const ProductDetailPage = (props: any) => {
   return (
     <Layout mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={mobile ? false : true}>
       <ProductDetailsWrapper />
+      <CategorySection/>
     </Layout>
   );
 };

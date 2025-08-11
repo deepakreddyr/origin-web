@@ -15,7 +15,7 @@ const DetailsHeader = (props: any) => {
   };
 
   return (
-    <div className="flex items-start mob:items-center justify-between w-full gap-[.6vw] mob:gap-[2vw] pt-[2.2vw] pb-[1.67vw] mob:py-[4vw] sticky top-0 z-[8] mob:px-[4vw] px-[2vw] bg-[#F2EEE3]">
+    <div className="flex items-start mob:items-center justify-between w-full gap-[.6vw] mob:gap-[2vw] pt-[2.2vw] pb-[1.67vw] mob:py-[4vw] sticky top-0 z-[8] mob:px-[4vw] px-[2vw] bg-[#FFF9E5]">
       {/* Back + Title */}
       <div className="flex items-start mob:items-center gap-[.6vw] mob:gap-[2vw]">
         <div className="flex items-center justify-end">

@@ -1,77 +1,154 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ItemCard from '../shared/ItemCard';
-import { Box } from '@mui/material';
-import CarouselButtons from '../CarouselButtons';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
+
 interface categoryProp {
   categoryDetail: any;
 }
 
-const PopularProduce = (props: categoryProp) => {
-  const { categoryDetail } = props;
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const scrollKey = `sliderScrollPosition_${categoryDetail.title}`;
+const PopularProduce = ({ categoryDetail }: categoryProp) => {
+  console.log(categoryDetail.data,"DATA");
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [mobileScrollIndex, setMobileScrollIndex] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isMobile = useMediaQuery(768);
 
-  const handleScroll = (direction: 'left' | 'right') => {
-    if (sliderRef.current) {
-      const scrollAmount = 300;
-      sliderRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
+  const itemsPerPage = isMobile ? 2 : window.innerWidth >= 1024 ? 4 : 3;
+  const totalItems = categoryDetail.data?.length || 0;
+  const maxIndex = Math.max(0, totalItems - itemsPerPage);
+
+  const handlePrevious = () => {
+    setCurrentIndex(prev => Math.max(0, prev - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex(prev => Math.min(maxIndex, prev + 1));
+  };
+
+  const handleMobileScroll = () => {
+    if (scrollContainerRef.current && isMobile) {
+      const container = scrollContainerRef.current;
+      const scrollLeft = container.scrollLeft;
+      const itemWidth = container.scrollWidth / totalItems;
+      const newIndex = Math.round(scrollLeft / (itemWidth * 2));
+      setMobileScrollIndex(Math.min(newIndex, Math.floor(totalItems / 2)));
+    }
+  };
+
+  const handleDotClick = (index: number) => {
+    if (isMobile && scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const itemWidth = container.scrollWidth / totalItems;
+      const scrollPosition = index * itemWidth * 2;
+      container.scrollTo({
+        left: scrollPosition,
         behavior: 'smooth'
       });
-    }
-  };
-
-  const saveScrollPosition = () => {
-    if (sliderRef.current) {
-      const scrollPosition = sliderRef.current.scrollLeft;
-      localStorage.setItem(scrollKey, String(scrollPosition));
-    }
-  };
-
-  const restoreScrollPosition = () => {
-    const savedPosition = localStorage.getItem(scrollKey);
-    if (sliderRef.current && savedPosition) {
-      sliderRef.current.scrollLeft = parseInt(savedPosition, 10);
+      setMobileScrollIndex(index);
+    } else {
+      setCurrentIndex(index);
     }
   };
 
   useEffect(() => {
-    restoreScrollPosition();
-    return () => saveScrollPosition();
-  }, []);
+    setCurrentIndex(0);
+    setMobileScrollIndex(0);
+  }, [isMobile]);
 
+  const visibleItems = !isMobile 
+    ? categoryDetail.data?.slice(currentIndex, currentIndex + itemsPerPage) || []
+    : categoryDetail.data || [];
+
+  const maxMobileIndex = Math.max(0, Math.ceil(totalItems / 2) - 1);
+  const currentMobileIndex = isMobile ? mobileScrollIndex : currentIndex;
+  const maxCurrentIndex = isMobile ? maxMobileIndex : maxIndex;
 
   return (
-    <>
-    <div className="relative w-[90.6vw] bg-transparent mob:bg-transparent pt-[72px] mob:pt-[2vw] pb-0 mob:pl-0 pl-[2.7vw] rounded-[12px]  mob:shadow-none mob:rounded-none transition-all duration-50 ease-in-out">
-        <p className="font-[SofiaPro] text-[1.944vw] mob:text-[5.1vw] pb-[2.1vw] font-bold py-[1.1vw] mob:py-[4.1vw]">
-          {categoryDetail.title}
-        </p>
+    <div className="relative w-full bg-[#FFF9E5] px-[4vw] py-[3vw] mob:px-[6vw] mob:py-[6vw] mob:overflow-visible">
+      <h2 className="font-[SofiaPro] text-[2.5vw] mob:text-[6vw] font-bold pl-[3vw] mob:pl-10 text-black mb-[2vw] mob:mb-[6vw]">
+        {categoryDetail.title}
+      </h2>
 
-        <div
-          ref={sliderRef}
-          className="flex mob:items-start gap-[2.2vw] mob:gap-[5vw] mob:pr-[6vw] overflow-x-scroll noscrollbar pr-[3vw] pb-[3vw]"
-          onScroll={saveScrollPosition}
-        >
-          {categoryDetail.data?.map((item: any) => (
-            <div key={item.id} className="mob:w-[50vw] mob:min-w-[50vw] mob:max-w-[45vw] mob:min-h-[260px] w-[17vw] min-w-[17vw] max-w-[17vw]">
-              <ItemCard itemDetails={item} />
+      <div className="relative flex items-center mob:overflow-visible">
+        {!isMobile && (
+          <button
+            onClick={handlePrevious}
+            disabled={currentIndex === 0}
+            className={`absolute left-[-2vw] z-10 w-[3vw] h-[3vw] rounded-full flex items-center justify-center transition-all duration-200 ${
+              currentIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'
+            }`}
+          >
+            <ChevronLeft size={40} className="text-black" />
+          </button>
+        )}
+
+        <div className="flex-1 mx-[3vw] mob:mx-0 mob:overflow-visible">
+          {!isMobile && (
+            <div className={`grid ${itemsPerPage === 4 ? 'grid-cols-4' : 'grid-cols-3'} gap-[1.5vw]`}>
+              {visibleItems.map((item: any) => (
+                <div key={item.id} className="md:w-[230px] md:h-[280px]  w-[25vw] h-[27vw]">
+                  <ItemCard itemDetails={item} />
+                </div>
+              ))}
             </div>
-          ))}
+          )}
+
+          {isMobile && (
+            <div
+              ref={scrollContainerRef}
+              className="flex gap-[4vw] pb-2"
+              style={{
+                overflowX: 'scroll',
+                scrollSnapType: 'x mandatory',
+                WebkitOverflowScrolling: 'touch',
+                width: '100vw',
+                marginLeft: '10vw',
+                paddingLeft: '6vw',
+                paddingRight: '6vw'
+              }}
+              onScroll={handleMobileScroll}
+            >
+              {visibleItems.map((item: any) => (
+                <div
+                  key={item.id}
+                  className="flex-shrink-0"
+                  style={{ scrollSnapAlign: 'start', width: '42vw', minWidth: '42vw' }}
+                >
+                  <ItemCard itemDetails={item} />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        <Box className="flex items-center justify-between py-[2vw] mob:pt-[8vw] pr-[10.5vw] mob:px-0 mob:hidden">
-        <div></div>
-        <CarouselButtons
-          leftButtonClass="poBlogsRight"
-          rightButtonClass="poBlogsLeft"
-          leftClick={() => handleScroll('left')}
-          rightClick={() => handleScroll('right')}
-        />
-      </Box>
+        {!isMobile && (
+          <button
+            onClick={handleNext}
+            disabled={currentIndex >= maxIndex}
+            className={`absolute right-[-2vw] z-10 w-[3vw] h-[3vw] rounded-full flex items-center justify-center transition-all duration-200 ${
+              currentIndex >= maxIndex ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'
+            }`}
+          >
+            <ChevronRight size={40} className="text-black" />
+          </button>
+        )}
       </div>
 
-    </>
+      {totalItems > itemsPerPage && (
+        <div className="flex justify-center mt-[2vw] mob:mt-[6vw] gap-[0.5vw] mob:gap-[2vw]">
+          {Array.from({ length: maxCurrentIndex + 1 }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => handleDotClick(index)}
+              className={`w-[0.8vw] h-[0.8vw] mob:w-[2vw] mob:h-[2vw] rounded-full transition-all duration-200 ${
+                index === currentMobileIndex ? 'bg-black' : 'bg-[#FFDD0066] hover:bg-gray-400'
+              }`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 

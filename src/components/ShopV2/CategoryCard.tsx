@@ -18,10 +18,10 @@ const CategoryCard = (props: Props) => {
     <Link
       replace
       href={href}
-      className="w-[16vw] h-[16vw] mob:w-[40vw] flex flex-col items-center text-center"
+     className="w-[24vw] h-[16vw] mob:w-[40vw] flex flex-col items-center text-center"
     >
       {/* Image */}
-      <div className="relative w-full h-[16vw] mob:h-[48vw] rounded-[1.67vw] overflow-hidden">
+      <div className="relative bg-white w-[16vw] h-[10vw] mob:h-[48vw] rounded-[1.2vw] overflow-hidden">
         <Image
           src={cardDetails.website_image || cardDetails.image}
           alt={cardDetails.name || 'product image'}
@@ -32,7 +32,7 @@ const CategoryCard = (props: Props) => {
       </div>
 
       {/* Category Name */}
-      <p className="text-[1.2vw] mob:text-[4vw] font-[SofiaPro] font-semibold mt-[0.5vw]">
+      <p className="text-[1.2vw] mob:text-[4vw] pt-2 font-[SofiaPro] font-semibold mt-[0.5vw]">
         {cardDetails.name}
       </p>
     </Link>

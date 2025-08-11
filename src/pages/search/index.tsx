@@ -1,233 +1,782 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
+import { useDispatch, useSelector } from 'react-redux';
+import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
+import AddItemBtn from '@/components/shared/AddItemBtn/AddItemBtn';
+import sampleimg from '/public/assets/images/shop/sampleimg2.png';
+import originLogo from '/public/assets/images/originLogo.png';
+import userIcon from '/public/assets/images/userIcon.png';
+import cartIcon from '/public/assets/icons/cartIcon.png';
+import { setCartItems, setCartTabType } from '@/store/slice/CartSlice';
+import { setIsSidebarOpen, setLoginDetails, setTabType } from '@/store/slice/loginSlice';
+import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 
-interface SearchItem {
-  id: string;
-  name?: string;
-  title?: string;
-  description?: string;
-  category?: string;
-  price?: number;
-  image?: string;
+// Updated Product interface to match your API response
+interface Product {
+  id: number;
+  item_code: string;
+  name: string;
+  image: string;
+  multiple_images: string[];
+  multiple_uoms: {
+    conversion_text: string;
+    is_available: boolean;
+    is_default: boolean;
+    is_visible: boolean;
+    market_price: number;
+    maximum_quantity: number;
+    minimum_quantity: number;
+    price: number;
+    ripeness_types: any;
+    stepper_quantity: number;
+    unit: string;
+    uom_id: number;
+    variant_id: number;
+    formatted_price?: string;
+  }[];
+  bg_color: string;
+  is_available: boolean;
+  is_greyed: boolean;
+  is_orderable: boolean;
+  navigation: {
+    to: string;
+  };
+  tag_url: string | null;
 }
 
-interface ApiResponse {
-  items?: SearchItem[];
-  data?: SearchItem[];
+interface SearchResponse {
+  data: Product[];
+  totalCount?: number;
+  hasMore?: boolean;
 }
 
-const SearchPage: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [searchResults, setSearchResults] = useState<SearchItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+// UOM Popup Modal Component
+const UOMPopup: React.FC<{
+  product: Product;
+  isOpen: boolean;
+  onClose: () => void;
+  selectedUOM: any;
+  onSelectUOM: (uom: any) => void;
+}> = ({ product, isOpen, onClose, selectedUOM, onSelectUOM }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const availableUOMs = product.multiple_uoms?.filter((uom) => uom?.is_available) || [];
 
-  // Get initial query from URL params
-//   useEffect(() => {
-//     if (router.isReady) {
-//       const { query } = router.query;
-//       if (query) {
-//         setSearchQuery(query);
-//         handleSearch(query);
-//       }
-//     }
-//   }, [router.isReady]);
-
-  const handleSearch = async (query: string): Promise<void> => {
-    if (!query || query.trim() === '') {
-      setSearchResults([]);
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      // Using the second API endpoint with query parameter
-      const headers = new Headers({
-        'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
-        'accept-encoding': 'gzip, deflate, br, zstd',
-        'referer': 'http://localhost:3000/',
-        'origin': 'http://localhost:3000',
-        'content-type': 'application/json',
-        'accept': 'application/json',
-        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-        'store-id': '4',
-        'delivery-type': 'instant',
-        'mm-build-version': '1.0.0',
-        'authorization': `${localStorage.getItem("user_token")}`, 
-        'mm-device-type': 'web',
-        'host': 'api.webdev.madrasmandi.in'
-      });
-
-      // Add headers that might be restricted by browsers
-      headers.set('sec-fetch-dest', 'empty');
-      headers.set('sec-fetch-mode', 'cors');
-      headers.set('sec-fetch-site', 'cross-site');
-      headers.set('sec-ch-ua-mobile', '?0');
-      headers.set('sec-ch-ua', '"Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"');
-      headers.set('sec-ch-ua-platform', '"macOS"');
-      headers.set('priority', 'u=1, i');
-
-      const response = await fetch(`https://api.webdev.madrasmandi.in/api/v5/user/items?query=${encodeURIComponent(query)}`, {
-        method: 'GET',
-        headers: headers
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data: ApiResponse = await response.json();
-      const results = data.items || data.data || (Array.isArray(data) ? data : []);
-      setSearchResults(results);
-      
-      // Update URL without page reload
-      router.push(`/search?query=${encodeURIComponent(query)}`, undefined, { shallow: true });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-      setSearchResults([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    handleSearch(searchQuery);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setSearchQuery(e.target.value);
-  };
-
-  // Debounced search (optional - searches as user types)
+  // Close modal on outside click
   useEffect(() => {
-    const delayedSearch = setTimeout(() => {
-      if (searchQuery) {
-        handleSearch(searchQuery);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose();
       }
-    }, 300);
+    };
 
-    return () => clearTimeout(delayedSearch);
-  }, [searchQuery]);
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscapeKey);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscapeKey);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  const handleUOMSelect = (uom: any) => {
+    onSelectUOM(uom);
+    onClose();
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        {/* Search Header */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Search Items</h1>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div 
+        ref={modalRef}
+        className="bg-white rounded-2xl max-w-md w-full max-h-[80vh] overflow-hidden shadow-2xl"
+      >
+        {/* Header */}
+        <div className="relative p-6 pb-4 border-b border-gray-100">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
           
-          {/* Search Form */}
-          <form onSubmit={handleSearchSubmit} className="flex gap-2">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={handleInputChange}
-              placeholder="Search for items..."
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Searching...' : 'Search'}
-            </button>
-          </form>
+          <div className="flex items-start gap-4 pr-8">
+            <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-50 flex-shrink-0">
+              <Image
+                src={product.image || sampleimg}
+                alt={product.name}
+                width={64}
+                height={64}
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-[SofiaPro] font-semibold text-lg text-gray-900 leading-tight">
+                {product.name}
+              </h3>
+            </div>
+          </div>
         </div>
 
-        {/* Search Results */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          {/* Loading State */}
-          {loading && (
-            <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="mt-4 text-gray-600">Searching...</p>
-            </div>
-          )}
+        {/* UOM Options */}
+        <div className="p-6 space-y-3 max-h-96 overflow-y-auto">
+          {availableUOMs.map((uom, index) => {
+            const isSelected = selectedUOM?.variant_id === uom.variant_id;
+            const hasDiscount = uom.market_price > uom.price && uom.market_price > 0;
+            const discountPercent = hasDiscount ? Math.round(((uom.market_price - uom.price) / uom.market_price) * 100) : 0;
 
-          {/* Error State */}
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-4">
-              <p className="text-red-700">Error: {error}</p>
-            </div>
-          )}
-
-          {/* Results Header */}
-          {!loading && !error && searchQuery && (
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">
-                Search Results for "{searchQuery}"
-              </h2>
-              <p className="text-sm text-gray-600">
-                {searchResults.length} item{searchResults.length !== 1 ? 's' : ''} found
-              </p>
-            </div>
-          )}
-
-          {/* Results List */}
-          {!loading && !error && searchResults.length > 0 && (
-            <div className="space-y-4">
-              {searchResults.map((item, index) => (
-                <div
-                  key={item.id || index}
-                  className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-                >
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-medium text-gray-900">
-                        {item.name || item.title || 'Item'}
-                      </h3>
-                      {item.description && (
-                        <p className="text-gray-600 mt-1">{item.description}</p>
+            return (
+              <div
+                key={uom.variant_id}
+                className={`relative border-2 rounded-xl p-4 cursor-pointer transition-all ${
+                  isSelected 
+                    ? 'border-yellow bg-yellow-50' 
+                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                }`}
+                onClick={() => handleUOMSelect(uom)}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-[SofiaPro] font-semibold text-gray-900 text-lg">
+                        {uom.unit}
+                      </span>
+                      {isSelected && (
+                        <div className="w-5 h-5 bg-grey rounded-full flex items-center justify-center">
+                          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
                       )}
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {item.category && (
-                          <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                            {item.category}
-                          </span>
-                        )}
-                        {item.price && (
-                          <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                            ${item.price}
-                          </span>
-                        )}
-                      </div>
                     </div>
-                    {item.image && (
-                      <img
-                        src={item.image}
-                        alt={item.name || item.title || 'Item'}
-                        className="w-16 h-16 object-cover rounded-md ml-4"
-                      />
-                    )}
+                    
+                    <div className="flex items-center gap-2 mt-1">
+                      {hasDiscount ? (
+                        <>
+                          <span className="text-gray-400 line-through text-sm font-[SofiaPro]">
+                            ₹{uom.market_price}
+                          </span>
+                          <span className="text-black font-[SofiaPro] font-bold text-lg">
+                            ₹{uom.price}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-gray-900 font-[SofiaPro] font-bold text-lg">
+                          ₹{uom.price}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="ml-4 min-w-[100px]">
+                    <AddItemBtn
+                      product={product}
+                      varientId={uom.variant_id}
+                      varientPrice={uom.price}
+                      stepperQuantity={uom.stepper_quantity}
+                      buttonType="black"
+                    />
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-
-          {/* No Results */}
-          {!loading && !error && searchQuery && searchResults.length === 0 && (
-            <div className="text-center py-8">
-              <p className="text-gray-600">No items found for "{searchQuery}"</p>
-              <p className="text-sm text-gray-500 mt-2">Try different keywords or check your spelling</p>
-            </div>
-          )}
-
-          {/* Empty State */}
-          {!loading && !error && !searchQuery && (
-            <div className="text-center py-8">
-              <p className="text-gray-600">Enter a search term to find items</p>
-            </div>
-          )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
   );
 };
 
-export default SearchPage;
+// ProductCard component adapted for your data structure with UOM popup
+const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
+  const router = useRouter(); 
+  const isMobile = useMediaQuery(600);
+  
+  const defaultUOM = product.multiple_uoms.find((uom) => uom.is_default) || product.multiple_uoms[0];
+  const [selectedUOM, setSelectedUOM] = useState(defaultUOM);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  
+  if (!defaultUOM) return null;
+
+  const hasMultipleUOMs = product.multiple_uoms?.length > 1;
+  const availableUOMs = product.multiple_uoms?.filter((uom) => uom?.is_available) || [];
+
+  const handleUOMChange = (uom: any) => {
+    setSelectedUOM(uom);
+  };
+
+  const handleCardClick = () => {
+    if (selectedUOM.is_available) {
+      router.push(`/${product.name.replace(/ /g, '-').toLowerCase()}/${product.id}`);
+    }
+  };
+
+  const handleUOMButtonClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsPopupOpen(true);
+  };
+
+  return (
+    <>
+      <div className="bg-white rounded-[1.5rem] shadow-[0_8px_24px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.06)] overflow-visible flex flex-col h-full hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)] transition-all duration-300 relative">
+        <button
+          disabled={!selectedUOM.is_available}
+          onClick={handleCardClick}
+          className={`text-left w-full flex flex-col h-full ${!selectedUOM.is_available ? 'opacity-50' : ''}`}
+        >
+          {/* Image Section */}
+          <div className="w-full flex-shrink-0 relative overflow-hidden rounded-t-[1.5rem]">
+            <div className="overflow-hidden bg-white flex justify-center items-center relative h-[110px] md:h-[170px]">
+              <div className="relative w-[85%] h-[85%]">
+                <Image
+                  src={product.image || sampleimg}
+                  alt={product.name || 'product image'}
+                  fill
+                  sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 25vw"
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
+              
+              {!selectedUOM.is_available && (
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                  <span className="text-white font-[SofiaPro] text-sm font-semibold">
+                    Out of Stock
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Content Section with Gradient Background */}
+          <div
+            className="w-full flex-grow flex flex-col justify-between p-[1.2rem] rounded-b-[1.5rem]"
+            style={{
+              background: 'linear-gradient(180deg, #fef3c7 0%, #fde047 50%, #facc15 100%)',
+              minHeight: '90px',
+              WebkitTransform: 'translateZ(0)',
+              transform: 'translateZ(0)',
+            }}
+          >
+            {/* Top section - Name */}
+            <div className="flex-shrink-0">
+              <p className="font-[SofiaPro] font-semibold text-[0.85rem] leading-[1.2] line-clamp-2 text-black">
+                {product.name}
+              </p>
+            </div>
+
+            {/* Bottom section - Price, Unit, and Button */}
+            <div className="flex-shrink-0">
+              <div className="flex justify-between items-center mb-[0.4rem]">
+                <div className="flex items-center gap-[0.3rem]">
+                  {selectedUOM.market_price > selectedUOM.price && selectedUOM.market_price > 0 ? (
+                    <>
+                      <p className="text-gray-400 line-through text-[0.7rem]">
+                        ₹{selectedUOM.market_price}
+                      </p>
+                      <p className="text-black font-semibold text-[0.7rem]">
+                        ₹{selectedUOM.price}
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-black font-semibold text-[0.7rem]">
+                      ₹{selectedUOM.price}
+                    </p>
+                  )}
+                </div>
+                
+                {/* UOM Display with Popup Trigger */}
+                <div className="relative">
+                  {hasMultipleUOMs && availableUOMs.length > 1 ? (
+                    <button
+                      type="button"
+                      onClick={handleUOMButtonClick}
+                      className="flex items-center gap-[0.2rem] text-[#737373] text-[0.7rem] hover:text-black transition-colors border border-gray-300 rounded-full px-2 py-1 hover:border-gray-400 bg-white/80"
+                    >
+                      <span>{selectedUOM.unit}</span>
+                      <svg
+                        className="w-3 h-3"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                  ) : (
+                    <p className="text-right text-[#737373] text-[0.7rem]">{selectedUOM.unit}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="rounded-[1.5rem] overflow-hidden">
+                <AddItemBtn
+                  product={product}
+                  varientId={selectedUOM.variant_id}
+                  varientPrice={selectedUOM.price}
+                  stepperQuantity={selectedUOM.stepper_quantity}
+                  buttonType="black"
+                />
+              </div>
+            </div>
+          </div>
+        </button>
+      </div>
+
+      {/* UOM Popup Modal */}
+      {hasMultipleUOMs && availableUOMs.length > 1 && (
+        <UOMPopup
+          product={product}
+          isOpen={isPopupOpen}
+          onClose={() => setIsPopupOpen(false)}
+          selectedUOM={selectedUOM}
+          onSelectUOM={handleUOMChange}
+        />
+      )}
+    </>
+  );
+};
+
+// LoadingCard component
+const LoadingCard: React.FC = () => (
+  <div className="bg-white rounded-[1.5rem] shadow-[0_8px_24px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden animate-pulse flex flex-col h-full">
+    <div className="w-full h-[110px] md:h-[170px] bg-gray-200"></div>
+    <div className="p-[1.2rem] bg-gradient-to-b from-yellow-100 to-yellow-300 flex-grow flex flex-col justify-between">
+      <div className="h-4 bg-gray-200 rounded mb-2"></div>
+      <div>
+        <div className="flex justify-between items-center mb-2">
+          <div className="h-3 bg-gray-200 rounded w-1/3"></div>
+          <div className="h-3 bg-gray-200 rounded w-1/4"></div>
+        </div>
+        <div className="h-10 bg-gray-300 rounded-full"></div>
+      </div>
+    </div>
+  </div>
+);
+
+// Main SearchResults component
+const SearchResults: React.FC = () => {
+  const router = useRouter();
+  const { q: searchQuery } = router.query;
+  const isMobile = useMediaQuery(600);
+  
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [currentSearchQuery, setCurrentSearchQuery] = useState('');
+  const [noResults, setNoResults] = useState(false);
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const dispatch = useDispatch();
+  const loginDetails = useSelector((state: any) => state.loginDetails);
+  const cart = useSelector((state: any) => state.cart);
+
+  // Cart functionality from header
+  const handleProfileMenuOpen = () => {
+    dispatch(
+      setLoginDetails({
+        ...loginDetails,
+        isSidebarOpen: true,
+        tabType: TabTypeConstant.ENTER_MOBILE_NUMBER
+      })
+    );
+  };
+
+  const openAccount = () => {
+    dispatch(setTabType(TabTypeConstant.ACCOUNT_MAIN));
+    dispatch(setIsSidebarOpen(true));
+  };
+
+  const handleCartOpen = () => {
+    dispatch(
+      setLoginDetails({
+        ...loginDetails,
+        isSidebarOpen: true,
+        tabType: TabTypeConstant.CART
+      })
+    );
+
+    if (cart?.items?.length === 0) {
+      const cartItemFromLs = localStorage.getItem('cart_items');
+      const cartItemsParsed = cartItemFromLs ? JSON.parse(cartItemFromLs) : [];
+      if (cartItemsParsed.length > 0) {
+        dispatch(setCartItems(cartItemsParsed));
+        dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
+      } else {
+        dispatch(setCartTabType(TabTypeConstant.EMPTY_CART));
+      }
+    } else {
+      dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
+    }
+  };
+
+  // API call function
+  const searchProducts = async (query: string, pageNum: number = 1): Promise<SearchResponse> => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v5/public/skip-login/items?query=${query}`);
+      const data = await response.json();
+      
+      // Transform the response to match our interface
+      return {
+        data: data.data || [],
+        totalCount: data.data?.length || 0,
+        hasMore: data.hasMore || false
+      };
+    } catch (error) {
+      console.error('Search API error:', error);
+      return {
+        data: [],
+        totalCount: 0,
+        hasMore: false
+      };
+    }
+  };
+
+  // Debounced search function
+  const debouncedSearch = (query: string) => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    debounceTimeoutRef.current = setTimeout(() => {
+      if (query.trim().length >= 2) {
+        handleNewSearch(query);
+        router.push(`/search?q=${encodeURIComponent(query)}`, undefined, { shallow: true });
+      }
+    }, 500);
+  };
+
+  // Initial search when component mounts or query changes
+  useEffect(() => {
+    if (searchQuery && typeof searchQuery === 'string') {
+      setCurrentSearchQuery(searchQuery);
+      handleNewSearch(searchQuery);
+    }
+  }, [searchQuery]);
+
+  // Cleanup debounce timeout
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Handle new search
+  const handleNewSearch = async (query: string) => {
+    if (!query.trim()) return;
+    
+    setLoading(true);
+    setProducts([]);
+    setPage(1);
+    setNoResults(false);
+    
+    try {
+      const response = await searchProducts(query, 1);
+      setProducts(response.data);
+      setTotalCount(response.data.length);
+      setHasMore(response.hasMore || false);
+      setNoResults(response.data.length === 0);
+    } catch (error) {
+      console.error('Search failed:', error);
+      setNoResults(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle load more
+  const handleLoadMore = async () => {
+    if (loading || !hasMore) return;
+    
+    setLoading(true);
+    const nextPage = page + 1;
+    
+    try {
+      const response = await searchProducts(currentSearchQuery, nextPage);
+      setProducts(prev => [...prev, ...response.data]);
+      setHasMore(response.hasMore || false);
+      setPage(nextPage);
+    } catch (error) {
+      console.error('Load more failed:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle search input change with debouncing
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setCurrentSearchQuery(value);
+    
+    if (value.trim().length >= 2) {
+      debouncedSearch(value);
+    } else if (value.trim().length === 0) {
+      setProducts([]);
+      setNoResults(false);
+    }
+  };
+
+  // Handle search form submit
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (currentSearchQuery.trim().length >= 2) {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+      handleNewSearch(currentSearchQuery);
+      router.push(`/search?q=${encodeURIComponent(currentSearchQuery)}`);
+    }
+  };
+
+  const handleSearchFocus = () => {
+    setIsSearchActive(true);
+  };
+
+  const handleSearchBlur = () => {
+    setTimeout(() => {
+      if (currentSearchQuery.trim() === '') {
+        setIsSearchActive(false);
+      }
+    }, 150);
+  };
+
+  const canSearch = currentSearchQuery.trim().length >= 2;
+
+  return (
+    <div className="min-h-screen bg-[#FFF9E5]">
+      {/* Header matching the provided design */}
+      <div className="bg-[#FFF9E5] border-gray-200 w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            
+            {/* Left Section - Logo */}
+            <div className="flex items-center">
+              <button 
+                onClick={() => router.push('/shop')}
+                className="flex items-center hover:opacity-80 transition-opacity"
+                aria-label="Go to shop"
+              >
+                <div className={`relative ${isMobile ? 'w-20 h-8' : 'w-24 h-10'}`}>
+                  <Image src={originLogo} alt="Origin" fill className="object-contain" />
+                </div>
+              </button>
+            </div>
+
+            {/* Center Section - Search Bar */}
+            <div className="flex-1 max-w-2xl mx-2">
+              <form onSubmit={handleSearchSubmit} className="relative">
+                <div className="relative">
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    value={currentSearchQuery}
+                    onChange={handleSearchInputChange}
+                    onFocus={handleSearchFocus}
+                    onBlur={handleSearchBlur}
+                    className="w-full h-10 pl-4 pr-12 bg-white border border-gray-300 rounded-full 
+                            focus:outline-none focus:ring-0 focus:border-gray-300 
+                            text-sm font-medium font-[SofiaPro] placeholder:text-gray-500 
+                            transition-all duration-200"
+                    placeholder="Search here"
+                    autoFocus
+                  />
+
+                  {/* Character Count Indicator */}
+                  {currentSearchQuery && currentSearchQuery.length < 2 && (
+                    <div className="absolute right-12 top-1/2 transform -translate-y-1/2 
+                                  text-xs text-gray-400 font-[SofiaPro]">
+                      {2 - currentSearchQuery.length} more
+                    </div>
+                  )}
+
+                  {/* Search Icon Button */}
+                  <button
+                    type="submit"
+                    disabled={!canSearch}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 
+                            rounded-full bg-transparent text-gray-400 cursor-pointer"
+                    aria-label="Search"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            {/* Right Section - User Actions */}
+            <div className="flex items-center gap-2">
+              {/* Login/Account Button */}
+              {/* {loginDetails.isLogin ? (
+                <button
+                  onClick={openAccount}
+                  className="p-2 hover:bg-white hover:bg-opacity-50 rounded-full transition-colors duration-200"
+                  aria-label="My account"
+                >
+                  <div className="w-6 h-6 relative">
+                    <Image src={userIcon} alt="Account" fill className="object-contain" />
+                  </div>
+                </button>
+              ) : (
+                <button
+                  onClick={handleProfileMenuOpen}
+                  className="px-4 py-2 border border-gray-400 rounded-full text-sm font-medium font-[SofiaPro]
+                           hover:bg-white hover:bg-opacity-50 transition-colors duration-200 text-gray-700"
+                >
+                  Login
+                </button>
+              )} */}
+
+              {/* Desktop Cart */}
+              <button
+                onClick={handleCartOpen}
+                className="relative p-2 hover:bg-white hover:bg-opacity-50 rounded-full transition-colors duration-200"
+                aria-label={`Shopping cart ${cart?.items?.length > 0 ? `(${cart.items.length} items)` : ''}`}
+              >
+                {cart?.items?.length > 0 && (
+                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white 
+                                text-xs font-medium rounded-full flex items-center justify-center">
+                    {cart.items.length > 99 ? '99+' : cart.items.length}
+                  </div>
+                )}
+                <div className="w-6 h-6 relative">
+                  <Image src={cartIcon} alt="Cart" fill className="object-contain" />
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Floating Cart */}
+      {isMobile && (
+        <button
+          onClick={handleCartOpen}
+          className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-white shadow-xl 
+                   rounded-full flex items-center justify-center border border-gray-200
+                   hover:shadow-2xl transition-shadow duration-200"
+          aria-label={`Shopping cart ${cart?.items?.length > 0 ? `(${cart.items.length} items)` : ''}`}
+        >
+          {cart?.items?.length > 0 && (
+            <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white 
+                          text-xs font-bold rounded-full flex items-center justify-center">
+              {cart.items.length > 99 ? '99+' : cart.items.length}
+            </div>
+          )}
+          <div className="w-6 h-6 relative">
+            <Image src={cartIcon} alt="Cart" fill className="object-contain" />
+          </div>
+        </button>
+      )}
+
+      {/* Search Results */}
+      <div className="max-w-[90vw] mx-auto px-[2vw] mob:px-[5vw] py-[3vw] mob:py-[6vw]">
+        {/* Results Header */}
+        {!loading && !noResults && totalCount > 0 && (
+          <div className="mb-[3vw] mob:mb-[6vw]">
+            <h2 className="font-[SofiaPro] font-semibold text-[1.5vw] mob:text-[5vw] text-black mb-[0.5vw] mob:mb-[2vw]">
+              Search Results
+            </h2>
+            <p className="font-[SofiaPro] text-[1vw] mob:text-[3.5vw] text-gray-600">
+              Found {totalCount} products for "{searchQuery}"
+            </p>
+          </div>
+        )}
+
+        {/* Loading State */}
+        {loading && products.length === 0 && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[2vw] mob:gap-[4vw]">
+            {Array.from({ length: 10 }).map((_, index) => (
+              <LoadingCard key={index} />
+            ))}
+          </div>
+        )}
+
+        {/* No Results */}
+        {noResults && !loading && (
+          <div className="text-center py-[8vw] mob:py-[20vw]">
+            <div className="text-[4vw] mob:text-[12vw] mb-[2vw] mob:mb-[4vw]">🔍</div>
+            <h3 className="font-[SofiaPro] font-semibold text-[1.5vw] mob:text-[5vw] text-black mb-[1vw] mob:mb-[3vw]">
+              No products found
+            </h3>
+            <p className="font-[SofiaPro] text-[1vw] mob:text-[3.5vw] text-gray-600 mb-[3vw] mob:mb-[6vw]">
+              Try searching with different keywords or browse our categories
+            </p>
+            {/* <button
+              onClick={() => router.push('/shop')}
+              className="bg-yellow-400 hover:bg-yellow-500 text-black font-[SofiaPro] font-semibold px-[3vw] mob:px-[8vw] py-[1vw] mob:py-[3vw] rounded-full text-[1vw] mob:text-[3.5vw] transition-colors"
+            >
+              Browse All Products
+            </button> */}
+          </div>
+        )}
+
+        {/* Products Grid */}
+        {products.length > 0 && (
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[5vw] mob:gap-[4vw]">
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+
+            {/* Load More Button */}
+            {hasMore && (
+              <div className="text-center mt-[4vw] mob:mt-[8vw]">
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loading}
+                  className="bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed text-black font-[SofiaPro] font-semibold px-[4vw] mob:px-[10vw] py-[1.2vw] mob:py-[3.5vw] rounded-full text-[1vw] mob:text-[3.5vw] transition-colors"
+                >
+                  {loading ? 'Loading...' : 'Load More Products'}
+                </button>
+              </div>
+            )}
+
+            {/* Loading More Cards */}
+            {loading && products.length > 0 && (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[2vw] mob:gap-[4vw] mt-[2vw] mob:mt-[4vw]">
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <LoadingCard key={`loading-${index}`} />
+                ))}
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default SearchResults;

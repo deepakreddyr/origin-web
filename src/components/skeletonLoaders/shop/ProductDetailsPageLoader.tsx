@@ -14,7 +14,7 @@ const ProductDetailsPageLoader = () => {
           </div>
         </div>
         <div className="w-[47.2vw] mob:w-full flex flex-col gap-[1.67vw] mob:gap-[5.1vw]">
-          <Skeleton variant="rectangular" className="w-full h-[4vw] mob:h-[12vw] rounded-[.6vw] rounded-[2v]" />
+          <Skeleton variant="rectangular" className="w-full h-[4vw] mob:h-[12vw] rounded-[2v]" />
           <Skeleton variant="rectangular" className="w-full h-[3vw] mob:h-[12vw] rounded-[.6vw]" />
           <Skeleton variant="rectangular" className="w-full h-[30vw] mob:h-[12vw] rounded-[.6vw]" />
 

@@ -21,11 +21,45 @@ type Props = {
   isHeaderSticky: any;
 };
 
+// Animated Placeholder Component
+const AnimatedPlaceholder = () => {
+  const fruits = ['enoki', 'apple', 'mango', 'orange', 'grapes', 'cherry', 'onion'];
+  const [currentFruitIndex, setCurrentFruitIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsVisible(false);
+      
+      setTimeout(() => {
+        setCurrentFruitIndex((prevIndex) => 
+          prevIndex === fruits.length - 1 ? 0 : prevIndex + 1
+        );
+        setIsVisible(true);
+      }, 300); // Half of the fade duration
+      
+    }, 2500); // Change every 2.5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <span 
+      className={`transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+    >
+      Search for '{fruits[currentFruitIndex]}'
+    </span>
+  );
+};
+
 const Header = ({ mainMenuItems, isHeaderSticky }: Props) => {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [topBarTransition, setTopBarTransition] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchActive, setIsSearchActive] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useDispatch();
   const loginDetails = useSelector((state: any) => state.loginDetails);
@@ -33,6 +67,10 @@ const Header = ({ mainMenuItems, isHeaderSticky }: Props) => {
 
   const router = useRouter();
   const isMobile = useMediaQuery(600);
+
+  const handleSearchFieldClick = () => {
+    router.push("/search");
+  }
 
   const handleProfileMenuOpen = () => {
     dispatch(
@@ -72,6 +110,34 @@ const Header = ({ mainMenuItems, isHeaderSticky }: Props) => {
     }
   };
 
+  const handleSearchClick = () => {
+    setIsSearchActive(true);
+    router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+  };
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      handleSearchClick();
+    }
+  };
+
+  const handleSearchFocus = () => {
+    setIsSearchActive(true);
+  };
+
+  const handleSearchBlur = () => {
+    setTimeout(() => {
+      if (searchQuery.trim() === '') {
+        setIsSearchActive(false);
+      }
+    }, 150);
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       const position = window.scrollY;
@@ -94,12 +160,12 @@ const Header = ({ mainMenuItems, isHeaderSticky }: Props) => {
   }, [isMobile]);
 
   return (
-    <div ref={menuRef} className={`z-[10] ${isHeaderSticky ? 'fixed top-[0]' : 'absolute'} flex items-center flex-col w-full`}>
+    <div ref={menuRef} className={`z-[10] ${isHeaderSticky ? 'fixed top-[1.1vw]' : 'absolute'} flex items-center flex-col w-full z-50`}>
       <OffersRibbon />
 
       {/* Header bar */}
       <div
-        className={`bg-white shadow-[4px_4px_32px_0px_rgba(0,0,0,0.08)] w-[80vw] mob:w-full mob:py-[4.1vw] mob:px-[5vw] px-[1.6vw] py-[1vw] ${
+        className={`bg-white shadow-[4px_4px_32px_0px_rgba(0,0,0,0.08)] z-50 w-[80vw] mob:w-full mob:py-[4.1vw] mob:px-[5vw] px-[1vw] py-[1vw] ${
           topBarTransition ? 'mt-[-1vw]' : 'mt-[1.1vw] mob:mt-0'
         } transition-all rounded-full mob:rounded-none flex items-center justify-between`}
       >
@@ -108,16 +174,16 @@ const Header = ({ mainMenuItems, isHeaderSticky }: Props) => {
             <Image src={hamberger} alt="hamberger" />
           </button>
 
-          <button
+          <button 
             onClick={() => router.push('/shop')}
-            className="w-[7vw] mob:w-[16vw] mob:h-[8vw] h-[4vw] mr-[4vw] top-[.2vw] relative"
+            className="w-[7vw] ml-[1vw] mob:w-[16vw] mob:h-[8vw] h-[4vw] mr-[4vw] top-[.2vw] relative"
           >
             <Image src={originLogo} alt="logo" />
           </button>
         </div>
 
         <div className="flex items-center gap-[1.1vw]">
-          <div className="flex items-center gap-[2vw] pr-[5vw] mob:hidden">
+          <div className="flex items-center gap-[2vw] pr-[0] mob:hidden">
             <Link
               href="/shop"
               className="h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full bg-primary text-black text-[1.1vw] font-medium font-[SofiaPro]"
@@ -127,6 +193,53 @@ const Header = ({ mainMenuItems, isHeaderSticky }: Props) => {
             <Link href="/about" className="text-black text-[1.1vw] font-medium font-[SofiaPro]">
               About us
             </Link>
+          </div>
+
+          {/* Enhanced Search Bar */}
+          <div className="flex-1 max-w-[28vw] mob:max-w-[45vw]">
+            <form onSubmit={handleSearchSubmit} className="relative">
+              
+              <div className="relative">
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={handleSearchInputChange}
+                  onClick={handleSearchFieldClick}
+                  className="w-full h-[2.4vw] mob:h-max px-[1.17vw] mob:px-[5.1vw] mob:py-[1.5vw] 
+                            rounded-full border border-gray-300 bg-transparent 
+                            placeholder:text-gray-400 
+                            text-[1.1vw] mob:text-[4.1vw] font-[SofiaPro] cursor-pointer 
+                            focus:outline-none focus:ring-0 transition-all duration-200"
+                />            
+
+                {!searchQuery && (
+                  <div className="absolute left-[1vw] mob:left-[3vw] top-1/2 transform -translate-y-1/2 pointer-events-none text-[1vw] mob:text-[3.5vw] font-[SofiaPro] text-gray-500">
+                    <AnimatedPlaceholder />
+                  </div>
+                )}
+
+                {/* Search Icon */}
+                <button
+                  type="submit"
+                  className="absolute right-[0.6vw] mob:right-[2vw] top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-gray-100 rounded-full w-[1.6vw] h-[1.6vw] mob:w-[6vw] mob:h-[6vw] flex items-center justify-center transition-colors duration-200"
+                >
+                  <svg
+                    className="w-[0.9vw] h-[0.9vw] mob:w-[3.5vw] mob:h-[3.5vw] text-gray-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </form>
           </div>
 
           {loginDetails.isLogin ? (
@@ -143,7 +256,7 @@ const Header = ({ mainMenuItems, isHeaderSticky }: Props) => {
               Login
             </button>
           )}
-
+          
           {!isMobile && (
             <>
               <div className="h-[1.67vw] mob:h-[7vw] w-[.1vw] mob:w-[.3vw] mob:mx-[2vw] bg-black-op-30"></div>
@@ -209,96 +322,3 @@ const Header = ({ mainMenuItems, isHeaderSticky }: Props) => {
 };
 
 export default Header;
-
-
-
-// <div
-//   className={`bg-white rounded-full flex px-[2.5vw] py-[1vw] w-[80vw] shadow-[4px_4px_32px_0px_rgba(0,0,0,0.08)] `}
-// >
-//   <IconButton className=" mob:block hidden p-0" onClick={handleMobileMenuOpen}>
-//     <OriginMenuIcon className="w-[21px] h-[18px]" />
-//   </IconButton>
-//   <Link href="/" className="w-[7vw] relative mob:w-[15vw] mob:h-[8vw]  h-[3.75vw]">
-//     {/* <Logo /> */}
-//     <Image src={originLogo} alt="origin logo" />
-//   </Link>
-//   <div className="flex flex-grow justify-start items-center order-3 md:order-[unset] mx-0 md:ms-[30px] md:me-4 md:basis-auto basis-full">
-//     <SearchBar />
-//   </div>
-//   <div className="flex items-center">
-//     {!isMobile && (
-//       <MenuItems items={mainMenuItems} handleSubmenuToggle={handleSubmenuToggle} openSubmenu={openSubmenu} />
-//     )}
-//     <Box className={classNames('flex items-center flex-row-reverse gap-2 lg:flex-row lg:gap-0')}>
-//       {loginDetails.user && profile?.data?.profile ? (
-//         <IconButton onClick={openAccount}>
-//           {/* <div className="md:w-[1.389vw]  md:h-[1.389vw] sm:w-[3.6vw] sm:h-[3.6vw] xs:w-[5.1vw] xs:h-[5.1vw]  relative"> */}
-//           <div className=" w-[1.25vw] h-[1.25vw] mob:w-[4.67vw] mob:h-[4.67vw]  relative">
-//             <Image src={userIcon} alt="account icon" />
-//           </div>
-//         </IconButton>
-//       ) : (
-//         <button className={'border border-black rounded-full px-[1.1vw] text-[.83vw] font-[SofiaPro] text-semibold '}>
-//           Login
-//         </button>
-//         // <OriginButton
-//         //   variant="outlined"
-//         //   handleClick={handleProfileMenuOpen}
-//         //   classes={{
-//         //     iconButton: 'md:px-3 px-5 py-1'
-//         //   }}
-//         // >
-//         //   <Typography variant="body1">Login</Typography>
-//         // </OriginButton>
-//       )}
-//       <Box className="lg:block px-1 md:px-4 text-black text-opacity-40" component="span">
-//         {'|'}
-//       </Box>
-//       <button
-//         // onClick={() => setIsCartOpen(true)}
-//         onClick={() => {
-//           dispatch(
-//             setLoginDetails({
-//               ...loginDetails,
-//               isSidebarOpen: true,
-//               tabType: TabTypeConstant.CART
-//             })
-//           );
-//           dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
-//         }}
-//         className="relative"
-//       >
-//         {cart?.items?.length > 0 && (
-//           <div className="absolute top-[-.6vw] left-[.7vw] w-[1.25vw] h-[1.25vw] text-[.78vw] rounded-full bg-secondary-300 z-[1] text-white font-[sofiaPro] flex items-center justify-center">
-//             {cart?.items?.length}
-//           </div>
-//         )}
-//         <div className="relative  w-[1.25vw] h-[1.25vw] z-0 ">
-//           <Image src={cartIcon} alt="cart-icon" />
-//         </div>
-//       </button>
-//       {/* <OriginButton
-//                           variant="iconOnly"
-//                           aria-label="show 4 new items in cart"
-//                           classes={{ iconButton: 'p-2 text-white' }}
-//                       >
-//                           <Box className="sr-only">Cart</Box>
-//                           <Badge
-//                               badgeContent={cart?.items?.length}
-//                               classes={{ badge: 'bg-secondary-300' }}
-//                               sx={{
-//                                   '.MuiBadge-badge': {
-//                                       fontFamily: 'SofiaPro, sans-serif',
-//                                       lineHeight: '21px',
-//                                   },
-//                               }}
-//                           >
-//                               <Box component="span" className="sr-only">
-//                                   {4} items in cart
-//                               </Box>
-//                               <OriginCartIcon className="w-5 h-[17px]" />
-//                           </Badge>
-//                       </OriginButton> */}
-//     </Box>
-//   </div>
-// </div>;

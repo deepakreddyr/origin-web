@@ -29,6 +29,8 @@ const OffersRibbon = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(600);
 
+
+
   useEffect(() => {
     let addressFromLs = getAddressAndStoreId();
     setAddressFromLs({ ...addressFromLs });
@@ -81,12 +83,10 @@ const OffersRibbon = () => {
   };
 
   return (
+       <div>
+        {isLoggedIn && (
     <div
-      className={`flex px-[10.15vw] mob:px-0 items-center justify-between w-full mob:w-screen transition-all ease-in-out duration-200 ${
-        topBarTransition
-          ? 'bg-transparent opacity-0 -translate-y-5'
-          : 'bg-secondary-300 opacity-1 translate-y-0'
-      }`}
+      className={`flex px-[10.15vw] mob:px-0 items-center justify-between w-full mob:w-screen transition-all ease-in-out duration-200`}
     >
       {/* Marquee or Offer Message */}
       <div className="h-[2vw] mob:h-[10vw] flex items-center mob:w-[50%] text-black">
@@ -109,7 +109,7 @@ const OffersRibbon = () => {
       </div>
 
       {/* Address Button */}
-      {isLoggedIn && (
+      
         <div>
           <button
             onClick={handleSelectAddress}
@@ -134,7 +134,9 @@ const OffersRibbon = () => {
             </div>
           </button>
         </div>
-      )}
+      
+    </div>
+    )}
     </div>
   );
 };

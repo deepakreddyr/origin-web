@@ -3,6 +3,7 @@ import Layout from '@/components/Layout';
 import { FooterDataType, MainMenuType } from '@/utilities/types';
 import CategorySection from '@/components/ShopV2/CategorySection';
 import PopularProduce from '@/components/ShopV2/PopularProduce';
+import FeatureProduct from '@/components/ShopV2/FeaturedProduct';
 import VideoBanner from '@/components/ShopV2/VideoBanner'; 
 import { useEffect, useState } from 'react';
 import { protectedUrl, unprotectedUrl } from '@/url';
@@ -141,7 +142,7 @@ const ShopPage = (props: HomeProps) => {
   );
 
   const LoadedUI = () => (
-    <div className="flex flex-col items-center pb-[20vw] mob:pb-[45vw] overflow-hidden">
+    <div className="flex flex-col items-center pb-[2vw] mob:pb-[10vw] overflow-hidden">
       <div className="w-full relative overflow-hidden m-0 p-0">
         <VideoBanner
           mobileVideoSrc="https://cdn.originfresh.in/website/Origin_9_16_v1.mp4"
@@ -154,25 +155,29 @@ const ShopPage = (props: HomeProps) => {
         <FeatureStrip />
       </div>
 
-      <div className="flex flex-col gap-[6vw] pl-[10.6vw] mob:pl-[0vw] w-full mt-[4vw] mob:mt-[8vw]">
+      <div className="flex flex-col gap-[6vw] mob:pl-[0vw] w-full mt-[4vw] mob:mt-[8vw]">
         <CategorySection />
       </div>
 
       {subCategories?.[0] && (
-        <div className="pt-[5vw]">
+        <div className="px-[2vw] bg-[#FFF9E5]">
           <PopularProduce categoryDetail={subCategories[0]} />
+        </div>
+      )}
+
+      {/* <div className="">
+        <FeatureProduct featuredItem={subCategories[1].data}/>
+      </div> */}
+
+      {subCategories?.[1] && (
+        <div className="px-[2vw] bg-[#FFF9E5]">
+          <PopularProduce categoryDetail={subCategories[2]} />
         </div>
       )}
 
       <div className="">
         <WhyOriginBanner />
       </div>
-
-      {subCategories?.[1] && (
-        <div className="">
-          <PopularProduce categoryDetail={subCategories[1]} />
-        </div>
-      )}
 
       {downloadAppReady && showDownloadApp && (
         <DownloadAppWrapper onClose={handleCloseDownloadApp} />

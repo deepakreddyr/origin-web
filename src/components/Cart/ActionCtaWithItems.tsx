@@ -35,7 +35,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
   const shouldDisable = cartItemsFromLS.some((item: any) =>
     item.multiple_uoms?.some(
       (uom: any) =>
-        uom.is_available === false || uom.cart_quantity >= uom.maximum_quantity
+        uom.is_available === false || uom.cart_quantity > uom.maximum_quantity
     )
   );
 

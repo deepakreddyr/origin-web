@@ -13,7 +13,7 @@ const WhyOriginBanner = () => {
         position: 'relative',
         borderRadius: '12px',
         overflow: 'hidden',
-        width: '90.6vw',
+        width: '85vw',
         margin: '4rem auto',
       }}
     >

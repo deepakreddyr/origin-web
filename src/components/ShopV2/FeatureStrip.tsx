@@ -12,21 +12,37 @@ const features = [
 
 const FeatureStrip = () => {
   return (
-    <div className="w-full bg-[white] border-t border-b border-gray-200 py-4 font-[SofiaPro]">
-      <div className="hidden md:flex justify-between flex-wrap gap-y-5 w-full px-4 sm:px-8 text-base md:text-lg font-bold text-[#1A1A1A] font-[SofiaPro]">
-        {features.map((item, idx) => (
-          <div key={idx} className="flex items-center gap-3 min-w-[200px]">
-            <Image src={item.icon} alt={item.label} width={28} height={28} className="w-[28px] h-[28px]" />
-            <span>{item.label}</span>
-          </div>
-        ))}
+    <div className="w-full bg-white border-t border-b border-gray-200 py-2 font-[SofiaPro]">
+      {/* Desktop */}
+      <div className="hidden md:flex justify-between w-full text-sm font-semibold text-[#1A1A1A] px-0">
+        <div className="flex justify-between w-full px-[4vw]">
+          {features.map((item, idx) => (
+            <div key={idx} className="flex items-center gap-2 min-w-[160px]">
+              <Image
+                src={item.icon}
+                alt={item.label}
+                width={22}
+                height={22}
+                className="w-[22px] h-[22px]"
+              />
+              <span className='text-2xl'>{item.label}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
+      {/* Mobile */}
       <div className="md:hidden overflow-x-auto scrollbar-hide font-[SofiaPro]">
-        <div className="flex gap-8 px-4 text-sm font-bold text-[#1A1A1A] whitespace-nowrap animate-scroll">
+        <div className="flex gap-6 px-4 text-sm font-semibold text-[#1A1A1A] whitespace-nowrap animate-scroll">
           {[...features, ...features].map((item, idx) => (
-            <div key={idx} className="flex items-center gap-3 flex-shrink-0 min-w-max">
-              <Image src={item.icon} alt={item.label} width={24} height={24} className="w-[24px] h-[24px]" />
+            <div key={idx} className="flex items-center gap-2 flex-shrink-0 min-w-max">
+              <Image
+                src={item.icon}
+                alt={item.label}
+                width={20}
+                height={20}
+                className="w-[20px] h-[20px]"
+              />
               <span>{item.label}</span>
             </div>
           ))}
@@ -48,8 +64,12 @@ const FeatureStrip = () => {
           animation-play-state: paused;
         }
         @keyframes scroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
         }
       `}</style>
     </div>

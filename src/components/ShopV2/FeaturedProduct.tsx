@@ -4,138 +4,232 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import AddItemBtn from '@/components/shared/AddItemBtn/AddItemBtn';
 
-const itemDetails = {
-  "id": 358,
-  "item_code": "OG00037",
-  "item_name": "Enoki Mushroom",
-  "name": "Enoki Mushroom",
-  "logo": "https://cdn.madrasmandi.in/item-images/6p7AMxWWVE0GiZD1DV5VafM4pSkNY5JwBKkOzkOt.webp",
-  "image": "https://cdn.madrasmandi.in/item-images/6p7AMxWWVE0GiZD1DV5VafM4pSkNY5JwBKkOzkOt.webp",
-  "website_image": "https://cdn.madrasmandi.in//item-images/RPQa8EClcNvO4xJcOWGpqrkU08Riac9A9JcYH9Km.webp",
-  "availability": true,
-  "extra_descriptions": [],
-  "tag_url": null,
-  "tag_text": null,
-  "is_collaborate_item": false,
-  "title": "",
-  "description": "",
-  "provider_id": null,
-  "multiple_uoms": [
-    {
-      "variant_id": 1445,
-      "name": null,
-      "uom_id": 9,
-      "unit": "100g",
-      "minimum_quantity": 99,
-      "maximum_quantity": 99,
-      "stepper_quantity": 1,
-      "is_visible": true,
-      "is_available": true,
-      "is_default": true,
-      "price": 195,
-      "platform_id": 4,
-      "formatted_price": "₹195",
-      "cart_quantity": 0,
-      "conversion_text": "",
-      "is_not_discounted": false,
-      "ripeness_types": null,
-      "cart_ripeness": null,
-      "market_price": 273
-    }
-  ],
-  "uom": [
-    {
-      "variant_id": 1445,
-      "name": null,
-      "uom_id": 9,
-      "unit": "100g",
-      "minimum_quantity": 99,
-      "maximum_quantity": 99,
-      "stepper_quantity": 1,
-      "is_visible": true,
-      "is_available": true,
-      "is_default": true,
-      "price": 195,
-      "platform_id": 4,
-      "formatted_price": "₹195",
-      "cart_quantity": 0,
-      "conversion_text": "",
-      "is_not_discounted": false,
-      "ripeness_types": null,
-      "cart_ripeness": null,
-      "market_price": 273
-    }
-  ]
-};
+interface UomType {
+  variant_id: number;
+  name: string | null;
+  uom_id: number;
+  unit: string;
+  minimum_quantity: number;
+  maximum_quantity: number;
+  stepper_quantity: number;
+  is_visible: boolean;
+  is_available: boolean;
+  is_default: boolean;
+  price: number;
+  platform_id: number;
+  formatted_price: string;
+  cart_quantity: number;
+  conversion_text: string;
+  is_not_discounted: boolean;
+  ripeness_types: any;
+  cart_ripeness: any;
+  market_price: number;
+}
 
+interface FeaturedItemType {
+  item: {
+    id: number;
+    item_code: string;
+    name: string;
+    image: string;
+    multiple_images: string[];
+    bg_color: string;
+    navigation: {
+      to: string;
+    };
+    is_greyed: boolean;
+    is_available: boolean;
+    is_orderable: boolean;
+    tag_url: string | null;
+    multiple_uoms: UomType[];
+  };
+  info: {
+    info: Array<{
+      type: string;
+      title: string;
+      details: Array<{
+        description?: string;
+        title?: string;
+      }>;
+      sub_title?: string;
+    }>;
+  };
+  upsell_items: any[];
+}
 
-const FeaturedProduct = () => {
+interface FeaturedProductProps {
+  featuredItem?: FeaturedItemType;
+}
+
+const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
-  const description = "At a real Chinese hot pot, you lower the enoki slowly, like a ritual. They soak in the spice, and you bite into a soft snap laced with fire.";
+  // Return null if no featured item is provided
+  if (!featuredItem || !featuredItem.item) {
+    return null;
+  }
+
+  const { item, info } = featuredItem;
+  
+  // Get the default UOM (unit of measure)
+  const defaultUom = item.multiple_uoms?.find((uom: UomType) => uom.is_default) || item.multiple_uoms?.[0];
+  
+  // Get product description from info
+  const aboutProduct = info.info.find(section => section.type === 'normal');
+  const description = aboutProduct?.details?.[0]?.description || '';
+
+  // Get nutrition info for display
+  const nutritionInfo = info.info.find(section => section.type === 'nutrition');
+
+  // Create product object for AddItemBtn
+  const productForAddBtn = {
+    id: item.id,
+    item_code: item.item_code,
+    item_name: item.name,
+    name: item.name,
+    logo: item.image,
+    image: item.image,
+    website_image: item.image,
+    availability: item.is_available,
+    extra_descriptions: [],
+    tag_url: item.tag_url,
+    tag_text: null,
+    is_collaborate_item: false,
+    title: "",
+    description: "",
+    provider_id: null,
+    multiple_uoms: item.multiple_uoms,
+    uom: item.multiple_uoms
+  };
 
   return (
-    <div className="w-full pt-16 pb-16 px-4 flex justify-center items-center">
-      <div className="w-full max-w-[1100px] flex flex-col md:flex-row items-center justify-center bg-[white] rounded-3xl border border-gray-200 shadow-sm overflow-hidden p-8 gap-8 md:gap-12">
+    <div className="w-full pt-8 pb-8 mob:pt-6 mob:pb-6 px-4 mob:px-4 flex justify-center items-center">
+      <div className="w-full max-w-[1100px] flex flex-col md:flex-row items-start justify-center overflow-hidden p-4 mob:p-0 gap-4 mob:gap-6">
 
         {/* Image Section */}
-        <div className="flex justify-center items-center md:pl-4">
-          <div className="rounded-3xl overflow-hidden">
+        <div className="flex justify-center items-center w-full md:w-[600px] mob:order-1">
+          <div 
+            className="rounded-3xl mob:rounded-2xl overflow-hidden w-full h-[300px] md:h-[420px] md:w-[600px] mob:h-[250px] flex items-center justify-center p-8"
+            style={{ backgroundColor: item.bg_color || '#F9F0DA' }}
+          >
             <Image
-              src="/assets/images/shop/EnokiMushrooms.webp"
-              alt="Enoki Mushroom"
-              width={480}
+              src={item.image || item.multiple_images?.[0] || "/assets/images/shop/testing_img.png"}
+              alt={item.name}
+              width={600}
               height={480}
-              className="object-cover w-[300px] h-[300px] md:w-[450px] md:h-[420px]"
+              className="object-contain w-full h-full"
+              onError={(e) => {
+                // Fallback image on error
+                (e.target as HTMLImageElement).src = "/assets/images/shop/testing_img.png";
+              }}
             />
           </div>
         </div>
 
         {/* Text Section */}
-        <div className="flex flex-col justify-center flex-1 text-center md:text-left gap-4 max-w-[400px]">
-          <h3 className="text-2xl md:text-[36px] font-bold text-black leading-tight">
-            Enoki Mushroom
-          </h3>
+        <div className="w-full md:w-[480px] h-auto md:h-[420px] flex flex-col justify-between bg-[#FFFCF1] rounded-3xl mob:rounded-2xl border border-gray-200 shadow-xs overflow-hidden p-6 md:p-8 mob:p-5 mob:order-2">
+          
+          {/* Top Content */}
+          <div className="flex flex-col gap-3 mob:gap-2">
+            <h3 className="text-2xl md:text-[36px] mob:text-xl font-bold text-black leading-tight">
+              {item.name}
+            </h3>
 
-          <p className="text-base md:text-lg text-gray-600">
-            Rs.195 <span className="text-sm md:text-base text-gray-400">100g</span>
-          </p>
+            {defaultUom && (
+              <>
+                <div className="flex items-baseline gap-2">
+                  <p className="text-base md:text-lg mob:text-lg font-bold text-gray-800">
+                    {defaultUom.formatted_price || `₹${defaultUom.price}`}
+                  </p>
+                  {defaultUom.market_price && defaultUom.market_price > defaultUom.price && (
+                    <p className="text-sm text-gray-400 line-through">
+                      ₹{defaultUom.market_price}
+                    </p>
+                  )}
+                </div>
 
-          {/* Description */}
-          <div>
-            {/* Mobile */}
-            <div className="block md:hidden">
-              <p className={`text-gray-700 text-sm leading-relaxed transition-all duration-300 ${
-                isDescriptionExpanded ? '' : 'line-clamp-2'
-              }`}>
-                {description}
+                <p className="text-base md:text-xs mob:text-sm text-gray-400">
+                  <span>{defaultUom.unit}</span>
+                </p>
+              </>
+            )}
+
+            {item.is_greyed && (
+              <p className="text-sm text-gray-500 font-medium">
+                Limited Stock
               </p>
-              <button 
-                onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                className="text-black text-sm font-medium mt-1 hover:underline"
-              >
-                {isDescriptionExpanded ? 'Read less' : 'Read more'}
-              </button>
-            </div>
+            )}
 
-            {/* Desktop */}
-            <p className="hidden md:block text-gray-700 text-base leading-relaxed">
-              {description}
-            </p>
+            {/* Description */}
+            {description && (
+              <div className="mob:mt-2">
+                {/* Mobile */}
+                <div className="block md:hidden">
+                  <p className={`text-gray-700 text-sm leading-relaxed transition-all duration-300 ${
+                    isDescriptionExpanded ? '' : 'line-clamp-2'
+                  }`}>
+                    {description}
+                  </p>
+                  {description.length > 100 && (
+                    <button 
+                      onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                      className="text-black text-sm font-medium mt-1 hover:underline"
+                    >
+                      {isDescriptionExpanded ? 'Read less' : 'Read more'}
+                    </button>
+                  )}
+                </div>
+
+                {/* Desktop */}
+                <p className="hidden md:block text-gray-700 text-base leading-relaxed">
+                  {description}
+                </p>
+              </div>
+            )}
+
+            {/* Nutrition Info (optional display) */}
+            {nutritionInfo && nutritionInfo.details && nutritionInfo.details.length > 0 && (
+              <div className="hidden md:flex flex-wrap gap-4 mt-2">
+                {nutritionInfo.details.slice(0, 2).map((nutrient, index) => (
+                  <div key={index} className="text-xs">
+                    <span className="font-semibold text-gray-800">{nutrient.title}</span>
+                    <span className="text-gray-600 ml-1">{nutrient.description}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Add to Cart Button */}
-          <div className="max-w-full">
-            <AddItemBtn
-              product={itemDetails}
-              varientId={1445}
-              varientPrice={"₹195"}
-              stepperQuantity={1}
-              buttonType="yellowaddtocart"
-            />
+          {/* Button at Bottom */}
+          <div className="pt-4 mob:pt-4 w-full">
+            {defaultUom && item.is_available && item.is_orderable ? (
+              <AddItemBtn
+                product={productForAddBtn}
+                varientId={defaultUom.variant_id}
+                varientPrice={defaultUom.formatted_price || `₹${defaultUom.price}`}
+                stepperQuantity={defaultUom.stepper_quantity || 1}
+                buttonType="blackaddtocart"
+              />
+            ) : (
+              <button 
+                disabled
+                className="w-full py-3 px-6 bg-gray-300 text-gray-500 rounded-lg font-medium cursor-not-allowed"
+              >
+                {!item.is_available ? 'Sold Out' : !item.is_orderable ? 'Not Available' : 'Currently Unavailable'}
+              </button>
+            )}
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      `}</style>
     </div>
   );
 };

@@ -44,6 +44,58 @@ interface FiltersType {
   scid: any;
   subCategory: any;
 }
+
+interface FeaturedItemType {
+  item: {
+    id: number;
+    item_code: string;
+    name: string;
+    image: string;
+    multiple_images: string[];
+    bg_color: string;
+    navigation: {
+      to: string;
+    };
+    is_greyed: boolean;
+    is_available: boolean;
+    is_orderable: boolean;
+    tag_url: string | null;
+    multiple_uoms: Array<{
+      variant_id: number;
+      name: string | null;
+      uom_id: number;
+      unit: string;
+      minimum_quantity: number;
+      maximum_quantity: number;
+      stepper_quantity: number;
+      is_visible: boolean;
+      is_available: boolean;
+      is_default: boolean;
+      price: number;
+      platform_id: number;
+      formatted_price: string;
+      cart_quantity: number;
+      conversion_text: string;
+      is_not_discounted: boolean;
+      ripeness_types: any;
+      cart_ripeness: any;
+      market_price: number;
+    }>;
+  };
+  info: {
+    info: Array<{
+      type: string;
+      title: string;
+      details: Array<{
+        description?: string;
+        title?: string;
+      }>;
+      sub_title?: string;
+    }>;
+  };
+  upsell_items: any[];
+}
+
 const ShopDetails = (props: HomeProps) => {
   const mobile = useMediaQuery(600);
 
@@ -54,6 +106,8 @@ const ShopDetails = (props: HomeProps) => {
     subCategory: null
   });
 
+  const [featuredItem, setFeaturedItem] = useState<FeaturedItemType | null>(null);
+
   const { mainMenuItems, footerData } = props;
   const dispatch = useDispatch();
   const router = useRouter();
@@ -61,7 +115,8 @@ const ShopDetails = (props: HomeProps) => {
   const getDataFromApi = useGetDataFromApi();
   const shopCategories = useSelector((state: any) => state.shopCategories);
   const products = useSelector((state: any) => state.products);
-
+  console.log(products, "PRODUCTS")
+  
   useEffect(() => {
     if (isReady) {
       const token = localStorage.getItem('user_token');
@@ -105,6 +160,11 @@ const ShopDetails = (props: HomeProps) => {
 
         dispatch(setShopSubCategories(data?.sub_categories));
         dispatch(setIsShopSubCategoriesFetched(false));
+
+        // Set the featured item from API response
+        if (data?.featured_item) {
+          setFeaturedItem(data.featured_item);
+        }
       };
       const failureHandler = (data: any) => {};
       getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
@@ -147,22 +207,22 @@ const ShopDetails = (props: HomeProps) => {
   // }, [query]);
   // console.log(filters);
   // if (mobile) return <DownloadAppWrapper />;
-  
   return (
     <Layout mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={true}>
       <ShopHero />
       <FeatureStrip />
       <div className="flex flex-col items-center justify-center mob:pt-[10vw]">
-        <FeaturedProduct />
         <div className="flex flex-col gap-[2.2vw] w-[80.7vw] mob:w-full  mob:px-[4vw] pb-[10vw] relative ">
           {filters.category ? (
             <CategoryAndSubCategory filters={filters} setFilters={setFilters} />
           ) : null}
+          {featuredItem && <FeaturedProduct featuredItem={featuredItem} />}
           <CardsWrapper />
         </div>
       </div>
-      <div className="flex flex-col gap-[2.2vw] w-[80.7vw] mob:w-full mob:px-[4vw] pb-[10vw] relative mx-auto">
-        <WhyOriginAndTestimonial />
+      <CategorySection/>
+      <div className="flex flex-col gap-[2.2vw] w-[80.7vw] pt-[2.5vw] mob:w-full mob:px-[4vw] pb-[3vw] relative mx-auto">
+        <WhyOriginAndTestimonial category={filters.category} />
       </div>
     </Layout>
   );

@@ -9,13 +9,14 @@ import catimg from '/public/assets/images/shop/catimage.webp';
 
 const CategorySection = () => {
   const filteredCategories = useSelector((state: any) => state.shopCategories);
+  console.log(filteredCategories,"CAT SECTION")
   const { categories } = filteredCategories;
   const mobile = useMediaQuery(600);
-
+  
   const mainCategoryList = categories.find((item: any) => item.type === 'main-category')?.data || [];
 
   const webUI = () => (
-    <div className="flex items-center justify-start mob:grid-cols-2 gap-[1.1vw] mob:gap-[4.1vw]">
+    <div className="flex justify-start mob:grid-cols-2 gap-[1.1vw] mob:gap-[4.1vw]">
       {mainCategoryList.map((category: any) => (
         <CategoryCard key={category.id} cardDetails={category} />
       ))}
@@ -75,12 +76,16 @@ const CategorySection = () => {
   );
 
   return (
-    <div>
-      <p className="font-[SofiaPro] text-start font-bold text-[2.08vw] mob:text-[5.1vw] pb-[2.1vw]">
-        Shop by category
-      </p>
-      {mobile ? mobUI() : webUI()}
-    </div>
+     <>
+    {mainCategoryList.length > 0 && (
+      <div className="px-[7vw]">
+        <p className="font-[SofiaPro] text-start font-bold text-[2.08vw] mob:text-[5.1vw] pb-[2.1vw]">
+          Shop by category
+        </p>
+        {mobile ? mobUI() : webUI()}
+      </div>
+    )}
+  </>
   );
 };
 

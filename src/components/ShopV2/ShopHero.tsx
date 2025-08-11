@@ -8,28 +8,36 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { useRouter } from 'next/router';
 
 import banner1 from '/public/assets/images/shop/heroBannerShop.png';
-// import banner2 from '/public/assets/images/shop/heroBannerShop2.png';
-import banner3 from '/public/assets/images/shop/heroBannerShop3.png';
+import banner2 from '/public/assets/images/shop/heroBannerShop1.png';
+import banner3 from '/public/assets/images/shop/heroBannerShop2.png';
+import banner4 from '/public/assets/images/shop/heroBannerShop3.png';
+import { title } from 'process';
 
 const bannerData = [
   {
     image: banner1,
     title: 'Exotics\nHave\nLanded',
     button: 'Shop Now',
-    href: '/shop/global-veggies/8/european/48',
+    href: '/shop/explore-all/2/exotic-fruits/5',
   },
-  // {
-  //   image: banner2,
-  //   title: 'Tiny.\nTasty.\nToo good.',
-  //   button: 'Shop Now',
-  //   href: '/shop/hydro-micro-greens/9/hydroponics/49',
-  // },
   {
-    image: banner3,
-    title: 'Fruit\nGot\nFancy',
+    image: banner4,
+    title: 'Tiny.\nTasty.\nToo good.',
+    button: 'Shop Now',
+    href: '/shop/hydro-micro-greens/9/hydroponics/49',
+  },
+  {
+    image: banner2,
+    title: 'Sweet\nBright\nJuicy',
     button: 'Shop Now',
     href: '/shop/world-fruits/3/berries/40',
   },
+  {
+    image: banner3,
+    title: 'Global\nSeasonal\nRare',
+    button: 'Shop Now',
+    href: '/shop/global-veggies/8/european/48',
+  }
 ];
 
 const ShopHero = () => {
@@ -52,8 +60,8 @@ const ShopHero = () => {
           <li
             key={index}
             onClick={onClickHandler}
-            className={`inline-block w-2 h-2 mx-1 rounded-full cursor-pointer ${
-              isSelected ? 'bg-green-600' : 'bg-gray-300'
+            className={`inline-block w-3 h-3 mx-1 rounded-full cursor-pointer ${
+              isSelected ? 'bg-[#24874C]' : 'bg-[#729D63]'
             }`}
             aria-label={`${label} ${index + 1}`}
             role="button"

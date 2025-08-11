@@ -1,25 +1,34 @@
 import Image from 'next/image';
-import React from 'react';
+import React, { useState } from 'react';
 import AddItemBtn from './AddItemBtn/AddItemBtn';
 import { useRouter } from 'next/router';
 import sampleimg from '/public/assets/images/shop/sampleimg2.png';
 
 const ItemCard = ({ itemDetails }: any) => {
   const router = useRouter();
-
-  const defaultUOM =
-    itemDetails?.multiple_uoms.find((uom: any) => uom?.is_default) || itemDetails?.multiple_uoms[0];
+  
+  const defaultUOM = itemDetails?.multiple_uoms.find((uom: any) => uom?.is_default) || itemDetails?.multiple_uoms[0];
+  const [selectedUOM, setSelectedUOM] = useState(defaultUOM);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   if (!defaultUOM) return null;
+
+  const hasMultipleUOMs = itemDetails?.multiple_uoms?.length > 1;
+  const availableUOMs = itemDetails?.multiple_uoms?.filter((uom: any) => uom?.is_available) || [];
+
+  const handleUOMChange = (uom: any) => {
+    setSelectedUOM(uom);
+    setIsDropdownOpen(false);
+  };
 
   return (
     <div className="bg-white rounded-[1.5rem] shadow-[0_8px_24px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col h-full">
       <button
-        disabled={!defaultUOM.is_available}
+        disabled={!selectedUOM.is_available}
         onClick={() =>
           router.push(`/${itemDetails.item_name.replace(/ /g, '-').toLowerCase()}/${itemDetails.id}`)
         }
-        className={`text-left w-full flex flex-col h-full ${!defaultUOM.is_available ? 'opacity-50' : ''}`}
+        className={`text-left w-full flex flex-col h-full ${!selectedUOM.is_available ? 'opacity-50' : ''}`}
       >
         {/* Image */}
         <div className="w-full flex-shrink-0 relative">
@@ -57,36 +66,99 @@ const ItemCard = ({ itemDetails }: any) => {
           <div className="flex-shrink-0">
             <div className="flex justify-between items-center mb-[0.4rem]">
               <div className="flex items-center gap-[0.3rem]">
-                {defaultUOM.market_price > defaultUOM.price && defaultUOM.market_price > 0 ? (
+                {selectedUOM.market_price > selectedUOM.price && selectedUOM.market_price > 0 ? (
                   <>
                     <p className="text-gray-400 line-through text-[0.7rem]">
-                      ₹{defaultUOM.market_price}
+                      ₹{selectedUOM.market_price}
                     </p>
                     <p className="text-black font-semibold text-[0.7rem]">
-                      {defaultUOM.formatted_price}
+                      {selectedUOM.formatted_price}
                     </p>
                   </>
                 ) : (
                   <p className="text-black font-semibold text-[0.7rem]">
-                    {defaultUOM.formatted_price}
+                    {selectedUOM.formatted_price}
                   </p>
                 )}
               </div>
-              <p className="text-right text-[#737373] text-[0.7rem]">{defaultUOM.unit}</p>
+              
+              {/* UOM Display with Dropdown */}
+              <div className="relative">
+                {hasMultipleUOMs && availableUOMs.length > 1 ? (
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsDropdownOpen(!isDropdownOpen);
+                      }}
+                      className="flex items-center gap-[0.2rem] text-[#737373] text-[0.7rem] hover:text-black transition-colors"
+                    >
+                      <span>{selectedUOM.unit}</span>
+                      <svg
+                        className={`w-3 h-3 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    {isDropdownOpen && (
+                      <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-[80px]">
+                        {availableUOMs.map((uom: any, index: number) => (
+                          <button
+                            key={index}
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleUOMChange(uom);
+                            }}
+                            className={`w-full px-3 py-2 text-left text-[0.7rem] hover:bg-gray-50 transition-colors ${
+                              selectedUOM.variant_id === uom.variant_id 
+                                ? 'text-black font-semibold bg-gray-50' 
+                                : 'text-[#737373]'
+                            } ${index === 0 ? 'rounded-t-lg' : ''} ${index === availableUOMs.length - 1 ? 'rounded-b-lg' : ''}`}
+                          >
+                            <div className="flex justify-between items-center">
+                              <span>{uom.unit}</span>
+                              <span className="text-black font-semibold ml-2">
+                                {uom.formatted_price}
+                              </span>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-right text-[#737373] text-[0.7rem]">{selectedUOM.unit}</p>
+                )}
+              </div>
             </div>
 
             <div className="rounded-[1.5rem] overflow-hidden">
               <AddItemBtn
                 product={itemDetails}
-                varientId={defaultUOM.variant_id}
-                varientPrice={defaultUOM.price}
-                stepperQuantity={defaultUOM.stepper_quantity}
+                varientId={selectedUOM.variant_id}
+                varientPrice={selectedUOM.price}
+                stepperQuantity={selectedUOM.stepper_quantity}
                 buttonType="black"
               />
             </div>
           </div>
         </div>
       </button>
+
+      {/* Overlay to close dropdown when clicking outside */}
+      {isDropdownOpen && (
+        <div
+          className="fixed inset-0 z-5"
+          onClick={() => setIsDropdownOpen(false)}
+        />
+      )}
     </div>
   );
 };
