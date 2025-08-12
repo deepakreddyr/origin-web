@@ -4,7 +4,7 @@ import ReviewItem from './ReviewItem';
 
 const ReviewList = (props: any) => {
   const cart = useSelector((state: any) => state.cart);
-  console.log(cart,"cart");
+  // console.log(cart,"cart");
 
   // With the flat structure, each cart item is already a single UOM variant
   // So we can directly map over cart.items

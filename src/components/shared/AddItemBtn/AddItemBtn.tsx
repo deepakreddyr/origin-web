@@ -26,16 +26,16 @@ const AddItemBtn = (props: any) => {
   );
   const itemQuantity = cartItem?.cart_quantity || 0;
 
-  console.log('AddItemBtn render:', {
-    productId: product.id,
-    varientId,
-    itemQuantity,
-    cartItem: cartItem ? { 
-      id: cartItem.id, 
-      variant_id: cartItem.variant_id, 
-      cart_quantity: cartItem.cart_quantity 
-    } : null
-  });
+  // console.log('AddItemBtn render:', {
+  //   productId: product.id,
+  //   varientId,
+  //   itemQuantity,
+  //   cartItem: cartItem ? { 
+  //     id: cartItem.id, 
+  //     variant_id: cartItem.variant_id, 
+  //     cart_quantity: cartItem.cart_quantity 
+  //   } : null
+  // });
 
   const handleClearCartFromBackend = () => {
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['clearCartItems'];
@@ -85,7 +85,7 @@ const AddItemBtn = (props: any) => {
     e.preventDefault();
     e.stopPropagation();
 
-    console.log('handleAddItem called for variant:', varientId);
+    // console.log('handleAddItem called for variant:', varientId);
 
     const selectedVariant = product.multiple_uoms.find(
       (variant: any) => variant.variant_id === varientId
@@ -113,7 +113,7 @@ const AddItemBtn = (props: any) => {
   const handleIncrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('handleIncrease called for variant:', varientId);
+    // console.log('handleIncrease called for variant:', varientId);
     dispatch(increaseQuantity({ varientId, stepperQuantity }));
     if (loginDetails.user) {
       addItemsToApi();
@@ -124,11 +124,11 @@ const AddItemBtn = (props: any) => {
     e.preventDefault();
     e.stopPropagation();
     
-    console.log('handleDecrease called for variant:', varientId, 'current quantity:', itemQuantity);
+    // console.log('handleDecrease called for variant:', varientId, 'current quantity:', itemQuantity);
     
     if (itemQuantity <= stepperQuantity) {
       // If this will result in zero or negative quantity, remove the item
-      console.log('Removing item due to decrease to zero');
+      // console.log('Removing item due to decrease to zero');
       dispatch(removeItemFromCart(varientId));
     } else {
       // Otherwise just decrease
@@ -144,7 +144,7 @@ const AddItemBtn = (props: any) => {
   const handleRemoveUOM = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('handleRemoveUOM called for variant:', varientId);
+    // console.log('handleRemoveUOM called for variant:', varientId);
     dispatch(removeItemFromCart(varientId));
     if (loginDetails.user) {
       addItemsToApi();
@@ -153,7 +153,7 @@ const AddItemBtn = (props: any) => {
 
   const isVariantPresent = itemQuantity > 0;
 
-  console.log('isVariantPresent:', isVariantPresent, 'quantity:', itemQuantity);
+  // console.log('isVariantPresent:', isVariantPresent, 'quantity:', itemQuantity);
 
   const BUTTON_MAP: any = {
     blackaddtocart: (

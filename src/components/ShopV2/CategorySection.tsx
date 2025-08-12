@@ -9,7 +9,7 @@ import catimg from '/public/assets/images/shop/catimage.webp';
 
 const CategorySection = () => {
   const filteredCategories = useSelector((state: any) => state.shopCategories);
-  console.log(filteredCategories,"CAT SECTION")
+  // console.log(filteredCategories,"CAT SECTION")
   const { categories } = filteredCategories;
   const mobile = useMediaQuery(600);
   

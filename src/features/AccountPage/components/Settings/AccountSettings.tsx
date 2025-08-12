@@ -121,7 +121,7 @@ const AccountSettings = ({
                                 caches.keys().then((names) => {
                                     return Promise.all(names.map(name => caches.delete(name)))
                                 }).then(() => {
-                                    console.log('All site caches cleared.')
+                                    // console.log('All site caches cleared.')
                                 })
                             }
 

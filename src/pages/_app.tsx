@@ -12,7 +12,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 // --- Cache clear utility ---
-const APP_VERSION = '1.1.2';  // Increment this on each deployment
+const APP_VERSION = '1.1.3';  // Increment this on each deployment
 
 const clearCacheAndReload = async () => {
   if (typeof window === 'undefined') return; // Prevent SSR crash

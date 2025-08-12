@@ -8,7 +8,7 @@ interface categoryProp {
 }
 
 const PopularProduce = ({ categoryDetail }: categoryProp) => {
-  console.log(categoryDetail.data,"DATA");
+  // console.log(categoryDetail.data,"DATA");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mobileScrollIndex, setMobileScrollIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);

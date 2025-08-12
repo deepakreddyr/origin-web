@@ -15,9 +15,9 @@ const InvoicePage: React.FC = () => {
   const [showFallback, setShowFallback] = useState<boolean>(false);
   
   const invoiceId = Array.isArray(id) ? id[0] : id;
-  console.log(process.env.NEXT_PUBLIC_BACKEND_API_URL);
+  // console.log(process.env.NEXT_PUBLIC_BACKEND_API_URL);
   const apiUrl = invoiceId ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/public/preview-store-invoice/${invoiceId}` : '';
-  console.log(apiUrl, "API");
+  // console.log(apiUrl, "API");
 
   // Detect mobile device and browser capabilities
   useEffect(() => {

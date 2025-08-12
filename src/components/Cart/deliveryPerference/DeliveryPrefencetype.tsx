@@ -14,7 +14,7 @@ type DeliveryType = 'TIME_SLOT' | 'INSTANT' | undefined;
 const DeliveryPrefencetype = () => {
   const getDataFromApi = useGetDataFromApi();
   const [loading, setLoading] = useState(true);
-  const [activeDeliveryType, setActiveDeliveryType] = useState<DeliveryType>(undefined); // no default selection
+  const [activeDeliveryType, setActiveDeliveryType] = useState<DeliveryType>(undefined);
   const dispatch = useDispatch();
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
 
@@ -56,13 +56,18 @@ const DeliveryPrefencetype = () => {
 
   if (loading) return <>loading</>;
 
+  // Check if instant delivery is available
+  const isInstantDeliveryAvailable = placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_available;
+
   return (
     <div>
-      <div className="grid grid-cols-2 p-[1.1vw] mob:p-[4.1vw] mob:gap-[4.1vw] gap-[1.1vw]">
-        <InstantDeliveryBtn
-          activeDeliveryType={activeDeliveryType}
-          setActiveDeliveryType={setActiveDeliveryType}
-        />
+      <div className={`grid ${isInstantDeliveryAvailable ? 'grid-cols-2' : 'grid-cols-1'} p-[1.1vw] mob:p-[4.1vw] mob:gap-[4.1vw] gap-[1.1vw]`}>
+        {isInstantDeliveryAvailable && (
+          <InstantDeliveryBtn
+            activeDeliveryType={activeDeliveryType}
+            setActiveDeliveryType={setActiveDeliveryType}
+          />
+        )}
         <ScheduledDeliveryBtn
           activeDeliveryType={activeDeliveryType}
           setActiveDeliveryType={setActiveDeliveryType}

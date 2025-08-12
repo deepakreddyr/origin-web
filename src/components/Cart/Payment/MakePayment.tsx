@@ -33,10 +33,10 @@ const MakePayment = (props: any) => {
     try {
       setProcessing(true);
       setProcessingPaymentId(paymentMethod.id);
-      console.log('Processing payment with:', paymentMethod);
+      // console.log('Processing payment with:', paymentMethod);
       
       await placeOrderHandler(paymentMethod);
-      console.log('Payment processed successfully');
+      // console.log('Payment processed successfully');
       
     } catch (error) {
       console.error('Payment processing failed:', error);
