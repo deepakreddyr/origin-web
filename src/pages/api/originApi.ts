@@ -64,7 +64,7 @@ const data: Data = {
   footerData: {
     footerLinksPrimary: [
       { text: 'Home', href: 'shop' },
-      { text: 'About Us', href: 'about' },
+      // { text: 'About Us', href: 'about' },
       { text: 'Shop All', href: 'shop' },
       // { text: 'Contact', href: 'contact' }
     ],

@@ -18,7 +18,7 @@ const ReviewItem = (props: any) => {
     variant_id: item.variant_id,
     cart_quantity: item.cart_quantity,
     price: item.price,
-    market_price: item.market_price,
+    market_price: item.market_price && item.market_price > 0 ? item.market_price : null,
     maximum_quantity: item.maximum_quantity,
     minimum_quantity: item.minimum_quantity,
     stepper_quantity: item.stepper_quantity,
@@ -88,7 +88,8 @@ const ReviewItem = (props: any) => {
               />
             </div>
             <div className="review-cart-counter flex flex-col items-center w-[2vw] mob:w-[12vw]">
-              {uom.market_price && uom.market_price > uom.price && (
+              {/* {console.log('Debug - market_price:', uom.market_price, 'price:', uom.price, 'condition result:', (uom.market_price !== null && uom.market_price !== undefined && uom.market_price !== 0 && uom.market_price > uom.price))} */}
+              {uom.market_price !== null && uom.market_price !== undefined && uom.market_price !== 0 && uom.market_price > uom.price && (
                 <span className="font-[sofiaPro] text-[.78vw] mob:text-[2.8vw] line-through text-[#231F2099]">
                   ₹{calculateItemTotalPrice(uom.market_price, uom.cart_quantity)}
                 </span>

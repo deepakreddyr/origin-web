@@ -21,7 +21,6 @@ import RefundDetails from "./components/RefundDetails";
 const OrderDetailsDeskTopView = () => {
   const router = useRouter();
   const [order, setOrderDetails] = useAtom(orderDetailsAtom);
-
   React.useEffect(() => {
     const { id } = router.query;
     if (id) {
@@ -53,8 +52,8 @@ const OrderDetailsDeskTopView = () => {
         margin: "0 4rem 0 4rem",
       }}
     >
-      {order.data?.order_id && (
-        <OrderStatusHeader orderId={order.data.order_id} />
+      {order.data?.order_code && (
+        <OrderStatusHeader order_code={order.data.order_code} />
       )}
       <Grid
         container
@@ -95,7 +94,7 @@ const OrderDetailsDeskTopView = () => {
             {!!order.data?.driver && <DeliveryPartner />}
             {!!order.data?.is_edit && !!order.data?.is_order_editable && (
               <EditOrderCounter
-                orderId={order.data?.order_id}
+                orderId={order.data?.order_code}
                 orderCreatedAt={order.data?.order_created_at}
                 editOrderTimeInSeconds={order.data?.edit_order_time}
               />

@@ -20,6 +20,7 @@ export interface OrderDetails {
   edit_order_time: number;
   is_order_editable: boolean;
   order_id: number;
+  order_code: number;
   status: string;
   status_list: Status[];
   address: string;

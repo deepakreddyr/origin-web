@@ -68,7 +68,7 @@ const AccountSettings = () => {
 
   const list = [
     {
-      title: 'Your Orders',
+      title: 'My Orders',
       desc: 'Order history & Statues',
       onClick: () => dispatch(setTabType(TabTypeConstant.YOUR_ORDERS))
     },

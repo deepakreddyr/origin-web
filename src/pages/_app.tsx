@@ -221,6 +221,7 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
           strategy="lazyOnload"
           onLoad={() => console.log('Razorpay script loaded')}
         />
+        
         <Component {...pageProps} />
       </LocalizationProvider>
     </Provider>

@@ -14,11 +14,11 @@ import BackImage from "../../assets/back.svg";
 // import CancelOrderCounter from '../CancelOrderCounter';
 
 interface Props {
-  orderId: string | number;
+  order_code: string | number;
 }
 
 const OrderStatusHeader = (props: Props) => {
-  const { orderId } = props;
+  const { order_code } = props;
   const [, setActiveAccountsPage] = useAtom(activeAccountsPageAtom);
   const [, setActiveSupportChat] = useAtom(activeSupportChatAtom);
   const [, setIsAccountOpen] = useAtom(isAccountIsOpen);
@@ -103,7 +103,7 @@ const OrderStatusHeader = (props: Props) => {
             cursor: "pointer",
           }}
           onClick={() => {
-            setActiveSupportChat(String(orderId));
+            setActiveSupportChat(String(order_code));
             setActiveAccountsPage(ActiveSidebar.SUPPORT_CHAT);
             setIsAccountOpen(true);
           }}

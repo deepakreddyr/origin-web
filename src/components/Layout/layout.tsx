@@ -29,12 +29,14 @@ export default function Layout({
   children,
   mainMenuItems,
   footerData,
-  isHeaderSticky
+  isHeaderSticky,
+  search = false // Add search prop with default value
 }: {
   children: React.ReactNode;
   mainMenuItems: MainMenuType[];
   footerData: FooterDataType;
   isHeaderSticky: any;
+  search?: boolean; // Add search prop to type definition
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -114,7 +116,13 @@ export default function Layout({
   return (
     <CacheProvider value={clientSideEmotionCache}>
       <ThemeProvider theme={theme}>
-        {query.type !== 'app' && <Header isHeaderSticky={isHeaderSticky} mainMenuItems={mainMenuItems} />}
+        {query.type !== 'app' && (
+          <Header 
+            isHeaderSticky={isHeaderSticky} 
+            mainMenuItems={mainMenuItems} 
+            search={search} // Pass search prop to Header
+          />
+        )}
         <SidebarScreen />
         {children}
         {query.type !== 'app' && <Footer footerData={footerData} />}

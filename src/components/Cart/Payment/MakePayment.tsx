@@ -9,6 +9,7 @@ const MakePayment = (props: any) => {
   const { placeOrderHandler } = props;
   const [showCodButton, setShowCodButton] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [processingPaymentId, setProcessingPaymentId] = useState(null); // Track which payment method is processing
 
   let paymentFlow = localStorage.getItem('FLOW_TYPE') ? localStorage.getItem('FLOW_TYPE') : null;
 
@@ -27,7 +28,30 @@ const MakePayment = (props: any) => {
       ? placeOrderDetails.checkoutDetails.cod_for_immediate_delivery
       : placeOrderDetails.checkoutDetails.enable_cod;
 
-    // console.log(processing, "processing");
+  // Helper function to handle payment processing
+  const handlePaymentProcessing = async (paymentMethod: any) => {
+    try {
+      setProcessing(true);
+      setProcessingPaymentId(paymentMethod.id);
+      console.log('Processing payment with:', paymentMethod);
+      
+      await placeOrderHandler(paymentMethod);
+      console.log('Payment processed successfully');
+      
+    } catch (error) {
+      console.error('Payment processing failed:', error);
+      // You might want to show an error message to the user here
+      alert('Payment processing failed. Please try again.');
+    } finally {
+      setProcessing(false);
+      setProcessingPaymentId(null);
+      // Reset COD button visibility if it was a COD payment that failed
+      if (!paymentMethod.sub_payment_method) {
+        setShowCodButton(false);
+      }
+    }
+  };
+
   return (
     <>
       <div className="">
@@ -54,27 +78,26 @@ const MakePayment = (props: any) => {
           <div className="flex flex-col gap-[1.1vw] mob:gap-[4.1vw]">
             {paymentTypeList.map((pay: any) => (
               <div
-                className={`${pay.sub_payment_method ? 'opacity-100' : `${isCodEnabled ? 'opacity-100' : 'opacity-30'}`} cursor-pointer border border-[#F2EEE44D] hover:border-primary-100 bg-[#F2EEE44D] py-[.97vw] mob:py-[3.6vw] mob:px-[4.1vw] px-[1.1vw] mob:rounded-[3.6vw] rounded-[.97vw]`}
+                className={`${pay.sub_payment_method ? 'opacity-100' : `${isCodEnabled ? 'opacity-100' : 'opacity-30'}`} ${
+                  processing && processingPaymentId !== pay.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                } border border-[#F2EEE44D] hover:border-primary-100 bg-[#F2EEE44D] py-[.97vw] mob:py-[3.6vw] mob:px-[4.1vw] px-[1.1vw] mob:rounded-[3.6vw] rounded-[.97vw]`}
                 key={pay.id}
                 onClick={async (e) => {
                   e.stopPropagation();
-                  if (processing) return;
-                  if (pay.name != "Pay On delivery") {
-                      setProcessing(true);
+                  
+                  // Prevent clicks if processing or if this specific payment method is disabled
+                  if (processing || (!pay.sub_payment_method && !isCodEnabled)) {
+                    return;
                   }
 
+                  // Handle online payment methods (with sub_payment_method)
                   if (pay.sub_payment_method) {
-                    try {
-                      await placeOrderHandler(pay);
-
-                    } finally {
-                      // setProcessing(false);
-                    }
+                    await handlePaymentProcessing(pay);
                   } else {
+                    // Handle COD - just toggle the button visibility
                     if (isCodEnabled) {
                       setShowCodButton(!showCodButton);
                     }
-                    // setProcessing(false); // No async operation here
                   }
                 }}
               >
@@ -85,6 +108,7 @@ const MakePayment = (props: any) => {
                   <div>
                     <p className="font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3vw] text-secondary-400 ">
                       {pay.name}
+                      {processing && processingPaymentId === pay.id && " (Processing...)"}
                     </p>
                     {pay.id === 4 && (
                       <p className="font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3vw] text-error pt-[.2vw] mob:pt-[1vw] ">
@@ -94,25 +118,20 @@ const MakePayment = (props: any) => {
                   </div>
                 </div>
 
-                {showCodButton && !pay.sub_payment_method && (
+                {showCodButton && !pay.sub_payment_method && isCodEnabled && (
                   <button
                     onClick={async (e) => {
                       e.stopPropagation();
                       if (processing) return;
 
-                      setProcessing(true);
-                      try {
-                        await placeOrderHandler(pay);
-                      } finally {
-                        // setProcessing(false);
-                      }
+                      await handlePaymentProcessing(pay);
                     }}
                     disabled={processing}
-                    className={`font-[SofiaPro] mt-[1.1vw] mob:mt-[4.1vw] font-semibold mob:px-[3vw] px-[.8vw] py-[.5vw] mob:py-[2vw] mob:text-[3vw] text-[.83vw] text-white bg-secondary rounded-[.8vw] ${
-                      processing ? 'opacity-50 cursor-not-allowed' : ''
+                    className={`font-[SofiaPro] mt-[1.1vw] mob:mt-[4.1vw] font-semibold mob:px-[3vw] px-[.8vw] py-[.5vw] mob:py-[2vw] mob:text-[3vw] text-[.83vw] text-white bg-secondary rounded-[.8vw] transition-all duration-200 ${
+                      processing ? 'opacity-50 cursor-not-allowed' : 'hover:bg-secondary-600'
                     }`}
                   >
-                    Pay on delivery
+                    {processing ? 'Processing...' : 'Pay on delivery'}
                   </button>
                 )}
               </div>

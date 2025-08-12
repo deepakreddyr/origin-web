@@ -7,7 +7,7 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 
 const DetailsHeader = (props: any) => {
   const { orderDetailsData } = props;
-  const { order_id, order_created_at } = orderDetailsData;
+  const { order_code, order_created_at } = orderDetailsData;
   const router = useRouter();
 
   const onClickBackButton = () => {
@@ -32,7 +32,7 @@ const DetailsHeader = (props: any) => {
         <div>
           <p className="font-[SofiaPro] text-[1.389vw] mob:text-[5.12vw] font-semibold">Order Details</p>
           <p className="font-[SofiaPro] font-medium text-[.97vw] mob:text-[3.6vw] text-[#231F2080]">
-            Order #{order_id}
+            Order #{order_code}
             <span> | </span>
             {formatTimestamp(order_created_at)}
           </p>

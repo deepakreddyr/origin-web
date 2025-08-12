@@ -30,15 +30,23 @@ export const prepareCartItemsToApi = (cartItems: any) => {
   return {
     items: cartItems.map((item: any) => ({
       item_code: item.item_code,
-      uom: item.multiple_uoms
-        .map((uomItem: any) => ({
-          id: uomItem.variant_id,
-          qty: uomItem.cart_quantity // Assuming cart_quantity corresponds to qty
-        }))
-        .filter((uom: any) => uom.qty > 0) // Include only UOMs with qty > 0
+      uom: Array.isArray(item.multiple_uoms)
+        ? item.multiple_uoms
+            .map((uomItem: any) => ({
+              id: uomItem.variant_id,
+              qty: uomItem.cart_quantity
+            }))
+            .filter((uom: any) => uom.qty > 0)
+        : [
+            {
+              id: item.variant_id,
+              qty: item.cart_quantity
+            }
+          ]
     }))
   };
 };
+
 export const clearPostPaymentItemsinLs = () => {
   localStorage.removeItem('total_cart');
   localStorage.removeItem('order_type');

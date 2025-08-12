@@ -6,12 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import AddItemBtn from '@/components/shared/AddItemBtn/AddItemBtn';
 import sampleimg from '/public/assets/images/shop/sampleimg2.png';
-import originLogo from '/public/assets/images/originLogo.png';
-import userIcon from '/public/assets/images/userIcon.png';
-import cartIcon from '/public/assets/icons/cartIcon.png';
-import { setCartItems, setCartTabType } from '@/store/slice/CartSlice';
-import { setIsSidebarOpen, setLoginDetails, setTabType } from '@/store/slice/loginSlice';
-import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 import Layout from '@/components/Layout';
 import { FooterDataType, MainMenuType } from '@/utilities/types';
 import { any } from 'zod';
@@ -378,7 +372,7 @@ const LoadingCard: React.FC = () => (
 );
 
 // Main SearchResults component
-const SearchResults= (props: HomeProps) => {
+const SearchResults = (props: HomeProps) => {
   const router = useRouter();
   const { q: searchQuery } = router.query;
   const isMobile = useMediaQuery(600);
@@ -394,49 +388,6 @@ const SearchResults= (props: HomeProps) => {
   
   const searchInputRef = useRef<HTMLInputElement>(null);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const dispatch = useDispatch();
-  const loginDetails = useSelector((state: any) => state.loginDetails);
-  const cart = useSelector((state: any) => state.cart);
-
-  // Cart functionality from header
-  const handleProfileMenuOpen = () => {
-    dispatch(
-      setLoginDetails({
-        ...loginDetails,
-        isSidebarOpen: true,
-        tabType: TabTypeConstant.ENTER_MOBILE_NUMBER
-      })
-    );
-  };
-
-  const openAccount = () => {
-    dispatch(setTabType(TabTypeConstant.ACCOUNT_MAIN));
-    dispatch(setIsSidebarOpen(true));
-  };
-
-  const handleCartOpen = () => {
-    dispatch(
-      setLoginDetails({
-        ...loginDetails,
-        isSidebarOpen: true,
-        tabType: TabTypeConstant.CART
-      })
-    );
-
-    if (cart?.items?.length === 0) {
-      const cartItemFromLs = localStorage.getItem('cart_items');
-      const cartItemsParsed = cartItemFromLs ? JSON.parse(cartItemFromLs) : [];
-      if (cartItemsParsed.length > 0) {
-        dispatch(setCartItems(cartItemsParsed));
-        dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
-      } else {
-        dispatch(setCartTabType(TabTypeConstant.EMPTY_CART));
-      }
-    } else {
-      dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
-    }
-  };
 
   // API call function
   const searchProducts = async (query: string, pageNum: number = 1): Promise<SearchResponse> => {
@@ -533,263 +484,84 @@ const SearchResults= (props: HomeProps) => {
     }
   };
 
-  // Handle search input change with debouncing
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setCurrentSearchQuery(value);
-    
-    if (value.trim().length >= 2) {
-      debouncedSearch(value);
-    } else if (value.trim().length === 0) {
-      setProducts([]);
-      setNoResults(false);
-    }
-  };
-
-  // Handle search form submit
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (currentSearchQuery.trim().length >= 2) {
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
-      }
-      handleNewSearch(currentSearchQuery);
-      router.push(`/search?q=${encodeURIComponent(currentSearchQuery)}`);
-    }
-  };
-
-  const handleSearchFocus = () => {
-    setIsSearchActive(true);
-  };
-
-  const handleSearchBlur = () => {
-    setTimeout(() => {
-      if (currentSearchQuery.trim() === '') {
-        setIsSearchActive(false);
-      }
-    }, 150);
-  };
-
   const canSearch = currentSearchQuery.trim().length >= 2;
 
   return (
-    // <Layout mainMenuItems={mainMenuItems} isHeaderSticky={true} footerData={footerData}>
-    <div className="min-h-screen bg-[#FFF9E5]">
-      {/* Header matching the provided design */}
-      <div className="bg-[#FFF9E5] border-gray-200 w-full">
-        <div className="max-w-7xl mt-5 mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            
-            {/* Left Section - Logo */}
-            <div className="flex items-center">
-              <button 
-                onClick={() => router.push('/shop')}
-                className="flex items-center hover:opacity-80 transition-opacity"
-                aria-label="Go to shop"
-              >
-                <div className={`relative ${isMobile ? 'w-20 h-8' : 'w-24 h-10'}`}>
-                  <Image src={originLogo} alt="Origin" fill className="object-contain" />
-                </div>
-              </button>
-            </div>
-
-            {/* Center Section - Search Bar */}
-            <div className="flex-1 mx-3">
-              <form onSubmit={handleSearchSubmit} className="relative">
-                <div className="relative">
-                  <input
-                    ref={searchInputRef}
-                    type="text"
-                    value={currentSearchQuery}
-                    onChange={handleSearchInputChange}
-                    onFocus={handleSearchFocus}
-                    onBlur={handleSearchBlur}
-                    className="w-full h-10 pl-4 pr-12 bg-white border border-gray-300 rounded-full 
-                            focus:outline-none focus:ring-0 focus:border-gray-300 
-                            text-sm font-medium font-[SofiaPro] placeholder:text-gray-500 
-                            transition-all duration-200"
-                    placeholder="Search here"
-                    autoFocus
-                  />
-
-                  {/* Character Count Indicator */}
-                  {currentSearchQuery && currentSearchQuery.length < 2 && (
-                    <div className="absolute right-12 top-1/2 transform -translate-y-1/2 
-                                  text-xs text-gray-400 font-[SofiaPro]">
-                      {2 - currentSearchQuery.length} more
-                    </div>
-                  )}
-
-                  {/* Search Icon Button */}
-                  <button
-                    type="submit"
-                    disabled={!canSearch}
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 
-                            rounded-full bg-transparent text-gray-400 cursor-pointer"
-                    aria-label="Search"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            {/* Right Section - User Actions */}
-            <div className="flex items-center gap-2">
-              {/* Login/Account Button */}
-              {/* {loginDetails.isLogin ? (
-                <button
-                  onClick={openAccount}
-                  className="p-2 hover:bg-white hover:bg-opacity-50 rounded-full transition-colors duration-200"
-                  aria-label="My account"
-                >
-                  <div className="w-6 h-6 relative">
-                    <Image src={userIcon} alt="Account" fill className="object-contain" />
-                  </div>
-                </button>
-              ) : (
-                <button
-                  onClick={handleProfileMenuOpen}
-                  className="px-4 py-2 border border-gray-400 rounded-full text-sm font-medium font-[SofiaPro]
-                           hover:bg-white hover:bg-opacity-50 transition-colors duration-200 text-gray-700"
-                >
-                  Login
-                </button>
-              )} */}
-
-              {/* Desktop Cart */}
-              <button
-                onClick={handleCartOpen}
-                className="relative p-2 hover:bg-white hover:bg-opacity-50 rounded-full transition-colors duration-200"
-                aria-label={`Shopping cart ${cart?.items?.length > 0 ? `(${cart.items.length} items)` : ''}`}
-              >
-                {cart?.items?.length > 0 && (
-                  <div className="absolute -top-1 -right-1 w-5 h-5 bg-secondary-300 text-white 
-                                text-xs font-medium rounded-full flex items-center justify-center">
-                    {cart.items.length > 99 ? '99+' : cart.items.length}
-                  </div>
-                )}
-                <div className="w-6 h-6 relative">
-                  <Image src={cartIcon} alt="Cart" fill className="object-contain" />
-                </div>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Floating Cart */}
-      {/* {isMobile && (
-        <button
-          onClick={handleCartOpen}
-          className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-white shadow-xl 
-                   rounded-full flex items-center justify-center border border-gray-200
-                   hover:shadow-2xl transition-shadow duration-200"
-          aria-label={`Shopping cart ${cart?.items?.length > 0 ? `(${cart.items.length} items)` : ''}`}
-        >
-          {cart?.items?.length > 0 && (
-            <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white 
-                          text-xs font-bold rounded-full flex items-center justify-center">
-              {cart.items.length > 99 ? '99+' : cart.items.length}
+    <Layout mainMenuItems={mainMenuItems} isHeaderSticky={true} footerData={footerData} search={true}>
+      <div className="min-h-screen bg-[#FFF9E5]">
+        {/* Search Results */}
+        <div className="max-w-[90vw] mx-auto px-[2vw] mob:px-[5vw] py-[3vw] mob:py-[6vw]">
+          {/* Results Header */}
+          {!loading && !noResults && totalCount > 0 && (
+            <div className="mb-[3vw] mob:mb-[6vw]">
+              <h2 className="font-[SofiaPro] font-semibold text-[1.5vw] mob:text-[5vw] text-black mb-[0.5vw] mob:mb-[2vw]">
+                Search Results
+              </h2>
+              <p className="font-[SofiaPro] text-[1vw] mob:text-[3.5vw] text-gray-600">
+                Found {totalCount} products for "{searchQuery}"
+              </p>
             </div>
           )}
-          <div className="w-6 h-6 relative">
-            <Image src={cartIcon} alt="Cart" fill className="object-contain" />
-          </div>
-        </button>
-      )} */}
 
-      {/* Search Results */}
-      <div className="max-w-[90vw] mx-auto px-[2vw] mob:px-[5vw] py-[3vw] mob:py-[6vw]">
-        {/* Results Header */}
-        {!loading && !noResults && totalCount > 0 && (
-          <div className="mb-[3vw] mob:mb-[6vw]">
-            <h2 className="font-[SofiaPro] font-semibold text-[1.5vw] mob:text-[5vw] text-black mb-[0.5vw] mob:mb-[2vw]">
-              Search Results
-            </h2>
-            <p className="font-[SofiaPro] text-[1vw] mob:text-[3.5vw] text-gray-600">
-              Found {totalCount} products for "{searchQuery}"
-            </p>
-          </div>
-        )}
-
-        {/* Loading State */}
-        {loading && products.length === 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[2vw] mob:gap-[4vw]">
-            {Array.from({ length: 10 }).map((_, index) => (
-              <LoadingCard key={index} />
-            ))}
-          </div>
-        )}
-
-        {/* No Results */}
-        {noResults && !loading && (
-          <div className="text-center py-[8vw] mob:py-[20vw]">
-            <div className="text-[4vw] mob:text-[12vw] mb-[2vw] mob:mb-[4vw]">🔍</div>
-            <h3 className="font-[SofiaPro] font-semibold text-[1.5vw] mob:text-[5vw] text-black mb-[1vw] mob:mb-[3vw]">
-              No products found
-            </h3>
-            <p className="font-[SofiaPro] text-[1vw] mob:text-[3.5vw] text-gray-600 mb-[3vw] mob:mb-[6vw]">
-              Try searching with different keywords or browse our categories
-            </p>
-            {/* <button
-              onClick={() => router.push('/shop')}
-              className="bg-yellow-400 hover:bg-yellow-500 text-black font-[SofiaPro] font-semibold px-[3vw] mob:px-[8vw] py-[1vw] mob:py-[3vw] rounded-full text-[1vw] mob:text-[3.5vw] transition-colors"
-            >
-              Browse All Products
-            </button> */}
-          </div>
-        )}
-
-        {/* Products Grid */}
-        {products.length > 0 && (
-          <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[5vw] mob:gap-[4vw]">
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
+          {/* Loading State */}
+          {loading && products.length === 0 && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[2vw] mob:gap-[4vw]">
+              {Array.from({ length: 10 }).map((_, index) => (
+                <LoadingCard key={index} />
               ))}
             </div>
+          )}
 
-            {/* Load More Button */}
-            {hasMore && (
-              <div className="text-center mt-[4vw] mob:mt-[8vw]">
-                <button
-                  onClick={handleLoadMore}
-                  disabled={loading}
-                  className="bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed text-black font-[SofiaPro] font-semibold px-[4vw] mob:px-[10vw] py-[1.2vw] mob:py-[3.5vw] rounded-full text-[1vw] mob:text-[3.5vw] transition-colors"
-                >
-                  {loading ? 'Loading...' : 'Load More Products'}
-                </button>
-              </div>
-            )}
+          {/* No Results */}
+          {noResults && !loading && (
+            <div className="text-center py-[8vw] mob:py-[20vw]">
+              <div className="text-[4vw] mob:text-[12vw] mb-[2vw] mob:mb-[4vw]">🔍</div>
+              <h3 className="font-[SofiaPro] font-semibold text-[1.5vw] mob:text-[5vw] text-black mb-[1vw] mob:mb-[3vw]">
+                No products found
+              </h3>
+              <p className="font-[SofiaPro] text-[1vw] mob:text-[3.5vw] text-gray-600 mb-[3vw] mob:mb-[6vw]">
+                Try searching with different keywords or browse our categories
+              </p>
+            </div>
+          )}
 
-            {/* Loading More Cards */}
-            {loading && products.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[2vw] mob:gap-[4vw] mt-[2vw] mob:mt-[4vw]">
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <LoadingCard key={`loading-${index}`} />
+          {/* Products Grid */}
+          {products.length > 0 && (
+            <>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[5vw] mob:gap-[4vw]">
+                {products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
                 ))}
               </div>
-            )}
-          </>
-        )}
+
+              {/* Load More Button */}
+              {hasMore && (
+                <div className="text-center mt-[4vw] mob:mt-[8vw]">
+                  <button
+                    onClick={handleLoadMore}
+                    disabled={loading}
+                    className="bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed text-black font-[SofiaPro] font-semibold px-[4vw] mob:px-[10vw] py-[1.2vw] mob:py-[3.5vw] rounded-full text-[1vw] mob:text-[3.5vw] transition-colors"
+                  >
+                    {loading ? 'Loading...' : 'Load More Products'}
+                  </button>
+                </div>
+              )}
+
+              {/* Loading More Cards */}
+              {loading && products.length > 0 && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[2vw] mob:gap-[4vw] mt-[2vw] mob:mt-[4vw]">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <LoadingCard key={`loading-${index}`} />
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 };
-
 
 export const getServerSideProps: GetServerSideProps = async () => {
   try {

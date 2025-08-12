@@ -4,6 +4,9 @@ import { OriginLogoWhite } from '../../Icons/OriginIcons';
 import SocialLinks from './SocialLinks';
 import FooterNav from './FooterNav';
 import { FooterDataType } from '../../utilities/types';
+import PhoneIcon from '@mui/icons-material/Phone';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import { Mail } from '@mui/icons-material';
 
 type FooterProps = {
   footerData?: FooterDataType;
@@ -12,7 +15,7 @@ type FooterProps = {
 const Footer: React.FC<FooterProps> = ({ footerData }) => {
   if (!footerData) return null;
 
-  const { footerLinksPrimary, footerLinksSecondary, contactDetails } = footerData;
+  const { footerLinksPrimary, footerLinksSecondary } = footerData;
 
   return (
     <>
@@ -51,26 +54,31 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
                   >
                     Contact Us
                   </Typography>
+
+                  {/* Phone */}
                   <Typography
                     component="a"
                     href="tel:+919900508216"
-                    className="text-white text-base no-underline hover:text-green-100"
+                    className="text-white text-base no-underline hover:text-green-100 flex items-center gap-2"
                   >
-                    +91 9900508216
+                    <PhoneIcon fontSize="small" /> +91 9900508216
                   </Typography>
+
                   <Typography
                     component="a"
                     href="mailto:support@originfresh.in"
                     className="text-white text-base no-underline hover:text-green-100"
                   >
-                    support@originfresh.in
+                    <Mail fontSize="small"/> support@originfresh.in
                   </Typography>
+
+                  {/* WhatsApp */}
                   <Typography
                     component="a"
                     href="tel:+918344621039"
-                    className="text-white text-base no-underline hover:text-green-100"
+                    className="text-white text-base no-underline hover:text-green-100 flex items-center gap-2"
                   >
-                    +91 8344621039
+                    <WhatsAppIcon fontSize="small" /> +91 8344621039
                   </Typography>
                 </Box>
               </Grid>

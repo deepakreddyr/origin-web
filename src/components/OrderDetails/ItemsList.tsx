@@ -3,7 +3,7 @@ import React from 'react';
 
 const ItemsList = (props: any) => {
   const { orderDetailsData } = props;
-  const { order_id, items } = orderDetailsData;
+  const { order_code, items } = orderDetailsData;
 
   return (
     <div
@@ -13,7 +13,7 @@ const ItemsList = (props: any) => {
         <div className="">
           <p className="font-[SofiaPro] text-[1.25vw] mob:text-[5vw] font-semibold text-black-op-80 ">Order Details</p>
           <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-medium text-black-op-60 pt-[.4vw] ">
-            Order ID {order_id}
+            Order ID {order_code}
           </p>
         </div>
         <div className="">

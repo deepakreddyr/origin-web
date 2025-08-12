@@ -154,11 +154,11 @@ const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
               </>
             )}
 
-            {item.is_greyed && (
+            {/* {item.is_greyed && (
               <p className="text-sm text-gray-500 font-medium">
                 Limited Stock
               </p>
-            )}
+            )} */}
 
             {/* Description */}
             {description && (
@@ -202,7 +202,7 @@ const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
 
           {/* Button at Bottom */}
           <div className="pt-4 mob:pt-4 w-full">
-            {defaultUom && item.is_available && item.is_orderable ? (
+            {defaultUom && item.is_available ?(
               <AddItemBtn
                 product={productForAddBtn}
                 varientId={defaultUom.variant_id}
@@ -215,7 +215,7 @@ const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
                 disabled
                 className="w-full py-3 px-6 bg-gray-300 text-gray-500 rounded-lg font-medium cursor-not-allowed"
               >
-                {!item.is_available ? 'Sold Out' : !item.is_orderable ? 'Sold Out' : 'Currently Unavailable'}
+                Sold Out
               </button>
             )}
           </div>

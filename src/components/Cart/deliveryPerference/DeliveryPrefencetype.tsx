@@ -1,7 +1,6 @@
 import { protectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { getAddressAndStoreId } from '@/utilities/utils';
-import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import InstantDeliveryBtn from './InstantDeliveryBtn';
 import ScheduledDeliveryBtn from './ScheduledDeliveryBtn';
@@ -12,15 +11,16 @@ import { setIsProceedButtonEnabled } from '@/store/slice/CartSlice';
 
 type DeliveryType = 'TIME_SLOT' | 'INSTANT' | undefined;
 
-const DeliveryPrefencetype = (props: any) => {
+const DeliveryPrefencetype = () => {
   const getDataFromApi = useGetDataFromApi();
   const [loading, setLoading] = useState(true);
-  const [activeDeliveryType, setActiveDeliveryType] = useState<DeliveryType>('TIME_SLOT');
+  const [activeDeliveryType, setActiveDeliveryType] = useState<DeliveryType>(undefined); // no default selection
   const dispatch = useDispatch();
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
 
   const fetchCheckoutDetails = () => {
-    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['proceedToCheckout'];
+    const apiUrl =
+      process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['proceedToCheckout'];
     const addressFromLs = getAddressAndStoreId();
     const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
 
@@ -38,15 +38,19 @@ const DeliveryPrefencetype = (props: any) => {
     fetchCheckoutDetails();
   }, []);
 
+  // enable Proceed button only if a type is selected & conditions met
   useEffect(() => {
     if (activeDeliveryType === 'TIME_SLOT') {
       if (placeOrderDetails.time_slot_id) {
         dispatch(setIsProceedButtonEnabled(true));
-        return;
+      } else {
+        dispatch(setIsProceedButtonEnabled(false));
       }
-      dispatch(setIsProceedButtonEnabled(false));
     } else if (activeDeliveryType === 'INSTANT') {
       dispatch(setIsProceedButtonEnabled(true));
+    } else {
+      // nothing selected yet
+      dispatch(setIsProceedButtonEnabled(false));
     }
   }, [activeDeliveryType, placeOrderDetails.time_slot_id]);
 
@@ -54,16 +58,17 @@ const DeliveryPrefencetype = (props: any) => {
 
   return (
     <div>
-      <div className="grid grid-cols-2 p-[1.1vw] mob:p-[4.1vw] mob:gap-[4.1vw] gap-[1.1vw] ">
-        {/* <InstantDeliveryBtn
+      <div className="grid grid-cols-2 p-[1.1vw] mob:p-[4.1vw] mob:gap-[4.1vw] gap-[1.1vw]">
+        <InstantDeliveryBtn
           activeDeliveryType={activeDeliveryType}
           setActiveDeliveryType={setActiveDeliveryType}
-        /> */}
-        {/* <ScheduledDeliveryBtn
+        />
+        <ScheduledDeliveryBtn
           activeDeliveryType={activeDeliveryType}
           setActiveDeliveryType={setActiveDeliveryType}
-        /> */}
+        />
       </div>
+
       {activeDeliveryType === 'TIME_SLOT' && (
         <div>
           <DeliveryTimings />
