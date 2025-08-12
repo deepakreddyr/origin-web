@@ -28,7 +28,7 @@ const CouponSection = (props: any) => {
 
   const resetCouponHandler = () => {
     dispatch(setCouponDetails({ ...couponDetailsInitialState }));
-    dispatch(setDiscountAmount(null));
+    dispatch(setDiscountAmount(0));
   };
 
   return (
