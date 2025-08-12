@@ -80,7 +80,7 @@ const HelpFaq = () => {
                   marginLeft: '0.2rem'
                 }}
               >
-                +91 99123 99123
+                +91 9900508216
               </Typography>
             </Box>
             <Box
