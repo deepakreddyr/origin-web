@@ -215,7 +215,7 @@ const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
                 disabled
                 className="w-full py-3 px-6 bg-gray-300 text-gray-500 rounded-lg font-medium cursor-not-allowed"
               >
-                {!item.is_available ? 'Sold Out' : !item.is_orderable ? 'Not Available' : 'Currently Unavailable'}
+                {!item.is_available ? 'Sold Out' : !item.is_orderable ? 'Sold Out' : 'Currently Unavailable'}
               </button>
             )}
           </div>
