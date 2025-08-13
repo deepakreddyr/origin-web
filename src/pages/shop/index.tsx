@@ -166,7 +166,7 @@ const ShopPage = (props: HomeProps) => {
       )}
 
       {/* <div className="">
-        <FeatureProduct featuredItem={subCategories[1].data}/>
+        // <FeatureProduct featuredItem={subCategories[1].data}/>
       </div> */}
 
       {subCategories?.[1] && (
