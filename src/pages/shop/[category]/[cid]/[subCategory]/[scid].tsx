@@ -115,7 +115,7 @@ const ShopDetails = (props: HomeProps) => {
   const getDataFromApi = useGetDataFromApi();
   const shopCategories = useSelector((state: any) => state.shopCategories);
   const products = useSelector((state: any) => state.products);
-  console.log(products, "PRODUCTS")
+  // console.log(products, "PRODUCTS")
   
   useEffect(() => {
     if (isReady) {
