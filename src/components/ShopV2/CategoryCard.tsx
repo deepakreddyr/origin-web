@@ -2,6 +2,7 @@ import { Category } from '@/utilities/types';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+// import webcat from '/public/assets/images/shop/webcatimg.png'
 
 interface Props {
   cardDetails: Category;
@@ -26,7 +27,7 @@ const CategoryCard = (props: Props) => {
           src={cardDetails.website_image || cardDetails.image}
           alt={cardDetails.name || 'product image'}
           fill
-          className="object-contain p-[1vw]"
+          className="object-cover"
           priority
         />
       </div>

@@ -1,8 +1,10 @@
-import React from 'react';
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface BlackBtnProps {
   isItemPresent: boolean;
   quantity: number;
+  maxQuantity: number;
   handleAddItem: (e: any) => void;
   handleIncrease: (e: any) => void;
   handleDecrease: (e: any) => void;
@@ -13,16 +15,18 @@ const BlackBtn = (props: BlackBtnProps) => {
   const {
     isItemPresent,
     quantity,
+    maxQuantity,
     handleAddItem,
     handleIncrease,
     handleDecrease,
     handleRemove,
   } = props;
 
+  const isMax = quantity >= maxQuantity;
+
   const onDecrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-
     if (quantity <= 1) {
       handleRemove?.(e);
     } else {
@@ -31,6 +35,7 @@ const BlackBtn = (props: BlackBtnProps) => {
   };
 
   const onIncrease = (e: any) => {
+    if (isMax) return;
     e.preventDefault();
     e.stopPropagation();
     handleIncrease(e);
@@ -43,23 +48,47 @@ const BlackBtn = (props: BlackBtnProps) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col items-center">
       {isItemPresent ? (
-        <div className="flex items-center justify-between px-[0.6vw] mob:px-[3vw] bg-white border-[2px] border-[#F3EEDF] rounded-full h-[2.2vw] mob:h-[7vw]">
-          <button
-            className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] rounded-full bg-black text-white text-[1vw] mob:text-[3.5vw] flex items-center justify-center"
-            onClick={onDecrease}
-          >
-            –
-          </button>
-          <p className="text-black font-semibold text-[1vw] mob:text-[3.2vw]">{quantity}</p>
-          <button
-            className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] rounded-full bg-black text-white text-[1vw] mob:text-[3.5vw] flex items-center justify-center"
-            onClick={onIncrease}
-          >
-            +
-          </button>
-        </div>
+        <>
+          {/* Row for buttons and number */}
+          <div className="flex items-center justify-between px-[0.6vw] mob:px-[3vw] bg-white border-[2px] border-[#F3EEDF] rounded-full h-[2.2vw] mob:h-[7vw] w-full">
+            <button
+              className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] rounded-full bg-black text-white text-[1vw] mob:text-[3.5vw] flex items-center justify-center"
+              onClick={onDecrease}
+            >
+              –
+            </button>
+
+            <p className="text-black font-semibold text-[1vw] mob:text-[3.2vw]">
+              {quantity}
+            </p>
+
+            <button
+              className={`h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] rounded-full flex items-center justify-center text-[1vw] mob:text-[3.5vw] ${
+                isMax ? "bg-gray-400 cursor-not-allowed" : "bg-black text-white"
+              }`}
+              onClick={onIncrease}
+            >
+              +
+            </button>
+          </div>
+
+          {/* Animated max quantity message */}
+          <AnimatePresence>
+            {isMax && (
+              <motion.p
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.3 }}
+                className="text-red-500 font-medium text-[0.8vw] mob:text-[2.8vw] mt-[0.5vw] mob:mt-[1vw] text-center"
+              >
+                Oops! Max quantity reached
+              </motion.p>
+            )}
+          </AnimatePresence>
+        </>
       ) : (
         <button
           className="w-full h-[2.2vw] mob:h-[7vw] bg-black text-white rounded-[0.5vw] mob:rounded-[2vw] font-semibold text-[1vw] mob:text-[3.2vw]"

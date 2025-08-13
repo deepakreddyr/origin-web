@@ -5,14 +5,14 @@ import YellowBtn from './YellowBtn';
 import WhiteBtn from './WhiteBtn';
 import BlackBtn from './BlackBtn';
 import BlackAddCartBtm from './BlackAddCartBtm';
-import YellowAddCartBtm from './YellowAddCartBtm'
+import YellowAddCartBtm from './YellowAddCartBtm';
 import { protectedUrl } from '@/url';
-import { getAddressAndStoreId, prepareCartItemsToApi } from '@/utilities/utils';
+import { getAddressAndStoreId } from '@/utilities/utils';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 
 const AddItemBtn = (props: any) => {
-  const { product, varientId, varientPrice, stepperQuantity, buttonType } = props;
+  const { product, varientId, stepperQuantity, buttonType } = props;
 
   const dispatch = useDispatch();
   const cartItems = useSelector((state: any) => state.cart.items);
@@ -20,34 +20,39 @@ const AddItemBtn = (props: any) => {
   const sendDataToApi = useSendDataToApi();
   const getDataFromApi = useGetDataFromApi();
 
-  // Find cart item for the current variant (now simplified with flat structure)
-  const cartItem = cartItems.find((item: any) => 
-    item.id === product.id && item.variant_id === varientId
+  // Normalize product ID - handle both 'id' and product ID variations
+  const normalizedProductId = product.id || product.product_id;
+  
+  // Current variant cart data - more robust matching
+  const cartItem = cartItems.find(
+    (item: any) => {
+      const itemProductId = item.id || item.product_id;
+      const itemVariantId = item.variant_id || item.varientId;
+      
+      return itemProductId === normalizedProductId && itemVariantId === varientId;
+    }
   );
+  
   const itemQuantity = cartItem?.cart_quantity || 0;
 
-  // console.log('AddItemBtn render:', {
-  //   productId: product.id,
-  //   varientId,
-  //   itemQuantity,
-  //   cartItem: cartItem ? { 
-  //     id: cartItem.id, 
-  //     variant_id: cartItem.variant_id, 
-  //     cart_quantity: cartItem.cart_quantity 
-  //   } : null
-  // });
+  // Get selected variant details from product - handle different structures
+  const uomArray = product.multiple_uoms || product.uoms || [];
+  const selectedVariant = uomArray.find(
+    (variant: any) => {
+      const variantId = variant.variant_id || variant.varientId;
+      return variantId === varientId;
+    }
+  );
+  
+  const maxQuantity = selectedVariant?.maximum_quantity || Infinity;
 
   const handleClearCartFromBackend = () => {
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['clearCartItems'];
     const addressFromLs = getAddressAndStoreId();
     let additionalHeaders = {};
-
     if (addressFromLs) {
-      additionalHeaders = {
-        'store-id': addressFromLs.store_id
-      };
+      additionalHeaders = { 'store-id': addressFromLs.store_id };
     }
-
     getDataFromApi(apiUrl, () => {}, () => {}, additionalHeaders);
   };
 
@@ -58,7 +63,6 @@ const AddItemBtn = (props: any) => {
     const addressFromLs = getAddressAndStoreId();
 
     if (!token) return;
-
     const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
 
     if (loginDetails.isSidebarOpen && cartItemFromLs) {
@@ -72,7 +76,6 @@ const AddItemBtn = (props: any) => {
           }))
         }))
       };
-
       if (cartItemsParsed?.length === 0) {
         handleClearCartFromBackend();
       } else {
@@ -84,21 +87,25 @@ const AddItemBtn = (props: any) => {
   const handleAddItem = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!selectedVariant) return;
 
-    // console.log('handleAddItem called for variant:', varientId);
+    // Normalize product data structure for cart
+    const normalizedProduct = {
+      id: normalizedProductId,
+      item_code: product.item_code,
+      name: product.name || product.item_name, // Handle both name variations
+      image: product.image,
+      bg_color: product.bg_color,
+      is_available: product.is_available,
+      is_greyed: product.is_greyed,
+      is_orderable: product.is_orderable,
+      navigation: product.navigation,
+      tag_url: product.tag_url,
+      multiple_uoms: uomArray
+    };
 
-    const selectedVariant = product.multiple_uoms.find(
-      (variant: any) => variant.variant_id === varientId
-    );
-
-    if (!selectedVariant) {
-      console.error('Selected variant not found');
-      return;
-    }
-
-    // Dispatch with the new flat structure
     dispatch(addItemToCart({
-      product: product,
+      product: normalizedProduct,
       selectedUOM: {
         ...selectedVariant,
         stepper_quantity: stepperQuantity
@@ -113,7 +120,8 @@ const AddItemBtn = (props: any) => {
   const handleIncrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    // console.log('handleIncrease called for variant:', varientId);
+    // prevent increase if max reached
+    if (itemQuantity >= maxQuantity) return;
     dispatch(increaseQuantity({ varientId, stepperQuantity }));
     if (loginDetails.user) {
       addItemsToApi();
@@ -123,28 +131,19 @@ const AddItemBtn = (props: any) => {
   const handleDecrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    // console.log('handleDecrease called for variant:', varientId, 'current quantity:', itemQuantity);
-    
     if (itemQuantity <= stepperQuantity) {
-      // If this will result in zero or negative quantity, remove the item
-      // console.log('Removing item due to decrease to zero');
       dispatch(removeItemFromCart(varientId));
     } else {
-      // Otherwise just decrease
       dispatch(decreaseQuantity({ varientId, stepperQuantity }));
     }
-    
     if (loginDetails.user) {
       addItemsToApi();
     }
   };
 
-  // Explicit remove handler
   const handleRemoveUOM = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    // console.log('handleRemoveUOM called for variant:', varientId);
     dispatch(removeItemFromCart(varientId));
     if (loginDetails.user) {
       addItemsToApi();
@@ -153,13 +152,12 @@ const AddItemBtn = (props: any) => {
 
   const isVariantPresent = itemQuantity > 0;
 
-  // console.log('isVariantPresent:', isVariantPresent, 'quantity:', itemQuantity);
-
   const BUTTON_MAP: any = {
     blackaddtocart: (
       <BlackAddCartBtm
         isItemPresent={isVariantPresent}
         quantity={itemQuantity}
+        maxQuantity={maxQuantity}
         handleAddItem={handleAddItem}
         handleIncrease={handleIncrease}
         handleDecrease={handleDecrease}
@@ -170,6 +168,7 @@ const AddItemBtn = (props: any) => {
       <YellowAddCartBtm
         isItemPresent={isVariantPresent}
         quantity={itemQuantity}
+        maxQuantity={maxQuantity}
         handleAddItem={handleAddItem}
         handleIncrease={handleIncrease}
         handleDecrease={handleDecrease}
@@ -180,6 +179,7 @@ const AddItemBtn = (props: any) => {
       <YellowBtn
         isItemPresent={isVariantPresent}
         quantity={itemQuantity}
+        maxQuantity={maxQuantity}
         handleAddItem={handleAddItem}
         handleIncrease={handleIncrease}
         handleDecrease={handleDecrease}
@@ -190,6 +190,7 @@ const AddItemBtn = (props: any) => {
       <WhiteBtn
         isItemPresent={isVariantPresent}
         quantity={itemQuantity}
+        maxQuantity={maxQuantity}
         handleAddItem={handleAddItem}
         handleIncrease={handleIncrease}
         handleDecrease={handleDecrease}
@@ -200,6 +201,7 @@ const AddItemBtn = (props: any) => {
       <BlackBtn
         isItemPresent={isVariantPresent}
         quantity={itemQuantity}
+        maxQuantity={maxQuantity}
         handleAddItem={handleAddItem}
         handleIncrease={handleIncrease}
         handleDecrease={handleDecrease}

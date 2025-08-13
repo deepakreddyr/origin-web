@@ -112,7 +112,7 @@ const MakePayment = (props: any) => {
                     </p>
                     {pay.id === 4 && (
                       <p className="font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3vw] text-error pt-[.2vw] mob:pt-[1vw] ">
-                        Only digital cashless payments are accepted.
+                        Only digital cashless payments are accepted at your door-step.
                       </p>
                     )}
                   </div>

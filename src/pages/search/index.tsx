@@ -11,7 +11,6 @@ import { FooterDataType, MainMenuType } from '@/utilities/types';
 import { any } from 'zod';
 
 // Updated Product interface to match your API response
-
 interface HomeProps {
   mainMenuItems: MainMenuType[];
   footerData: FooterDataType;
@@ -140,7 +139,6 @@ const UOMPopup: React.FC<{
           {availableUOMs.map((uom, index) => {
             const isSelected = selectedUOM?.variant_id === uom.variant_id;
             const hasDiscount = uom.market_price > uom.price && uom.market_price > 0;
-            const discountPercent = hasDiscount ? Math.round(((uom.market_price - uom.price) / uom.market_price) * 100) : 0;
 
             return (
               <div
@@ -204,14 +202,31 @@ const UOMPopup: React.FC<{
   );
 };
 
-// ProductCard component adapted for your data structure with UOM popup
+// ProductCard component adapted with enhanced debugging and cart sync fix
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const router = useRouter(); 
   const isMobile = useMediaQuery(600);
+  const cartItems = useSelector((state: any) => state.cart.items);
   
   const defaultUOM = product.multiple_uoms.find((uom) => uom.is_default) || product.multiple_uoms[0];
   const [selectedUOM, setSelectedUOM] = useState(defaultUOM);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  
+  // Debug logging for cart synchronization
+  // useEffect(() => {
+  //   const cartItemsForThisProduct = cartItems.filter((item: any) => item.id === product.id);
+  //   console.log('ProductCard Debug - Search Page:', {
+  //     productId: product.id,
+  //     productName: product.name,
+  //     selectedVariantId: selectedUOM?.variant_id,
+  //     cartItemsForProduct: cartItemsForThisProduct.map((item: any) => ({
+  //       id: item.id,
+  //       variant_id: item.variant_id,
+  //       quantity: item.cart_quantity
+  //     })),
+  //     allCartItems: cartItems.length
+  //   });
+  // }, [product.id, product.name, selectedUOM?.variant_id, cartItems]);
   
   if (!defaultUOM) return null;
 
@@ -219,6 +234,11 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const availableUOMs = product.multiple_uoms?.filter((uom) => uom?.is_available) || [];
 
   const handleUOMChange = (uom: any) => {
+    console.log('Search ProductCard - UOM changed:', {
+      from: selectedUOM?.variant_id,
+      to: uom.variant_id,
+      unit: uom.unit
+    });
     setSelectedUOM(uom);
   };
 
@@ -371,6 +391,41 @@ const LoadingCard: React.FC = () => (
   </div>
 );
 
+// // Cart Debug Component (temporary - remove in production)
+// const CartDebugInfo: React.FC = () => {
+//   const cartItems = useSelector((state: any) => state.cart.items);
+//   const [showDebug, setShowDebug] = useState(false);
+
+//   // Only show in development
+//   if (process.env.NODE_ENV !== 'development') return null;
+
+//   return (
+//     <>
+//       <button
+//         onClick={() => setShowDebug(!showDebug)}
+//         className="fixed bottom-4 right-4 bg-red-500 text-white px-3 py-2 rounded text-xs z-50"
+//       >
+//         {showDebug ? 'Hide' : 'Show'} Cart Debug
+//       </button>
+      
+//       {showDebug && (
+//         <div className="fixed top-4 right-4 bg-white border border-red-500 p-4 rounded shadow-lg z-50 max-w-sm max-h-96 overflow-auto">
+//           <h3 className="font-bold text-sm mb-2">Cart Debug Info ({cartItems.length} items)</h3>
+//           <pre className="text-xs text-gray-800">
+//             {JSON.stringify(cartItems.map((item: any) => ({
+//               id: item.id,
+//               name: item.name,
+//               variant_id: item.variant_id,
+//               unit: item.unit,
+//               quantity: item.cart_quantity
+//             })), null, 2)}
+//           </pre>
+//         </div>
+//       )}
+//     </>
+//   );
+// };
+
 // Main SearchResults component
 const SearchResults = (props: HomeProps) => {
   const router = useRouter();
@@ -394,6 +449,16 @@ const SearchResults = (props: HomeProps) => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v5/public/skip-login/items?query=${query}`);
       const data = await response.json();
+      
+      // console.log('Search API Response:', {
+      //   query,
+      //   resultsCount: data.data?.length || 0,
+      //   firstProduct: data.data?.[0] ? {
+      //     id: data.data[0].id,
+      //     name: data.data[0].name,
+      //     variants: data.data[0].multiple_uoms?.length || 0
+      //   } : null
+      // });
       
       // Transform the response to match our interface
       return {
@@ -446,6 +511,7 @@ const SearchResults = (props: HomeProps) => {
   const handleNewSearch = async (query: string) => {
     if (!query.trim()) return;
     
+    // console.log('Search - Starting new search:', query);
     setLoading(true);
     setProducts([]);
     setPage(1);
@@ -453,6 +519,7 @@ const SearchResults = (props: HomeProps) => {
     
     try {
       const response = await searchProducts(query, 1);
+      // console.log('Search - Results received:', response.data.length, 'products');
       setProducts(response.data);
       setTotalCount(response.data.length);
       setHasMore(response.hasMore || false);
@@ -484,11 +551,12 @@ const SearchResults = (props: HomeProps) => {
     }
   };
 
-  const canSearch = currentSearchQuery.trim().length >= 2;
-
   return (
     <Layout mainMenuItems={mainMenuItems} isHeaderSticky={true} footerData={footerData} search={true}>
       <div className="min-h-screen bg-[#FFF9E5]">
+        {/* Cart Debug Info (only in development) */}
+        {/* <CartDebugInfo /> */}
+        
         {/* Search Results */}
         <div className="max-w-[90vw] mx-auto px-[2vw] mob:px-[5vw] py-[3vw] mob:py-[6vw]">
           {/* Results Header */}
@@ -530,7 +598,7 @@ const SearchResults = (props: HomeProps) => {
             <>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[5vw] mob:gap-[4vw]">
                 {products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard key={`search-product-${product.id}`} product={product} />
                 ))}
               </div>
 
