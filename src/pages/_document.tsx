@@ -4,13 +4,12 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        {/* Multiple favicon formats for better compatibility */}
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=a-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        
-        {/* Meta Pixel Code */}
+        <title>Origin Fresh</title>
         <script
           dangerouslySetInnerHTML={{
             __html: `
