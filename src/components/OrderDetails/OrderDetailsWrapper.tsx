@@ -13,13 +13,12 @@ import RefundWrapper from '../orderRefund/RefundWrapper';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsOrderDetailsLoading, setOrderDetailsData, setRefundList } from '@/store/slice/OrderAndRefundDetails';
 import RetryOrPayonlineWrapper from './RetryOrPayonlineWrapper';
+
 const OrderDetailsWrapper = () => {
   const getDataFromApi = useGetDataFromApi();
   const orderAndRefundDetails = useSelector((state: any) => state.orderAndRefundDetails);
-  // console.log(orderAndRefundDetails,"DATA")
   const router = useRouter();
   const { isReady, query } = router;
-  const refreshInterval = useRef<NodeJS.Timeout | null>(null);
   const dispatch = useDispatch();
 
   const fetchOrderdetails = () => {
@@ -46,30 +45,16 @@ const OrderDetailsWrapper = () => {
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
   };
 
-  // useEffect(() => {
-  //   if (isReady) {
-  //     fetchOrderdetails();
-  //   }
-  // }, [isReady, query]);
-
+  // Only fetch on initial load - no more frequent polling
   useEffect(() => {
     if (isReady) {
       fetchOrderdetails();
     }
-
-    refreshInterval.current = setInterval(() => {
-      fetchOrderdetails(); // Fetch every 2 seconds
-    }, 5000);
-
-    return () => {
-      if (refreshInterval.current) {
-        clearInterval(refreshInterval.current); // Cleanup the interval on unmount
-      }
-    };
-  }, [isReady, query]);
+  }, [isReady, query.id]); // Only depend on isReady and query.id
 
   if (!orderAndRefundDetails.orderDetailsData)
     return <div className="pb-[6vw]  pt-[12vw] p-[10vw]">No Order found for this order</div>;
+    
   if (orderAndRefundDetails.isOrderDetailsLoading)
     return (
       <div
@@ -78,6 +63,7 @@ const OrderDetailsWrapper = () => {
         <OrderDetailsSkeleton />
       </div>
     );
+    
   return (
     <div
       className={`pb-[6vw] mob:pb-[15vw] p-[10vw] mob:p-0 ${query.type !== 'app' ? 'mob:pt-[28vw]' : ''}  relative `}
@@ -90,7 +76,9 @@ const OrderDetailsWrapper = () => {
             fetchOrderdetails={fetchOrderdetails}
           />
           <div className="w-full mob:block hidden mob:px-[4.1vw] ">
-            {(orderAndRefundDetails.orderDetailsData.status !== "Cancelled by user") && <RetryOrPayonlineWrapper />}
+            {(orderAndRefundDetails.orderDetailsData.status !== "Cancelled by user") && 
+              <RetryOrPayonlineWrapper fetchOrderdetails={fetchOrderdetails} />
+            }
             <ItemsList orderDetailsData={orderAndRefundDetails.orderDetailsData} />
           </div>
           <div className="mob:px-[4.1vw] flex flex-col gap-[1.671vw] mob:gap-[4.1vw] ">
@@ -105,7 +93,9 @@ const OrderDetailsWrapper = () => {
           </div>
         </div>
         <div className="w-full flex flex-col mob:hidden gap-[1.67vw]">
-          {(orderAndRefundDetails.orderDetailsData.status !== "Cancelled by user") && <RetryOrPayonlineWrapper />}
+          {(orderAndRefundDetails.orderDetailsData.status !== "Cancelled by user") && 
+            <RetryOrPayonlineWrapper fetchOrderdetails={fetchOrderdetails} />
+          }
           <ItemsList orderDetailsData={orderAndRefundDetails.orderDetailsData} />
         </div>
       </div>

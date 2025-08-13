@@ -66,7 +66,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
       <div
         className={`fixed flex items-center justify-between h-[4vw] mob:h-[15vw] ${
           finalIsDisabled ? 'bg-gray-400' : 'bg-primary'
-        } z-[2] bottom-[1.67vw] mob:bottom-[5vw] w-[calc(30vw-2vw)] mob:w-[calc(96vw-4vw)] mob:p-[2vw] p-[.6vw] rounded-full `}
+        } z-[2] mob:z-[9999] bottom-[1.67vw] mob:bottom-[5vw] w-[calc(30vw-2vw)] mob:w-[calc(100vw-4vw)] mob:p-[2vw] p-[.6vw] rounded-full mob:left-[2vw] mob:shadow-xl`}
       >
         <div className="pl-[1vw] mob:pl-[2.1vw]">
           <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-black-op-60 font-medium ">

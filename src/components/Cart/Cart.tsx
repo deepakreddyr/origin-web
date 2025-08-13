@@ -67,8 +67,6 @@ const Cart = () => {
       : {};
 
     const successHandler = (data: any) => {
-      // console.log('API Response:', data);
-      
       dispatch(setCartItems(data.data));
       dispatch(setCartMinimum(data.cart_minimum));
       setBillDetails({
@@ -77,9 +75,7 @@ const Cart = () => {
         delivery_charge: data.delivery_charge,
       });
 
-      // Pass the complete order restriction data to ActionCtaWithItems
       if (data.order_restricted) {
-        // console.log('Order restriction data found:', data.order_restricted);
         setOrderRestrictionData({
           title: data.order_restricted.title,
           description: data.order_restricted.description,
@@ -87,7 +83,6 @@ const Cart = () => {
           is_available: data.order_restricted.is_available,
         });
       } else {
-        // console.log('No order restriction data');
         setOrderRestrictionData(null);
       }
     };
@@ -220,7 +215,7 @@ const Cart = () => {
   };
 
   return (
-    <div className="flex flex-col grow gap-[1.1vw] mob:gap-[4.1vw] pb-[6vw] mob:pb-[20vw]">
+    <div className="flex flex-col grow gap-[1.1vw] mob:gap-[4.1vw] pb-[6vw] mob:pb-[25vw]">
       {SCREEN_MAP[cart.cartTabType]}
     </div>
   );
