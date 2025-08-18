@@ -447,20 +447,16 @@ const SearchResults = (props: HomeProps) => {
   // API call function
   const searchProducts = async (query: string, pageNum: number = 1): Promise<SearchResponse> => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v5/public/skip-login/items?query=${query}`);
+      const headers: any = {
+      'Content-Type': 'application/json',
+      'delivery-type': 'instant'
+    };
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v5/public/skip-login/items?query=${query}`,{
+        method: 'GET',
+        headers: headers
+      });
       const data = await response.json();
-      
-      // console.log('Search API Response:', {
-      //   query,
-      //   resultsCount: data.data?.length || 0,
-      //   firstProduct: data.data?.[0] ? {
-      //     id: data.data[0].id,
-      //     name: data.data[0].name,
-      //     variants: data.data[0].multiple_uoms?.length || 0
-      //   } : null
-      // });
-      
-      // Transform the response to match our interface
+
       return {
         data: data.data || [],
         totalCount: data.data?.length || 0,

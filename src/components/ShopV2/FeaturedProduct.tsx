@@ -110,7 +110,6 @@ const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
         <div className="flex justify-center items-center w-full md:w-[600px] mob:order-1">
           <div 
             className="rounded-3xl mob:rounded-2xl overflow-hidden w-full h-[300px] md:h-[420px] md:w-[600px] mob:h-[250px] flex items-center justify-center p-8"
-            style={{ backgroundColor: item.bg_color || '#F9F0DA' }}
           >
             <Image
               src={item.image || item.multiple_images?.[0] || "/assets/images/shop/testing_img.png"}

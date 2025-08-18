@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface BlackBtnProps {
@@ -22,7 +22,27 @@ const BlackBtn = (props: BlackBtnProps) => {
     handleRemove,
   } = props;
 
+  const [showMaxMessage, setShowMaxMessage] = useState(false);
+
   const isMax = quantity >= maxQuantity;
+
+  // Show the message when quantity reaches max
+  useEffect(() => {
+    if (isMax) {
+      setShowMaxMessage(true);
+    }
+  }, [isMax]);
+
+  // Hide the message after 2 seconds
+  useEffect(() => {
+    if (showMaxMessage) {
+      const timer = setTimeout(() => {
+        setShowMaxMessage(false);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showMaxMessage]);
 
   const onDecrease = (e: any) => {
     e.preventDefault();
@@ -35,9 +55,15 @@ const BlackBtn = (props: BlackBtnProps) => {
   };
 
   const onIncrease = (e: any) => {
-    if (isMax) return;
     e.preventDefault();
     e.stopPropagation();
+    
+    if (isMax) {
+      // Show the message when trying to exceed max quantity
+      setShowMaxMessage(true);
+      return;
+    }
+    
     handleIncrease(e);
   };
 
@@ -76,7 +102,7 @@ const BlackBtn = (props: BlackBtnProps) => {
 
           {/* Animated max quantity message */}
           <AnimatePresence>
-            {isMax && (
+            {showMaxMessage && (
               <motion.p
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
