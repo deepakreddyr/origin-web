@@ -126,7 +126,7 @@ const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
         </div>
 
         {/* Text Section */}
-        <div className="w-full md:w-[480px] h-auto md:h-[420px] flex flex-col justify-between bg-[#FFFCF1] rounded-3xl mob:rounded-2xl border border-gray-200 shadow-xs overflow-hidden p-6 md:p-8 mob:p-5 mob:order-2">
+        <div className="w-full md:w-[480px] h-auto md:h-[420px] shadow-md flex flex-col justify-between bg-[#FFFCF1] rounded-3xl mob:rounded-2xl shadow-xs overflow-hidden p-6 md:p-8 mob:p-5 mob:order-2">
           
           {/* Top Content */}
           <div className="flex flex-col gap-3 mob:gap-2">

@@ -251,16 +251,7 @@ const ProductDetailsWrapper: React.FC = () => {
   const productDescription = aboutSection?.details?.[0]?.description || '';
 
   return (
-    <div className="min-h-screen mt-[5vw]" style={{ backgroundColor: '#FFF9E5' }}>
-      {/* Mobile Header */}
-      <div className="items-center gap-[3vw] mb-[4.1vw] mob:mb-0 sticky top-[0vw] bg-[#FFF9E5] z-[2] py-[4vw] hidden mob:flex px-[4.1vw]">
-        <button onClick={() => router.back()} className="relative w-[1.25vw] mob:w-[5vw] mob:h-[5vw] h-[1.25vw]">
-          <Image src={backIcon} alt="back" />
-        </button>
-        <p className="font-[SofiaPro] font-semibold mob:text-[5.1vw] mt-[2vw] text-[1.67vw]">
-          {productDetails.item.name}
-        </p>
-      </div>
+    <div className="mt-[4vw]" style={{ backgroundColor: '#FFF9E5' }}>
 
       {/* Main Content Container */}
       <div className="max-w-6xl mx-auto px-8 py-12 mob:px-4 mob:py-6">

@@ -22,7 +22,7 @@ const ItemCard = ({ itemDetails }: any) => {
   };
 
   return (
-    <div className="bg-white rounded-[1.5rem] shadow-[0_8px_24px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col h-full">
+    <div className="bg-white rounded-[1.5rem] shadow-md overflow-hidden flex flex-col h-full">
       <button
         disabled={!selectedUOM.is_available}
         onClick={() =>

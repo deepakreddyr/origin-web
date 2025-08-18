@@ -110,26 +110,31 @@ const ShopPage = (props: HomeProps) => {
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
   }, []);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      try {
-        const userToken = localStorage.getItem('user_token');
+useEffect(() => {
+  const timer = setTimeout(() => {
+    try {
+      const userToken = localStorage.getItem('user_token');
+      const hasSeenBanner = localStorage.getItem('downloadAppBannerSeen'); 
 
-        // Show download app banner when user is not logged in (both mobile and desktop)
-        if (!userToken) {
-          setShowDownloadApp(true);
-        }
-        setDownloadAppReady(true);
-      } catch (error) {
-        console.error('Error accessing localStorage:', error);
-        setDownloadAppReady(true);
+      if (!userToken && !hasSeenBanner) {
+        setShowDownloadApp(true);
       }
-    }, 500);
 
-    return () => clearTimeout(timer);
-  }, []);
+      setDownloadAppReady(true);
+    } catch (error) {
+      console.error('Error accessing localStorage:', error);
+      setDownloadAppReady(true);
+    }
+  }, 500);
 
-  const handleCloseDownloadApp = () => setShowDownloadApp(false);
+  return () => clearTimeout(timer);
+}, []);
+
+const handleCloseDownloadApp = () => {
+  setShowDownloadApp(false);
+  localStorage.setItem('downloadAppBannerSeen', 'true');
+};
+
 
   const PageLoader = () => (
     <div className="flex flex-col gap-[6vw] pl-[10.6vw] mob:pl-[4.1vw] relative top-[12vw] mob:top-[32vw] overflow-hidden">

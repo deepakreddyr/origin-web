@@ -256,7 +256,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
 
   return (
     <>
-      <div className="bg-white rounded-[1.5rem] shadow-[0_8px_24px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.06)] overflow-visible flex flex-col h-full hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)] transition-all duration-300 relative">
+      <div className="bg-white rounded-[1.5rem] shadow-md overflow-visible flex flex-col h-full transition-all duration-300 relative">
         <button
           disabled={!selectedUOM.is_available}
           onClick={handleCardClick}

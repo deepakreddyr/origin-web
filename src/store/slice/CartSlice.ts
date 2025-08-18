@@ -68,13 +68,16 @@ const updateCartTotals = (state: CartState) => {
   state.items.forEach((item) => {
     if (item.cart_quantity > 0) {
       state.totalPrice += item.price * item.cart_quantity;
-      state.totalQuantity += item.cart_quantity;
-
-      const original = item.market_price && item.market_price > 0 ? item.market_price : item.price;
+      state.totalQuantity += 1;
+      const original =
+        item.market_price && item.market_price > 0
+          ? item.market_price
+          : item.price;
       state.totalOriginalPrice += original * item.cart_quantity;
     }
   });
 };
+
 
 const isProceedBtnEnabled = (state: CartState) => {
   if (state.cart_minimum && state.amountToPay < state.cart_minimum) return false;
@@ -194,21 +197,21 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     setCartItems: (state, action: PayloadAction<any[]>) => {
-      console.log('Cart Slice - Setting cart items:', action.payload);
+      // console.log('Cart Slice - Setting cart items:', action.payload);
       // Convert to flat structure if needed
       state.items = convertToFlatStructure(action.payload);
-      console.log('Cart Slice - Items after conversion:', state.items.map(item => ({ id: item.id, variant_id: item.variant_id, quantity: item.cart_quantity })));
+      // console.log('Cart Slice - Items after conversion:', state.items.map(item => ({ id: item.id, variant_id: item.variant_id, quantity: item.cart_quantity })));
       updateCartTotals(state);
       state.isProceedBtnEnabled = isProceedBtnEnabled(state);
     },
 
     addItemToCart: (state, action: PayloadAction<{ product: any; selectedUOM: any }>) => {
       const { product, selectedUOM } = action.payload;
-      console.log('Cart Slice - Adding item to cart:', { 
-        productId: product.id || product.product_id, 
-        variantId: selectedUOM.variant_id || selectedUOM.varientId,
-        productName: product.name || product.item_name
-      });
+      // console.log('Cart Slice - Adding item to cart:', { 
+      //   productId: product.id || product.product_id, 
+      //   variantId: selectedUOM.variant_id || selectedUOM.varientId,
+      //   productName: product.name || product.item_name
+      // });
       
       const normalizedProductId = product.id || product.product_id;
       const normalizedVariantId = selectedUOM.variant_id || selectedUOM.varientId;
@@ -219,11 +222,11 @@ export const cartSlice = createSlice({
 
       if (existingItemIndex !== -1) {
         // Item exists, increase quantity
-        console.log('Cart Slice - Item exists, updating quantity');
+        // console.log('Cart Slice - Item exists, updating quantity');
         state.items[existingItemIndex].cart_quantity += selectedUOM.stepper_quantity;
       } else {
         // New item, add to cart
-        console.log('Cart Slice - New item, adding to cart');
+        // console.log('Cart Slice - New item, adding to cart');
         const newCartItem: CartItemFlat = {
           // Product data - normalize property names
           id: normalizedProductId,
@@ -255,7 +258,7 @@ export const cartSlice = createSlice({
         state.items.push(newCartItem);
       }
 
-      console.log('Cart Slice - Cart after adding item:', state.items.map(item => ({ id: item.id, variant_id: item.variant_id, quantity: item.cart_quantity })));
+      // console.log('Cart Slice - Cart after adding item:', state.items.map(item => ({ id: item.id, variant_id: item.variant_id, quantity: item.cart_quantity })));
       updateCartTotals(state);
       updateLSWithNestedFormat(state.items);
       state.isProceedBtnEnabled = isProceedBtnEnabled(state);
@@ -263,8 +266,8 @@ export const cartSlice = createSlice({
 
     removeItemFromCart: (state, action: PayloadAction<number>) => {
       const variantId = action.payload;
-      console.log('Cart Slice - Removing variant from cart:', variantId);
-      console.log('Cart Slice - Cart before removal:', state.items.map(item => ({ id: item.id, variant_id: item.variant_id, quantity: item.cart_quantity })));
+      // console.log('Cart Slice - Removing variant from cart:', variantId);
+      // console.log('Cart Slice - Cart before removal:', state.items.map(item => ({ id: item.id, variant_id: item.variant_id, quantity: item.cart_quantity })));
 
       const initialItemCount = state.items.length;
       
@@ -272,8 +275,8 @@ export const cartSlice = createSlice({
       state.items = state.items.filter((item) => item.variant_id !== variantId);
 
       const finalItemCount = state.items.length;
-      console.log(`Cart Slice - Items count changed from ${initialItemCount} to ${finalItemCount}`);
-      console.log('Cart Slice - Cart after removal:', state.items.map(item => ({ id: item.id, variant_id: item.variant_id, quantity: item.cart_quantity })));
+      // console.log(`Cart Slice - Items count changed from ${initialItemCount} to ${finalItemCount}`);
+      // console.log('Cart Slice - Cart after removal:', state.items.map(item => ({ id: item.id, variant_id: item.variant_id, quantity: item.cart_quantity })));
 
       updateCartTotals(state);
       updateLSWithNestedFormat(state.items);
@@ -282,14 +285,14 @@ export const cartSlice = createSlice({
 
     increaseQuantity: (state, action: PayloadAction<{ varientId: number; stepperQuantity: number }>) => {
       const { varientId, stepperQuantity } = action.payload;
-      console.log('Cart Slice - Increasing quantity for variant:', varientId, 'by:', stepperQuantity);
+      // console.log('Cart Slice - Increasing quantity for variant:', varientId, 'by:', stepperQuantity);
 
       const item = state.items.find((item) => item.variant_id === varientId);
       if (item) {
-        console.log(`Cart Slice - Variant ${varientId} quantity changing from ${item.cart_quantity} to ${item.cart_quantity + stepperQuantity}`);
+        // console.log(`Cart Slice - Variant ${varientId} quantity changing from ${item.cart_quantity} to ${item.cart_quantity + stepperQuantity}`);
         item.cart_quantity += stepperQuantity;
       } else {
-        console.log('Cart Slice - WARNING: Variant not found for increase:', varientId);
+        // console.log('Cart Slice - WARNING: Variant not found for increase:', varientId);
       }
 
       updateCartTotals(state);
@@ -299,24 +302,24 @@ export const cartSlice = createSlice({
 
     decreaseQuantity: (state, action: PayloadAction<{ varientId: number; stepperQuantity: number }>) => {
       const { varientId, stepperQuantity } = action.payload;
-      console.log('Cart Slice - Decreasing quantity for variant:', varientId, 'by:', stepperQuantity);
+      // console.log('Cart Slice - Decreasing quantity for variant:', varientId, 'by:', stepperQuantity);
 
       const itemIndex = state.items.findIndex((item) => item.variant_id === varientId);
       if (itemIndex !== -1) {
         const item = state.items[itemIndex];
         const newQuantity = item.cart_quantity - stepperQuantity;
         
-        console.log(`Cart Slice - Variant ${varientId} quantity changing from ${item.cart_quantity} to ${newQuantity}`);
+        // console.log(`Cart Slice - Variant ${varientId} quantity changing from ${item.cart_quantity} to ${newQuantity}`);
         
         if (newQuantity <= 0) {
           // Remove the item completely
-          console.log('Cart Slice - Removing item due to zero quantity:', varientId);
+          // console.log('Cart Slice - Removing item due to zero quantity:', varientId);
           state.items.splice(itemIndex, 1);
         } else {
           item.cart_quantity = newQuantity;
         }
       } else {
-        console.log('Cart Slice - WARNING: Variant not found for decrease:', varientId);
+        // console.log('Cart Slice - WARNING: Variant not found for decrease:', varientId);
       }
 
       updateCartTotals(state);
@@ -357,7 +360,7 @@ export const cartSlice = createSlice({
     },
 
     clearCart: (state) => {
-      console.log('Cart Slice - Clearing entire cart');
+      // console.log('Cart Slice - Clearing entire cart');
       state.items = [];
       state.totalQuantity = 0;
       state.totalPrice = 0;

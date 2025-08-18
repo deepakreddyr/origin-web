@@ -12,7 +12,9 @@ const ProductDetailPage = (props: any) => {
   return (
     <Layout mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={mobile ? false : true}>
       <ProductDetailsWrapper />
+      <div className='mb-[25px]'>
       <CategorySection/>
+      </div>
     </Layout>
   );
 };
