@@ -164,7 +164,7 @@ const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
                 <div className="mob:mt-2 max-h-[120px] md:max-h-[160px] overflow-y-auto pr-2 custom-scroll">
                 {/* Works on both mobile + desktop */}
                 <p className="text-gray-700 text-xs md:text-sm leading-relaxed">
-                  {/* {description} */}Grown in controlled-climate farms across Europe and Northern Asia, these raspberries are what happens when nature meets intent. Each berry is shaped by steady light, cool air, and just the right stress — the kind that concentrates flavour and preserves structure. No mush. No fade. Just clarity in every bite. Notes: Flavour: Bright, gently tart, aromatic Use in: Breakfasts, parfaits, desserts, or straight off the crate.
+                  {description}
                 </p>
 
                 {/* Toggle button */}
