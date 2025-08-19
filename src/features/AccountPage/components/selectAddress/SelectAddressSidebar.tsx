@@ -140,10 +140,10 @@ const SelectAddressSidebar = () => {
         ))}
       </div>
       
-      {/* Add the + New Address button at the bottom */}
+      {/* Add the + New Address button at the bottom
       <div className="px-[1vw] mob:px-[4vw] pb-[1vw] mob:pb-[4vw]">
         {addAddressCTA()}
-      </div>
+      </div> */}
     </div>
   );
 };
