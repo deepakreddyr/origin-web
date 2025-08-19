@@ -75,7 +75,83 @@ interface ProductDetails {
   isLoading: boolean;
 }
 
-
+// Product pairing data configuration
+const PRODUCT_PAIRINGS: Record<number, {
+  productName: string;
+  pairings: Array<{
+    name: string;
+    description: string;
+  }>;
+}> = {
+  283: {
+    productName: "Raspberry Imported",
+    pairings: [
+      {
+        name: "Strawberry",
+        description: "Sweetens the tartness. Works well in salads or fruit bowls."
+      },
+      {
+        name: "Spinach",
+        description: "Adds a fresh, leafy contrast. Enhances smoothies effortlessly."
+      },
+      {
+        name: "Banana",
+        description: "Rounds off the sharpness with creamy sweetness. Try the pair in parfaits or shakes."
+      }
+    ]
+  },
+  358: {
+    productName: "Enoki Mushrooms",
+    pairings: [
+      {
+        name: "Asparagus",
+        description: "Adds crisp, earthy texture. Works beautifully in stir-fries or soups."
+      },
+      {
+        name: "Spring Onion",
+        description: "Gives a mild, fresh bite. Tastes the best in hot pots."
+      },
+      {
+        name: "Zucchini",
+        description: "Complements with subtle sweetness. Pairs wonderfully in sautés or bowls."
+      }
+    ]
+  },
+  377: {
+    productName: "Hydroponic Butterhead Lettuce",
+    pairings: [
+      {
+        name: "Cucumber",
+        description: "Adds crunch and coolness. Perfect in salads or wraps."
+      },
+      {
+        name: "Tomato",
+        description: "Brings juicy, mild acidity. Enhances sandwiches or bowls."
+      },
+      {
+        name: "Carrot",
+        description: "Adds sweetness and color. Ideal in salads or slaws."
+      }
+    ]
+  },
+  84: {
+    productName: "Muskmelon Indian",
+    pairings: [
+      {
+        name: "Cucumber",
+        description: "Enhances freshness and crunch. Adds a crisp touch to salads or juices."
+      },
+      {
+        name: "Watermelon",
+        description: "Amplifies the fruity sweetness. Brightens chilled bowls or drinks."
+      },
+      {
+        name: "Mint",
+        description: "Adds a fresh herbal lift. Complements fruit salads or drinks effortlessly."
+      }
+    ]
+  }
+};
 
 // Hungry for More Section Component
 const HungryForMoreSection: React.FC<{ upsellItems: ProductItem[] }> = ({ upsellItems }) => {
@@ -118,10 +194,15 @@ const HungryForMoreSection: React.FC<{ upsellItems: ProductItem[] }> = ({ upsell
 
 const BestPairingCollapsed: React.FC<{ productDetails: ProductDetails }> = ({ productDetails }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-
-  const aboutSection = productDetails.info?.info?.find(
-    section => section.type === 'normal' && section.title === 'About the Product'
-  );
+  
+  // Get the product ID and check if it has pairing data
+  const productId = productDetails.item.id;
+  const pairingData = PRODUCT_PAIRINGS[productId];
+  
+  // Don't render the component if no pairing data exists for this product
+  if (!pairingData) {
+    return null;
+  }
 
   return (
     <div className="mt-8">
@@ -154,31 +235,21 @@ const BestPairingCollapsed: React.FC<{ productDetails: ProductDetails }> = ({ pr
         </svg>
       </div>
 
-      {/* Dropdown Content - Now pushes content below */}
-      <div className={`overflow-hidden transition-all duration-300 ${isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-        <div className="bg-[#FFF9E5] border-t p-4">
+      {/* Dropdown Content - Pushes only content below */}
+      {isExpanded && (
+        <div className="bg-[#FFF9E5] border-t p-4 animate-slideDown">
           <div className="ml-9 space-y-4">
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-1 text-sm">Coconut</h4>
-              <p className="text-gray-700 text-sm leading-relaxed">
-                Enhances its tropical, creamy notes. Try in smoothies or panna cotta.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-1 text-sm">Lime or Lemongrass</h4>
-              <p className="text-gray-700 text-sm leading-relaxed">
-                Balances the sweetness with a zesty lift. Great in sorbets or drinks.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-1 text-sm">Mint or Thai Basil</h4>
-              <p className="text-gray-700 text-sm leading-relaxed">
-                Adds a refreshing herbal contrast in salads or garnishes.
-              </p>
-            </div>
+            {pairingData.pairings.map((pairing, index) => (
+              <div key={index}>
+                <h4 className="font-semibold text-gray-900 mb-1 text-sm">{pairing.name}</h4>
+                <p className="text-gray-700 text-sm leading-relaxed">
+                  {pairing.description}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
@@ -382,6 +453,19 @@ const ProductDetailsWrapper: React.FC = () => {
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
+        }
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-slideDown {
+          animation: slideDown 0.3s ease-out;
         }
       `}</style>
     </div>

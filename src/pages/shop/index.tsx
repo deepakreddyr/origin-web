@@ -20,7 +20,6 @@ import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import DownloadAppWrapper from '@/components/downloadApp/DownloadAppWrapper';
 import FeatureStrip from '@/components/ShopV2/FeatureStrip';
 import WhyOriginBanner from '@/components/ShopV2/WhyOriginBanner';
-import { log } from 'console';
 
 interface HomeProps {
   mainMenuItems: MainMenuType[];

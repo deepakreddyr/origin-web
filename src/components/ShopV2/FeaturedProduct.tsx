@@ -129,7 +129,7 @@ const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
         <div className="w-full md:w-[480px] h-auto md:h-[420px] shadow-md flex flex-col justify-between bg-[#FFFCF1] rounded-3xl mob:rounded-2xl shadow-xs overflow-hidden p-6 md:p-8 mob:p-5 mob:order-2">
           
           {/* Top Content */}
-          <div className="flex flex-col gap-3 mob:gap-2">
+          <div className="flex flex-col gap-1 mob:gap-2">
             <h3 className="text-2xl md:text-[36px] mob:text-xl font-bold text-black leading-tight">
               {item.name}
             </h3>
@@ -137,17 +137,17 @@ const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
             {defaultUom && (
               <>
                 <div className="flex items-baseline gap-2">
-                  <p className="text-base md:text-lg mob:text-lg font-bold text-gray-800">
-                    {defaultUom.formatted_price || `₹${defaultUom.price}`}
-                  </p>
                   {defaultUom.market_price && defaultUom.market_price > defaultUom.price && (
                     <p className="text-sm text-gray-400 line-through">
                       ₹{defaultUom.market_price}
                     </p>
                   )}
+                  <p className="text-base md:text-lg mob:text-lg font-bold text-gray-800">
+                    {defaultUom.formatted_price || `₹${defaultUom.price}`}
+                  </p>
                 </div>
 
-                <p className="text-base md:text-xs mob:text-sm text-gray-400">
+                <p className="text-base md:text-sm mob:text-sm text-gray-400">
                   <span>{defaultUom.unit}</span>
                 </p>
               </>
@@ -161,28 +161,21 @@ const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
 
             {/* Description */}
             {description && (
-              <div className="mob:mt-2">
-                {/* Mobile */}
-                <div className="block md:hidden">
-                  <p className={`text-gray-700 text-sm leading-relaxed transition-all duration-300 ${
-                    isDescriptionExpanded ? '' : 'line-clamp-2'
-                  }`}>
-                    {description}
-                  </p>
-                  {description.length > 100 && (
-                    <button 
-                      onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                      className="text-black text-sm font-medium mt-1 hover:underline"
-                    >
-                      {isDescriptionExpanded ? 'Read less' : 'Read more'}
-                    </button>
-                  )}
-                </div>
-
-                {/* Desktop */}
-                <p className="hidden md:block text-gray-700 text-base leading-relaxed">
-                  {description}
+                <div className="mob:mt-2 max-h-[120px] md:max-h-[160px] overflow-y-auto pr-2 custom-scroll">
+                {/* Works on both mobile + desktop */}
+                <p className="text-gray-700 text-xs md:text-sm leading-relaxed">
+                  {/* {description} */}Grown in controlled-climate farms across Europe and Northern Asia, these raspberries are what happens when nature meets intent. Each berry is shaped by steady light, cool air, and just the right stress — the kind that concentrates flavour and preserves structure. No mush. No fade. Just clarity in every bite. Notes: Flavour: Bright, gently tart, aromatic Use in: Breakfasts, parfaits, desserts, or straight off the crate.
                 </p>
+
+                {/* Toggle button */}
+                {description.length > 120 && (
+                  <button
+                    // onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                    className="text-black text-sm md:text-base font-medium hover:underline"
+                  >
+                    {/* {isDescriptionExpanded ? 'Read less' : 'Read more'} */}
+                  </button>
+                )}
               </div>
             )}
 
@@ -200,7 +193,7 @@ const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
           </div>
 
           {/* Button at Bottom */}
-          <div className="pt-4 mob:pt-4 w-full">
+          <div className="mob:pt-4 w-full">
             {defaultUom && item.is_available ?(
               <AddItemBtn
                 product={productForAddBtn}

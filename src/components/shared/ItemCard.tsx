@@ -10,7 +10,6 @@ const ItemCard = ({ itemDetails }: any) => {
   const defaultUOM = itemDetails?.multiple_uoms.find((uom: any) => uom?.is_default) || itemDetails?.multiple_uoms[0];
   const [selectedUOM, setSelectedUOM] = useState(defaultUOM);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  console.log(itemDetails,"ITEM DETAILS");
   if (!defaultUOM) return null;
 
   const hasMultipleUOMs = itemDetails?.multiple_uoms?.length > 1;
