@@ -13,18 +13,20 @@ import { Button } from '@mui/material';
 // Import the required atoms and enums for new address functionality
 import {
   addressDetailsAtom,
-  isAddressIsOpen,
-  isEditingAddress,
-  addressSidebarDetails
+  isEditingAddress
 } from '@/features/AddressEditDetails/context/atoms';
-import { manageAddressScreens } from '../../enums/ActiveSidebar';
-import TabType from '@/features/AddressEditDetails/enums/TabType';
+import { 
+  addressActiveScreenAtom,
+  activeAccountsPageAtom 
+} from '@/features/AccountPage/context/atoms';
+import { manageAddressScreens } from '@/features/AccountPage/enums/ActiveSidebar';
+import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 
 const SelectAddressSidebar = () => {
   const [address, setAddress] = useAtom(addressAtom);
   const [, setAddressDetails] = useAtom(addressDetailsAtom);
-  const [, setIsAddressOpen] = useAtom(isAddressIsOpen);
-  const [, setAddressSidebarDetails] = useAtom(addressSidebarDetails);
+  const [, setAddressActiveScreen] = useAtom(addressActiveScreenAtom);
+  const [, setActiveAccountsPage] = useAtom(activeAccountsPageAtom);
   const [editingDetails, setIsEditingAddress] = useAtom(isEditingAddress);
   
   const dispatch = useDispatch();
@@ -64,13 +66,14 @@ const SelectAddressSidebar = () => {
       isActive: false
     });
 
-    // Switch to address edit flow - start with serviceability check
-    setAddressSidebarDetails({
-      tabType: TabType.SERVICEABILITY // You might need to add this to your TabType enum
+    // Switch to ManageAddress screen in account sidebar
+    dispatch({
+      type: 'loginDetails/setTabType',
+      payload: TabTypeConstant.MANAGE_ADDRESS
     });
 
-    // Open the address sidebar
-    setIsAddressOpen(true);
+    // Set the address screen to serviceability check
+    setAddressActiveScreen(manageAddressScreens.SERVICEABILITY);
   };
 
   const addAddressCTA = () => {
@@ -140,10 +143,10 @@ const SelectAddressSidebar = () => {
         ))}
       </div>
       
-      {/* Add the + New Address button at the bottom
+      {/* Add the + New Address button at the bottom */}
       <div className="px-[1vw] mob:px-[4vw] pb-[1vw] mob:pb-[4vw]">
         {addAddressCTA()}
-      </div> */}
+      </div>
     </div>
   );
 };

@@ -78,7 +78,7 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
                     href="tel:+918344621039"
                     className="text-white text-base no-underline hover:text-green-100 flex items-center gap-2"
                   >
-                    <WhatsAppIcon fontSize="small" /> +91 8344621039
+                    <WhatsAppIcon fontSize="small" /> +91 9900507318
                   </Typography>
                 </Box>
               </Grid>
