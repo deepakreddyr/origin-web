@@ -11,18 +11,16 @@ import { wrapper } from '@/store/store';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-// --- Cache clear utility ---
-const APP_VERSION = '1.1.3';  // Increment this on each deployment
+const APP_VERSION = '1.1.4';  
 
 const clearCacheAndReload = async () => {
-  if (typeof window === 'undefined') return; // Prevent SSR crash
+  if (typeof window === 'undefined') return;
 
   const currentVersion = localStorage.getItem('appVersion');
   console.log("Current app version in storage:", currentVersion);
   console.log("Latest APP_VERSION:", APP_VERSION);
 
   if (currentVersion === null || currentVersion !== APP_VERSION) {
-    // console.log(`Cache clear: old version=${currentVersion}, new version=${APP_VERSION}`);
     
     try {
       // Clear all caches
