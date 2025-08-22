@@ -25,7 +25,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
   const loginDetails = useSelector((state: any) => state.loginDetails); // Added to check login state
   const [showPopup, setShowPopup] = useState(false);
   const [isOrderRestricted, setIsOrderRestricted] = useState(false);
-
+  
   let cartItemsFromLS: any[] = [];
   if (typeof window !== 'undefined') {
     const lsData = localStorage.getItem('cart_items');
@@ -54,7 +54,9 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
   const finalIsDisabled = loginDetails?.user
     ? isDisabled || shouldDisable || isOrderRestricted
     : false;
-
+  console.log(finalIsDisabled,"finalIsDisabled");
+  console.log(isDisabled,"isDisabled");
+  console.log(isOrderRestricted,"isOrderRestricted");
   const handleClick = () => {
     if (!finalIsDisabled && handler) {
       handler();

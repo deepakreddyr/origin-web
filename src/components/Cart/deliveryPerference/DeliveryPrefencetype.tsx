@@ -6,7 +6,7 @@ import InstantDeliveryBtn from './InstantDeliveryBtn';
 import ScheduledDeliveryBtn from './ScheduledDeliveryBtn';
 import DeliveryTimings from './DeliveryTimings';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCheckoutDetails } from '@/store/slice/placeOrderDetails';
+import { setCheckoutDetails, updateDeliveryType } from '@/store/slice/placeOrderDetails';
 import { setIsProceedButtonEnabled } from '@/store/slice/CartSlice';
 
 type DeliveryType = 'TIME_SLOT' | 'INSTANT' | undefined;
@@ -26,6 +26,13 @@ const DeliveryPrefencetype = () => {
 
     const successHandler = (data: any) => {
       dispatch(setCheckoutDetails({ ...data }));
+      
+      // Set TIME_SLOT as default if timeslots are available
+      if (data?.checkoutDetails?.timeslots?.length > 0) {
+        setActiveDeliveryType('TIME_SLOT');
+        dispatch(updateDeliveryType('TIME_SLOT'));
+      }
+      
       setLoading(false);
     };
     const failureHandler = () => {
@@ -57,9 +64,7 @@ const DeliveryPrefencetype = () => {
   if (loading) return <>loading</>;
 
   // Check if instant delivery is available
-  const isInstantDeliveryAvailable = placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_available&&placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_enabled;
-  // console.log(placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_available,"IMMEDIATE_DEL");
-  // console.log(placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_enabled,"IMMEDIATE_DEL_EN");
+  const isInstantDeliveryAvailable = placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_available && placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_enabled;
 
   return (
     <div>
@@ -76,11 +81,9 @@ const DeliveryPrefencetype = () => {
         />
       </div>
 
-      {activeDeliveryType === 'TIME_SLOT' && (
-        <div>
-          <DeliveryTimings />
-        </div>
-      )}
+      <div>
+        <DeliveryTimings />
+      </div>
     </div>
   );
 };
