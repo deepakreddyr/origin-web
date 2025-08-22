@@ -22,6 +22,7 @@ const DeliveryTimings = (props: any) => {
         <p className="font-[SofiaPro] text-[.83vw]  mob:text-[3vw]">
           Delivery, <span className="font-semibold">{formatRelativeDate(checkoutDetails.delivery_date[0])}</span>{' '}
         </p>
+        <p className='font-[SofiaPro] font-semibold text-[.83vw] mt-5'>Please select your preferred delivery timing.</p>
         <div className="grid grid-cols-2 gap-[1.1vw] mob:gap-[4.1vw] mob:pt-[4.1vw] pt-[1.1vw]">
           {checkoutDetails.timeslots.map((time: any) => (
             <button
