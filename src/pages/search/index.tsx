@@ -447,30 +447,45 @@ const SearchResults = (props: HomeProps) => {
   // API call function
   const searchProducts = async (query: string, pageNum: number = 1): Promise<SearchResponse> => {
     try {
+      const userToken = localStorage.getItem("user_token"); // check token in localStorage
+      
+      // base headers
       const headers: any = {
-      'Content-Type': 'application/json',
-      'delivery-type': 'instant'
-    };
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v5/public/skip-login/items?query=${query}`,{
-        method: 'GET',
-        headers: headers
+        "Content-Type": "application/json",
+        "Delivery-Type": "instant",
+      };
+
+      let apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v5/public/skip-login/items?query=${query}`;
+
+      if (userToken) {
+        apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v5/user/items?query=${query}`;
+        headers["Authorization"] = `Bearer ${userToken}`;
+        headers['MM-Device-Type'] = 'web';
+        headers['MM-Build-Version'] = '1.0.1';
+      }
+
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        headers,
       });
+
       const data = await response.json();
 
       return {
         data: data.data || [],
         totalCount: data.data?.length || 0,
-        hasMore: data.hasMore || false
+        hasMore: data.hasMore || false,
       };
     } catch (error) {
-      console.error('Search API error:', error);
+      console.error("Search API error:", error);
       return {
         data: [],
         totalCount: 0,
-        hasMore: false
+        hasMore: false,
       };
     }
   };
+
 
   // Debounced search function
   const debouncedSearch = (query: string) => {
