@@ -54,9 +54,9 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
   const finalIsDisabled = loginDetails?.user
     ? isDisabled || shouldDisable || isOrderRestricted
     : false;
-  console.log(finalIsDisabled,"finalIsDisabled");
-  console.log(isDisabled,"isDisabled");
-  console.log(isOrderRestricted,"isOrderRestricted");
+  // console.log(finalIsDisabled,"finalIsDisabled");
+  // console.log(isDisabled,"isDisabled");
+  // console.log(isOrderRestricted,"isOrderRestricted");
   const handleClick = () => {
     if (!finalIsDisabled && handler) {
       handler();
