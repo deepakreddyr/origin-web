@@ -106,7 +106,7 @@ const PaymentFailure = (props: any) => {
               You can also proceed with options below
             </p>
             <div className="flex items-center gap-[1.67vw] mob:gap-[5vw] justify-center">
-              <button
+              {/* <button
                 onClick={() => {
                   // this will open the checkout again with the same order keu and order dertails
 
@@ -121,7 +121,7 @@ const PaymentFailure = (props: any) => {
                 className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  mob:px-[4.1vw] px-[1.1vw] mob:py-[1.5vw] py-[.5vw] rounded-full bg-primary border border-primary"
               >
                 Retry Payment
-              </button>
+              </button> */}
               <button
                 onClick={() => payOnCodHandler()}
                 className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold px-[1.1vw] mob:px-[4.1vw] py-[.5vw] mob:py-[1.5vw] rounded-full bg-white border border-black"
