@@ -90,7 +90,7 @@ const Payment = (props: any) => {
   };
 
   // totalAmount: any, orderDetails: any, orderResponse: any
-  const checkoutRazporpay: any = () => {
+  const checkoutRazporpay = (orderId: any) => {
     let totalAmount: any = localStorage.getItem('total_cart');
     let orderType: any = localStorage.getItem('order_type');
     let orderResponse: any = localStorage.getItem('razorpay_response');
@@ -112,7 +112,7 @@ const Payment = (props: any) => {
           contact: profile?.data?.phone,
           method: orderType.sub_payment_method
         },
-        order_id: orderResponse?.data?.razorpay_order_id,
+        order_id: orderId,
         handler() {
           onSuccess(orderResponse, orderType.name);
         },
@@ -125,6 +125,7 @@ const Payment = (props: any) => {
           color: '#FFEB66'
         }
       };
+      // console.log(razorpayOptions);
       const rzp1 = new (window as any).Razorpay(razorpayOptions);
       rzp1.open();
     }
@@ -234,7 +235,8 @@ const Payment = (props: any) => {
         if (response?.data?.razorpay_order_id) {
           // setCheckoutDetails;
           // totalAmount, orderType, response;
-          checkoutRazporpay();
+          const order_id=response?.data?.razorpay_order_id;
+          checkoutRazporpay(order_id);
         }
       }
     };
