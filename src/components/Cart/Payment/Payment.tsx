@@ -94,6 +94,7 @@ const Payment = (props: any) => {
     let totalAmount: any = localStorage.getItem('total_cart');
     let orderType: any = localStorage.getItem('order_type');
     let orderResponse: any = localStorage.getItem('razorpay_response');
+    console.log(orderId, "order-id");
     if (totalAmount) totalAmount = JSON.parse(totalAmount);
     if (orderType) orderType = JSON.parse(orderType);
     if (orderResponse) orderResponse = JSON.parse(orderResponse);
@@ -145,6 +146,7 @@ const Payment = (props: any) => {
       };
     }
     const successHandler = (data: any) => {
+      console.log(data,"data");
       let orderResponse = {
         order_id: orderAndRefundDetails.orderDetailsData.order_id,
         sub_total: data.data.amount_due / 100

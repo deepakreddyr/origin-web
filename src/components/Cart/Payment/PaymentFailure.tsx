@@ -12,13 +12,14 @@ import { clearCart, setCartTabType } from '@/store/slice/CartSlice';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 const PaymentFailure = (props: any) => {
   const { paymentModalDetails, placeOrderAgain, setPaymentFlowScreen } = props;
+  console.log(paymentModalDetails, "test");
   const sendDataToApi = useSendDataToApi();
   const [showFailureConfirmModal, setShowFailureConifrmModal] = useState(false);
   const [activeScreenIndex, setActiveScreenIndex] = useState(1);
   const router = useRouter();
   const dispatch = useDispatch();
   let paymentFlow = localStorage.getItem('FLOW_TYPE') ? localStorage.getItem('FLOW_TYPE') : null;
-
+  console.log(paymentFlow);
   // useEffect(() => {
   //   const timer = setTimeout(() => {
   //     localStorage.removeItem('FLOW_TYPE');
@@ -110,9 +111,11 @@ const PaymentFailure = (props: any) => {
                   // this will open the checkout again with the same order keu and order dertails
 
                   placeOrderAgain(
-                    paymentModalDetails.cartValue,
-                    paymentModalDetails.orderDetails,
-                    paymentModalDetails.orderResponse
+                    // paymentModalDetails.cartValue,
+                    // paymentModalDetails.orderDetails,
+                    // paymentModalDetails.orderResponse,
+                    paymentModalDetails.orderResponse.razorpay_order_id
+
                   );
                 }}
                 className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  mob:px-[4.1vw] px-[1.1vw] mob:py-[1.5vw] py-[.5vw] rounded-full bg-primary border border-primary"
