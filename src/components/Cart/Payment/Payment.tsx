@@ -177,7 +177,7 @@ const Payment = (props: any) => {
           color: '#FFEB66'
         }
       };
-      console.log(razorpayOptions,"data-");
+      // console.log(razorpayOptions,"data-");
       const rzp1 = new (window as any).Razorpay(razorpayOptions);
       rzp1.open();
     };
