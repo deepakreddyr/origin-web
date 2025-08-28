@@ -26,13 +26,6 @@ const DeliveryPrefencetype = () => {
 
     const successHandler = (data: any) => {
       dispatch(setCheckoutDetails({ ...data }));
-      
-      // Set TIME_SLOT as default if timeslots are available
-      if (data?.checkoutDetails?.timeslots?.length > 0) {
-        setActiveDeliveryType('TIME_SLOT');
-        dispatch(updateDeliveryType('TIME_SLOT'));
-      }
-      
       setLoading(false);
     };
     const failureHandler = () => {
@@ -45,21 +38,28 @@ const DeliveryPrefencetype = () => {
     fetchCheckoutDetails();
   }, []);
 
-  // enable Proceed button only if a type is selected & conditions met
+  // Auto-update activeDeliveryType based on Redux state changes
   useEffect(() => {
-    if (activeDeliveryType === 'TIME_SLOT') {
-      if (placeOrderDetails.time_slot_id) {
-        dispatch(setIsProceedButtonEnabled(true));
-      } else {
-        dispatch(setIsProceedButtonEnabled(false));
-      }
-    } else if (activeDeliveryType === 'INSTANT') {
-      dispatch(setIsProceedButtonEnabled(true));
-    } else {
-      // nothing selected yet
-      dispatch(setIsProceedButtonEnabled(false));
+    if (placeOrderDetails.delivery_type !== '') {
+      setActiveDeliveryType(placeOrderDetails.delivery_type);
     }
-  }, [activeDeliveryType, placeOrderDetails.time_slot_id]);
+  }, [placeOrderDetails.delivery_type]);
+
+  // Enable/disable proceed button based on selections
+  useEffect(() => {
+    let canProceed = false;
+
+    if (placeOrderDetails.delivery_type === 'TIME_SLOT') {
+      // For time slot delivery, user must select a specific timing
+      canProceed = placeOrderDetails.time_slot_id !== '';
+    } else if (placeOrderDetails.delivery_type === 'INSTANT') {
+      // For instant delivery, no additional selection needed
+      canProceed = true;
+    }
+
+    // Enable proceed button if user has made all required selections
+    dispatch(setIsProceedButtonEnabled(canProceed));
+  }, [placeOrderDetails.delivery_type, placeOrderDetails.time_slot_id, dispatch]);
 
   if (loading) return <>loading</>;
 

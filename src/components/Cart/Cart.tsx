@@ -38,6 +38,7 @@ import { useAtom } from 'jotai';
 
 const Cart = () => {
   const cart = useSelector((state: any) => state.cart);
+  const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails); // Added this line
   const [showAddressModal, setAddressModal] = useState(false);
   const [showCouponList, setShowCouponList] = useState(false);
   const [orderRestrictionData, setOrderRestrictionData] = useState<null | {
@@ -158,12 +159,31 @@ const Cart = () => {
         dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
         return;
       }
-      if (cart.cartTabType === TabTypeConstant.CART_MAIN) {
+      
+      // If we're in the main cart view and no modal is open
+      if (cart.cartTabType === TabTypeConstant.CART_MAIN && !showAddressModal) {
         setAddressModal(true);
-        dispatch(setIsProceedButtonEnabled(false));
+        dispatch(setIsProceedButtonEnabled(false)); // Disable until timing is selected
+        return;
       }
+      
+      // If modal is open, check if user has selected delivery timing
       if (cart.cartTabType === TabTypeConstant.CART_MAIN && showAddressModal) {
-        dispatch(setCartTabType(TabTypeConstant.PAYMENT));
+        // Check if user has selected a delivery type and timing
+        const hasSelectedDelivery = placeOrderDetails.delivery_type !== '';
+        const hasSelectedTiming = placeOrderDetails.delivery_type === 'INSTANT' || 
+                                  (placeOrderDetails.delivery_type === 'TIME_SLOT' && placeOrderDetails.time_slot_id !== '');
+        
+        if (hasSelectedDelivery && hasSelectedTiming) {
+          // User has selected timing, proceed to payment
+          setAddressModal(false);
+          dispatch(setCartTabType(TabTypeConstant.PAYMENT));
+          return;
+        } else {
+          // User hasn't selected timing, show alert or keep modal open
+          alert('Please select a delivery timing to proceed.');
+          return;
+        }
       }
     } else {
       setRouteSourceToLs(TabTypeConstant.CART);
@@ -207,6 +227,7 @@ const Cart = () => {
             handler={proceedButtonHandler}
             isDisabled={!cart.isProceedBtnEnabled}
             orderRestrictionData={orderRestrictionData}
+            showAddressModal={showAddressModal} // Pass this prop to ActionCtaWithItems
           />
         )}
       </>

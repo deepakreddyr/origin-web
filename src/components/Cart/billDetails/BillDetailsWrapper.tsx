@@ -106,7 +106,7 @@ const BillDetailsWrapper = (props: any) => {
             You're almost there! 🎉
           </p> */}
           <p className="font-[SofiaPro] font-bold text-green-700 text-sm mt-1">
-            Add <span className="font-[SofiaPro] font-bold font-bold">₹{remainingAmount}</span> more to reach the minimum order!
+            Add <span className="font-[SofiaPro] font-bold">₹{remainingAmount}</span> more to reach the minimum order!
           </p>
         </div>
     )}
