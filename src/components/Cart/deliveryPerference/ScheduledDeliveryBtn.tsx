@@ -47,11 +47,6 @@ const ScheduledDeliveryBtn = (props: any) => {
           height={28}
           className="mob:w-[40px] mob:h-[40px]"
         />
-        {isSelected && (
-          <div className="absolute -top-1 -right-1 bg-[#006C37] rounded-full w-5 h-5 flex items-center justify-center">
-            <span className="text-white text-xs font-bold">✓</span>
-          </div>
-        )}
       </div>
       
       <p className="font-[SofiaPro] text-[1vw] mob:text-[5vw] font-semibold mb-[0.4vw] mob:mb-[2vw]">

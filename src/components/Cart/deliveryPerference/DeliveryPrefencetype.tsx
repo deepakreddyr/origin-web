@@ -64,7 +64,7 @@ const DeliveryPrefencetype = () => {
   if (loading) return <>loading</>;
 
   // Check if instant delivery is available
-  const isInstantDeliveryAvailable = placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_available && placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_enabled;
+  const isInstantDeliveryAvailable = placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_available && placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_enabled && placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_time_enabled && !placeOrderDetails?.checkoutDetails?.dash_delivery?.is_immediate_delivery_busy;
 
   return (
     <div>

@@ -20,25 +20,25 @@ const OrderStatusImageDesc = () => {
     previousOrderStartedAt: number,
     eta: number
   ): Duration | null => {
-    console.log("Input - previousOrderStartedAt:", previousOrderStartedAt);
-    console.log("Input - eta:", eta);
+    // console.log("Input - previousOrderStartedAt:", previousOrderStartedAt);
+    // console.log("Input - eta:", eta);
 
     const previousOrderDate = new Date(previousOrderStartedAt * 1000);
-    console.log("Previous order date:", previousOrderDate.toISOString());
+    // console.log("Previous order date:", previousOrderDate.toISOString());
 
     const then = DateTime.fromJSDate(previousOrderDate).plus({ seconds: eta });
-    console.log("Calculated ETA (then):", then.toISO());
+    // console.log("Calculated ETA (then):", then.toISO());
 
     const now = DateTime.now();
-    console.log("Current time (now):", now.toISO());
+    // console.log("Current time (now):", now.toISO());
 
     if (now < then) {
       const diff = then.diff(now);
-      console.log("Time difference:", diff.toObject());
+      // console.log("Time difference:", diff.toObject());
       return diff;
     }
 
-    console.log("ETA has passed, returning null");
+    // console.log("ETA has passed, returning null");
     return null;
   };
 
@@ -59,7 +59,7 @@ const OrderStatusImageDesc = () => {
         setCount(newETA);
       }
 
-      console.log("Final ETA to display:", count?.toFormat("mm:ss") || "2:00");
+      // console.log("Final ETA to display:", count?.toFormat("mm:ss") || "2:00");
     }
   };
 

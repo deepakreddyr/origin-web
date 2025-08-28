@@ -88,7 +88,7 @@ const RetryOrPayonlineWrapper: React.FC<RetryOrPayonlineWrapperProps> = ({ fetch
       }
       
       const successHandler = (data: any) => {
-        console.log('Payment method updated successfully:', data);
+        // console.log('Payment method updated successfully:', data);
         setIsUpdatingPayment(false);
         // Refresh the order details instead of reloading the page
         if (fetchOrderdetails) {
@@ -107,7 +107,7 @@ const RetryOrPayonlineWrapper: React.FC<RetryOrPayonlineWrapperProps> = ({ fetch
         payment_method: 'COD'
       };
       
-      console.log('Updating payment method to COD for order:', apiData.order_id);
+      // console.log('Updating payment method to COD for order:', apiData.order_id);
       setIsUpdatingPayment(true);
       sendDataToApi(apiUrl, apiData, 'POST', successHandler, failureHandler, additionalHeaders);
     }

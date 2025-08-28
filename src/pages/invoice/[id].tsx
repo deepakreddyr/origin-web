@@ -285,7 +285,7 @@ const InvoicePage: React.FC = () => {
                     title={`Invoice ${displayId}`}
                     style={{ border: 'none' }}
                     onError={() => {
-                      console.log('Iframe failed to load, showing fallback');
+                      // console.log('Iframe failed to load, showing fallback');
                       setShowFallback(true);
                     }}
                   />

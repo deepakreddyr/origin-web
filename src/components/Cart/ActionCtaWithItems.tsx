@@ -65,10 +65,10 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
         
         if (hasSelectedDelivery) {
           if (placeOrderDetails.delivery_type === 'INSTANT') {
-            return 'PROCEED TO PAYMENT';
+            return 'PROCEED TO PAY';
           } else if (placeOrderDetails.delivery_type === 'TIME_SLOT') {
             const hasSelectedTiming = placeOrderDetails.time_slot_id !== '';
-            return hasSelectedTiming ? 'PROCEED TO PAYMENT' : 'SELECT TIME SLOT';
+            return hasSelectedTiming ? 'PROCEED TO PAY' : 'SELECT TIME SLOT';
           }
         }
         return 'SELECT DELIVERY TYPE';

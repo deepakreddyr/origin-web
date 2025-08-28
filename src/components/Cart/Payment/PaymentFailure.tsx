@@ -12,14 +12,14 @@ import { clearCart, setCartTabType } from '@/store/slice/CartSlice';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 const PaymentFailure = (props: any) => {
   const { paymentModalDetails, placeOrderAgain, setPaymentFlowScreen } = props;
-  console.log(paymentModalDetails, "test");
+  // console.log(paymentModalDetails, "test");
   const sendDataToApi = useSendDataToApi();
   const [showFailureConfirmModal, setShowFailureConifrmModal] = useState(false);
   const [activeScreenIndex, setActiveScreenIndex] = useState(1);
   const router = useRouter();
   const dispatch = useDispatch();
   let paymentFlow = localStorage.getItem('FLOW_TYPE') ? localStorage.getItem('FLOW_TYPE') : null;
-  console.log(paymentFlow);
+  // console.log(paymentFlow);
   // useEffect(() => {
   //   const timer = setTimeout(() => {
   //     localStorage.removeItem('FLOW_TYPE');

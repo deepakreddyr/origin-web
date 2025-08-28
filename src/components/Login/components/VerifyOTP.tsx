@@ -86,7 +86,7 @@ const VerifyOTP = (props: Props) => {
       }
     };
     const failureHandler = (data: any) => {
-      console.log(data);
+      // console.log(data);
     };
 
     getDataFromApi(apiUrl, successHandler, failureHandler, {});

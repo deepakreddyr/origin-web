@@ -75,7 +75,7 @@ const BillDetailsWrapper = (props: any) => {
             </div>
           </li>
         )}
-
+        {localStorage.getItem("user_token") && 
         <li>
           <div className="flex items-center text-secondary justify-between">
             <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">Delivery fee</p>
@@ -89,7 +89,7 @@ const BillDetailsWrapper = (props: any) => {
             </p>
           </div>
         </li>
-
+        }
         <li>
           <div className="flex items-center text-black justify-between">
             <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">To Pay</p>

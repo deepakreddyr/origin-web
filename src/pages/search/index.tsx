@@ -234,11 +234,11 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const availableUOMs = product.multiple_uoms?.filter((uom) => uom?.is_available) || [];
 
   const handleUOMChange = (uom: any) => {
-    console.log('Search ProductCard - UOM changed:', {
-      from: selectedUOM?.variant_id,
-      to: uom.variant_id,
-      unit: uom.unit
-    });
+    // console.log('Search ProductCard - UOM changed:', {
+    //   from: selectedUOM?.variant_id,
+    //   to: uom.variant_id,
+    //   unit: uom.unit
+    // });
     setSelectedUOM(uom);
   };
 
