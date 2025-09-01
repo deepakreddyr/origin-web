@@ -98,7 +98,7 @@ const HelpFaq = () => {
                   marginLeft: '0.2rem'
                 }}
               >
-                help@originfresh.com
+                support@originfresh.in
               </Typography>
             </Box>
           </Box>
