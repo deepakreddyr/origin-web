@@ -129,5 +129,5 @@ interface Data {
   order: Order;
 }
 
-type RecentOrderResponse = Data[];
+type RecentOrderResponse = any;
 export default RecentOrderResponse;

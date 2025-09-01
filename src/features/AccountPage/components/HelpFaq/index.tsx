@@ -25,7 +25,6 @@ const HelpFaq = () => {
   const [, setRecentOrderAtom] = useAtom(recentOrderAtom);
   const [recentOrder] = useAtom(recentOrderAtom);
   // const [, setActiveAccountsPage] = useAtom(activeAccountsPageAtom)
-
   const faqs = recentOrder?.data?.map((item: any) => item.faqs) || [];
   // const orders = recentOrder?.data?.map((item: any) => item.order) || []
 
@@ -80,7 +79,7 @@ const HelpFaq = () => {
                   marginLeft: '0.2rem'
                 }}
               >
-                +91 9900508216
+                {recentOrder?.data?.[0]?.support_phone}
               </Typography>
             </Box>
             <Box
@@ -98,7 +97,7 @@ const HelpFaq = () => {
                   marginLeft: '0.2rem'
                 }}
               >
-                support@originfresh.in
+                {recentOrder?.data?.[0]?.support_email}
               </Typography>
             </Box>
           </Box>
