@@ -10,6 +10,7 @@ import { setIsSidebarOpen } from '@/store/slice/loginSlice';
 interface Props {
   order: {
     order_id: string;
+    order_code: string;
     created_at: number;
     status: string;
     item_details: string;
@@ -36,12 +37,12 @@ const OrderCard = (props: Props) => {
 
   return (
     <div
-      key={order.order_id}
+      key={order.order_code}
       className="cursor-pointer bg-[#F8F4E9] p-[1.1vw] mob:p-[4.1vw] mob:rounded-[3vw] rounded-[.83vw] "
       onClick={() => redirectOnClick(order.order_id)}
     >
       <div className="flex justify-between items-center mob:pb-[2.5vw] pb-[.6vw]">
-        <span className="font-bold text-[.97vw] mob:text-[3.6vw] font-[SofiaPro] ">{`ORDER ID ${order.order_id}`}</span>
+        <span className="font-bold text-[.97vw] mob:text-[3.6vw] font-[SofiaPro] ">{`ORDER ID ${order.order_code}`}</span>
 
         <div>
           {order.status === 'Delivered' ? (
