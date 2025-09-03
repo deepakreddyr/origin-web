@@ -28,7 +28,16 @@ const CategorySection = () => {
   const webUI = () => {
     const itemsToShow = showAll ? mainCategoryList : mainCategoryList.slice(0, 8);
     const hasMore = mainCategoryList.length > 8;
-
+    if (mainCategoryList.length <= 5) {
+      // Original layout for 5 or fewer categories
+      return (
+        <div className="flex justify-center gap-[1.1vw]">
+          {mainCategoryList.map((category: any) => (
+            <CategoryCard key={category.id} cardDetails={category} />
+          ))}
+        </div>
+      );
+    }
     return (
       <div>
         {/* Grid Layout */}
