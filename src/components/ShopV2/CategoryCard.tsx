@@ -2,7 +2,6 @@ import { Category } from '@/utilities/types';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-// import webcat from '/public/assets/images/shop/webcatimg.png'
 
 interface Props {
   cardDetails: Category;
@@ -11,15 +10,21 @@ interface Props {
 const CategoryCard = (props: Props) => {
   const { cardDetails } = props;
 
-  const href = `/shop/${cardDetails.name.replace(/ /g, '-').toLowerCase()}/${cardDetails?.id}/${cardDetails?.sub_categories[0].name
-    .replace(/ /g, '-')
-    .toLowerCase()}/${cardDetails?.sub_categories[0].id}`;
+  // Handle cases where sub_categories might be empty or undefined
+  const firstSubCategory = cardDetails?.sub_categories?.[0];
+  
+  // Generate href based on whether sub_categories exist
+  const href = firstSubCategory
+    ? `/shop/${cardDetails.name.replace(/ /g, '-').toLowerCase()}/${cardDetails?.id}/${firstSubCategory.name
+        .replace(/ /g, '-')
+        .toLowerCase()}/${firstSubCategory.id}`
+    : `/shop/${cardDetails.name.replace(/ /g, '-').toLowerCase()}/${cardDetails?.id}`;
 
   return (
     <Link
       replace
       href={href}
-     className="w-[24vw] h-[16vw] mob:w-[40vw] flex flex-col items-center text-center"
+      className="w-[24vw] h-[16vw] mob:w-[40vw] flex flex-col items-center text-center"
     >
       {/* Image */}
       <div className="relative bg-white w-[16vw] h-[10vw] mob:h-[48vw] rounded-[1.2vw] overflow-hidden">
