@@ -20,7 +20,7 @@ const ChatScreen = () => {
   const orders = recentOrder.data?.map((item: any) => item.order) || [];
   const [activeSupportChat] = useAtom(activeSupportChatAtom);
   React.useEffect(() => {
-    const orderId: any = orders.map((order) => order.order_id);
+    const orderId: any = orders.map((order: any) => order.order_id);
 
     getSupportChat(setSupportChat, orderId);
   }, []);

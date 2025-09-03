@@ -50,6 +50,7 @@ body {
   color: #000;
   /* background-color: #f9f0da; */
   font-size: 16px;
+  touch-action: manipulation;
 }
 
 body {

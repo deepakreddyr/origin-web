@@ -171,4 +171,5 @@ div[style*='animation: scroll'] {
 }
 html, body {
   overflow-x: hidden;
+  touch-action: manipulation;
 }
