@@ -34,12 +34,12 @@ const CategorySection = () => {
             href={`/shop/${category.name.replace(/ /g, '-').toLowerCase()}/${category.id}/${category.sub_categories[0].name.replace(/ /g, '-').toLowerCase()}/${category.sub_categories[0].id}`}
             className={`${index === 0 ? 'col-span-2' : 'col-span-1'} flex flex-col items-center`}
           >
-            <div className="relative w-full h-[29vw] border border-[#E3E3E3] rounded-[2vw] shadow-sm hover:shadow-md transition-shadow duration-200">
+            <div className="relative w-full h-[29vw] rounded-[2vw] shadow-sm hover:shadow-md transition-shadow duration-200">
               <Image
-                src={category.image || catimg}
+                src={category.website_image || catimg}
                 alt={category.name}
                 fill
-                className="object-contain rounded-[2vw]"
+                className="object-cover rounded-[2vw]"
               />
             </div>
             <p className="font-[SofiaPro] text-[3.6vw] font-semibold text-center mt-[2vw]">
@@ -60,10 +60,10 @@ const CategorySection = () => {
           >
             <div className="relative w-full h-[30vw] border border-[#E3E3E3] rounded-[2vw] shadow-sm hover:shadow-md transition-shadow duration-200">
               <Image
-                src={category.image || catimg}
+                src={category.website_image || catimg}
                 alt={category.name}
                 fill
-                className="object-contain rounded-[2vw]"
+                className="object-cover rounded-[2vw]"
               />
             </div>
             <p className="font-[SofiaPro] text-[3.6vw] font-semibold text-center mt-[2vw]">
