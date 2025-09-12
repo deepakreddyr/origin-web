@@ -20,6 +20,7 @@ import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import DownloadAppWrapper from '@/components/downloadApp/DownloadAppWrapper';
 import FeatureStrip from '@/components/ShopV2/FeatureStrip';
 import WhyOriginBanner from '@/components/ShopV2/WhyOriginBanner';
+import { ShopHeroSingle } from '@/components/ShopV2/ShopHero';
 
 interface HomeProps {
   mainMenuItems: MainMenuType[];
@@ -148,14 +149,15 @@ const handleCloseDownloadApp = () => {
   const LoadedUI = () => (
     <div className="flex flex-col items-center pb-[2vw] mob:pb-[10vw] overflow-hidden">
       <div className="w-full relative overflow-hidden m-0 p-0">
-        <VideoBanner
+        {/* <VideoBanner
           mobileVideoSrc="https://cdn.originfresh.in/website/Origin_9_16_v1.mp4"
           desktopVideoSrc="https://cdn.originfresh.in/website/Origin_16_9_v1.mp4"
           autoPlay={true}
           muted={true}
           loop={true}
           controls={false}
-        />
+        /> */}
+        <ShopHeroSingle/>
         <FeatureStrip />
       </div>
 

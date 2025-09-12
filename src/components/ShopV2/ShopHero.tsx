@@ -11,7 +11,7 @@ import banner1 from '/public/assets/images/shop/heroBannerShop.png';
 import banner2 from '/public/assets/images/shop/heroBannerShop1.png';
 import banner3 from '/public/assets/images/shop/heroBannerShop2.png';
 import banner4 from '/public/assets/images/shop/heroBannerShop3.png';
-import { title } from 'process';
+import landingimg from '/public/assets/images/shop/landingimg.webp';
 
 const bannerData = [
   {
@@ -137,3 +137,75 @@ const ShopHero = () => {
 };
 
 export default ShopHero;
+
+// 🔹 New Component: Single Banner Hero
+export const ShopHeroSingle = () => {
+  const isMobile = useMediaQuery('(max-width:768px)');
+  const isTablet = useMediaQuery('(max-width:1024px)');
+  const router = useRouter();
+
+  return (
+    <div className="relative w-full overflow-hidden mob:pt-[20px]">
+      <div
+        className={`relative w-full ${
+          isMobile ? 'pt-[50px]' : 'aspect-[2.4/1]'
+        }`}
+      >
+        <div className="w-full relative">
+          <Image
+            src={landingimg}
+            alt="Shop Hero Single Banner"
+            layout="responsive"
+            width={1920}
+            height={800}
+            className="object-cover"
+            priority
+            quality={100}
+          />
+        </div>
+
+        <div
+          className="absolute inset-0 z-10 flex items-center justify-start"
+          style={{ 
+            paddingRight: isMobile ? '50px' : isTablet ? '120px' : '200px' 
+          }}
+        >
+          <div
+            className={`text-left ${
+              isMobile ? 'max-w-[60vw] pt-[8vw]' : isTablet ? 'max-w-[35vw]' : 'max-w-[28vw]'
+            }`}
+          >
+            <h1
+              className={`
+                font-[SofiaPro] font-bold text-white whitespace-pre-line
+                ${isMobile 
+                  ? 'text-[4.5vw] leading-[1.0]' 
+                  : isTablet 
+                    ? 'text-[4.5vw] leading-[0.9]' 
+                    : 'text-[6vw] leading-[1.1]'
+                }
+              `}
+            >
+              {/* {banner.title} */}
+            </h1>
+            <button
+              onClick={() => router.push("/shimeji-mushroom-white/288")}
+              className={`
+                bg-[#FFD600] text-black font-[SofiaPro] font-semibold rounded-lg
+                hover:bg-[#ffcd00] transition
+                ${isMobile 
+                  ? 'text-[2vw] mt-[15vw] py-1 px-4 ml-[15vw]' 
+                  : isTablet 
+                    ? 'text-[1.2vw] mt-[1.8vw] py-2 px-6 ml-[15vw]' 
+                    : 'text-[1vw] mt-[9vw] py-2 px-6 ml-[11vw]'
+                }
+              `}
+            >
+              Shop Now
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
