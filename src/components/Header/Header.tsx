@@ -328,7 +328,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
 
   // Default header styling (original)
   return (
-    <div ref={menuRef} className={`z-[10] ${isHeaderSticky ? 'fixed top-[1.1vw]' : 'absolute'} flex items-center flex-col w-full z-50`}>
+    <div ref={menuRef} className={`${isHeaderSticky ? 'fixed top-[1.1vw]' : 'absolute'} flex items-center flex-col w-full z-20`}>
       <OffersRibbon />
 
       {/* Header bar */}
