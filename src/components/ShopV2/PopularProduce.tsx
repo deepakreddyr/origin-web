@@ -45,7 +45,7 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
         <button
           onClick={handlePrevious}
           disabled={currentIndex === 0}
-          className={`absolute left-[-2vw] mob:left-[-6vw] w-[3vw] h-[3vw] mob:w-[8vw] mob:h-[8vw] rounded-full flex items-center justify-center transition-all duration-200 z-10 ${
+          className={`absolute left-[-2vw] mob:left-[-7vw] w-[3vw] h-[3vw] mob:w-[8vw] mob:h-[8vw] rounded-full flex items-center justify-center transition-all duration-200 z-10 ${
             currentIndex === 0
               ? 'opacity-50 cursor-not-allowed'
               : 'hover:bg-gray-100 bg-white shadow-md'
@@ -95,7 +95,7 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
         <button
           onClick={handleNext}
           disabled={currentIndex >= maxIndex}
-          className={`absolute right-[-2vw] mob:right-[-6vw] w-[3vw] h-[3vw] mob:w-[8vw] mob:h-[8vw] rounded-full flex items-center justify-center transition-all duration-200 z-10 ${
+          className={`absolute right-[-2vw] mob:right-[-7vw] w-[3vw] h-[3vw] mob:w-[8vw] mob:h-[8vw] rounded-full flex items-center justify-center transition-all duration-200 z-10 ${
             currentIndex >= maxIndex
               ? 'opacity-50 cursor-not-allowed'
               : 'hover:bg-gray-100'
