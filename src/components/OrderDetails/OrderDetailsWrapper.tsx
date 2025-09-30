@@ -76,9 +76,9 @@ const OrderDetailsWrapper = () => {
             fetchOrderdetails={fetchOrderdetails}
           />
           <div className="w-full mob:block hidden mob:px-[4.1vw] ">
-            {(orderAndRefundDetails.orderDetailsData.status !== "Cancelled by user") && 
+            {/* {(orderAndRefundDetails.orderDetailsData.status !== "Cancelled by user") && 
               <RetryOrPayonlineWrapper fetchOrderdetails={fetchOrderdetails} />
-            }
+            } */}
             <ItemsList orderDetailsData={orderAndRefundDetails.orderDetailsData} />
           </div>
           <div className="mob:px-[4.1vw] flex flex-col gap-[1.671vw] mob:gap-[4.1vw] ">

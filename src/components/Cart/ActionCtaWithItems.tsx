@@ -131,8 +131,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
     <div className="relative">
       {/* Selection guidance tooltip */}
       {finalIsDisabled && cart.cartTabType === TabTypeConstant.CART_MAIN && loginDetails?.user && (
-        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 bg-black text-white text-sm rounded-lg opacity-75">
-          {placeOrderDetails.delivery_type === '' && 'Select delivery type first'}
+        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 text-white text-sm rounded-lg opacity-75">
           {placeOrderDetails.delivery_type === 'TIME_SLOT' && placeOrderDetails.time_slot_id === '' && 'Choose a time slot'}
         </div>
       )}
