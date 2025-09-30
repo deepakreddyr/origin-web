@@ -6,7 +6,7 @@ import { Carousel } from 'react-responsive-carousel';
 import { useMediaQuery } from '@mui/material';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { useRouter } from 'next/router';
-
+import { useEffect } from 'react';
 import banner1 from '/public/assets/images/shop/heroBannerShop.png';
 import banner2 from '/public/assets/images/shop/heroBannerShop1.png';
 import banner3 from '/public/assets/images/shop/heroBannerShop2.png';
@@ -143,7 +143,9 @@ export const ShopHeroSingle = () => {
   const isMobile = useMediaQuery('(max-width:768px)');
   const isTablet = useMediaQuery('(max-width:1024px)');
   const router = useRouter();
-
+  useEffect(() => {
+    router.prefetch('/shimeji-mushroom-white/288')
+  }, [router])
   return (
     <div className="relative w-full overflow-hidden mob:pt-[20px]">
       <div
