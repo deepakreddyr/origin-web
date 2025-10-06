@@ -213,7 +213,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                   className="flex items-center hover:opacity-80 transition-opacity"
                   aria-label="Go to shop"
                 >
-                  <div className={`relative ${isMobile ? 'w-24 h-10' : 'w-20 h-10'}`}>
+                  <div className={`relative ${isMobile ? 'w-24 h-10' : 'w-[8vw] h-10'}`}>
                     <Image src={originLogo} alt="Origin" fill className="object-contain" />
                   </div>
                 </button>
