@@ -1091,7 +1091,7 @@ const TermsAndConditions = () => {
                         <strong>17.1. </strong>
                         You hereby expressly agree to receive communications by
                         way of SMS, telephone or VOIP calls, messaging app like
-                        WhatsApp on the registered mobile phone number /or
+                        WhatsApp and RCS on the registered mobile phone number /or
                         electronic communications like e-mails from the Company
                         and other third parties duly authorised by the Company.
                         You hereby expressly consent to the monitoring and

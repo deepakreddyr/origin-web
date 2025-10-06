@@ -7,6 +7,8 @@ import { FooterDataType } from '../../utilities/types';
 import PhoneIcon from '@mui/icons-material/Phone';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import { Mail } from '@mui/icons-material';
+import Image from 'next/image';
+import originLogo from '/public/assets/images/neworiginlogo.png';
 
 type FooterProps = {
   footerData?: FooterDataType;
@@ -27,7 +29,15 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
               {/* Logo + Social Links */}
               <Grid item xs={12} md={3.5}>
                 <Box className="h-full flex flex-col items-start justify-center space-y-6">
-                  <OriginLogoWhite className="w-44 h-auto pt-[50px]" />
+                  <Box className="mt-[50px] pr-[100px]">
+                    <Image
+                      src={originLogo} // replace with your image path
+                      alt="Origin Logo"
+                      width={400} // approximate width in pixels (matches w-44)
+                      height={75} // height (adjust according to your logo's aspect ratio)
+                      className="object-contain filter invert brightness-200"
+                    />
+                  </Box>
                   <SocialLinks />
                 </Box>
               </Grid>

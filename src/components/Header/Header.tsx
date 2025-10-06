@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import hamberger from '/public/assets/images/hamberger.png';
-import originLogo from '/public/assets/images/originLogo.png';
+import originLogo from '/public/assets/images/neworiginlogo.png';
 import userIcon from '/public/assets/images/userIcon.png';
 import cartIcon from '/public/assets/icons/cartIcon.png';
 
@@ -19,10 +19,9 @@ import { MainMenuType } from '@/utilities/types';
 type Props = {
   mainMenuItems: MainMenuType[];
   isHeaderSticky: any;
-  search?: boolean; // New prop to control search page styling
+  search?: boolean;
 };
 
-// Animated Placeholder Component
 const AnimatedPlaceholder = () => {
   const fruits = ['enoki', 'apple', 'mango', 'orange', 'grapes', 'cherry', 'onion'];
   const [currentFruitIndex, setCurrentFruitIndex] = useState(0);
@@ -37,9 +36,9 @@ const AnimatedPlaceholder = () => {
           prevIndex === fruits.length - 1 ? 0 : prevIndex + 1
         );
         setIsVisible(true);
-      }, 300); // Half of the fade duration
+      }, 300);
       
-    }, 2500); // Change every 2.5 seconds
+    }, 2500);
 
     return () => clearInterval(interval);
   }, []);
@@ -71,7 +70,6 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
   const router = useRouter();
   const isMobile = useMediaQuery(600);
 
-  // Get search query from URL if on search page
   useEffect(() => {
     if (search && router.query.q && typeof router.query.q === 'string') {
       setCurrentSearchQuery(router.query.q);
@@ -123,7 +121,6 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
     }
   };
 
-  // Enhanced search functionality for search page
   const debouncedSearch = (query: string) => {
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
@@ -203,30 +200,25 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
     };
   }, [isMobile, search]);
 
-  // Conditional styling based on search prop
   if (search) {
-    // Search page header styling
     return (
       <>
-        {/* Search Page Header */}
         <div className="bg-[#FFF9E5] border-gray-200 w-full">
           <div className="max-w-7xl mt-5 mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               
-              {/* Left Section - Logo */}
               <div className="flex items-center">
                 <button 
                   onClick={() => router.push('/shop')}
                   className="flex items-center hover:opacity-80 transition-opacity"
                   aria-label="Go to shop"
                 >
-                  <div className={`relative ${isMobile ? 'w-20 h-8' : 'w-24 h-10'}`}>
+                  <div className={`relative ${isMobile ? 'w-24 h-10' : 'w-20 h-10'}`}>
                     <Image src={originLogo} alt="Origin" fill className="object-contain" />
                   </div>
                 </button>
               </div>
 
-              {/* Center Section - Search Bar */}
               <div className="flex-1 mx-3">
                 <form onSubmit={handleSearchSubmit} className="relative">
                   <div className="relative">
@@ -245,7 +237,6 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                       autoFocus
                     />
 
-                    {/* Character Count Indicator */}
                     {searchQuery && searchQuery.length < 2 && (
                       <div className="absolute right-12 top-1/2 transform -translate-y-1/2 
                                     text-xs text-gray-400 font-[SofiaPro]">
@@ -253,7 +244,6 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                       </div>
                     )}
 
-                    {/* Search Icon Button */}
                     <button
                       type="submit"
                       disabled={searchQuery.trim().length < 2}
@@ -279,9 +269,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                 </form>
               </div>
 
-              {/* Right Section - User Actions */}
               <div className="flex items-center gap-2">
-                {/* Login/Account Button */}
                 {loginDetails.isLogin ? (
                   <button
                     onClick={openAccount}
@@ -302,7 +290,6 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                   </button>
                 )}
 
-                {/* Desktop Cart */}
                 <button
                   onClick={handleCartOpen}
                   className="relative p-2 hover:bg-white hover:bg-opacity-50 rounded-full transition-colors duration-200"
@@ -326,27 +313,33 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
     );
   }
 
-  // Default header styling (original)
   return (
     <div ref={menuRef} className={`${isHeaderSticky ? 'fixed top-[1.1vw]' : 'absolute'} flex items-center flex-col w-full z-20`}>
       <OffersRibbon />
 
-      {/* Header bar */}
       <div
-        className={`bg-white shadow-[4px_4px_32px_0px_rgba(0,0,0,0.08)] z-50 w-[80vw] mob:w-full mob:py-[4.1vw] mob:px-[5vw] px-[1vw] py-[1vw] ${
+        className={`bg-white shadow-[4px_4px_32px_0px_rgba(0,0,0,0.08)] z-50 w-[80vw] mob:w-full mob:py-[1vw] mob:px-[5vw] ${
           topBarTransition ? 'mt-[-1vw]' : 'mt-[1.1vw] mob:mt-0'
         } transition-all rounded-full mob:rounded-none flex items-center justify-between`}
       >
         <div className="flex items-center gap-[3vw]">
           <button onClick={() => setDrawerOpen(!drawerOpen)} className="w-[5vw] hidden mob:block h-[4vw] relative">
-            <Image src={hamberger} alt="hamberger" />
+            <Image src={hamberger} alt="hamberger" fill className="object-contain" />
           </button>
 
           <button 
             onClick={() => router.push('/shop')}
-            className="w-[7vw] ml-[1vw] mob:w-[16vw] mob:h-[8vw] h-[4vw] mr-[4vw] top-[.2vw] relative"
+            className="relative"
           >
-            <Image src={originLogo} alt="logo" />
+            <div className="w-[10vw] ml-[2vw] mt-2 mob:w-[30vw] mob:h-[12vw] h-[5vw] mr-[4vw] relative">
+              <Image 
+                src={originLogo} 
+                alt="logo" 
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
           </button>
         </div>
 
@@ -360,58 +353,82 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
             </Link>
           </div>
 
-          {/* Enhanced Search Bar */}
-          <div className="flex-1 max-w-[28vw] mob:max-w-[45vw]">
-            <form onSubmit={handleSearchSubmit} className="relative">
-              <div className="relative">
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  value={searchQuery}
-                  onChange={handleSearchInputChange}
-                  onClick={handleSearchFieldClick}
-                  onFocus={handleSearchFocus}
-                  onBlur={handleSearchBlur}
-                  className="w-full h-[2.4vw] mob:h-max px-[1.17vw] mob:px-[5.1vw] mob:py-[1.5vw] 
-                            rounded-full border border-gray-300 bg-transparent 
-                            placeholder:text-gray-400 
-                            text-[1.1vw] mob:text-[4.1vw] font-[SofiaPro] cursor-pointer 
-                            focus:outline-none focus:ring-0 transition-all duration-200"
-                />            
+          {/* Desktop Search Bar */}
+          {!isMobile && (
+            <div className="flex-1 max-w-[28vw]">
+              <form onSubmit={handleSearchSubmit} className="relative">
+                <div className="relative">
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    value={searchQuery}
+                    onChange={handleSearchInputChange}
+                    onClick={handleSearchFieldClick}
+                    onFocus={handleSearchFocus}
+                    onBlur={handleSearchBlur}
+                    className="w-full h-[2.4vw] px-[1.17vw] 
+                              rounded-full border border-gray-300 bg-transparent 
+                              placeholder:text-gray-400 
+                              text-[1.1vw] font-[SofiaPro] cursor-pointer 
+                              focus:outline-none focus:ring-0 transition-all duration-200"
+                  />            
 
-                {!searchQuery && (
-                  <div className="absolute left-[1vw] mob:left-[3vw] top-1/2 transform -translate-y-1/2 pointer-events-none text-[1vw] mob:text-[3.5vw] font-[SofiaPro] text-gray-500">
-                    <AnimatedPlaceholder />
-                  </div>
-                )}
+                  {!searchQuery && (
+                    <div className="absolute left-[1vw] top-1/2 transform -translate-y-1/2 pointer-events-none text-[1vw] font-[SofiaPro] text-gray-500">
+                      <AnimatedPlaceholder />
+                    </div>
+                  )}
 
-                {/* Search Icon */}
-                <button
-                  type="submit"
-                  className="absolute right-[0.6vw] mob:right-[2vw] top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-gray-100 rounded-full w-[1.6vw] h-[1.6vw] mob:w-[6vw] mob:h-[6vw] flex items-center justify-center transition-colors duration-200"
-                >
-                  <svg
-                    className="w-[0.9vw] h-[0.9vw] mob:w-[3.5vw] mob:h-[3.5vw] text-gray-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                  <button
+                    type="submit"
+                    className="absolute right-[0.6vw] top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-gray-100 rounded-full w-[1.6vw] h-[1.6vw] flex items-center justify-center transition-colors duration-200"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </form>
-          </div>
+                    <svg
+                      className="w-[0.9vw] h-[0.9vw] text-gray-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* Mobile Search Icon */}
+          {isMobile && (
+            <button
+              onClick={() => router.push('/search')}
+              className="p-[2vw] hover:bg-gray-100 rounded-full transition-colors duration-200"
+              aria-label="Search"
+            >
+              <svg
+                className="w-[5vw] h-[5vw] text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </button>
+          )}
 
           {loginDetails.isLogin ? (
             <button onClick={openAccount}>
               <div className="w-[1.25vw] mob:w-[5.128vw] mob:h-[5.128vw] h-[1.25vw] relative">
-                <Image src={userIcon} alt="account icon" />
+                <Image src={userIcon} alt="account icon" fill className="object-contain" />
               </div>
             </button>
           ) : (
@@ -425,7 +442,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
           
           {!isMobile && (
             <>
-              <div className="h-[1.67vw] mob:h-[7vw] w-[.1vw] mob:w-[.3vw] mob:mx-[2vw] bg-black-op-30"></div>
+              <div className="h-[1.67vw] w-[.1vw] bg-black-op-30"></div>
               <button onClick={handleCartOpen} className="relative pr-[1.67vw]">
                 {cart?.items?.length > 0 && (
                   <div className="absolute top-[-.6vw] left-[.7vw] w-[1.25vw] h-[1.25vw] text-[.78vw] rounded-full bg-secondary-300 z-[1] text-white font-[sofiaPro] flex items-center justify-center">
@@ -433,7 +450,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                   </div>
                 )}
                 <div className="relative w-[1.25vw] h-[1.25vw] z-0">
-                  <Image src={cartIcon} alt="cart-icon" />
+                  <Image src={cartIcon} alt="cart-icon" fill className="object-contain" />
                 </div>
               </button>
             </>
@@ -441,7 +458,6 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
         </div>
       </div>
 
-      {/* Floating Cart on Bottom Right for Mobile */}
       {isMobile && (
         <button
           onClick={handleCartOpen}
@@ -453,12 +469,11 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
             </div>
           )}
           <div className="relative w-[6vw] h-[6vw]">
-            <Image src={cartIcon} alt="cart-icon" />
+            <Image src={cartIcon} alt="cart-icon" fill className="object-contain" />
           </div>
         </button>
       )}
 
-      {/* Mobile Drawer */}
       <MobileDrawer
         drawerOpen={drawerOpen}
         handleMobileMenuOpen={() => setDrawerOpen(!drawerOpen)}
@@ -469,7 +484,6 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
         topBarTransition={topBarTransition}
       />
 
-      {/* Desktop Submenus */}
       {!isMobile &&
         mainMenuItems.map(
           (item) =>
