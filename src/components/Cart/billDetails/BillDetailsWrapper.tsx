@@ -73,7 +73,7 @@ const BillDetailsWrapper = (props: any) => {
           <div className="flex items-center text-black justify-between">
             <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw] flex items-center gap-[0.4vw]">
               Item total
-              <Tooltip
+              {/* <Tooltip
                 title="5% GST applied on applicable items"
                 arrow
                 open={tooltipOpen}
@@ -100,7 +100,7 @@ const BillDetailsWrapper = (props: any) => {
                     }}
                   />
                 </IconButton>
-              </Tooltip>
+              </Tooltip> */}
             </p>
             <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
               ₹{cart.totalOriginalPrice}
