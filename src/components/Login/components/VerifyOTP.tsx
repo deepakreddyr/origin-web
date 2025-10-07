@@ -37,7 +37,28 @@ const VerifyOTP = (props: Props) => {
   const fetchAddressDetails = async (token: any) => {
     let apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + '/api/v1/user/address';
     const successHandler = (data: any) => {
-      const defaultAddress = data.data.find((item: any) => item.is_default);
+      // console.log(data,"DATA");
+      
+      // Find default address that is deliverable
+      let defaultAddress = data.data.find((item: any) => item.is_default && item.deliverable);
+      
+      // If default address is not deliverable, find any other deliverable address
+      if (!defaultAddress) {
+        defaultAddress = data.data.find((item: any) => item.deliverable);
+      }
+      
+      // Store the deliverable address details FIRST before setting state
+      if (defaultAddress && defaultAddress.deliverable) {
+        localStorage.setItem('store-id', JSON.stringify(defaultAddress.store_id));
+        localStorage.setItem('selected_address', JSON.stringify(defaultAddress));
+        // console.log('Selected deliverable address:', defaultAddress);
+      } else {
+        // console.log('No deliverable address found');
+        // Clear any existing stored address if none are deliverable
+        localStorage.removeItem('store-id');
+        localStorage.removeItem('selected_address');
+      }
+
       setAddress({
         loading: false,
         success: false,
@@ -47,7 +68,7 @@ const VerifyOTP = (props: Props) => {
       });
       // localStorage.setItem('user_token', loginDetails.user);
       
-      if (!data?.data) {
+      if (!data?.data || !data.data.length) {
         dispatch(
           setLoginDetails({
             isSidebarOpen: true,
@@ -58,10 +79,6 @@ const VerifyOTP = (props: Props) => {
         );
       } else {
         let tab_source = localStorage.getItem('tab_source');
-
-        const defaultAddress = data.data.find((item: any) => item.is_default);
-        localStorage.setItem('store-id', JSON.stringify(defaultAddress?.store_id));
-        localStorage.setItem('selected_address', JSON.stringify(defaultAddress));
 
         if (tab_source) {
           removeRouteSourceFromLs('tab_source');

@@ -11,7 +11,7 @@ import { wrapper } from '@/store/store';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-const APP_VERSION = '1.1.4';  
+const APP_VERSION = '1.1.5';  
 
 const clearCacheAndReload = async () => {
   if (typeof window === 'undefined') return;

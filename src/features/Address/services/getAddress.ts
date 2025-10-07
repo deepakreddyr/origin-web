@@ -4,12 +4,15 @@ import { mainApiUrl } from '@/url';
 
 export const getAddress = async (set: any) => {
   try {
+    // Set loading state
     set((prevState: AddressAtomI) => ({
       ...prevState,
       loading: true,
       error: false,
       success: false,
-      address: null
+      address: null,
+      defaultAddress: null,
+      data: null
     }));
 
     const response: any = await request(mainApiUrl.getAddress, {
@@ -20,38 +23,65 @@ export const getAddress = async (set: any) => {
         'Content-Type': 'application/json'
       }
     });
-    if (response.data.length > 0) {
-      const defaultAddress = response.data.find((item: any) => item.is_default);
 
-      localStorage.setItem('store-id', JSON.stringify(defaultAddress?.store_id));
-      localStorage.setItem('selected_address', JSON.stringify(defaultAddress)),
-        set((prevState: AddressAtomI) => ({
-          ...prevState,
-          loading: false,
-          error: false,
-          success: false,
-          address: response.data,
-          data: response.data, // kept on intention for immeditate fix
-          defaultAddress
-        }));
+    if (response.data && response.data.length > 0) {
+      // Prefer deliverable default address
+      let defaultAddress = response.data.find(
+        (item: any) => item.is_default && item.deliverable
+      );
+
+      // If default is not deliverable, pick any deliverable address
+      if (!defaultAddress) {
+        defaultAddress = response.data.find((item: any) => item.deliverable);
+      }
+
+      // Update localStorage
+      if (defaultAddress) {
+        localStorage.setItem('store-id', JSON.stringify(defaultAddress.store_id));
+        localStorage.setItem('selected_address', JSON.stringify(defaultAddress));
+      } else {
+        // Remove stored address if none are deliverable
+        localStorage.removeItem('store-id');
+        localStorage.removeItem('selected_address');
+      }
+
+      set((prevState: AddressAtomI) => ({
+        ...prevState,
+        loading: false,
+        error: false,
+        success: true,
+        address: response.data,
+        data: response.data,
+        defaultAddress
+      }));
     } else {
+      // No addresses returned
+      localStorage.removeItem('store-id');
+      localStorage.removeItem('selected_address');
+
       set((prevState: AddressAtomI) => ({
         ...prevState,
         loading: false,
         error: false,
         success: false,
         address: null,
-        data: null, // kept on intention for immeditate fix
+        data: null,
         defaultAddress: null
       }));
     }
   } catch (error) {
+    // Error handling
+    localStorage.removeItem('store-id');
+    localStorage.removeItem('selected_address');
+
     set((prevState: AddressAtomI) => ({
       ...prevState,
       loading: false,
-      error: false,
+      error: true,
       success: false,
-      address: null
+      address: null,
+      data: null,
+      defaultAddress: null
     }));
   }
 };
