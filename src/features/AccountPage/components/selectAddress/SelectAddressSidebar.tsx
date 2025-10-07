@@ -119,9 +119,10 @@ const SelectAddressSidebar = () => {
             onClick={() => handleSetAddress(data)}
             onMouseEnter={() => setHoveredItemId(data.address_id)}
             onMouseLeave={() => setHoveredItemId(null)}
-            className={`flex w-full text-start cursor-pointer gap-[.6vw] mob:gap-[3vw]  last:border-b-0 last:mb-0 border-b border-b-beige-200   ${
+            className={`flex w-full text-start cursor-pointer gap-4 mob:gap-4 border-b border-b-beige-200 mb-2 mob:mb-3 ${
               hoveredItemId === data.address_id ? 'bg-[#F2EEE4]' : ''
-            } transition-all py-[1vw] mob:py-[4.1vw] mob:pl-[0vw] pl-[1vw] mob:w-full duration-100`}
+            } transition-all py-4 px-4 mob:py-6 mob:px-6 mob:w-full duration-100 rounded-lg`}
+            style={{ marginBottom: data.address_id === address.address?.[address.address.length - 1]?.address_id ? 0 : undefined }}
           >
             <div>
               <div className="flex items-center justify-center w-[3vw] mob:w-[10vw] mob:h-[10vw] h-[3vw] bg-[#F8F4E9] mob:rounded-[2vw] rounded-[.6vw] border border-[#F2EEE4]">
