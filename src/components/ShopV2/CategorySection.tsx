@@ -13,7 +13,6 @@ const CategorySection = () => {
   const mobile = useMediaQuery(600);
   
   const mainCategoryList = categories.find((item: any) => item.type === 'main-category')?.data || [];
-  console.log(mainCategoryList);
   // State for showing more categories
   const [showAll, setShowAll] = useState(false);
   

@@ -105,7 +105,7 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
             <Grid container className="mt-5 pt-5">
               <Grid item xs={12} className="text-center">
                 <Typography variant="body2" className="text-sm text-white opacity-90">
-                  © 2025, Origin. All rights reserved.
+                  © 2025, Origin Fresh. All rights reserved.
                 </Typography>
               </Grid>
             </Grid>

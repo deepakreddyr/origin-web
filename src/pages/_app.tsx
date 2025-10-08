@@ -166,7 +166,7 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="lazyOnload"
-          // onLoad={() => console.log('Razorpay script loaded')}
+          onLoad={() => console.log('Razorpay script loaded')}
         />
 
         <Component {...pageProps} />
