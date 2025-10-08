@@ -10,9 +10,11 @@ import { Provider } from 'react-redux';
 import { wrapper } from '@/store/store';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
-const APP_VERSION = '1.1.5';  
+const APP_VERSION = '1.1.5';
 
+// --- Cache Clearing / Version Check ---
 const clearCacheAndReload = async () => {
   if (typeof window === 'undefined') return;
 
@@ -21,32 +23,27 @@ const clearCacheAndReload = async () => {
   console.log("Latest APP_VERSION:", APP_VERSION);
 
   if (currentVersion === null || currentVersion !== APP_VERSION) {
-    
     try {
       // Clear all caches
       if ('caches' in window) {
         const cacheNames = await caches.keys();
-        await Promise.all(
-          cacheNames.map(cacheName => caches.delete(cacheName))
-        );
+        await Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)));
         console.log('All caches cleared');
       }
 
       // Clear storage
       sessionStorage.clear();
-      localStorage.clear(); // Clear everything first
+      localStorage.clear();
       
       // Set new version
       localStorage.setItem('appVersion', APP_VERSION);
-      
       console.log('Storage cleared and version updated');
-      
+
       // Force reload with cache bypass
       window.location.reload();
       
     } catch (error) {
       console.error('Error clearing cache:', error);
-      // Fallback: just reload
       window.location.reload();
     }
   } else {
@@ -61,68 +58,35 @@ const handleInvoiceDeepLink = (router: any) => {
   const urlParams = new URLSearchParams(window.location.search);
   const invoiceId = urlParams.get('i');
   const forceWeb = urlParams.has('web');
-  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-  // Block app redirects if invoice parameter exists or web=true
   if (invoiceId || forceWeb) {
     console.log('Invoice deep link detected, blocking app redirects');
-    
-    // Override common app redirect functions
+
+    // Override app redirects
     const originalReplace = window.location.replace;
     const originalAssign = window.location.assign;
     const originalOpen = window.open;
 
     window.location.replace = function(url: string | URL) {
-      if (typeof url === 'string' && (
-        url.includes('app-store') || 
-        url.includes('play-store') ||
-        url.includes('intent://') ||
-        url.startsWith('originfresh://') ||
-        url.includes('app')
-      )) {
-        console.log('App redirect blocked - staying in web for invoice');
-        return;
-      }
+      if (typeof url === 'string' && /app-store|play-store|intent:\/\/|originfresh:\/\//.test(url)) return;
       return originalReplace.call(window.location, url);
     };
 
     window.location.assign = function(url: string | URL) {
-      if (typeof url === 'string' && (
-        url.includes('app-store') || 
-        url.includes('play-store') ||
-        url.includes('intent://') ||
-        url.startsWith('originfresh://') ||
-        url.includes('app')
-      )) {
-        console.log('App redirect blocked - staying in web for invoice');
-        return;
-      }
+      if (typeof url === 'string' && /app-store|play-store|intent:\/\/|originfresh:\/\//.test(url)) return;
       return originalAssign.call(window.location, url);
     };
 
     window.open = function(url?: string | URL, target?: string, features?: string) {
-      if (url && typeof url === 'string' && (
-        url.startsWith('intent://') || 
-        url.startsWith('originfresh://') || 
-        url.includes('app-store') ||
-        url.includes('play-store')
-      )) {
-        console.log('App scheme blocked - staying in web for invoice');
-        return null;
-      }
+      if (typeof url === 'string' && /intent:\/\/|originfresh:\/\/|app-store|play-store/.test(url)) return null;
       return originalOpen.call(window, url, target, features);
     };
 
-    // Add meta tags to prevent app banners
+    // Prevent app banners
     const preventAppBanner = () => {
-      // Remove existing app banners
-      const existingMeta = document.querySelector('meta[name="apple-itunes-app"]');
-      if (existingMeta) existingMeta.remove();
-      
-      const existingGoogleMeta = document.querySelector('meta[name="google-play-app"]');
-      if (existingGoogleMeta) existingGoogleMeta.remove();
+      document.querySelector('meta[name="apple-itunes-app"]')?.remove();
+      document.querySelector('meta[name="google-play-app"]')?.remove();
 
-      // Add empty meta tags to prevent app banners
       const appleMetaTag = document.createElement('meta');
       appleMetaTag.name = 'apple-itunes-app';
       appleMetaTag.content = '';
@@ -133,74 +97,49 @@ const handleInvoiceDeepLink = (router: any) => {
       googleMetaTag.content = '';
       document.head.appendChild(googleMetaTag);
     };
-
     preventAppBanner();
 
-    // Set session storage to remember preference
-    if (typeof(Storage) !== "undefined") {
-      sessionStorage.setItem('forceWebView', 'true');
-      sessionStorage.setItem('invoiceView', 'true');
-    }
+    // Store preference in session
+    sessionStorage.setItem('forceWebView', 'true');
+    sessionStorage.setItem('invoiceView', 'true');
 
-    // Handle invoice routing
+    // Redirect to invoice page
     if (invoiceId && router.pathname === '/') {
-      console.log(`Redirecting to invoice page: ${invoiceId}`);
-      
-      // Clean URL and redirect to invoice page
       const cleanUrl = new URL(window.location.href);
       cleanUrl.searchParams.delete('i');
       cleanUrl.searchParams.delete('web');
-      
-      // Update browser history to clean URL
       window.history.replaceState({}, '', cleanUrl.pathname);
-      
-      // Navigate to invoice page
       router.push(`/invoice/${invoiceId}`);
     }
   }
 };
 
+// --- Main App ---
 export default function App({ Component, pageProps, ...rest }: AppProps) {
-  const { store, props } = wrapper.useWrappedStore(rest);
+  const { store } = wrapper.useWrappedStore(rest);
   const [isGMapLoaded, setIsGMapLoaded] = useAtom(isGMapLoadedAtom);
   const router = useRouter();
 
   useEffect(() => {
-    // Run cache clear check first
+    // Clear cache if app version changed
     clearCacheAndReload();
-    
-    // Handle invoice deep links after cache check
-    const timeoutId = setTimeout(() => {
-      handleInvoiceDeepLink(router);
-    }, 100); // Small delay to ensure router is ready
 
+    // Handle invoice deep links
+    const timeoutId = setTimeout(() => handleInvoiceDeepLink(router), 100);
     return () => clearTimeout(timeoutId);
   }, [router]);
 
-  // Additional effect to handle route changes and ensure app redirects stay blocked
+  // Block unwanted scripts on route changes
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const hasInvoiceParam = urlParams.has('i');
-    const hasWebParam = urlParams.has('web');
-    
-    if (hasInvoiceParam || hasWebParam || sessionStorage.getItem('invoiceView')) {
-      // Keep blocking app redirects on route changes
+    if (sessionStorage.getItem('invoiceView')) {
       const blockInterval = setInterval(() => {
-        const scripts = document.querySelectorAll('script');
-        scripts.forEach(script => {
-          if (script.innerHTML && (
-            script.innerHTML.includes('app-store') || 
-            script.innerHTML.includes('play-store') || 
-            script.innerHTML.includes('deep-link') ||
-            script.innerHTML.includes('intent://')
-          )) {
-            console.log('Removing app redirect script');
+        document.querySelectorAll('script').forEach(script => {
+          if (script.innerHTML && /app-store|play-store|deep-link|intent:\/\//.test(script.innerHTML)) {
             script.remove();
+            console.log('Removed app redirect script');
           }
         });
       }, 1000);
-
-      // Clear interval after 10 seconds
       setTimeout(() => clearInterval(blockInterval), 10000);
     }
   }, [router.pathname]);
@@ -208,18 +147,28 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
   return (
     <Provider store={store}>
       <LocalizationProvider dateAdapter={AdapterLuxon}>
+        <Head>
+          {/* Add viewport and title in _app.tsx */}
+          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+          <title>Origin Fresh</title>
+        </Head>
+
         <NextNProgress color="#000" />
+
+        {/* Google Maps */}
         <Script
           id="google-maps"
           src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_MAP_KEY}&libraries=places`}
           onLoad={() => setIsGMapLoaded(true)}
         />
+
+        {/* Razorpay */}
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="lazyOnload"
-          onLoad={() => console.log('Razorpay script loaded')}
+          // onLoad={() => console.log('Razorpay script loaded')}
         />
-        
+
         <Component {...pageProps} />
       </LocalizationProvider>
     </Provider>

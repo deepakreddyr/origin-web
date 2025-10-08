@@ -67,7 +67,6 @@ const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
   if (!featuredItem || !featuredItem.item) {
     return null;
   }
-
   const { item, info } = featuredItem;
   const defaultUom =
     item.multiple_uoms?.find((uom: UomType) => uom.is_default) ||
@@ -102,7 +101,7 @@ const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
 
   return (
     <div className="w-full pt-8 pb-8 mob:pt-6 mob:pb-6 px-4 mob:px-4 flex justify-center items-center">
-      <div className="w-full max-w-[1100px] flex flex-col md:flex-row items-start justify-center overflow-hidden p-4 mob:p-0 gap-4 mob:gap-6">
+      <div className="w-full max-w-[1100px] flex flex-col md:flex-row items-start justify-center overflow-hidden p-4 mob:p-0 gap-8 mob:gap-6">
         {/* Image Section */}
         <div className="flex justify-center items-center w-full md:w-[600px]">
           <div className="rounded-3xl mob:rounded-2xl overflow-hidden w-full h-[300px] md:h-[420px] mob:h-[250px] flex items-center justify-center p-8">
@@ -127,34 +126,34 @@ const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
         {/* Text Section */}
         <div className="w-full md:w-[480px] shadow-md flex flex-col justify-between bg-[#FFFCF1] rounded-3xl mob:rounded-2xl shadow-xs overflow-hidden p-6 md:p-8 mob:p-5">
           {/* Top Content */}
-          <div className="flex flex-col gap-1 mob:gap-2">
+          <div className="flex flex-col gap-3 mob:gap-2">
             <h3 className="text-2xl md:text-[36px] mob:text-xl font-bold text-black leading-tight">
               {item.name}
             </h3>
 
             {defaultUom && (
               <>
-                <div className="flex items-baseline gap-2">
+                <div className="flex items-baseline gap-2 mt-2">
                   {defaultUom.market_price &&
                     defaultUom.market_price > defaultUom.price && (
-                      <p className="text-sm text-gray-400 line-through">
+                      <p className="text-base md:text-lg text-gray-400 line-through">
                         ₹{defaultUom.market_price}
                       </p>
                     )}
-                  <p className="text-base md:text-lg mob:text-lg font-bold text-gray-800">
+                  <p className="text-lg md:text-2xl mob:text-lg font-bold text-gray-800">
                     {defaultUom.formatted_price || `₹${defaultUom.price}`}
                   </p>
                 </div>
 
-                <p className="text-base md:text-sm mob:text-sm text-gray-400">
-                  <span>{defaultUom.unit}</span>
+                <p className="text-sm md:text-base mob:text-sm text-gray-500 font-medium">
+                  {defaultUom.unit}
                 </p>
               </>
             )}
 
             {/* Description */}
             {description && (
-              <div className="mob:mt-2 overflow-y-auto pr-2 custom-scroll">
+              <div className="mt-3 mob:mt-2 overflow-y-auto pr-2 custom-scroll">
                 <p className="text-gray-700 text-xs md:text-sm leading-relaxed">
                   {description}
                 </p>
@@ -165,7 +164,7 @@ const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
             {nutritionInfo &&
               nutritionInfo.details &&
               nutritionInfo.details.length > 0 && (
-                <div className="hidden md:flex flex-wrap gap-4 mt-2">
+                <div className="hidden md:flex flex-wrap gap-4 mt-4">
                   {nutritionInfo.details.slice(0, 2).map((nutrient, index) => (
                     <div key={index} className="text-xs">
                       <span className="font-semibold text-gray-800">
@@ -181,7 +180,7 @@ const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
           </div>
 
           {/* Button */}
-          <div className="mob:pt-4 w-full">
+          <div className="mt-6 mob:mt-4 w-full">
             {defaultUom && item.is_available ? (
               <AddItemBtn
                 product={productForAddBtn}
