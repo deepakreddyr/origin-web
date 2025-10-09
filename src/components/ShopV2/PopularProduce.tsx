@@ -48,7 +48,7 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
           className={`absolute left-[-2vw] mob:left-[-7vw] w-[3vw] h-[3vw] mob:w-[8vw] mob:h-[8vw] rounded-full flex items-center justify-center transition-all duration-200 z-10 ${
             currentIndex === 0
               ? 'opacity-50 cursor-not-allowed'
-              : 'hover:bg-gray-100 bg-white shadow-md'
+              : 'hover:bg-gray-100'
           }`}
         >
           <ChevronLeft 

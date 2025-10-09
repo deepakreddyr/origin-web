@@ -28,7 +28,7 @@ const ContactDetails = () => {
             Email us
           </Typography>
           <Typography className="font-[SofiaPro] text-[28px] leading-[30px] text-black font-normal">
-            support@madrasmandi.in
+            support@originfresh.in
           </Typography>
         </Stack>
       </Stack>

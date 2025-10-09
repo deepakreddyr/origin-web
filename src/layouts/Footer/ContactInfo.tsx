@@ -80,7 +80,7 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactDetails }) => {
         <MessageOutlined
           sx={{ marginTop: "2px", width: "16px", height: "16px" }}
         />
-        <NextLink href="mailto:support@madrasmandi.in" passHref>
+        <NextLink href="mailto:support@originfresh.in" passHref>
           <MUILink sx={{ color: "inherit", textDecoration: "none" }}>
             support@originfresh.in
           </MUILink>

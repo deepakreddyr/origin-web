@@ -181,9 +181,9 @@ const handleCloseDownloadApp = () => {
         </div>
       )}
 
-      <div className="">
+      {/* <div className="">
         <WhyOriginBanner />
-      </div>
+      </div> */}
 
       {downloadAppReady && showDownloadApp && (
         <DownloadAppWrapper onClose={handleCloseDownloadApp} />
