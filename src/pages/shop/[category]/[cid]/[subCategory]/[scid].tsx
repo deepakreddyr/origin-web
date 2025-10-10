@@ -118,58 +118,52 @@ const ShopDetails = (props: HomeProps) => {
   // console.log(products, "PRODUCTS")
   
   useEffect(() => {
-    if (isReady) {
-      const token = localStorage.getItem('user_token');
-      const addressFromLs = getAddressAndStoreId();
-      let additionalHeaders = {};
+  if (isReady) {
+    const token = localStorage.getItem('user_token');
+    const addressFromLs = getAddressAndStoreId();
+    let additionalHeaders = {};
 
-      let apiUrl;
+    let apiUrl;
 
-      if (token && addressFromLs) {
-        apiUrl =
-          process.env.NEXT_PUBLIC_BACKEND_API_URL +
-          protectedUrl['getCategories'] +
-          `/${query.cid}` +
-          `/sub-categories/${query.scid}`;
+    if (token && addressFromLs) {
+      apiUrl =
+        process.env.NEXT_PUBLIC_BACKEND_API_URL +
+        protectedUrl['getCategories'] +
+        `/${query.cid}` +
+        `/sub-categories/${query.scid}`;
 
-        if (addressFromLs)
-          additionalHeaders = {
-            'store-id': addressFromLs.store_id
-          };
-      } else {
-        apiUrl =
-          process.env.NEXT_PUBLIC_BACKEND_API_URL +
-          unprotectedUrl['getCategories'] +
-          `/${query.cid}` +
-          `/sub-categories/${query.scid}`;
-      }
-      const { category, cid, subCategory, scid } = query;
-      setFilters({
-        ...filters,
-        category,
-        cid,
-        scid,
-        subCategory
-      });
-      const successHandler = (data: any) => {
-        // dispatch(setShopCategories(data.items))
-        // dispatch(setIsShopCategoriesFetched(true))
-        
-        dispatch(setProductList(data?.items));
-        dispatch(setIsProductListLoading(false));
-
-        dispatch(setShopSubCategories(data?.sub_categories));
-        dispatch(setIsShopSubCategoriesFetched(false));
-
-        // Set the featured item from API response
-        if (data?.featured_item) {
-          setFeaturedItem(data.featured_item);
-        }
-      };
-      const failureHandler = (data: any) => {};
-      getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+      if (addressFromLs)
+        additionalHeaders = {
+          'store-id': addressFromLs.store_id
+        };
+    } else {
+      apiUrl =
+        process.env.NEXT_PUBLIC_BACKEND_API_URL +
+        unprotectedUrl['getCategories'] +
+        `/${query.cid}` +
+        `/sub-categories/${query.scid}`;
     }
-  }, [isReady, query]);
+    const { category, cid, subCategory, scid } = query;
+    setFilters({
+      ...filters,
+      category,
+      cid,
+      scid,
+      subCategory
+    });
+    const successHandler = (data: any) => {
+      dispatch(setProductList(data?.items));
+      dispatch(setIsProductListLoading(false));
+
+      dispatch(setShopSubCategories(data?.sub_categories));
+      dispatch(setIsShopSubCategoriesFetched(false));
+      setFeaturedItem(data?.featured_item || null);
+    };
+    const failureHandler = (data: any) => {};
+    getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+  }
+}, [isReady, query]);
+
 
   useEffect(() => {
     if (!shopCategories.isCategoriesFetched) {
@@ -200,13 +194,6 @@ const ShopDetails = (props: HomeProps) => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (isReady) {
-  //     window.scrollTo({ top: 0, behavior: 'smooth' });
-  //   }
-  // }, [query]);
-  // console.log(filters);
-  // if (mobile) return <DownloadAppWrapper />;
   return (
     <Layout mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={true}>
       <ShopHero />
