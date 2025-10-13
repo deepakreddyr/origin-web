@@ -2,8 +2,9 @@ import { mainApiUrl, protectedUrl, unprotectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { getAddressAndStoreId } from '@/utilities/utils';
 import Image from 'next/image';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import StoringInfo from './StoringInfo';
 import BreadCrumbNavigation from './BreadCrumbNavigation';
 import ItemCard from '../shared/ItemCard';
@@ -15,6 +16,7 @@ import ForgetItemWrapper from './ForgetItemWrapper';
 import ProductDetailsPageLoader from '../skeletonLoaders/shop/ProductDetailsPageLoader';
 import backIcon from '/public/assets/icons/backIcon.png';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
+import { GetServerSideProps } from 'next';
 
 // Updated Type definitions based on actual API response
 interface UOM {
@@ -72,7 +74,19 @@ interface ProductDetails {
   info: ProductInfo;
   upsell_items: ProductItem[];
   combo_items: any[];
-  isLoading: boolean;
+}
+
+interface ProductDetailsWrapperProps {
+  initialProductDetails: ProductDetails;
+  seoData: {
+    title: string;
+    description: string;
+    image: string;
+    price: number;
+    currency: string;
+    availability: string;
+    url: string;
+  };
 }
 
 // Product pairing data configuration
@@ -164,16 +178,15 @@ const HungryForMoreSection: React.FC<{ upsellItems: ProductItem[] }> = ({ upsell
   // Transform upsell items to match ItemCard expected format
   const transformedItems = upsellItems.map(item => ({
     ...item,
-    item_name: item.name, // Map name to item_name for routing
+    item_name: item.name,
     multiple_uoms: item.multiple_uoms.map(uom => ({
       ...uom,
-      formatted_price: `₹${uom.price}` // Add formatted_price for ItemCard
+      formatted_price: `₹${uom.price}`
     }))
   }));
 
   return (
     <div className="mob:mt-12">
-      {/* Section Header */}
       <div className="flex items-center justify-between mb-8 mob:mb-6">
         <div>
           <h2 className="text-[2.5vw] mob:text-xl font-[SofiaPro] font-bold text-gray-900 mb-2">
@@ -182,7 +195,6 @@ const HungryForMoreSection: React.FC<{ upsellItems: ProductItem[] }> = ({ upsell
         </div>
       </div>
 
-      {/* Products Grid using existing ItemCard */}
       <div className={`grid ${mobile ? "grid-cols-2 gap-3" : "grid-cols-4 gap-[5vw]"}`}>
         {transformedItems.slice(0, mobile ? 4 : 8).map((item) => (
           <ItemCard key={item.id} itemDetails={item} />
@@ -195,18 +207,15 @@ const HungryForMoreSection: React.FC<{ upsellItems: ProductItem[] }> = ({ upsell
 const BestPairingCollapsed: React.FC<{ productDetails: ProductDetails }> = ({ productDetails }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   
-  // Get the product ID and check if it has pairing data
   const productId = productDetails.item.id;
   const pairingData = PRODUCT_PAIRINGS[productId];
   
-  // Don't render the component if no pairing data exists for this product
   if (!pairingData) {
     return null;
   }
 
   return (
     <div className="mt-8">
-      {/* Toggle Button */}
       <div
         className="flex items-center justify-between cursor-pointer py-4 border-t"
         onClick={() => setIsExpanded(prev => !prev)}
@@ -235,7 +244,6 @@ const BestPairingCollapsed: React.FC<{ productDetails: ProductDetails }> = ({ pr
         </svg>
       </div>
 
-      {/* Dropdown Content - Pushes only content below */}
       {isExpanded && (
         <div className="bg-[#FFF9E5] border-t p-4 animate-slideDown">
           <div className="ml-9 space-y-4">
@@ -254,65 +262,14 @@ const BestPairingCollapsed: React.FC<{ productDetails: ProductDetails }> = ({ pr
   );
 };
 
-const ProductDetailsWrapper: React.FC = () => {
+const ProductDetailsWrapper: React.FC<ProductDetailsWrapperProps> = ({ 
+  initialProductDetails,
+  seoData 
+}) => {
   const mobile: boolean = useMediaQuery(768);
-  const [productDetails, setProductDetails] = useState<ProductDetails>({
-    item: {
-      id: 0,
-      item_code: '',
-      name: '',
-      image: '',
-      multiple_images: [],
-      tag_url: null,
-      bg_color: '',
-      navigation: {
-        to: ''
-      },
-      is_greyed: false,
-      is_available: true,
-      is_orderable: false,
-      multiple_uoms: []
-    },
-    info: {
-      info: []
-    },
-    upsell_items: [],
-    combo_items: [],
-    isLoading: true
-  });
-
-  const getDataFromApi = useGetDataFromApi();
   const router = useRouter();
-  const { isReady, query } = router;
 
-  useEffect(() => {
-    if (isReady) {
-      const token: string | null = localStorage.getItem('user_token');
-      const addressFromLs = getAddressAndStoreId();
-      let additionalHeaders: Record<string, string> = {};
-
-      let apiUrl: string;
-
-      if (token) {
-        apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['searchForProduct'] + `/${query.id}`;
-
-        if (addressFromLs)
-          additionalHeaders = {
-            'store-id': addressFromLs.store_id
-          };
-      } else {
-        apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['searchForProduct'] + `/${query.id}`;
-      }
-
-      const successHandler = (data: any) => {
-        if (data?.data) setProductDetails({ ...productDetails, ...data.data, isLoading: false });
-      };
-      const failureHandler = (data: any) => {};
-      getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
-    }
-  }, [isReady]);
-
-  if (productDetails.isLoading) return <ProductDetailsPageLoader />;
+  const productDetails = initialProductDetails;
   
   // Find default UOM or use first one
   const defaultUOM: UOM = productDetails?.item?.multiple_uoms?.find((uom: UOM) => uom?.is_default === true) || productDetails?.item?.multiple_uoms?.[0];
@@ -321,155 +278,280 @@ const ProductDetailsWrapper: React.FC = () => {
   const aboutSection = productDetails.info?.info?.find(section => section.type === 'normal' && section.title === 'About the Product');
   const productDescription = aboutSection?.details?.[0]?.description || '';
 
+  // Generate JSON-LD structured data for SEO
+  const structuredData = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": seoData.title,
+    "image": seoData.image,
+    "description": seoData.description,
+    "offers": {
+      "@type": "Offer",
+      "url": seoData.url,
+      "priceCurrency": seoData.currency,
+      "price": seoData.price,
+      "availability": seoData.availability,
+      "itemCondition": "https://schema.org/NewCondition"
+    }
+  };
+
   return (
-    <div className="mt-[4vw]" style={{ backgroundColor: '#FFF9E5' }}>
-
-      {/* Main Content Container */}
-      <div className="max-w-6xl mx-auto px-8 py-12 mob:px-4 mob:py-6">
+    <>
+      <Head>
+        {/* Primary Meta Tags */}
+        <title>{seoData.title}</title>
+        <meta name="title" content={seoData.title} />
+        <meta name="description" content={seoData.description} />
         
-        {/* Mobile Layout */}
-        {mobile ? (
-          <div className="space-y-8">
-            {/* Product Image */}
-            <div className="flex justify-center">
-              <div className="relative w-80 h-80 bg-transparent">
-                <Image 
-                  src={productDetails.item.image} 
-                  fill 
-                  alt={productDetails.item.name || "Product"} 
-                  style={{ objectFit: 'contain' }} 
-                />
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="product" />
+        <meta property="og:url" content={seoData.url} />
+        <meta property="og:title" content={seoData.title} />
+        <meta property="og:description" content={seoData.description} />
+        <meta property="og:image" content={seoData.image} />
+        <meta property="product:price:amount" content={seoData.price.toString()} />
+        <meta property="product:price:currency" content={seoData.currency} />
+        
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={seoData.url} />
+        <meta property="twitter:title" content={seoData.title} />
+        <meta property="twitter:description" content={seoData.description} />
+        <meta property="twitter:image" content={seoData.image} />
+        
+        {/* Additional SEO tags */}
+        <link rel="canonical" href={seoData.url} />
+        <meta name="robots" content="index, follow" />
+        
+        {/* JSON-LD Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+      </Head>
+
+      <div className="mt-[4vw]" style={{ backgroundColor: '#FFF9E5' }}>
+        {/* Main Content Container */}
+        <div className="max-w-6xl mx-auto px-8 py-12 mob:px-4 mob:py-6">
+          
+          {/* Mobile Layout */}
+          {mobile ? (
+            <div className="space-y-8">
+              {/* Product Image */}
+              <div className="flex justify-center">
+                <div className="relative w-80 h-80 bg-transparent">
+                  <Image 
+                    src={productDetails.item.image} 
+                    fill 
+                    alt={productDetails.item.name || "Product"} 
+                    style={{ objectFit: 'contain' }}
+                    priority
+                  />
+                </div>
               </div>
-            </div>
 
-            {/* Product Info */}
-            <div className="text-center space-y-4">
-              <h1 className="text-3xl font-bold text-gray-900">
-                {productDetails.item.name}
-              </h1>
-              
-              {defaultUOM && (
-                <>
-                  <div className="text-2xl font-[SofiaPro] font-bold text-gray-900">
-                    Rs.{defaultUOM.price}
-                  </div>
-                  <div className="text-gray-500 font-[SofiaPro] text-sm">
-                    {defaultUOM.unit}
-                  </div>
-                </>
-              )}
-
-              <div className='font-[SofiaPro]'>
-                <AddItemBtn
-                  product={productDetails?.item}
-                  varientId={defaultUOM?.variant_id}
-                  varientPrice={defaultUOM?.price}
-                  stepperQuantity={defaultUOM?.stepper_quantity}
-                  buttonType={'yellowaddtocart'}
-                />
-              </div>
-
-              {productDescription && (
-                <p className="text-gray-700 leading-relaxed text-sm mt-6">
-                  {productDescription}
-                </p>
-              )}
-
-              <BestPairingCollapsed productDetails={productDetails} />
-            </div>
-          </div>
-        ) : (
-          /* Desktop Layout - Horizontal */
-          <div className="flex items-center gap-16 min-h-[550px]">
-            {/* Left Side - Product Image */}
-            <div className="flex-1 flex justify-center">
-              <div className="relative w-96 h-96 bg-transparent">
-                <Image 
-                  src={productDetails.item.image} 
-                  fill 
-                  alt={productDetails.item.name || "Product"} 
-                  style={{ objectFit: 'contain' }} 
-                  className="drop-shadow-xl"
-                />
-              </div>
-            </div>
-
-            {/* Right Side - Product Information */}
-            <div className="flex-1 max-w-lg space-y-6">
-              <div>
-                <h1 className="text-4xl font-bold text-gray-900 mb-3 leading-tight">
+              {/* Product Info */}
+              <div className="text-center space-y-4">
+                <h1 className="text-3xl font-bold text-gray-900">
                   {productDetails.item.name}
                 </h1>
                 
                 {defaultUOM && (
                   <>
-                    <div className="text-2xl font-bold text-gray-900 mb-1">
+                    <div className="text-2xl font-[SofiaPro] font-bold text-gray-900">
                       Rs.{defaultUOM.price}
                     </div>
-                    <div className="text-gray-500 text-sm mb-6">
+                    <div className="text-gray-500 font-[SofiaPro] text-sm">
                       {defaultUOM.unit}
                     </div>
                   </>
                 )}
+
+                <div className='font-[SofiaPro]'>
+                  <AddItemBtn
+                    product={productDetails?.item}
+                    varientId={defaultUOM?.variant_id}
+                    varientPrice={defaultUOM?.price}
+                    stepperQuantity={defaultUOM?.stepper_quantity}
+                    buttonType={'yellowaddtocart'}
+                  />
+                </div>
+
+                {productDescription && (
+                  <p className="text-gray-700 leading-relaxed text-sm mt-6">
+                    {productDescription}
+                  </p>
+                )}
+
+                <BestPairingCollapsed productDetails={productDetails} />
               </div>
-
-              <div className=''>
-                <AddItemBtn
-                  product={productDetails?.item}
-                  varientId={defaultUOM?.variant_id}
-                  varientPrice={defaultUOM?.price}
-                  stepperQuantity={defaultUOM?.stepper_quantity}
-                  buttonType={'yellowaddtocart'}
-                />
-              </div>
-
-              {productDescription && (
-                <p className="text-gray-700 leading-relaxed">
-                  {productDescription}
-                </p>
-              )}
-
-              <BestPairingCollapsed productDetails={productDetails} />
             </div>
-          </div>
-        )}
+          ) : (
+            /* Desktop Layout - Horizontal */
+            <div className="flex items-center gap-16 min-h-[550px]">
+              {/* Left Side - Product Image */}
+              <div className="flex-1 flex justify-center">
+                <div className="relative w-96 h-96 bg-transparent">
+                  <Image 
+                    src={productDetails.item.image} 
+                    fill 
+                    alt={productDetails.item.name || "Product"} 
+                    style={{ objectFit: 'contain' }} 
+                    className="drop-shadow-xl"
+                    priority
+                  />
+                </div>
+              </div>
 
-        {/* Additional Components */}
-        <div className="mt-12 space-y-8">
-          <AboutTheProduct productDetails={productDetails} />
+              {/* Right Side - Product Information */}
+              <div className="flex-1 max-w-lg space-y-6">
+                <div>
+                  <h1 className="text-4xl font-bold text-gray-900 mb-3 leading-tight">
+                    {productDetails.item.name}
+                  </h1>
+                  
+                  {defaultUOM && (
+                    <>
+                      <div className="text-2xl font-bold text-gray-900 mb-1">
+                        Rs.{defaultUOM.price}
+                      </div>
+                      <div className="text-gray-500 text-sm mb-6">
+                        {defaultUOM.unit}
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className=''>
+                  <AddItemBtn
+                    product={productDetails?.item}
+                    varientId={defaultUOM?.variant_id}
+                    varientPrice={defaultUOM?.price}
+                    stepperQuantity={defaultUOM?.stepper_quantity}
+                    buttonType={'yellowaddtocart'}
+                  />
+                </div>
+
+                {productDescription && (
+                  <p className="text-gray-700 leading-relaxed">
+                    {productDescription}
+                  </p>
+                )}
+
+                <BestPairingCollapsed productDetails={productDetails} />
+              </div>
+            </div>
+          )}
+
+          {/* Additional Components */}
+          <div className="mt-12 space-y-8">
+            <AboutTheProduct productDetails={productDetails} />
+          </div>
+
+          {/* Hungry for More Section */}
+          <HungryForMoreSection upsellItems={productDetails.upsell_items} />
+
         </div>
 
-        {/* Hungry for More Section */}
-        <HungryForMoreSection upsellItems={productDetails.upsell_items} />
-
+        <style jsx>{`
+          .border-l-3 {
+            border-left-width: 3px;
+          }
+          .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+          @keyframes slideDown {
+            from {
+              opacity: 0;
+              transform: translateY(-10px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          .animate-slideDown {
+            animation: slideDown 0.3s ease-out;
+          }
+        `}</style>
       </div>
-
-      <style jsx>{`
-        .border-l-3 {
-          border-left-width: 3px;
-        }
-        .line-clamp-2 {
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-        @keyframes slideDown {
-          from {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-slideDown {
-          animation: slideDown 0.3s ease-out;
-        }
-      `}</style>
-    </div>
+    </>
   );
+};
+
+// Server-Side Props - This runs on the server for every request
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { id } = context.params as { id: string };
+  const { req } = context;
+
+  try {
+    // Get token from cookies if available
+    const token = req.cookies.user_token || null;
+    const storeId = req.cookies.store_id || null;
+
+    let apiUrl: string;
+    let headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+
+    // Construct API URL based on authentication
+    if (token) {
+      apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}${protectedUrl['searchForProduct']}/${id}`;
+      headers['Authorization'] = `Bearer ${token}`;
+      
+      if (storeId) {
+        headers['store-id'] = storeId;
+      }
+    } else {
+      apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}${unprotectedUrl['searchForProduct']}/${id}`;
+    }
+
+    // Fetch product data from API
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers,
+    });
+
+    if (!response.ok) {
+      throw new Error(`API call failed: ${response.status}`);
+    }
+
+    const apiData = await response.json();
+    const productData = apiData.data;
+
+    // Extract SEO data
+    const defaultUOM = productData.item.multiple_uoms?.find((uom: UOM) => uom.is_default) || productData.item.multiple_uoms?.[0];
+    const aboutSection = productData.info?.info?.find((section: InfoSection) => section.type === 'normal' && section.title === 'About the Product');
+    const description = aboutSection?.details?.[0]?.description || `Buy ${productData.item.name} online. Fresh and high-quality products delivered to your doorstep.`;
+
+    // Prepare SEO data
+    const seoData = {
+      title: `${productData.item.name} - Buy Online | Your Store Name`,
+      description: description.substring(0, 160), // Meta descriptions should be ~150-160 chars
+      image: productData.item.image,
+      price: defaultUOM?.price || 0,
+      currency: 'INR',
+      availability: productData.item.is_available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+      url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://yoursite.com'}/product/${id}`,
+    };
+
+    return {
+      props: {
+        initialProductDetails: productData,
+        seoData,
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching product details:', error);
+    
+    // Return 404 page if product not found
+    return {
+      notFound: true,
+    };
+  }
 };
 
 export default ProductDetailsWrapper;
