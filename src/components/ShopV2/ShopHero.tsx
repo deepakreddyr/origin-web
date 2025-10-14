@@ -11,7 +11,7 @@ import banner1 from '/public/assets/images/shop/heroBannerShop.png';
 import banner2 from '/public/assets/images/shop/heroBannerShop1.png';
 import banner3 from '/public/assets/images/shop/heroBannerShop2.png';
 import banner4 from '/public/assets/images/shop/heroBannerShop3.png';
-import landingimg from '/public/assets/images/shop/landingimg2.png';
+import landingimg from '/public/assets/images/shop/diwalibanner.png';
 
 const bannerData = [
   {
@@ -137,23 +137,23 @@ const ShopHero = () => {
 };
 export default ShopHero;
 
-// 🔹 New Component: Single Banner Hero
 export const ShopHeroSingle = () => {
-  const isMobile = useMediaQuery('(max-width:768px)');
-  const isTablet = useMediaQuery('(max-width:1024px)');
+  const isMobile = useMediaQuery("(max-width:768px)");
+  const isTablet = useMediaQuery("(max-width:1024px)");
   const router = useRouter();
-  
+
   useEffect(() => {
-    router.prefetch('/shimeji-mushroom-white/288')
-  }, [router])
-  
+    router.prefetch("/diwali-gifting/16/diwali-gifting/54");
+  }, [router]);
+
   return (
     <div className="relative w-full overflow-hidden mob:pt-[20px]">
       <div
         className={`relative w-full ${
-          isMobile ? 'pt-[50px]' : 'aspect-[2.4/1]'
+          isMobile ? "pt-[50px]" : "aspect-[2.4/1]"
         }`}
       >
+        {/* Background Image */}
         <div className="w-full relative">
           <Image
             src={landingimg}
@@ -167,26 +167,24 @@ export const ShopHeroSingle = () => {
           />
         </div>
 
-        <div
-          className="absolute inset-0 z-10 flex items-center justify-end"
-          style={{ 
-            paddingRight: isMobile ? '20px' : isTablet ? '60px' : '90px',
-            paddingBottom: isMobile ? '40px' : isTablet ? '60px' : '80px',
-            paddingTop: isMobile ? '40vw' : isTablet ? '25vw' : '16vw'
-          }}
-        >
+        {/* Button */}
+        <div className="absolute inset-0 z-10 flex items-center justify-start">
           <button
-            onClick={() => router.push("/shimeji-mushroom-white/288")}
+            onClick={() =>
+              router.push("/shop/diwali-gifting/16/diwali-gifting/54")
+            }
             className={`
-              bg-[#FFD600] text-black font-[SofiaPro] font-semibold rounded-lg
+              absolute bg-[#FFD600] text-black font-[SofiaPro] font-semibold rounded-lg
               hover:bg-[#ffcd00] transition
-              ${isMobile 
-                ? 'text-[3.5vw] py-2 px-5' 
-                : isTablet 
-                  ? 'text-[1.8vw] py-3 px-8' 
-                  : 'text-[1.2vw] py-3 px-10'
+              ${
+                isMobile
+                  ? "scale-[0.5] left-[32%] top-[78%] text-[4vw] py-2 px-6"
+                  : isTablet
+                    ? "scale-100 left-[35%] top-[70%] text-[1.4vw] py-2 px-6"
+                    : "scale-100 left-[34%] top-[70%] text-[1.1vw] py-3 px-10"
               }
             `}
+            style={{ transformOrigin: "left top" }}
           >
             Shop Now
           </button>

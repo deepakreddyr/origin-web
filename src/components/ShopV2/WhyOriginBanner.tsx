@@ -1,8 +1,8 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import desktopHero from '/public/assets/images/shop/whyoriginbannershop.png';
+import landingimg from '/public/assets/images/shop/landingimg2.png';
 
 const WhyOriginBanner = () => {
   const router = useRouter();
@@ -17,8 +17,9 @@ const WhyOriginBanner = () => {
         margin: '4rem auto',
       }}
     >
+      {/* Background Image */}
       <Image
-        src={desktopHero}
+        src={landingimg}
         alt="Why Origin"
         layout="responsive"
         width={1600}
@@ -29,18 +30,34 @@ const WhyOriginBanner = () => {
           objectFit: 'cover',
         }}
       />
-      <Box
+
+      {/* Button with scale */}
+      <Button
+        onClick={() => router.push('/cotton-candy-grapes/328')}
         sx={{
           position: 'absolute',
-          top: '50%',
-          right: '10%',
-          transform: 'translateY(-50%)',
-          color: '#fff',
-          textAlign: 'left',
+          top: { xs: '70%', sm: '65%', md: '63%' }, // vertical position
+          right: { xs: '5%', sm: '5%', md: '6%' },
+          transform: {
+            xs: 'translateY(-50%) scale(0.5)', // mobile scale
+            sm: 'translateY(-50%) scale(0.7)', // tablet scale
+            md: 'translateY(-50%) scale(1)',   // desktop normal
+          },
+          transformOrigin: 'right center', // scale from right center
+          borderRadius: '8px',
+          backgroundColor: '#FFD600',
+          color: 'black',
+          px: 4,
+          py: 1.5,
+          fontWeight: 'bold',
+          fontSize: '1.1rem',
+          '&:hover': {
+            backgroundColor: '#FFCD00',
+          },
         }}
       >
-        
-      </Box>
+        Shop Now
+      </Button>
     </Box>
   );
 };
