@@ -1,34 +1,147 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-const YellowBtn = (props: any) => {
-  const { isItemPresent, handleDecrease, quantity, handleIncrease, handleAddItem } = props;
+interface YellowBtnProps {
+  isItemPresent: boolean;
+  quantity: number;
+  maxQuantity: number;
+  handleAddItem: (e: any) => void;
+  handleIncrease: (e: any) => void;
+  handleDecrease: (e: any) => void;
+  handleRemove?: (e: any) => void;
+  borderRadius?: number;
+}
+
+const YellowBtn = (props: YellowBtnProps) => {
+  const {
+    isItemPresent,
+    quantity,
+    maxQuantity,
+    handleAddItem,
+    handleIncrease,
+    handleDecrease,
+    handleRemove,
+    borderRadius = 8, // smaller radius for rectangular look
+  } = props;
+
+  const [showMaxMessage, setShowMaxMessage] = useState(false);
+  const isMax = quantity >= maxQuantity;
+
+  useEffect(() => {
+    if (isMax) setShowMaxMessage(true);
+  }, [isMax]);
+
+  useEffect(() => {
+    if (showMaxMessage) {
+      const timer = setTimeout(() => setShowMaxMessage(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [showMaxMessage]);
+
+  const onDecrease = (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (quantity <= 1) handleRemove?.(e);
+    else handleDecrease(e);
+  };
+
+  const onIncrease = (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isMax) return setShowMaxMessage(true);
+    handleIncrease(e);
+  };
+
+  const onAdd = (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleAddItem(e);
+  };
 
   return (
-    <div className="w-full">
-      {isItemPresent ? (
-        <div className="flex items-center justify-between px-[0.6vw] mob:px-[3vw] bg-white border-[2px] border-[#F3EEDF] rounded-full h-[2.8vw] mob:h-[9vw]">
-          <button
-            className="h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] rounded-full bg-[#FFD500] text-black text-[1.1vw] mob:text-[4vw] flex items-center justify-center"
-            onClick={handleDecrease}
+    <div className="w-full flex flex-col items-center">
+      {/* Fixed container size */}
+      <div
+        className="relative w-full flex items-center justify-center overflow-hidden"
+        style={{
+          height: "30px", // consistent button height
+          borderRadius: `${borderRadius}px`,
+          backgroundColor: "#FFD700",
+        }}
+      >
+        <AnimatePresence mode="wait">
+          {isItemPresent ? (
+            <motion.div
+              key="quantity"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex items-center justify-between w-full px-3"
+            >
+              <button
+                className="flex items-center justify-center ml-[2vw]"
+                style={{
+                  width: "24px",
+                  height: "24px",
+                  borderRadius: "4px",
+                  color: "black",
+                }}
+                onClick={onDecrease}
+              >
+                –
+              </button>
+
+              <p className="text-black font-semibold text-base">{quantity}</p>
+
+              <button
+                className="flex items-center justify-center mr-[2vw]"
+                style={{
+                  width: "24px",
+                  height: "24px",
+                  borderRadius: "4px",
+                  backgroundColor: isMax ? "gray" : "",
+                  color: "black",
+                }}
+                onClick={onIncrease}
+              >
+                +
+              </button>
+            </motion.div>
+          ) : (
+            <motion.button
+              key="add"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="w-full h-full font-semibold text-black"
+              style={{
+                borderRadius: `${borderRadius}px`,
+                backgroundColor: "#FFD700",
+              }}
+              onClick={onAdd}
+            >
+              Add
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Max quantity message */}
+      <AnimatePresence>
+        {showMaxMessage && (
+          <motion.p
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.3 }}
+            className="text-red-500 font-medium text-[0.8vw] mob:text-[2.8vw] mt-[0.5vw] mob:mt-[1vw] text-center"
           >
-            –
-          </button>
-          <p className="text-black font-semibold text-[1.1vw] mob:text-[3.6vw]">{quantity}</p>
-          <button
-            className="h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] rounded-full bg-[#FFD500] text-black text-[1.1vw] mob:text-[4vw] flex items-center justify-center"
-            onClick={handleIncrease}
-          >
-            +
-          </button>
-        </div>
-      ) : (
-        <button
-          className="w-full h-[2.8vw] mob:h-[10vw] bg-[#FFD500] text-black rounded-[0.5vw] mob:rounded-[2vw] font-semibold text-[1vw] mob:text-[3.6vw]"
-          onClick={handleAddItem}
-        >
-          Add
-        </button>
-      )}
+            Oops! Max quantity reached
+          </motion.p>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

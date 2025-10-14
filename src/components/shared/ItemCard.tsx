@@ -1,3 +1,102 @@
+// import Image from 'next/image';
+// import React, { useState } from 'react';
+// import AddItemBtn from './AddItemBtn/AddItemBtn';
+// import { useRouter } from 'next/router';
+// import sampleimg from '/public/assets/images/shop/sampleIMAGE.jpg';
+
+// const ItemCard = ({ itemDetails }: any) => {
+//   const router = useRouter();
+
+//   const defaultUOM =
+//     itemDetails?.multiple_uoms.find((uom: any) => uom?.is_default) ||
+//     itemDetails?.multiple_uoms[0];
+//   const [selectedUOM, setSelectedUOM] = useState(defaultUOM);
+//   const [isExpanded, setIsExpanded] = useState(false);
+
+//   if (!defaultUOM) return null;
+
+//   const availableUOMs =
+//     itemDetails?.multiple_uoms?.filter((uom: any) => uom?.is_available) || [];
+
+//   return (
+//     <div className="relative rounded-[12px] overflow-hidden flex flex-col h-full transition-all duration-300">
+//       {/* Full Background Image */}
+//       <div className="absolute inset-0">
+//         <Image
+//           src={sampleimg}
+//           alt={itemDetails.name || 'product image'}
+//           fill
+//           sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 25vw"
+//           style={{ objectFit: 'cover' }}
+//         />
+//       </div>
+
+//       <button
+//         disabled={!selectedUOM.is_available}
+//         onClick={() =>
+//           router.push(
+//             `/${itemDetails.item_name.replace(/ /g, '-').toLowerCase()}/${itemDetails.id}`
+//           )
+//         }
+//         className={`relative text-left w-full flex flex-col h-full z-10 ${
+//           !selectedUOM.is_available ? 'opacity-50' : ''
+//         }`}
+//       >
+//         {/* Unit indicator - top right */}
+//         <div className="absolute top-3 right-3 z-20">
+//           <p className="text-white text-xs font-semibold">{selectedUOM.unit}</p>
+//         </div>
+
+//         {/* Bottom content area */}
+//         <div className="absolute inset-x-0 bottom-0 flex flex-col">
+//           <div
+//             className="p-3 transition-all duration-300 ease-out"
+//             style={{ backdropFilter: 'blur(2px)' }}
+//           >
+//             {/* Product Name + Price Row */}
+//             <div className="flex justify-between items-start mb-2">
+//               <p className="text-white text-xs font-semibold line-clamp-2 w-2/3">
+//                 {itemDetails.name}
+//               </p>
+//               <div className="flex flex-col items-end w-1/3">
+//                 {selectedUOM.market_price > selectedUOM.price &&
+//                 selectedUOM.market_price > 0 ? (
+//                   <p className="text-white/50 text-[10px] font-semibold">
+//                     <a className="text-white font-semibold text-[12px]">
+//                       {selectedUOM.formatted_price}
+//                     </a>{' '}
+//                     <a className="text-white/50 line-through text-[10px]">
+//                       ₹{selectedUOM.market_price}
+//                     </a>
+//                   </p>
+//                 ) : (
+//                   <p className="text-white font-semibold text-[12px]">
+//                     {selectedUOM.formatted_price}
+//                   </p>
+//                 )}
+//               </div>
+//             </div>
+
+//             {/* Add Button */}
+//             <div onClick={(e) => e.stopPropagation()} className="">
+//               <AddItemBtn
+//                 product={itemDetails}
+//                 varientId={selectedUOM.variant_id}
+//                 varientPrice={selectedUOM.price}
+//                 stepperQuantity={selectedUOM.stepper_quantity}
+//                 buttonType="yellow"
+//               />
+//             </div>
+//           </div>
+//         </div>
+//       </button>
+//     </div>
+//   );
+// };
+
+// export default ItemCard;
+
+
 import Image from 'next/image';
 import React, { useState } from 'react';
 import AddItemBtn from './AddItemBtn/AddItemBtn';
