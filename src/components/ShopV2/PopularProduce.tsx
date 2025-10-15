@@ -68,7 +68,8 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
               {visibleItems.map((item: any) => (
                 <div
                   key={item.id}
-                  className="md:w-[230px] md:h-[280px] w-[25vw] h-[27vw]"
+                  className="w-full"
+                  style={{ aspectRatio: '0.85' }}
                 >
                   <ItemCard itemDetails={item} />
                 </div>
@@ -82,7 +83,8 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
               {visibleItems.map((item: any) => (
                 <div
                   key={item.id}
-                  className="w-[40vw] h-[215px]"
+                  className="w-full"
+                  style={{ aspectRatio: '0.85' }}
                 >
                   <ItemCard itemDetails={item} />
                 </div>

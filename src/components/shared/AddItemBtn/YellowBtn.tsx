@@ -21,7 +21,7 @@ const YellowBtn = (props: YellowBtnProps) => {
     handleIncrease,
     handleDecrease,
     handleRemove,
-    borderRadius = 8, // smaller radius for rectangular look
+    borderRadius = 0, // smaller radius for rectangular look
   } = props;
 
   const [showMaxMessage, setShowMaxMessage] = useState(false);
