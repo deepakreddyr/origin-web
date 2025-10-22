@@ -1,7 +1,7 @@
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import razorpayIcon from '/public/assets/images/razorpay.png';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { paymentTypeList } from '@/constants';
 
@@ -9,7 +9,10 @@ const MakePayment = (props: any) => {
   const { placeOrderHandler } = props;
   const [showCodButton, setShowCodButton] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const [processingPaymentId, setProcessingPaymentId] = useState(null); // Track which payment method is processing
+  const [processingPaymentId, setProcessingPaymentId] = useState(null);
+  
+  // Ref to track if payment is in progress (survives re-renders better than state)
+  const isProcessingRef = useRef(false);
 
   let paymentFlow = localStorage.getItem('FLOW_TYPE') ? localStorage.getItem('FLOW_TYPE') : null;
 
@@ -30,7 +33,14 @@ const MakePayment = (props: any) => {
 
   // Helper function to handle payment processing
   const handlePaymentProcessing = async (paymentMethod: any) => {
+    // Prevent duplicate clicks
+    if (isProcessingRef.current) {
+      // console.log('Payment already in progress, ignoring click');
+      return;
+    }
+
     try {
+      isProcessingRef.current = true;
       setProcessing(true);
       setProcessingPaymentId(paymentMethod.id);
       // console.log('Processing payment with:', paymentMethod);
@@ -40,11 +50,12 @@ const MakePayment = (props: any) => {
       
     } catch (error) {
       console.error('Payment processing failed:', error);
-      // You might want to show an error message to the user here
-      alert('Payment processing failed. Please try again.');
+      // alert('Payment processing failed. Please try again.');
     } finally {
       setProcessing(false);
       setProcessingPaymentId(null);
+      isProcessingRef.current = false;
+      
       // Reset COD button visibility if it was a COD payment that failed
       if (!paymentMethod.sub_payment_method) {
         setShowCodButton(false);
@@ -86,7 +97,8 @@ const MakePayment = (props: any) => {
                   e.stopPropagation();
                   
                   // Prevent clicks if processing or if this specific payment method is disabled
-                  if (processing || (!pay.sub_payment_method && !isCodEnabled)) {
+                  if (processing || isProcessingRef.current || (!pay.sub_payment_method && !isCodEnabled)) {
+                    // console.log('Click blocked - payment in progress or disabled');
                     return;
                   }
 
@@ -122,13 +134,16 @@ const MakePayment = (props: any) => {
                   <button
                     onClick={async (e) => {
                       e.stopPropagation();
-                      if (processing) return;
+                      if (processing || isProcessingRef.current) {
+                        // console.log('Button click blocked - payment in progress');
+                        return;
+                      }
 
                       await handlePaymentProcessing(pay);
                     }}
-                    disabled={processing}
+                    disabled={processing || isProcessingRef.current}
                     className={`font-[SofiaPro] mt-[1.1vw] mob:mt-[4.1vw] font-semibold mob:px-[3vw] px-[.8vw] py-[.5vw] mob:py-[2vw] mob:text-[3vw] text-[.83vw] text-white bg-secondary rounded-[.8vw] transition-all duration-200 ${
-                      processing ? 'opacity-50 cursor-not-allowed' : 'hover:bg-secondary-600'
+                      processing || isProcessingRef.current ? 'opacity-50 cursor-not-allowed' : 'hover:bg-secondary-600'
                     }`}
                   >
                     {processing ? 'Processing...' : 'Pay on delivery'}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAddressAndStoreId, prepareCartItemsToApi } from '@/utilities/utils';
@@ -30,6 +30,9 @@ const Payment = (props: any) => {
   const getDataFromApi = useGetDataFromApi();
 
   const orderAndRefundDetails = useSelector((state: any) => state.orderAndRefundDetails);
+  
+  // Add ref to prevent duplicate order placement
+  const isPlacingOrderRef = useRef(false);
 
   const clearPostPaymentItemsinLs = () => {
     localStorage.removeItem('total_cart');
@@ -48,8 +51,8 @@ const Payment = (props: any) => {
       apiData = prepareCartItemsToApi(JSON.parse(cartItemFromLs));
       transformedData = {
         items: apiData.items.map((item: any) => {
-          const { uom, ...rest } = item; // Destructure to exclude `uom`
-          return rest; // Return the remaining keys
+          const { uom, ...rest } = item;
+          return rest;
         })
       };
     }
@@ -60,9 +63,7 @@ const Payment = (props: any) => {
     }
 
     const successHandler = (data: any) => {};
-    const failureHandler = (data: any) => {
-      // console.log(data);
-    };
+    const failureHandler = (data: any) => {};
     sendDataToApi(url, transformedData, 'POST', successHandler, failureHandler, additionalHeaders);
   };
 
@@ -78,6 +79,7 @@ const Payment = (props: any) => {
     dispatch(setIsHeaderVisible(false));
     clearPostPaymentItemsinLs();
   };
+  
   const onFailure = (totalAmount: any, orderDetails: any, paymentMethod: any, orderResponse: any) => {
     setPaymentModalDetails({
       ...paymentModalDetails,
@@ -89,12 +91,11 @@ const Payment = (props: any) => {
     setPaymentFlowScreen(TabTypeConstant.PAYMENT_FAILED);
   };
 
-  // totalAmount: any, orderDetails: any, orderResponse: any
   const checkoutRazporpay = (orderId: any) => {
     let totalAmount: any = localStorage.getItem('total_cart');
     let orderType: any = localStorage.getItem('order_type');
     let orderResponse: any = localStorage.getItem('razorpay_response');
-    // console.log(orderId, "order-id");
+    
     if (totalAmount) totalAmount = JSON.parse(totalAmount);
     if (orderType) orderType = JSON.parse(orderType);
     if (orderResponse) orderResponse = JSON.parse(orderResponse);
@@ -126,127 +127,157 @@ const Payment = (props: any) => {
           color: '#FFEB66'
         }
       };
-      // console.log(razorpayOptions);
       const rzp1 = new (window as any).Razorpay(razorpayOptions);
       rzp1.open();
     }
   };
 
   const handleRetyPaymentFromOrderDetails = (orderType: any) => {
-    let apiUrl =
-      process.env.NEXT_PUBLIC_BACKEND_API_URL +
-      protectedUrl['retryPayment'] +
-      `/${orderAndRefundDetails.orderDetailsData.order_id}`;
-    let additionalHeaders = {};
+    return new Promise((resolve, reject) => {
+      let apiUrl =
+        process.env.NEXT_PUBLIC_BACKEND_API_URL +
+        protectedUrl['retryPayment'] +
+        `/${orderAndRefundDetails.orderDetailsData.order_id}`;
+      let additionalHeaders = {};
 
-    const addressFromLs = getAddressAndStoreId();
-    if (addressFromLs) {
-      additionalHeaders = {
-        'store-id': addressFromLs.store_id
-      };
-    }
-    const successHandler = (data: any) => {
-      // console.log(data,"data");
-      let orderResponse = {
-        order_id: orderAndRefundDetails.orderDetailsData.order_id,
-        sub_total: data.data.amount_due / 100
-      };
-      // let TotalAmountInPaise = Math.round(totalAmount * 100);
-      const razorpayOptions = {
-        key: razKey,
-        amount: String(data.data.amount_due),
-        currency: 'INR',
-        name: 'Origin Fresh',
-        description: 'Origin Fresh',
-        prefill: {
-          name: profile?.data?.name,
-          email: profile?.data?.email,
-          contact: profile?.data?.phone,
-          method: orderType.sub_payment_method
-        },
-        order_id: data.data.id,
-        handler() {
-          onSuccess(orderResponse, orderType.name);
-        },
-        modal: {
-          ondismiss() {
-            onFailure(data.data.amount_due, orderType, orderType.name, orderResponse);
+      const addressFromLs = getAddressAndStoreId();
+      if (addressFromLs) {
+        additionalHeaders = {
+          'store-id': addressFromLs.store_id
+        };
+      }
+      
+      const successHandler = (data: any) => {
+        let orderResponse = {
+          order_id: orderAndRefundDetails.orderDetailsData.order_id,
+          sub_total: data.data.amount_due / 100
+        };
+        
+        const razorpayOptions = {
+          key: razKey,
+          amount: String(data.data.amount_due),
+          currency: 'INR',
+          name: 'Origin Fresh',
+          description: 'Origin Fresh',
+          prefill: {
+            name: profile?.data?.name,
+            email: profile?.data?.email,
+            contact: profile?.data?.phone,
+            method: orderType.sub_payment_method
+          },
+          order_id: data.data.id,
+          handler() {
+            onSuccess(orderResponse, orderType.name);
+            resolve(true);
+          },
+          modal: {
+            ondismiss() {
+              onFailure(data.data.amount_due, orderType, orderType.name, orderResponse);
+              reject(new Error('Payment cancelled'));
+            }
+          },
+          theme: {
+            color: '#FFEB66'
           }
-        },
-        theme: {
-          color: '#FFEB66'
-        }
+        };
+        const rzp1 = new (window as any).Razorpay(razorpayOptions);
+        rzp1.open();
       };
-      // console.log(razorpayOptions,"data-");
-      const rzp1 = new (window as any).Razorpay(razorpayOptions);
-      rzp1.open();
-    };
-    const failureHandler = (data: any) => {};
-    getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+      
+      const failureHandler = (data: any) => {
+        reject(new Error('API call failed'));
+      };
+      
+      getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+    });
   };
 
   const placeOrderHandler = (orderType: any) => {
-    let paymentFlow = localStorage.getItem('FLOW_TYPE');
-
-    if (paymentFlow === 'retry_payment') {
-      handleRetyPaymentFromOrderDetails(orderType);
-      return;
+    // Prevent duplicate order placement
+    if (isPlacingOrderRef.current) {
+      return Promise.reject(new Error('Order already in progress'));
     }
 
-    let storeId: any = localStorage.getItem('store-id');
-    const { items } = prepareCartItemsToApi(cart.items);
-    let apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + mainApiUrl['ordersActions'];
-    const addressFromLs = getAddressAndStoreId();
+    return new Promise((resolve, reject) => {
+      let paymentFlow = localStorage.getItem('FLOW_TYPE');
 
-    let additionalHeaders = {};
-    const apiData = {
-      items,
-      delivery_fee: placeOrderDetails.delivery_fee,
-      individual_package_enabled: false,
-      delivery_type: 'instant',
-      delivery_date: placeOrderDetails.checkoutDetails.formatted_delivery_date[0],
-      sub_total: cart.totalPrice,
-      tax: 0,
-      total: cart.amountToPay === 0 ? cart.totalPrice : cart.amountToPay,
-      time_slot_id: placeOrderDetails.time_slot_id,
-      store_id: JSON.parse(storeId),
-      is_rewards_used: false,
-      payment_method: orderType.name === 'Pay On delivery' ? 'cash' : 'razorpay',
-      coupon_id: cart.couponDetails?.id ? cart.couponDetails?.id : null,
-      sub_payment_method: orderType.sub_payment_method,
-      uuid: uuidv4()
-    };
-
-    if (addressFromLs) {
-      additionalHeaders = {
-        'store-id': addressFromLs.store_id
-      };
-    }
-    const successHandler = (response: any) => {
-      if (response?.data) {
-        localStorage.setItem('razorpay_response', JSON.stringify(response?.data));
-        localStorage.setItem('order_type', JSON.stringify(orderType));
-        let totalAmount = cart.amountToPay === 0 ? cart.totalPrice : cart.amountToPay;
-        localStorage.setItem('total_cart', JSON.stringify(totalAmount));
-        if (orderType.name === 'Pay On delivery') {
-          let orderResponse = {
-            order_id: response?.data?.order_id,
-            sub_total: response.data.sub_total
-          };
-          onSuccess(orderResponse, orderType.name);
-        }
-        if (response?.data?.razorpay_order_id) {
-          // setCheckoutDetails;
-          // totalAmount, orderType, response;
-          const order_id=response?.data?.razorpay_order_id;
-          checkoutRazporpay(order_id);
-        }
+      if (paymentFlow === 'retry_payment') {
+        handleRetyPaymentFromOrderDetails(orderType)
+          .then(resolve)
+          .catch(reject)
+          .finally(() => {
+            isPlacingOrderRef.current = false;
+          });
+        return;
       }
-    };
-    const failureHandler = (data: any) => {
-      //  setLoading(false);
-    };
-    sendDataToApi(apiUrl, apiData, 'POST', successHandler, failureHandler, additionalHeaders);
+
+      isPlacingOrderRef.current = true;
+
+      let storeId: any = localStorage.getItem('store-id');
+      const { items } = prepareCartItemsToApi(cart.items);
+      let apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + mainApiUrl['ordersActions'];
+      const addressFromLs = getAddressAndStoreId();
+
+      let additionalHeaders = {};
+      const apiData = {
+        items,
+        delivery_fee: placeOrderDetails.delivery_fee,
+        individual_package_enabled: false,
+        delivery_type: 'instant',
+        delivery_date: placeOrderDetails.checkoutDetails.formatted_delivery_date[0],
+        sub_total: cart.totalPrice,
+        tax: 0,
+        total: cart.amountToPay === 0 ? cart.totalPrice : cart.amountToPay,
+        time_slot_id: placeOrderDetails.time_slot_id,
+        store_id: JSON.parse(storeId),
+        is_rewards_used: false,
+        payment_method: orderType.name === 'Pay On delivery' ? 'cash' : 'razorpay',
+        coupon_id: cart.couponDetails?.id ? cart.couponDetails?.id : null,
+        sub_payment_method: orderType.sub_payment_method,
+        uuid: uuidv4()
+      };
+
+      if (addressFromLs) {
+        additionalHeaders = {
+          'store-id': addressFromLs.store_id
+        };
+      }
+      
+      const successHandler = (response: any) => {
+        if (response?.data) {
+          localStorage.setItem('razorpay_response', JSON.stringify(response?.data));
+          localStorage.setItem('order_type', JSON.stringify(orderType));
+          let totalAmount = cart.amountToPay === 0 ? cart.totalPrice : cart.amountToPay;
+          localStorage.setItem('total_cart', JSON.stringify(totalAmount));
+          
+          if (orderType.name === 'Pay On delivery') {
+            let orderResponse = {
+              order_id: response?.data?.order_id,
+              sub_total: response.data.sub_total
+            };
+            onSuccess(orderResponse, orderType.name);
+            isPlacingOrderRef.current = false;
+            resolve(true);
+          }
+          else if (response?.data?.razorpay_order_id) {
+            const order_id = response?.data?.razorpay_order_id;
+            checkoutRazporpay(order_id);
+            isPlacingOrderRef.current = false;
+            resolve(true);
+          }
+        } else {
+          isPlacingOrderRef.current = false;
+          reject(new Error('No response data'));
+        }
+      };
+      
+      const failureHandler = (data: any) => {
+        isPlacingOrderRef.current = false;
+        reject(new Error('Order placement failed'));
+      };
+      
+      sendDataToApi(apiUrl, apiData, 'POST', successHandler, failureHandler, additionalHeaders);
+    });
   };
 
   const PAYMENT_SCREEN_MAP: any = {
