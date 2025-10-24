@@ -318,7 +318,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
       <OffersRibbon />
 
       <div
-        className={`bg-white shadow-[4px_4px_32px_0px_rgba(0,0,0,0.08)] z-50 w-[80vw] mob:w-full mob:py-[1vw] mob:px-[5vw] ${
+        className={`bg-white shadow-[4px_4px_32px_0px_rgba(0,0,0,0.08)] z-50 w-[65vw] mob:w-full mob:py-[1vw] mob:px-[5vw] ${
           topBarTransition ? 'mt-[-1vw]' : 'mt-[1.1vw] mob:mt-0'
         } transition-all rounded-full mob:rounded-none flex items-center justify-between`}
       >
@@ -331,7 +331,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
             onClick={() => router.push('/shop')}
             className="relative"
           >
-            <div className="w-[10vw] ml-[2vw] mt-2 mob:w-[30vw] mob:h-[12vw] h-[5vw] mr-[4vw] relative">
+            <div className="w-[10vw] ml-[2vw] mt-2 mob:w-[30vw] mob:h-[12vw] h-[4vw] mr-[4vw] relative">
               <Image 
                 src={originLogo} 
                 alt="logo" 

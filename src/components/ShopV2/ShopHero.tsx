@@ -6,12 +6,13 @@ import { Carousel } from 'react-responsive-carousel';
 import { useMediaQuery } from '@mui/material';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import banner1 from '/public/assets/images/shop/heroBannerShop.png';
 import banner2 from '/public/assets/images/shop/heroBannerShop1.png';
 import banner3 from '/public/assets/images/shop/heroBannerShop2.png';
 import banner4 from '/public/assets/images/shop/heroBannerShop3.png';
-import landingimg from '/public/assets/images/shop/landingimg2.png';
+import landingimg from '/public/assets/images/shop/homepagebg.png';
+import downchevron from '/public/assets/svg/homedownchevron.svg';
+import PopularProduce from '@/components/ShopV2/PopularProduce';
 
 const bannerData = [
   {
@@ -87,48 +88,6 @@ const ShopHero = () => {
                 quality={100}
               />
             </div>
-
-            <div
-              className="absolute inset-0 z-10 flex items-center justify-end"
-              style={{ 
-                paddingRight: isMobile ? '50px' : isTablet ? '120px' : '200px' 
-              }}
-            >
-              <div
-                className={`text-left ${
-                  isMobile ? 'max-w-[60vw] pt-[8vw]' : isTablet ? 'max-w-[35vw]' : 'max-w-[28vw]'
-                }`}
-              >
-                <h1
-                  className={`
-                    font-[SofiaPro] font-bold text-white whitespace-pre-line
-                    ${isMobile 
-                      ? 'text-[4.5vw] leading-[1.0]' 
-                      : isTablet 
-                        ? 'text-[4.5vw] leading-[0.9]' 
-                        : 'text-[6vw] leading-[1.1]'
-                    }
-                  `}
-                >
-                  {banner.title}
-                </h1>
-                <button
-                  onClick={() => router.push(banner.href)}
-                  className={`
-                    bg-[#FFD600] text-black font-[SofiaPro] font-semibold rounded-lg
-                    hover:bg-[#ffcd00] transition
-                    ${isMobile 
-                      ? 'text-[2vw] mt-[3vw] py-1 px-4' 
-                      : isTablet 
-                        ? 'text-[1.2vw] mt-[1.8vw] py-2 px-6' 
-                        : 'text-[1vw] mt-[1.5vw] py-2 px-6'
-                    }
-                  `}
-                >
-                  {banner.button}
-                </button>
-              </div>
-            </div>
           </div>
         ))}
       </Carousel>
@@ -137,18 +96,21 @@ const ShopHero = () => {
 };
 export default ShopHero;
 
-// 🔹 New Component: Single Banner Hero
 export const ShopHeroSingle = () => {
   const isMobile = useMediaQuery('(max-width:768px)');
   const isTablet = useMediaQuery('(max-width:1024px)');
   const router = useRouter();
   
-  useEffect(() => {
-    router.prefetch('/shimeji-mushroom-white/288')
-  }, [router])
+  const handleScrollDown = () => {
+    window.scrollBy({
+      top: window.innerHeight,
+      behavior: 'smooth'
+    });
+  };
   
   return (
     <div className="relative w-full overflow-hidden mob:pt-[20px]">
+      {/* Hero Banner Section */}
       <div
         className={`relative w-full ${
           isMobile ? 'pt-[50px]' : 'aspect-[2.4/1]'
@@ -159,36 +121,34 @@ export const ShopHeroSingle = () => {
             src={landingimg}
             alt="Shop Hero Single Banner"
             layout="responsive"
-            width={1920}
-            height={800}
             className="object-cover"
             priority
             quality={100}
           />
         </div>
 
-        <div
-          className="absolute inset-0 z-10 flex items-center justify-end"
-          style={{ 
-            paddingRight: isMobile ? '20px' : isTablet ? '60px' : '90px',
-            paddingBottom: isMobile ? '40px' : isTablet ? '60px' : '80px',
-            paddingTop: isMobile ? '40vw' : isTablet ? '25vw' : '16vw'
-          }}
-        >
+        {/* Text Overlay */}
+        <div className="absolute inset-0">
+          <h1 className="text-center text-white font-[SofiaPro] px-4 mt-[23vw]">
+            <div className="text-[3.5vw] mob:text-[8vw] font-normal tracking-wide">
+              EXPLORE
+            </div>
+            <div className="text-[5.5vw] mob:text-[12vw] font-bold tracking-tight mt-[-0.5vw] mob:mt-[-2vw]">
+              THE CULT OF FRESH
+            </div>
+          </h1>
           <button
-            onClick={() => router.push("/shimeji-mushroom-white/288")}
-            className={`
-              bg-[#FFD600] text-black font-[SofiaPro] font-semibold rounded-lg
-              hover:bg-[#ffcd00] transition
-              ${isMobile 
-                ? 'text-[3.5vw] py-2 px-5' 
-                : isTablet 
-                  ? 'text-[1.8vw] py-3 px-8' 
-                  : 'text-[1.2vw] py-3 px-10'
-              }
-            `}
+            onClick={handleScrollDown}
+            className="mt-[2vw] ml-[47vw] mob:mt-[6vw] w-[6vw] h-[6vw] mob:w-[12vw] mob:h-[12vw] bg-[black] rounded-full flex items-center justify-center"
+            aria-label="Scroll down"
           >
-            Shop Now
+            <Image 
+            src={downchevron}
+            width={300}
+            height={300}
+            alt="Shop Hero Single Banner"
+            layout="responsive"/>
+
           </button>
         </div>
       </div>

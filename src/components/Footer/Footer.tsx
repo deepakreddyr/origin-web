@@ -22,7 +22,7 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
   return (
     <>
       {/* Footer main */}
-      <Box className="bg-[#146321] py-[60px] md:pt-[20px]">
+      <Box className="bg-[#FFDD00] py-[60px] md:pt-[20px]">
         <Box className="min-h-[240px] flex items-center">
           <Container maxWidth="lg">
             <Grid container spacing={3}>
@@ -35,7 +35,7 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
                       alt="Origin Logo"
                       width={400} // approximate width in pixels (matches w-44)
                       height={75} // height (adjust according to your logo's aspect ratio)
-                      className="object-contain filter invert brightness-200"
+                      className="object-contain"
                     />
                   </Box>
                   <SocialLinks />
@@ -47,7 +47,7 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
                 <Box className="flex flex-col items-start space-y-4 mt-6 md:mt-10">
                   <Typography
                     variant="body2"
-                    className="text-white text-sm font-semibold uppercase tracking-wider mb-2"
+                    className="text-black text-sm font-semibold uppercase tracking-wider mb-2"
                   >
                     Navigation
                   </Typography>
@@ -60,7 +60,7 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
                 <Box className="flex flex-col items-start space-y-4 mt-6 md:mt-10">
                   <Typography
                     variant="body2"
-                    className="text-white text-sm font-semibold uppercase tracking-wider mb-2"
+                    className="text-black text-sm font-semibold uppercase tracking-wider mb-2"
                   >
                     Contact Us
                   </Typography>
@@ -69,7 +69,7 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
                   <Typography
                     component="a"
                     href="tel:+919900508216"
-                    className="text-white text-base no-underline hover:text-green-100 flex items-center gap-2"
+                    className="text-black text-base no-underline hover:text-green-100 flex items-center gap-2"
                   >
                     <PhoneIcon fontSize="small" /> +91 9900508216
                   </Typography>
@@ -77,7 +77,7 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
                   <Typography
                     component="a"
                     href="mailto:support@originfresh.in"
-                    className="text-white text-base no-underline hover:text-green-100"
+                    className="text-black text-base no-underline hover:text-green-100"
                   >
                     <Mail fontSize="small"/> support@originfresh.in
                   </Typography>
@@ -86,7 +86,7 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
                   <Typography
                     component="a"
                     href="tel:+918344621039"
-                    className="text-white text-base no-underline hover:text-green-100 flex items-center gap-2"
+                    className="text-black text-base no-underline hover:text-green-100 flex items-center gap-2"
                   >
                     <WhatsAppIcon fontSize="small" /> +91 9900507318
                   </Typography>
@@ -104,7 +104,7 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
             {/* Footer Bottom */}
             <Grid container className="mt-5 pt-5">
               <Grid item xs={12} className="text-center">
-                <Typography variant="body2" className="text-sm text-white opacity-90">
+                <Typography variant="body2" className="text-sm text-black opacity-90">
                   © 2025, Origin Fresh. All rights reserved.
                 </Typography>
               </Grid>

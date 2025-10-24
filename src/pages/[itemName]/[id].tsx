@@ -59,9 +59,9 @@ const ProductDetailPage = (props: ProductDetailPageProps) => {
         initialProductDetails={initialProductDetails}
         seoData={seoData}
       />
-      <div className='mb-[25px]'>
+      {/* <div className='mb-[25px]'>
         <CategorySection/>
-      </div>
+      </div> */}
     </Layout>
   );
 };

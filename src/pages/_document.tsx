@@ -37,7 +37,7 @@ export default function Document() {
         </noscript>
         {/* End Meta Pixel */}
       </Head>
-      <body style={{ backgroundColor: '#FFF9E5' }}>
+      <body style={{ backgroundColor: '#000000' }}>
         <Main />
         <NextScript />
       </body>

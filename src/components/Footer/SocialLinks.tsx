@@ -21,7 +21,7 @@ const SocialLinks = () => {
           alt="Instagram"
           width={32}
           height={32}
-          className="w-8 h-8"
+          className="w-8 h-8 filter invert brightness-200"
         />
       </a>
       <a
@@ -35,7 +35,7 @@ const SocialLinks = () => {
           alt="LinkedIn"
           width={32}
           height={32}
-          className="w-8 h-8"
+          className="w-8 h-8 filter invert brightness-200"
         />
       </a>
       {/* <a
