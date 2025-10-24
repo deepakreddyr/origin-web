@@ -156,7 +156,7 @@ export const ShopHeroSingle = () => {
         {/* Background Image */}
         <div className="w-full relative">
           <Image
-            src={landingimg}
+            src="https://cdn.originfresh.in/website-images/fomo.jpg"
             alt="Shop Hero Single Banner"
             layout="responsive"
             width={1920}
@@ -171,17 +171,16 @@ export const ShopHeroSingle = () => {
         <div className="absolute inset-0 z-10 flex items-center justify-start">
           <button
             onClick={() =>
-              router.push("/shop/diwali-gifting/16/diwali-gifting/54")
+              router.push("/carrots-mixed-color/452")
             }
             className={`
               absolute bg-[#FFD600] text-black font-[SofiaPro] font-semibold rounded-lg
-              hover:bg-[#ffcd00] transition
               ${
                 isMobile
-                  ? "scale-[0.5] left-[32%] top-[78%] text-[4vw] py-2 px-6"
+                  ? "scale-[0.5] left-[7%] top-[78%] text-[4vw] py-2 px-6"
                   : isTablet
-                    ? "scale-100 left-[35%] top-[70%] text-[1.4vw] py-2 px-6"
-                    : "scale-100 left-[34%] top-[70%] text-[1.1vw] py-3 px-10"
+                    ? "scale-100 left-[8%] top-[70%] text-[1.4vw] py-2 px-6"
+                    : "scale-100 left-[7.5%] top-[70%] text-[1.1vw] py-3 px-10"
               }
             `}
             style={{ transformOrigin: "left top" }}
