@@ -171,7 +171,7 @@ const SignUp = () => {
 
               <div className="bg-primary-100 min-h-[48px] px-[3.6vw] md:px-[1.67vw] flex items-center gap-[5px] rounded-full">
                 <input
-                  className="border-none outline-none bg-primary-100 placeholder:text-[#231F2099] placeholder:text-[14px] md:placeholder:text-[.97vw] font-[SofiaPro] text-[14px]"
+                  className="border-none outline-none bg-primary-100 placeholder:text-[#231F2099] placeholder:text-[14px] md:placeholder:text-[.97vw] font-slab text-[14px]"
                   placeholder="Enter Your Name"
                   required={true}
                   type="text"
@@ -226,7 +226,7 @@ const SignUp = () => {
 
               <div className="bg-primary-100 min-h-[48px]  px-[3.6vw] md:px-[1.67vw] flex items-center gap-[5px] rounded-full">
                 <input
-                  className="border-none outline-none bg-primary-100 placeholder:text-[#231F2099] placeholder:text-[14px] md:placeholder:text-[.97vw] w-full font-[SofiaPro] text-[14px]"
+                  className="border-none outline-none bg-primary-100 placeholder:text-[#231F2099] placeholder:text-[14px] md:placeholder:text-[.97vw] w-full font-slab text-[14px]"
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);

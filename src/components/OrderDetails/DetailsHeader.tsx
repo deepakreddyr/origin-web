@@ -30,8 +30,8 @@ const DetailsHeader = (props: any) => {
           </button>
         </div>
         <div>
-          <p className="font-[SofiaPro] text-[1.389vw] mob:text-[5.12vw] font-semibold">Order Details</p>
-          <p className="font-[SofiaPro] font-medium text-[.97vw] mob:text-[3.6vw] text-[#231F2080]">
+          <p className="font-slab text-[1.389vw] mob:text-[5.12vw] font-semibold">Order Details</p>
+          <p className="font-slab font-medium text-[.97vw] mob:text-[3.6vw] text-[#231F2080]">
             Order #{order_code}
             <span> | </span>
             {formatTimestamp(order_created_at)}
@@ -48,11 +48,11 @@ const DetailsHeader = (props: any) => {
               fontSize: { xs: '5vw', md: '1.5vw' },
             }}
           />
-          <p className="font-[SofiaPro] font-semibold text-[0.9vw] mob:text-[3.8vw] text-[#231F20]">Contact Support</p>
+          <p className="font-slab font-semibold text-[0.9vw] mob:text-[3.8vw] text-[#231F20]">Contact Support</p>
         </div>
         <a
           href="tel:+919876543210"
-          className="font-[SofiaPro] text-[0.85vw] mob:text-[3.5vw] text-[#CC4C85] font-medium underline"
+          className="font-slab text-[0.85vw] mob:text-[3.5vw] text-[#CC4C85] font-medium underline"
         >
           +91 9900508216
         </a>

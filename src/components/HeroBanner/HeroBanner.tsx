@@ -38,11 +38,11 @@ const HeroBanner = ({ data }: HeroBannerProps) => {
             {HTMLReactParser(data?.desc)}
           </Typography>
 
-          <Button className="relative bg-primary hover:bg-primary px-6 lg:px-[2rem] py-2 lg:py-[0.9063rem] rounded-full w-fit font-[SofiaPro] font-medium text-[#231F20] text-[0.875rem] lg:text-lg normal-case">
+          <Button className="relative bg-primary hover:bg-primary px-6 lg:px-[2rem] py-2 lg:py-[0.9063rem] rounded-full w-fit font-slab font-medium text-[#231F20] text-[0.875rem] lg:text-lg normal-case">
             {HTMLReactParser(data?.button?.label || "")}
             <Typography
               variant="body1"
-              className="top-[-0.625rem] right-[0.625rem] absolute bg-black rounded-full w-[1.1875rem] lg:w-[23px] h-[1.1875rem] lg:h-[1.4375rem] font-[SofiaPro] font-medium text-[12px] text-white lg:text-[14px] df"
+              className="top-[-0.625rem] right-[0.625rem] absolute bg-black rounded-full w-[1.1875rem] lg:w-[23px] h-[1.1875rem] lg:h-[1.4375rem] font-slab font-medium text-[12px] text-white lg:text-[14px] df"
             >
               {HTMLReactParser(data?.button?.data || "")}
             </Typography>

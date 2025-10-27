@@ -57,10 +57,10 @@ const BillDetails = (props: any) => {
       orderDetails?.payment_status === 'failed' ||
       orderDetails?.payment_status === 'pending'
     ) {
-      return <p className="font-[sofiaPro] font-semibold text-[.97vw] mob:text-[3.6vw] text-[#231F20]">To Pay</p>;
+      return <p className="font-slab font-semibold text-[.97vw] mob:text-[3.6vw] text-[#231F20]">To Pay</p>;
     }
     if (orderDetails?.payment_status === 'complete' && orderDetails?.payment_method === 'Razorpay') {
-      return <p className="font-[sofiaPro] font-semibold text-[.97vw] mob:text-[3.6vw] text-[#231F20]">Paid Online</p>;
+      return <p className="font-slab font-semibold text-[.97vw] mob:text-[3.6vw] text-[#231F20]">Paid Online</p>;
     }
 
     return null;
@@ -70,7 +70,7 @@ const BillDetails = (props: any) => {
     return (
       <div className="flex justify-between">
         {renderPaymentText()}
-        <p className="font-[sofiaPro] font-medium text-[.97vw] mob:text-[3.6vw]">₹{totalPayableAmount}</p>
+        <p className="font-slab font-medium text-[.97vw] mob:text-[3.6vw]">₹{totalPayableAmount}</p>
       </div>
     );
   };
@@ -79,8 +79,8 @@ const BillDetails = (props: any) => {
     if (!canRender) return null;
     return (
       <div className={`flex justify-between ${isGreen ? 'text-[#00855B]' : 'text-[#231F20]'}`}>
-        <p className="font-[sofiaPro] font-medium text-[.97vw] mob:text-[3.6vw]">{title}</p>
-        <p className="font-[sofiaPro] font-medium text-[.97vw] mob:text-[3.6vw]">{value}</p>
+        <p className="font-slab font-medium text-[.97vw] mob:text-[3.6vw]">{title}</p>
+        <p className="font-slab font-medium text-[.97vw] mob:text-[3.6vw]">{value}</p>
       </div>
     );
   };
@@ -130,7 +130,7 @@ const BillDetails = (props: any) => {
   };
   return (
     <div className="bg-[#F2EEE44D] border border-[#F2EEE4] rounded-[1.1vw] mob:rounded-[4.1vw] mob:p-[4.1vw] p-[1.1vw]">
-      <p className="font-[SofiaPro] font-semibold text-[1.25vw] mob:text-[5vw]  pb-[1.1vw] mob:pb-[4.1vw] text-black opacity-80">
+      <p className="font-slab font-semibold text-[1.25vw] mob:text-[5vw]  pb-[1.1vw] mob:pb-[4.1vw] text-black opacity-80">
         Bill Details
       </p>
       {(orderDetails.bills.filter((bill: any) => bill.payment_method !== 'Refund') || []).length > 1 ? (

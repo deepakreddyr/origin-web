@@ -67,7 +67,7 @@ const DeliveryInstruction = () => {
         borderRadius: '16px'
       }}
     >
-      <p className="font-[SofiaPro] font-semibold text-[1.1vw] mob:text-[4.1vw] text-[#231F20CC]">
+      <p className="font-slab font-semibold text-[1.1vw] mob:text-[4.1vw] text-[#231F20CC]">
         Delivery Instructions
       </p>
       {renderInstruction()}

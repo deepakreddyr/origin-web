@@ -35,11 +35,11 @@ const PaymentSuccess = (props: any) => {
         <Lottie animationData={successAnimation} />
       </div>
       <div className="text-center pt-[1.67vw] mob:pt-[5.1vw] ">
-        <p className="font-[SofiaPro] text-[1.25vw] mob:text-[5vw] text-black font-semibold ">
+        <p className="font-slab text-[1.25vw] mob:text-[5vw] text-black font-semibold ">
           Order placed successfully !
         </p>
 
-        {/* <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] text-[#231F2099] font-regular pt-[.97vw] mob:pt-[3.6vw] ">
+        {/* <p className="font-slab text-[.97vw] mob:text-[3.6vw] text-[#231F2099] font-regular pt-[.97vw] mob:pt-[3.6vw] ">
           Paid
           <span className="font-semibold text-[.97vw] mob:text-[3.6vw]">
             {' '}
@@ -47,7 +47,7 @@ const PaymentSuccess = (props: any) => {
           </span>using{' '}
           <span className="font-semibold text-[.97vw] mob:text-[3.6vw]">{paymentModalDetails.paymentType}</span>
         </p>
-        <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] mob:pt-[4.1vw] pt-[1.1vw] text-[#231F2099]">
+        <p className="font-slab text-[.97vw] mob:text-[3.6vw] mob:pt-[4.1vw] pt-[1.1vw] text-[#231F2099]">
           directing you to order Details in {timer}s.
         </p> */}
       </div>

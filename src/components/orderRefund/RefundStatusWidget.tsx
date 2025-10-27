@@ -16,8 +16,8 @@ const RefundStatusWidget = (props: any) => {
     <div className="border bg-[#F2EEE44D] border-beige-200 p-[1.1vw] mob:p-[4.1vw] mob:rounded-[3vw] rounded-[.83vw]">
       <div className="flex items-center justify-between border-b border-b-beige-200 pb-[.97vw] mb-[.97vw] ">
         <div>
-          <p className="font-[SofiaPro] font-semibold text-[1.1vw] mob:text-[4.1vw] text-[#231F20]">Refund Amount:</p>
-          <p className="font-[SofiaPro] font-medium text-[.97vw] mob:text-[3.6vw] text-black-op-80  mob:pt-[2vw] pt-[.4vw] ">
+          <p className="font-slab font-semibold text-[1.1vw] mob:text-[4.1vw] text-[#231F20]">Refund Amount:</p>
+          <p className="font-slab font-medium text-[.97vw] mob:text-[3.6vw] text-black-op-80  mob:pt-[2vw] pt-[.4vw] ">
             {' '}
             ₹{refundDetails.amount}
           </p>
@@ -28,7 +28,7 @@ const RefundStatusWidget = (props: any) => {
           </div>
           <p
             style={{ color: refundDetails.rrn_number ? '#25874D' : '#DC6F3F' }}
-            className="font-[SofiaPro] font-medium text-[.83vw] mob:text-[3vw] "
+            className="font-slab font-medium text-[.83vw] mob:text-[3vw] "
           >
             {refundDetails.rrn_number ? 'Refund Completed' : 'Refund under process'}
           </p>
@@ -36,8 +36,8 @@ const RefundStatusWidget = (props: any) => {
       </div>
       <div>
         <div className=" border-b border-b-beige-200 pb-[.97vw] mob:pb-[3.6vw] mob:mb-[3.6vw] mb-[.97vw]">
-          <p className="font-[SofiaPro] font-medium text-[.83vw] mob:text-[3vw] text-black-op-80 ">To: Source</p>
-          <p className="font-[SofiaPro] font-medium text-[.83vw] mob:text-[3vw] mob:pt-[1vw] pt-[.3vw] text-black-op-80">
+          <p className="font-slab font-medium text-[.83vw] mob:text-[3vw] text-black-op-80 ">To: Source</p>
+          <p className="font-slab font-medium text-[.83vw] mob:text-[3vw] mob:pt-[1vw] pt-[.3vw] text-black-op-80">
             Refunded on: {convertTimestampToDate(refundDetails.initiated_at)}{' '}
           </p>
         </div>
@@ -56,10 +56,10 @@ const RefundStatusWidget = (props: any) => {
             </div>
 
             <div>
-              <p className="font-[SofiaPro] font-semibold  text-secondary text-[.97vw] mob:text-[3.6vw]">
+              <p className="font-slab font-semibold  text-secondary text-[.97vw] mob:text-[3.6vw]">
                 Refund initiated
               </p>
-              <p className="text-black-op-60 font-[SofiaPro]  font-medium text-[.83vw] mob:text-[3vw] ">
+              <p className="text-black-op-60 font-slab  font-medium text-[.83vw] mob:text-[3vw] ">
                 {convertTimestampToDate(refundDetails.initiated_at)}
               </p>
             </div>
@@ -81,20 +81,20 @@ const RefundStatusWidget = (props: any) => {
             <div>
               <p
                 style={{ color: refundDetails.rrn_number ? '#25874D' : '#231F2066' }}
-                className="font-[SofiaPro] font-semibold   text-[.97vw] mob:text-[3.6vw]  mt-[-.2vw] "
+                className="font-slab font-semibold   text-[.97vw] mob:text-[3.6vw]  mt-[-.2vw] "
               >
                 {refundDetails.rrn_number
                   ? `Refund credited to your account`
                   : 'Refund will be credited to your account'}
               </p>
               {refundDetails.completed_at && (
-                <p className="text-black-op-60 font-[SofiaPro]  font-medium text-[.83vw] mob:text-[3vw] ">
+                <p className="text-black-op-60 font-slab  font-medium text-[.83vw] mob:text-[3vw] ">
                   {convertTimestampToDate(refundDetails.completed_at)}
                 </p>
               )}
               <p
                 style={{ color: refundDetails.rrn_number ? '#25874D' : '#231F2066' }}
-                className="font-[SofiaPro] font-medium  text-black-op-50 text-[.8vw] mob:text-[3vw] mob:mt-[.75vw] mt-[.2vw]"
+                className="font-slab font-medium  text-black-op-50 text-[.8vw] mob:text-[3vw] mob:mt-[.75vw] mt-[.2vw]"
               >
                 {refundDetails.rrn_number
                   ? `Your RRN Number is ${refundDetails.rrn_number} and the refund is completed , will reflect in 5 - 10 days`

@@ -18,7 +18,7 @@ const ProductDetailsPageLoader = () => {
           <Skeleton variant="rectangular" className="w-full h-[3vw] mob:h-[12vw] rounded-[.6vw]" />
           <Skeleton variant="rectangular" className="w-full h-[30vw] mob:h-[12vw] rounded-[.6vw]" />
 
-          {/* <p className="font-[SofiaPro] font-semibold text-[1.67vw]">{productDetails.item.name}</p> */}
+          {/* <p className="font-slab font-semibold text-[1.67vw]">{productDetails.item.name}</p> */}
           {/* <ItemQuantityAndCta productDetails={productDetails} /> */}
           {/* <NutritionInfo productDetails={productDetails} /> */}
           {/* <AboutTheProduct productDetails={productDetails} /> */}

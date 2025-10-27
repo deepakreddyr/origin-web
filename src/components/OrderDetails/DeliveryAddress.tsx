@@ -11,7 +11,7 @@ const DeliveryAddress = (props: any) => {
   return (
     <div className="border w-full h-max bg-[#F2EEE44D] border-[#F2EEE4] rounded-[1.1vw] mob:rounded-[4.1vw] mob:p-[4.1vw] p-[1.1vw] ">
       <div className="">
-        <p className="font-[SofiaPro] font-semibold text-[1.25vw] mob:text-[5vw] text-black-op-80 pb-[1.1vw] mob:pb-[4.1vw]">
+        <p className="font-slab font-semibold text-[1.25vw] mob:text-[5vw] text-black-op-80 pb-[1.1vw] mob:pb-[4.1vw]">
           Delivering to
         </p>
         <div className="flex gap-[.5vw] mob:gap-[1.5vw] ">
@@ -25,22 +25,22 @@ const DeliveryAddress = (props: any) => {
             </div>
           </div>
           <div className="w-[26vw] mob:w-[80vw]">
-            <p className="font-[SofiaPro] font-semibold text-[1.1vw] mob:text-[4.1vw] text-black ">{address_name}</p>
-            <p className="font-[SofiaPro] font-regular text-[.83vw] mob:text-[3vw] mob:pt-[1vw] text-black-op-50">
+            <p className="font-slab font-semibold text-[1.1vw] mob:text-[4.1vw] text-black ">{address_name}</p>
+            <p className="font-slab font-regular text-[.83vw] mob:text-[3vw] mob:pt-[1vw] text-black-op-50">
               {address}
             </p>
           </div>
         </div>
       </div>
       <div className="pt-[1.67vw] mob:pt-[8vw]">
-        <p className="font-[SofiaPro] font-semibold text-[1.25vw] mob:text-[5vw] text-black-op-80 pb-[1.1vw] mob:pb-[4.1vw]">
+        <p className="font-slab font-semibold text-[1.25vw] mob:text-[5vw] text-black-op-80 pb-[1.1vw] mob:pb-[4.1vw]">
           Payment Type
         </p>
         <div className="flex items-center gap-[.5vw] mob:gap-[1.5vw]">
           <div className="w-[2.9vw] h-[2.9vw] mob:w-[9vw] mob:h-[9vw] relative ">
             <Image src={paymentTypeIcon} alt="" />
           </div>
-          <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  ">
+          <p className="font-slab text-[.97vw] mob:text-[3.6vw] font-semibold  ">
             {payment_method === 'Razorpay' ? 'Paid Online' : 'Cash on Delivery'}
           </p>
         </div>

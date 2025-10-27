@@ -50,8 +50,8 @@ const CartAddressList = (props: any) => {
               </div>
             </div>
             <div className="w-[19.3vw]">
-              <p className="font-[SofiaPro] text-[.83vw] font-semibold ">{item.address_name}</p>
-              <p className="font-[SofiaPro] text-[.83vw] font-medium text-[#231F20CC]">{item.address}</p>
+              <p className="font-slab text-[.83vw] font-semibold ">{item.address_name}</p>
+              <p className="font-slab text-[.83vw] font-medium text-[#231F20CC]">{item.address}</p>
             </div>
           </button>
         ))}
@@ -59,7 +59,7 @@ const CartAddressList = (props: any) => {
       <div className="fixed bottom-[1.1vw] w-full ">
         <button
           onClick={sendUserToAddAddress}
-          className="bg-primary w-[28vw] py-[.7vw] font-[SofiaPro] text-[.97vw] font-semibold rounded-full "
+          className="bg-primary w-[28vw] py-[.7vw] font-slab text-[.97vw] font-semibold rounded-full "
         >
           Add New Address +
         </button>

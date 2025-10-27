@@ -65,13 +65,13 @@ const BillDetailsWrapper = (props: any) => {
 
   return (
     <div className="bg-[#F2EEE44D] flex flex-col border border-[#F2EEE4] p-[1.1vw] mob:p-[4.1vw] mob:rounded-[4.1vw] rounded-[1.1vw]">
-      <h3 className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] mob:pb-[1.5vw] pb-[.6vw] font-semibold text-[#231F20CC]">
+      <h3 className="font-slab text-[1.1vw] mob:text-[4.1vw] mob:pb-[1.5vw] pb-[.6vw] font-semibold text-[#231F20CC]">
         Bill details
       </h3>
       <ul className="p-0 flex flex-col mob:gap-[1vw] gap-[.3vw]">
         <li>
           <div className="flex items-center text-black justify-between">
-            <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw] flex items-center gap-[0.4vw]">
+            <p className="font-slab font-bold mob:text-[3.6vw] text-[.97vw] flex items-center gap-[0.4vw]">
               Item total
               {/* <Tooltip
                 title="5% GST applied on applicable items"
@@ -102,7 +102,7 @@ const BillDetailsWrapper = (props: any) => {
                 </IconButton>
               </Tooltip> */}
             </p>
-            <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
+            <p className="font-slab font-bold mob:text-[3.6vw] text-[.97vw]">
               ₹{cart.totalOriginalPrice}
             </p>
           </div>
@@ -111,8 +111,8 @@ const BillDetailsWrapper = (props: any) => {
         {cart.totalOriginalPrice - cart.totalPrice > 0 && (
           <li>
             <div className="flex items-center text-secondary justify-between">
-              <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">Savings</p>
-              <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
+              <p className="font-slab font-bold mob:text-[3.6vw] text-[.97vw]">Savings</p>
+              <p className="font-slab font-bold mob:text-[3.6vw] text-[.97vw]">
                 ₹{cart.totalOriginalPrice - cart.totalPrice}
               </p>
             </div>
@@ -122,8 +122,8 @@ const BillDetailsWrapper = (props: any) => {
         {cart.discountAmount > 0 && (
           <li>
             <div className="flex items-center text-secondary justify-between">
-              <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">Coupon used</p>
-              <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
+              <p className="font-slab font-bold mob:text-[3.6vw] text-[.97vw]">Coupon used</p>
+              <p className="font-slab font-bold mob:text-[3.6vw] text-[.97vw]">
                 ₹{Math.round(cart.discountAmount)}
               </p>
             </div>
@@ -133,8 +133,8 @@ const BillDetailsWrapper = (props: any) => {
         {localStorage.getItem("user_token") && (
           <li>
             <div className="flex items-center text-secondary justify-between">
-              <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">Delivery fee</p>
-              <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
+              <p className="font-slab font-bold mob:text-[3.6vw] text-[.97vw]">Delivery fee</p>
+              <p className="font-slab font-bold mob:text-[3.6vw] text-[.97vw]">
                 {billDetails.free_delivery_charge && (
                   <span className="text-black-op-60 font-regular line-through">
                     ₹{billDetails.free_delivery_charge}
@@ -148,8 +148,8 @@ const BillDetailsWrapper = (props: any) => {
 
         <li>
           <div className="flex items-center text-black justify-between">
-            <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">To Pay</p>
-            <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">₹{cart.amountToPay}</p>
+            <p className="font-slab font-bold mob:text-[3.6vw] text-[.97vw]">To Pay</p>
+            <p className="font-slab font-bold mob:text-[3.6vw] text-[.97vw]">₹{cart.amountToPay}</p>
           </div>
         </li>
       </ul>
@@ -157,9 +157,9 @@ const BillDetailsWrapper = (props: any) => {
       {billDetails.cart_minimum &&
         Number(billDetails.cart_minimum) > 0 &&
         cart.amountToPay < billDetails.cart_minimum && (
-          <div className="font-[SofiaPro] font-bold bg-green-50 border border-green-200 rounded-md p-3 mt-3">
-            <p className="font-[SofiaPro] font-bold text-green-700 text-sm mt-1">
-              Add <span className="font-[SofiaPro] font-bold">₹{remainingAmount}</span> more to reach the minimum order!
+          <div className="font-slab font-bold bg-green-50 border border-green-200 rounded-md p-3 mt-3">
+            <p className="font-slab font-bold text-green-700 text-sm mt-1">
+              Add <span className="font-slab font-bold">₹{remainingAmount}</span> more to reach the minimum order!
             </p>
           </div>
         )}

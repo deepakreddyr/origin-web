@@ -38,7 +38,7 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
 
   return (
     <div className="relative w-full px-[4vw] py-[3vw] mob:px-[6vw] mob:py-[6vw] overflow-hidden">
-      <h2 className="font-[SofiaPro] text-[2.5vw] mob:text-[6vw] font-bold pl-[3vw] mob:pl-5 text-white mb-[2vw] mob:mb-[6vw]">
+      <h2 className="font-slab text-[2.5vw] mob:text-[6vw] font-bold pl-[3vw] mob:pl-5 text-white mb-[2vw] mob:mb-[6vw]">
         {categoryDetail.title}
       </h2>
 

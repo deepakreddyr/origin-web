@@ -69,13 +69,13 @@ const RequestOTP = (props: Props) => {
     <div className="">
       <div className="flex flex-col gap-[2.2vw] ">
         <div>
-          <p className="font-[SofiaPro] sm:pb-[.78vw] xs:pb-[3vw] font-semibold text-[16px] text-black">
+          <p className="font-slab sm:pb-[.78vw] xs:pb-[3vw] font-semibold text-[16px] text-black">
             Mobile Number*
           </p>
           <div className="bg-primary-100 min-h-[48px] px-[3.6vw] md:px-[1.67vw] flex items-center gap-[5px] rounded-full">
-            <p className="font-[SofiaPro] text-[14px] ">+91</p>
+            <p className="font-slab text-[14px] ">+91</p>
             <input
-              className="border-none outline-none w-full bg-primary-100 placeholder:text-[#231F2099] font-[SofiaPro] text-[14px]"
+              className="border-none outline-none w-full bg-primary-100 placeholder:text-[#231F2099] font-slab text-[14px]"
               placeholder="10 Digit Mobile Number"
               type="number"
               value={mobileNumber ? mobileNumber : ''}

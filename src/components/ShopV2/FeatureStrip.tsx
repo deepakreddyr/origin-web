@@ -12,7 +12,7 @@ const features = [
 
 const FeatureStrip = () => {
   return (
-    <div className="w-full bg-white border-t border-b border-gray-200 py-2 font-[SofiaPro]">
+    <div className="w-full bg-white border-t border-b border-gray-200 py-2 font-slab">
       {/* Desktop */}
       <div className="hidden md:flex justify-between w-full text-sm font-semibold text-[#1A1A1A] px-0">
         <div className="flex justify-between w-full px-[4vw]">
@@ -32,7 +32,7 @@ const FeatureStrip = () => {
       </div>
 
       {/* Mobile */}
-      <div className="md:hidden overflow-x-auto scrollbar-hide font-[SofiaPro]">
+      <div className="md:hidden overflow-x-auto scrollbar-hide font-slab">
         <div className="flex gap-6 px-4 text-sm font-semibold text-[#1A1A1A] whitespace-nowrap animate-scroll">
           {[...features, ...features].map((item, idx) => (
             <div key={idx} className="flex items-center gap-2 flex-shrink-0 min-w-max">

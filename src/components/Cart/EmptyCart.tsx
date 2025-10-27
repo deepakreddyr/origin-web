@@ -18,7 +18,7 @@ const EmptyCart = () => {
 
       <div className="mt-5 sm:mt-4 md:mt-[1.25vw] flex flex-col items-center">
         {/* 📝 Text */}
-        <p className="font-[SofiaPro] text-[4vw] sm:text-[2.5vw] md:text-[.97vw] font-semibold text-center">
+        <p className="font-slab text-[4vw] sm:text-[2.5vw] md:text-[.97vw] font-semibold text-center">
           Your Cart is Empty
         </p>
 
@@ -28,7 +28,7 @@ const EmptyCart = () => {
             router.push('/shop');
             dispatch(setIsSidebarOpen(false));
           }}
-          className="mt-5 sm:mt-4 md:mt-[1.67vw] bg-primary text-black font-[SofiaPro] font-semibold 
+          className="mt-5 sm:mt-4 md:mt-[1.67vw] bg-primary text-black font-slab font-semibold 
                      text-[4vw] sm:text-[2.5vw] md:text-[.97vw] 
                      px-5 sm:px-7 md:px-[2vw] py-2.5 sm:py-2 md:py-[.6vw] 
                      rounded-full"

@@ -67,10 +67,10 @@ const ReviewItem = (props: any) => {
             />
           </figure>
           <div className="review-cart-information flex flex-col">
-            <h4 className="font-[sofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold">
+            <h4 className="font-slab text-[.97vw] mob:text-[3.6vw] font-semibold">
               {item?.name}
             </h4>
-            <span className="text-black/60 text-[.83vw] mob:text-[3vw] font-[sofiaPro]">
+            <span className="text-black/60 text-[.83vw] mob:text-[3vw] font-slab">
               {`${uom.unit} `}
             </span>
           </div>
@@ -90,11 +90,11 @@ const ReviewItem = (props: any) => {
             <div className="review-cart-counter flex flex-col items-center w-[2vw] mob:w-[12vw]">
               {/* {console.log('Debug - market_price:', uom.market_price, 'price:', uom.price, 'condition result:', (uom.market_price !== null && uom.market_price !== undefined && uom.market_price !== 0 && uom.market_price > uom.price))} */}
               {uom.market_price !== null && uom.market_price !== undefined && uom.market_price !== 0 && uom.market_price > uom.price && (
-                <span className="font-[sofiaPro] text-[.78vw] mob:text-[2.8vw] line-through text-[#231F2099]">
+                <span className="font-slab text-[.78vw] mob:text-[2.8vw] line-through text-[#231F2099]">
                   ₹{calculateItemTotalPrice(uom.market_price, uom.cart_quantity)}
                 </span>
               )}
-              <span className="font-[sofiaPro] text-[.83vw] mob:text-[3.3vw]">
+              <span className="font-slab text-[.83vw] mob:text-[3.3vw]">
                 ₹{calculateItemTotalPrice(uom.price, uom.cart_quantity)}
               </span>
             </div>
@@ -106,7 +106,7 @@ const ReviewItem = (props: any) => {
             }}
             className="flex items-center"
           >
-            <p className="font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3.3vw] text-[#C70000] whitespace-nowrap">
+            <p className="font-slab font-semibold text-[.83vw] mob:text-[3.3vw] text-[#C70000] whitespace-nowrap">
               OUT OF STOCK
             </p>
             <div className="relative w-[2.5vw] h-[2.5vw] mob:w-[6vw] mob:h-[6vw]">
@@ -118,7 +118,7 @@ const ReviewItem = (props: any) => {
 
       {uom.maximum_quantity > 1 && uom.cart_quantity > uom.maximum_quantity && (
         <div>
-          <p className="font-[SofiaPro] text-[.83vw] mt-[.4vw] font-medium text-semibold text-danger">
+          <p className="font-slab text-[.83vw] mt-[.4vw] font-medium text-semibold text-danger">
             Maximum available <span className="font-semibold">{uom.maximum_quantity}</span>. Please change the Quantity.
           </p>
         </div>

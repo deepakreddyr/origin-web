@@ -10,7 +10,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        SofiaPro: ['"Sofia Pro"']
+        SofiaPro: ['"Sofia Pro"'],
+        'slab': ['MuseoSlab', 'serif'] 
+        // ----------------------------------
       },
       colors: {
         danger: '#C70000',

@@ -158,8 +158,8 @@ const SelectAddressSidebar = () => {
               </div>
 
               <div className="w-[22vw] mob:w-[80vw]">
-                <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold">{data.address_name}</p>
-                <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] text-black-op-80">{data.address}</p>
+                <p className="font-slab text-[.97vw] mob:text-[3.6vw] font-semibold">{data.address_name}</p>
+                <p className="text-[.83vw] mob:text-[3vw] font-slab text-black-op-80">{data.address}</p>
 
                 {isDisabled && (
                   <Typography

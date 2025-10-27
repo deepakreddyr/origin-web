@@ -1,0 +1,97 @@
+/* museo-slab-style.css */
+
+@font-face {
+  font-family: "MuseoSlab";
+  src: url("/assets/fonts/MuseoSlab/Museo_Slab_100.otf") format("opentype");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MuseoSlab";
+  src: url("/assets/fonts/MuseoSlab/Museo_Slab_100italic.otf") format("opentype");
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MuseoSlab";
+  src: url("/assets/fonts/MuseoSlab/Museo_Slab_300.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MuseoSlab";
+  src: url("/assets/fonts/MuseoSlab/Museo_Slab_300italic.otf") format("opentype");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MuseoSlab";
+  src: url("/assets/fonts/MuseoSlab/Museo_Slab_500.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MuseoSlab";
+  src: url("/assets/fonts/MuseoSlab/Museo_Slab_500italic.otf") format("opentype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MuseoSlab";
+  src: url("/assets/fonts/MuseoSlab/Museo_Slab_700.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MuseoSlab";
+  src: url("/assets/fonts/MuseoSlab/Museo_Slab_700italic.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MuseoSlab";
+  src: url("/assets/fonts/MuseoSlab/Museo_Slab_900.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MuseoSlab";
+  src: url("/assets/fonts/MuseoSlab/Museo_Slab_900italic.otf") format("opentype");
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MuseoSlab";
+  src: url("/assets/fonts/MuseoSlab/Museo_Slab_1000.otf") format("opentype");
+  font-weight: 950; /* Using 950 as 1000 is not a standard weight, but can be used */
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MuseoSlab";
+  src: url("/assets/fonts/MuseoSlab/Museo_Slab_1000italic.otf") format("opentype");
+  font-weight: 950;
+  font-style: italic;
+  font-display: swap;
+}

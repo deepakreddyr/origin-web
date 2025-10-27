@@ -46,10 +46,10 @@ const StatusBanner = (props: any) => {
         <span className="absolute top-[-.5vw] mob:top-[-3vw] left-[.2vw] text-base">.</span>
         <span className="absolute top-[-.5vw] mob:top-[-3vw] right-[.2vw] text-base">.</span>
         <div className="flex flex-col items-center justify-center">
-          <p className="text-[.7vw] mob:text-[3vw] font-[SofiaPro] font-semibold pb-[.3vw]">
+          <p className="text-[.7vw] mob:text-[3vw] font-slab font-semibold pb-[.3vw]">
             {DeliveryStatusDetails[currentStatus].statusTitle}
           </p>
-          <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold ">
+          <p className="text-[.83vw] mob:text-[3vw] font-slab font-semibold ">
             {DeliveryStatusDetails[currentStatus]?.statusDesc === 'timer'
               ? convertEtaToMins(remainingEta)
               : DeliveryStatusDetails[currentStatus]?.statusDesc}

@@ -93,7 +93,7 @@ const AutoCompleteInputField = () => {
           onChange={onChange}
           placeholder="Location Search"
           required={false}
-          className="font-[SofiaPro]  "
+          className="font-slab  "
         />
       </Box>
     </Box>

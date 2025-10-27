@@ -49,7 +49,7 @@ const OverlapPinnedCards = ({
         >
           <Typography
             variant="body1"
-            className="max-w-[551px] font-[SofiaPro] font-light text-[14px] text-left lg:text-[18px] leading-[22.4px] lg:leading-[28.8px]"
+            className="max-w-[551px] font-slab font-light text-[14px] text-left lg:text-[18px] leading-[22.4px] lg:leading-[28.8px]"
           >
             {HTMLReactParser(data?.desc || "")}
           </Typography>

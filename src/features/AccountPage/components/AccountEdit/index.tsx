@@ -177,16 +177,16 @@ const AccountEdit = () => {
     const renderName = () => (
         <Box className="single-field">
             <InputLabel
-                className="font-[SofiaPro] input-label"
+                className="font-slab input-label"
                 shrink
                 htmlFor="Name"
             >
                 Name
             </InputLabel>
-            <Box className="font-[SofiaPro] input-button">
+            <Box className="font-slab input-button">
                 <Input
                     id="Name"
-                    className="font-[SofiaPro] input-field"
+                    className="font-slab input-field"
                     value={variable.name}
                     onChange={onChangeVariable('name')}
                     disabled={editField !== 'name'}
@@ -318,12 +318,12 @@ const AccountEdit = () => {
                         {variable.gender === '' ? (
                             <p
                                 style={{ color: '#a1a1a0ee' }}
-                                className="font-[SofiaPro]  text-[16px]"
+                                className="font-slab  text-[16px]"
                             >
                                 Select gender
                             </p>
                         ) : (
-                            <p className="font-[SofiaPro] text-[14px]  ">
+                            <p className="font-slab text-[14px]  ">
                                 {variable.gender}
                             </p>
                         )}
@@ -357,7 +357,7 @@ const AccountEdit = () => {
                                             ✓
                                         </p>
 
-                                        <button className="font-[SofiaPro]  text-white">
+                                        <button className="font-slab  text-white">
                                             {data.name}
                                         </button>
                                     </li>
@@ -495,14 +495,14 @@ const AccountEdit = () => {
                     }}
                 >
                     <Button
-                        className="font-[SofiaPro] font-semibold capitalize"
+                        className="font-slab font-semibold capitalize"
                         sx={sxStyle.updateButtonStyle}
                         onClick={onSubmit('email')}
                     >
                         Update
                     </Button>
                     <Button
-                        className="font-[SofiaPro] font-semibold capitalize"
+                        className="font-slab font-semibold capitalize"
                         sx={sxStyle.cancelButtonStyle}
                         onClick={handleCancelClick}
                     >

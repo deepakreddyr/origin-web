@@ -10,7 +10,7 @@ const ReviewList = (props: any) => {
   // So we can directly map over cart.items
   return (
     <div className="bg-[#F2EEE44D] flex flex-col border border-[#F2EEE4] p-[1.1vw] mob:py-[4.1vw] px-0 mob:rounded-[4.1vw] rounded-[1.1vw]">
-      <h3 className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] font-semibold text-[#231F20CC] px-[1.1vw] mob:px-[4.1vw] pb-[.97vw]">
+      <h3 className="font-slab text-[1.1vw] mob:text-[4.1vw] font-semibold text-[#231F20CC] px-[1.1vw] mob:px-[4.1vw] pb-[.97vw]">
         Review cart
       </h3>
       
@@ -25,7 +25,7 @@ const ReviewList = (props: any) => {
         </ul>
       ) : (
         <div className="px-[1.1vw] mob:px-[4.1vw] py-[2vw] mob:py-[8vw] text-center">
-          <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] text-gray-500">
+          <p className="font-slab text-[.97vw] mob:text-[3.6vw] text-gray-500">
             Your cart is empty
           </p>
         </div>

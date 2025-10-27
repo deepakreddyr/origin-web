@@ -78,7 +78,7 @@ const DownloadAppWrapper: React.FC<DownloadAppWrapperProps> = ({ onClose }) => {
           <div className="hidden lg:flex lg:min-h-[550px] xl:min-h-[650px] 2xl:min-h-[700px]">
             {/* Left Side - Content */}
             <div className="flex-1 px-12 xl:px-16 py-12 xl:py-16 flex flex-col justify-center">
-              <h2 className="font-[SofiaPro] text-3xl xl:text-4xl font-semibold text-black leading-tight mb-8 xl:mb-12">
+              <h2 className="font-slab text-3xl xl:text-4xl font-semibold text-black leading-tight mb-8 xl:mb-12">
                 Change your idea of fresh!<br />
                 Download the Origin app
               </h2>
@@ -93,12 +93,12 @@ const DownloadAppWrapper: React.FC<DownloadAppWrapperProps> = ({ onClose }) => {
                     sizes="80px"
                   />
                 </div>
-                <p className="font-[SofiaPro] text-2xl xl:text-3xl font-semibold text-black">
+                <p className="font-slab text-2xl xl:text-3xl font-semibold text-black">
                   Origin Fresh
                 </p>
               </div>
 
-              <p className="font-[SofiaPro] text-xl xl:text-2xl font-medium mb-8 xl:mb-12 text-gray-800">
+              <p className="font-slab text-xl xl:text-2xl font-medium mb-8 xl:mb-12 text-gray-800">
                 #FRESHORNOTHING
               </p>
               
@@ -133,7 +133,7 @@ const DownloadAppWrapper: React.FC<DownloadAppWrapperProps> = ({ onClose }) => {
               </div>
               
               {/* Footer Links */}
-              <div className="font-[SofiaPro] font-medium text-gray-500 text-sm xl:text-base">
+              <div className="font-slab font-medium text-gray-500 text-sm xl:text-base">
                 <Link 
                   className="hover:underline hover:text-gray-600 transition-colors duration-200" 
                   href="/terms-and-conditions"
@@ -169,7 +169,7 @@ const DownloadAppWrapper: React.FC<DownloadAppWrapperProps> = ({ onClose }) => {
           <div className="lg:hidden">
             {/* Content */}
             <div className="px-[8vw] pt-[8vw] mob:px-[6vw] mob:pt-[10vw]">
-              <p className="font-[SofiaPro] text-[5.12vw] mob:text-[4.5vw] font-semibold text-black text-center leading-tight mb-4">
+              <p className="font-slab text-[5.12vw] mob:text-[4.5vw] font-semibold text-black text-center leading-tight mb-4">
                 Change your idea of fresh! Download the Origin app
               </p>
               
@@ -183,7 +183,7 @@ const DownloadAppWrapper: React.FC<DownloadAppWrapperProps> = ({ onClose }) => {
                     sizes="(max-width: 600px) 12vw, 9vw"
                   />
                 </div>
-                <p className="font-[SofiaPro] text-[3.6vw] mob:text-[4vw] font-semibold text-black">
+                <p className="font-slab text-[3.6vw] mob:text-[4vw] font-semibold text-black">
                   Origin Fresh
                 </p>
               </div>
@@ -202,7 +202,7 @@ const DownloadAppWrapper: React.FC<DownloadAppWrapperProps> = ({ onClose }) => {
             </div>
 
             <div className="p-[4.1vw] mob:p-[6vw]">
-              <p className="font-[SofiaPro] text-center text-[4.1vw] mob:text-[3.5vw] font-medium mb-6 text-gray-800">
+              <p className="font-slab text-center text-[4.1vw] mob:text-[3.5vw] font-medium mb-6 text-gray-800">
                 #FRESHORNOTHING
               </p>
               
@@ -237,7 +237,7 @@ const DownloadAppWrapper: React.FC<DownloadAppWrapperProps> = ({ onClose }) => {
                 </div>
               
               {/* Footer Links */}
-              <div className="font-[SofiaPro] font-medium text-[#7B7979] text-[3vw] mob:text-[3.5vw] text-center">
+              <div className="font-slab font-medium text-[#7B7979] text-[3vw] mob:text-[3.5vw] text-center">
                 <Link 
                   className="hover:underline hover:text-gray-600 transition-colors duration-200" 
                   href="/terms-and-conditions"

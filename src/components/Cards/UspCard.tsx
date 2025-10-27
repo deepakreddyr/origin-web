@@ -15,7 +15,7 @@ const UspCard = ({ cardData }: USPPROPS) => {
         <Image src={icon} alt={title} fill />
       </div>
       <div className="h-[6vw] mt-[1.67vw] mob:w-[25.5vw] ">
-        <p className="font-[SofiaPro] font-medium text-[1.52vw] mob:text-[3.6vw] text-center ">{title}</p>
+        <p className="font-slab font-medium text-[1.52vw] mob:text-[3.6vw] text-center ">{title}</p>
       </div>
     </div>
   );

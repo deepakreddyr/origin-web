@@ -34,7 +34,7 @@ const CouponSection = (props: any) => {
   return (
     // <></>
     <div className=" bg-[#F2EEE44D]  flex flex-col border border-[#F2EEE4] p-[1.1vw] mob:p-[4.1vw] mob:rounded-[4.1vw] rounded-[1.1vw]">
-      <h3 className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] mob:pb-[2vw] pb-[.6vw] font-semibold text-[#231F20CC]">
+      <h3 className="font-slab text-[1.1vw] mob:text-[4.1vw] mob:pb-[2vw] pb-[.6vw] font-semibold text-[#231F20CC]">
         Save with coupons
       </h3>
 
@@ -48,8 +48,8 @@ const CouponSection = (props: any) => {
               <Image src={percentageIcon} alt="percentage icon" fill />{' '}
             </div>
             <div className="">
-              <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  ">View coupons & Offers</p>
-              <p className="font-[SofiaPro] text-[.78vw] mob:text-[3vw] font-regular pt-[.3vw] mob:pt-[1.5vw] ">
+              <p className="font-slab text-[.97vw] mob:text-[3.6vw] font-semibold  ">View coupons & Offers</p>
+              <p className="font-slab text-[.78vw] mob:text-[3vw] font-regular pt-[.3vw] mob:pt-[1.5vw] ">
                 Find and apply to save on this order
               </p>
             </div>
@@ -65,15 +65,15 @@ const CouponSection = (props: any) => {
               <Image src={percentageIcon} alt="percentage icon" fill />{' '}
             </div>
             <div className="">
-              <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  ">View coupons & Offers</p>
-              <p className="font-[SofiaPro] text-[.78vw] mob:text-[3vw] font-regular pt-[.3vw] mob:pt-[2vw] ">
+              <p className="font-slab text-[.97vw] mob:text-[3.6vw] font-semibold  ">View coupons & Offers</p>
+              <p className="font-slab text-[.78vw] mob:text-[3vw] font-regular pt-[.3vw] mob:pt-[2vw] ">
                 You Saved {couponDetails.offer} on this order
               </p>
             </div>
           </div>
           <button
             onClick={resetCouponHandler}
-            className="font-[SofiaPro] font-bold text-[.83vw] mob:text-[3vw] text-white bg-[#D0583F] rounded-full px-[.83vw] py-[.6vw] mob:px-[3vw] mob:py-[2vw]"
+            className="font-slab font-bold text-[.83vw] mob:text-[3vw] text-white bg-[#D0583F] rounded-full px-[.83vw] py-[.6vw] mob:px-[3vw] mob:py-[2vw]"
           >
             REMOVE
           </button>

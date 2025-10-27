@@ -16,18 +16,18 @@ const ContactDetails = () => {
 
       <Stack direction="column" className="gap-[30px] md:gap-10">
         <Stack direction="column" className="gap-1 md:gap-3">
-          <Typography className="text-[#00000099] text-lg font-[SofiaPro] font-light">
+          <Typography className="text-[#00000099] text-lg font-slab font-light">
             Call us
           </Typography>
-          <Typography className="font-[SofiaPro] text-[28px] leading-[30px] text-black font-normal">
+          <Typography className="font-slab text-[28px] leading-[30px] text-black font-normal">
             04446276129
           </Typography>
         </Stack>
         <Stack direction="column" className="gap-1 md:gap-3">
-          <Typography className="text-[#00000099] text-lg font-[SofiaPro] font-light">
+          <Typography className="text-[#00000099] text-lg font-slab font-light">
             Email us
           </Typography>
-          <Typography className="font-[SofiaPro] text-[28px] leading-[30px] text-black font-normal">
+          <Typography className="font-slab text-[28px] leading-[30px] text-black font-normal">
             support@originfresh.in
           </Typography>
         </Stack>

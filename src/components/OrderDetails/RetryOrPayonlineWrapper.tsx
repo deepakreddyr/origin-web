@@ -118,10 +118,10 @@ const RetryOrPayonlineWrapper: React.FC<RetryOrPayonlineWrapperProps> = ({ fetch
   return (
     <div className="bg-[#F2EEE44D] border border-[#F2EEE4] rounded-[1.1vw] mob:rounded-[4.1vw] mob:p-[4.1vw] p-[1.1vw] flex mob:flex-col items-end mob:items-center justify-between mob:mb-[4.1vw] w-full">
       <div className="w-[25vw] mob:w-full">
-        <p className="font-[SofiaPro] font-semibold text-[1.1vw] mob:text-[4.1vw] text-black-op-80 ">
+        <p className="font-slab font-semibold text-[1.1vw] mob:text-[4.1vw] text-black-op-80 ">
           Payment Pending!
         </p>
-        <p className="font-[SofiaPro] font-regular  text-[.97vw] mob:text-[3vw] text-black-op-80 pt-[.83vw]">
+        <p className="font-slab font-regular  text-[.97vw] mob:text-[3vw] text-black-op-80 pt-[.83vw]">
           {paymentMentod === 'Razorpay'
             ? ' We are awaiting confirmation on your payment, You can click on Retry payment to try again.'
             : 'Pay Online and make the delivery experience seamless'}
@@ -132,14 +132,14 @@ const RetryOrPayonlineWrapper: React.FC<RetryOrPayonlineWrapperProps> = ({ fetch
           <div className="flex mob:grid mob:grid-cols-2 mob:gap-[4.1vw] gap-[.4vw]">
             <button
               onClick={handlepayment}
-              className="bg-primary px-[1.45vw] mob:px-[2vw] font-medium py-[.6vw] mob:py-[2vw] text-[.83vw] mob:text-[3vw] font-[SofiaPro] rounded-full border mob:w-full border-primary "
+              className="bg-primary px-[1.45vw] mob:px-[2vw] font-medium py-[.6vw] mob:py-[2vw] text-[.83vw] mob:text-[3vw] font-slab rounded-full border mob:w-full border-primary "
             >
               Retry Payment
             </button>
             <button
               onClick={handlePayOnDelivery}
               disabled={isUpdatingPayment}
-              className={`px-[1.45vw] mob:py-[2vw] py-[.6vw] font-medium text-[.83vw] mob:text-[3vw] font-[SofiaPro] rounded-full border border-black ${
+              className={`px-[1.45vw] mob:py-[2vw] py-[.6vw] font-medium text-[.83vw] mob:text-[3vw] font-slab rounded-full border border-black ${
                 isUpdatingPayment ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'
               }`}
             >
@@ -149,7 +149,7 @@ const RetryOrPayonlineWrapper: React.FC<RetryOrPayonlineWrapperProps> = ({ fetch
         ) : (
           <button
             onClick={handlepayment}
-            className="px-[1.45vw] mob:py-[2vw] py-[.6vw] font-medium text-[.83vw]  mob:text-[3vw]  font-[SofiaPro] rounded-full border border-black"
+            className="px-[1.45vw] mob:py-[2vw] py-[.6vw] font-medium text-[.83vw]  mob:text-[3vw]  font-slab rounded-full border border-black"
           >
             Pay online
           </button>

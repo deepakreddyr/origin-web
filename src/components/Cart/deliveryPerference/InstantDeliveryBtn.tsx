@@ -57,7 +57,7 @@ const InstantDeliveryBtn = (props: any) => {
           } rounded-full`}
         >
           <p
-            className={`font-[SofiaPro] font-semibold text-[.6vw] mob:text-[2vw] ${
+            className={`font-slab font-semibold text-[.6vw] mob:text-[2vw] ${
               isButtonEnabled ? 'text-[#6F2D72]' : 'text-[#231F204D]'
             } px-[.6vw] mob:px-[1.8vw] mob:py-[.5vw] py-[.2vw] rounded-full`}
           >
@@ -66,13 +66,13 @@ const InstantDeliveryBtn = (props: any) => {
         </div>
       </div>
       <div className="text-start pt-[.87vw] mob:pt-[3vw]">
-        <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold">
+        <p className="font-slab text-[.97vw] mob:text-[3.6vw] font-semibold">
           {checkoutDetails?.dash_delivery?.immediate_order_title}
           {isSelected && (
               <span className="text-purple text-xs font-bold">✓</span>
           )}
         </p>
-        <p className="font-[SofiaPro] text-[.78vw] mob:text-[3vw]">
+        <p className="font-slab text-[.78vw] mob:text-[3vw]">
           {isButtonEnabled 
             ? checkoutDetails?.dash_delivery?.immediate_order_sub_title
             : 'Instant delivery not available'

@@ -93,11 +93,11 @@ const OffersRibbon = () => {
                   className="flex whitespace-nowrap animate-scroll"
                   style={{ animation: 'scroll 10s linear infinite' }}
                 >
-                  <p className="text-white font-[SofiaPro] font-medium text-[3vw] px-4"></p>
+                  <p className="text-white font-slab font-medium text-[3vw] px-4"></p>
                 </div>
               </div>
             ) : (
-              <p className="text-white font-[SofiaPro] text-[.97vw] font-medium"></p>
+              <p className="text-white font-slab text-[.97vw] font-medium"></p>
             )}
           </div>
 
@@ -118,12 +118,12 @@ const OffersRibbon = () => {
                   <p className="text-[.78vw] mob:text-[3vw] truncate font-bold text-[SofiaPro] text-white">
                     {address.defaultAddress?.address_name} -
                   </p>
-                  <p className="font-light text-[.78vw] mob:text-[3vw] w-[15vw] mob:w-[30vw] truncate font-[SofiaPro] text-white">
+                  <p className="font-light text-[.78vw] mob:text-[3vw] w-[15vw] mob:w-[30vw] truncate font-slab text-white">
                     &nbsp;{address.defaultAddress.address}
                   </p>
                 </div>
               ) : (
-                <p className="text-[.78vw] mob:text-[3vw] truncate font-bold font-[SofiaPro] text-white">
+                <p className="text-[.78vw] mob:text-[3vw] truncate font-bold font-slab text-white">
                   Select Address
                 </p>
               )}

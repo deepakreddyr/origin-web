@@ -38,7 +38,7 @@ const CategoryCard = (props: Props) => {
       </div>
 
       {/* Category Name */}
-      <p className="text-[1.2vw] mob:text-[4vw] pt-2 font-[SofiaPro] font-semibold mt-[0.5vw]">
+      <p className="text-[1.2vw] mob:text-[4vw] pt-2 font-slab font-semibold mt-[0.5vw]">
         {cardDetails.name}
       </p>
     </Link>

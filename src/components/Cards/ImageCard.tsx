@@ -22,7 +22,7 @@ const ImageCard = ({ ICardData, className }: any) => {
         >
             <Typography
                 variant="body1"
-                className="block mb-2 md:mb-3 px-6 md:px-14 p-5 md:pt-14 w-full md:w-auto font-[SofiaPro] font-medium text-base text-left md:text-center md:text-lg cursor-pointer"
+                className="block mb-2 md:mb-3 px-6 md:px-14 p-5 md:pt-14 w-full md:w-auto font-slab font-medium text-base text-left md:text-center md:text-lg cursor-pointer"
             >
                 {title}
             </Typography>

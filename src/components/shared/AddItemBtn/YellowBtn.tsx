@@ -21,7 +21,7 @@ const YellowBtn = (props: YellowBtnProps) => {
     handleIncrease,
     handleDecrease,
     handleRemove,
-    borderRadius = 0, // smaller radius for rectangular look
+    borderRadius = 0,
   } = props;
 
   const [showMaxMessage, setShowMaxMessage] = useState(false);
@@ -48,7 +48,10 @@ const YellowBtn = (props: YellowBtnProps) => {
   const onIncrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    if (isMax) return setShowMaxMessage(true);
+    if (isMax) {
+      setShowMaxMessage(true);
+      return;
+    }
     handleIncrease(e);
   };
 
@@ -60,11 +63,11 @@ const YellowBtn = (props: YellowBtnProps) => {
 
   return (
     <div className="w-full flex flex-col items-center">
-      {/* Fixed container size */}
+      {/* Button container */}
       <div
         className="relative w-full flex items-center justify-center overflow-hidden"
         style={{
-          height: "30px", // consistent button height
+          height: "30px",
           borderRadius: `${borderRadius}px`,
           backgroundColor: "#FFD700",
         }}
@@ -79,6 +82,7 @@ const YellowBtn = (props: YellowBtnProps) => {
               transition={{ duration: 0.2 }}
               className="flex items-center justify-between w-full px-3"
             >
+              {/* – Button */}
               <button
                 className="flex items-center justify-center ml-[2vw]"
                 style={{
@@ -92,17 +96,21 @@ const YellowBtn = (props: YellowBtnProps) => {
                 –
               </button>
 
+              {/* Quantity */}
               <p className="text-black font-semibold text-base">{quantity}</p>
 
+              {/* + Button */}
               <button
-                className="flex items-center justify-center mr-[2vw]"
+                className="flex items-center justify-center mr-[2vw] transition-all duration-200"
                 style={{
                   width: "24px",
                   height: "24px",
                   borderRadius: "4px",
-                  backgroundColor: isMax ? "gray" : "",
-                  color: "black",
+                  color: isMax ? "rgba(0, 0, 0, 0.12)" : "black",
+                  cursor: isMax ? "not-allowed" : "pointer",
+                  opacity: 1,
                 }}
+                disabled={isMax}
                 onClick={onIncrease}
               >
                 +

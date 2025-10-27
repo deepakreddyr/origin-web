@@ -40,9 +40,9 @@ const SelectDropdown = (props: Props) => {
         className="bg-primary-100 min-h-[48px] px-[3.6vw] md:px-[1.67vw] flex justify-between items-center gap-[5px] rounded-full"
       >
         {value === '' ? (
-          <p className="font-[SofiaPro] text-[#231F2099] text-[14px] md:text-[.97vw] ">Select gender</p>
+          <p className="font-slab text-[#231F2099] text-[14px] md:text-[.97vw] ">Select gender</p>
         ) : (
-          <p className="font-[SofiaPro]  text-[14px] md:text-[.97vw] ">{value}</p>
+          <p className="font-slab  text-[14px] md:text-[.97vw] ">{value}</p>
         )}
         <div
           className={`relative w-[1.1vw] mob:w-[4.1vw] transition-all ease-in-out ${
@@ -66,7 +66,7 @@ const SelectDropdown = (props: Props) => {
               >
                 <p className={` ${value === data.name ? 'text-[#FFA500]' : 'text-[#000]'}`}>✓</p>
 
-                <button className="font-[SofiaPro]  text-white">{data.name}</button>
+                <button className="font-slab  text-white">{data.name}</button>
               </li>
             ))}
           </ul>

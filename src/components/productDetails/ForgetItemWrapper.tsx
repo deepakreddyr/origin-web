@@ -26,7 +26,7 @@ const ForgetItemWrapper = (props: any) => {
   if (productDetails.upsell_items.length === 0) return null;
   return (
     <div className="border rounded-[1.1vw] border-beige-200 p-[1.1vw] mt-[5vw]">
-      <p className="font-[SofiaPro] text-[1.25vw] font-semibold text-black-op-80">Forgot to add?</p>
+      <p className="font-slab text-[1.25vw] font-semibold text-black-op-80">Forgot to add?</p>
       <div
         style={{ background: 'linear-gradient(90deg, #25874D 0%, rgba(37, 135, 77, 0) 100%)' }}
         className="w-full h-[3px] mt-[.6vw]"

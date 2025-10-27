@@ -11,13 +11,13 @@ const ItemsList = (props: any) => {
     >
       <div className="flex items-end justify-between border-b border-b-[#F2EEE4] pb-[.97vw] mob:pb-[3.6vw] mob:mb-[4.1vw] mb-[1.1vw] ">
         <div className="">
-          <p className="font-[SofiaPro] text-[1.25vw] mob:text-[5vw] font-semibold text-black-op-80 ">Order Details</p>
-          <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-medium text-black-op-60 pt-[.4vw] ">
+          <p className="font-slab text-[1.25vw] mob:text-[5vw] font-semibold text-black-op-80 ">Order Details</p>
+          <p className="font-slab text-[.97vw] mob:text-[3.6vw] font-medium text-black-op-60 pt-[.4vw] ">
             Order ID {order_code}
           </p>
         </div>
         <div className="">
-          <p className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] font-medium text-black-op-60 ">
+          <p className="font-slab text-[1.1vw] mob:text-[4.1vw] font-medium text-black-op-60 ">
             {' '}
             {items.length} Items
           </p>
@@ -37,22 +37,22 @@ const ItemsList = (props: any) => {
               className={`flex justify-between w-full items-center ${item.ordered_uoms[0].shortage_qty >= 1 ? 'opacity-40' : ''} `}
             >
               <div>
-                <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold text-black ">{item.name}</p>
-                <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] pt-[.4vw] mob:pt-[1vw] font-medium text-black-op-60">
+                <p className="font-slab text-[.97vw] mob:text-[3.6vw] font-semibold text-black ">{item.name}</p>
+                <p className="font-slab text-[.83vw] mob:text-[3vw] pt-[.4vw] mob:pt-[1vw] font-medium text-black-op-60">
                   {item.ordered_uoms[0].unit} x{item.ordered_uoms[0].cart_quantity}{' '}
                 </p>
               </div>
               <div>
-                <p className="font-[SofiaPro] text-[.82vw] mob:text-[2.8vw] font-medium line-through text-black-op-60 ">
+                <p className="font-slab text-[.82vw] mob:text-[2.8vw] font-medium line-through text-black-op-60 ">
                   ₹{item.ordered_uoms[0].market_price_sub_total}
                 </p>
-                <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-medium  ">
+                <p className="font-slab text-[.97vw] mob:text-[3.6vw] font-medium  ">
                   ₹{item.ordered_uoms[0].subtotal}
                 </p>
               </div>
             </div>
             {item.ordered_uoms[0].shortage_qty >= 1 && (
-              <p className="font-[SofiaPro] font-semibold text-[#C70000] text-[.83vw] mob:text-[3vw] absolute right-[5vw]  ">
+              <p className="font-slab font-semibold text-[#C70000] text-[.83vw] mob:text-[3vw] absolute right-[5vw]  ">
                 UNAVAILABLE
               </p>
             )}

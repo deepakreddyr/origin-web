@@ -31,7 +31,7 @@ const CarersInfoCard = ({ data }: CarersInfoCardProps) => {
         </Typography>
         <Typography
           variant="body1"
-          className="text-[12px] font-[SofiaPro] leading-[19.2px] md:text-[18px] font-light md:leading-[28.8px] text-center"
+          className="text-[12px] font-slab leading-[19.2px] md:text-[18px] font-light md:leading-[28.8px] text-center"
         >
           {HTMLReactParser(data?.desc)}
         </Typography>

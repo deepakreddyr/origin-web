@@ -27,7 +27,7 @@ const Dropdown = (props: any) => {
                   handler(data, name);
                   setShowDropdown(false);
                 }}
-                className={`font-[SofiaPro] text-start w-full font-semibold text-[1.25vw] mob:text-[4.5vw] ${value === data.name ? 'text-secondary' : 'text-black'} `}
+                className={`font-slab text-start w-full font-semibold text-[1.25vw] mob:text-[4.5vw] ${value === data.name ? 'text-secondary' : 'text-black'} `}
                 key={data.id}
               >
                 {data.name}

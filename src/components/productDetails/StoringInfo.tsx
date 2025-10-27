@@ -13,7 +13,7 @@ const StoringInfo = (props: any) => {
 
   return (
     <div className="border mob:bg-[#F2EEE44D] rounded-[1.1vw] mob:rounded-[4.1vw] mob:p-[4.1vw] border-beige-200 p-[1.1vw]">
-      <p className="font-[SofiaPro] text-[1.25vw] mob:text-[5.1vw] font-semibold text-black-op-70">
+      <p className="font-slab text-[1.25vw] mob:text-[5.1vw] font-semibold text-black-op-70">
         {storingInfo?.title}
       </p>
       <div className="grid gap-[1.1vw] mob:gap-[4.1vw] grid-cols-2 pt-[1.1vw] mob:pt-[4.1vw]">
@@ -26,10 +26,10 @@ const StoringInfo = (props: any) => {
               <Image src={data.image} fill alt={data?.title || ''} />
             </div>
             <div>
-              <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.8vw] font-bold">
+              <p className="font-slab text-[.97vw] mob:text-[3.8vw] font-bold">
                 {data?.title}
               </p>
-              <p className="font-[SofiaPro] pt-[0.3vw] mob:pt-[1.5vw] text-[.97vw] mob:text-[3vw] font-normal text-black-op-80">
+              <p className="font-slab pt-[0.3vw] mob:pt-[1.5vw] text-[.97vw] mob:text-[3vw] font-normal text-black-op-80">
                 {data?.description}
               </p>
             </div>

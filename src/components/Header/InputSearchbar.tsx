@@ -15,7 +15,7 @@ const InputSearchbar = () => {
       className="flex items-center rounded-full w-[25vw] bg-primary-200 pr-[1.1vw]"
     >
       <input
-        className="outline-none h-[2.6vw] text-black placeholder:text-black px-[1.1vw] text-[.83vw] font-[SofiaPro] placeholder:text-[.83vw] rounded-full w-[23.9vw] bg-primary-200"
+        className="outline-none h-[2.6vw] text-black placeholder:text-black px-[1.1vw] text-[.83vw] font-slab placeholder:text-[.83vw] rounded-full w-[23.9vw] bg-primary-200"
         placeholder="Search Products "
       />
       <div className="relative w-[1.1vw] h-[1.1vw] ">

@@ -1,5 +1,5 @@
+@import './museo-slab-style.css';
 @import './sofia-style.css';
-/* @import './SofiaPro-style.css'; */
 
 @tailwind base;
 @tailwind components;

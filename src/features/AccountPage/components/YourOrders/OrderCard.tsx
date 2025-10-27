@@ -42,20 +42,20 @@ const OrderCard = (props: Props) => {
       onClick={() => redirectOnClick(order.order_id)}
     >
       <div className="flex justify-between items-center mob:pb-[2.5vw] pb-[.6vw]">
-        <span className="font-bold text-[.97vw] mob:text-[3.6vw] font-[SofiaPro] ">{`ORDER ID ${order.order_code}`}</span>
+        <span className="font-bold text-[.97vw] mob:text-[3.6vw] font-slab ">{`ORDER ID ${order.order_code}`}</span>
 
         <div>
           {order.status === 'Delivered' ? (
             <div className="bg-[#231F201A] px-[1.1vw] mob:px-[4.1vw] mob:py-[1.5vw] py-[.4vw] mob:rounded-[2vw] rounded-[.6vw]">
-              <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold text-black">DELIVERED</p>
+              <p className="text-[.83vw] mob:text-[3vw] font-slab font-semibold text-black">DELIVERED</p>
             </div>
           ) : order.status === 'Not Delivered' || order.status === 'Rejected by admin' ? (
             <div className="bg-[#C700001A] px-[1.1vw] mob:px-[4.1vw] mob:py-[1.5vw] py-[.4vw] mob:rounded-[2vw] rounded-[.6vw]">
-              <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold text-danger">NOT DELIVERED</p>
+              <p className="text-[.83vw] mob:text-[3vw] font-slab font-semibold text-danger">NOT DELIVERED</p>
             </div>
           ) : (
             <div className=" bg-[#25874D1A] px-[1.1vw] mob:px-[4.1vw] mob:py-[1.5vw] py-[.4vw] mob:rounded-[2vw] rounded-[.6vw] ">
-              <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold text-secondary">IN PROGRESS</p>
+              <p className="text-[.83vw] mob:text-[3vw] font-slab font-semibold text-secondary">IN PROGRESS</p>
             </div>
           )}
         </div>

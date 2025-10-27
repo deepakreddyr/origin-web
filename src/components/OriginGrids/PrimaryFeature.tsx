@@ -15,17 +15,17 @@ const PrimaryFeature = () => {
             {featureList.map((text, index) => (
               <div
                 key={index}
-                className="flex items-center gap-3 w-max text-[1.25vw] font-[SofiaPro] whitespace-nowrap"
+                className="flex items-center gap-3 w-max text-[1.25vw] font-slab whitespace-nowrap"
               >
-                <span className="font-[SofiaPro] text-[5vw] font-medium">{text.split(' ')[0]}</span>
+                <span className="font-slab text-[5vw] font-medium">{text.split(' ')[0]}</span>
                 {text.slice(2)}
               </div>
             ))}
           </Marquee>
         ) : (
           featureList.map((text, index) => (
-            <div key={index} className="flex items-center gap-3 font-[SofiaPro] w-max text-[1.25vw] whitespace-nowrap">
-              <span className="text-[1.389vw]  font-[SofiaPro] font-medium ">{text.split(' ')[0]}</span>
+            <div key={index} className="flex items-center gap-3 font-slab w-max text-[1.25vw] whitespace-nowrap">
+              <span className="text-[1.389vw]  font-slab font-medium ">{text.split(' ')[0]}</span>
               {text.slice(2)}
             </div>
           ))

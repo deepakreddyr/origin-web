@@ -129,17 +129,17 @@ export const ShopHeroSingle = () => {
 
         {/* Text Overlay */}
         <div className="absolute inset-0">
-          <h1 className="text-center text-white font-[SofiaPro] px-4 mt-[23vw]">
-            <div className="text-[3.5vw] mob:text-[8vw] font-normal tracking-wide">
+          <h1 className="text-center text-white font-slab px-4 mt-[23vw]">
+            <div className="text-[5.5vw] mb-[2vw] mob:text-[8vw] font-normal tracking-wide">
               EXPLORE
             </div>
-            <div className="text-[5.5vw] mob:text-[12vw] font-bold tracking-tight mt-[-0.5vw] mob:mt-[-2vw]">
+            <div className="text-[5.5vw] mob:text-[12vw] font-black tracking-tight mt-[-0.5vw] mob:mt-[-2vw]">
               THE CULT OF FRESH
             </div>
           </h1>
           <button
             onClick={handleScrollDown}
-            className="mt-[2vw] ml-[47vw] mob:mt-[6vw] w-[6vw] h-[6vw] mob:w-[12vw] mob:h-[12vw] bg-[black] rounded-full flex items-center justify-center"
+            className="mt-[2vw] ml-[47vw] mob:mt-[6vw] w-[6vw] h-[6vw] mob:w-[12vw] mob:h-[12vw] rounded-full flex items-center justify-center"
             aria-label="Scroll down"
           >
             <Image 

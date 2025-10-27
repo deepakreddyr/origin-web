@@ -133,7 +133,7 @@ const ContactUsForm = () => {
 
             <Button
               type="submit"
-              className="bg-primary hover:bg-primary mt-[18px] px-[46px] py-[14px] rounded-full font-[SofiaPro] font-medium text-[#231F20] text-lg"
+              className="bg-primary hover:bg-primary mt-[18px] px-[46px] py-[14px] rounded-full font-slab font-medium text-[#231F20] text-lg"
             >
               Submit
             </Button>

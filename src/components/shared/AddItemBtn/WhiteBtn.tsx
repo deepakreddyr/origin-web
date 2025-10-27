@@ -35,7 +35,7 @@ const WhiteBtn = (props: any) => {
         </div>
       ) : (
         <button
-          className="bg-primary flex items-center gap-[0vw] mob:gap-[0.6vw] h-[2.5vw]  mob:h-[7.85vw] rounded-full   pl-[1.1vw]  mob:pl-[4.1vw] mob:pr-[2vw] pr-[.4vw] py-[.4vw] font-[SofiaPro] text-[.97vw] font-bold  mob:text-[3.6vw]  "
+          className="bg-primary flex items-center gap-[0vw] mob:gap-[0.6vw] h-[2.5vw]  mob:h-[7.85vw] rounded-full   pl-[1.1vw]  mob:pl-[4.1vw] mob:pr-[2vw] pr-[.4vw] py-[.4vw] font-slab text-[.97vw] font-bold  mob:text-[3.6vw]  "
           onClick={handleAddItem}
         >
           Add{' '}

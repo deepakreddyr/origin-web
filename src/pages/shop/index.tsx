@@ -3,8 +3,6 @@ import Layout from '@/components/Layout';
 import { FooterDataType, MainMenuType } from '@/utilities/types';
 import CategorySection from '@/components/ShopV2/CategorySection';
 import PopularProduce from '@/components/ShopV2/PopularProduce';
-import FeatureProduct from '@/components/ShopV2/FeaturedProduct';
-import VideoBanner from '@/components/ShopV2/VideoBanner'; 
 import { useEffect, useState } from 'react';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
@@ -18,8 +16,6 @@ import MainCategorySkeleton from '@/components/skeletonLoaders/shop/MainCategory
 import PopularCarouselSkeleton from '@/components/skeletonLoaders/shop/PopularCarouselSkeleton';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import DownloadAppWrapper from '@/components/downloadApp/DownloadAppWrapper';
-import FeatureStrip from '@/components/ShopV2/FeatureStrip';
-import WhyOriginBanner from '@/components/ShopV2/WhyOriginBanner';
 import { ShopHeroSingle } from '@/components/ShopV2/ShopHero';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
@@ -165,18 +161,18 @@ const ShopPage = (props: HomeProps) => {
         <CategorySection />
       </div>
 
-      <div className="flex flex-col items-center justify-center mb-[5vw] bg-[#000000] relative w-full">
+      <div className="flex flex-col items-center justify-center bg-[#000000] relative w-full">
         <div className="max-w-7xl mx-auto w-full relative">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="text-center md:mb-12 z-10 relative"
+            className="text-center z-10 relative"
           >
           </motion.div>
           
-          {/* Globe Container with proper height */}
-          <div className="relative w-full h-[450px] md:h-[550px] flex items-center justify-center">
+          {/* Globe Container with reduced spacing */}
+          <div className="relative w-full h-[450px] mb-[10vw] md:h-[550px] flex items-center justify-center -mt-8 md:-mt-12">
             <div className="w-full h-full">
               <GlobeWithMarkers />
             </div>

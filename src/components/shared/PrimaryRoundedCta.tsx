@@ -12,7 +12,7 @@ const PrimaryRoundedCta = (props: Props) => {
   return (
     <button
       onClick={handler}
-      className={`${style} w-full h-[48px] font-[SofiaPro] font-semibold rounded-full transition-all ease-in-out duration-200 ${isDisabled ? "text-secondary-400 bg-primary opacity-50" : "text-[#231F20] bg-primary"}`}
+      className={`${style} w-full h-[48px] font-slab font-semibold rounded-full transition-all ease-in-out duration-200 ${isDisabled ? "text-secondary-400 bg-primary opacity-50" : "text-[#231F20] bg-primary"}`}
     >
       {name}
     </button>

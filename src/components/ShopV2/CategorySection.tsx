@@ -93,7 +93,7 @@ const CategorySection = () => {
     <>
       {mainCategoryList.length > 0 && (
         <div className="px-[7vw]">
-          <p className="font-[SofiaPro] text-start font-bold text-white text-[2.08vw] mob:text-[5.1vw] pb-[2.1vw] mob:pb-[4vw]">
+          <p className="font-slab text-start font-bold text-white text-[2.08vw] mob:text-[5.1vw] pb-[2.1vw] mob:pb-[4vw]">
             Shop By Category
           </p>
           {mobile ? mobUI() : webUI()}

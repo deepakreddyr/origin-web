@@ -26,10 +26,10 @@ const DeliveryTimings = (props: any) => {
         className="w-full min-h-[10vw] bg-primary-100 rounded-[.97vw] mob:rounded-[3.6vw] mob:p-[3.6vw] p-[.97vw] "
         style={{ boxShadow: '0px 0px 10px 0px #231F200F inset' }}
       >
-        <p className="font-[SofiaPro] text-[.83vw]  mob:text-[3vw]">
+        <p className="font-slab text-[.83vw]  mob:text-[3vw]">
           Delivery, <span className="font-semibold">{formatRelativeDate(checkoutDetails.delivery_date[0])}</span>{' '}
         </p>
-        <p className='font-[SofiaPro] font-semibold text-[.83vw] mob:text-[2.5vw] mt-5'>
+        <p className='font-slab font-semibold text-[.83vw] mob:text-[2.5vw] mt-5'>
           Please select your preferred delivery timing.
         </p>
         <div className="grid grid-cols-2 gap-[1.1vw] mob:gap-[4.1vw] mob:pt-[4.1vw] pt-[1.1vw]">
@@ -42,7 +42,7 @@ const DeliveryTimings = (props: any) => {
                 key={time.id}
                 onClick={() => isAvailable && handleTimeSlotSelection(time)}
                 disabled={!isAvailable}
-                className={`font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3vw] transition-all duration-200 ${
+                className={`font-slab font-semibold text-[.83vw] mob:text-[3vw] transition-all duration-200 ${
                   isAvailable 
                     ? `bg-white ${
                         isSelected 

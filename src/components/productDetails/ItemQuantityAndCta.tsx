@@ -10,13 +10,13 @@ const ItemQuantityAndCta = (props: any) => {
   return (
     <div className="w-[25.2vw] mob:w-[92vw] my-[1.1vw] flex items-center justify-between  rounded-[.83vw] mob:p-[4.1vw] mob:rounded-[4.1vw] p-[1.1vw] mob:rounded-t-[0vw]  mob:mt-[-5.1vw] ">
       {/* <div className="">
-        <p className="font-[SofiaPro] font-medium  text-[.97vw] mob:text-[4.1vw]">{defaultUOM.unit}</p>
+        <p className="font-slab font-medium  text-[.97vw] mob:text-[4.1vw]">{defaultUOM.unit}</p>
         <div className="pt-[.4vw] mob:pt-[1vw]">
-          <span className="font-[SofiaPro] pr-[0.2vw] font-medium text-[.97vw] mob:text-[3.6vw] ">
+          <span className="font-slab pr-[0.2vw] font-medium text-[.97vw] mob:text-[3.6vw] ">
             {defaultUOM.price}
           </span>
           {defaultUOM.market_price > defaultUOM.price && (
-            <span className="font-[SofiaPro] font-regular text-[.8vw] mob:text-[3vw] text-black-op-60 line-through pl-[.3vw] pt-[.3vw]">
+            <span className="font-slab font-regular text-[.8vw] mob:text-[3vw] text-black-op-60 line-through pl-[.3vw] pt-[.3vw]">
               {defaultUOM.market_price}
             </span>
           )}

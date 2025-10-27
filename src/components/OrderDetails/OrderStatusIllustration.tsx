@@ -69,7 +69,7 @@ const OrderStatusIllustration = (props: any) => {
                   />
                 </div>
               )}
-              <span className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold ">
+              <span className="font-slab text-[.97vw] mob:text-[3.6vw] font-semibold ">
                 {mapToggle ? 'Close Map' : 'Map View'}
               </span>
             </button>
@@ -118,20 +118,20 @@ const OrderStatusIllustration = (props: any) => {
         {!mapToggle && (
           <div className="absolute bottom-[1vw] mob:bottom-[3vw] flex items-center justify-between w-full pr-[1.1vw] mob:px-[3vw] ">
             <div className="px-[1.1vw]">
-              <p className="font-semibold font-[SofiaPro] text-gray-500 pb-[.4vw] text-[.97vw] mob:text-[3.6vw]">
+              <p className="font-semibold font-slab text-gray-500 pb-[.4vw] text-[.97vw] mob:text-[3.6vw]">
                 {!orderDetailsData.time_slot ? 'Dash Delivery' : 'Time Slot'}
               </p>
-              <p className="font-semibold font-[SofiaPro] text-black text-[.97vw] mob:text-[3.6vw]">{time_formatted}</p>
+              <p className="font-semibold font-slab text-black text-[.97vw] mob:text-[3.6vw]">{time_formatted}</p>
             </div>
             <div>{<StatusBanner orderDetails={orderDetailsData} />}</div>
           </div>
         )}
       </div>
       <div className="relative z-[0] top-[-1vw] bg-black p-[1.1vw] pt-[2vw] mob:pt-[5vw] mob:p-[4vw]  rounded-b-[1.1vw] mob:rounded-b-[3.6vw]">
-        <p className="font-semibold font-[SofiaPro] text-white text-[.97vw] mob:text-[3.6vw]">
+        <p className="font-semibold font-slab text-white text-[.97vw] mob:text-[3.6vw]">
           {DeliveryStatusDetails[currentStatus]?.text}
         </p>
-        <p className="pt-2 text-white font-[SofiaPro] text-[.83vw] mob:text-[3vw]">
+        <p className="pt-2 text-white font-slab text-[.83vw] mob:text-[3vw]">
           {DeliveryStatusDetails[currentStatus]?.description}
         </p>
       </div>

@@ -57,7 +57,7 @@ const MakePayment = (props: any) => {
       <div className="">
         {!paymentFlow && (
           <div className="bg-[#FFEB66] border border-[#FFDD0066] rounded-b-[1.1vw] mob:rounded-[4.1vw]  m-[-1.1vw] mob:m-[-4.1vw] mob:p-[4.2vw] p-[1.19vw] mob:mb-[4vw]  mb-[2vw] flex items-center justify-between  ">
-            <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  text-[#231F20CC] ">
+            <p className="font-slab text-[.97vw] mob:text-[3.6vw] font-semibold  text-[#231F20CC] ">
               {deliveryType}
             </p>
 
@@ -65,14 +65,14 @@ const MakePayment = (props: any) => {
               <div className="">
                 <Image src={''} alt="" />
               </div>
-              <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  text-[#231F20CC] ">
+              <p className="font-slab text-[.97vw] mob:text-[3.6vw] font-semibold  text-[#231F20CC] ">
                 {deliveryTime}
               </p>
             </div>
           </div>
         )}
         <div>
-          <p className="font-[SofiaPro] font-semibold text-[1vw] mob:text-[4vw] text-[#231F20CC] pb-[.97vw] mob:pb-[3.6vw] ">
+          <p className="font-slab font-semibold text-[1vw] mob:text-[4vw] text-[#231F20CC] pb-[.97vw] mob:pb-[3.6vw] ">
             Payment methods
           </p>
           <div className="flex flex-col gap-[1.1vw] mob:gap-[4.1vw]">
@@ -106,12 +106,12 @@ const MakePayment = (props: any) => {
                     <Image src={pay.icon} alt="" />
                   </div>
                   <div>
-                    <p className="font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3vw] text-secondary-400 ">
+                    <p className="font-slab font-semibold text-[.83vw] mob:text-[3vw] text-secondary-400 ">
                       {pay.name}
                       {processing && processingPaymentId === pay.id && " (Processing...)"}
                     </p>
                     {pay.id === 4 && (
-                      <p className="font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3vw] text-error pt-[.2vw] mob:pt-[1vw] ">
+                      <p className="font-slab font-semibold text-[.83vw] mob:text-[3vw] text-error pt-[.2vw] mob:pt-[1vw] ">
                         Only digital cashless payments are accepted at your door-step.
                       </p>
                     )}
@@ -127,7 +127,7 @@ const MakePayment = (props: any) => {
                       await handlePaymentProcessing(pay);
                     }}
                     disabled={processing}
-                    className={`font-[SofiaPro] mt-[1.1vw] mob:mt-[4.1vw] font-semibold mob:px-[3vw] px-[.8vw] py-[.5vw] mob:py-[2vw] mob:text-[3vw] text-[.83vw] text-white bg-secondary rounded-[.8vw] transition-all duration-200 ${
+                    className={`font-slab mt-[1.1vw] mob:mt-[4.1vw] font-semibold mob:px-[3vw] px-[.8vw] py-[.5vw] mob:py-[2vw] mob:text-[3vw] text-[.83vw] text-white bg-secondary rounded-[.8vw] transition-all duration-200 ${
                       processing ? 'opacity-50 cursor-not-allowed' : 'hover:bg-secondary-600'
                     }`}
                   >
@@ -141,7 +141,7 @@ const MakePayment = (props: any) => {
       </div>
 
       <div className="flex items-center justify-center gap-[.4vw] mob:gap-[2vw]">
-        <p className="font-[SofiaPro] text-[.7vw] mob:text-[3vw] text-[#231F20CC]  ">
+        <p className="font-slab text-[.7vw] mob:text-[3vw] text-[#231F20CC]  ">
           100% Secured payments powered by
         </p>
         <div className="w-[5vw] mob:w-[18vw] mob:h-[3vw] h-[.9vw] relative ">

@@ -45,15 +45,15 @@ const RestrictOrderInfo: React.FC<RestrictOrderInfoProps> = ({ orderRestrictionD
           {/* <div className="w-[1.5vw] h-[1.5vw] mob:w-[5vw] mob:h-[5vw] bg-red-500 rounded-full flex items-center justify-center mr-[0.8vw] mob:mr-[2vw]">
             <span className="text-white text-[0.8vw] mob:text-[2.5vw] font-bold">!</span>
           </div> */}
-          <h3 className="font-[SofiaPro] text-[1.1vw] mob:text-[4vw] font-bold text-red-700">
+          <h3 className="font-slab text-[1.1vw] mob:text-[4vw] font-bold text-red-700">
             {/* {orderRestrictionData.title} */}
           </h3>
         </div>
-        <p className="font-[SofiaPro] text-[0.9vw] mob:text-[3.2vw] text-center text-green-600 leading-relaxed">
+        <p className="font-slab text-[0.9vw] mob:text-[3.2vw] text-center text-green-600 leading-relaxed">
           { "Beauty sleep mode on. See you at 4 AM?" }
           {/* || orderRestrictionData.description */}
         </p>
-        <p className="font-[SofiaPro] text-[0.9vw] mob:text-[3.2vw] text-center text-green-600 leading-relaxed">
+        <p className="font-slab text-[0.9vw] mob:text-[3.2vw] text-center text-green-600 leading-relaxed">
           { "Just Kidding our drivers deliver only from 8PM to 5AM" }
           {/* || orderRestrictionData.description */}
         </p>

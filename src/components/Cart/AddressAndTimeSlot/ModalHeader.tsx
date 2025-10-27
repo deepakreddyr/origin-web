@@ -43,7 +43,7 @@ const ModalHeader = (props: any) => {
             <Image src={backIcon} alt="back" />
           </button>
         )}
-        <p className="font-[SofiaPro] font-bold text-[1.25vw] mob:text-[4.1vw] mob:pt-[1vw] ">Select your delivery</p>
+        <p className="font-slab font-bold text-[1.25vw] mob:text-[4.1vw] mob:pt-[1vw] ">Select your delivery</p>
       </div>
       <button
         onClick={() => {

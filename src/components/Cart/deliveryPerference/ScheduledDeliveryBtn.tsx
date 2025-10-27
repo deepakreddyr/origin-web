@@ -49,14 +49,14 @@ const ScheduledDeliveryBtn = (props: any) => {
         />
       </div>
       
-      <p className="font-[SofiaPro] text-[1vw] mob:text-[5vw] font-semibold mb-[0.4vw] mob:mb-[2vw]">
+      <p className="font-slab text-[1vw] mob:text-[5vw] font-semibold mb-[0.4vw] mob:mb-[2vw]">
         Time Slot Delivery
         {isSelected && (
           <span className="ml-2 text-[#006C37] font-bold">✓</span>
         )}
       </p>
       
-      <p className="font-[SofiaPro] text-[0.85vw] mob:text-[3.8vw] leading-snug">
+      <p className="font-slab text-[0.85vw] mob:text-[3.8vw] leading-snug">
         {isButtonEnabled ? (
           <>
             Pick a time slot between <br />

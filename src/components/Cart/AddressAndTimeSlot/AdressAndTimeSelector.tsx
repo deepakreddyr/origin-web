@@ -19,7 +19,7 @@ const AdressAndTimeSelector = (props: any) => {
       <div className="flex px-[1.389vw] mob:px-[4.1vw] mob:py-[3vw] py-[.78vw] bg-[#F2EEE466] mob:rounded-[4vw] rounded-b-[1.67vw] ">
         {address && address.defaultAddress && (
           <div className="">
-            <p className="font-[SofiaPro] text-[.97vw] mob:text-[3vw] ">
+            <p className="font-slab text-[.97vw] mob:text-[3vw] ">
               <span className="font-bold">{address?.defaultAddress?.address_name} - </span>
               {address?.defaultAddress?.address}
             </p>

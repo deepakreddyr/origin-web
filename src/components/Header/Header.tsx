@@ -231,7 +231,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                       onBlur={handleSearchBlur}
                       className="w-full h-10 pl-4 pr-12 bg-white border border-gray-300 rounded-full 
                               focus:outline-none focus:ring-0 focus:border-gray-300 
-                              text-sm font-medium font-[SofiaPro] placeholder:text-gray-500 
+                              text-sm font-medium font-slab placeholder:text-gray-500 
                               transition-all duration-200"
                       placeholder="Search here"
                       autoFocus
@@ -239,7 +239,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
 
                     {searchQuery && searchQuery.length < 2 && (
                       <div className="absolute right-12 top-1/2 transform -translate-y-1/2 
-                                    text-xs text-gray-400 font-[SofiaPro]">
+                                    text-xs text-gray-400 font-slab">
                         {2 - searchQuery.length} more
                       </div>
                     )}
@@ -283,7 +283,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                 ) : (
                   <button
                     onClick={handleProfileMenuOpen}
-                    className="px-4 py-2 border border-gray-400 rounded-full text-sm font-medium font-[SofiaPro]
+                    className="px-4 py-2 border border-gray-400 rounded-full text-sm font-medium font-slab
                              hover:bg-white hover:bg-opacity-50 transition-colors duration-200 text-gray-700"
                   >
                     Login
@@ -320,7 +320,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
       <div
         className={`bg-white shadow-[4px_4px_32px_0px_rgba(0,0,0,0.08)] z-50 w-[65vw] mob:w-full mob:py-[1vw] mob:px-[5vw] ${
           topBarTransition ? 'mt-[-1vw]' : 'mt-[1.1vw] mob:mt-0'
-        } transition-all rounded-full mob:rounded-none flex items-center justify-between`}
+        } transition-all rounded-full mob:rounded-[80px] flex items-center justify-between`}
       >
         <div className="flex items-center gap-[3vw]">
           <button onClick={() => setDrawerOpen(!drawerOpen)} className="w-[5vw] hidden mob:block h-[4vw] relative">
@@ -347,7 +347,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
           <div className="flex items-center gap-[2vw] pr-[0] mob:hidden">
             <Link
               href="/shop"
-              className="h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full bg-primary text-black text-[1.1vw] font-medium font-[SofiaPro]"
+              className="h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full bg-primary text-black text-[1.1vw] font-medium font-slab"
             >
               Shop All
             </Link>
@@ -369,12 +369,12 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                     className="w-full h-[2.4vw] px-[1.17vw] 
                               rounded-full border border-gray-300 bg-transparent 
                               placeholder:text-gray-400 
-                              text-[1.1vw] font-[SofiaPro] cursor-pointer 
+                              text-[1.1vw] font-slab cursor-pointer 
                               focus:outline-none focus:ring-0 transition-all duration-200"
                   />            
 
                   {!searchQuery && (
-                    <div className="absolute left-[1vw] top-1/2 transform -translate-y-1/2 pointer-events-none text-[1vw] font-[SofiaPro] text-gray-500">
+                    <div className="absolute left-[1vw] top-1/2 transform -translate-y-1/2 pointer-events-none text-[1vw] font-slab text-gray-500">
                       <AnimatedPlaceholder />
                     </div>
                   )}
@@ -434,7 +434,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
           ) : (
             <button
               onClick={handleProfileMenuOpen}
-              className="border-[1px] border-black h-[2.4vw] mob:h-max px-[1.17vw] mob:px-[5.1vw] mob:py-[1.5vw] rounded-full text-black text-[1.1vw] mob:text-[4.1vw] font-medium font-[SofiaPro]"
+              className="border-[1px] border-black h-[2.4vw] mob:h-max px-[1.17vw] mob:px-[5.1vw] mob:py-[1.5vw] rounded-full text-black text-[1.1vw] mob:text-[4.1vw] font-medium font-slab"
             >
               Login
             </button>
@@ -445,7 +445,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
               <div className="h-[1.67vw] w-[.1vw] bg-black-op-30"></div>
               <button onClick={handleCartOpen} className="relative pr-[1.67vw]">
                 {cart?.items?.length > 0 && (
-                  <div className="absolute top-[-.6vw] left-[.7vw] w-[1.25vw] h-[1.25vw] text-[.78vw] rounded-full bg-secondary-300 z-[1] text-white font-[sofiaPro] flex items-center justify-center">
+                  <div className="absolute top-[-.6vw] left-[.7vw] w-[1.25vw] h-[1.25vw] text-[.78vw] rounded-full bg-secondary-300 z-[1] text-white font-slab flex items-center justify-center">
                     {cart?.items?.length}
                   </div>
                 )}

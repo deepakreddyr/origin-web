@@ -14,8 +14,8 @@ const Hero = () => {
         </h1>
       </div> */}
       <div className="pl-[10vw] pt-[6vw] mob:pl-[4vw] ">
-        <p className="font-[SofiaPro] text-[1.67vw] mob:text-[3.6vw] font-medium ">About Us</p>
-        <p className="font-[SofiaPro] font-bold leading-none text-[4.4vw] mob:text-[10.2vw] pt-[4vw] text-secondary  ">
+        <p className="font-slab text-[1.67vw] mob:text-[3.6vw] font-medium ">About Us</p>
+        <p className="font-slab font-bold leading-none text-[4.4vw] mob:text-[10.2vw] pt-[4vw] text-secondary  ">
           Embracing <br /> Freshness , Selection, <br /> and Community
         </p>
       </div>

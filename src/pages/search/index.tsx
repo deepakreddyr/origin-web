@@ -127,7 +127,7 @@ const UOMPopup: React.FC<{
               />
             </div>
             <div className="flex-1">
-              <h3 className="font-[SofiaPro] font-semibold text-lg text-gray-900 leading-tight">
+              <h3 className="font-slab font-semibold text-lg text-gray-900 leading-tight">
                 {product.name}
               </h3>
             </div>
@@ -153,7 +153,7 @@ const UOMPopup: React.FC<{
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-[SofiaPro] font-semibold text-gray-900 text-lg">
+                      <span className="font-slab font-semibold text-gray-900 text-lg">
                         {uom.unit}
                       </span>
                       {isSelected && (
@@ -168,15 +168,15 @@ const UOMPopup: React.FC<{
                     <div className="flex items-center gap-2 mt-1">
                       {hasDiscount ? (
                         <>
-                          <span className="text-gray-400 line-through text-sm font-[SofiaPro]">
+                          <span className="text-gray-400 line-through text-sm font-slab">
                             ₹{uom.market_price}
                           </span>
-                          <span className="text-black font-[SofiaPro] font-bold text-lg">
+                          <span className="text-black font-slab font-bold text-lg">
                             ₹{uom.price}
                           </span>
                         </>
                       ) : (
-                        <span className="text-gray-900 font-[SofiaPro] font-bold text-lg">
+                        <span className="text-gray-900 font-slab font-bold text-lg">
                           ₹{uom.price}
                         </span>
                       )}
@@ -277,7 +277,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
               
               {!selectedUOM.is_available && (
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                  <span className="text-white font-[SofiaPro] text-sm font-semibold">
+                  <span className="text-white font-slab text-sm font-semibold">
                     Out of Stock
                   </span>
                 </div>
@@ -297,7 +297,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
           >
             {/* Top section - Name */}
             <div className="flex-shrink-0">
-              <p className="font-[SofiaPro] font-semibold text-[0.85rem] leading-[1.2] line-clamp-2 text-black">
+              <p className="font-slab font-semibold text-[0.85rem] leading-[1.2] line-clamp-2 text-black">
                 {product.name}
               </p>
             </div>
@@ -573,10 +573,10 @@ const SearchResults = (props: HomeProps) => {
           {/* Results Header */}
           {!loading && !noResults && totalCount > 0 && (
             <div className="mb-[3vw] mob:mb-[6vw]">
-              <h2 className="font-[SofiaPro] font-semibold text-[1.5vw] mob:text-[5vw] text-black mb-[0.5vw] mob:mb-[2vw]">
+              <h2 className="font-slab font-semibold text-[1.5vw] mob:text-[5vw] text-black mb-[0.5vw] mob:mb-[2vw]">
                 Search Results
               </h2>
-              <p className="font-[SofiaPro] text-[1vw] mob:text-[3.5vw] text-gray-600">
+              <p className="font-slab text-[1vw] mob:text-[3.5vw] text-gray-600">
                 Found {totalCount} products for "{searchQuery}"
               </p>
             </div>
@@ -595,10 +595,10 @@ const SearchResults = (props: HomeProps) => {
           {noResults && !loading && (
             <div className="text-center py-[8vw] mob:py-[20vw]">
               <div className="text-[4vw] mob:text-[12vw] mb-[2vw] mob:mb-[4vw]">🔍</div>
-              <h3 className="font-[SofiaPro] font-semibold text-[1.5vw] mob:text-[5vw] text-black mb-[1vw] mob:mb-[3vw]">
+              <h3 className="font-slab font-semibold text-[1.5vw] mob:text-[5vw] text-black mb-[1vw] mob:mb-[3vw]">
                 No products found
               </h3>
-              <p className="font-[SofiaPro] text-[1vw] mob:text-[3.5vw] text-gray-600 mb-[3vw] mob:mb-[6vw]">
+              <p className="font-slab text-[1vw] mob:text-[3.5vw] text-gray-600 mb-[3vw] mob:mb-[6vw]">
                 Try searching with different keywords or browse our categories
               </p>
             </div>
@@ -619,7 +619,7 @@ const SearchResults = (props: HomeProps) => {
                   <button
                     onClick={handleLoadMore}
                     disabled={loading}
-                    className="bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed text-black font-[SofiaPro] font-semibold px-[4vw] mob:px-[10vw] py-[1.2vw] mob:py-[3.5vw] rounded-full text-[1vw] mob:text-[3.5vw] transition-colors"
+                    className="bg-yellow-400 hover:bg-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed text-black font-slab font-semibold px-[4vw] mob:px-[10vw] py-[1.2vw] mob:py-[3.5vw] rounded-full text-[1vw] mob:text-[3.5vw] transition-colors"
                   >
                     {loading ? 'Loading...' : 'Load More Products'}
                   </button>
