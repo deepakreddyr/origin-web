@@ -196,21 +196,21 @@ const ShopDetails = (props: HomeProps) => {
 
   return (
     <Layout mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={true}>
-      <ShopHero />
-      <FeatureStrip />
+      {/* <ShopHero /> */}
+      {/* <FeatureStrip /> */}
       <div className="flex flex-col items-center justify-center mob:pt-[10vw]">
         <div className="flex flex-col gap-[2.2vw] w-[80.7vw] mob:w-full  mob:px-[4vw] pb-[10vw] relative ">
           {filters.category ? (
             <CategoryAndSubCategory filters={filters} setFilters={setFilters} />
           ) : null}
-          {featuredItem && <FeaturedProduct featuredItem={featuredItem} />}
+          {/* {featuredItem && <FeaturedProduct featuredItem={featuredItem} />} */}
           <CardsWrapper />
         </div>
       </div>
       <CategorySection/>
-      <div className="flex flex-col gap-[2.2vw] w-[80.7vw] pt-[2.5vw] mob:w-full mob:px-[4vw] pb-[3vw] relative mx-auto">
+      {/* <div className="flex flex-col gap-[2.2vw] w-[80.7vw] pt-[2.5vw] mob:w-full mob:px-[4vw] pb-[3vw] relative mx-auto">
         <WhyOriginAndTestimonial category={filters.category} />
-      </div>
+      </div> */}
     </Layout>
   );
 };

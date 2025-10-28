@@ -55,10 +55,7 @@ const ProductDetailPage = (props: ProductDetailPageProps) => {
 
   return (
     <Layout mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={mobile ? false : true}>
-      <ProductDetailsWrapper 
-        initialProductDetails={initialProductDetails}
-        seoData={seoData}
-      />
+      <ProductDetailsWrapper />
       <div className='mb-[25px]'>
         <CategorySection/>
       </div>
@@ -66,80 +63,28 @@ const ProductDetailPage = (props: ProductDetailPageProps) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<ProductDetailPageProps> = async (context) => {
-  const { id } = context.params as { id: string };
-  const { req } = context;
 
+export const getServerSideProps: GetServerSideProps = async () => {
+
+  // console.log("hello");
   try {
-    // Fetch layout data (menu items, footer)
-    const layoutResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/originApi`);
-    const originApiData = await layoutResponse.json();
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/originApi`);
+    const originApiData = await response.json();
+
     const { mainMenuItems, footerData } = originApiData;
-
-    // Get token from cookies if available
-    const token = req.cookies.user_token || null;
-    const storeId = req.cookies.store_id || null;
-
-    let apiUrl: string;
-    let headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    };
-
-    // Construct API URL based on authentication
-    if (token) {
-      apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}${protectedUrl['searchForProduct']}/${id}`;
-      headers['Authorization'] = `Bearer ${token}`;
-      
-      if (storeId) {
-        headers['store-id'] = storeId;
-      }
-    } else {
-      apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}${unprotectedUrl['searchForProduct']}/${id}`;
-    }
-
-    // Fetch product data from API
-    const productResponse = await fetch(apiUrl, {
-      method: 'GET',
-      headers,
-    });
-
-    if (!productResponse.ok) {
-      throw new Error(`API call failed: ${productResponse.status}`);
-    }
-
-    const apiData = await productResponse.json();
-    const productData = apiData.data;
-
-    // Extract SEO data
-    const defaultUOM = productData.item.multiple_uoms?.find((uom: UOM) => uom.is_default) || productData.item.multiple_uoms?.[0];
-    const aboutSection = productData.info?.info?.find((section: InfoSection) => section.type === 'normal' && section.title === 'About the Product');
-    const description = aboutSection?.details?.[0]?.description || `Buy ${productData.item.name} online. Fresh and high-quality products delivered to your doorstep.`;
-
-    // Prepare SEO data
-    const seoData = {
-      title: `${productData.item.name} - Buy Fresh Online | Origin Fresh`,
-      description: description.substring(0, 160),
-      image: productData.item.image,
-      price: defaultUOM?.price || 0,
-      currency: 'INR',
-      availability: productData.item.is_available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-      url: `https://originfresh.in/product/${id}`,
-    };
-
     return {
       props: {
         mainMenuItems,
-        footerData,
-        initialProductDetails: productData,
-        seoData,
-      },
+        footerData
+      }
     };
   } catch (error) {
-    console.error('Error fetching product details:', error);
-    
-    // Return 404 page if product not found
+    console.error('Error fetching USP card data:', error);
     return {
-      notFound: true,
+      props: {
+        mainMenuItems: [],
+        footerData: {}
+      }
     };
   }
 };
