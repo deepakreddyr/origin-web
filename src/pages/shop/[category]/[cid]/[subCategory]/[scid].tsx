@@ -196,7 +196,7 @@ const ShopDetails = (props: HomeProps) => {
 
   return (
     <Layout mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={true}>
-      {/* <ShopHero /> */}
+      <ShopHero />
       {/* <FeatureStrip /> */}
       <div className="flex flex-col items-center justify-center mob:pt-[10vw]">
         <div className="flex flex-col gap-[2.2vw] w-[80.7vw] mob:w-full  mob:px-[4vw] pb-[10vw] relative ">

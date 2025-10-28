@@ -6,13 +6,12 @@ import { Carousel } from 'react-responsive-carousel';
 import { useMediaQuery } from '@mui/material';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { useRouter } from 'next/router';
-import banner1 from '/public/assets/images/shop/heroBannerShop.png';
-import banner2 from '/public/assets/images/shop/heroBannerShop1.png';
-import banner3 from '/public/assets/images/shop/heroBannerShop2.png';
-import banner4 from '/public/assets/images/shop/heroBannerShop3.png';
+import banner1 from '/public/assets/images/shop/categorybanner1.png';
+// import banner2 from '/public/assets/images/shop/heroBannerShop1.png';
+// import banner3 from '/public/assets/images/shop/heroBannerShop2.png';
+// import banner4 from '/public/assets/images/shop/heroBannerShop3.png';
 import landingimg from '/public/assets/images/shop/homepagebg.png';
 import downchevron from '/public/assets/svg/homedownchevron.svg';
-import PopularProduce from '@/components/ShopV2/PopularProduce';
 
 const bannerData = [
   {
@@ -21,24 +20,24 @@ const bannerData = [
     button: 'Shop Now',
     href: '/shop/explore-all/2/exotic-fruits/5',
   },
-  {
-    image: banner4,
-    title: 'Tiny.\nTasty.\nToo good.',
-    button: 'Shop Now',
-    href: '/shop/hydro-micro-greens/9/hydroponics/49',
-  },
-  {
-    image: banner2,
-    title: 'Sweet\nBright\nJuicy',
-    button: 'Shop Now',
-    href: '/shop/world-fruits/3/berries/40',
-  },
-  {
-    image: banner3,
-    title: 'Global\nSeasonal\nRare',
-    button: 'Shop Now',
-    href: '/shop/global-veggies/8/european/48',
-  }
+  // {
+  //   image: banner4,
+  //   title: 'Tiny.\nTasty.\nToo good.',
+  //   button: 'Shop Now',
+  //   href: '/shop/hydro-micro-greens/9/hydroponics/49',
+  // },
+  // {
+  //   image: banner2,
+  //   title: 'Sweet\nBright\nJuicy',
+  //   button: 'Shop Now',
+  //   href: '/shop/world-fruits/3/berries/40',
+  // },
+  // {
+  //   image: banner3,
+  //   title: 'Global\nSeasonal\nRare',
+  //   button: 'Shop Now',
+  //   href: '/shop/global-veggies/8/european/48',
+  // }
 ];
 
 const ShopHero = () => {
@@ -61,10 +60,11 @@ const ShopHero = () => {
           <li
             key={index}
             onClick={onClickHandler}
-            className={`inline-block w-3 h-3 mx-1 rounded-full cursor-pointer ${
-              isSelected ? 'bg-[#24874C]' : 'bg-[#729D63]'
-            }`}
-            aria-label={`${label} ${index + 1}`}
+            className={`inline-block w-3 h-3 mx-1 rounded-full cursor-pointer`}
+            //   ${
+            //   isSelected ? 'bg-[#24874C]' : 'bg-[#729D63]'
+            // }`}
+            // aria-label={`${label} ${index + 1}`}
             role="button"
           />
         )}

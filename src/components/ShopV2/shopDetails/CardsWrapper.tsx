@@ -6,15 +6,32 @@ import { useSelector } from 'react-redux';
 const CardsWrapper = () => {
   const products = useSelector((state: any) => state.products);
   if (products.isProductListLoading) return <ProductCardLoader />;
-  
+
   return (
-    <div className="grid grid-cols-3 md:grid-cols-3 sm:grid-cols-2 mob:grid-cols-2 gap-[1vw] md:gap-[5vw] mob:gap-[5vw]">
-    {products.productsList?.map((item: any) => (
-      <div key={item.id} className="h-[25vw] w-[20vw]">
-        <ItemCard itemDetails={item} />
-      </div>
-    ))}
-  </div>
+    <div
+      className="
+        grid 
+        grid-cols-2
+        md:grid-cols-3
+        lg:grid-cols-3
+        gap-[3vw]
+        md:gap-[2vw]
+        lg:gap-[3vw]
+        w-full
+        px-[3vw]
+        md:px-[2vw]
+        lg:px-[1vw]
+      "
+    >
+      {products.productsList?.map((item: any) => (
+        <div
+          key={item.id}
+          className="w-full aspect-[0.85] md:aspect-[0.8] lg:w-[22vw] lg:h-[23vw]"
+        >
+          <ItemCard itemDetails={item} />
+        </div>
+      ))}
+    </div>
   );
 };
 

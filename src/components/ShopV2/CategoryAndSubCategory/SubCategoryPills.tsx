@@ -18,10 +18,10 @@ const SubCategoryPills = (props: any) => {
               <button
                 onClick={() => handler(item, name)}
                 key={item.id}
-                className={`px-3 py-2 text-sm md:px-[1vw] md:py-[.7vw] md:text-[.9vw] rounded-lg md:rounded-[0.6vw] font-medium text-center shadow-md border transition-all duration-200
+                className={`px-3 py-2 text-sm font-medium md:px-[1vw] md:py-[.7vw] md:text-[.9vw] rounded-lg md:rounded-[0.6vw] text-center shadow-md transition-all duration-200
                   ${isSelected
-                    ? 'bg-gradient-to-tr from-[#146321] to-[#29C943] text-white'
-                    : 'bg-white text-black border-gray-300 hover:bg-gray-100 active:bg-gray-200'}
+                    ? 'bg-gradient-to-r from-[#FFDD00] to-[#FFFCDE] text-black'
+                    : 'bg-[#FFFCDE] text-black'}
                 `}
               >
                 {item.name}
