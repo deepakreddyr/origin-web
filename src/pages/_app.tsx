@@ -19,8 +19,8 @@ const clearCacheAndReload = async () => {
   if (typeof window === 'undefined') return;
 
   const currentVersion = localStorage.getItem('appVersion');
-  console.log("Current app version in storage:", currentVersion);
-  console.log("Latest APP_VERSION:", APP_VERSION);
+  // console.log("Current app version in storage:", currentVersion);
+  // console.log("Latest APP_VERSION:", APP_VERSION);
 
   if (currentVersion === null || currentVersion !== APP_VERSION) {
     try {
@@ -28,7 +28,7 @@ const clearCacheAndReload = async () => {
       if ('caches' in window) {
         const cacheNames = await caches.keys();
         await Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)));
-        console.log('All caches cleared');
+        // console.log('All caches cleared');
       }
 
       // Clear storage
@@ -37,7 +37,7 @@ const clearCacheAndReload = async () => {
       
       // Set new version
       localStorage.setItem('appVersion', APP_VERSION);
-      console.log('Storage cleared and version updated');
+      // console.log('Storage cleared and version updated');
 
       // Force reload with cache bypass
       window.location.reload();
@@ -47,7 +47,7 @@ const clearCacheAndReload = async () => {
       window.location.reload();
     }
   } else {
-    console.log("App version matches, no cache clear needed.");
+    // console.log("App version matches, no cache clear needed.");
   }
 };
 
@@ -60,7 +60,7 @@ const handleInvoiceDeepLink = (router: any) => {
   const forceWeb = urlParams.has('web');
 
   if (invoiceId || forceWeb) {
-    console.log('Invoice deep link detected, blocking app redirects');
+    // console.log('Invoice deep link detected, blocking app redirects');
 
     // Override app redirects
     const originalReplace = window.location.replace;
@@ -136,7 +136,7 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
         document.querySelectorAll('script').forEach(script => {
           if (script.innerHTML && /app-store|play-store|deep-link|intent:\/\//.test(script.innerHTML)) {
             script.remove();
-            console.log('Removed app redirect script');
+            // console.log('Removed app redirect script');
           }
         });
       }, 1000);
@@ -166,7 +166,7 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="lazyOnload"
-          onLoad={() => console.log('Razorpay script loaded')}
+          // onLoad={() => console.log('Razorpay script loaded')}
         />
 
         <Component {...pageProps} />

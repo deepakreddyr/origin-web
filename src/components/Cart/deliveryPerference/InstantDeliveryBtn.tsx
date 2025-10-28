@@ -15,6 +15,10 @@ const InstantDeliveryBtn = (props: any) => {
 
   const isSelected = delivery_type === 'INSTANT' || activeDeliveryType === 'INSTANT';
 
+  // Get instant delivery fee
+  const instantDeliveryFee = checkoutDetails?.dash_delivery?.immediate_delivery_fee;
+  const hasFee = instantDeliveryFee && parseFloat(instantDeliveryFee) > 0;
+
   const handleInstantDeliverySelection = () => {
     if (!isButtonEnabled) return;
     
@@ -69,7 +73,7 @@ const InstantDeliveryBtn = (props: any) => {
         <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold">
           {checkoutDetails?.dash_delivery?.immediate_order_title}
           {isSelected && (
-              <span className="text-purple text-xs font-bold">✓</span>
+            <span className="text-purple text-xs font-bold ml-1">✓</span>
           )}
         </p>
         <p className="font-[SofiaPro] text-[.78vw] mob:text-[3vw]">
@@ -78,6 +82,11 @@ const InstantDeliveryBtn = (props: any) => {
             : 'Instant delivery not available'
           }
         </p>
+        {isButtonEnabled && hasFee && (
+          <p className="font-[SofiaPro] text-[.78vw] mob:text-[3vw] text-[#6F2D72] font-medium mt-[.5vw] mob:mt-[2vw]">
+            Additional ₹{instantDeliveryFee} applicable
+          </p>
+        )}
       </div>
     </button>
   );

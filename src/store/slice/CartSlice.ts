@@ -197,22 +197,13 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     setCartItems: (state, action: PayloadAction<any[]>) => {
-      // console.log('Cart Slice - Setting cart items:', action.payload);
-      // Convert to flat structure if needed
       state.items = convertToFlatStructure(action.payload);
-      // console.log('Cart Slice - Items after conversion:', state.items.map(item => ({ id: item.id, variant_id: item.variant_id, quantity: item.cart_quantity })));
       updateCartTotals(state);
       state.isProceedBtnEnabled = isProceedBtnEnabled(state);
     },
 
     addItemToCart: (state, action: PayloadAction<{ product: any; selectedUOM: any }>) => {
       const { product, selectedUOM } = action.payload;
-      // console.log('Cart Slice - Adding item to cart:', { 
-      //   productId: product.id || product.product_id, 
-      //   variantId: selectedUOM.variant_id || selectedUOM.varientId,
-      //   productName: product.name || product.item_name
-      // });
-      
       const normalizedProductId = product.id || product.product_id;
       const normalizedVariantId = selectedUOM.variant_id || selectedUOM.varientId;
       
@@ -221,14 +212,9 @@ export const cartSlice = createSlice({
       );
 
       if (existingItemIndex !== -1) {
-        // Item exists, increase quantity
-        // console.log('Cart Slice - Item exists, updating quantity');
         state.items[existingItemIndex].cart_quantity += selectedUOM.stepper_quantity;
       } else {
-        // New item, add to cart
-        // console.log('Cart Slice - New item, adding to cart');
         const newCartItem: CartItemFlat = {
-          // Product data - normalize property names
           id: normalizedProductId,
           item_code: product.item_code,
           name: product.name || product.item_name,
@@ -239,7 +225,6 @@ export const cartSlice = createSlice({
           is_orderable: product.is_orderable,
           navigation: product.navigation,
           tag_url: product.tag_url,
-          // UOM data - normalize property names
           variant_id: normalizedVariantId,
           cart_quantity: selectedUOM.stepper_quantity,
           price: selectedUOM.price,
@@ -257,8 +242,6 @@ export const cartSlice = createSlice({
         };
         state.items.push(newCartItem);
       }
-
-      // console.log('Cart Slice - Cart after adding item:', state.items.map(item => ({ id: item.id, variant_id: item.variant_id, quantity: item.cart_quantity })));
       updateCartTotals(state);
       updateLSWithNestedFormat(state.items);
       state.isProceedBtnEnabled = isProceedBtnEnabled(state);

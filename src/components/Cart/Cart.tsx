@@ -38,7 +38,7 @@ import { useAtom } from 'jotai';
 
 const Cart = () => {
   const cart = useSelector((state: any) => state.cart);
-  const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails); // Added this line
+  const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
   const [showAddressModal, setAddressModal] = useState(false);
   const [showCouponList, setShowCouponList] = useState(false);
   const [orderRestrictionData, setOrderRestrictionData] = useState<null | {
@@ -56,12 +56,13 @@ const Cart = () => {
     cart_minimum: '',
     delivery_charge: '',
     free_delivery_charge: '',
+    distance_delivery_fees: null,
+    distance_from_warehouse: null,
   });
   const [address, setAddress] = useAtom(addressAtom);
 
   const fetchCartItemsFromApi = () => {
-    const apiUrl =
-      process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getCartItems'];
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getCartItems'];
     const addressFromLs = getAddressAndStoreId();
     const additionalHeaders = addressFromLs
       ? { 'store-id': addressFromLs.store_id }
@@ -71,9 +72,11 @@ const Cart = () => {
       dispatch(setCartItems(data.data));
       dispatch(setCartMinimum(data.cart_minimum));
       setBillDetails({
-        ...billDetails,
         cart_minimum: data.cart_minimum,
         delivery_charge: data.delivery_charge,
+        free_delivery_charge: data.free_delivery_charge || '',
+        distance_delivery_fees: data.distance_delivery_fees || null,
+        distance_from_warehouse: data.distance_from_warehouse || null,
       });
 
       if (data.order_restricted) {
@@ -227,7 +230,7 @@ const Cart = () => {
             handler={proceedButtonHandler}
             isDisabled={!cart.isProceedBtnEnabled}
             orderRestrictionData={orderRestrictionData}
-            showAddressModal={showAddressModal} // Pass this prop to ActionCtaWithItems
+            showAddressModal={showAddressModal}
           />
         )}
       </>

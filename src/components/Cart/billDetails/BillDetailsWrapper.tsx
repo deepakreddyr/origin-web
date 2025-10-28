@@ -19,14 +19,43 @@ const BillDetailsWrapper = (props: any) => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
+  // Function to calculate delivery fee based on distance_delivery_fees
+  const calculateDeliveryFee = () => {
+    // If distance_delivery_fees is not present, use default delivery_charge
+    if (!billDetails.distance_delivery_fees || !Array.isArray(billDetails.distance_delivery_fees)) {
+      return billDetails.delivery_charge;
+    }
+
+    const cartValue = cart.totalPrice;
+
+    // Find the matching fee tier based on cart value
+    const matchingTier = billDetails.distance_delivery_fees.find((tier: any) => {
+      const fromAmount = parseFloat(tier.from_amount);
+      const toAmount = parseFloat(tier.to_amount);
+      return cartValue >= fromAmount && cartValue <= toAmount;
+    });
+
+    // If a matching tier is found, return its value, otherwise use default delivery_charge
+    if (matchingTier) {
+      return parseFloat(matchingTier.value);
+    }
+
+    return billDetails.delivery_charge;
+  };
+
   useEffect(() => {
     let amountTobePaid;
     const { totalPrice, amountToPay, discountAmount } = cart;
-    if (billDetails.delivery_charge > 0) {
-      amountTobePaid = totalPrice + billDetails.delivery_charge;
+    
+    // Calculate dynamic delivery fee
+    const deliveryFee = calculateDeliveryFee();
+    
+    if (deliveryFee > 0) {
+      amountTobePaid = totalPrice + deliveryFee;
     } else {
       amountTobePaid = totalPrice;
     }
+    
     if (couponDetails.code && couponDetails.isValid === 1) {
       if (amountToPay < couponDetails.min_cart_value) {
         amountTobePaid = amountTobePaid + discountAmount;
@@ -47,10 +76,8 @@ const BillDetailsWrapper = (props: any) => {
     : 0;
 
   const handleTooltipToggle = () => {
-    // On mobile, toggle tooltip on click
     if (isMobile) {
       setTooltipOpen((prev) => !prev);
-      // auto-close after 2 seconds
       setTimeout(() => setTooltipOpen(false), 2000);
     }
   };
@@ -63,6 +90,9 @@ const BillDetailsWrapper = (props: any) => {
     if (!isMobile) setTooltipOpen(false);
   };
 
+  // Get the current delivery fee to display
+  const currentDeliveryFee = calculateDeliveryFee();
+
   return (
     <div className="bg-[#F2EEE44D] flex flex-col border border-[#F2EEE4] p-[1.1vw] mob:p-[4.1vw] mob:rounded-[4.1vw] rounded-[1.1vw]">
       <h3 className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] mob:pb-[1.5vw] pb-[.6vw] font-semibold text-[#231F20CC]">
@@ -73,34 +103,6 @@ const BillDetailsWrapper = (props: any) => {
           <div className="flex items-center text-black justify-between">
             <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw] flex items-center gap-[0.4vw]">
               Item total
-              {/* <Tooltip
-                title="5% GST applied on applicable items"
-                arrow
-                open={tooltipOpen}
-                onOpen={handleTooltipOpen}
-                onClose={handleTooltipClose}
-                disableFocusListener
-                disableHoverListener={isMobile}
-                disableTouchListener={isMobile}
-              >
-                <IconButton
-                  size="small"
-                  onClick={handleTooltipToggle}
-                  onMouseEnter={handleTooltipOpen}
-                  onMouseLeave={handleTooltipClose}
-                  sx={{
-                    padding: 0,
-                    color: "#888",
-                    "&:hover": { color: "#000" },
-                  }}
-                >
-                  <InfoOutlinedIcon
-                    sx={{
-                      fontSize: isMobile ? "4vw" : "1vw",
-                    }}
-                  />
-                </IconButton>
-              </Tooltip> */}
             </p>
             <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
               ₹{cart.totalOriginalPrice}
@@ -140,7 +142,7 @@ const BillDetailsWrapper = (props: any) => {
                     ₹{billDetails.free_delivery_charge}
                   </span>
                 )}{' '}
-                {billDetails.delivery_charge === 0 ? 'FREE' : `₹${billDetails.delivery_charge}`}
+                {currentDeliveryFee === 0 ? 'FREE' : `₹${currentDeliveryFee}`}
               </p>
             </div>
           </li>

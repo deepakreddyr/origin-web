@@ -46,12 +46,12 @@ const VideoBanner: React.FC<VideoBannerProps> = ({
           try {
             await videoElement.play();
           } catch (error) {
-            console.log('Video autoplay failed after loadeddata:', error);
+            // console.log('Video autoplay failed after loadeddata:', error);
           }
         }, { once: true });
       }
     } catch (error) {
-      console.log('Video autoplay failed:', error);
+      // console.log('Video autoplay failed:', error);
       
       // Fallback: Try to play on user interaction
       const playOnInteraction = async () => {
@@ -60,7 +60,7 @@ const VideoBanner: React.FC<VideoBannerProps> = ({
           document.removeEventListener('touchstart', playOnInteraction);
           document.removeEventListener('click', playOnInteraction);
         } catch (e) {
-          console.log('Manual play also failed:', e);
+          // console.log('Manual play also failed:', e);
         }
       };
       

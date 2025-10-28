@@ -73,7 +73,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
     recalcDisableState();
   }, [cart, recalcDisableState]);
 
-  // 👂 Listen to custom event triggered after removal
+  // Listen to custom event triggered after removal
   useEffect(() => {
     const handleCartUpdate = () => {
       recalcDisableState();
@@ -126,6 +126,21 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
     return isDisabled;
   };
 
+  // Calculate total amount including instant delivery fee
+  const getTotalAmount = () => {
+    let total = parseFloat(cart.amountToPay) || 0;
+    
+    // Add instant delivery fee if instant delivery is selected
+    if (placeOrderDetails.delivery_type === 'INSTANT') {
+      const instantFee = placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_fee;
+      if (instantFee && parseFloat(instantFee) > 0) {
+        total += parseFloat(instantFee);
+      }
+    }
+    
+    return total.toFixed(2);
+  };
+
   const finalIsDisabled = getDisabledState();
 
   const handleClick = () => {
@@ -148,11 +163,8 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
           <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-black-op-60 font-medium">
             {cart.totalQuantity} Items
           </p>
-          {/* <p className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] text-black mob:pt-[.6vw]">
-            ₹{cart.amountToPay} <a className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-black-op-60 font-medium">(Inclusive of all taxes.)</a>
-          </p> */}
           <p className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] text-black mob:pt-[.6vw]">
-            ₹{cart.amountToPay}
+            ₹{getTotalAmount()}
           </p>
         </div>
 

@@ -101,7 +101,7 @@ export default function CompleteAddress(props: Props) {
         isSaved: true
       }));
     } catch (e) {
-      console.log(e, 'error while submitting new address');
+      // console.log(e, 'error while submitting new address');
     }
   };
 
