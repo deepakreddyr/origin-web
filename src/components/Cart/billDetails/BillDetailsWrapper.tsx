@@ -3,7 +3,8 @@ import {
   setAmountToPay,
   setCouponDetails,
   setDiscountAmount,
-  setIsProceedButtonEnabled
+  setIsProceedButtonEnabled,
+  setDeliveryFee
 } from '@/store/slice/CartSlice';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -49,6 +50,9 @@ const BillDetailsWrapper = (props: any) => {
     
     // Calculate dynamic delivery fee
     const deliveryFee = calculateDeliveryFee();
+    
+    // Dispatch delivery fee to cart state
+    dispatch(setDeliveryFee(deliveryFee));
     
     if (deliveryFee > 0) {
       amountTobePaid = totalPrice + deliveryFee;
@@ -115,7 +119,7 @@ const BillDetailsWrapper = (props: any) => {
             <div className="flex items-center text-secondary justify-between">
               <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">Savings</p>
               <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
-                ₹{cart.totalOriginalPrice - cart.totalPrice}
+                - ₹{cart.totalOriginalPrice - cart.totalPrice}
               </p>
             </div>
           </li>

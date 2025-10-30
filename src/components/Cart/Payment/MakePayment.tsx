@@ -35,7 +35,6 @@ const MakePayment = (props: any) => {
   const handlePaymentProcessing = async (paymentMethod: any) => {
     // Prevent duplicate clicks
     if (isProcessingRef.current) {
-      // console.log('Payment already in progress, ignoring click');
       return;
     }
 
@@ -43,14 +42,11 @@ const MakePayment = (props: any) => {
       isProcessingRef.current = true;
       setProcessing(true);
       setProcessingPaymentId(paymentMethod.id);
-      // console.log('Processing payment with:', paymentMethod);
       
       await placeOrderHandler(paymentMethod);
-      // console.log('Payment processed successfully');
       
     } catch (error) {
       console.error('Payment processing failed:', error);
-      // alert('Payment processing failed. Please try again.');
     } finally {
       setProcessing(false);
       setProcessingPaymentId(null);
@@ -98,7 +94,6 @@ const MakePayment = (props: any) => {
                   
                   // Prevent clicks if processing or if this specific payment method is disabled
                   if (processing || isProcessingRef.current || (!pay.sub_payment_method && !isCodEnabled)) {
-                    // console.log('Click blocked - payment in progress or disabled');
                     return;
                   }
 
@@ -135,7 +130,6 @@ const MakePayment = (props: any) => {
                     onClick={async (e) => {
                       e.stopPropagation();
                       if (processing || isProcessingRef.current) {
-                        // console.log('Button click blocked - payment in progress');
                         return;
                       }
 

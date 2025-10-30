@@ -221,7 +221,7 @@ const Payment = (props: any) => {
       let additionalHeaders = {};
       const apiData = {
         items,
-        delivery_fee: placeOrderDetails.delivery_fee,
+        delivery_fee: cart.deliveryFee,
         individual_package_enabled: false,
         delivery_type: 'instant',
         delivery_date: placeOrderDetails.checkoutDetails.formatted_delivery_date[0],
@@ -275,7 +275,6 @@ const Payment = (props: any) => {
         isPlacingOrderRef.current = false;
         reject(new Error('Order placement failed'));
       };
-      
       sendDataToApi(apiUrl, apiData, 'POST', successHandler, failureHandler, additionalHeaders);
     });
   };

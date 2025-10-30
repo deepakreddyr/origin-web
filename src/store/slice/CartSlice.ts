@@ -45,6 +45,7 @@ interface CartState {
   amountToPay: number;
   discountAmount: number | null;
   cart_minimum: number | null;
+  deliveryFee: number; // Added delivery fee to state
 }
 
 const initialState: CartState = {
@@ -58,6 +59,7 @@ const initialState: CartState = {
   couponDetails: couponDetailsInitialState,
   discountAmount: null,
   cart_minimum: null,
+  deliveryFee: 0, // Initialize delivery fee
 };
 
 const updateCartTotals = (state: CartState) => {
@@ -249,17 +251,12 @@ export const cartSlice = createSlice({
 
     removeItemFromCart: (state, action: PayloadAction<number>) => {
       const variantId = action.payload;
-      // console.log('Cart Slice - Removing variant from cart:', variantId);
-      // console.log('Cart Slice - Cart before removal:', state.items.map(item => ({ id: item.id, variant_id: item.variant_id, quantity: item.cart_quantity })));
-
       const initialItemCount = state.items.length;
       
       // Simply remove the item with matching variant_id
       state.items = state.items.filter((item) => item.variant_id !== variantId);
 
       const finalItemCount = state.items.length;
-      // console.log(`Cart Slice - Items count changed from ${initialItemCount} to ${finalItemCount}`);
-      // console.log('Cart Slice - Cart after removal:', state.items.map(item => ({ id: item.id, variant_id: item.variant_id, quantity: item.cart_quantity })));
 
       updateCartTotals(state);
       updateLSWithNestedFormat(state.items);
@@ -268,14 +265,10 @@ export const cartSlice = createSlice({
 
     increaseQuantity: (state, action: PayloadAction<{ varientId: number; stepperQuantity: number }>) => {
       const { varientId, stepperQuantity } = action.payload;
-      // console.log('Cart Slice - Increasing quantity for variant:', varientId, 'by:', stepperQuantity);
 
       const item = state.items.find((item) => item.variant_id === varientId);
       if (item) {
-        // console.log(`Cart Slice - Variant ${varientId} quantity changing from ${item.cart_quantity} to ${item.cart_quantity + stepperQuantity}`);
         item.cart_quantity += stepperQuantity;
-      } else {
-        // console.log('Cart Slice - WARNING: Variant not found for increase:', varientId);
       }
 
       updateCartTotals(state);
@@ -285,24 +278,17 @@ export const cartSlice = createSlice({
 
     decreaseQuantity: (state, action: PayloadAction<{ varientId: number; stepperQuantity: number }>) => {
       const { varientId, stepperQuantity } = action.payload;
-      // console.log('Cart Slice - Decreasing quantity for variant:', varientId, 'by:', stepperQuantity);
 
       const itemIndex = state.items.findIndex((item) => item.variant_id === varientId);
       if (itemIndex !== -1) {
         const item = state.items[itemIndex];
         const newQuantity = item.cart_quantity - stepperQuantity;
         
-        // console.log(`Cart Slice - Variant ${varientId} quantity changing from ${item.cart_quantity} to ${newQuantity}`);
-        
         if (newQuantity <= 0) {
-          // Remove the item completely
-          // console.log('Cart Slice - Removing item due to zero quantity:', varientId);
           state.items.splice(itemIndex, 1);
         } else {
           item.cart_quantity = newQuantity;
         }
-      } else {
-        // console.log('Cart Slice - WARNING: Variant not found for decrease:', varientId);
       }
 
       updateCartTotals(state);
@@ -338,18 +324,23 @@ export const cartSlice = createSlice({
       state.amountToPay = action.payload;
     },
     
+    // New action to set delivery fee
+    setDeliveryFee: (state, action: PayloadAction<number>) => {
+      state.deliveryFee = action.payload;
+    },
+    
     setIsProceedButtonEnabled: (state, action: PayloadAction<boolean>) => {
       state.isProceedBtnEnabled = action.payload;
     },
 
     clearCart: (state) => {
-      // console.log('Cart Slice - Clearing entire cart');
       state.items = [];
       state.totalQuantity = 0;
       state.totalPrice = 0;
       state.totalOriginalPrice = 0;
       state.cartTabType = '';
       state.couponDetails = couponDetailsInitialState;
+      state.deliveryFee = 0;
       localStorage.removeItem('cart_items');
     }
   }
@@ -369,7 +360,8 @@ export const {
   setAmountToPay,
   setDiscountAmount,
   setIsProceedButtonEnabled,
-  setCartMinimum
+  setCartMinimum,
+  setDeliveryFee, // Export new action
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
