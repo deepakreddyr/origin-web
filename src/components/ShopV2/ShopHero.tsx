@@ -143,7 +143,7 @@ export const ShopHeroSingle = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.prefetch("/diwali-gifting/16/diwali-gifting/54");
+    router.prefetch("/freshly-arrived/2/new-arrivals/11");
   }, [router]);
 
   return (
@@ -171,7 +171,7 @@ export const ShopHeroSingle = () => {
         <div className="absolute inset-0 z-10 flex items-center justify-start">
           <button
             onClick={() =>
-              router.push("/carrots-mixed-color/452")
+              router.push("/shop/freshly-arrived/2/new-arrivals/11")
             }
             className={`
               absolute bg-[#FFD600] text-black font-[SofiaPro] font-semibold rounded-lg

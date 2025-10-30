@@ -6,13 +6,20 @@ import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import Image from 'next/image';
 import Link from 'next/link';
 import catimg from '/public/assets/images/shop/catimage.webp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 const CategorySection = () => {
   const filteredCategories = useSelector((state: any) => state.shopCategories);
   const { categories } = filteredCategories;
   const mobile = useMediaQuery(600);
   
-  const mainCategoryList = categories.find((item: any) => item.type === 'main-category')?.data || [];
+  const mainCategoryList =
+    categories.find((item: any) => item.type === 'main-category')?.data || [];
+
+  // Merge the real categories with test categories for testing
+  const combinedCategoryList = [...mainCategoryList,];
+
   // State for showing more categories
   const [showAll, setShowAll] = useState(false);
   
@@ -25,35 +32,47 @@ const CategorySection = () => {
   };
 
   const webUI = () => {
-    const itemsToShow = showAll ? mainCategoryList : mainCategoryList.slice(0, 8);
-    const hasMore = mainCategoryList.length > 8;
-    if (mainCategoryList.length <= 5) {
-      // Original layout for 5 or fewer categories
+    const INITIAL_DISPLAY_COUNT = 8;
+    const itemsToShow = showAll ? combinedCategoryList : combinedCategoryList.slice(0, INITIAL_DISPLAY_COUNT);
+    const hasMore = combinedCategoryList.length > INITIAL_DISPLAY_COUNT;
+    
+    if (combinedCategoryList.length <= 5) {
       return (
         <div className="flex justify-center gap-[1.1vw]">
-          {mainCategoryList.map((category: any) => (
+          {combinedCategoryList.map((category: any) => (
             <CategoryCard key={category.id} cardDetails={category} />
           ))}
         </div>
       );
     }
+    
     return (
       <div>
         {/* Grid Layout */}
-        <div className="grid grid-cols-4 gap-[1.1vw] mb-[2vw]">
+        <div className="grid grid-cols-4 gap-[1.1vw] mb-[1.5vw] justify-items-center">
           {itemsToShow.map((category: any) => (
             <CategoryCard key={category.id} cardDetails={category} />
           ))}
         </div>
         
-        {/* Show More/Less Button */}
+        {/* Show More/Less Button with Icon */}
         {hasMore && (
           <div className="flex justify-center">
             <button
               onClick={() => setShowAll(!showAll)}
-              className="px-[2vw] py-[0.5vw] border-2 border-gray-300 rounded-[0.5vw] text-[1.1vw] font-[SofiaPro] font-semibold hover:border-gray-500 transition-colors duration-200"
+              className="flex items-center gap-[0.5vw] px-[2vw] py-[0.6vw] text-[1.1vw] font-[SofiaPro] font-semibold"
             >
-              {showAll ? 'Show Less' : `View All Categories (${mainCategoryList.length})`}
+              {showAll ? (
+                <>
+                  <span>Show Less</span>
+                  <KeyboardArrowUpIcon sx={{ fontSize: '1.5vw' }} />
+                </>
+              ) : (
+                <>
+                  <span>View All Categories ({combinedCategoryList.length})</span>
+                  <KeyboardArrowDownIcon sx={{ fontSize: '1.5vw' }} />
+                </>
+              )}
             </button>
           </div>
         )}
@@ -61,19 +80,55 @@ const CategorySection = () => {
     );
   };
 
-  const mobUI = () => {
-    const renderCategoryBlock = (categories: any[], startIndex: number) => (
-      <div className="mb-[4.1vw]">
-        {/* First Row: 2 Items (left is wide) */}
+const mobUI = () => {
+  const INITIAL_DISPLAY_COUNT = 10;
+  const itemsToShow = showAll
+    ? combinedCategoryList
+    : combinedCategoryList.slice(0, INITIAL_DISPLAY_COUNT);
+  const hasMore = combinedCategoryList.length > INITIAL_DISPLAY_COUNT;
+
+  // First 2 larger cards
+  const firstTwo = itemsToShow.slice(0, 2);
+  // Remaining smaller cards
+  const rest = itemsToShow.slice(2);
+
+  return (
+    <div>
+      {/* First row: 2 larger cards */}
+      <div className="grid grid-cols-3 gap-[4.1vw] mb-[4.1vw]">
+        {firstTwo.map((category: any, index: number) => (
+          <Link
+            replace
+            key={category.id}
+            href={generateHref(category)}
+            className={`${index === 0 ? 'col-span-2' : 'col-span-1'} flex flex-col items-center`}
+          >
+            <div className="relative w-full h-[29vw] rounded-[2vw] shadow-sm hover:shadow-md transition-shadow duration-200">
+              <Image
+                src={category.website_image || category.image || catimg}
+                alt={category.name}
+                fill
+                className="object-cover rounded-[2vw]"
+              />
+            </div>
+            <p className="font-[SofiaPro] text-[3.6vw] font-semibold text-center mt-[2vw]">
+              {category.name}
+            </p>
+          </Link>
+        ))}
+      </div>
+
+      {/* All remaining categories — small uniform grid */}
+      {rest.length > 0 && (
         <div className="grid grid-cols-3 gap-[4.1vw]">
-          {categories.slice(startIndex, startIndex + 2).map((category: any, index: number) => (
+          {rest.map((category: any) => (
             <Link
               replace
               key={category.id}
               href={generateHref(category)}
-              className={`${index === 0 ? 'col-span-2' : 'col-span-1'} flex flex-col items-center`}
+              className="flex flex-col items-center"
             >
-              <div className="relative w-full h-[29vw] rounded-[2vw] shadow-sm hover:shadow-md transition-shadow duration-200">
+              <div className="relative w-full h-[30vw] border border-[#E3E3E3] rounded-[2vw] shadow-sm hover:shadow-md transition-shadow duration-200">
                 <Image
                   src={category.website_image || category.image || catimg}
                   alt={category.name}
@@ -87,65 +142,37 @@ const CategorySection = () => {
             </Link>
           ))}
         </div>
+      )}
 
-        {/* Second Row: 3 Regular Items (if available) */}
-        {categories.slice(startIndex + 2, startIndex + 5).length > 0 && (
-          <div className="grid grid-cols-3 mt-[4.1vw] gap-[4.1vw]">
-            {categories.slice(startIndex + 2, startIndex + 5).map((category: any) => (
-              <Link
-                replace
-                key={category.id}
-                href={generateHref(category)}
-                className="flex flex-col items-center"
-              >
-                <div className="relative w-full h-[30vw] border border-[#E3E3E3] rounded-[2vw] shadow-sm hover:shadow-md transition-shadow duration-200">
-                  <Image
-                    src={category.website_image || category.image || catimg}
-                    alt={category.name}
-                    fill
-                    className="object-cover rounded-[2vw]"
-                  />
-                </div>
-                <p className="font-[SofiaPro] text-[3.6vw] font-semibold text-center mt-[2vw]">
-                  {category.name}
-                </p>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-    );
+      {/* Show More/Less Button */}
+      {hasMore && (
+        <div className="flex justify-center mt-[4vw]">
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="flex items-center gap-[2vw] px-[6vw] py-[3vw] text-[4vw] font-[SofiaPro] font-semibold"
+          >
+            {showAll ? (
+              <>
+                <span>Show Less</span>
+                <KeyboardArrowUpIcon sx={{ fontSize: '5vw' }} />
+              </>
+            ) : (
+              <>
+                <span>View All ({combinedCategoryList.length})</span>
+                <KeyboardArrowDownIcon sx={{ fontSize: '5vw' }} />
+              </>
+            )}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
 
-    const itemsToShow = showAll ? mainCategoryList : mainCategoryList.slice(0, 10);
-    const hasMore = mainCategoryList.length > 10;
-
-    // Render blocks of 5 categories each
-    const blocks = [];
-    for (let i = 0; i < itemsToShow.length; i += 5) {
-      blocks.push(renderCategoryBlock(itemsToShow, i));
-    }
-
-    return (
-      <div>
-        {blocks}
-        {/* Show More/Less Button for Mobile */}
-        {hasMore && (
-          <div className="flex justify-center mt-[4vw]">
-            <button
-              onClick={() => setShowAll(!showAll)}
-              className="px-[6vw] py-[3vw] border-2 border-gray-300 rounded-[2vw] text-[4vw] font-[SofiaPro] font-semibold hover:border-gray-500 transition-colors duration-200"
-            >
-              {showAll ? 'Show Less' : `View All (${mainCategoryList.length})`}
-            </button>
-          </div>
-        )}
-      </div>
-    );
-  };
 
   return (
     <>
-      {mainCategoryList.length > 0 && (
+      {combinedCategoryList.length > 0 && (
         <div className="px-[7vw]">
           <p className="font-[SofiaPro] text-start font-bold text-[2.08vw] mob:text-[5.1vw] pb-[2.1vw]">
             Shop by category
