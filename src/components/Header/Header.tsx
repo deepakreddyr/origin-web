@@ -122,16 +122,19 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
   };
 
   const debouncedSearch = (query: string) => {
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current);
-    }
+  if (debounceTimeoutRef.current) {
+    clearTimeout(debounceTimeoutRef.current);
+  }
 
-    debounceTimeoutRef.current = setTimeout(() => {
-      if (query.trim().length >= 2) {
-        router.push(`/search?q=${encodeURIComponent(query)}`, undefined, { shallow: true });
-      }
-    }, 500);
-  };
+  debounceTimeoutRef.current = setTimeout(() => {
+    if (query.trim().length >= 2) {
+      router.push(`/search?q=${encodeURIComponent(query)}`, undefined, { shallow: true });
+    } else if (query.trim().length < 2) {
+      // Clear the URL query parameter when search text is less than 2 characters
+      router.push('/search', undefined, { shallow: true });
+    }
+  }, 500);
+};
 
   const handleSearchClick = () => {
     setIsSearchActive(true);
@@ -143,16 +146,14 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
   };
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchQuery(value);
-    
-    if (search) {
-      setCurrentSearchQuery(value);
-      if (value.trim().length >= 2) {
-        debouncedSearch(value);
-      }
-    }
-  };
+  const value = e.target.value;
+  setSearchQuery(value);
+  
+  if (search) {
+    setCurrentSearchQuery(value);
+    debouncedSearch(value);
+  }
+};
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();

@@ -488,18 +488,25 @@ const SearchResults = (props: HomeProps) => {
 
 
   // Debounced search function
-  const debouncedSearch = (query: string) => {
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current);
-    }
+  // Debounced search function
+const debouncedSearch = (query: string) => {
+  if (debounceTimeoutRef.current) {
+    clearTimeout(debounceTimeoutRef.current);
+  }
 
-    debounceTimeoutRef.current = setTimeout(() => {
-      if (query.trim().length >= 2) {
-        handleNewSearch(query);
-        router.push(`/search?q=${encodeURIComponent(query)}`, undefined, { shallow: true });
-      }
-    }, 500);
-  };
+  debounceTimeoutRef.current = setTimeout(() => {
+    if (query.trim().length >= 2) {
+      handleNewSearch(query);
+      router.push(`/search?q=${encodeURIComponent(query)}`, undefined, { shallow: true });
+    } else if (query.trim().length < 2) {
+      // Clear the URL query parameter when search text is less than 2 characters
+      router.push('/search', undefined, { shallow: true });
+      setProducts([]);
+      setNoResults(false);
+      setTotalCount(0);
+    }
+  }, 500);
+};
 
   // Initial search when component mounts or query changes
   useEffect(() => {
