@@ -24,7 +24,7 @@ const BillDetailsWrapper = (props: any) => {
   const calculateDeliveryFee = () => {
     // If distance_delivery_fees is not present, use default delivery_charge
     if (!billDetails.distance_delivery_fees || !Array.isArray(billDetails.distance_delivery_fees)) {
-      return billDetails.delivery_charge;
+      return billDetails.delivery_charge || 0;
     }
 
     const cartValue = cart.totalPrice;
@@ -41,7 +41,36 @@ const BillDetailsWrapper = (props: any) => {
       return parseFloat(matchingTier.value);
     }
 
-    return billDetails.delivery_charge;
+    return billDetails.delivery_charge || 0;
+  };
+
+  // Function to get the free delivery threshold
+  const getFreeDeliveryThreshold = () => {
+    if (!billDetails.distance_delivery_fees || !Array.isArray(billDetails.distance_delivery_fees)) {
+      return null;
+    }
+
+    // Find the tier where delivery is free (value is 0)
+    const freeTier = billDetails.distance_delivery_fees.find((tier: any) => {
+      return parseFloat(tier.value) === 0;
+    });
+
+    if (freeTier) {
+      return parseFloat(freeTier.from_amount);
+    }
+
+    // If no free tier exists, find the highest to_amount + 1 (next threshold for potential free delivery)
+    const sortedTiers = [...billDetails.distance_delivery_fees].sort((a, b) => 
+      parseFloat(b.to_amount) - parseFloat(a.to_amount)
+    );
+    
+    if (sortedTiers.length > 0) {
+      const highestTier = sortedTiers[0];
+      // Return the next tier threshold (to_amount + 0.01 rounded up)
+      return Math.ceil(parseFloat(highestTier.to_amount)) + 1;
+    }
+
+    return null;
   };
 
   useEffect(() => {
@@ -82,7 +111,7 @@ const BillDetailsWrapper = (props: any) => {
   const handleTooltipToggle = () => {
     if (isMobile) {
       setTooltipOpen((prev) => !prev);
-      setTimeout(() => setTooltipOpen(false), 2000);
+      setTimeout(() => setTooltipOpen(false), 3000);
     }
   };
 
@@ -96,6 +125,10 @@ const BillDetailsWrapper = (props: any) => {
 
   // Get the current delivery fee to display
   const currentDeliveryFee = calculateDeliveryFee();
+  const freeDeliveryThreshold = getFreeDeliveryThreshold();
+
+  // Check if info icon should be shown - only when there's a delivery fee
+  const shouldShowInfo = currentDeliveryFee > 0 && freeDeliveryThreshold;
 
   return (
     <div className="bg-[#F2EEE44D] flex flex-col border border-[#F2EEE4] p-[1.1vw] mob:p-[4.1vw] mob:rounded-[4.1vw] rounded-[1.1vw]">
@@ -130,7 +163,7 @@ const BillDetailsWrapper = (props: any) => {
             <div className="flex items-center text-secondary justify-between">
               <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">Coupon used</p>
               <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
-                ₹{Math.round(cart.discountAmount)}
+                - ₹{Math.round(cart.discountAmount)}
               </p>
             </div>
           </li>
@@ -139,14 +172,75 @@ const BillDetailsWrapper = (props: any) => {
         {localStorage.getItem("user_token") && (
           <li>
             <div className="flex items-center text-secondary justify-between">
-              <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">Delivery fee</p>
+              <div className="flex items-center gap-[0.3vw] mob:gap-[1vw]">
+                <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">Delivery fee</p>
+                {shouldShowInfo && (
+                  <Tooltip
+                    title={
+                      <div className="p-[0.5vw] mob:p-[2vw]">
+                        <p className="font-[SofiaPro] font-semibold text-[0.9vw] mob:text-[3.5vw] mb-[0.3vw] mob:mb-[1vw]">
+                          Details
+                        </p>
+                        <p className="font-[SofiaPro] font-bold text-[0.85vw] mob:text-[3.2vw] mb-[0.2vw] mob:mb-[0.8vw]">
+                          You're outside our free delivery zone.
+                        </p>
+                        <p className="font-[SofiaPro] text-[0.8vw] mob:text-[3vw] opacity-80">
+                          Order for ₹{freeDeliveryThreshold} or more for free delivery.
+                        </p>
+                      </div>
+                    }
+                    open={tooltipOpen}
+                    onClose={handleTooltipClose}
+                    onOpen={handleTooltipOpen}
+                    arrow
+                    placement="top"
+                    componentsProps={{
+                      tooltip: {
+                        sx: {
+                          bgcolor: '#231F20',
+                          color: 'white',
+                          fontSize: isMobile ? '3vw' : '0.8vw',
+                          borderRadius: isMobile ? '2vw' : '0.5vw',
+                          padding: isMobile ? '2vw' : '0.8vw',
+                          maxWidth: isMobile ? '70vw' : '18vw',
+                          '& .MuiTooltip-arrow': {
+                            color: '#231F20',
+                          },
+                        },
+                      },
+                    }}
+                  >
+                    <IconButton
+                      size="small"
+                      onClick={handleTooltipToggle}
+                      sx={{
+                        padding: isMobile ? '1vw' : '0.2vw',
+                        '&:hover': {
+                          backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                        },
+                      }}
+                    >
+                      <InfoOutlinedIcon
+                        sx={{
+                          fontSize: isMobile ? '4vw' : '1.1vw',
+                          color: '#231F20CC',
+                        }}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                )}
+              </div>
               <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
-                {billDetails.free_delivery_charge && (
-                  <span className="text-black-op-60 font-regular line-through">
+                {billDetails.free_delivery_charge && currentDeliveryFee > 0 && (
+                  <span className="text-black-op-60 font-regular line-through mr-[0.3vw]">
                     ₹{billDetails.free_delivery_charge}
                   </span>
-                )}{' '}
-                {currentDeliveryFee === 0 ? 'FREE' : `₹${currentDeliveryFee}`}
+                )}
+                {currentDeliveryFee === 0 ? (
+                  <span className="text-secondary">FREE</span>
+                ) : (
+                  `₹${currentDeliveryFee}`
+                )}
               </p>
             </div>
           </li>
