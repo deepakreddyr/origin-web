@@ -86,7 +86,7 @@ const PaymentFailure = (props: any) => {
     return (
       <>
         <div onClick={() => setActiveScreenIndex(2)} className="absolute top-[1.4vw] right-[1.4vw]">
-          <button className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-danger font-semibold ">CANCEL</button>
+          <button className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-danger font-semibold ">CANCEL ORDER</button>
         </div>
         <div className="w-[10vw] mob:w-[30vw]">
           <Lottie animationData={failureAnimation} />

@@ -17,6 +17,7 @@ import RetryOrPayonlineWrapper from './RetryOrPayonlineWrapper';
 const OrderDetailsWrapper = () => {
   const getDataFromApi = useGetDataFromApi();
   const orderAndRefundDetails = useSelector((state: any) => state.orderAndRefundDetails);
+  // console.log(orderAndRefundDetails,"orderAndRefundDetails");
   const router = useRouter();
   const { isReady, query } = router;
   const dispatch = useDispatch();
@@ -93,9 +94,9 @@ const OrderDetailsWrapper = () => {
           </div>
         </div>
         <div className="w-full flex flex-col mob:hidden gap-[1.67vw]">
-          {/* {(orderAndRefundDetails.orderDetailsData.status !== "Cancelled by user") && 
+          {(orderAndRefundDetails.orderDetailsData.status !== "Cancelled by user") && (orderAndRefundDetails.orderDetailsData.payment_status === "pending") &&
             <RetryOrPayonlineWrapper fetchOrderdetails={fetchOrderdetails} />
-          } */}
+          }
           <ItemsList orderDetailsData={orderAndRefundDetails.orderDetailsData} />
         </div>
       </div>

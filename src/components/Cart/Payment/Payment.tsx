@@ -148,6 +148,7 @@ const Payment = (props: any) => {
       }
       
       const successHandler = (data: any) => {
+        // console.log(data,"data");
         let orderResponse = {
           order_id: orderAndRefundDetails.orderDetailsData.order_id,
           sub_total: data.data.amount_due / 100
@@ -202,6 +203,8 @@ const Payment = (props: any) => {
       let paymentFlow = localStorage.getItem('FLOW_TYPE');
 
       if (paymentFlow === 'retry_payment') {
+        // console.log("entered this part");
+        // console.log(orderType,"orderType");
         handleRetyPaymentFromOrderDetails(orderType)
           .then(resolve)
           .catch(reject)

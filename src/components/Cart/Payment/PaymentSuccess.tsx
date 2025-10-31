@@ -39,17 +39,15 @@ const PaymentSuccess = (props: any) => {
           Order placed successfully !
         </p>
 
-        {/* <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] text-[#231F2099] font-regular pt-[.97vw] mob:pt-[3.6vw] ">
+        <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] text-[#231F2099] font-regular pt-[.97vw] mob:pt-[3.6vw] ">
           Paid
           <span className="font-semibold text-[.97vw] mob:text-[3.6vw]">
-            {' '}
-            ₹{total_to_pay}{' '}
           </span>using{' '}
           <span className="font-semibold text-[.97vw] mob:text-[3.6vw]">{paymentModalDetails.paymentType}</span>
         </p>
         <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] mob:pt-[4.1vw] pt-[1.1vw] text-[#231F2099]">
           directing you to order Details in {timer}s.
-        </p> */}
+        </p>
       </div>
     </div>
   );
