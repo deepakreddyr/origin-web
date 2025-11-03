@@ -1,77 +1,105 @@
-import { Box, Typography } from '@mui/material';
+'use client';
+
 import Image from 'next/image';
-import type { SingleDeliveryInstruction } from './data/deliveryInstructions';
-import styles from './style.module.css';
-import useDeliveryInstructionActions from '@/components/CartPage/hooks/useDeliveryInstructionActions';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { updateInstructions } from '@/store/slice/placeOrderDetails';
+import { useState, useEffect } from 'react';
+
+const givetosecurity = '/assets/svg/give-to-security.svg';
+const NoCalling = '/assets/svg/avoid-calling.svg';
+const LeaveAtdoor = '/assets/svg/leave-at-door.svg';
+
+const deliveryInstructions = [
+  {
+    slug: 'Give_to_Security',
+    name: 'Give to Security',
+    image: givetosecurity,
+  },
+  {
+    slug: 'Leave_at_door',
+    name: 'Leave at door',
+    image: LeaveAtdoor,
+  },
+  {
+    slug: 'Avoid_Calling',
+    name: 'Avoid Calling',
+    image: NoCalling,
+  },
+];
 
 const DeliveryInstruction = () => {
-  const deliveryInstruction = useDeliveryInstructionActions();
   const dispatch = useDispatch();
-  const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
-  const renderDeliveryInstruction = (item: SingleDeliveryInstruction) => {
-    const cssRules = {
-      containerClassName: `${
-        item.isActivated ? styles['delivery-instruction-list-active-item'] : ''
-      } ${styles['delivery-instruction-list-item']}
-      `
-    };
+  const [selectedInstructions, setSelectedInstructions] = useState<string[]>([]);
 
-    const handleInstructions = (slug: any, name: any) => {
-      deliveryInstruction.onChange(slug)();
-      dispatch(updateInstructions(name));
-    };
+  // Update Redux whenever selections change
+  useEffect(() => {
+    const instructionsString = selectedInstructions
+      .map((slug, index) => {
+        const instruction = deliveryInstructions.find(inst => inst.slug === slug);
+        if (!instruction) return '';
+        
+        if (index === selectedInstructions.length - 1 && selectedInstructions.length > 1) {
+          return `and ${instruction.name}`;
+        } else if (index === selectedInstructions.length - 1) {
+          return instruction.name;
+        } else if (index === selectedInstructions.length - 2) {
+          return `${instruction.name} `;
+        } else {
+          return `${instruction.name}, `;
+        }
+      })
+      .join('');
+    
+    dispatch(updateInstructions(instructionsString));
+  }, [selectedInstructions, dispatch]);
 
-    return (
-      <Box
-        component="li"
-        className={cssRules.containerClassName}
-        onClick={() => handleInstructions(item.slug, item.name)}
-      >
-        <Box component="figure">
-          <Image className={styles.img} src={item.image} alt="leave-at-gate" />
-        </Box>
-        <Typography
-          component="span"
-          sx={{
-            fontSize: 10,
-            fontWeight: 500,
-            color: '#025235',
-            display: 'block'
-          }}
-        >
-          {item.name}
-        </Typography>
-      </Box>
-    );
+  const handleInstructions = (slug: string) => {
+    setSelectedInstructions(prev => {
+      if (prev.includes(slug)) {
+        // Remove if already selected
+        return prev.filter(s => s !== slug);
+      } else {
+        // Add if not selected
+        return [...prev, slug];
+      }
+    });
   };
 
-  const renderInstruction = () => {
-    return (
-      <Box component="ul" className={`delivery-instruction-list ${styles['delivery-instruction-list']}`}>
-        {deliveryInstruction.data.map(renderDeliveryInstruction)}
-      </Box>
-    );
-  };
   return (
-    <Box
-      className="delivery-instruction"
-      sx={{
-        backgroundColor: 'rgba(242, 238, 228, 0.3)',
-        display: 'flex',
-        flexDirection: 'column',
-        border: '1px solid #F2EEE4',
-        padding: '1rem',
-        // margin: ' 0.8rem 0.3rem 0.3rem 0.3rem',
-        borderRadius: '16px'
-      }}
-    >
-      <p className="font-slab font-semibold text-[1.1vw] mob:text-[4.1vw] text-[#231F20CC]">
+    <div className="bg-[#FFFCDE] border border-black mob:rounded-[2vw] rounded-[0.5vw] p-4 flex flex-col gap-3">
+      <h1 className="font-slab font-semibold text-[1.1vw] text-black mb-2 mob:text-[4.1vw]">
         Delivery Instructions
-      </p>
-      {renderInstruction()}
-    </Box>
+      </h1>
+
+      <div className="grid grid-cols-3 gap-[0.8rem]">
+        {deliveryInstructions.map((item) => {
+          const isActive = selectedInstructions.includes(item.slug);
+
+          return (
+            <div
+              key={item.slug}
+              onClick={() => handleInstructions(item.slug)}
+              className={`relative cursor-pointer flex flex-col mob:rounded-[2vw] items-center justify-center rounded-[0.5vw] border-[1px] transition-all duration-200 ${
+                isActive
+                  ? 'border-[#F9CE24]'
+                  : 'border-[#E5E1D8]'
+              } p-3 w-full text-center hover:border-[#F9CE24] hover:bg-[#FFF9E5]`}
+            >
+              <Image
+                src={item.image}
+                alt={item.name}
+                width={35}
+                height={35}
+                className="mb-1"
+              />
+              <span className="text-[0.5rem] font-[SofiaPro] font-semibold text-[#1E1E1E] leading-tight">
+                {item.name}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 };
 

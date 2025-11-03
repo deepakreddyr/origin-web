@@ -1,8 +1,7 @@
 enum TypeOfDeliveryInstruction {
+  GIVE_TO_SECURITY = "Give to Security",
   LEAVE_AT_DOOR = "Leave at door",
-  GIVE_TO_SECURITY = "Give to security",
-  AVOID_CALLING = "Avoid calling",
-  DO_NOT_RING_BILL = "Don't ring bell",
+  AVOID_CALLING = "Avoid Calling",
 }
 
 export default TypeOfDeliveryInstruction;

@@ -21,9 +21,9 @@ const Coupon = (props: any) => {
     >
       <div className="flex items-center justify-between mob:p-[3vw] p-[.78vw]">
         <div>
-          <p className="font-slab font-semibold text-[1.1vw] mob:text-[4.1vw] ">{couponDetailsFromList.code}</p>
+          <p className="font-[SofiaPro] font-semibold text-[1.1vw] mob:text-[4.1vw] ">{couponDetailsFromList.code}</p>
           <p
-            className={`font-slab font-medium text-[.83vw] mob:text-[3vw] mob:pt-[1.4vw] pt-[.4vw] ${!isMinvalueConditionValid ? 'text-error' : 'text-black'}  `}
+            className={`font-[SofiaPro] font-medium text-[.83vw] mob:text-[3vw] mob:pt-[1.4vw] pt-[.4vw] ${!isMinvalueConditionValid ? 'text-error' : 'text-black'}  `}
           >
             {isCouponValid && isMinvalueConditionValid && isCouponValid
               ? couponDetailsFromList.description
@@ -46,7 +46,7 @@ const Coupon = (props: any) => {
         <div className="absolute bg-white h-[1.5vw] w-[1.5vw] mob:w-[5vw] mob:h-[5vw] rounded-full mob:top-[-2.2vw] top-[-.75vw] left-[-1vw] border-r-[2px] border-[#231F201A]"></div>
         <div className="absolute bg-white h-[1.5vw] w-[1.5vw] mob:w-[5vw] mob:h-[5vw] rounded-full top-[-.75vw] mob:top-[-2.2vw] right-[-1vw] border-l-[2px] border-[#231F201A]"></div>
         <div className="border-t border-dashed border-black-op-30 p-[1.1vw] mob:p-[4.1vw] ">
-          <p className="font-slab text-[.83vw] mob:text-[3vw] font-semibold  text-black-op-60 ">
+          <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] font-semibold  text-black-op-60 ">
             {couponDetailsFromList.offer}
           </p>
         </div>

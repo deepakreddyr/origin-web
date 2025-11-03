@@ -1,20 +1,11 @@
 import { GetServerSideProps } from 'next';
 import Layout from '@/components/Layout';
-import ProductsFilterSlider from '@/components/Shop/ProductsFilterSlider';
-import FiltersHeaderSection from '@/components/Shop/FiltersHeaderSection';
-import { Categories, FooterDataType, MainMenuType, Products } from '@/utilities/types';
-import { Box, Typography } from '@mui/material';
+import { FooterDataType, MainMenuType } from '@/utilities/types';
 import CategorySection from '@/components/ShopV2/CategorySection';
-import PopularProduce from '@/components/ShopV2/PopularProduce';
-import BestSellers from '@/components/ShopV2/BestSellers';
-import { header, request } from '@/utilities/request';
-import { axiosFetch } from '@/utilities/hooks/useAxiosFetch';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { protectedUrl, unprotectedUrl } from '@/url';
-import { useAtom } from 'jotai';
-import { addressAtom } from '@/features/Address/context/atoms';
 import { getAddressAndStoreId } from '@/utilities/utils';
 import CategoryAndSubCategory from '@/components/ShopV2/CategoryAndSubCategory/CategoryAndSubCategory';
 import { useDispatch, useSelector } from 'react-redux';
@@ -27,11 +18,7 @@ import {
 import CardsWrapper from '@/components/ShopV2/shopDetails/CardsWrapper';
 import { setIsProductListLoading, setProductList } from '@/store/slice/productsSlice';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
-import DownloadAppWrapper from '@/components/downloadApp/DownloadAppWrapper';
 import ShopHero from '@/components/ShopV2/ShopHero';
-import FeatureStrip from '@/components/ShopV2/FeatureStrip';
-import FeaturedProduct from '@/components/ShopV2/FeaturedProduct';
-import WhyOriginAndTestimonial from '@/components/ShopV2/WhyOriginAndTestimonial';
 
 interface HomeProps {
   mainMenuItems: MainMenuType[];
@@ -46,53 +33,8 @@ interface FiltersType {
 }
 
 interface FeaturedItemType {
-  item: {
-    id: number;
-    item_code: string;
-    name: string;
-    image: string;
-    multiple_images: string[];
-    bg_color: string;
-    navigation: {
-      to: string;
-    };
-    is_greyed: boolean;
-    is_available: boolean;
-    is_orderable: boolean;
-    tag_url: string | null;
-    multiple_uoms: Array<{
-      variant_id: number;
-      name: string | null;
-      uom_id: number;
-      unit: string;
-      minimum_quantity: number;
-      maximum_quantity: number;
-      stepper_quantity: number;
-      is_visible: boolean;
-      is_available: boolean;
-      is_default: boolean;
-      price: number;
-      platform_id: number;
-      formatted_price: string;
-      cart_quantity: number;
-      conversion_text: string;
-      is_not_discounted: boolean;
-      ripeness_types: any;
-      cart_ripeness: any;
-      market_price: number;
-    }>;
-  };
-  info: {
-    info: Array<{
-      type: string;
-      title: string;
-      details: Array<{
-        description?: string;
-        title?: string;
-      }>;
-      sub_title?: string;
-    }>;
-  };
+  item: any;
+  info: any;
   upsell_items: any[];
 }
 
@@ -115,55 +57,52 @@ const ShopDetails = (props: HomeProps) => {
   const getDataFromApi = useGetDataFromApi();
   const shopCategories = useSelector((state: any) => state.shopCategories);
   const products = useSelector((state: any) => state.products);
-  // console.log(products, "PRODUCTS")
   
   useEffect(() => {
-  if (isReady) {
-    const token = localStorage.getItem('user_token');
-    const addressFromLs = getAddressAndStoreId();
-    let additionalHeaders = {};
+    if (isReady) {
+      const token = localStorage.getItem('user_token');
+      const addressFromLs = getAddressAndStoreId();
+      let additionalHeaders = {};
 
-    let apiUrl;
+      let apiUrl;
 
-    if (token && addressFromLs) {
-      apiUrl =
-        process.env.NEXT_PUBLIC_BACKEND_API_URL +
-        protectedUrl['getCategories'] +
-        `/${query.cid}` +
-        `/sub-categories/${query.scid}`;
+      if (token && addressFromLs) {
+        apiUrl =
+          process.env.NEXT_PUBLIC_BACKEND_API_URL +
+          protectedUrl['getCategories'] +
+          `/${query.cid}` +
+          `/sub-categories/${query.scid}`;
 
-      if (addressFromLs)
-        additionalHeaders = {
-          'store-id': addressFromLs.store_id
-        };
-    } else {
-      apiUrl =
-        process.env.NEXT_PUBLIC_BACKEND_API_URL +
-        unprotectedUrl['getCategories'] +
-        `/${query.cid}` +
-        `/sub-categories/${query.scid}`;
+        if (addressFromLs)
+          additionalHeaders = {
+            'store-id': addressFromLs.store_id
+          };
+      } else {
+        apiUrl =
+          process.env.NEXT_PUBLIC_BACKEND_API_URL +
+          unprotectedUrl['getCategories'] +
+          `/${query.cid}` +
+          `/sub-categories/${query.scid}`;
+      }
+      const { category, cid, subCategory, scid } = query;
+      setFilters({
+        ...filters,
+        category,
+        cid,
+        scid,
+        subCategory
+      });
+      const successHandler = (data: any) => {
+        dispatch(setProductList(data?.items));
+        dispatch(setIsProductListLoading(false));
+        dispatch(setShopSubCategories(data?.sub_categories));
+        dispatch(setIsShopSubCategoriesFetched(false));
+        setFeaturedItem(data?.featured_item || null);
+      };
+      const failureHandler = (data: any) => {};
+      getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
     }
-    const { category, cid, subCategory, scid } = query;
-    setFilters({
-      ...filters,
-      category,
-      cid,
-      scid,
-      subCategory
-    });
-    const successHandler = (data: any) => {
-      dispatch(setProductList(data?.items));
-      dispatch(setIsProductListLoading(false));
-
-      dispatch(setShopSubCategories(data?.sub_categories));
-      dispatch(setIsShopSubCategoriesFetched(false));
-      setFeaturedItem(data?.featured_item || null);
-    };
-    const failureHandler = (data: any) => {};
-    getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
-  }
-}, [isReady, query]);
-
+  }, [isReady, query]);
 
   useEffect(() => {
     if (!shopCategories.isCategoriesFetched) {
@@ -173,7 +112,6 @@ const ShopDetails = (props: HomeProps) => {
       let additionalHeaders = {};
       if (token && addressFromLs) {
         apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getShopDetails'];
-
         additionalHeaders = {
           'store-id': addressFromLs.store_id
         };
@@ -181,7 +119,6 @@ const ShopDetails = (props: HomeProps) => {
         apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['getShopDetails'];
       }
       const successHandler = (data: any) => {
-        // console.log(data,"data")
         dispatch(setShopCategories(data?.data));
         dispatch(setIsProductListLoading(false));
         dispatch(setIsShopCategoriesFetched(true));
@@ -196,30 +133,28 @@ const ShopDetails = (props: HomeProps) => {
 
   return (
     <Layout mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={true}>
-      <ShopHero />
-      {/* <FeatureStrip /> */}
-      <div className="flex flex-col items-center justify-center mt-[-25vw] mob:pt-[10vw]">
-        <div className="flex flex-col gap-[2.2vw] w-[80.7vw] mob:w-full  mob:px-[4vw] pb-[10vw] relative ">
-          {filters.category ? (
-            <CategoryAndSubCategory filters={filters} setFilters={setFilters} />
-          ) : null}
-          {/* {featuredItem && <FeaturedProduct featuredItem={featuredItem} />} */}
-          <CardsWrapper />
-        </div>
-        <div className='mb-7'>
-          <CategorySection/>
+      {/* Container with overflow-clip instead of overflow-hidden */}
+      <div className="overflow-clip">
+        <ShopHero />
+        <div className="flex flex-col items-center mt-[-25vw] mob:pt-[10vw]">
+          <div className="flex flex-col w-[80.7vw] mob:w-full pb-[10vw] relative">
+            {filters.category ? (
+              <CategoryAndSubCategory filters={filters} setFilters={setFilters} />
+            ) : null}
+            <div className="mob:px-[4vw]">
+              <CardsWrapper />
+            </div>
+          </div>
+          <div className='mb-7'>
+            <CategorySection/>
+          </div>
         </div>
       </div>
-      {/* <div className="flex flex-col gap-[2.2vw] w-[80.7vw] pt-[2.5vw] mob:w-full mob:px-[4vw] pb-[3vw] relative mx-auto">
-        <WhyOriginAndTestimonial category={filters.category} />
-      </div> */}
     </Layout>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-
-  // console.log("hello");
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/originApi`);
     const originApiData = await response.json();

@@ -4,7 +4,6 @@ import Dropdown from './Dropdown';
 import { useRouter } from 'next/router';
 import SubCategoryPills from './SubCategoryPills';
 import DropdownAndPillsSkeleton from '@/components/skeletonLoaders/shop/DropdownAndPillsSkeleton';
-import { Flag } from '@mui/icons-material';
 
 interface Props {
   filters: any;
@@ -20,12 +19,6 @@ const CategoryAndSubCategory = (props: Props) => {
   const { query, isReady } = router;
 
   useEffect(() => {
-    const handleBackNavigation = (url: string) => {
-      if (url !== '/shop') {
-        router.replace('/shop');
-      }
-    };
-
     router.beforePopState(() => {
       router.replace('/shop');
       return false;
@@ -57,23 +50,35 @@ const CategoryAndSubCategory = (props: Props) => {
 
     router.push(url, undefined, { shallow: true, scroll: false });
   };
-
-  const handleSubCategoryChange = (value: any, name: any) => {
-    let url: any;
-    url = `/shop/${filters.category}/${filters.cid}/${value.name}/${value.id}`;
-    router.push(url, undefined, { shallow: true, scroll: false });
-  };
+  
   const toTitleCase = (str: string) => {
-    // console.log(str);
     return str
-      .replace(/-/g, ' ')                   // Replace hyphens with spaces
+      .replace(/-/g, ' ')
       .replace(/\w\S*/g, (txt) =>
         txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
       );
   };
 
   return (
-    <div className="font-[SofiaPro] sticky top-0 pt-4 md:pt-[4vw] pb-3 md:pb-[1.2vw] mb-0 px-4 md:p-[1.1vw] flex flex-col gap-3 md:gap-[1.1vw] z-[1]">
+    <div
+      className="
+        font-[SofiaPro]
+        sticky 
+        z-[5]
+        pt-4 md:pt-[1.5vw]
+        pb-3 md:pb-[1.2vw]
+        px-4 md:px-[1.1vw]
+        flex 
+        flex-col 
+        gap-3 md:gap-[1.1vw]
+        w-full
+      "
+      style={{
+        // Inline styles as fallback
+        position: 'sticky',
+        top: '100px', // Adjust based on your header height
+      }}
+    >
       {products.isProductListLoading ? (
         <DropdownAndPillsSkeleton />
       ) : (

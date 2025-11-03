@@ -1,6 +1,5 @@
 import { Categories, ShopDataType, ShopDetails } from '../../../src//utilities/types';
 import React, { useState } from 'react';
-// import CategoryCard from './CategoryCard'; 
 import { useSelector } from 'react-redux';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import Link from 'next/link';
@@ -36,7 +35,6 @@ const CategorySection = () => {
     </Link>
   );
 
-
   const webUI = () => {
     const itemsToShow = showAll ? mainCategoryList : mainCategoryList.slice(0, 8);
     const hasMore = mainCategoryList.length > 8;
@@ -64,27 +62,30 @@ const CategorySection = () => {
   };
 
   const mobUI = () => {
-    const itemsToShow = showAll ? mainCategoryList : mainCategoryList.slice(0, 10);
-    const hasMore = mainCategoryList.length > 10;
-    
     return (
-      <div>
-        <div className="flex flex-wrap justify-start gap-[2.5vw] mb-[4vw]">
-          {itemsToShow.map((category: any) => (
-            <CategoryPill key={category.id} category={category} />
+      <div style={{ 
+        overflowX: 'scroll',
+        WebkitOverflowScrolling: 'touch',
+        scrollbarWidth: 'none',
+        msOverflowStyle: 'none',
+        marginLeft: '-7vw',
+        marginRight: '-7vw'
+      }}>
+        <div style={{ 
+          display: 'flex',
+          gap: '2.5vw',
+          paddingLeft: '7vw',
+          paddingRight: '7vw',
+          paddingBottom: '2vw',
+          width: 'fit-content',
+          minWidth: '100%'
+        }}>
+          {mainCategoryList.map((category: any) => (
+            <div key={category.id} style={{ flexShrink: 0 }}>
+              <CategoryPill category={category} />
+            </div>
           ))}
         </div>
-        
-        {hasMore && (
-          <div className="flex justify-center mt-[4vw]">
-            <button
-              onClick={() => setShowAll(!showAll)}
-              className="px-[6vw] py-[3vw] border-2 border-gray-300 rounded-[2vw] text-[4vw] font-[SofiaPro] font-semibold hover:border-gray-500 transition-colors duration-200"
-            >
-              {showAll ? 'Show Less' : `View All (${mainCategoryList.length})`}
-            </button>
-          </div>
-        )}
       </div>
     );
   };

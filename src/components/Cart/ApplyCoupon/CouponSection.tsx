@@ -1,5 +1,5 @@
 import React from 'react';
-import percentageIcon from '/public/assets/icons/percentageIcon.png';
+import percentageIcon from '/public/assets/icons/percentageIcon.svg';
 import gotoIcon from '/public/assets/icons/gotoIcon.png';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,23 +33,23 @@ const CouponSection = (props: any) => {
 
   return (
     // <></>
-    <div className=" bg-[#F2EEE44D]  flex flex-col border border-[#F2EEE4] p-[1.1vw] mob:p-[4.1vw] mob:rounded-[4.1vw] rounded-[1.1vw]">
-      <h3 className="font-slab text-[1.1vw] mob:text-[4.1vw] mob:pb-[2vw] pb-[.6vw] font-semibold text-[#231F20CC]">
+    <div className=" bg-[#FFFCDE]  flex flex-col border border-black p-[1.1vw] mob:p-[4.1vw] mob:rounded-[2vw] rounded-[0.5vw]">
+      <h3 className="font-slab text-[1.1vw] mob:text-[4.1vw] mob:pb-[2vw] mb-2 font-semibold text-black">
         Save with coupons
       </h3>
 
       {couponDetails.name === '' ? (
         <button
           onClick={() => handleAddCoupon()}
-          className="flex text-start items-center border border-[#F2EEE4] bg-[#F2EEE4] justify-between p-[.83vw] rounded-[.83vw] mob:p-[3vw] mob:rounded-[3vw]  "
+          className="flex text-start items-center  bg-[#FFF6B2] justify-between p-[.83vw] rounded-[.5vw] mob:p-[3vw] mob:rounded-[3vw]  "
         >
           <div className="flex gap-[.798vw] mob:gap-[3vw] items-center">
             <div className="relative w-[2.5vw] h-[2.5vw] mob:w-[10vw] mob:h-[10vw]  ">
               <Image src={percentageIcon} alt="percentage icon" fill />{' '}
             </div>
             <div className="">
-              <p className="font-slab text-[.97vw] mob:text-[3.6vw] font-semibold  ">View coupons & Offers</p>
-              <p className="font-slab text-[.78vw] mob:text-[3vw] font-regular pt-[.3vw] mob:pt-[1.5vw] ">
+              <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  ">View coupons & Offers</p>
+              <p className="font-[SofiaPro] text-[.78vw] mob:text-[3vw] font-regular pt-[.3vw] mob:pt-[1.5vw] ">
                 Find and apply to save on this order
               </p>
             </div>
@@ -65,15 +65,15 @@ const CouponSection = (props: any) => {
               <Image src={percentageIcon} alt="percentage icon" fill />{' '}
             </div>
             <div className="">
-              <p className="font-slab text-[.97vw] mob:text-[3.6vw] font-semibold  ">View coupons & Offers</p>
-              <p className="font-slab text-[.78vw] mob:text-[3vw] font-regular pt-[.3vw] mob:pt-[2vw] ">
+              <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  ">View coupons & Offers</p>
+              <p className="font-[SofiaPro] text-[.78vw] mob:text-[3vw] font-regular pt-[.3vw] mob:pt-[2vw] ">
                 You Saved {couponDetails.offer} on this order
               </p>
             </div>
           </div>
           <button
             onClick={resetCouponHandler}
-            className="font-slab font-bold text-[.83vw] mob:text-[3vw] text-white bg-[#D0583F] rounded-full px-[.83vw] py-[.6vw] mob:px-[3vw] mob:py-[2vw]"
+            className="font-[SofiaPro] font-bold text-[.83vw] mob:text-[3vw] text-white bg-[#D0583F] rounded-full px-[.83vw] py-[.6vw] mob:px-[3vw] mob:py-[2vw]"
           >
             REMOVE
           </button>

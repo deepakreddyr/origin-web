@@ -9,29 +9,30 @@ const CardsWrapper = () => {
 
   return (
     <div
-      className="
-        grid 
-        grid-cols-2
-        md:grid-cols-3
-        lg:grid-cols-3
-        gap-[3vw]
-        md:gap-[2vw]
-        lg:gap-[3vw]
-        w-full
-        px-[3vw]
-        md:px-[2vw]
-        lg:px-[1vw]
-      "
+  className="
+    grid
+    grid-cols-2
+    md:grid-cols-3
+    lg:grid-cols-3
+    gap-[3vw]
+    md:gap-[2vw]
+    lg:gap-[3vw]
+    w-full
+    px-[3vw]
+    md:px-[2vw]
+    lg:px-[1vw]
+  "
+>
+  {products.productsList?.map((item: any) => (
+    <div
+      key={item.id}
+      className="aspect-[0.85] md:aspect-[0.8] w-full lg:h-[23vw] lg:px-7"
     >
-      {products.productsList?.map((item: any) => (
-        <div
-          key={item.id}
-          className="w-full aspect-[0.85] md:aspect-[0.8] lg:w-[22vw] lg:h-[23vw]"
-        >
-          <ItemCard itemDetails={item} />
-        </div>
-      ))}
+      <ItemCard itemDetails={item} />
     </div>
+  ))}
+</div>
+
   );
 };
 

@@ -59,18 +59,18 @@ const ReviewItem = (props: any) => {
     >
       <div className="flex items-center gap-[.78vw] grow mob:gap-[3vw] justify-between">
         <div className="review-cart-info flex gap-3 items-center mob:w-[60vw] grow">
-          <figure className="w-[4vw] h-[4vw] mob:w-[15vw] mob:h-[15vw] rounded-lg bg-[#F2EEE4] flex-shrink-0 m-0 p-1 overflow-hidden">
+          {/* <figure className="w-[4vw] h-[4vw] mob:w-[15vw] mob:h-[15vw] rounded-lg bg-[#F2EEE4] flex-shrink-0 m-0 p-1 overflow-hidden">
             <img
               src={item.image || '/public/assets/images/shop/sampleimg2.png'}
               alt="product image"
               style={{ width: '100%', height: '100%', objectFit: 'contain' }}
             />
-          </figure>
-          <div className="review-cart-information flex flex-col">
-            <h4 className="font-slab text-[.97vw] mob:text-[3.6vw] font-semibold">
+          </figure> */}
+          <div className="review-cart-information flex flex-col font-[SofiaPro] ">
+            <h4 className="text-[1.1vw] mob:text-[3.6vw] font-semibold">
               {item?.name}
             </h4>
-            <span className="text-black/60 text-[.83vw] mob:text-[3vw] font-slab">
+            <span className="text-black/60 text-[.83vw] mob:text-[3vw] font-semibold">
               {`${uom.unit} `}
             </span>
           </div>
@@ -87,14 +87,14 @@ const ReviewItem = (props: any) => {
                 buttonType="black"
               />
             </div>
-            <div className="review-cart-counter flex flex-col items-center w-[2vw] mob:w-[12vw]">
+            <div className="review-cart-counter flex flex-col items-center w-[2vw] mob:w-[12vw] font-medium">
               {/* {console.log('Debug - market_price:', uom.market_price, 'price:', uom.price, 'condition result:', (uom.market_price !== null && uom.market_price !== undefined && uom.market_price !== 0 && uom.market_price > uom.price))} */}
               {uom.market_price !== null && uom.market_price !== undefined && uom.market_price !== 0 && uom.market_price > uom.price && (
-                <span className="font-slab text-[.78vw] mob:text-[2.8vw] line-through text-[#231F2099]">
+                <span className="font-slab text-[.8vw] mob:text-[2.8vw] line-through text-[#231F2099]">
                   ₹{calculateItemTotalPrice(uom.market_price, uom.cart_quantity)}
                 </span>
               )}
-              <span className="font-slab text-[.83vw] mob:text-[3.3vw]">
+              <span className="font-slab text-[1vw] mob:text-[3.3vw]">
                 ₹{calculateItemTotalPrice(uom.price, uom.cart_quantity)}
               </span>
             </div>

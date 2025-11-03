@@ -3,7 +3,7 @@ import NoCalling from "../../../assets/avoid-calling.svg";
 import LeaveAtGate from "../../../assets/leave-at-gate.svg";
 import TypeOfDeliveryInstruction from "./typeOfDeliveryInstruction";
 
-const { AVOID_CALLING, DO_NOT_RING_BILL, GIVE_TO_SECURITY, LEAVE_AT_DOOR } =
+const { AVOID_CALLING, GIVE_TO_SECURITY, LEAVE_AT_DOOR } =
   TypeOfDeliveryInstruction;
 
 export const slugGenerator = (name: string) => name.split(" ").join("_");
@@ -40,13 +40,13 @@ const deliveryInstructionDefault: DeliveryInstructionType = [
     isDisabled: false,
     image: NoCalling,
   },
-  {
-    slug: slugGenerator(DO_NOT_RING_BILL),
-    name: DO_NOT_RING_BILL,
-    isActivated: false,
-    isDisabled: false,
-    image: NotRingBell,
-  },
+  // {
+  //   slug: slugGenerator(DO_NOT_RING_BILL),
+  //   name: DO_NOT_RING_BILL,
+  //   isActivated: false,
+  //   isDisabled: false,
+  //   image: NotRingBell,
+  // },
 ];
 
 export default deliveryInstructionDefault;

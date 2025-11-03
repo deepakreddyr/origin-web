@@ -9,8 +9,8 @@ const ReviewList = (props: any) => {
   // With the flat structure, each cart item is already a single UOM variant
   // So we can directly map over cart.items
   return (
-    <div className="bg-[#F2EEE44D] flex flex-col border border-[#F2EEE4] p-[1.1vw] mob:py-[4.1vw] px-0 mob:rounded-[4.1vw] rounded-[1.1vw]">
-      <h3 className="font-slab text-[1.1vw] mob:text-[4.1vw] font-semibold text-[#231F20CC] px-[1.1vw] mob:px-[4.1vw] pb-[.97vw]">
+    <div className="flex flex-col border border-black p-[1.1vw] mob:py-[4.1vw] px-0 mob:rounded-[2vw] rounded-[0.5vw]">
+      <h3 className="font-slab text-[1.1vw] mob:text-[4.1vw] font-semibold text-black px-[1.1vw] mob:px-[4.1vw]">
         Review cart
       </h3>
       

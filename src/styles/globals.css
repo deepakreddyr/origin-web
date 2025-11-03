@@ -9,24 +9,22 @@
 @layer utilities {
   @import url('./typography.css');
 }
+
 #nprogress .spinner {
   display: none !important;
 }
 
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
-}
+/* ============================================
+   SCROLLBAR HIDING - UPDATED
+   ============================================ */
 
+/* Default: hide scrollbars on body and html only */
 @layer base {
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: #146321 #fff;
-    list-style: none;
-  }
   body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  
   @media screen and (max-width: 768px) {
     body::-webkit-scrollbar {
       display: none;
@@ -34,6 +32,10 @@
 
     html {
       scrollbar-width: none;
+    }
+    
+    html::-webkit-scrollbar {
+      display: none;
     }
   }
 
@@ -50,6 +52,7 @@
 }
 
 @import url('./sliders.css');
+
 .b1 {
   border: 1px solid red;
 }
@@ -60,21 +63,45 @@
   align-items: center;
 }
 
-@layer base {
-  body {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-}
-@import url('./sliders.css');
+/* ============================================
+   UTILITY CLASSES FOR HIDING SCROLLBARS
+   ============================================ */
 
-/* hide scroll bar */
+/* Use these classes when you want to hide scrollbar but keep scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+  width: 0;
+  height: 0;
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
 .noscrollbar {
   scrollbar-width: none;
 }
+
 .noscrollbar::-webkit-scrollbar {
   display: none;
+  width: 0;
+  height: 0;
 }
+
+/* ============================================
+   INPUT STYLES
+   ============================================ */
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -86,11 +113,9 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
-/* swiper custom */
-.swiper-button,
-.swiper-button-disabled {
-  @apply opacity-40 transition-opacity duration-200 ease-in-out pointer-events-none;
-}
+/* ============================================
+   BACKGROUNDS
+   ============================================ */
 
 .howItWorksBg {
   background-image: url('/assets/images/howitworks.svg');
@@ -109,15 +134,19 @@ input[type='number'] {
   }
 }
 
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
 @keyframes marquee-left {
   from {
     transform: translateX(0);
   }
-
   to {
     transform: translateX(calc(-100% - var(--gap)));
   }
 }
+
 .animate-marquee-left {
   animation: marquee-left var(--duration, 40s) linear infinite;
 }
@@ -132,14 +161,17 @@ input[type='number'] {
 }
 
 div[style*='animation: scroll'] {
-  width: max-content; /* Ensure the container stretches to fit content */
+  width: max-content;
 }
 
+/* ============================================
+   HERO SECTION
+   ============================================ */
+
 .hero-section {
-  background:  url('../assets/svg/hero/illustration.svg'), url('../assets/svg/hero/bg-color.jpg');
-  /* background: url(),url('../assets/svg/hero/newHeroBanner.png'); */
+  background: url('../assets/svg/hero/illustration.svg'), url('../assets/svg/hero/bg-color.jpg');
   background-size: 45%, cover;
-  background-position: bottom right,  center center;
+  background-position: bottom right, center center;
   background-repeat: no-repeat;
   position: relative;
   overflow: hidden;
@@ -152,6 +184,10 @@ div[style*='animation: scroll'] {
   top: 0;
   bottom: 0;
 }
+
+/* ============================================
+   CAROUSEL
+   ============================================ */
 
 .carousel .control-dots {
   position: absolute;
@@ -169,24 +205,25 @@ div[style*='animation: scroll'] {
 .carousel .control-dots .dot {
   box-shadow: none;
 }
-html, body {
-  overflow-x: hidden;
+
+/* ============================================
+   HTML & BODY
+   ============================================ */
+
+html {
   touch-action: manipulation;
 }
 
-/* Add to your global CSS or Tailwind config */
-
-/* Hide scrollbar for webkit browsers */
-.scrollbar-hide {
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  scrollbar-width: none; /* Firefox */
+body {
+  touch-action: manipulation;
+  max-width: 100vw;
+  position: relative;
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
-}
+/* ============================================
+   CUSTOM SCROLLBAR (when you want visible scrollbar)
+   ============================================ */
 
-/* Alternative: Custom styled scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   height: 4px;
 }

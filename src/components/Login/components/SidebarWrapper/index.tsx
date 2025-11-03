@@ -41,13 +41,13 @@ const SidebarWrapper = (props: Props) => {
       <div
         className={`fixed top-0 ${
           loginDetails.isSidebarOpen ? 'right-0' : '-right-full'
-        } w-[30vw] mob:w-screen h-screen bg-white shadow-md flex flex-col 
+        } w-[30vw] mob:w-screen h-screen bg-[#FFFCDE] shadow-md flex flex-col 
     transition-all duration-300 ease-in-out z-[20]`}
       >
         {loginDetails.isHeaderVisible && (
           <div
             className="h-[5.0vw] mob:h-[15vw] flex items-center justify-between w-full gap-[.6vw] mob:gap-[2vw] px-4 sticky top-0 z-[1] 
-                border-b border-[#F2EEE4] bg-white shadow-md"
+                border-b border-[#F2EEE4] bg-[#FFFCDE] shadow-md"
           >
             {isBackButtonEnable && (
               <div className="flex items-center justify-end ">

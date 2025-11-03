@@ -10,7 +10,7 @@ const SubCategoryPills = (props: any) => {
   return (
     <div className="w-full mt-2 md:mt-[1vw]">
       {/* Scrollable wrapper only on mobile */}
-      <div className="overflow-x-auto md:overflow-visible">
+      <div className="overflow-x-auto md:overflow-visible scrollbar-hide">
         <div className="flex md:flex-wrap gap-2 md:gap-[0.8vw] whitespace-nowrap">
           {shopCategories.subCategories.map((item: any) => {
             const isSelected = value === item.name;
