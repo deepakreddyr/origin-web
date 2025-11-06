@@ -3,6 +3,7 @@ import Layout from '@/components/Layout';
 import { FooterDataType, MainMenuType } from '@/utilities/types';
 import CategorySection from '@/components/ShopV2/CategorySection';
 import PopularProduce from '@/components/ShopV2/PopularProduce';
+import PopularProduceMob from '@/components/ShopV2/PopularProduceMob';
 import FeatureProduct from '@/components/ShopV2/FeaturedProduct';
 import VideoBanner from '@/components/ShopV2/VideoBanner'; 
 import { useEffect, useState } from 'react';
@@ -38,7 +39,8 @@ const ShopPage = (props: HomeProps) => {
   const router = useRouter();
   const getDataFromApi = useGetDataFromApi();
   const [address] = useAtom(addressAtom);
-
+  const isMobile = useMediaQuery(768);
+  const isTablet = useMediaQuery(1024);
   const filteredCategories = useSelector((state: any) => state.shopCategories);
   
   // console.log(filteredCategories,"Category");
@@ -166,21 +168,29 @@ const handleCloseDownloadApp = () => {
       </div>
 
       {subCategories?.[0] && (
-        <div className="px-[2vw] bg-[#FFF9E5]">
-          <PopularProduce categoryDetail={subCategories[0]} />
-        </div>
-      )}
+  <div className="px-[2vw] bg-[#FFF9E5]">
+    {(isMobile || isTablet) ? (
+      <PopularProduceMob categoryDetail={subCategories[0]} />
+    ) : (
+      <PopularProduce categoryDetail={subCategories[0]} />
+    )}
+  </div>
+)}
 
-      {/* <div className="">
-        // <FeatureProduct featuredItem={subCategories[1].data}/>
-      </div> */}
+{/* Example placeholder for future feature section */}
+{/* <div className="">
+  <FeatureProduct featuredItem={subCategories[1]?.data} />
+</div> */}
 
-      {subCategories?.[1] && (
-        <div className="px-[2vw] bg-[#FFF9E5]">
-          <PopularProduce categoryDetail={subCategories[2]} />
-        </div>
-      )}
-
+{subCategories?.[1] && (
+  <div className="px-[2vw] bg-[#FFF9E5]">
+    {(isMobile || isTablet) ? (
+      <PopularProduceMob categoryDetail={subCategories[2]} />
+    ) : (
+      <PopularProduce categoryDetail={subCategories[2]} />
+    )}
+  </div>
+)}
       <div className="">
         <WhyOriginBanner />
       </div>
