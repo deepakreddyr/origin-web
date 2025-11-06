@@ -20,13 +20,17 @@ const ItemCard = ({ itemDetails }: any) => {
     setIsDropdownOpen(false);
   };
 
+  const handleNavigation =()=>{
+    const slug = encodeURIComponent(
+    itemDetails.item_name.replace(/ /g, '-').toLowerCase()
+    );
+    router.push(`/${slug}/${itemDetails.id}`);
+  };
   return (
     <div className="bg-white rounded-[1.5rem] shadow-md overflow-hidden flex flex-col h-full">
       <button
         disabled={!selectedUOM.is_available}
-        onClick={() =>
-          router.push(`/${itemDetails.item_name.replace(/ /g, '-').toLowerCase()}/${itemDetails.id}`)
-        }
+        onClick={handleNavigation}
         className={`text-left w-full flex flex-col h-full ${!selectedUOM.is_available ? 'opacity-50' : ''}`}
       >
         {/* Image */}
