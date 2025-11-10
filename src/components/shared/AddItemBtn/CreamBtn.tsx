@@ -11,7 +11,7 @@ interface BlackBtnProps {
   handleRemove?: (e: any) => void;
 }
 
-const BlackBtn = (props: BlackBtnProps) => {
+const CreamBtn = (props: BlackBtnProps) => {
   const {
     isItemPresent,
     quantity,
@@ -128,4 +128,4 @@ const BlackBtn = (props: BlackBtnProps) => {
   );
 };
 
-export default BlackBtn;
+export default CreamBtn;

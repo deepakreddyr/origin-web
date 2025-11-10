@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import AddItemBtn from './AddItemBtn/AddItemBtn';
 import { useRouter } from 'next/router';
 
-const ItemCard = ({ itemDetails }: any) => {
+const ItemCard = ({ itemDetails,bottomBg }: any) => {
   const router = useRouter();
   
   const defaultUOM =
@@ -32,7 +32,7 @@ const ItemCard = ({ itemDetails }: any) => {
   };
 
   return (
-    <div className="rounded-[0.5rem] overflow-hidden flex flex-col h-full bg-white drop-shadow-md">
+    <div className="rounded-[0.5rem] overflow-hidden flex flex-col h-full drop-shadow-md">
       <button
         disabled={!selectedUOM.is_available}
         onClick={handleNavigation}
@@ -41,9 +41,9 @@ const ItemCard = ({ itemDetails }: any) => {
         }`}
       >
         {/* IMAGE SECTION - 70% of height */}
-        <div className="relative flex-shrink-0 h-[65%]">
+        <div className="relative flex-shrink-0 h-[65%] bg-white">
           <Image
-            src={"https://lh3.googleusercontent.com/aida-public/AB6AXuDqn-qLVmFjXRMPRveJ7dqOv_2uhRHVJVqck4Kl7o-Y--CJt-_B04gYHBhxFyr9eE9Yzc28ehPMzCHwzeH32LOcjwJxRqmOG_D4EBF0wlTGCwGavkur56_CKn9j5KiY1B0UcxKekudK3WbH98QXByVJiSOFpCZHM3WCtkbNEa-4iBI3KxKzvAtZ54KoFCN2kjmbh5pIADmQtiutZqR6U6_iqFLFNVCdwPyr6j0Ff34h72Qu14o0WFWVEE5_NchGUSCTQRwYjbYYYBM"}
+            src={"https://lh3.googleusercontent.com/aida-public/AB6AXuDgFMpkMuZGL6jJdY5mUbXStzT2vWlVHGofMJbbOPJfqwBUj0PLLXqRMSvCs8QjoVMbrXPoBIktxh4UYdcZUm13kNSMUF1QqrpGtMbRT1NF0MNhiHOJoZhe_CY4ckQTDmz7dw7QP1P3SPzBZ8Se7PcnksvDx7K_P5u8m8ijP219lVszomRuAGdCcGWpNw5GP9bcBoHZK7-RFeepUS9rd4yT0urMZgZie7rqNpVoSaF1u-C-tQkcnVno-mA7x7q7E8qUSnShwv-K0F0"}
             alt={itemDetails.name || 'product image'}
             fill
             style={{ objectFit: 'cover' }}
@@ -52,7 +52,7 @@ const ItemCard = ({ itemDetails }: any) => {
         </div>
 
         {/* WHITE CONTENT SECTION - 30% of height */}
-        <div className="flex-grow bg-white p-[1rem] flex flex-col justify-between h-[35%]">
+        <div className={`flex-grow p-[1rem] ${bottomBg}  flex flex-col justify-between h-[35%]`}>
           {/* PRODUCT NAME */}
           <p className="font-[SofiaPro] font-medium text-[0.95rem] leading-[1.2] line-clamp-2 text-black">
             {itemDetails.name}
@@ -158,7 +158,7 @@ const ItemCard = ({ itemDetails }: any) => {
               varientId={selectedUOM.variant_id}
               varientPrice={selectedUOM.price}
               stepperQuantity={selectedUOM.stepper_quantity}
-              buttonType="black"
+              buttonType="cream"
             />
           </div>
         </div>

@@ -70,7 +70,7 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
                   key={item.id}
                   className="md:w-[230px] md:h-[350px] w-[25vw] h-[30vw]"
                 >
-                  <ItemCard itemDetails={item} />
+                  <ItemCard itemDetails={item} bottomBg="bg-white" />
                 </div>
               ))}
             </div>
@@ -84,7 +84,7 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
                   key={item.id}
                   className="w-[40vw] h-[215px]"
                 >
-                  <ItemCard itemDetails={item} />
+                  <ItemCard itemDetails={item} bottomBg="bg-white"/>
                 </div>
               ))}
             </div>

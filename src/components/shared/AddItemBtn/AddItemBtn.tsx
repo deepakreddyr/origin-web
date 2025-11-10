@@ -3,7 +3,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import YellowBtn from './YellowBtn';
 import WhiteBtn from './WhiteBtn';
-import BlackBtn from './BlackBtn';
+import CreamBtn from './CreamBtn';
 import BlackAddCartBtm from './BlackAddCartBtm';
 import YellowAddCartBtm from './YellowAddCartBtm';
 import { protectedUrl } from '@/url';
@@ -197,8 +197,8 @@ const AddItemBtn = (props: any) => {
         handleRemove={handleRemoveUOM}
       />
     ),
-    black: (
-      <BlackBtn
+    cream: (
+      <CreamBtn
         isItemPresent={isVariantPresent}
         quantity={itemQuantity}
         maxQuantity={maxQuantity}

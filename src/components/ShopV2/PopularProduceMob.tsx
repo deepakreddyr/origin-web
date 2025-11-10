@@ -71,7 +71,7 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
                 midlg:w-[220px] midlg:h-[270px]     /* 1180px small desktop breakpoint */
               "
             >
-              <ItemCard itemDetails={item} />
+              <ItemCard itemDetails={item} bottomBg="bg-white"/>
             </div>
           ))}
       </div>

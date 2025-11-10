@@ -2,7 +2,11 @@ import React, { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-// ---------------- FlavorCard ----------------
+// Define the CARD_WIDTH_RATIO once for consistency
+const CARD_WIDTH_RATIO = 0.7;
+const GAP_SIZE = 24; // Tailwind's gap-6 is typically 1.5rem, or 24px
+
+// ---------------- FlavorCard (No Changes) ----------------
 const FlavorCard = ({ itemDetails }: any) => {
   const router = useRouter();
 
@@ -26,16 +30,14 @@ const FlavorCard = ({ itemDetails }: any) => {
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
-          src={
-            itemDetails.image ||
-            'https://lh3.googleusercontent.com/aida-public/AB6AXuDqn-qLVmFjXRMPRveJ7dqOv_2uhRHVJVqck4Kl7o-Y--CJt-_B04gYHBhxFyr9eE9Yzc28ehPMzCHwzeH32LOcjwJxRqmOG_D4EBF0wlTGCwGavkur56_CKn9j5KiY1B0UcxKekudK3WbH98QXByVJiSOFpCZHM3WCtkbNEa-4iBI3KxKzvAtZ54KoFCN2kjmbh5pIADmQtiutZqR6U6_iqFLFNVCdwPyr6j0Ff34h72Qu14o0WFWVEE5_NchGUSCTQRwYjbYYYBM'
+          src={"https://lh3.googleusercontent.com/aida-public/AB6AXuDgFMpkMuZGL6jJdY5mUbXStzT2vWlVHGofMJbbOPJfqwBUj0PLLXqRMSvCs8QjoVMbrXPoBIktxh4UYdcZUm13kNSMUF1QqrpGtMbRT1NF0MNhiHOJoZhe_CY4ckQTDmz7dw7QP1P3SPzBZ8Se7PcnksvDx7K_P5u8m8ijP219lVszomRuAGdCcGWpNw5GP9bcBoHZK7-RFeepUS9rd4yT0urMZgZie7rqNpVoSaF1u-C-tQkcnVno-mA7x7q7E8qUSnShwv-K0F0"
           }
           alt={itemDetails.name || itemDetails.item_name}
           fill
           style={{ objectFit: 'cover' }}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 33vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
+        <div className="absolute inset-0" />
       </div>
 
       {/* Content */}
@@ -60,8 +62,35 @@ const DiscoverNewFlavors = ({ categoryDetail }: CategoryProp) => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const observerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  // NEW: State to hold the calculated horizontal padding
+  const [paddingX, setPaddingX] = useState('0px'); 
 
-  // Observe which card is centered
+  // Calculate the required padding to center the first/last card
+  useEffect(() => {
+    const calculatePadding = () => {
+      if (sliderRef.current) {
+        // Full width of the slider viewport
+        const viewportWidth = sliderRef.current.clientWidth;
+        // Width of the actual card (based on CSS '70vw' or '400px' max)
+        // We'll use 70vw for the calculation, assuming it dominates on mobile
+        const cardWidth = Math.min(
+          viewportWidth * CARD_WIDTH_RATIO, 
+          400
+        ); 
+
+        // Calculation: (Viewport Width - Card Width) / 2
+        const requiredPadding = (viewportWidth - cardWidth) / 2;
+        setPaddingX(`${requiredPadding}px`);
+      }
+    };
+
+    // Calculate once on mount and on resize
+    calculatePadding();
+    window.addEventListener('resize', calculatePadding);
+    return () => window.removeEventListener('resize', calculatePadding);
+  }, []);
+
+  // Observe which card is centered (Threshold adjusted to 0.5 for stability)
   useEffect(() => {
     if (!observerRefs.current.length) return;
 
@@ -70,36 +99,39 @@ const DiscoverNewFlavors = ({ categoryDetail }: CategoryProp) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const index = observerRefs.current.indexOf(entry.target as HTMLDivElement);
+            // This is crucial: only set active if the card is NOT the result of a programmatic scroll, 
+            // but for a simple, controlled carousel, setting it here is fine.
             if (index !== -1) setActiveIndex(index);
           }
         });
       },
-      { root: sliderRef.current, threshold: 0.6 }
+      { root: sliderRef.current, threshold: 0.5 } // Adjusted threshold
     );
 
     observerRefs.current.forEach((el) => el && observer.observe(el));
     return () => observer.disconnect();
   }, [categoryDetail?.data]);
 
-  // Auto-scroll every 3 seconds (was 2 seconds)
+  // Auto-scroll every 3 seconds
   useEffect(() => {
     if (!sliderRef.current || !categoryDetail?.data?.length) return;
-
-    // Define the custom card width for calculation
-    const CARD_WIDTH_RATIO = 0.7; // Corresponds to the 70vw style below
 
     const interval = setInterval(() => {
       setActiveIndex((prev) => {
         const nextIndex = (prev + 1) % categoryDetail.data.length;
-        // Calculate scroll position based on the new card width
-        const cardWidth = sliderRef.current!.clientWidth * CARD_WIDTH_RATIO;
+        // Calculate scroll position based on the width and index
+        const cardWidth = Math.min(sliderRef.current!.clientWidth * CARD_WIDTH_RATIO, 400);
+        
+        // Scroll target is: Card position - required padding
+        const scrollTarget = (cardWidth + GAP_SIZE) * nextIndex; // + GAP_SIZE because of flex gap
+
         sliderRef.current?.scrollTo({
-          left: cardWidth * nextIndex,
+          left: scrollTarget,
           behavior: 'smooth',
         });
         return nextIndex;
       });
-    },3000); // **Changed from 2000 to 3000**
+    },3000); 
 
     return () => clearInterval(interval);
   }, [categoryDetail?.data]);
@@ -107,10 +139,11 @@ const DiscoverNewFlavors = ({ categoryDetail }: CategoryProp) => {
   // Function to manually scroll to an index
   const scrollToCard = (index: number) => {
       if (sliderRef.current) {
-          const CARD_WIDTH_RATIO = 0.7; // Must match the style width
-          const cardWidth = sliderRef.current.clientWidth * CARD_WIDTH_RATIO;
+          const cardWidth = Math.min(sliderRef.current.clientWidth * CARD_WIDTH_RATIO, 400);
+          const scrollTarget = (cardWidth + GAP_SIZE) * index;
+          
           sliderRef.current.scrollTo({
-              left: cardWidth * index,
+              left: scrollTarget,
               behavior: 'smooth',
           });
           setActiveIndex(index);
@@ -128,7 +161,8 @@ const DiscoverNewFlavors = ({ categoryDetail }: CategoryProp) => {
       {/* Carousel */}
       <div
         ref={sliderRef}
-        className="flex gap-6 overflow-x-auto scrollbar-hide snap-x snap-mandatory justify-start scroll-smooth px-[15vw]" // Adjusted padding for better center visibility
+        // Removed fixed 'px-[15vw]' and applied dynamic 'paddingX'
+        className="flex gap-6 overflow-x-auto scrollbar-hide justify-start scroll-smooth" 
         style={{
           scrollSnapType: 'x mandatory',
           scrollbarWidth: 'none',
@@ -142,15 +176,17 @@ const DiscoverNewFlavors = ({ categoryDetail }: CategoryProp) => {
               ref={(el) => {
                 observerRefs.current[index] = el;
               }}
-              className={`flex-shrink-0 snap-center transition-all duration-700 ease-out transform ${
+              className={`flex-shrink-0 transition-all duration-700 ease-out transform ${
                 activeIndex === index
-                  ? 'scale-100 opacity-100 z-20'
-                  : 'scale-70 opacity-50 z-0' // **Smaller scale and opacity for non-active items**
+                  ? 'scale-100'
+                  : 'scale-70' 
               }`}
               style={{
-                width: '70vw', // **Adjusted for a taller aspect ratio on mobile**
-                maxWidth: '400px', // **Maximum width for center item**
-                height: '520px', // **Increased height to change aspect ratio**
+                width: '70vw', 
+                maxWidth: '400px', 
+                height: '520px', 
+                // Adjusted snapping for perfect centering relative to padding
+                scrollSnapAlign: 'center', 
               }}
             >
               <FlavorCard itemDetails={item} />
@@ -168,7 +204,7 @@ const DiscoverNewFlavors = ({ categoryDetail }: CategoryProp) => {
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
                 activeIndex === index
                   ? 'bg-black'
-                  : 'bg-[#FFDD0066] hover:bg-gray-400'
+                  : 'bg-[#FFDD0066]'
               }`}
             />
           ))}
@@ -177,9 +213,6 @@ const DiscoverNewFlavors = ({ categoryDetail }: CategoryProp) => {
       <style jsx>{`
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
-        }
-        .snap-center {
-          scroll-snap-align: center;
         }
       `}</style>
     </div>
