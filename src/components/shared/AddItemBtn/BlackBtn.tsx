@@ -77,7 +77,7 @@ const BlackBtn = (props: BlackBtnProps) => {
     <div className="w-full flex flex-col items-center">
       {isItemPresent ? (
         <>
-          {/* Row for buttons and number */}
+          {/* Row for buttons and number - Stepper remains black/white */}
           <div className="flex items-center justify-between px-[0.6vw] mob:px-[3vw] bg-white border-[2px] border-[#F3EEDF] rounded-full h-[2.2vw] mob:h-[7vw] w-full">
             <button
               className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] rounded-full bg-black text-white text-[1vw] mob:text-[3.5vw] flex items-center justify-center"
@@ -116,11 +116,12 @@ const BlackBtn = (props: BlackBtnProps) => {
           </AnimatePresence>
         </>
       ) : (
+        // ADD TO CART BUTTON (Updated to cream background with black border and text)
         <button
-          className="w-full h-[2.2vw] mob:h-[7vw] bg-black text-white rounded-[0.5vw] mob:rounded-[2vw] font-semibold text-[1vw] mob:text-[3.2vw]"
+          className="w-full h-[2.2vw] mob:h-[7vw] bg-[#FFFCDE] text-black rounded-[0.5vw] mob:rounded-[2vw] font-semibold text-[1vw] mob:text-[3.2vw]"
           onClick={onAdd}
         >
-          Add
+          Add to Cart
         </button>
       )}
     </div>

@@ -22,6 +22,7 @@ import DownloadAppWrapper from '@/components/downloadApp/DownloadAppWrapper';
 import FeatureStrip from '@/components/ShopV2/FeatureStrip';
 import WhyOriginBanner from '@/components/ShopV2/WhyOriginBanner';
 import { ShopHeroSingle } from '@/components/ShopV2/ShopHero';
+import DiscoverNewFlavors from '@/components/ShopV2/NewFlavour';
 
 interface HomeProps {
   mainMenuItems: MainMenuType[];
@@ -160,37 +161,29 @@ const handleCloseDownloadApp = () => {
           controls={false}
         /> */}
         <ShopHeroSingle/>
-        <FeatureStrip />
+        {/* <FeatureStrip /> */}
       </div>
 
-      <div className="flex flex-col gap-[6vw] mob:pl-[0vw] w-full mt-[4vw] mob:mt-[8vw]">
+      <div className="w-full px-[3vw] mob:mt-7">
         <CategorySection />
       </div>
 
       {subCategories?.[0] && (
-  <div className="px-[2vw] bg-[#FFF9E5]">
-    {(isMobile || isTablet) ? (
-      <PopularProduceMob categoryDetail={subCategories[0]} />
-    ) : (
-      <PopularProduce categoryDetail={subCategories[0]} />
-    )}
-  </div>
-)}
+        <div className="w-full">
+          {(isMobile || isTablet) ? (
+            <PopularProduceMob categoryDetail={subCategories[0]} />
+          ) : (
+            <PopularProduce categoryDetail={subCategories[0]} />
+          )}
+        </div>
+      )}
+      
+      {subCategories?.[1] && (
+        <div className="w-full px-[2vw]">
+          <DiscoverNewFlavors categoryDetail={subCategories[2]} />
+        </div>
+      )}
 
-{/* Example placeholder for future feature section */}
-{/* <div className="">
-  <FeatureProduct featuredItem={subCategories[1]?.data} />
-</div> */}
-
-{subCategories?.[1] && (
-  <div className="px-[2vw] bg-[#FFF9E5]">
-    {(isMobile || isTablet) ? (
-      <PopularProduceMob categoryDetail={subCategories[2]} />
-    ) : (
-      <PopularProduce categoryDetail={subCategories[2]} />
-    )}
-  </div>
-)}
       <div className="">
         <WhyOriginBanner />
       </div>

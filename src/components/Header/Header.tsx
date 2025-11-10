@@ -15,6 +15,11 @@ import { setIsSidebarOpen, setLoginDetails, setTabType } from '@/store/slice/log
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import { TabTypeConstant } from '../Login/constants/tabTypeContent';
 import { MainMenuType } from '@/utilities/types';
+import { useAtom } from 'jotai';
+import { addressAtom } from '@/features/Address/context/atoms';
+import { profileAtom } from '@/features/AccountPage/context/atoms';
+import whiteDropdownIcon from '/public/assets/images/whiteDropdown.png';
+import { getAddressAndStoreId } from '@/utilities/utils';
 
 type Props = {
   mainMenuItems: MainMenuType[];
@@ -22,7 +27,7 @@ type Props = {
   search?: boolean;
 };
 
-const AnimatedPlaceholder = () => {
+const AnimatedPlaceholder = ({ isScrolled }: { isScrolled: boolean }) => {
   const fruits = ['enoki', 'apple', 'mango', 'orange', 'grapes', 'cherry', 'onion'];
   const [currentFruitIndex, setCurrentFruitIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
@@ -45,9 +50,11 @@ const AnimatedPlaceholder = () => {
 
   return (
     <span 
-      className={`transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+      className={`transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'} ${
+        isScrolled ? 'text-gray-500' : 'text-white text-opacity-70'
+      }`}
     >
-      Search for '{fruits[currentFruitIndex]}'
+      Search "{fruits[currentFruitIndex]}"
     </span>
   );
 };
@@ -55,10 +62,11 @@ const AnimatedPlaceholder = () => {
 const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [topBarTransition, setTopBarTransition] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [currentSearchQuery, setCurrentSearchQuery] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -66,16 +74,27 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
   const dispatch = useDispatch();
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const cart = useSelector((state: any) => state.cart);
+  const [address] = useAtom(addressAtom);
+  const [profile] = useAtom(profileAtom);
 
   const router = useRouter();
   const isMobile = useMediaQuery(600);
+
+  // Filter out items that shouldn't be shown in desktop header
+  const excludedLabels = ['Gourmet', 'Fruit Baskets', 'Contact', 'Reviews'];
+  const desktopMenuItems = mainMenuItems.filter(
+    item => !excludedLabels.includes(item.label)
+  );
 
   useEffect(() => {
     if (search && router.query.q && typeof router.query.q === 'string') {
       setCurrentSearchQuery(router.query.q);
       setSearchQuery(router.query.q);
     }
-  }, [search, router.query.q]);
+
+    const token = localStorage.getItem('user_token');
+    setIsLoggedIn(!!token);
+  }, [search, router.query.q, loginDetails.tabType]);
 
   const handleSearchFieldClick = () => {
     if (!search) {
@@ -121,44 +140,66 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
     }
   };
 
-  const debouncedSearch = (query: string) => {
-  if (debounceTimeoutRef.current) {
-    clearTimeout(debounceTimeoutRef.current);
-  }
+  const handleSelectAddress = () => {
+    if (loginDetails.isLogin) {
+      dispatch(setIsSidebarOpen(true));
 
-  debounceTimeoutRef.current = setTimeout(() => {
-    if (query.trim().length >= 2) {
-      router.push(`/search?q=${encodeURIComponent(query)}`, undefined, { shallow: true });
-    } else if (query.trim().length < 2) {
-      // Clear the URL query parameter when search text is less than 2 characters
-      router.push('/search', undefined, { shallow: true });
+      if (!profile?.data?.profile) {
+        dispatch(setTabType(TabTypeConstant.REGISTER));
+        return;
+      }
+
+      if (address.address.length > 0) {
+        dispatch(setTabType(TabTypeConstant.SELECT_ADDRESS));
+      } else {
+        dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
+      }
+    } else {
+      dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
     }
-  }, 500);
-};
+  };
+
+  const debouncedSearch = (query: string) => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    debounceTimeoutRef.current = setTimeout(() => {
+      if (query.trim().length >= 2) {
+        router.push(`/search?q=${encodeURIComponent(query)}`, undefined, { shallow: true });
+      } else if (query.trim().length < 2) {
+        router.push('/search', undefined, { shallow: true });
+      }
+    }, 500);
+  };
 
   const handleSearchClick = () => {
     setIsSearchActive(true);
-    if (search && searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
-    } else if (!search) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+    if (searchQuery.trim().length >= 2) {
+      if (search) {
+        router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+      } else {
+        router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+      }
     }
   };
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const value = e.target.value;
-  setSearchQuery(value);
-  
-  if (search) {
-    setCurrentSearchQuery(value);
-    debouncedSearch(value);
-  }
-};
+    const value = e.target.value;
+    setSearchQuery(value);
+    
+    if (search) {
+      setCurrentSearchQuery(value);
+      debouncedSearch(value);
+    }
+  };
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      handleSearchClick();
+  const handleSearchKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (searchQuery.trim()) {
+        handleSearchClick();
+      }
     }
   };
 
@@ -177,7 +218,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
   useEffect(() => {
     const handleScroll = () => {
       const position = window.scrollY;
-      setTopBarTransition(position > 40 && !isMobile && !search);
+      setIsScrolled(position > 50);
       if (position > 40) setOpenSubmenu(null);
     };
 
@@ -204,8 +245,8 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
   if (search) {
     return (
       <>
-        <div className="bg-[#FFF9E5] border-gray-200 w-full">
-          <div className="max-w-7xl mt-5 mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-[#FFFCDE] border-b border-gray-200 w-full sticky top-0 z-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               
               <div className="flex items-center">
@@ -214,46 +255,18 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                   className="flex items-center hover:opacity-80 transition-opacity"
                   aria-label="Go to shop"
                 >
-                  <div className={`relative ${isMobile ? 'w-24 h-10' : 'w-[8vw] h-10'}`}>
+                  <div className={`relative mt-[7px] ${isMobile ? 'w-32 h-12' : 'w-40 h-12'}`}>
                     <Image src={originLogo} alt="Origin" fill className="object-contain" />
                   </div>
                 </button>
               </div>
 
-              <div className="flex-1 mx-3">
-                <form onSubmit={handleSearchSubmit} className="relative">
+              <div className="flex-1 mx-4 max-w-2xl">
+                <div className="relative">
                   <div className="relative">
-                    <input
-                      ref={searchInputRef}
-                      type="text"
-                      value={searchQuery}
-                      onChange={handleSearchInputChange}
-                      onFocus={handleSearchFocus}
-                      onBlur={handleSearchBlur}
-                      className="w-full h-10 pl-4 pr-12 bg-white border border-gray-300 rounded-full 
-                              focus:outline-none focus:ring-0 focus:border-gray-300 
-                              text-sm font-medium font-[SofiaPro] placeholder:text-gray-500 
-                              transition-all duration-200"
-                      placeholder="Search here"
-                      autoFocus
-                    />
-
-                    {searchQuery && searchQuery.length < 2 && (
-                      <div className="absolute right-12 top-1/2 transform -translate-y-1/2 
-                                    text-xs text-gray-400 font-[SofiaPro]">
-                        {2 - searchQuery.length} more
-                      </div>
-                    )}
-
-                    <button
-                      type="submit"
-                      disabled={searchQuery.trim().length < 2}
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 
-                              rounded-full bg-transparent text-gray-400 cursor-pointer"
-                      aria-label="Search"
-                    >
+                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-600">
                       <svg
-                        className="w-4 h-4"
+                        className="w-5 h-5"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -265,40 +278,45 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                           d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                         />
                       </svg>
-                    </button>
+                    </div>
+                    <input
+                      ref={searchInputRef}
+                      type="text"
+                      value={searchQuery}
+                      onChange={handleSearchInputChange}
+                      onKeyDown={handleSearchKeyDown}
+                      onFocus={handleSearchFocus}
+                      onBlur={handleSearchBlur}
+                      className="w-full h-12 pl-12 pr-4 bg-white/80 backdrop-blur-sm border-none rounded-full 
+                              focus:outline-none focus:ring-0 focus:bg-white
+                              text-base font-normal text-gray-800 placeholder:text-gray-500 
+                              transition-all duration-200 shadow-sm"
+                      placeholder="Search"
+                      autoFocus
+                    />
                   </div>
-                </form>
+                </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                {loginDetails.isLogin ? (
-                  <button
-                    onClick={openAccount}
-                    className="p-2 hover:bg-white hover:bg-opacity-50 rounded-full transition-colors duration-200"
-                    aria-label="My account"
-                  >
-                    <div className="w-6 h-6 relative">
-                      <Image src={userIcon} alt="Account" fill className="object-contain" />
-                    </div>
-                  </button>
-                ) : (
-                  <button
-                    onClick={handleProfileMenuOpen}
-                    className="px-4 py-2 border border-gray-400 rounded-full text-sm font-medium font-[SofiaPro]
-                             hover:bg-white hover:bg-opacity-50 transition-colors duration-200 text-gray-700"
-                  >
-                    Login
-                  </button>
-                )}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={loginDetails.isLogin ? openAccount : handleProfileMenuOpen}
+                  className="p-2.5 hover:bg-white hover:bg-opacity-40 rounded-full transition-colors duration-200"
+                  aria-label="My account"
+                >
+                  <div className="w-6 h-6 relative">
+                    <Image src={userIcon} alt="Account" fill className="object-contain" />
+                  </div>
+                </button>
 
                 <button
                   onClick={handleCartOpen}
-                  className="relative p-2 hover:bg-white hover:bg-opacity-50 rounded-full transition-colors duration-200"
+                  className="relative p-2.5 hover:bg-white hover:bg-opacity-40 rounded-full transition-colors duration-200"
                   aria-label={`Shopping cart ${cart?.items?.length > 0 ? `(${cart.items.length} items)` : ''}`}
                 >
                   {cart?.items?.length > 0 && (
-                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-secondary-300 text-white 
-                                  text-xs font-medium rounded-full flex items-center justify-center">
+                    <div className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 bg-green-500 text-white 
+                                  text-xs font-semibold rounded-full flex items-center justify-center">
                       {cart.items.length > 99 ? '99+' : cart.items.length}
                     </div>
                   )}
@@ -315,162 +333,240 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
   }
 
   return (
-    <div ref={menuRef} className={`${isHeaderSticky ? 'fixed top-[1.1vw]' : 'absolute'} flex items-center flex-col w-full z-20`}>
-      <OffersRibbon />
-
+    <div ref={menuRef} className="fixed top-0 w-full z-20">
       <div
-        className={`bg-white shadow-[4px_4px_32px_0px_rgba(0,0,0,0.08)] z-50 w-[80vw] mob:w-full mob:py-[1vw] mob:px-[5vw] ${
-          topBarTransition ? 'mt-[-1vw]' : 'mt-[1.1vw] mob:mt-0'
-        } transition-all rounded-full mob:rounded-none flex items-center justify-between`}
+        className={`w-full transition-all duration-300 ${
+          isScrolled 
+            ? 'bg-[#FFFCDE] shadow-sm' 
+            : 'bg-transparent'
+        }`}
       >
-        <div className="flex items-center gap-[3vw]">
-          <button onClick={() => setDrawerOpen(!drawerOpen)} className="w-[5vw] hidden mob:block h-[4vw] relative">
-            <Image src={hamberger} alt="hamberger" fill className="object-contain" />
-          </button>
-
-          <button 
-            onClick={() => router.push('/shop')}
-            className="relative"
-          >
-            <div className="w-[10vw] ml-[2vw] mt-2 mob:w-[30vw] mob:h-[12vw] h-[5vw] mr-[4vw] relative">
-              <Image 
-                src={originLogo} 
-                alt="logo" 
-                fill
-                className="object-contain"
-                priority
-              />
-            </div>
-          </button>
-        </div>
-
-        <div className="flex items-center gap-[1.1vw]">
-          <div className="flex items-center gap-[2vw] pr-[0] mob:hidden">
-            <Link
-              href="/shop"
-              className="h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full bg-primary text-black text-[1.1vw] font-medium font-[SofiaPro]"
-            >
-              Shop All
-            </Link>
-          </div>
-
-          {/* Desktop Search Bar */}
-          {!isMobile && (
-            <div className="flex-1 max-w-[28vw]">
-              <form onSubmit={handleSearchSubmit} className="relative">
-                <div className="relative">
-                  <input
-                    ref={searchInputRef}
-                    type="text"
-                    value={searchQuery}
-                    onChange={handleSearchInputChange}
-                    onClick={handleSearchFieldClick}
-                    onFocus={handleSearchFocus}
-                    onBlur={handleSearchBlur}
-                    className="w-full h-[2.4vw] px-[1.17vw] 
-                              rounded-full border border-gray-300 bg-transparent 
-                              placeholder:text-gray-400 
-                              text-[1.1vw] font-[SofiaPro] cursor-pointer 
-                              focus:outline-none focus:ring-0 transition-all duration-200"
-                  />            
-
-                  {!searchQuery && (
-                    <div className="absolute left-[1vw] top-1/2 transform -translate-y-1/2 pointer-events-none text-[1vw] font-[SofiaPro] text-gray-500">
-                      <AnimatedPlaceholder />
-                    </div>
-                  )}
-
-                  <button
-                    type="submit"
-                    className="absolute right-[0.6vw] top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-gray-100 rounded-full w-[1.6vw] h-[1.6vw] flex items-center justify-center transition-colors duration-200"
-                  >
-                    <svg
-                      className="w-[0.9vw] h-[0.9vw] text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
-
-          {/* Mobile Search Icon */}
-          {isMobile && (
-            <button
-              onClick={() => router.push('/search')}
-              className="p-[2vw] hover:bg-gray-100 rounded-full transition-colors duration-200"
-              aria-label="Search"
-            >
-              <svg
-                className="w-[5vw] h-[5vw] text-gray-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </button>
-          )}
-
-          {loginDetails.isLogin ? (
-            <button onClick={openAccount}>
-              <div className="w-[1.25vw] mob:w-[5.128vw] mob:h-[5.128vw] h-[1.25vw] relative">
-                <Image src={userIcon} alt="account icon" fill className="object-contain" />
-              </div>
-            </button>
-          ) : (
-            <button
-              onClick={handleProfileMenuOpen}
-              className="border-[1px] border-black h-[2.4vw] mob:h-max px-[1.17vw] mob:px-[5.1vw] mob:py-[1.5vw] rounded-full text-black text-[1.1vw] mob:text-[4.1vw] font-medium font-[SofiaPro]"
-            >
-              Login
-            </button>
-          )}
-          
-          {!isMobile && (
-            <>
-              <div className="h-[1.67vw] w-[.1vw] bg-black-op-30"></div>
-              <button onClick={handleCartOpen} className="relative pr-[1.67vw]">
-                {cart?.items?.length > 0 && (
-                  <div className="absolute top-[-.6vw] left-[.7vw] w-[1.25vw] h-[1.25vw] text-[.78vw] rounded-full bg-secondary-300 z-[1] text-white font-[sofiaPro] flex items-center justify-center">
-                    {cart?.items?.length}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            {/* Left Section - Logo */}
+            <div className="flex items-center gap-4">
+              {isMobile && (
+                <button 
+                  onClick={() => setDrawerOpen(!drawerOpen)} 
+                  className="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
+                >
+                  <div className="w-6 h-6 relative">
+                    <Image 
+                      src={hamberger} 
+                      alt="Menu" 
+                      fill 
+                      className="object-contain"
+                      style={{ filter: isScrolled ? 'none' : 'brightness(0) invert(1)' }}
+                    />
                   </div>
-                )}
-                <div className="relative w-[1.25vw] h-[1.25vw] z-0">
-                  <Image src={cartIcon} alt="cart-icon" fill className="object-contain" />
+                </button>
+              )}
+
+              <button 
+                onClick={() => router.push('/shop')}
+                className="hover:opacity-80 transition-opacity"
+              >
+                <div className={`relative mt-[7px] ${isMobile ? 'w-32 h-10' : 'w-40 h-10'}`}>
+                  <Image 
+                    src={originLogo} 
+                    alt="Foodstories" 
+                    fill
+                    className="object-contain"
+                    style={{ filter: isScrolled ? 'none' : 'brightness(0) invert(1)' }}
+                    priority
+                  />
                 </div>
               </button>
-            </>
-          )}
+            </div>
+
+            {/* Center Section - Navigation Menu (Desktop Only) */}
+            {!isMobile && (
+              <div className="flex items-center gap-8 flex-1 justify-center mx-8">
+                {desktopMenuItems.map((item) => (
+                  <Link
+                    key={item.label}
+                    href={'#'}
+                    onMouseEnter={() => item.submenu && setOpenSubmenu(item.label)}
+                    className={`text-base font-semibold transition-colors duration-200 relative ${
+                      isScrolled 
+                        ? 'text-gray-900 hover:text-gray-600' 
+                        : 'text-white hover:text-white hover:text-opacity-80'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+                
+                {/* Address Selection Button */}
+                {isLoggedIn && (
+                  <button
+                    onClick={handleSelectAddress}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-200 ${
+                      isScrolled
+                        ? 'bg-white/60 hover:bg-white/80 text-gray-900'
+                        : 'bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm'
+                    }`}
+                  >
+                    {address.defaultAddress?.address_name ? (
+                      <div className="flex items-center gap-1 max-w-[200px]">
+                        <span className="font-bold text-sm truncate">
+                          {address.defaultAddress?.address_name}
+                        </span>
+                        <span className="text-sm">-</span>
+                        <span className="font-light text-sm truncate">
+                          {address.defaultAddress.address}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="font-bold text-sm">Select Address</span>
+                    )}
+                    <div className="relative w-3 h-3">
+                      <Image 
+                        src={whiteDropdownIcon} 
+                        alt="dropdown" 
+                        fill
+                        className="object-contain"
+                        style={{ filter: isScrolled ? 'brightness(0)' : 'none' }}
+                      />
+                    </div>
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Right Section - Search, Account, Cart */}
+            <div className="flex items-center gap-3">
+              {/* Desktop Search Bar */}
+              {!isMobile && (
+                <div className="w-64">
+                  <div className="relative">
+                    <div className="relative">
+                      <div className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
+                        isScrolled ? 'text-gray-600' : 'text-white text-opacity-70'
+                      }`}>
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                          />
+                        </svg>
+                      </div>
+                      <input
+                        ref={searchInputRef}
+                        type="text"
+                        value={searchQuery}
+                        onChange={handleSearchInputChange}
+                        onClick={handleSearchFieldClick}
+                        onKeyDown={handleSearchKeyDown}
+                        onFocus={handleSearchFocus}
+                        onBlur={handleSearchBlur}
+                        className={`w-full h-10 pl-10 pr-4 rounded-full border transition-all duration-200 cursor-pointer
+                          focus:outline-none focus:ring-0 text-sm font-normal
+                          ${isScrolled 
+                            ? 'bg-white/80 backdrop-blur-sm border-gray-200 text-gray-900 placeholder:text-gray-500 focus:bg-white' 
+                            : 'bg-white/20 backdrop-blur-sm border-white/30 text-white placeholder:text-white placeholder:text-opacity-70 focus:bg-white/30'
+                          }`}
+                      />            
+
+                      {!searchQuery && (
+                        <div className="absolute left-10 top-1/2 transform -translate-y-1/2 pointer-events-none text-sm">
+                          <AnimatedPlaceholder isScrolled={isScrolled} />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Mobile Search Icon */}
+              {isMobile && (
+                <button
+                  onClick={() => router.push('/search')}
+                  className="p-2 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
+                  aria-label="Search"
+                >
+                  <svg
+                    className={`w-6 h-6 ${isScrolled ? 'text-gray-900' : 'text-white'}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </button>
+              )}
+
+              {/* Account Icon - Always visible */}
+              <button
+                onClick={loginDetails.isLogin ? openAccount : handleProfileMenuOpen}
+                className="p-2 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
+                aria-label="Account"
+              >
+                <div className={`w-6 h-6 relative ${isMobile ? 'w-6 h-6' : 'w-6 h-6'}`}>
+                  <Image 
+                    src={userIcon} 
+                    alt="Account" 
+                    fill 
+                    className="object-contain"
+                    style={{ filter: isScrolled ? 'none' : 'brightness(0) invert(1)' }}
+                  />
+                </div>
+              </button>
+              
+              {/* Cart Icon - Desktop */}
+              {!isMobile && (
+                <button 
+                  onClick={handleCartOpen} 
+                  className="relative p-2 hover:bg-white hover:bg-opacity-20 rounded-full transition-colors"
+                >
+                  {cart?.items?.length > 0 && (
+                    <div className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 bg-green-500 text-white 
+                                  text-xs font-semibold rounded-full flex items-center justify-center z-10">
+                      {cart.items.length > 99 ? '99+' : cart.items.length}
+                    </div>
+                  )}
+                  <div className="relative w-6 h-6">
+                    <Image 
+                      src={cartIcon} 
+                      alt="Cart" 
+                      fill 
+                      className="object-contain"
+                      style={{ filter: isScrolled ? 'none' : 'brightness(0) invert(1)' }}
+                    />
+                  </div>
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
+      {/* Mobile Cart FAB */}
       {isMobile && (
         <button
           onClick={handleCartOpen}
-          className="fixed bottom-[5vw] right-[5vw] z-[99] bg-white p-[4vw] rounded-full shadow-xl border border-gray-200"
+          className="fixed bottom-6 right-6 z-[20] bg-white p-4 rounded-full shadow-2xl border border-gray-200 hover:shadow-xl transition-shadow"
         >
           {cart?.items?.length > 0 && (
-            <div className="absolute top-[-2vw] left-[7vw] w-[6vw] h-[6vw] text-[3vw] rounded-full bg-secondary-300 z-[1] text-white flex items-center justify-center">
-              {cart.items.length}
+            <div className="absolute -top-2 -right-2 min-w-[24px] h-6 px-1.5 bg-green-500 text-white 
+                          text-xs font-semibold rounded-full flex items-center justify-center z-10">
+              {cart.items.length > 99 ? '99+' : cart.items.length}
             </div>
           )}
-          <div className="relative w-[6vw] h-[6vw]">
-            <Image src={cartIcon} alt="cart-icon" fill className="object-contain" />
+          <div className="relative w-6 h-6">
+            <Image src={cartIcon} alt="Cart" fill className="object-contain" />
           </div>
         </button>
       )}
@@ -482,11 +578,11 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
         openSubmenu={openSubmenu}
         handleSubmenuToggle={(label: string) => setOpenSubmenu((prev) => (prev === label ? null : label))}
         isMobile={isMobile}
-        topBarTransition={topBarTransition}
+        topBarTransition={isScrolled}
       />
 
       {!isMobile &&
-        mainMenuItems.map(
+        desktopMenuItems.map(
           (item) =>
             item.submenu && (
               <Submenu
@@ -494,7 +590,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                 submenu={item.submenu}
                 isOpen={openSubmenu === item.label}
                 isMobile={isMobile}
-                transitionBool={topBarTransition}
+                transitionBool={isScrolled}
               />
             )
         )}

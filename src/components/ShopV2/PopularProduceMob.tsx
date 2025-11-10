@@ -42,7 +42,7 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
   }, []);
 
   return (
-    <div className="relative w-[90.6vw] py-0 md:py-9 pt-[72px] pl-[2.7vw] mob:pl-0 lg:rounded-l-[48px] transition-all duration-50 ease-in-out">
+    <div className="relative w-[90.6vw] py-0 md:py-9 mob:pl-[5vw] md:pl-[5vw] tabp:pl-[5vw] tabl:pl-[5vw] lg:rounded-l-[48px] transition-all duration-50 ease-in-out">
       <p className="font-[SofiaPro] text-[1.944vw] mob:text-[5.1vw] pb-[2.1vw] font-bold py-[1.1vw] mob:py-[4.1vw]">
         {categoryDetail.title}
       </p>
@@ -63,7 +63,7 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
                 /* ✅ Existing sizes */
                 tab:w-[190px] tab:h-[210px]
                 md:w-[200px] md:h-[220px]
-                mob:w-[190px] mob:h-[220px]
+                mob:w-[220px] mob:h-[330px]
 
                 /* ✅ New sizes */
                 tabp:w-[190px] tabp:h-[210px]       /* 768px portrait tablets */

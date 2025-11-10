@@ -27,7 +27,7 @@ const CategoryCard = (props: Props) => {
       className="w-[24vw] h-[16vw] mob:w-[40vw] flex flex-col items-center text-center"
     >
       {/* Image */}
-      <div className="relative bg-white w-[16vw] h-[10vw] mob:h-[48vw] rounded-[1.2vw] overflow-hidden">
+      <div className="relative bg-white w-[16vw] h-[10vw] mob:h-[48vw] rounded-full overflow-hidden">
         <Image
           src={cardDetails.website_image || cardDetails.image}
           alt={cardDetails.name || 'product image'}

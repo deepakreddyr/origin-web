@@ -35,8 +35,8 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
   const visibleItems = categoryDetail.data?.slice(currentIndex, currentIndex + itemsPerPage) || [];
 
   return (
-    <div className="relative w-full bg-[#FFF9E5] px-[4vw] py-[3vw] mob:px-[6vw] mob:py-[6vw]">
-      <h2 className="font-[SofiaPro] text-[2.5vw] mob:text-[6vw] font-bold pl-[3vw] mob:pl-5 text-black mb-[2vw] mob:mb-[6vw]">
+    <div className="relative w-full justify-items-center">
+      <h2 className="font-[SofiaPro] text-[2.5vw] mob:text-[6vw] font-bold mob:pl-5 text-black mb-[2vw] mob:mb-[6vw]">
         {categoryDetail.title}
       </h2>
 
@@ -68,7 +68,7 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
               {visibleItems.map((item: any) => (
                 <div
                   key={item.id}
-                  className="md:w-[230px] md:h-[280px] w-[25vw] h-[27vw]"
+                  className="md:w-[230px] md:h-[350px] w-[25vw] h-[30vw]"
                 >
                   <ItemCard itemDetails={item} />
                 </div>
