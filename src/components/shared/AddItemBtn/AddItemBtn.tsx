@@ -2,7 +2,7 @@ import { addItemToCart, decreaseQuantity, increaseQuantity, removeItemFromCart }
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import YellowBtn from './YellowBtn';
-import WhiteBtn from './WhiteBtn';
+import BlackBtn from './BlackBtn';
 import CreamBtn from './CreamBtn';
 import BlackAddCartBtm from './BlackAddCartBtm';
 import YellowAddCartBtm from './YellowAddCartBtm';
@@ -186,8 +186,8 @@ const AddItemBtn = (props: any) => {
         handleRemove={handleRemoveUOM}
       />
     ),
-    white: (
-      <WhiteBtn
+    black: (
+      <BlackBtn
         isItemPresent={isVariantPresent}
         quantity={itemQuantity}
         maxQuantity={maxQuantity}

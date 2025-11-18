@@ -82,7 +82,7 @@ const CategorySection = () => {
                 replace
                 key={category.id}
                 href={generateHref(category)}
-                className="relative rounded-[0.5rem] overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
+                className="relative rounded-[1rem] overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
                 style={{
                   gridArea: area,
                   width: '100%',

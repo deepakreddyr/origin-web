@@ -79,6 +79,9 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
 
   const router = useRouter();
   const isMobile = useMediaQuery(600);
+  
+  // Check if current page is /shop
+  const isShopPage = router.pathname === '/shop';
 
   // Filter out items that shouldn't be shown in desktop header
   const excludedLabels = ['Gourmet', 'Fruit Baskets', 'Contact', 'Reviews'];
@@ -228,7 +231,8 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
       }
     };
 
-    if (!search) {
+    // Only add scroll listener if on shop page
+    if (!search && isShopPage) {
       window.addEventListener('scroll', handleScroll);
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -240,7 +244,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
         clearTimeout(debounceTimeoutRef.current);
       }
     };
-  }, [isMobile, search]);
+  }, [isMobile, search, isShopPage]);
 
   if (search) {
     return (
@@ -332,11 +336,15 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
     );
   }
 
+  // Determine if header should have background
+  // On shop page: use scroll-based styling. On other pages: always show background
+  const shouldShowBackground = !isShopPage || isScrolled;
+
   return (
     <div ref={menuRef} className="fixed top-0 w-full z-20">
       <div
         className={`w-full transition-all duration-300 ${
-          isScrolled 
+          shouldShowBackground
             ? 'bg-[#FFFCDE] shadow-sm' 
             : 'bg-transparent'
         }`}
@@ -356,7 +364,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                       alt="Menu" 
                       fill 
                       className="object-contain"
-                      style={{ filter: isScrolled ? 'none' : 'brightness(0) invert(1)' }}
+                      style={{ filter: shouldShowBackground ? 'none' : 'brightness(0) invert(1)' }}
                     />
                   </div>
                 </button>
@@ -372,7 +380,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                     alt="Foodstories" 
                     fill
                     className="object-contain"
-                    style={{ filter: isScrolled ? 'none' : 'brightness(0) invert(1)' }}
+                    style={{ filter: shouldShowBackground ? 'none' : 'brightness(0) invert(1)' }}
                     priority
                   />
                 </div>
@@ -388,7 +396,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                     href={'#'}
                     onMouseEnter={() => item.submenu && setOpenSubmenu(item.label)}
                     className={`text-base font-semibold transition-colors duration-200 relative ${
-                      isScrolled 
+                      shouldShowBackground
                         ? 'text-gray-900 hover:text-gray-600' 
                         : 'text-white hover:text-white hover:text-opacity-80'
                     }`}
@@ -402,7 +410,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                   <button
                     onClick={handleSelectAddress}
                     className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-200 ${
-                      isScrolled
+                      shouldShowBackground
                         ? 'bg-white/60 hover:bg-white/80 text-gray-900'
                         : 'bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm'
                     }`}
@@ -426,7 +434,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                         alt="dropdown" 
                         fill
                         className="object-contain"
-                        style={{ filter: isScrolled ? 'brightness(0)' : 'none' }}
+                        style={{ filter: shouldShowBackground ? 'brightness(0)' : 'none' }}
                       />
                     </div>
                   </button>
@@ -442,7 +450,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                   <div className="relative">
                     <div className="relative">
                       <div className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
-                        isScrolled ? 'text-gray-600' : 'text-white text-opacity-70'
+                        shouldShowBackground ? 'text-gray-600' : 'text-white text-opacity-70'
                       }`}>
                         <svg
                           className="w-4 h-4"
@@ -469,7 +477,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                         onBlur={handleSearchBlur}
                         className={`w-full h-10 pl-10 pr-4 rounded-full border transition-all duration-200 cursor-pointer
                           focus:outline-none focus:ring-0 text-sm font-normal
-                          ${isScrolled 
+                          ${shouldShowBackground
                             ? 'bg-white/80 backdrop-blur-sm border-gray-200 text-gray-900 placeholder:text-gray-500 focus:bg-white' 
                             : 'bg-white/20 backdrop-blur-sm border-white/30 text-white placeholder:text-white placeholder:text-opacity-70 focus:bg-white/30'
                           }`}
@@ -477,7 +485,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
 
                       {!searchQuery && (
                         <div className="absolute left-10 top-1/2 transform -translate-y-1/2 pointer-events-none text-sm">
-                          <AnimatedPlaceholder isScrolled={isScrolled} />
+                          <AnimatedPlaceholder isScrolled={shouldShowBackground} />
                         </div>
                       )}
                     </div>
@@ -493,7 +501,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                   aria-label="Search"
                 >
                   <svg
-                    className={`w-6 h-6 ${isScrolled ? 'text-gray-900' : 'text-white'}`}
+                    className={`w-6 h-6 ${shouldShowBackground ? 'text-gray-900' : 'text-white'}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -520,7 +528,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                     alt="Account" 
                     fill 
                     className="object-contain"
-                    style={{ filter: isScrolled ? 'none' : 'brightness(0) invert(1)' }}
+                    style={{ filter: shouldShowBackground ? 'none' : 'brightness(0) invert(1)' }}
                   />
                 </div>
               </button>
@@ -543,7 +551,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                       alt="Cart" 
                       fill 
                       className="object-contain"
-                      style={{ filter: isScrolled ? 'none' : 'brightness(0) invert(1)' }}
+                      style={{ filter: shouldShowBackground ? 'none' : 'brightness(0) invert(1)' }}
                     />
                   </div>
                 </button>
@@ -578,7 +586,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
         openSubmenu={openSubmenu}
         handleSubmenuToggle={(label: string) => setOpenSubmenu((prev) => (prev === label ? null : label))}
         isMobile={isMobile}
-        topBarTransition={isScrolled}
+        topBarTransition={shouldShowBackground}
       />
 
       {!isMobile &&
@@ -590,7 +598,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                 submenu={item.submenu}
                 isOpen={openSubmenu === item.label}
                 isMobile={isMobile}
-                transitionBool={isScrolled}
+                transitionBool={shouldShowBackground}
               />
             )
         )}
