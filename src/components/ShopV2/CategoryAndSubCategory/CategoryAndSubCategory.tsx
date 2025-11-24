@@ -73,7 +73,7 @@ const CategoryAndSubCategory = (props: Props) => {
   };
 
   return (
-    <div className="sticky top-0 pt-4 md:pt-[4vw] pb-3 md:pb-[1.2vw] mb-0 px-4 md:p-[1.1vw] flex flex-col gap-3 md:gap-[1.1vw] bg-[#FFF9E5] z-[1]">
+    <div className="sticky top-0 pt-10 md:pt-[4vw] pb-3 md:pb-[1.2vw] mb-0 px-4 md:p-[1.1vw] flex flex-col gap-3 md:gap-[1.1vw] bg-[#FFF9E5] z-[1]">
       {products.isProductListLoading ? (
         <DropdownAndPillsSkeleton />
       ) : (

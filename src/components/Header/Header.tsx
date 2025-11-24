@@ -8,6 +8,13 @@ import originLogo from '/public/assets/images/neworiginlogo.png';
 import userIcon from '/public/assets/images/userIcon.png';
 import cartIcon from '/public/assets/icons/cartIcon.png';
 
+// --- NEW IMPORTS REQUIRED FOR LOCATION FUNCTIONALITY ---
+import { useAtom } from 'jotai';
+import { addressAtom } from '@/features/Address/context/atoms';
+import { profileAtom } from '@/features/AccountPage/context/atoms';
+import whiteDropdownIcon from '/public/assets/images/whiteDropdown.png';
+// --------------------------------------------------------
+
 import { MobileDrawer, Submenu } from '.';
 import OffersRibbon from './OffersRibbon';
 import { setCartItems, setCartTabType } from '@/store/slice/CartSlice';
@@ -20,6 +27,30 @@ type Props = {
   mainMenuItems: MainMenuType[];
   isHeaderSticky: any;
   search?: boolean;
+};
+
+// HELPER FUNCTION: Calculate total cart line items from nested structure
+const getCartItemCount = (cartItems: any[]) => {
+  let count = 0;
+  
+  cartItems.forEach((product: any) => {
+    product.multiple_uoms?.forEach((uom: any) => {
+      if (uom.cart_ripeness && uom.cart_ripeness.length > 0) {
+        // Count each ripeness type as a separate line item
+        uom.cart_ripeness.forEach((ripeness: any) => {
+          const qty = Number(ripeness.qty);
+          if (qty > 0) {
+            count++;
+          }
+        });
+      } else if (uom.cart_quantity > 0) {
+        // Count simple items (no ripeness)
+        count++;
+      }
+    });
+  });
+  
+  return count;
 };
 
 const AnimatedPlaceholder = () => {
@@ -59,6 +90,8 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [currentSearchQuery, setCurrentSearchQuery] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
   const menuRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -66,16 +99,30 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
   const dispatch = useDispatch();
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const cart = useSelector((state: any) => state.cart);
+  
+  // Calculate cart item count from nested structure
+  const cartItemCount = getCartItemCount(cart?.items || []);
+  
+  // --- NEW LOCATION HOOKS ---
+  const [address] = useAtom(addressAtom);
+  const [profile] = useAtom(profileAtom);
+  // --------------------------
 
   const router = useRouter();
   const isMobile = useMediaQuery(600);
+  const isShopPage = router.pathname === '/shop';
 
   useEffect(() => {
     if (search && router.query.q && typeof router.query.q === 'string') {
       setCurrentSearchQuery(router.query.q);
       setSearchQuery(router.query.q);
     }
-  }, [search, router.query.q]);
+    
+    // Check login status on mount
+    const token = localStorage.getItem('user_token');
+    setIsLoggedIn(!!token);
+    
+  }, [search, router.query.q, loginDetails.tabType]);
 
   const handleSearchFieldClick = () => {
     if (!search) {
@@ -120,21 +167,47 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
       dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
     }
   };
+  
+  // --- LOCATION HANDLER ---
+  const handleSelectAddress = () => {
+    dispatch(setIsSidebarOpen(true));
+
+    if (!isLoggedIn) {
+      dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
+      return;
+    }
+    
+    if (!loginDetails.isLogin) {
+        dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
+        return;
+    }
+
+    if (!profile?.data?.profile) {
+      dispatch(setTabType(TabTypeConstant.REGISTER));
+      return;
+    }
+
+    if (address.address.length > 0) {
+      dispatch(setTabType(TabTypeConstant.SELECT_ADDRESS));
+    } else {
+      dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
+    }
+  };
+  // -------------------------
 
   const debouncedSearch = (query: string) => {
-  if (debounceTimeoutRef.current) {
-    clearTimeout(debounceTimeoutRef.current);
-  }
-
-  debounceTimeoutRef.current = setTimeout(() => {
-    if (query.trim().length >= 2) {
-      router.push(`/search?q=${encodeURIComponent(query)}`, undefined, { shallow: true });
-    } else if (query.trim().length < 2) {
-      // Clear the URL query parameter when search text is less than 2 characters
-      router.push('/search', undefined, { shallow: true });
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
     }
-  }, 500);
-};
+
+    debounceTimeoutRef.current = setTimeout(() => {
+      if (query.trim().length >= 2) {
+        router.push(`/search?q=${encodeURIComponent(query)}`, undefined, { shallow: true });
+      } else if (query.trim().length < 2) {
+        router.push('/search', undefined, { shallow: true });
+      }
+    }, 500);
+  };
 
   const handleSearchClick = () => {
     setIsSearchActive(true);
@@ -146,14 +219,14 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
   };
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const value = e.target.value;
-  setSearchQuery(value);
-  
-  if (search) {
-    setCurrentSearchQuery(value);
-    debouncedSearch(value);
-  }
-};
+    const value = e.target.value;
+    setSearchQuery(value);
+    
+    if (search) {
+      setCurrentSearchQuery(value);
+      debouncedSearch(value);
+    }
+  };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -294,12 +367,12 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                 <button
                   onClick={handleCartOpen}
                   className="relative p-2 hover:bg-white hover:bg-opacity-50 rounded-full transition-colors duration-200"
-                  aria-label={`Shopping cart ${cart?.items?.length > 0 ? `(${cart.items.length} items)` : ''}`}
+                  aria-label={`Shopping cart ${cartItemCount > 0 ? `(${cartItemCount} items)` : ''}`}
                 >
-                  {cart?.items?.length > 0 && (
+                  {cartItemCount > 0 && (
                     <div className="absolute -top-1 -right-1 w-5 h-5 bg-secondary-300 text-white 
                                   text-xs font-medium rounded-full flex items-center justify-center">
-                      {cart.items.length > 99 ? '99+' : cart.items.length}
+                      {cartItemCount > 99 ? '99+' : cartItemCount}
                     </div>
                   )}
                   <div className="w-6 h-6 relative">
@@ -315,24 +388,26 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
   }
 
   return (
-    <div ref={menuRef} className={`${isHeaderSticky ? 'fixed top-[1.1vw]' : 'absolute'} flex items-center flex-col w-full z-20`}>
-      <OffersRibbon />
+    <div ref={menuRef} className={`${isHeaderSticky ? 'fixed top-[1.1vw] mob:top-0' : 'absolute top-0'} flex items-center flex-col w-full z-20`}>
+      {/* <OffersRibbon /> */}
 
       <div
-        className={`bg-white shadow-[4px_4px_32px_0px_rgba(0,0,0,0.08)] z-50 w-[80vw] mob:w-full mob:py-[1vw] mob:px-[5vw] ${
+        className={`bg-white shadow-[4px_4px_32px_0px_rgba(0,0,0,0.08)] z-50 w-[80vw] mob:w-full mob:py-[3vw] mob:px-[5vw] ${
           topBarTransition ? 'mt-[-1vw]' : 'mt-[1.1vw] mob:mt-0'
         } transition-all rounded-full mob:rounded-none flex items-center justify-between`}
       >
-        <div className="flex items-center gap-[3vw]">
-          <button onClick={() => setDrawerOpen(!drawerOpen)} className="w-[5vw] hidden mob:block h-[4vw] relative">
-            <Image src={hamberger} alt="hamberger" fill className="object-contain" />
-          </button>
+        <div className="flex items-center gap-[2vw] mob:gap-[3vw] flex-1">
+          {isMobile && (
+             <button onClick={() => setDrawerOpen(!drawerOpen)} className="w-[5vw] h-[4vw] relative flex-shrink-0">
+               <Image src={hamberger} alt="hamberger" fill className="object-contain" />
+             </button>
+          )}
 
           <button 
             onClick={() => router.push('/shop')}
-            className="relative"
+            className="relative flex-shrink-0"
           >
-            <div className="w-[10vw] ml-[2vw] mt-2 mob:w-[30vw] mob:h-[12vw] h-[5vw] mr-[4vw] relative">
+            <div className="w-[10vw] ml-[2vw] mt-2 mob:w-[25vw] mob:h-[10vw] mob:ml-0 h-[5vw] mr-[4vw] mob:mr-0 relative">
               <Image 
                 src={originLogo} 
                 alt="logo" 
@@ -342,9 +417,109 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
               />
             </div>
           </button>
+          
+          {/* --- MOBILE LOCATION BUTTON WITH CAROUSEL (Visible next to logo) --- */}
+          {isMobile && isLoggedIn && (
+            <button
+              onClick={handleSelectAddress}
+              className="flex items-center gap-[2vw] px-[3vw] py-[1.5vw] rounded-full bg-gray-100 text-gray-900 text-[3.5vw] font-medium font-[SofiaPro] flex-1 max-w-[35vw] overflow-hidden"
+              aria-label="Select Delivery Address"
+            >
+              <svg 
+                className="w-[4vw] h-[4vw] flex-shrink-0 text-green-700"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              {address.defaultAddress?.address_name ? (
+                <div className="flex-1 overflow-hidden relative">
+                  <div className="animate-marquee whitespace-nowrap">
+                    <span className="font-bold">
+                      {address.defaultAddress?.address_name}
+                    </span>
+                    <span className="mx-[1.5vw]">•</span>
+                    <span className="font-normal">
+                      {address.defaultAddress.address}
+                    </span>
+                    {/* Duplicate for seamless loop */}
+                    <span className="font-bold ml-[4vw]">
+                      {address.defaultAddress?.address_name}
+                    </span>
+                    <span className="mx-[1.5vw]">•</span>
+                    <span className="font-normal">
+                      {address.defaultAddress.address}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <span className="font-bold truncate">Address</span>
+              )}
+            </button>
+          )}
+          {/* ------------------------------------------------------------------ */}
+          
+          <style jsx>{`
+            @keyframes marquee {
+              0% {
+                transform: translateX(0);
+              }
+              100% {
+                transform: translateX(-50%);
+              }
+            }
+            
+            .animate-marquee {
+              display: inline-block;
+              animation: marquee 12s linear infinite;
+              will-change: transform;
+            }
+          `}</style>
         </div>
 
         <div className="flex items-center gap-[1.1vw]">
+          {/* --- DESKTOP LOCATION BUTTON WITH CAROUSEL (Visible before search) --- */}
+          {!isMobile && isLoggedIn && (
+            <button
+              onClick={handleSelectAddress}
+              className="flex items-center gap-2 px-[1.5vw] py-[0.5vw] rounded-full bg-gray-100 hover:bg-gray-200 text-gray-900 transition-colors max-w-[200px]"
+              aria-label="Select Delivery Address"
+            >
+              <svg 
+                className="w-[1vw] h-[1vw] flex-shrink-0 text-green-700"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              {address.defaultAddress?.address_name ? (
+                <div className="flex-1 overflow-hidden relative">
+                  <div className="animate-marquee whitespace-nowrap text-[1vw]">
+                    <span className="font-bold">
+                      {address.defaultAddress?.address_name}
+                    </span>
+                    <span className="mx-[0.5vw]">•</span>
+                    <span className="font-light">
+                      {address.defaultAddress.address}
+                    </span>
+                    {/* Duplicate for seamless loop */}
+                    <span className="font-bold ml-[2vw]">
+                      {address.defaultAddress?.address_name}
+                    </span>
+                    <span className="mx-[0.5vw]">•</span>
+                    <span className="font-light">
+                      {address.defaultAddress.address}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <span className="font-bold text-[1vw]">Select Address</span>
+              )}
+              <svg className="w-[0.6vw] h-[0.6vw] text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+            </button>
+          )}
+          {/* ------------------------------------------------------------------ */}
+          
           <div className="flex items-center gap-[2vw] pr-[0] mob:hidden">
             <Link
               href="/shop"
@@ -426,9 +601,10 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
             </button>
           )}
 
+          {/* Mobile & Desktop Account/Login */}
           {loginDetails.isLogin ? (
             <button onClick={openAccount}>
-              <div className="w-[1.25vw] mob:w-[5.128vw] mob:h-[5.128vw] h-[1.25vw] relative">
+              <div className="w-[1.25vw] mob:w-[5.5vw] mob:h-[5.5vw] h-[1.25vw] relative">
                 <Image src={userIcon} alt="account icon" fill className="object-contain" />
               </div>
             </button>
@@ -445,9 +621,9 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
             <>
               <div className="h-[1.67vw] w-[.1vw] bg-black-op-30"></div>
               <button onClick={handleCartOpen} className="relative pr-[1.67vw]">
-                {cart?.items?.length > 0 && (
+                {cartItemCount > 0 && (
                   <div className="absolute top-[-.6vw] left-[.7vw] w-[1.25vw] h-[1.25vw] text-[.78vw] rounded-full bg-secondary-300 z-[1] text-white font-[sofiaPro] flex items-center justify-center">
-                    {cart?.items?.length}
+                    {cartItemCount > 99 ? '99+' : cartItemCount}
                   </div>
                 )}
                 <div className="relative w-[1.25vw] h-[1.25vw] z-0">
@@ -464,9 +640,9 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
           onClick={handleCartOpen}
           className="fixed bottom-[5vw] right-[5vw] z-[99] bg-white p-[4vw] rounded-full shadow-xl border border-gray-200"
         >
-          {cart?.items?.length > 0 && (
+          {cartItemCount > 0 && (
             <div className="absolute top-[-2vw] left-[7vw] w-[6vw] h-[6vw] text-[3vw] rounded-full bg-secondary-300 z-[1] text-white flex items-center justify-center">
-              {cart.items.length}
+              {cartItemCount > 99 ? '99+' : cartItemCount}
             </div>
           )}
           <div className="relative w-[6vw] h-[6vw]">
