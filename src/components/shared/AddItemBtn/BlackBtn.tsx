@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { FC } from "react";
 
 interface BlackBtnProps {
   isItemPresent: boolean;
@@ -11,7 +12,7 @@ interface BlackBtnProps {
   handleRemove?: (e: any) => void;
 }
 
-const BlackBtn = (props: BlackBtnProps) => {
+const BlackBtn: FC<BlackBtnProps> = (props) => {
   const {
     isItemPresent,
     quantity,
@@ -19,21 +20,20 @@ const BlackBtn = (props: BlackBtnProps) => {
     handleAddItem,
     handleIncrease,
     handleDecrease,
-    handleRemove,
   } = props;
 
   const [showMaxMessage, setShowMaxMessage] = useState(false);
 
   const isMax = quantity >= maxQuantity;
 
-  // Show the message when quantity reaches max
+  // Effect to show the max message immediately when max quantity is reached
   useEffect(() => {
     if (isMax) {
       setShowMaxMessage(true);
     }
   }, [isMax]);
 
-  // Hide the message after 2 seconds
+  // Effect to hide the max message after 2 seconds
   useEffect(() => {
     if (showMaxMessage) {
       const timer = setTimeout(() => {
@@ -47,11 +47,7 @@ const BlackBtn = (props: BlackBtnProps) => {
   const onDecrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    if (quantity <= 1) {
-      handleRemove?.(e);
-    } else {
-      handleDecrease(e);
-    }
+    handleDecrease(e);
   };
 
   const onIncrease = (e: any) => {
@@ -59,7 +55,6 @@ const BlackBtn = (props: BlackBtnProps) => {
     e.stopPropagation();
     
     if (isMax) {
-      // Show the message when trying to exceed max quantity
       setShowMaxMessage(true);
       return;
     }
@@ -77,30 +72,31 @@ const BlackBtn = (props: BlackBtnProps) => {
     <div className="w-full flex flex-col items-center">
       {isItemPresent ? (
         <>
-          {/* Row for buttons and number */}
           <div className="flex items-center justify-between px-[0.6vw] mob:px-[3vw] bg-white border-[2px] border-[#F3EEDF] rounded-full h-[2.2vw] mob:h-[7vw] w-full">
+            {/* Decrease Button (using HTML entity for mathematical minus for better alignment) */}
             <button
-              className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] rounded-full bg-black text-white text-[1vw] mob:text-[3.5vw] flex items-center justify-center"
+              className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] rounded-full bg-black text-white text-[1vw] mob:text-[3.5vw]"
               onClick={onDecrease}
             >
-              –
+              &#8722;
             </button>
 
             <p className="text-black font-semibold text-[1vw] mob:text-[3.2vw]">
               {quantity}
             </p>
 
+            {/* Increase Button */}
             <button
-              className={`h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] rounded-full flex items-center justify-center text-[1vw] mob:text-[3.5vw] ${
+              className={`h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] rounded-full text-[1vw] mob:text-[3.5vw] ${
                 isMax ? "bg-gray-400 cursor-not-allowed" : "bg-black text-white"
               }`}
               onClick={onIncrease}
+              disabled={isMax}
             >
               +
             </button>
           </div>
 
-          {/* Animated max quantity message */}
           <AnimatePresence>
             {showMaxMessage && (
               <motion.p

@@ -10,6 +10,7 @@ import AddItemBtn from '../shared/AddItemBtn/AddItemBtn';
 import AboutTheProduct from './AboutTheProduct';
 import ProductDetailsPageLoader from '../skeletonLoaders/shop/ProductDetailsPageLoader';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 // Type definitions
 interface UOM {
@@ -25,6 +26,9 @@ interface UOM {
   maximum_quantity: number;
   stepper_quantity: number;
   conversion_text: string;
+  ripeness_types?: string[];
+  cart_ripeness?: Array<{ ripeness_type: string; qty: string }>;
+  cart_quantity?: number;
   [key: string]: any;
 }
 
@@ -68,6 +72,41 @@ interface ProductDetails {
   combo_items: any[];
   isLoading: boolean;
 }
+
+// Max Quantity Toast Component
+const MaxQuantityToast: React.FC<{
+  maxQuantity: number | null;
+  isVisible: boolean;
+  onClose: () => void;
+}> = ({ maxQuantity, isVisible, onClose }) => {
+  useEffect(() => {
+    if (isVisible) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, onClose]);
+
+  if (!isVisible || maxQuantity === null) return null;
+
+  return (
+    <div
+      className={`fixed top-20 left-1/2 -translate-x-1/2 z-40 transition-opacity duration-300 ease-in-out ${
+        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
+    >
+      <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full relative">
+        <div className="flex items-center justify-center w-full gap-2">
+          <InfoOutlinedIcon sx={{ color: 'yellow' }} />
+          <p className="text-[0.70rem] font-semibold text-white text-center leading-tight">
+            Maximum quantity of {maxQuantity} reached for this item.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // Product pairing data
 const PRODUCT_PAIRINGS: Record<number, {
@@ -142,10 +181,10 @@ const HungryForMoreSection: React.FC<{ upsellItems: ProductItem[] }> = ({ upsell
 // Best Pairing Section
 const BestPairingCollapsed: React.FC<{ productDetails: ProductDetails }> = ({ productDetails }) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  
+
   const productId = productDetails.item.id;
   const pairingData = PRODUCT_PAIRINGS[productId];
-  
+
   if (!pairingData) return null;
 
   return (
@@ -215,6 +254,15 @@ const ProductDetailsWrapper = () => {
     combo_items: [],
     isLoading: true
   });
+
+  // Max Quantity Toast State
+  const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
+  const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
+
+  const handleMaxQuantityExceeded = (maxQty: number) => {
+    setToastMaxQuantity(maxQty);
+    setShowMaxQuantityToast(true);
+  };
 
   const getDataFromApi = useGetDataFromApi();
   const router = useRouter();
@@ -318,16 +366,22 @@ const ProductDetailsWrapper = () => {
       </Head>
 
       <div className="mt-[4vw]" style={{ backgroundColor: '#FFF9E5' }}>
+        {/* Max Quantity Toast */}
+        <MaxQuantityToast
+          maxQuantity={toastMaxQuantity}
+          isVisible={showMaxQuantityToast}
+          onClose={() => setShowMaxQuantityToast(false)}
+        />
+
         <div className="max-w-6xl mx-auto px-8 py-12 mob:px-4 mob:py-6">
-          
           {mobile ? (
             <div className="space-y-8">
               <div className="flex justify-center">
                 <div className="relative w-80 h-80 bg-transparent">
-                  <Image 
-                    src={productDetails.item.image} 
-                    fill 
-                    alt={productDetails.item.name || "Product"} 
+                  <Image
+                    src={productDetails.item.image}
+                    fill
+                    alt={productDetails.item.name || "Product"}
                     style={{ objectFit: 'contain' }}
                     priority
                   />
@@ -336,7 +390,7 @@ const ProductDetailsWrapper = () => {
 
               <div className="text-center space-y-4">
                 <h1 className="text-3xl font-bold text-gray-900">{productDetails.item.name}</h1>
-                
+
                 {defaultUOM && (
                   <>
                     <div className="text-2xl font-[SofiaPro] font-bold text-gray-900">
@@ -353,6 +407,7 @@ const ProductDetailsWrapper = () => {
                     varientPrice={defaultUOM?.price}
                     stepperQuantity={defaultUOM?.stepper_quantity}
                     buttonType={'yellowaddtocart'}
+                    onMaxQuantityExceeded={handleMaxQuantityExceeded}
                   />
                 </div>
 
@@ -367,11 +422,11 @@ const ProductDetailsWrapper = () => {
             <div className="flex items-center gap-16 min-h-[550px]">
               <div className="flex-1 flex justify-center">
                 <div className="relative w-96 h-96 bg-transparent">
-                  <Image 
-                    src={productDetails.item.image} 
-                    fill 
-                    alt={productDetails.item.name || "Product"} 
-                    style={{ objectFit: 'contain' }} 
+                  <Image
+                    src={productDetails.item.image}
+                    fill
+                    alt={productDetails.item.name || "Product"}
+                    style={{ objectFit: 'contain' }}
                     className="drop-shadow-xl"
                     priority
                   />
@@ -383,7 +438,7 @@ const ProductDetailsWrapper = () => {
                   <h1 className="text-4xl font-bold text-gray-900 mb-3 leading-tight">
                     {productDetails.item.name}
                   </h1>
-                  
+
                   {defaultUOM && (
                     <>
                       <div className="text-2xl font-bold text-gray-900 mb-1">₹{defaultUOM.price}</div>
@@ -398,6 +453,7 @@ const ProductDetailsWrapper = () => {
                   varientPrice={defaultUOM?.price}
                   stepperQuantity={defaultUOM?.stepper_quantity}
                   buttonType={'yellowaddtocart'}
+                  onMaxQuantityExceeded={handleMaxQuantityExceeded}
                 />
 
                 {productDescription && (

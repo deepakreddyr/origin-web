@@ -9,6 +9,10 @@ import sampleimg from '/public/assets/images/shop/sampleimg2.png';
 import Layout from '@/components/Layout';
 import { FooterDataType, MainMenuType } from '@/utilities/types';
 import { any } from 'zod';
+// --- ASSUMED IMPORT FOR THE ITEMCARD COMPONENT ---
+// Please adjust this path to where your ItemCard is actually located.
+import ItemCard from '@/components/shared/ItemCard'; 
+// --- END ASSUMED IMPORT ---
 
 // Updated Product interface to match your API response
 interface HomeProps {
@@ -31,7 +35,7 @@ interface Product {
     maximum_quantity: number;
     minimum_quantity: number;
     price: number;
-    ripeness_types: any;
+    ripeness_types: string[];
     stepper_quantity: number;
     unit: string;
     uom_id: number;
@@ -54,18 +58,37 @@ interface SearchResponse {
   hasMore?: boolean;
 }
 
-// UOM Popup Modal Component
+// Helper function to find the default ripeness or null (kept for UOMPopup)
+const getDefaultRipeness = (uom: any): string | null => {
+  return uom?.ripeness_types?.length > 0 ? uom.ripeness_types[0] : null;
+};
+
+
+// UOM Popup Modal Component (KEPT AS IT IS USED LOCALLY)
 const UOMPopup: React.FC<{
   product: Product;
   isOpen: boolean;
   onClose: () => void;
   selectedUOM: any;
+  selectedRipeness: string | null;
   onSelectUOM: (uom: any) => void;
-}> = ({ product, isOpen, onClose, selectedUOM, onSelectUOM }) => {
+  onSelectRipeness: (ripeness: string | null) => void;
+}> = ({ product, isOpen, onClose, selectedUOM, selectedRipeness, onSelectUOM, onSelectRipeness }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const availableUOMs = product.multiple_uoms?.filter((uom) => uom?.is_available) || [];
+  
+  const [modalUOM, setModalUOM] = useState(selectedUOM);
+  const [modalRipeness, setModalRipeness] = useState(selectedRipeness);
+  
+  const cartItems = useSelector((state: any) => state.cart.items);
 
-  // Close modal on outside click
+  useEffect(() => {
+    if (isOpen) {
+      setModalUOM(selectedUOM);
+      setModalRipeness(selectedRipeness);
+    }
+  }, [isOpen, selectedUOM, selectedRipeness]);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -92,12 +115,31 @@ const UOMPopup: React.FC<{
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || availableUOMs.length === 0) return null;
 
   const handleUOMSelect = (uom: any) => {
-    onSelectUOM(uom);
-    onClose();
+    setModalUOM(uom);
+    setModalRipeness(uom.ripeness_types?.length > 0 ? uom.ripeness_types[0] : null);
   };
+  
+  const handleDone = () => {
+    if (modalUOM && (!modalUOM.ripeness_types || modalRipeness !== undefined)) {
+      onSelectUOM(modalUOM); 
+      onSelectRipeness(modalRipeness);
+    }
+    onClose();
+  }
+
+  const hasRipenessTypes = modalUOM?.ripeness_types?.length > 0;
+  
+  const currentCartItem = cartItems.find(
+    (item: any) => 
+      item.variant_id === modalUOM?.variant_id && 
+      item.selected_ripeness_type === modalRipeness
+  );
+  
+  const itemQuantity = currentCartItem?.cart_quantity || 0;
+
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -108,7 +150,7 @@ const UOMPopup: React.FC<{
         {/* Header */}
         <div className="relative p-6 pb-4 border-b border-gray-100">
           <button
-            onClick={onClose}
+            onClick={handleDone}
             className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -135,246 +177,95 @@ const UOMPopup: React.FC<{
         </div>
 
         {/* UOM Options */}
-        <div className="p-6 space-y-3 max-h-96 overflow-y-auto">
-          {availableUOMs.map((uom, index) => {
-            const isSelected = selectedUOM?.variant_id === uom.variant_id;
-            const hasDiscount = uom.market_price > uom.price && uom.market_price > 0;
-
-            return (
-              <div
+        <div className="p-6 space-y-4 max-h-96 overflow-y-auto">
+          {/* UOM List */}
+          <h4 className="font-semibold text-gray-700 text-base mb-2">Select Unit of Measurement</h4>
+          <div className="flex flex-wrap gap-2">
+            {availableUOMs.map((uom) => (
+              <button
                 key={uom.variant_id}
-                className={`relative border-2 rounded-xl p-4 cursor-pointer transition-all ${
-                  isSelected 
-                    ? 'border-yellow bg-yellow-50' 
-                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                className={`border-2 rounded-full px-4 py-2 text-sm transition-all ${
+                  modalUOM?.variant_id === uom.variant_id 
+                    ? 'border-yellow bg-yellow-100 text-black font-bold' 
+                    : 'border-gray-200 hover:border-gray-300 text-gray-700'
                 }`}
                 onClick={() => handleUOMSelect(uom)}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-[SofiaPro] font-semibold text-gray-900 text-lg">
-                        {uom.unit}
-                      </span>
-                      {isSelected && (
-                        <div className="w-5 h-5 bg-grey rounded-full flex items-center justify-center">
-                          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="flex items-center gap-2 mt-1">
-                      {hasDiscount ? (
-                        <>
-                          <span className="text-gray-400 line-through text-sm font-[SofiaPro]">
-                            ₹{uom.market_price}
-                          </span>
-                          <span className="text-black font-[SofiaPro] font-bold text-lg">
-                            ₹{uom.price}
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-gray-900 font-[SofiaPro] font-bold text-lg">
-                          ₹{uom.price}
-                        </span>
-                      )}
-                    </div>
-                  </div>
+                {uom.unit} - ₹{uom.price}
+              </button>
+            ))}
+          </div>
 
-                  <div className="ml-4 min-w-[100px]">
+          {/* Ripeness Options */}
+          {modalUOM && hasRipenessTypes && (
+            <div className="pt-4 border-t mt-4">
+              <h4 className="font-semibold text-gray-700 text-base mb-2">Select Ripeness</h4>
+              <div className="flex flex-wrap gap-2">
+                {modalUOM.ripeness_types.map((ripeness: string) => (
+                  <button
+                    key={ripeness}
+                    className={`border-2 rounded-full px-4 py-2 text-sm capitalize transition-all ${
+                      modalRipeness === ripeness 
+                        ? 'border-green-500 bg-green-100 text-green-800 font-bold' 
+                        : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                    }`}
+                    onClick={() => setModalRipeness(ripeness)}
+                  >
+                    {ripeness.replace('_', ' ')}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Action/Add to Cart area for the currently selected UOM/Ripeness */}
+          {modalUOM && (!hasRipenessTypes || modalRipeness !== null) && (
+            <div className="pt-6 border-t mt-6">
+               <h4 className="font-semibold text-gray-700 mb-3">
+                 Current Selection: {modalUOM.unit} 
+                 {modalRipeness && ` (${modalRipeness.replace('_', ' ')})`}
+               </h4>
+               <div className="flex justify-between items-center">
+                 <div className="flex items-center gap-2">
+                   <span className="text-black font-bold text-xl">₹{modalUOM.price}</span>
+                   {modalUOM.market_price > modalUOM.price && (
+                     <span className="text-gray-400 line-through text-md">₹{modalUOM.market_price}</span>
+                   )}
+                 </div>
+                 
+                 <div className="ml-4 min-w-[120px]">
                     <AddItemBtn
                       product={product}
-                      varientId={uom.variant_id}
-                      varientPrice={uom.price}
-                      stepperQuantity={uom.stepper_quantity}
+                      varientId={modalUOM.variant_id}
+                      varientPrice={modalUOM.price}
+                      stepperQuantity={modalUOM.stepper_quantity}
                       buttonType="black"
+                      selectedRipenessType={modalRipeness} 
                     />
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+                 </div>
+               </div>
+            </div>
+          )}
+
+          <div className="pt-4">
+            <button
+                onClick={handleDone}
+                className="w-full bg-yellow-500 text-black font-semibold py-3 rounded-xl hover:bg-yellow-600 transition-colors"
+            >
+                Done and Apply Selection
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-// ProductCard component adapted with enhanced debugging and cart sync fix
-const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
-  const router = useRouter(); 
-  const isMobile = useMediaQuery(600);
-  const cartItems = useSelector((state: any) => state.cart.items);
-  
-  const defaultUOM = product.multiple_uoms.find((uom) => uom.is_default) || product.multiple_uoms[0];
-  const [selectedUOM, setSelectedUOM] = useState(defaultUOM);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  
-  // Debug logging for cart synchronization
-  // useEffect(() => {
-  //   const cartItemsForThisProduct = cartItems.filter((item: any) => item.id === product.id);
-  //   console.log('ProductCard Debug - Search Page:', {
-  //     productId: product.id,
-  //     productName: product.name,
-  //     selectedVariantId: selectedUOM?.variant_id,
-  //     cartItemsForProduct: cartItemsForThisProduct.map((item: any) => ({
-  //       id: item.id,
-  //       variant_id: item.variant_id,
-  //       quantity: item.cart_quantity
-  //     })),
-  //     allCartItems: cartItems.length
-  //   });
-  // }, [product.id, product.name, selectedUOM?.variant_id, cartItems]);
-  
-  if (!defaultUOM) return null;
+// REMOVING ProductCard definition and using the imported ItemCard instead.
+// The ItemCard component from the previous context is assumed to have replaced this definition.
 
-  const hasMultipleUOMs = product.multiple_uoms?.length > 1;
-  const availableUOMs = product.multiple_uoms?.filter((uom) => uom?.is_available) || [];
 
-  const handleUOMChange = (uom: any) => {
-    // console.log('Search ProductCard - UOM changed:', {
-    //   from: selectedUOM?.variant_id,
-    //   to: uom.variant_id,
-    //   unit: uom.unit
-    // });
-    setSelectedUOM(uom);
-  };
-
-  const handleCardClick = () => {
-    if (selectedUOM.is_available) {
-      router.push(`/${product.name.replace(/ /g, '-').toLowerCase()}/${product.id}`);
-    }
-  };
-
-  const handleUOMButtonClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsPopupOpen(true);
-  };
-
-  return (
-    <>
-      <div className="bg-white rounded-[1.5rem] shadow-md overflow-visible flex flex-col h-full transition-all duration-300 relative">
-        <button
-          disabled={!selectedUOM.is_available}
-          onClick={handleCardClick}
-          className={`text-left w-full flex flex-col h-full ${!selectedUOM.is_available ? 'opacity-50' : ''}`}
-        >
-          {/* Image Section */}
-          <div className="w-full flex-shrink-0 relative overflow-hidden rounded-t-[1.5rem]">
-            <div className="overflow-hidden bg-white flex justify-center items-center relative h-[110px] md:h-[170px]">
-              <div className="relative w-[85%] h-[85%]">
-                <Image
-                  src={product.image || sampleimg}
-                  alt={product.name || 'product image'}
-                  fill
-                  sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 25vw"
-                  style={{ objectFit: 'contain' }}
-                />
-              </div>
-              
-              {!selectedUOM.is_available && (
-                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                  <span className="text-white font-[SofiaPro] text-sm font-semibold">
-                    Out of Stock
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Content Section with Gradient Background */}
-          <div
-            className="w-full flex-grow flex flex-col justify-between p-[1.2rem] rounded-b-[1.5rem]"
-            style={{
-              background: 'linear-gradient(180deg, #fef3c7 0%, #fde047 50%, #facc15 100%)',
-              minHeight: '90px',
-              WebkitTransform: 'translateZ(0)',
-              transform: 'translateZ(0)',
-            }}
-          >
-            {/* Top section - Name */}
-            <div className="flex-shrink-0">
-              <p className="font-[SofiaPro] font-semibold text-[0.85rem] leading-[1.2] line-clamp-2 text-black">
-                {product.name}
-              </p>
-            </div>
-
-            {/* Bottom section - Price, Unit, and Button */}
-            <div className="flex-shrink-0">
-              <div className="flex justify-between items-center mb-[0.4rem]">
-                <div className="flex items-center gap-[0.3rem]">
-                  {selectedUOM.market_price > selectedUOM.price && selectedUOM.market_price > 0 ? (
-                    <>
-                      <p className="text-gray-400 line-through text-[0.7rem]">
-                        ₹{selectedUOM.market_price}
-                      </p>
-                      <p className="text-black font-semibold text-[0.7rem]">
-                        ₹{selectedUOM.price}
-                      </p>
-                    </>
-                  ) : (
-                    <p className="text-black font-semibold text-[0.7rem]">
-                      ₹{selectedUOM.price}
-                    </p>
-                  )}
-                </div>
-                
-                {/* UOM Display with Popup Trigger */}
-                <div className="relative">
-                  {hasMultipleUOMs && availableUOMs.length > 1 ? (
-                    <button
-                      type="button"
-                      onClick={handleUOMButtonClick}
-                      className="flex items-center gap-[0.2rem] text-[#737373] text-[0.7rem] hover:text-black transition-colors border border-gray-300 rounded-full px-2 py-1 hover:border-gray-400 bg-white/80"
-                    >
-                      <span>{selectedUOM.unit}</span>
-                      <svg
-                        className="w-3 h-3"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                  ) : (
-                    <p className="text-right text-[#737373] text-[0.7rem]">{selectedUOM.unit}</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="rounded-[1.5rem] overflow-hidden">
-                <AddItemBtn
-                  product={product}
-                  varientId={selectedUOM.variant_id}
-                  varientPrice={selectedUOM.price}
-                  stepperQuantity={selectedUOM.stepper_quantity}
-                  buttonType="black"
-                />
-              </div>
-            </div>
-          </div>
-        </button>
-      </div>
-
-      {/* UOM Popup Modal */}
-      {hasMultipleUOMs && availableUOMs.length > 1 && (
-        <UOMPopup
-          product={product}
-          isOpen={isPopupOpen}
-          onClose={() => setIsPopupOpen(false)}
-          selectedUOM={selectedUOM}
-          onSelectUOM={handleUOMChange}
-        />
-      )}
-    </>
-  );
-};
-
-// LoadingCard component
+// LoadingCard component (KEPT)
 const LoadingCard: React.FC = () => (
   <div className="bg-white rounded-[1.5rem] shadow-[0_8px_24px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.06)] overflow-hidden animate-pulse flex flex-col h-full">
     <div className="w-full h-[110px] md:h-[170px] bg-gray-200"></div>
@@ -390,41 +281,6 @@ const LoadingCard: React.FC = () => (
     </div>
   </div>
 );
-
-// // Cart Debug Component (temporary - remove in production)
-// const CartDebugInfo: React.FC = () => {
-//   const cartItems = useSelector((state: any) => state.cart.items);
-//   const [showDebug, setShowDebug] = useState(false);
-
-//   // Only show in development
-//   if (process.env.NODE_ENV !== 'development') return null;
-
-//   return (
-//     <>
-//       <button
-//         onClick={() => setShowDebug(!showDebug)}
-//         className="fixed bottom-4 right-4 bg-red-500 text-white px-3 py-2 rounded text-xs z-50"
-//       >
-//         {showDebug ? 'Hide' : 'Show'} Cart Debug
-//       </button>
-      
-//       {showDebug && (
-//         <div className="fixed top-4 right-4 bg-white border border-red-500 p-4 rounded shadow-lg z-50 max-w-sm max-h-96 overflow-auto">
-//           <h3 className="font-bold text-sm mb-2">Cart Debug Info ({cartItems.length} items)</h3>
-//           <pre className="text-xs text-gray-800">
-//             {JSON.stringify(cartItems.map((item: any) => ({
-//               id: item.id,
-//               name: item.name,
-//               variant_id: item.variant_id,
-//               unit: item.unit,
-//               quantity: item.cart_quantity
-//             })), null, 2)}
-//           </pre>
-//         </div>
-//       )}
-//     </>
-//   );
-// };
 
 // Main SearchResults component
 const SearchResults = (props: HomeProps) => {
@@ -488,7 +344,6 @@ const SearchResults = (props: HomeProps) => {
 
 
   // Debounced search function
-  // Debounced search function
 const debouncedSearch = (query: string) => {
   if (debounceTimeoutRef.current) {
     clearTimeout(debounceTimeoutRef.current);
@@ -529,7 +384,6 @@ const debouncedSearch = (query: string) => {
   const handleNewSearch = async (query: string) => {
     if (!query.trim()) return;
     
-    // console.log('Search - Starting new search:', query);
     setLoading(true);
     setProducts([]);
     setPage(1);
@@ -537,7 +391,6 @@ const debouncedSearch = (query: string) => {
     
     try {
       const response = await searchProducts(query, 1);
-      // console.log('Search - Results received:', response.data.length, 'products');
       setProducts(response.data);
       setTotalCount(response.data.length);
       setHasMore(response.hasMore || false);
@@ -572,8 +425,6 @@ const debouncedSearch = (query: string) => {
   return (
     <Layout mainMenuItems={mainMenuItems} isHeaderSticky={true} footerData={footerData} search={true}>
       <div className="min-h-screen bg-[#FFF9E5]">
-        {/* Cart Debug Info (only in development) */}
-        {/* <CartDebugInfo /> */}
         
         {/* Search Results */}
         <div className="max-w-[90vw] mx-auto px-[2vw] mob:px-[5vw] py-[3vw] mob:py-[6vw]">
@@ -616,7 +467,9 @@ const debouncedSearch = (query: string) => {
             <>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[5vw] mob:gap-[4vw]">
                 {products.map((product) => (
-                  <ProductCard key={`search-product-${product.id}`} product={product} />
+                  // *** CRITICAL CHANGE: Using ItemCard with the expected prop name ***
+                  <ItemCard key={`search-product-${product.id}`} itemDetails={product} />
+                  // ********************************************************************
                 ))}
               </div>
 

@@ -1,5 +1,5 @@
 import { addItemToCart, decreaseQuantity, increaseQuantity, removeItemFromCart } from '@/store/slice/CartSlice';
-import React from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import YellowBtn from './YellowBtn';
 import WhiteBtn from './WhiteBtn';
@@ -11,8 +11,10 @@ import { getAddressAndStoreId } from '@/utilities/utils';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 
-const AddItemBtn = (props: any) => {
-  const { product, varientId, stepperQuantity, buttonType } = props;
+// Remove MaxQuantityToast component here. <-- This line remains correct.
+
+const AddItemBtn: FC<any> = (props) => {
+  const { product, varientId, stepperQuantity, buttonType, selectedRipenessType = null, onMaxQuantityExceeded } = props; // <-- onMaxQuantityExceeded is the callback
 
   const dispatch = useDispatch();
   const cartItems = useSelector((state: any) => state.cart.items);
@@ -20,22 +22,10 @@ const AddItemBtn = (props: any) => {
   const sendDataToApi = useSendDataToApi();
   const getDataFromApi = useGetDataFromApi();
 
-  // Normalize product ID - handle both 'id' and product ID variations
+  // Normalize product ID
   const normalizedProductId = product.id || product.product_id;
   
-  // Current variant cart data - more robust matching
-  const cartItem = cartItems.find(
-    (item: any) => {
-      const itemProductId = item.id || item.product_id;
-      const itemVariantId = item.variant_id || item.varientId;
-      
-      return itemProductId === normalizedProductId && itemVariantId === varientId;
-    }
-  );
-  
-  const itemQuantity = cartItem?.cart_quantity || 0;
-
-  // Get selected variant details from product - handle different structures
+  // Get selected variant details from product
   const uomArray = product.multiple_uoms || product.uoms || [];
   const selectedVariant = uomArray.find(
     (variant: any) => {
@@ -45,6 +35,45 @@ const AddItemBtn = (props: any) => {
   );
   
   const maxQuantity = selectedVariant?.maximum_quantity || Infinity;
+
+  // CRITICAL FIX: Find the cart item in the nested structure
+  let itemQuantity = 0; // Quantity of the specific UOM + ripeness type
+  const cartProduct = cartItems.find((item: any) => {
+    const itemProductId = item.id || item.product_id;
+    return itemProductId === normalizedProductId;
+  });
+  
+  let cartUOM: any;
+
+  if (cartProduct) {
+    // Find the specific UOM variant
+    cartUOM = cartProduct.multiple_uoms?.find((uom: any) => uom.variant_id === varientId);
+    
+    if (cartUOM) {
+      if (selectedRipenessType && cartUOM.cart_ripeness) {
+        // Get quantity for specific ripeness type
+        const ripenessObj = cartUOM.cart_ripeness.find((r: any) => r.ripeness_type === selectedRipenessType);
+        itemQuantity = ripenessObj ? Number(ripenessObj.qty) : 0;
+      } else {
+        // Get total quantity for simple item (no ripeness)
+        itemQuantity = cartUOM.cart_quantity || 0;
+      }
+    }
+  }
+
+  // Function to calculate total quantity for a variant ID across all ripeness types
+  const getVariantTotalQuantity = () => {
+    if (!cartUOM) return 0; 
+
+    if (cartUOM.cart_ripeness && Array.isArray(cartUOM.cart_ripeness)) {
+      // Sum up quantities from all ripeness types for this UOM
+      return cartUOM.cart_ripeness.reduce((sum: number, r: any) => sum + Number(r.qty), 0);
+    } else {
+      // If no ripeness types, use the general cart_quantity
+      return cartUOM.cart_quantity || 0;
+    }
+  };
+
 
   const handleClearCartFromBackend = () => {
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['clearCartItems'];
@@ -89,11 +118,21 @@ const AddItemBtn = (props: any) => {
     e.stopPropagation();
     if (!selectedVariant) return;
 
+    // --- CRITICAL CHECK: Call callback if limit is exceeded ---
+    const totalQuantityInCart = getVariantTotalQuantity();
+    const newTotalQuantity = totalQuantityInCart + stepperQuantity;
+
+    if (newTotalQuantity > maxQuantity) {
+      onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity); // <-- Call callback
+      return;
+    }
+    // -----------------------------------------------------------
+
     // Normalize product data structure for cart
     const normalizedProduct = {
       id: normalizedProductId,
       item_code: product.item_code,
-      name: product.name || product.item_name, // Handle both name variations
+      name: product.name || product.item_name,
       image: product.image,
       bg_color: product.bg_color,
       is_available: product.is_available,
@@ -109,7 +148,8 @@ const AddItemBtn = (props: any) => {
       selectedUOM: {
         ...selectedVariant,
         stepper_quantity: stepperQuantity
-      }
+      },
+      selectedRipenessType
     }));
 
     if (loginDetails.user) {
@@ -120,9 +160,19 @@ const AddItemBtn = (props: any) => {
   const handleIncrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    // prevent increase if max reached
-    if (itemQuantity >= maxQuantity) return;
-    dispatch(increaseQuantity({ varientId, stepperQuantity }));
+    
+    // --- CRITICAL CHECK: Call callback if limit is exceeded ---
+    const totalQuantityInCart = getVariantTotalQuantity();
+    const newTotalQuantity = totalQuantityInCart + stepperQuantity;
+
+    if (newTotalQuantity > maxQuantity) {
+      onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity); // <-- Call callback
+      return;
+    }
+    // -----------------------------------------------------------
+    
+    dispatch(increaseQuantity({ varientId, stepperQuantity, selectedRipenessType }));
+    
     if (loginDetails.user) {
       addItemsToApi();
     }
@@ -131,11 +181,18 @@ const AddItemBtn = (props: any) => {
   const handleDecrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    
+    const itemToRemove = { varientId, selectedRipenessType };
+
     if (itemQuantity <= stepperQuantity) {
-      dispatch(removeItemFromCart(varientId));
+      // Remove the item completely
+      dispatch(removeItemFromCart(itemToRemove)); 
     } else {
-      dispatch(decreaseQuantity({ varientId, stepperQuantity }));
+      // Decrease quantity
+      dispatch(decreaseQuantity({ varientId, stepperQuantity, selectedRipenessType }));
     }
+    
     if (loginDetails.user) {
       addItemsToApi();
     }
@@ -144,12 +201,15 @@ const AddItemBtn = (props: any) => {
   const handleRemoveUOM = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    dispatch(removeItemFromCart(varientId));
+    
+    const itemToRemove = { varientId, selectedRipenessType };
+    dispatch(removeItemFromCart(itemToRemove)); 
+    
     if (loginDetails.user) {
       addItemsToApi();
     }
   };
-
+  
   const isVariantPresent = itemQuantity > 0;
 
   const BUTTON_MAP: any = {
@@ -173,6 +233,9 @@ const AddItemBtn = (props: any) => {
         handleIncrease={handleIncrease}
         handleDecrease={handleDecrease}
         handleRemove={handleRemoveUOM}
+        product={product}
+        selectedRipenessType={selectedRipenessType}
+        variantId={varientId}
       />
     ),
     yellow: (
@@ -210,7 +273,12 @@ const AddItemBtn = (props: any) => {
     )
   };
 
-  return <div>{BUTTON_MAP[buttonType]}</div>;
+  // Removed the MaxQuantityToast from here.
+  return (
+    <div className="relative z-10"> 
+        {BUTTON_MAP[buttonType]}
+    </div>
+  );
 };
 
 export default AddItemBtn;

@@ -26,25 +26,81 @@ export const removeRouteSourceFromLs = (name: string) => {
   localStorage.removeItem(name);
 };
 
+// utils.ts
+
+// ... (other utility functions)
+
+/**
+ * Transforms the nested cart structure (CartProduct[]) into the API payload format.
+ * If a UOM has 'cart_ripeness' entries, it breaks them out into separate UOM objects
+ * in the API payload, each with its specific quantity and ripeness_type.
+ * * @param cartItems Array of top-level Product objects (the nested structure from Redux/LS).
+ * @returns An object conforming to the API payload structure { items: [...] }.
+ */
 export const prepareCartItemsToApi = (cartItems: any) => {
-  return {
-    items: cartItems.map((item: any) => ({
-      item_code: item.item_code,
-      uom: Array.isArray(item.multiple_uoms)
-        ? item.multiple_uoms
-            .map((uomItem: any) => ({
-              id: uomItem.variant_id,
-              qty: uomItem.cart_quantity
-            }))
-            .filter((uom: any) => uom.qty > 0)
-        : [
-            {
-              id: item.variant_id,
-              qty: item.cart_quantity
+  // cartItems is expected to be an array of top-level Product objects
+  console.log(cartItems, "cartItems");
+  const apiPayload: any[] = [];
+
+  cartItems.forEach((product: any) => {
+    // 1. Check for valid product code and UOMs
+    if (!product.item_code || !Array.isArray(product.multiple_uoms)) {
+      return; // Skip invalid product entries
+    }
+
+    // 2. Initialize the structure for this product
+    const productEntry = {
+      item_code: product.item_code,
+      uom: [] as any[]
+    };
+
+    // 3. Iterate through all UOM/Variant entries within this product
+    product.multiple_uoms.forEach((uom: any) => {
+      // We only care about UOMs that have been added to the cart (cart_quantity > 0)
+      if (uom.variant_id && uom.cart_quantity > 0) {
+        
+        // --- NEW LOGIC FOR RIPENESS EXPLOSION ---
+        if (Array.isArray(uom.cart_ripeness) && uom.cart_ripeness.length > 0) {
+          // A. Item with Ripeness: Explode into separate UOM entries
+          uom.cart_ripeness.forEach((ripenessObj: { ripeness_type: string, qty: string }) => {
+            const qty = Number(ripenessObj.qty);
+            if (qty > 0) {
+              productEntry.uom.push({
+                id: uom.variant_id,
+                qty: qty,
+                ripeness_type: ripenessObj.ripeness_type, // Include ripeness_type
+              });
             }
-          ]
-    }))
-  };
+          });
+        } else {
+          // B. Simple Item (No Ripeness split): Use the UOM's total quantity
+          const qty = Number(uom.cart_quantity);
+          if (qty > 0) {
+            const uomEntry: { id: number, qty: number, ripeness_type?: string } = {
+              id: uom.variant_id,
+              qty: qty,
+            };
+            
+            // If the UOM has a default selected_ripeness_type (e.g., if it was 
+            // implicitly selected but not split), include it.
+            // NOTE: The previous version used selected_ripeness_type which is only 
+            // available in the FLAT structure. In the NESTED structure, if cart_ripeness
+            // is empty, we must rely on omitting the ripeness_type key entirely.
+            
+            productEntry.uom.push(uomEntry);
+          }
+        }
+      }
+    });
+
+    // 4. Add the product entry to the main payload if it contains UOMs
+    if (productEntry.uom.length > 0) {
+      apiPayload.push(productEntry);
+    }
+  });
+
+  console.log(apiPayload, "apiPayload");
+  return { items: apiPayload };
 };
 
 export const clearPostPaymentItemsinLs = () => {

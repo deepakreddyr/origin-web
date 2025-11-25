@@ -113,7 +113,6 @@ const Cart = () => {
 
     if (cartItemFromLs) {
       const cartItems = prepareCartItemsToApi(JSON.parse(cartItemFromLs));
-
       const successHandler = () => {
         fetchCartItemsFromApi();
       };
