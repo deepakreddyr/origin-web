@@ -24,7 +24,7 @@ interface UOM {
     maximum_quantity: number;
     minimum_quantity: number;
     price: number;
-    ripeness_types: string[]; 
+    ripeness_types?: string[]; 
     stepper_quantity: number;
     unit: string;
     uom_id: number;
@@ -143,7 +143,10 @@ const UOMPopup: FC<{
   const allVariants: UOM[] = [];
   product.multiple_uoms.forEach((uom) => {
     if (!uom.is_available) return;
-    if (uom.ripeness_types?.length > 0) {
+    
+    // CORRECTED: Explicitly check if uom.ripeness_types is truthy (not null or undefined)
+    // before attempting to access .length or .forEach.
+    if (uom.ripeness_types && uom.ripeness_types.length > 0) {
       uom.ripeness_types.forEach((ripeness) => {
         allVariants.push({ ...uom, selected_ripeness_type: ripeness });
       });
@@ -230,7 +233,9 @@ const UOMPopup: FC<{
     };
   }, [isTransitioning, onClose, isOpen]);
 
-  const hasRipenessTypes = product.multiple_uoms.some(uom => uom?.ripeness_types?.length > 0);
+  const hasRipenessTypes = product.multiple_uoms.some(uom => 
+    uom.ripeness_types && uom.ripeness_types.length > 0
+  );
   if (!isOpen && !isTransitioning) return null;
 
   // CRITICAL FIX: Calculate subtotal from nested structure
@@ -447,7 +452,9 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
     itemDetails?.multiple_uoms?.filter((uom: any) => uom?.is_available) || [];
     
   const hasMultipleUOMs = availableUOMs.length > 1;
-  const hasRipenessOptions = availableUOMs.some(uom => uom?.ripeness_types?.length > 0);
+  const hasRipenessOptions = availableUOMs.some(uom => 
+    uom.ripeness_types && uom.ripeness_types.length > 0
+  );
   const requiresSelection = hasMultipleUOMs || hasRipenessOptions;
 
 
