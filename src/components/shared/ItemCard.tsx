@@ -6,7 +6,7 @@ import sampleimg from '/public/assets/images/shop/sampleimg2.png';
 import { useSelector } from 'react-redux';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
-// --- SVG IMPORTS (User provided) ---
+// --- SVG IMPORTS ---
 import ripeSvg from '/public/assets/svg/ripe.svg';
 import semiRipeSvg from '/public/assets/svg/semiripe.svg';
 import rawSvg from '/public/assets/svg/raw.svg';
@@ -14,7 +14,7 @@ import infoicon1 from '/public/assets/svg/infoicon1.svg'
 import infoicon2 from '/public/assets/svg/infoicon2.svg'
 // -----------------------
 
-// Interface Definitions (Keeping them local for completeness)
+// Interface Definitions
 interface UOM {
     conversion_text: string | null;
     is_available: boolean;
@@ -24,7 +24,7 @@ interface UOM {
     maximum_quantity: number;
     minimum_quantity: number;
     price: number;
-    ripeness_types?: string[]; 
+    ripeness_types?: string[]; // Made optional
     stepper_quantity: number;
     unit: string;
     uom_id: number;
@@ -52,7 +52,7 @@ interface Product {
 }
 
 // ==========================================================
-// MAX QUANTITY TOAST COMPONENT (Style Corrections)
+// MAX QUANTITY TOAST COMPONENT
 // ==========================================================
 const MaxQuantityToast: FC<{ 
     maxQuantity: number | null; 
@@ -80,8 +80,6 @@ const MaxQuantityToast: FC<{
   >
     {/* SINGLE WRAPPER — fully rounded */}
     <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full relative">
-
-      {/* Left red bar */}
 
       {/* Centered text + icon */}
       <div className="flex items-center justify-center w-full gap-2">
@@ -113,7 +111,8 @@ const UOMPopup: FC<{
   const modalRef = useRef<HTMLDivElement>(null);
   const cartItems = useSelector((state: any) => state.cart.items);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isRipenessInfoOpen, setIsRipenessInfoOpen] = useState(false);
+  // State for the ripeness info panel
+  const [isRipenessInfoOpen, setIsRipenessInfoOpen] = useState(false); 
   
   // --- NEW STATE FOR TOAST ---
   const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
@@ -144,8 +143,7 @@ const UOMPopup: FC<{
   product.multiple_uoms.forEach((uom) => {
     if (!uom.is_available) return;
     
-    // CORRECTED: Explicitly check if uom.ripeness_types is truthy (not null or undefined)
-    // before attempting to access .length or .forEach.
+    // TypeScript Fix: Explicitly check if uom.ripeness_types is truthy
     if (uom.ripeness_types && uom.ripeness_types.length > 0) {
       uom.ripeness_types.forEach((ripeness) => {
         allVariants.push({ ...uom, selected_ripeness_type: ripeness });
@@ -201,6 +199,8 @@ const UOMPopup: FC<{
         
     } else {
         setIsTransitioning(false);
+        // Reset Ripeness Info state when closing
+        setIsRipenessInfoOpen(false); 
         setTimeout(() => {
             document.body.style.overflow = 'unset';
         }, 300);
@@ -233,6 +233,7 @@ const UOMPopup: FC<{
     };
   }, [isTransitioning, onClose, isOpen]);
 
+  // TypeScript Fix: Explicitly check for ripeness_types
   const hasRipenessTypes = product.multiple_uoms.some(uom => 
     uom.ripeness_types && uom.ripeness_types.length > 0
   );
@@ -248,6 +249,20 @@ const UOMPopup: FC<{
     (acc, variant) => acc + (variant.price * variant.cart_quantity),
     0
   );
+
+  // --- NEW LOGIC FOR CONDITIONAL SLASHED SUBTOTAL ---
+  const cartVariants = variantsWithCartInfo.filter(v => v.cart_quantity > 0);
+  
+  const totalMarketPrice = cartVariants.reduce(
+      (acc, variant) => acc + (variant.market_price * variant.cart_quantity),
+      0
+  );
+  
+  // Check if EVERY variant in the cart has a discount (market price > price)
+  const isSlashedSubtotalVisible = cartVariants.length > 0 && cartVariants.every(
+      variant => variant.market_price > variant.price
+  );
+  // ---------------------------------------------------
 
 
   return (
@@ -303,7 +318,7 @@ const UOMPopup: FC<{
                     <Image src={ripeSvg} alt="Ripe" width={14} height={14} />
                     <Image src={semiRipeSvg} alt="Semi Ripe" width={14} height={14} />
                     <Image src={rawSvg} alt="Raw" width={14} height={14} />
-                    <span className="text-xs font-bold text-green-700">
+                    <span className="text-xs font-bold text-green-700 font-[SofiaPro]">
                         What is ripeness options?
                     </span>
                     <svg className={`w-3 h-3 text-green-700 transition-transform duration-300 ${isRipenessInfoOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
@@ -313,13 +328,13 @@ const UOMPopup: FC<{
                     <div className="p-2 rounded-lg text-xs text-gray-700 space-y-1 border border-gray-200">
                         <p className="flex items-center gap-3">
                             <Image src={infoicon1} alt='' width={20} height={20} className="flex-shrink-0" />
-                            <span className='text-[1vw] mob:text-[2.7vw] font-[SofiaPro] font-medium'>
+                            <span className='text-xs mob:text-[2.7vw] font-[SofiaPro] font-medium'>
                                 Choose your preferred fruits and specify ripeness level: Ripe, Semi Ripe, or Raw.
                             </span>
                         </p>
                         <p className="flex items-center gap-3">
                             <Image src={infoicon2} alt='' width={20} height={20} className="flex-shrink-0" />
-                            <span className='text-[1vw] mob:text-[2.7vw] font-[SofiaPro] font-medium'>
+                            <span className='text-xs mob:text-[2.7vw] font-[SofiaPro] font-medium'>
                                 Your selected options will be delivered with your order, ensuring the freshest produce just the way you like it.
                             </span>
                         </p>
@@ -353,10 +368,10 @@ const UOMPopup: FC<{
                          <span className="text-lg mr-2"></span>
                     )}
                     <div className="flex-1">
-                        <p className="font-semibold text-gray-800 capitalize leading-none text-sm">
+                        <p className="font-semibold text-gray-800 capitalize leading-none text-sm font-[SofiaPro]">
                             {ripenessLabel || product.name}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-gray-500 mt-1 font-[SofiaPro]">
                             {variant.unit}
                         </p>
                     </div>
@@ -364,18 +379,13 @@ const UOMPopup: FC<{
                 
                 {/* Price and Discount */}
                 <div className="flex flex-col items-end mr-3 flex-shrink-0">
-                    {hasDiscount && (
-                        <span className="text-[0.6rem] font-medium text-green-500">
-                           SAVE {((1 - variant.price / variant.market_price) * 100).toFixed(0)}%
-                        </span>
-                    )}
                     <div className="flex items-center gap-1">
                         {hasDiscount && (
-                            <span className="line-through text-xs text-gray-400">
+                            <span className="line-through text-xs text-gray-400 font-[SofiaPro]">
                                 ₹{variant.market_price}
                             </span>
                         )}
-                        <span className="font-bold text-base text-gray-900">
+                        <span className="font-bold text-base text-gray-900 font-[SofiaPro]">
                             ₹{variant.price}
                         </span>
                     </div>
@@ -401,20 +411,30 @@ const UOMPopup: FC<{
 
         {/* Footer/Confirm Button */}
         <div className="flex-shrink-0 p-3 bg-white">
-          <div className="flex justify-between items-center bg-black h-[4.5vw] mob:h-[15vw] p-4 rounded-full">
-            <p className="font-bold text-sm text-white">
+          <div className={`
+            flex justify-between items-center bg-black
+            h-14 md:h-16
+            p-4 rounded-full
+          `}>
+            <p className="font-normal font-[SofiaPro] text-sm text-white">
                 Sub total
-                <span className='block text-xs font-normal mt-0.5'>
-                    <span className="text-gray-400 line-through mr-1">₹{(subTotalPrice / 0.88).toFixed(2)}</span> 
-                    <span className="text-base font-bold">₹{subTotalPrice.toFixed(2)}</span>
+                <span className='block text-xs font-normal mt-0.5 font-[SofiaPro]'>
+                    {/* CONDITIONAL SLASHED PRICE */}
+                    {isSlashedSubtotalVisible && (
+                        <span className="text-gray-400 line-through mr-1 text-xs font-normal">
+                            ₹{totalMarketPrice}
+                        </span> 
+                    )}
+                    <span className="text-base font-bold">₹{subTotalPrice}</span>
                 </span>
             </p>
             <button
-              onClick={onClose}
+              // onClick={onClose} will trigger useEffect to reset state
+              onClick={onClose} 
               disabled={subTotalQuantity === 0}
-              className={`px-8 py-3 rounded-full font-bold text-sm transition-colors shadow-md ${
+              className={`px-8 py-3 rounded-full font-bold text-sm transition-colors shadow-md font-[SofiaPro] ${
                 subTotalQuantity > 0 
-                  ? 'bg-yellow-400 text-black hover:bg-yellow-500'
+                  ? 'bg-primary' // Changed to typical e-commerce primary color
                   : 'bg-gray-700 text-gray-400 cursor-not-allowed'
               }`}
             >
@@ -429,7 +449,7 @@ const UOMPopup: FC<{
 
 
 // --------------------------------------------------------
-// ITEM CARD COMPONENT - (Passing the new prop in the popup)
+// ITEM CARD COMPONENT
 // --------------------------------------------------------
 
 const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
@@ -452,6 +472,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
     itemDetails?.multiple_uoms?.filter((uom: any) => uom?.is_available) || [];
     
   const hasMultipleUOMs = availableUOMs.length > 1;
+  // TypeScript Fix: Explicitly check for ripeness_types
   const hasRipenessOptions = availableUOMs.some(uom => 
     uom.ripeness_types && uom.ripeness_types.length > 0
   );
@@ -556,15 +577,15 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                   {/* Reduced price font sizes */}
                   {selectedUOM.market_price > selectedUOM.price && selectedUOM.market_price > 0 ? (
                     <>
-                      <p className="text-gray-400 line-through text-[0.65rem]">
+                      <p className="text-gray-400 line-through text-[0.65rem] font-[SofiaPro]">
                         ₹{selectedUOM.market_price}
                       </p>
-                      <p className="text-black font-semibold text-[0.65rem]">
+                      <p className="text-black font-semibold text-[0.65rem] font-[SofiaPro]">
                         ₹{selectedUOM.price}
                       </p>
                     </>
                   ) : (
-                    <p className="text-black font-semibold text-[0.65rem]">
+                    <p className="text-black font-semibold text-[0.65rem] font-[SofiaPro]">
                       ₹{selectedUOM.price}
                     </p>
                   )}
@@ -572,7 +593,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
 
                 <div className="relative">
                     {/* Reduced unit font size */}
-                    <p className="text-right text-[#737373] text-[0.65rem] capitalize">
+                    <p className="text-right text-[#737373] text-[0.65rem] capitalize font-[SofiaPro]">
                       {selectedUOM.unit}
                       {ripenessText}
                     </p>
@@ -580,15 +601,13 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
               </div>
 
               <div className="rounded-[1rem] overflow-hidden">
-                {/* CORRECTION: Always show "More Options" if selection is required.
-                  The state of the item in the cart doesn't negate the need to open the selection popup.
-                */}
+                {/* CORRECTION: Always show "More Options" if selection is required. */}
                 {requiresSelection ? ( // Check if selection is required
                   <button
                     type="button"
                     // Reduced button height and font size
                     onClick={handleAddItemClick}
-                    className="w-full h-7 bg-black text-white font-semibold text-xs rounded-[0.75rem] flex items-center justify-center hover:bg-gray-800 transition-colors"
+                    className="w-full h-7 bg-black text-white font-semibold text-xs rounded-[0.75rem] flex items-center justify-center hover:bg-gray-800 transition-colors font-[SofiaPro]"
                   >
                     More Options
                   </button>

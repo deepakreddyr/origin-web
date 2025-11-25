@@ -26,14 +26,13 @@ const BlackBtn: FC<BlackBtnProps> = (props) => {
 
   const isMax = quantity >= maxQuantity;
 
-  // Effect to show the max message immediately when max quantity is reached
+  // ... (Effects remain the same)
   useEffect(() => {
     if (isMax) {
       setShowMaxMessage(true);
     }
   }, [isMax]);
 
-  // Effect to hide the max message after 2 seconds
   useEffect(() => {
     if (showMaxMessage) {
       const timer = setTimeout(() => {
@@ -73,9 +72,9 @@ const BlackBtn: FC<BlackBtnProps> = (props) => {
       {isItemPresent ? (
         <>
           <div className="flex items-center justify-between px-[0.6vw] mob:px-[3vw] bg-white border-[2px] border-[#F3EEDF] rounded-full h-[2.2vw] mob:h-[7vw] w-full">
-            {/* Decrease Button (using HTML entity for mathematical minus for better alignment) */}
+            {/* Decrease Button - ADDED: flex items-center justify-center */}
             <button
-              className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] rounded-full bg-black text-white text-[1vw] mob:text-[3.5vw]"
+              className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] rounded-full bg-black text-white text-[1vw] mob:text-[3.5vw] flex items-center justify-center"
               onClick={onDecrease}
             >
               &#8722;
@@ -85,9 +84,9 @@ const BlackBtn: FC<BlackBtnProps> = (props) => {
               {quantity}
             </p>
 
-            {/* Increase Button */}
+            {/* Increase Button - ADDED: flex items-center justify-center */}
             <button
-              className={`h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] rounded-full text-[1vw] mob:text-[3.5vw] ${
+              className={`h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] rounded-full text-[1vw] mob:text-[3.5vw] flex items-center justify-center ${
                 isMax ? "bg-gray-400 cursor-not-allowed" : "bg-black text-white"
               }`}
               onClick={onIncrease}
