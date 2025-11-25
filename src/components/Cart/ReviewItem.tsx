@@ -33,7 +33,6 @@ const ReviewItem = (props: any) => {
     selectedRipenessType: ripenessType
   };
 
-  console.log(ripenessType,"ripenesstype");
   return (
     <li
       style={{
@@ -106,7 +105,7 @@ const ReviewItem = (props: any) => {
 
       {uom.maximum_quantity > 1 && uom.cart_quantity > uom.maximum_quantity && (
         <div>
-          <p className="font-[SofiaPro] text-[.83vw] mt-[.4vw] font-medium text-semibold text-danger">
+          <p className="font-[SofiaPro] text-[0.83vw] mob:text-[3vw] mt-[.4vw] font-medium text-semibold text-danger">
             Maximum available <span className="font-semibold">{uom.maximum_quantity}</span>. Please change the Quantity.
           </p>
         </div>

@@ -163,7 +163,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
           <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-black-op-60 font-medium">
             {cart.totalQuantity} Items
           </p>
-          <p className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] text-black mob:pt-[.6vw]">
+          <p className="font-[SofiaPro] font-semibold text-[1.1vw] mob:text-[4.1vw] text-black mob:pt-[.6vw]">
             ₹{getTotalAmount()}
           </p>
         </div>

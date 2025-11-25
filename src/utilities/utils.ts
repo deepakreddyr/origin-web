@@ -39,7 +39,7 @@ export const removeRouteSourceFromLs = (name: string) => {
  */
 export const prepareCartItemsToApi = (cartItems: any) => {
   // cartItems is expected to be an array of top-level Product objects
-  console.log(cartItems, "cartItems");
+  // console.log(cartItems, "cartItems");
   const apiPayload: any[] = [];
 
   cartItems.forEach((product: any) => {
@@ -99,7 +99,7 @@ export const prepareCartItemsToApi = (cartItems: any) => {
     }
   });
 
-  console.log(apiPayload, "apiPayload");
+  // console.log(apiPayload, "apiPayload");
   return { items: apiPayload };
 };
 
