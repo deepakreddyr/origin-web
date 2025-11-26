@@ -275,7 +275,7 @@ const AddItemBtn: FC<any> = (props) => {
 
   // Removed the MaxQuantityToast from here.
   return (
-    <div className="relative z-10"> 
+    <div className="relative z-5"> 
         {BUTTON_MAP[buttonType]}
     </div>
   );

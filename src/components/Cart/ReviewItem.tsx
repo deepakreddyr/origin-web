@@ -5,6 +5,52 @@ import deleteIcon from '/public/assets/icons/deleteIcon.png';
 import { removeItemFromCart } from '@/store/slice/CartSlice';
 import { useDispatch } from 'react-redux';
 
+// --- NEW IMPORTS for Ripeness Icons ---
+import ripeSvg from '/public/assets/svg/ripe.svg';
+import semiRipeSvg from '/public/assets/svg/semiripe.svg';
+import rawSvg from '/public/assets/svg/raw.svg';
+
+// Map ripeness key to SVG icon, display text, and color
+const ripenessMap: {
+  [key: string]: { text: string; image: any; color: string };
+} = {
+  raw: { text: 'RAW', image: rawSvg, color: '#878787' },
+  semi_ripe: { text: 'SEMI', image: semiRipeSvg, color: '#878787' },
+  ripe: { text: 'RIPE', image: ripeSvg, color: '#878787' },
+};
+
+// Helper component to render the Ripeness Icon and Text
+const RipenessIndicator = ({ ripenessType }: { ripenessType: string }) => {
+  // Normalize ripenessType to match map keys (e.g., "semi_ripe")
+  const ripenessKey = ripenessType.toLowerCase().replace(/\s/g, '_');
+  const info = ripenessKey && ripenessMap[ripenessKey] ? ripenessMap[ripenessKey] : null;
+
+  if (!info) return null;
+
+  return (
+    <div className="flex items-center whitespace-nowrap">
+      {/* SVG Icon */}
+      <div className="w-[.6vw] h-[.6vw] mob:w-[2.2vw] mob:h-[2.2vw] flex items-center justify-center mr-[.2vw]">
+        <Image 
+            src={info.image} 
+            alt={`${info.text} ripeness`} 
+            width={10} 
+            height={10} 
+            className="object-contain" 
+        />
+      </div>
+      {/* Ripeness Text */}
+      <span 
+        className={`font-[SofiaPro] text-[.83vw] mob:text-[3vw] font-medium capitalize`} 
+        style={{ color: info.color }}
+      >
+        {info.text}
+      </span>
+    </div>
+  );
+};
+// --- END NEW HELPERS ---
+
 const ReviewItem = (props: any) => {
   const { product, uom, ripenessType } = props;
   const dispatch = useDispatch();
@@ -22,16 +68,13 @@ const ReviewItem = (props: any) => {
     itemQuantity = uom.cart_quantity;
   }
 
-  // Helper to format ripeness text
-  const ripenessText = ripenessType 
-    ? ` (${ripenessType.replace('_', ' ')})` 
-    : '';
-    
   // Prepare payload for removeItemFromCart
   const removeItemPayload = {
     varientId: uom.variant_id,
     selectedRipenessType: ripenessType
   };
+
+  const hasRipeness = !!ripenessType;
 
   return (
     <li
@@ -56,10 +99,27 @@ const ReviewItem = (props: any) => {
             <h4 className="font-[sofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold">
               {product?.name}
             </h4>
-            {/* Display Unit and Ripeness */}
-            <span className="text-black/60 text-[.83vw] mob:text-[3vw] font-[sofiaPro] capitalize">
-              {`${uom.unit}${ripenessText}`}
-            </span>
+            
+            {/* --- UPDATED DISPLAY: Ripeness (Icon+Text) + Dot + Unit --- */}
+            <div className="flex items-center text-black/60 text-[.83vw] mob:text-[3vw] font-[sofiaPro] capitalize">
+              
+              {/* Ripeness Icon and Text (Only renders if ripenessType is defined) */}
+              {hasRipeness && <RipenessIndicator ripenessType={ripenessType} />}
+
+              {/* Separator Dot (Only renders if ripenessType is defined) */}
+              {hasRipeness && (
+                <span className="font-extrabold text-[.83vw] mob:text-[3vw] mx-[.15vw]">
+                    •
+                </span>
+              )}
+
+              {/* Unit Display */}
+              <span>
+                {uom.unit}
+              </span>
+            </div>
+            {/* --- END UPDATED DISPLAY --- */}
+
           </div>
         </div>
 

@@ -1,6 +1,54 @@
 import Image from 'next/image';
 import React from 'react';
 
+// Imported SVGs to be used for ripeness display
+import ripeSvg from '/public/assets/svg/ripe.svg';
+import semiRipeSvg from '/public/assets/svg/semiripe.svg';
+import rawSvg from '/public/assets/svg/raw.svg';
+
+// Map ripeness key to SVG icon, display text, and color
+const ripenessMap: {
+  [key: string]: { text: string; image: any; color: string };
+} = {
+  raw: { text: 'RAW', image: rawSvg, color: '#878787' },
+  semi_ripe: { text: 'SEMI', image: semiRipeSvg, color: '#878787' },
+  ripe: { text: 'RIPE', image: ripeSvg, color: '#878787' },
+};
+
+// Helper component to render the Ripeness Icon and Text
+const RipenessIndicator = ({ uom }: { uom: any }) => {
+  const ripenessKey = uom.ripeness;
+  const info = ripenessKey && ripenessMap[ripenessKey] ? ripenessMap[ripenessKey] : null;
+
+  if (!info) return null;
+
+  return (
+    <div className="flex items-center">
+      {/* SVG Icon */}
+      <div className="w-[.6vw] h-[.6vw] mob:w-[2.2vw] mob:h-[2.2vw] flex items-center justify-center mr-[.2vw]">
+        <Image 
+            src={info.image} 
+            alt={`${info.text} ripeness`} 
+            width={10} 
+            height={10} 
+            className="object-contain" 
+        />
+      </div>
+      {/* Ripeness Text */}
+      <p className={`font-[SofiaPro] text-[.83vw] mob:text-[3vw] font-medium capitalize`} style={{ color: info.color }}>
+        {info.text}
+      </p>
+    </div>
+  );
+};
+
+// Helper component to render the separator dot
+const SeparatorDot = () => (
+    <span className="font-[SofiaPro] font-extrabold text-[.83vw] mob:text-[3vw] text-black-op-60 mx-[.15vw]">
+        •
+    </span>
+);
+
 const ItemsList = (props: any) => {
   const { orderDetailsData } = props;
   const { order_code, items } = orderDetailsData;
@@ -33,10 +81,8 @@ const ItemsList = (props: any) => {
           item.ordered_uoms?.map((uom: any, uomIndex: number) => {
             const isUnavailable = uom.shortage_qty >= 1;
             
-            // FIXED: Use 'ripeness' from API response (not 'selected_ripeness_type')
-            const ripenessText = uom.ripeness 
-              ? ` (${uom.ripeness.replace('_', ' ')})` 
-              : '';
+            // Check for ripeness existence
+            const hasRipeness = !!uom.ripeness;
             
             return (
               <div 
@@ -57,9 +103,20 @@ const ItemsList = (props: any) => {
                     <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold text-black ">
                       {item.name}
                     </p>
-                    <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] pt-[.4vw] mob:pt-[1vw] font-medium text-black-op-60 capitalize">
-                      {uom.unit}{ripenessText} x {uom.cart_quantity}
-                    </p>
+                    {/* COMBINED LINE: Ripeness (Icon+Text) + Dot + UOM/Quantity */}
+                    <div className="flex items-center pt-[.4vw] mob:pt-[1vw]">
+                      
+                      {/* Ripeness Icon and Text (Renders only if ripeness exists) */}
+                      {hasRipeness && <RipenessIndicator uom={uom} />}
+                      
+                      {/* Separator Dot (Renders only if ripeness exists) */}
+                      {hasRipeness && <SeparatorDot />}
+
+                      {/* UOM and Quantity */}
+                      <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] font-medium text-black-op-60 capitalize">
+                        {uom.unit} x {uom.cart_quantity}
+                      </p>
+                    </div>
                   </div>
                   <div className="text-right">
                     {uom.market_price_sub_total && uom.market_price_sub_total > uom.subtotal && (
