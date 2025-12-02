@@ -205,7 +205,7 @@ const UOMPopup: FC<{
                 height={14}
               />
               <span className="text-xs font-bold text-green-700">
-                What is ripeness options?
+                How does Ripeness Quotient Index (RQI) work?
               </span>
               <svg
                 className={`w-3 h-3 text-green-700 transition-transform duration-300 ${

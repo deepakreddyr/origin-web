@@ -319,7 +319,7 @@ const UOMPopup: FC<{
                     <Image src={semiRipeSvg} alt="Semi Ripe" width={14} height={14} />
                     <Image src={rawSvg} alt="Raw" width={14} height={14} />
                     <span className="text-xs font-bold text-green-700 font-[SofiaPro]">
-                        What is ripeness options?
+                        How does Ripeness Quotient Index (RQI) work?
                     </span>
                     <svg className={`w-3 h-3 text-green-700 transition-transform duration-300 ${isRipenessInfoOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                 </button>

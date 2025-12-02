@@ -426,7 +426,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
               aria-label="Select Delivery Address"
             >
               <svg 
-                className="w-[4vw] h-[4vw] flex-shrink-0 text-green-700"
+                className="w-[4vw] h-[4vw] flex-shrink-0 text-black-700"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z" />
@@ -486,7 +486,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
               aria-label="Select Delivery Address"
             >
               <svg 
-                className="w-[1vw] h-[1vw] flex-shrink-0 text-green-700"
+                className="w-[1vw] h-[1vw] flex-shrink-0 text-black-700"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z" />

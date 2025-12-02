@@ -105,7 +105,7 @@ const BlackBtn: FC<BlackBtnProps> = (props) => {
                 transition={{ duration: 0.3 }}
                 className="text-red-500 font-medium text-[0.8vw] mob:text-[2.8vw] mt-[0.5vw] mob:mt-[1vw] text-center"
               >
-                Oops! Max quantity reached
+                {/* Oops! Max quantity reached */}
               </motion.p>
             )}
           </AnimatePresence>
