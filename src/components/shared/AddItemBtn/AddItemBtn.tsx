@@ -20,10 +20,8 @@ const AddItemBtn: FC<any> = (props) => {
   const sendDataToApi = useSendDataToApi();
   const getDataFromApi = useGetDataFromApi();
 
-  // Normalize product ID
   const normalizedProductId = product.id || product.product_id;
   
-  // Get selected variant details from product
   const uomArray = product.multiple_uoms || product.uoms || [];
   const selectedVariant = uomArray.find(
     (variant: any) => {
@@ -34,8 +32,8 @@ const AddItemBtn: FC<any> = (props) => {
   
   const maxQuantity = selectedVariant?.maximum_quantity || Infinity;
 
-  // CRITICAL FIX: Find the cart item in the nested structure
-  let itemQuantity = 0; // Quantity of the specific UOM + ripeness type
+  // Find cart item and specific quantity
+  let itemQuantity = 0;
   const cartProduct = cartItems.find((item: any) => {
     const itemProductId = item.id || item.product_id;
     return itemProductId === normalizedProductId;
@@ -44,34 +42,28 @@ const AddItemBtn: FC<any> = (props) => {
   let cartUOM: any;
 
   if (cartProduct) {
-    // Find the specific UOM variant
     cartUOM = cartProduct.multiple_uoms?.find((uom: any) => uom.variant_id === varientId);
     
     if (cartUOM) {
       if (selectedRipenessType && cartUOM.cart_ripeness) {
-        // Get quantity for specific ripeness type
         const ripenessObj = cartUOM.cart_ripeness.find((r: any) => r.ripeness_type === selectedRipenessType);
         itemQuantity = ripenessObj ? Number(ripenessObj.qty) : 0;
       } else {
-        // Get total quantity for simple item (no ripeness)
         itemQuantity = cartUOM.cart_quantity || 0;
       }
     }
   }
 
-  // Function to calculate total quantity for a variant ID across all ripeness types
+  // ===== FIX: Calculate total for this specific variant (all ripeness types) =====
   const getVariantTotalQuantity = () => {
     if (!cartUOM) return 0; 
 
     if (cartUOM.cart_ripeness && Array.isArray(cartUOM.cart_ripeness)) {
-      // Sum up quantities from all ripeness types for this UOM
       return cartUOM.cart_ripeness.reduce((sum: number, r: any) => sum + Number(r.qty), 0);
     } else {
-      // If no ripeness types, use the general cart_quantity
       return cartUOM.cart_quantity || 0;
     }
   };
-
 
   const handleClearCartFromBackend = () => {
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['clearCartItems'];
@@ -116,17 +108,23 @@ const AddItemBtn: FC<any> = (props) => {
     e.stopPropagation();
     if (!selectedVariant) return;
 
-    // --- CRITICAL CHECK: Call callback if limit is exceeded ---
+    // Check if already at max before adding
     const totalQuantityInCart = getVariantTotalQuantity();
+    
+    // If already at max, show toast and prevent action
+    if (totalQuantityInCart >= maxQuantity) {
+      onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
+      return;
+    }
+
+    // Check max quantity for THIS variant (across all ripeness types)
     const newTotalQuantity = totalQuantityInCart + stepperQuantity;
 
     if (newTotalQuantity > maxQuantity) {
       onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
       return;
     }
-    // -----------------------------------------------------------
 
-    // Normalize product data structure for cart
     const normalizedProduct = {
       id: normalizedProductId,
       item_code: product.item_code,
@@ -159,15 +157,22 @@ const AddItemBtn: FC<any> = (props) => {
     e.preventDefault();
     e.stopPropagation();
     
-    // --- CRITICAL CHECK: Call callback if limit is exceeded ---
+    // Check if already at max before increasing
     const totalQuantityInCart = getVariantTotalQuantity();
+    
+    // If already at max, show toast and prevent action
+    if (totalQuantityInCart >= maxQuantity) {
+      onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
+      return;
+    }
+    
+    // Check max quantity for THIS variant (across all ripeness types)
     const newTotalQuantity = totalQuantityInCart + stepperQuantity;
 
     if (newTotalQuantity > maxQuantity) {
       onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
       return;
     }
-    // -----------------------------------------------------------
     
     dispatch(increaseQuantity({ varientId, stepperQuantity, selectedRipenessType }));
     
@@ -180,14 +185,11 @@ const AddItemBtn: FC<any> = (props) => {
     e.preventDefault();
     e.stopPropagation();
     
-    
     const itemToRemove = { varientId, selectedRipenessType };
 
     if (itemQuantity <= stepperQuantity) {
-      // Remove the item completely
       dispatch(removeItemFromCart(itemToRemove)); 
     } else {
-      // Decrease quantity
       dispatch(decreaseQuantity({ varientId, stepperQuantity, selectedRipenessType }));
     }
     

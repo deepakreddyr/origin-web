@@ -12,8 +12,7 @@ import semiRipeSvg from '/public/assets/svg/semiripe.svg';
 import rawSvg from '/public/assets/svg/raw.svg';
 import infoicon1 from '/public/assets/svg/infoicon1.svg'
 import infoicon2 from '/public/assets/svg/infoicon2.svg'
-import itemRipenessSvg from '/public/assets/svg/itemRipeness.svg'; // <<< NEW IMPORT
-// -----------------------
+import itemRipenessSvg from '/public/assets/svg/itemRipeness.svg';
 
 // Interface Definitions
 interface UOM {
@@ -59,9 +58,10 @@ const MaxQuantityToast: FC<{
     maxQuantity: number | null; 
     isVisible: boolean; 
     onClose: () => void;
-}> = ({ maxQuantity, isVisible, onClose }) => {
+    itemName?: string;
+    isInsideModal?: boolean;
+}> = ({ maxQuantity, isVisible, onClose, itemName = "this item", isInsideModal = false }) => {
     
-    // Auto-close effect (3 seconds)
     useEffect(() => {
         if (isVisible) {
             const timer = setTimeout(() => {
@@ -73,32 +73,47 @@ const MaxQuantityToast: FC<{
 
     if (!isVisible || maxQuantity === null) return null;
 
+    // Different positioning strategy for modal vs page
+    if (isInsideModal) {
+        return (
+            <div 
+                className={`absolute left-1/2 -top-14 transform -translate-x-1/2 w-[90%] transition-opacity duration-300 ease-in-out z-[9999] ${
+                    isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                }`}
+            >
+                <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full relative">
+                    <div className="flex items-center justify-center w-full gap-2">
+                        <InfoOutlinedIcon sx={{color: 'yellow', fontSize: '1.2rem'}}/>
+                        <p className="text-[0.70rem] font-semibold text-white text-center leading-tight">
+                            Maximum quantity of {maxQuantity} reached for {itemName}.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div 
-            className={`absolute z-30 left-1/2 -top-12 transform -translate-x-1/2 w-[90%] max-w-sm transition-opacity duration-300 ease-in-out ${
+            className={`fixed z-[60] left-1/2 bottom-4 transform -translate-x-1/2 w-[90%] max-w-sm transition-opacity duration-300 ease-in-out ${
                 isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
         >
-            {/* SINGLE WRAPPER — fully rounded */}
             <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full relative">
-                {/* Centered text + icon */}
                 <div className="flex items-center justify-center w-full gap-2">
-                    <InfoOutlinedIcon sx={{color: 'yellow'}}/>
+                    <InfoOutlinedIcon sx={{color: 'yellow', fontSize: '1.2rem'}}/>
                     <p className="text-[0.70rem] font-semibold text-white text-center leading-tight">
-                        Maximum quantity of {maxQuantity} reached for this item.
+                        Maximum quantity of {maxQuantity} reached for {itemName}.
                     </p>
                 </div>
             </div>
         </div>
     );
 };
-// ==========================================================
-
 
 // --------------------------------------------------------
 // UOM POPUP COMPONENT 
 // --------------------------------------------------------
-
 const UOMPopup: FC<{
   product: Product;
   isOpen: boolean;
@@ -108,10 +123,8 @@ const UOMPopup: FC<{
   const modalRef = useRef<HTMLDivElement>(null);
   const cartItems = useSelector((state: any) => state.cart.items);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  // State for the ripeness info panel
   const [isRipenessInfoOpen, setIsRipenessInfoOpen] = useState(false); 
   
-  // --- NEW STATE FOR TOAST ---
   const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
   const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
   
@@ -119,9 +132,6 @@ const UOMPopup: FC<{
       setToastMaxQuantity(maxQty);
       setShowMaxQuantityToast(true);
   };
-  // ---------------------------
-  
-  // --- Ripeness Icon Mapping ---
   const getRipenessSvg = (ripeness: string) => {
     switch (ripeness.toLowerCase().replace(/ /g, '_')) {
       case 'raw':
@@ -135,7 +145,6 @@ const UOMPopup: FC<{
     }
   }
 
-  // --- Variant Generation ---
   const allVariants: UOM[] = [];
   product.multiple_uoms.forEach((uom) => {
     if (!uom.is_available) return;
@@ -149,28 +158,23 @@ const UOMPopup: FC<{
     }
   });
 
-  // CRITICAL FIX: Find cart quantities from nested structure
   const variantsWithCartInfo = allVariants.map((variant) => {
-    // Find the product in cart
     const cartProduct = cartItems.find((item: any) => item.id === product.id);
     
     let cart_quantity = 0;
     
     if (cartProduct) {
-      // Find the UOM in the product
       const cartUOM = cartProduct.multiple_uoms?.find(
         (uom: any) => uom.variant_id === variant.variant_id
       );
       
       if (cartUOM) {
         if (variant.selected_ripeness_type && cartUOM.cart_ripeness) {
-          // Get quantity for specific ripeness
           const ripenessObj = cartUOM.cart_ripeness.find(
             (r: any) => r.ripeness_type === variant.selected_ripeness_type
           );
           cart_quantity = ripenessObj ? Number(ripenessObj.qty) : 0;
         } else if (!variant.selected_ripeness_type) {
-          // Get total quantity for simple item
           cart_quantity = cartUOM.cart_quantity || 0;
         }
       }
@@ -182,20 +186,14 @@ const UOMPopup: FC<{
     };
   });
   
-  
-  // --- Modal Control Effects ---
   useEffect(() => {
     if (isOpen) {
         document.body.style.overflow = 'hidden';
         setTimeout(() => setIsTransitioning(true), 10);
-        
-        // Hide toast when modal opens
         setShowMaxQuantityToast(false); 
         setToastMaxQuantity(null);
-        
     } else {
         setIsTransitioning(false);
-        // Reset Ripeness Info state when closing
         setIsRipenessInfoOpen(false); 
         setTimeout(() => {
             document.body.style.overflow = 'unset';
@@ -232,9 +230,9 @@ const UOMPopup: FC<{
   const hasRipenessTypes = product.multiple_uoms.some(uom => 
     uom.ripeness_types && uom.ripeness_types.length > 0
   );
+  
   if (!isOpen && !isTransitioning) return null;
 
-  // CRITICAL FIX: Calculate subtotal from nested structure
   const subTotalQuantity = variantsWithCartInfo.reduce(
     (acc, variant) => acc + variant.cart_quantity, 
     0
@@ -245,7 +243,6 @@ const UOMPopup: FC<{
     0
   );
 
-  // --- NEW LOGIC FOR CONDITIONAL SLASHED SUBTOTAL ---
   const cartVariants = variantsWithCartInfo.filter(v => v.cart_quantity > 0);
   
   const totalMarketPrice = cartVariants.reduce(
@@ -253,12 +250,9 @@ const UOMPopup: FC<{
       0
   );
   
-  // Check if EVERY variant in the cart has a discount (market price > price)
   const isSlashedSubtotalVisible = cartVariants.length > 0 && cartVariants.every(
       variant => variant.market_price > variant.price
   );
-  // ---------------------------------------------------
-
 
   return (
     <div 
@@ -272,15 +266,15 @@ const UOMPopup: FC<{
         `}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* === MAX QUANTITY TOAST PLACEMENT === */}
+        {/* Toast positioned relative to modal card - appears above the card */}
         <MaxQuantityToast 
             maxQuantity={toastMaxQuantity}
             isVisible={showMaxQuantityToast}
             onClose={() => setShowMaxQuantityToast(false)}
+            itemName={product.name}
+            isInsideModal={true}
         />
-        {/* ================================== */}
         
-        {/* Header */}
         <div className="flex-shrink-0 p-4 pb-3 border-b border-gray-100 relative">
           <button 
             onClick={onClose} 
@@ -303,7 +297,6 @@ const UOMPopup: FC<{
           </div>
         </div>
         
-        {/* Ripeness Info Section */}
         {hasRipenessTypes && (
             <div className="p-4 pt-2 pb-2 flex-shrink-0">
                 <button 
@@ -338,7 +331,6 @@ const UOMPopup: FC<{
             </div>
         )}
         
-        {/* Scrollable Variant List */}
         <div className={`flex-grow overflow-y-auto ${hasRipenessTypes ? 'p-4 pt-2 space-y-2' : 'p-4 space-y-2'}`}>
           {variantsWithCartInfo.map((variant) => {
             const isSelected = variant.cart_quantity > 0;
@@ -352,7 +344,7 @@ const UOMPopup: FC<{
               <div 
                 key={`${variant.variant_id}-${ripenessLabel}`}
                 className={`flex items-center justify-between p-2 rounded-lg border transition-colors ${
-                  isSelected ? 'bg-[#FFF9E5] border-yellow-300' : ' hover:border-gray-300'
+                  isSelected ? 'border-yellow-200' : ' hover:border-gray-300'
                 }`}
               >
                 <div className="flex items-center flex-1 pr-2">
@@ -364,7 +356,7 @@ const UOMPopup: FC<{
                     )}
                     <div className="flex-1">
                         <p className="font-semibold text-gray-800 capitalize leading-none text-sm font-[SofiaPro]">
-                            {ripenessLabel || product.name}
+                            {ripenessLabel ||""}
                         </p>
                         <p className="text-xs text-gray-500 mt-1 font-[SofiaPro]">
                             {variant.unit}
@@ -372,7 +364,6 @@ const UOMPopup: FC<{
                     </div>
                 </div>
                 
-                {/* Price and Discount */}
                 <div className="flex flex-col items-end mr-3 flex-shrink-0">
                     <div className="flex items-center gap-1">
                         {hasDiscount && (
@@ -386,7 +377,6 @@ const UOMPopup: FC<{
                     </div>
                 </div>
 
-                {/* Add Button */}
                 <div className="w-[90px] flex-shrink-0">
                   <AddItemBtn
                     product={product}
@@ -404,7 +394,6 @@ const UOMPopup: FC<{
           })}
         </div>
 
-        {/* Footer/Confirm Button */}
         <div className="flex-shrink-0 p-3 bg-white">
           <div className={`
             flex justify-between items-center bg-black
@@ -414,7 +403,6 @@ const UOMPopup: FC<{
             <p className="font-normal font-[SofiaPro] text-sm text-white">
                 Sub total
                 <span className='block text-xs font-normal mt-0.5 font-[SofiaPro]'>
-                    {/* CONDITIONAL SLASHED PRICE */}
                     {isSlashedSubtotalVisible && (
                         <span className="text-gray-400 line-through mr-1 text-xs font-normal">
                             ₹{totalMarketPrice}
@@ -441,11 +429,9 @@ const UOMPopup: FC<{
   );
 };
 
-
 // --------------------------------------------------------
 // ITEM CARD COMPONENT
 // --------------------------------------------------------
-
 const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
   const router = useRouter();
   const cartItems = useSelector((state: any) => state.cart.items);
@@ -460,7 +446,6 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
   const [selectedRipeness, setSelectedRipeness] = useState<string | null>(initialRipeness);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   
-  // --- ADD TOAST STATE FOR ITEMCARD ---
   const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
   const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
   
@@ -468,7 +453,6 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
       setToastMaxQuantity(maxQty);
       setShowMaxQuantityToast(true);
   };
-  // ---------------------------
   
   if (!defaultUOM) return null;
 
@@ -480,7 +464,6 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
     uom.ripeness_types && uom.ripeness_types.length > 0
   );
   const requiresSelection = hasMultipleUOMs || hasRipenessOptions;
-
 
   const handleSelectionMade = (uom: UOM, ripeness: string | null) => {
     setSelectedUOM(uom); 
@@ -505,40 +488,37 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
     }
   };
   
+  // ===== CALCULATE TOTAL QUANTITY ACROSS ALL UOMS/RIPENESS =====
   const currentCartProduct = cartItems.find((item: any) => item.id === itemDetails.id);
   
-  let itemQuantity = 0;
-  if (currentCartProduct) {
-      const cartUOM = currentCartProduct.multiple_uoms?.find(
-          (uom: any) => uom.variant_id === selectedUOM.variant_id
-      );
-      if (cartUOM) {
-          if (selectedRipeness && cartUOM.cart_ripeness) {
-              const ripenessObj = cartUOM.cart_ripeness.find(
-                  (r: any) => r.ripeness_type === selectedRipeness
-              );
-              itemQuantity = ripenessObj ? Number(ripenessObj.qty) : 0;
-          } else {
-              itemQuantity = cartUOM.cart_quantity || 0;
-          }
+  let totalQuantityAcrossProduct = 0;
+  
+  if (currentCartProduct && currentCartProduct.multiple_uoms) {
+    currentCartProduct.multiple_uoms.forEach((cartUOM: any) => {
+      if (cartUOM.cart_ripeness && Array.isArray(cartUOM.cart_ripeness)) {
+        // Sum all ripeness quantities for this UOM
+        cartUOM.cart_ripeness.forEach((r: any) => {
+          totalQuantityAcrossProduct += Number(r.qty) || 0;
+        });
+      } else {
+        // Simple item without ripeness
+        totalQuantityAcrossProduct += Number(cartUOM.cart_quantity) || 0;
       }
+    });
   }
-  
-  const ripenessText = selectedRipeness 
-    ? `, ${selectedRipeness.replace('_', ' ')}` 
-    : '';
-  
+  // ==============================================================
 
   return (
     <>
+      {/* Toast outside the card wrapper so it's not clipped */}
+      <MaxQuantityToast 
+          maxQuantity={toastMaxQuantity}
+          isVisible={showMaxQuantityToast}
+          onClose={() => setShowMaxQuantityToast(false)}
+          itemName={itemDetails.name}
+      />
+      
       <div className="rounded-[1rem] shadow-md overflow-hidden flex flex-col h-full relative">
-        {/* === MAX QUANTITY TOAST FOR ITEMCARD === */}
-        <MaxQuantityToast 
-            maxQuantity={toastMaxQuantity}
-            isVisible={showMaxQuantityToast}
-            onClose={() => setShowMaxQuantityToast(false)}
-        />
-        {/* ================================== */}
         
         <button
           disabled={!selectedUOM.is_available}
@@ -557,18 +537,16 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                 />
               </div>
 
-              {/* --- MODIFIED RIPENESS INDICATOR: BOTTOM RIGHT and BIGGER --- */}
               {hasRipenessOptions && (
-                  <div className="absolute bottom-2 right-2 z-10 p-1 bg-white rounded-full shadow-lg"> {/* Changed top-2 to bottom-2 */}
+                  <div className="absolute bottom-2 right-2 z-[5] p-1 bg-white rounded-full shadow-lg">
                       <Image 
                           src={itemRipenessSvg} 
                           alt="Multiple Ripeness Options" 
-                          width={30} // Increased size
-                          height={30} // Increased size
+                          width={30}
+                          height={30}
                       />
                   </div>
               )}
-              {/* ------------------------------ */}
 
               {!selectedUOM.is_available && (
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -623,13 +601,45 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
 
               <div className="rounded-[1rem] overflow-hidden">
                 {requiresSelection ? (
-                  <button
-                    type="button"
-                    onClick={handleAddItemClick}
-                    className="w-full h-7 bg-black text-white font-semibold text-xs rounded-[0.75rem] flex items-center justify-center hover:bg-gray-800 transition-colors font-[SofiaPro]"
-                  >
-                    More Options
-                  </button>
+                  totalQuantityAcrossProduct > 0 ? (
+                    // Show stepper when items are in cart
+                    <div className="flex items-center justify-between px-2 bg-white border-[2px] border-[#F3EEDF] rounded-full h-7">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setIsPopupOpen(true);
+                        }}
+                        className="h-5 w-5 rounded-full bg-black text-white text-sm flex items-center justify-center"
+                      >
+                        &#8722;
+                      </button>
+
+                      <p className="text-black font-semibold text-sm">
+                        {totalQuantityAcrossProduct}
+                      </p>
+
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setIsPopupOpen(true);
+                        }}
+                        className="h-5 w-5 rounded-full bg-black text-white text-sm flex items-center justify-center"
+                      >
+                        +
+                      </button>
+                    </div>
+                  ) : (
+                    // Show "More Options" when cart is empty
+                    <button
+                      type="button"
+                      onClick={handleAddItemClick}
+                      className="w-full h-7 bg-black text-white font-semibold text-xs rounded-[0.75rem] flex items-center justify-center hover:bg-gray-800 transition-colors font-[SofiaPro]"
+                    >
+                      More Options
+                    </button>
+                  )
                 ) : (
                   <AddItemBtn
                     product={itemDetails}

@@ -15,9 +15,9 @@ import rawSvg from '/public/assets/svg/raw.svg';
 const ripenessMap: {
   [key: string]: { text: string; image: any; color: string };
 } = {
-  raw: { text: 'RAW', image: rawSvg, color: '#878787' },
-  semi_ripe: { text: 'SEMI', image: semiRipeSvg, color: '#878787' },
-  ripe: { text: 'RIPE', image: ripeSvg, color: '#878787' },
+  raw: { text: 'Raw', image: rawSvg, color: '#878787' },
+  semi_ripe: { text: 'Semi', image: semiRipeSvg, color: '#878787' },
+  ripe: { text: 'Ripe', image: ripeSvg, color: '#878787' },
 };
 
 // Helper component to render the Ripeness Icon and Text

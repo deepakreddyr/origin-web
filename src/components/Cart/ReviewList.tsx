@@ -5,7 +5,6 @@ import ReviewItem from './ReviewItem';
 // UPDATED ReviewList PROPS: Added onShowMaxQuantityToast
 const ReviewList = ({ onShowMaxQuantityToast }: { onShowMaxQuantityToast: (maxQty: number) => void }) => {
   const cart = useSelector((state: any) => state.cart);
-  console.log(cart, "cart");
 
   return (
     <div className="bg-[#F2EEE44D] flex flex-col border border-[#F2EEE4] p-[1.1vw] mob:py-[4.1vw] px-0 mob:rounded-[4.1vw] rounded-[1.1vw]">
