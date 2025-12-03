@@ -12,6 +12,7 @@ import semiRipeSvg from '/public/assets/svg/semiripe.svg';
 import rawSvg from '/public/assets/svg/raw.svg';
 import infoicon1 from '/public/assets/svg/infoicon1.svg'
 import infoicon2 from '/public/assets/svg/infoicon2.svg'
+import itemRipenessSvg from '/public/assets/svg/itemRipeness.svg'; // <<< NEW IMPORT
 // -----------------------
 
 // Interface Definitions
@@ -24,7 +25,7 @@ interface UOM {
     maximum_quantity: number;
     minimum_quantity: number;
     price: number;
-    ripeness_types?: string[]; // Made optional
+    ripeness_types?: string[];
     stepper_quantity: number;
     unit: string;
     uom_id: number;
@@ -73,27 +74,23 @@ const MaxQuantityToast: FC<{
     if (!isVisible || maxQuantity === null) return null;
 
     return (
-  <div 
-    className={`absolute z-30 left-1/2 -top-12 transform -translate-x-1/2 w-[90%] max-w-sm transition-opacity duration-300 ease-in-out ${
-      isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-    }`}
-  >
-    {/* SINGLE WRAPPER — fully rounded */}
-    <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full relative">
-
-      {/* Centered text + icon */}
-      <div className="flex items-center justify-center w-full gap-2">
-        <InfoOutlinedIcon sx={{color: 'yellow'}}/>
-
-        <p className="text-[0.70rem] font-semibold text-white text-center leading-tight">
-          Maximum quantity of {maxQuantity} reached for this item.
-        </p>
-      </div>
-
-    </div>
-  </div>
-);
-
+        <div 
+            className={`absolute z-30 left-1/2 -top-12 transform -translate-x-1/2 w-[90%] max-w-sm transition-opacity duration-300 ease-in-out ${
+                isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+        >
+            {/* SINGLE WRAPPER — fully rounded */}
+            <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full relative">
+                {/* Centered text + icon */}
+                <div className="flex items-center justify-center w-full gap-2">
+                    <InfoOutlinedIcon sx={{color: 'yellow'}}/>
+                    <p className="text-[0.70rem] font-semibold text-white text-center leading-tight">
+                        Maximum quantity of {maxQuantity} reached for this item.
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
 };
 // ==========================================================
 
@@ -143,7 +140,6 @@ const UOMPopup: FC<{
   product.multiple_uoms.forEach((uom) => {
     if (!uom.is_available) return;
     
-    // TypeScript Fix: Explicitly check if uom.ripeness_types is truthy
     if (uom.ripeness_types && uom.ripeness_types.length > 0) {
       uom.ripeness_types.forEach((ripeness) => {
         allVariants.push({ ...uom, selected_ripeness_type: ripeness });
@@ -233,7 +229,6 @@ const UOMPopup: FC<{
     };
   }, [isTransitioning, onClose, isOpen]);
 
-  // TypeScript Fix: Explicitly check for ripeness_types
   const hasRipenessTypes = product.multiple_uoms.some(uom => 
     uom.ripeness_types && uom.ripeness_types.length > 0
   );
@@ -401,7 +396,7 @@ const UOMPopup: FC<{
                     buttonType="black"
                     selectedRipenessType={variant.selected_ripeness_type} 
                     onCartUpdate={() => onSelectionMade(variant, variant.selected_ripeness_type || null)}
-                    onMaxQuantityExceeded={handleMaxQuantityExceeded} // <-- Pass the handler down
+                    onMaxQuantityExceeded={handleMaxQuantityExceeded}
                   />
                 </div>
               </div>
@@ -429,12 +424,11 @@ const UOMPopup: FC<{
                 </span>
             </p>
             <button
-              // onClick={onClose} will trigger useEffect to reset state
               onClick={onClose} 
               disabled={subTotalQuantity === 0}
               className={`px-8 py-3 rounded-full font-bold text-sm transition-colors shadow-md font-[SofiaPro] ${
                 subTotalQuantity > 0 
-                  ? 'bg-primary' // Changed to typical e-commerce primary color
+                  ? 'bg-primary'
                   : 'bg-gray-700 text-gray-400 cursor-not-allowed'
               }`}
             >
@@ -466,13 +460,22 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
   const [selectedRipeness, setSelectedRipeness] = useState<string | null>(initialRipeness);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   
+  // --- ADD TOAST STATE FOR ITEMCARD ---
+  const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
+  const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
+  
+  const handleMaxQuantityExceeded = (maxQty: number) => {
+      setToastMaxQuantity(maxQty);
+      setShowMaxQuantityToast(true);
+  };
+  // ---------------------------
+  
   if (!defaultUOM) return null;
 
   const availableUOMs =
     itemDetails?.multiple_uoms?.filter((uom: any) => uom?.is_available) || [];
     
   const hasMultipleUOMs = availableUOMs.length > 1;
-  // TypeScript Fix: Explicitly check for ripeness_types
   const hasRipenessOptions = availableUOMs.some(uom => 
     uom.ripeness_types && uom.ripeness_types.length > 0
   );
@@ -528,7 +531,15 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
 
   return (
     <>
-      <div className="rounded-[1rem] shadow-md overflow-hidden flex flex-col h-full">
+      <div className="rounded-[1rem] shadow-md overflow-hidden flex flex-col h-full relative">
+        {/* === MAX QUANTITY TOAST FOR ITEMCARD === */}
+        <MaxQuantityToast 
+            maxQuantity={toastMaxQuantity}
+            isVisible={showMaxQuantityToast}
+            onClose={() => setShowMaxQuantityToast(false)}
+        />
+        {/* ================================== */}
+        
         <button
           disabled={!selectedUOM.is_available}
           onClick={handleNavigation}
@@ -545,6 +556,20 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                   style={{ objectFit: 'contain' }}
                 />
               </div>
+
+              {/* --- MODIFIED RIPENESS INDICATOR: BOTTOM RIGHT and BIGGER --- */}
+              {hasRipenessOptions && (
+                  <div className="absolute bottom-2 right-2 z-10 p-1 bg-white rounded-full shadow-lg"> {/* Changed top-2 to bottom-2 */}
+                      <Image 
+                          src={itemRipenessSvg} 
+                          alt="Multiple Ripeness Options" 
+                          width={30} // Increased size
+                          height={30} // Increased size
+                      />
+                  </div>
+              )}
+              {/* ------------------------------ */}
+
               {!selectedUOM.is_available && (
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                   <span className="text-white font-[SofiaPro] text-sm font-semibold">
@@ -559,13 +584,12 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
             className="w-full flex-grow flex flex-col justify-between p-[1rem] rounded-b-[1rem]"
             style={{
               background: 'linear-gradient(180deg, #fef3c7 0%, #fde047 50%, #facc15 100%)',
-              minHeight: '80px', // Reduced min height
+              minHeight: '80px',
               WebkitTransform: 'translateZ(0)',
               transform: 'translateZ(0)',
             }}
           >
             <div className="flex-shrink-0">
-              {/* Reduced font size for product name */}
               <p className="font-[SofiaPro] font-semibold text-[0.8rem] leading-[1.2] line-clamp-2 text-black">
                 {itemDetails.name}
               </p>
@@ -574,7 +598,6 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
             <div className="flex-shrink-0">
               <div className="flex justify-between items-center mb-[0.3rem]">
                 <div className="flex items-center gap-[0.3rem]">
-                  {/* Reduced price font sizes */}
                   {selectedUOM.market_price > selectedUOM.price && selectedUOM.market_price > 0 ? (
                     <>
                       <p className="text-gray-400 line-through text-[0.65rem] font-[SofiaPro]">
@@ -592,35 +615,30 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                 </div>
 
                 <div className="relative">
-                    {/* Reduced unit font size */}
                     <p className="text-right text-[#737373] text-[0.65rem] capitalize font-[SofiaPro]">
                       {selectedUOM.unit}
-                      {ripenessText}
                     </p>
                 </div>
               </div>
 
               <div className="rounded-[1rem] overflow-hidden">
-                {/* CORRECTION: Always show "More Options" if selection is required. */}
-                {requiresSelection ? ( // Check if selection is required
+                {requiresSelection ? (
                   <button
                     type="button"
-                    // Reduced button height and font size
                     onClick={handleAddItemClick}
                     className="w-full h-7 bg-black text-white font-semibold text-xs rounded-[0.75rem] flex items-center justify-center hover:bg-gray-800 transition-colors font-[SofiaPro]"
                   >
                     More Options
                   </button>
                 ) : (
-                  // If selection is NOT required, proceed to the AddItemBtn logic
                   <AddItemBtn
                     product={itemDetails}
                     varientId={selectedUOM.variant_id}
                     varientPrice={selectedUOM.price}
                     stepperQuantity={selectedUOM.stepper_quantity}
                     buttonType="black"
-                    selectedRipenessType={selectedRipeness} 
-                    // Note: No onMaxQuantityExceeded needed here as the card button doesn't trigger the toast.
+                    selectedRipenessType={selectedRipeness}
+                    onMaxQuantityExceeded={handleMaxQuantityExceeded}
                   />
                 )}
               </div>

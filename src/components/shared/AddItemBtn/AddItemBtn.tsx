@@ -1,5 +1,5 @@
 import { addItemToCart, decreaseQuantity, increaseQuantity, removeItemFromCart } from '@/store/slice/CartSlice';
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import YellowBtn from './YellowBtn';
 import WhiteBtn from './WhiteBtn';
@@ -11,10 +11,8 @@ import { getAddressAndStoreId } from '@/utilities/utils';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 
-// Remove MaxQuantityToast component here. <-- This line remains correct.
-
 const AddItemBtn: FC<any> = (props) => {
-  const { product, varientId, stepperQuantity, buttonType, selectedRipenessType = null, onMaxQuantityExceeded } = props; // <-- onMaxQuantityExceeded is the callback
+  const { product, varientId, stepperQuantity, buttonType, selectedRipenessType = null, onMaxQuantityExceeded } = props;
 
   const dispatch = useDispatch();
   const cartItems = useSelector((state: any) => state.cart.items);
@@ -123,7 +121,7 @@ const AddItemBtn: FC<any> = (props) => {
     const newTotalQuantity = totalQuantityInCart + stepperQuantity;
 
     if (newTotalQuantity > maxQuantity) {
-      onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity); // <-- Call callback
+      onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
       return;
     }
     // -----------------------------------------------------------
@@ -166,7 +164,7 @@ const AddItemBtn: FC<any> = (props) => {
     const newTotalQuantity = totalQuantityInCart + stepperQuantity;
 
     if (newTotalQuantity > maxQuantity) {
-      onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity); // <-- Call callback
+      onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
       return;
     }
     // -----------------------------------------------------------
@@ -273,7 +271,6 @@ const AddItemBtn: FC<any> = (props) => {
     )
   };
 
-  // Removed the MaxQuantityToast from here.
   return (
     <div className="relative z-5"> 
         {BUTTON_MAP[buttonType]}

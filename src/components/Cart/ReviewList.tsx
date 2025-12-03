@@ -2,7 +2,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import ReviewItem from './ReviewItem';
 
-const ReviewList = () => {
+// UPDATED ReviewList PROPS: Added onShowMaxQuantityToast
+const ReviewList = ({ onShowMaxQuantityToast }: { onShowMaxQuantityToast: (maxQty: number) => void }) => {
   const cart = useSelector((state: any) => state.cart);
   console.log(cart, "cart");
 
@@ -29,6 +30,7 @@ const ReviewList = () => {
                         product={product}
                         uom={uom}
                         ripenessType={ripeness.ripeness_type}
+                        onShowMaxQuantityToast={onShowMaxQuantityToast} // PASSED DOWN
                       />
                     );
                   }
@@ -42,6 +44,7 @@ const ReviewList = () => {
                     product={product}
                     uom={uom}
                     ripenessType={null}
+                    onShowMaxQuantityToast={onShowMaxQuantityToast} // PASSED DOWN
                   />
                 );
               }

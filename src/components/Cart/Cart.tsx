@@ -35,6 +35,49 @@ import Payment from './Payment/Payment';
 import { updateTimeSlotId } from '@/store/slice/placeOrderDetails';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { useAtom } from 'jotai';
+// Import InfoOutlinedIcon to be used in the new MaxQuantityToast copy
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined"; 
+
+// ==========================================================
+// MAX QUANTITY TOAST COMPONENT MOVED/COPIED HERE FOR GLOBAL RENDER
+// ==========================================================
+const MaxQuantityToast: React.FC<{ 
+    maxQuantity: number | null; 
+    isVisible: boolean; 
+    onClose: () => void;
+}> = ({ maxQuantity, isVisible, onClose }) => {
+    
+    // Auto-hide logic
+    React.useEffect(() => {
+        if (isVisible) {
+            const timer = setTimeout(() => {
+                onClose();
+            }, 3000); 
+            return () => clearTimeout(timer);
+        }
+    }, [isVisible, onClose]);
+
+    if (!isVisible || maxQuantity === null) return null;
+
+    return (
+        <div 
+            className={`absolute bottom-22 left-1/2 transform -translate-x-1/2 z-[9999] w-[90%] max-w-md transition-opacity duration-300 ease-in-out ${
+                isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            }`}
+        >
+            <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full">
+                <div className="flex items-center justify-center w-full gap-2">
+                    <InfoOutlinedIcon sx={{color: 'yellow', fontSize: '1.2rem'}}/>
+                    <p className="text-[0.70rem] mob:text-[2.8vw] font-semibold text-white text-center leading-tight">
+                        Maximum quantity of {maxQuantity} reached for this item.
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+};
+// ==========================================================
+
 
 const Cart = () => {
   const cart = useSelector((state: any) => state.cart);
@@ -60,6 +103,17 @@ const Cart = () => {
     distance_from_warehouse: null,
   });
   const [address, setAddress] = useAtom(addressAtom);
+  
+  // --- ADD TOAST STATE HERE ---
+  const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
+  const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
+
+  const handleMaxQuantityExceededGlobal = (maxQty: number) => {
+      setToastMaxQuantity(maxQty);
+      setShowMaxQuantityToast(true);
+  };
+  // ----------------------------
+
 
   const fetchCartItemsFromApi = () => {
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getCartItems'];
@@ -211,7 +265,7 @@ const Cart = () => {
         {orderRestrictionData && (
           <RestrictOrderInfo orderRestrictionData={orderRestrictionData} />
         )}
-        <ReviewList />
+        <ReviewList onShowMaxQuantityToast={handleMaxQuantityExceededGlobal} />
         <DeliveryInstruction />
         <CouponSection setShowCouponList={setShowCouponList} />
         {showAddressModal && (
@@ -238,8 +292,14 @@ const Cart = () => {
   };
 
   return (
+    // RENDER THE MAX QUANTITY TOAST AT THE TOP LEVEL HERE
     <div className="flex flex-col grow gap-[1.1vw] mob:gap-[4.1vw] pb-[6vw] mob:pb-[25vw]">
-      {SCREEN_MAP[cart.cartTabType]}
+        <MaxQuantityToast 
+            maxQuantity={toastMaxQuantity}
+            isVisible={showMaxQuantityToast}
+            onClose={() => setShowMaxQuantityToast(false)}
+        />
+        {SCREEN_MAP[cart.cartTabType]}
     </div>
   );
 };
