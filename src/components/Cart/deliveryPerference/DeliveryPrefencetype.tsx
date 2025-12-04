@@ -81,9 +81,12 @@ const DeliveryPrefencetype = () => {
         />
       </div>
 
-      <div>
-        <DeliveryTimings />
-      </div>
+      {/* CONDITIONAL RENDERING: Only show DeliveryTimings if TIME_SLOT is active */}
+      {activeDeliveryType === 'TIME_SLOT' && (
+        <div>
+          <DeliveryTimings />
+        </div>
+      )}
     </div>
   );
 };
