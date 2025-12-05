@@ -11,6 +11,8 @@ import AboutTheProduct from './AboutTheProduct';
 import ProductDetailsPageLoader from '../skeletonLoaders/shop/ProductDetailsPageLoader';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import itemRipenessSvg from '/public/assets/svg/itemRipeness.svg';
+
 
 // Type definitions
 interface UOM {
@@ -26,7 +28,7 @@ interface UOM {
   maximum_quantity: number;
   stepper_quantity: number;
   conversion_text: string;
-  ripeness_types?: string[];
+  ripeness_types?: string[]; // KEY PROPERTY TO CHECK
   cart_ripeness?: Array<{ ripeness_type: string; qty: string }>;
   cart_quantity?: number;
   [key: string]: any;
@@ -305,6 +307,9 @@ const ProductDetailsWrapper = () => {
   // Find default UOM
   const defaultUOM: UOM | undefined = productDetails?.item?.multiple_uoms?.find((uom: UOM) => uom?.is_default === true) || productDetails?.item?.multiple_uoms?.[0];
 
+  // CHECK FOR RIPENESS FEATURE: Check if the array exists and has content
+  const hasRipenessFeature = !!(defaultUOM?.ripeness_types && defaultUOM.ripeness_types.length > 0);
+
   // Get product description
   const aboutSection = productDetails.info?.info?.find(section => section.type === 'normal' && section.title === 'About the Product');
   const productDescription = aboutSection?.details?.[0]?.description || '';
@@ -377,6 +382,7 @@ const ProductDetailsWrapper = () => {
           {mobile ? (
             <div className="space-y-8">
               <div className="flex justify-center">
+                {/* --- MOBILE VIEW: Image Container UPDATED for relative positioning --- */}
                 <div className="relative w-80 h-80 bg-transparent">
                   <Image
                     src={productDetails.item.image}
@@ -385,9 +391,15 @@ const ProductDetailsWrapper = () => {
                     style={{ objectFit: 'contain' }}
                     priority
                   />
+                  {/* --- NEW: Ripeness SVG positioned absolutely --- */}
+                  {hasRipenessFeature && (
+                    <div className="absolute bottom-2 right-2 z-10">
+                      <Image src={itemRipenessSvg} alt='Select ripeness' width={28} height={28} />
+                    </div>
+                  )}
+                  {/* --- END NEW --- */}
                 </div>
               </div>
-
               <div className="text-center space-y-4">
                 <h1 className="text-3xl font-bold text-gray-900">{productDetails.item.name}</h1>
 
@@ -396,6 +408,7 @@ const ProductDetailsWrapper = () => {
                     <div className="text-2xl font-[SofiaPro] font-bold text-gray-900">
                       ₹{defaultUOM.price}
                     </div>
+                    {/* Removed the old centralized Image component here */}
                     <div className="text-gray-500 font-[SofiaPro] text-sm">{defaultUOM.unit}</div>
                   </>
                 )}
@@ -408,6 +421,8 @@ const ProductDetailsWrapper = () => {
                     stepperQuantity={defaultUOM?.stepper_quantity}
                     buttonType={'yellowaddtocart'}
                     onMaxQuantityExceeded={handleMaxQuantityExceeded}
+                    // 👇 Pass the check result to AddItemBtn for conditional rendering
+                    hasRipenessFeature={hasRipenessFeature}
                   />
                 </div>
 
@@ -421,6 +436,7 @@ const ProductDetailsWrapper = () => {
           ) : (
             <div className="flex items-center gap-16 min-h-[550px]">
               <div className="flex-1 flex justify-center">
+                {/* --- DESKTOP VIEW: Image Container UPDATED for relative positioning --- */}
                 <div className="relative w-96 h-96 bg-transparent">
                   <Image
                     src={productDetails.item.image}
@@ -430,6 +446,13 @@ const ProductDetailsWrapper = () => {
                     className="drop-shadow-xl"
                     priority
                   />
+                  {/* --- NEW: Ripeness SVG positioned absolutely --- */}
+                  {hasRipenessFeature && (
+                    <div className="absolute top-2 right-2 z-10">
+                      <Image src={itemRipenessSvg} alt='Select ripeness' width={70} height={70} />
+                    </div>
+                  )}
+                  {/* --- END NEW --- */}
                 </div>
               </div>
 
@@ -454,6 +477,8 @@ const ProductDetailsWrapper = () => {
                   stepperQuantity={defaultUOM?.stepper_quantity}
                   buttonType={'yellowaddtocart'}
                   onMaxQuantityExceeded={handleMaxQuantityExceeded}
+                  // 👇 Pass the check result to AddItemBtn for conditional rendering
+                  hasRipenessFeature={hasRipenessFeature}
                 />
 
                 {productDescription && (

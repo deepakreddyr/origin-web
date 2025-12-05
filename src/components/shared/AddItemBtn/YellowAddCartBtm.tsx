@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import AddItemBtn from './AddItemBtn';
+// Assuming this is your central button component that takes the new minimumQuantity prop
+import AddItemBtn from './AddItemBtn'; 
 // --- SVG IMPORTS ---
 import ripeSvg from '/public/assets/svg/ripe.svg';
 import semiRipeSvg from '/public/assets/svg/semiripe.svg';
@@ -22,10 +23,10 @@ interface UOM {
   is_visible: boolean;
   market_price: number;
   maximum_quantity: number;
-  minimum_quantity: number;
+  minimum_quantity: number; // The min quantity
   price: number;
   ripeness_types: string[];
-  stepper_quantity: number;
+  stepper_quantity: number; // The incremental quantity
   unit: string;
   uom_id: number;
   variant_id: number;
@@ -124,7 +125,7 @@ const MaxQuantityToast: FC<{
 };
 
 // ==========================================================
-// 3. UOM POPUP COMPONENT
+// 3. UOM POPUP COMPONENT (FIX APPLIED HERE)
 // ==========================================================
 const UOMPopup: FC<{
   product: Product;
@@ -404,9 +405,11 @@ const UOMPopup: FC<{
                     product={product}
                     varientId={variant.variant_id}
                     varientPrice={variant.price}
-                    stepperQuantity={
-                      variant.stepper_quantity
-                    }
+                    // 🔑 FIX: Pass both the stepper and the minimum quantity 
+                    // This ensures AddItemBtn has the min quantity for the initial 'add' click
+                    stepperQuantity={variant.stepper_quantity}
+                    minimumQuantity={variant.minimum_quantity} // <--- NEW PROP ADDED
+                    // ------------------------------------------------------------------
                     buttonType="black"
                     selectedRipenessType={
                       variant.selected_ripeness_type
@@ -461,7 +464,7 @@ const UOMPopup: FC<{
 };
 
 // ==========================================================
-// 4. YellowBtn Component (Updated with Total Quantity)
+// 4. YellowBtn Component (Steppers logic relies on the UOMPopup fix above)
 // ==========================================================
 const YellowBtn = (props: YellowBtnProps) => {
   const {
@@ -586,7 +589,8 @@ const YellowBtn = (props: YellowBtnProps) => {
   };
   
   const handleSelectionMade = (uom: UOM, ripeness: string | null) => {
-    setIsPopupOpen(false);
+    // If a selection is made in the popup, we can close it.
+    setIsPopupOpen(false); 
   };
   
   // Show stepper if: (no selection required AND item present) OR (selection required AND has items in cart)

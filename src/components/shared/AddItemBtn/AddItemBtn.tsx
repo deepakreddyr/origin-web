@@ -12,7 +12,16 @@ import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 
 const AddItemBtn: FC<any> = (props) => {
-  const { product, varientId, stepperQuantity, buttonType, selectedRipenessType = null, onMaxQuantityExceeded } = props;
+  const { 
+    product, 
+    varientId, 
+    // Accept props from the parent (like UOMPopup)
+    stepperQuantity: stepperQuantityProp, 
+    minimumQuantity: minimumQuantityProp, // 🔑 NEW PROP
+    buttonType, 
+    selectedRipenessType = null, 
+    onMaxQuantityExceeded 
+  } = props;
 
   const dispatch = useDispatch();
   const cartItems = useSelector((state: any) => state.cart.items);
@@ -30,6 +39,11 @@ const AddItemBtn: FC<any> = (props) => {
     }
   );
   
+  // 1. DETERMINE FINAL QUANTITIES
+  const finalMinQuantity = minimumQuantityProp || selectedVariant?.minimum_quantity || 1;
+  // If stepperQuantity is passed as a prop (e.g., from YellowBtn), use it, otherwise use the variant's stepper.
+  const finalStepQuantity = stepperQuantityProp || selectedVariant?.stepper_quantity || 1; 
+
   const maxQuantity = selectedVariant?.maximum_quantity || Infinity;
 
   // Find cart item and specific quantity
@@ -103,22 +117,26 @@ const AddItemBtn: FC<any> = (props) => {
     }
   };
 
+  // ==========================================================
+  // ADD ITEM LOGIC (Uses finalMinQuantity for initial add)
+  // ==========================================================
   const handleAddItem = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     if (!selectedVariant) return;
 
+    // Use finalMinQuantity for the initial addition
+    const quantityToAdd = finalMinQuantity;
+
     // Check if already at max before adding
     const totalQuantityInCart = getVariantTotalQuantity();
     
-    // If already at max, show toast and prevent action
     if (totalQuantityInCart >= maxQuantity) {
       onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
       return;
     }
 
-    // Check max quantity for THIS variant (across all ripeness types)
-    const newTotalQuantity = totalQuantityInCart + stepperQuantity;
+    const newTotalQuantity = totalQuantityInCart + quantityToAdd;
 
     if (newTotalQuantity > maxQuantity) {
       onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
@@ -143,7 +161,8 @@ const AddItemBtn: FC<any> = (props) => {
       product: normalizedProduct,
       selectedUOM: {
         ...selectedVariant,
-        stepper_quantity: stepperQuantity
+        // Pass the quantity to add, which is finalMinQuantity
+        stepper_quantity: quantityToAdd 
       },
       selectedRipenessType
     }));
@@ -153,6 +172,9 @@ const AddItemBtn: FC<any> = (props) => {
     }
   };
 
+  // ==========================================================
+  // INCREASE LOGIC (Uses finalStepQuantity for increments)
+  // ==========================================================
   const handleIncrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
@@ -160,37 +182,43 @@ const AddItemBtn: FC<any> = (props) => {
     // Check if already at max before increasing
     const totalQuantityInCart = getVariantTotalQuantity();
     
-    // If already at max, show toast and prevent action
     if (totalQuantityInCart >= maxQuantity) {
       onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
       return;
     }
     
-    // Check max quantity for THIS variant (across all ripeness types)
-    const newTotalQuantity = totalQuantityInCart + stepperQuantity;
+    // Use finalStepQuantity for incremental increases
+    const newTotalQuantity = totalQuantityInCart + finalStepQuantity;
 
     if (newTotalQuantity > maxQuantity) {
       onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
       return;
     }
     
-    dispatch(increaseQuantity({ varientId, stepperQuantity, selectedRipenessType }));
+    dispatch(increaseQuantity({ varientId, stepperQuantity: finalStepQuantity, selectedRipenessType }));
     
     if (loginDetails.user) {
       addItemsToApi();
     }
   };
 
+  // ==========================================================
+  // DECREASE LOGIC (Critical Update for Min Quantity Reduction)
+  // ==========================================================
   const handleDecrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     
     const itemToRemove = { varientId, selectedRipenessType };
-
-    if (itemQuantity <= stepperQuantity) {
+    
+    // If the current quantity is equal to or less than the initial minimum quantity, 
+    // remove the entire item/variant/ripeness selection.
+    if (itemQuantity <= finalMinQuantity) {
       dispatch(removeItemFromCart(itemToRemove)); 
+      
+    // Otherwise, decrease by the standard finalStepQuantity.
     } else {
-      dispatch(decreaseQuantity({ varientId, stepperQuantity, selectedRipenessType }));
+      dispatch(decreaseQuantity({ varientId, stepperQuantity: finalStepQuantity, selectedRipenessType }));
     }
     
     if (loginDetails.user) {
@@ -238,6 +266,7 @@ const AddItemBtn: FC<any> = (props) => {
         variantId={varientId}
       />
     ),
+    // ... other button types (YellowBtn, WhiteBtn, BlackBtn) are assumed to be similar
     yellow: (
       <YellowBtn
         isItemPresent={isVariantPresent}
@@ -247,6 +276,8 @@ const AddItemBtn: FC<any> = (props) => {
         handleIncrease={handleIncrease}
         handleDecrease={handleDecrease}
         handleRemove={handleRemoveUOM}
+        product={product} // ensure product is passed for complex buttons
+        varientId={varientId}
       />
     ),
     white: (
