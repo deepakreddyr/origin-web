@@ -102,7 +102,7 @@ export const ShopHeroSingle = () => {
         </div>
 
         {/* Button */}
-        <div className="absolute inset-0 z-10 flex items-center justify-start">
+        <div className="absolute inset-0 z-0 flex items-center justify-start">
           <button
             onClick={() =>
               router.push("/nectacot/567")

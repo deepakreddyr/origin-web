@@ -448,7 +448,7 @@ const ProductDetailsWrapper = () => {
                   />
                   {/* --- NEW: Ripeness SVG positioned absolutely --- */}
                   {hasRipenessFeature && (
-                    <div className="absolute top-2 right-2 z-10">
+                    <div className="absolute top-2 right-2 z-0">
                       <Image src={itemRipenessSvg} alt='Select ripeness' width={70} height={70} />
                     </div>
                   )}
