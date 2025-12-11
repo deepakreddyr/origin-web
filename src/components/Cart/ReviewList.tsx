@@ -1,25 +1,20 @@
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux'; // <-- ADDED useDispatch
+import { useSelector, useDispatch } from 'react-redux';
+import { validateAndCleanCart } from '@/store/slice/CartSlice'; // ✅ Import the action
 import ReviewItem from './ReviewItem';
-import { validateCart } from '@/store/slice/CartSlice'; // <-- Import the cleaning action
 
-// UPDATED ReviewList PROPS: Added onShowMaxQuantityToast
 const ReviewList = ({ onShowMaxQuantityToast }: { onShowMaxQuantityToast: (maxQty: number) => void }) => {
   const cart = useSelector((state: any) => state.cart);
-  const dispatch = useDispatch(); // <-- Initialize dispatch
+  const dispatch = useDispatch();
   
-  console.log(cart,"cart state");
+  // console.log(cart, "cart state");
 
-  // 🛑 IMPLEMENTATION FOR STATE CLEANUP ON MOUNT
-  // This hook ensures that every time the cart component loads, the Redux store is 
-  // validated against the current availability data contained in the state, 
-  // permanently removing items that are no longer available.
+  // ✅ VALIDATE AND CLEAN CART ON MOUNT AND WHEN ITEMS CHANGE
   useEffect(() => {
-    // Assuming the cart state (`cart.items`) already contains the latest 
-    // `ripeness_types` from the API after hydration or a fetch.
-    dispatch(validateCart());
-  }, [dispatch]);
-  // ----------------------------------------------
+    if (cart.items?.length > 0) {
+      dispatch(validateAndCleanCart());
+    }
+  }, [dispatch]); // Run once on mount, or you can add cart.items to dependencies if you want it to run on every cart update
 
   return (
     <div className="bg-[#F2EEE44D] flex flex-col border border-[#F2EEE4] p-[1.1vw] mob:py-[4.1vw] px-0 mob:rounded-[4.1vw] rounded-[1.1vw]">
@@ -30,28 +25,11 @@ const ReviewList = ({ onShowMaxQuantityToast }: { onShowMaxQuantityToast: (maxQt
       {cart.items?.length > 0 ? (
         <ul className="review-cart-list list-none m-0 p-0 flex flex-col gap-[0vw] w-full">
           {cart.items.map((product: any) => (
-            // Iterate through each product's UOMs
             product.multiple_uoms.map((uom: any) => {
-              
-              // --- 🛑 CORE VALIDATION LOGIC (Display-Side) 🛑 ---
-              // NOTE: This logic is now redundant if `validateCart()` works, 
-              // but it's a good safety filter for immediate display before the Redux update completes.
-              let cartRipenessToRender = [];
-              const availableRipenessTypes = Array.isArray(uom.ripeness_types) ? uom.ripeness_types : [];
-
+              // Check if this UOM has valid ripeness types in the cart
               if (uom.cart_ripeness && uom.cart_ripeness.length > 0) {
-                // Filter the items in cart (cart_ripeness) against the items currently available (ripeness_types)
-                cartRipenessToRender = uom.cart_ripeness.filter((ripeness: any) => 
-                  availableRipenessTypes.includes(ripeness.ripeness_type)
-                );
-              }
-              // --- END CORE VALIDATION LOGIC ---
-
-
-              // Check if this UOM has valid, available ripeness types in the cart
-              if (cartRipenessToRender.length > 0) {
-                // Render one ReviewItem per VALID ripeness type
-                return cartRipenessToRender.map((ripeness: any) => {
+                // Render one ReviewItem per ripeness type
+                return uom.cart_ripeness.map((ripeness: any) => {
                   const qty = Number(ripeness.qty);
                   if (qty > 0) {
                     return (
@@ -60,22 +38,21 @@ const ReviewList = ({ onShowMaxQuantityToast }: { onShowMaxQuantityToast: (maxQt
                         product={product}
                         uom={uom}
                         ripenessType={ripeness.ripeness_type}
-                        onShowMaxQuantityToast={onShowMaxQuantityToast} // PASSED DOWN
+                        onShowMaxQuantityToast={onShowMaxQuantityToast}
                       />
                     );
                   }
                   return null;
                 }).filter(Boolean);
-              } else if (!uom.cart_ripeness && uom.cart_quantity > 0) { 
-                // Simple item without ripeness (or if all ripeness types were filtered out and cart_quantity > 0)
-                // This branch handles simple, non-ripeness items.
+              } else if (uom.cart_quantity > 0) { 
+                // Simple item without ripeness
                 return (
                   <ReviewItem
                     key={`${product.id}-${uom.variant_id}-none`}
                     product={product}
                     uom={uom}
                     ripenessType={null}
-                    onShowMaxQuantityToast={onShowMaxQuantityToast} // PASSED DOWN
+                    onShowMaxQuantityToast={onShowMaxQuantityToast}
                   />
                 );
               }

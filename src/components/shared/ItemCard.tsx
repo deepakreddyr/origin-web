@@ -370,7 +370,7 @@ const UOMPopup: FC<{
                     
                     <div className="flex-1">
                         <p className="font-semibold text-gray-800 capitalize leading-none text-base font-[SofiaPro]">
-                            {ripenessLabel || "Default"}
+                            {ripenessLabel}
                         </p>
                         <p className="text-xs text-gray-500 mt-1 font-[SofiaPro]">
                             {variant.unit}
