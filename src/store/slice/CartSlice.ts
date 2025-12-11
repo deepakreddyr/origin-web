@@ -23,7 +23,7 @@ interface CartUOM {
   is_available: boolean;
   is_default: boolean;
   is_visible: boolean;
-  ripeness_types: any;
+  ripeness_types: string[] | any; // Updated to expect an array of strings (available types)
   cart_ripeness?: CartRipeness[] | null | undefined; // Array of ripeness objects
 }
 
@@ -156,7 +156,7 @@ const updateCartQuantityInNestedStructure = (
   const amount = action === 'increase' ? stepperQuantity : -stepperQuantity;
   
   if (action === 'increase') {
-    // If max quantity is reached, prevent increasing (handled in reducers, but good safety check)
+    // If max quantity is reached, prevent increasing 
     if (uom.cart_quantity + amount > uom.maximum_quantity) return;
   }
 
@@ -171,33 +171,78 @@ const updateCartQuantityInNestedStructure = (
   }
 };
 
+// --- CORE FIX: RIPENESS VALIDATION FUNCTION ---
+/**
+ * Compares cart ripeness entries against currently available ripeness_types 
+ * and removes unavailable types from the cart state.
+ * @param uom The CartUOM object to clean.
+ * @returns true if any ripeness entry was removed.
+ */
+const cleanInvalidRipenessFromUOM = (uom: CartUOM): boolean => {
+    // Get the list of currently available ripeness types from the API data
+    const availableRipenessTypes = Array.isArray(uom.ripeness_types) ? uom.ripeness_types : [];
+    let removedCount = 0;
+
+    if (uom.cart_ripeness && uom.cart_ripeness.length > 0) {
+        const initialLength = uom.cart_ripeness.length;
+        
+        // Filter the cart_ripeness array: keep only items whose type is in the available list
+        uom.cart_ripeness = uom.cart_ripeness.filter(r => 
+            availableRipenessTypes.includes(r.ripeness_type)
+        );
+
+        removedCount = initialLength - uom.cart_ripeness.length;
+
+        // If all specific ripeness types for this UOM were removed, 
+        // set cart_ripeness to undefined to reflect an empty state.
+        if (uom.cart_ripeness.length === 0) {
+            uom.cart_ripeness = undefined;
+        }
+    }
+
+    return removedCount > 0;
+};
+
+
+// --- UPDATED SAVE CART FUNCTION ---
 const saveCart = (state: CartState) => {
+    let cartModifiedByCleaning = false; 
+
     state.items.forEach(product => {
         product.multiple_uoms.forEach(uom => {
+            
+            // 🛑 CORE FIX: VALIDATE RIPENESS AGAINST API AVAILABILITY
+            const wasCleaned = cleanInvalidRipenessFromUOM(uom);
+            if (wasCleaned) {
+                cartModifiedByCleaning = true;
+            }
 
-            // --- RIPENESS CLEANUP RULE (TS FIX) ---
+            // --- Existing Ripeness Cleanup Rule (Removing zero-quantity entries) ---
             if (uom.cart_ripeness) {
-                // Use nullish coalescing to ensure uom.cart_ripeness is treated as an array for filtering
                 const validRipeness = (uom.cart_ripeness ?? []).filter(
                     r => r.ripeness_type !== null && r.ripeness_type !== undefined && Number(r.qty) > 0
                 );
 
-                // If valid entries exist → keep them
                 if (validRipeness.length > 0) {
                     uom.cart_ripeness = validRipeness;
-                } 
-                // If nothing valid → explicitly set to undefined
-                else {
+                } else {
                     uom.cart_ripeness = undefined; 
                 }
             }
+            // ----------------------------------------
 
-            // If ripeness exists → cart_quantity must be the sum(ripeness.qty)
+            // Recalculate cart_quantity based on the now-cleaned cart_ripeness
             if (uom.cart_ripeness?.length && uom.cart_ripeness.length > 0) { 
                 uom.cart_quantity = uom.cart_ripeness.reduce(
                     (sum, r) => sum + Number(r.qty),
                     0
                 );
+            }
+            // If ripeness was being tracked but is now empty/undefined, zero out cart_quantity
+            else if (uom.cart_ripeness === undefined && uom.cart_quantity > 0) {
+                 // Check if it was tracking ripeness before. If so, and it's now empty, set quantity to 0.
+                 // This ensures the product is removed if all valid ripeness entries were deleted.
+                 uom.cart_quantity = 0;
             }
         });
 
@@ -216,6 +261,8 @@ const saveCart = (state: CartState) => {
 
     // IMPORTANT: LS now receives cleaned structure
     updateCartItemsToLs(state.items);
+    
+    // You could optionally emit a side effect or set a transient state here if `cartModifiedByCleaning` is true
 };
 
 
@@ -228,107 +275,114 @@ export const cartSlice = createSlice({
       saveCart(state);
     },
 
-    // Replace the addItemToCart reducer in CartSlice (lines 175-259)
+    // 🛑 NEW REDUCER FOR EXPLICIT VALIDATION
+    validateCart: (state) => {
+        // This explicitly re-runs all cleaning and saving logic.
+        // Use this when the cart mounts or after API fetch to ensure sync.
+        saveCart(state);
+    },
+    // ------------------------------------------
 
-addItemToCart: (state, action: PayloadAction<{ product: any; selectedUOM: any; selectedRipenessType: string | null }>) => {
-  const { product, selectedUOM, selectedRipenessType } = action.payload;
-  const normalizedProductId = product.id || product.product_id;
-  const normalizedVariantId = selectedUOM.variant_id || selectedUOM.varientId;
-  
-  // ✅ FIX: Separate the quantity to add from the stepper quantity
-  const quantityToAdd = selectedUOM.stepper_quantity; // This is the quantity being added (could be min qty on first add)
-  
-  // ✅ FIX: Get the ORIGINAL stepper from the product's UOM, not from selectedUOM
-  const originalVariant = product.multiple_uoms.find((uom: any) => 
-    (uom.variant_id || uom.varientId) === normalizedVariantId
-  );
-  const actualStepperQuantity = originalVariant?.stepper_quantity || 1;
+    addItemToCart: (state, action: PayloadAction<{ product: any; selectedUOM: any; selectedRipenessType: string | null }>) => {
+      const { product, selectedUOM, selectedRipenessType } = action.payload;
+      const normalizedProductId = product.id || product.product_id;
+      const normalizedVariantId = selectedUOM.variant_id || selectedUOM.varientId;
+      
+      // ✅ FIX: Separate the quantity to add from the stepper quantity
+      const quantityToAdd = selectedUOM.stepper_quantity; 
+      
+      // ✅ FIX: Get the ORIGINAL stepper from the product's UOM, not from selectedUOM
+      const originalVariant = product.multiple_uoms.find((uom: any) => 
+        (uom.variant_id || uom.varientId) === normalizedVariantId
+      );
+      const actualStepperQuantity = originalVariant?.stepper_quantity || 1;
 
-  const { product: existingProduct, uom: existingUOM, ripeness: existingRipeness } = findUOMAndRipeness(
-    state, 
-    normalizedProductId, 
-    normalizedVariantId, 
-    selectedRipenessType
-  );
+      const { product: existingProduct, uom: existingUOM, ripeness: existingRipeness } = findUOMAndRipeness(
+        state, 
+        normalizedProductId, 
+        normalizedVariantId, 
+        selectedRipenessType
+      );
 
-  if (existingUOM) {
-    // Prevent adding beyond max quantity
-    if (existingUOM.cart_quantity + quantityToAdd > existingUOM.maximum_quantity) {
-      saveCart(state);
-      return;
-    }
+      if (existingUOM) {
+        // Prevent adding beyond max quantity
+        if (existingUOM.cart_quantity + quantityToAdd > existingUOM.maximum_quantity) {
+          saveCart(state);
+          return;
+        }
 
-    // UOM/Product exists, now update quantity
-    if (selectedRipenessType) {
-      // Case: Item with specific Ripeness
-      if (existingRipeness) {
-        // Ripeness object exists -> update it
-        updateCartQuantityInNestedStructure(existingUOM, existingRipeness, quantityToAdd, 'increase');
-      } else {
-        // UOM exists but ripeness object doesn't -> create new ripeness object
-        if (!existingUOM.cart_ripeness) existingUOM.cart_ripeness = [];
-        
-        existingUOM.cart_ripeness.push({
-          ripeness_type: selectedRipenessType,
-          qty: String(quantityToAdd),
-        });
-        existingUOM.cart_quantity += quantityToAdd;
-      }
-    } else {
-      // Case: Simple item (or complex item with null type from AddItemBtn)
-      existingUOM.cart_quantity += quantityToAdd;
+        // UOM/Product exists, now update quantity
+        if (selectedRipenessType) {
+          // Case: Item with specific Ripeness
+          if (existingRipeness) {
+            // Ripeness object exists -> update it
+            updateCartQuantityInNestedStructure(existingUOM, existingRipeness, quantityToAdd, 'increase');
+          } else {
+            // UOM exists but ripeness object doesn't -> create new ripeness object
+            if (!existingUOM.cart_ripeness) existingUOM.cart_ripeness = [];
+            
+            existingUOM.cart_ripeness.push({
+              ripeness_type: selectedRipenessType,
+              qty: String(quantityToAdd),
+            });
+            // NOTE: cart_quantity is updated inside updateCartQuantityInNestedStructure or recalculated by saveCart
+            existingUOM.cart_quantity += quantityToAdd;
+          }
+        } else {
+          // Case: Simple item (or complex item with null type from AddItemBtn)
+          existingUOM.cart_quantity += quantityToAdd;
 
-      // If the UOM *has* ripeness entries, but a specific type wasn't given,
-      // assume we update the first entry as a fallback.
-      if (existingUOM.cart_ripeness && existingUOM.cart_ripeness.length > 0) {
-        const firstRipeness = existingUOM.cart_ripeness[0];
-        firstRipeness.qty = String(Number(firstRipeness.qty) + quantityToAdd);
-      }
-    }
-  } else {
-    // Product/UOM does not exist -> create the product and UOM structure
-    const newUOM: CartUOM = {
-        variant_id: normalizedVariantId,
-        cart_quantity: quantityToAdd, // ✅ Use the quantity being added
-        price: selectedUOM.price,
-        market_price: selectedUOM.market_price,
-        maximum_quantity: selectedUOM.maximum_quantity,
-        minimum_quantity: selectedUOM.minimum_quantity,
-        stepper_quantity: actualStepperQuantity, // ✅ Use the ORIGINAL stepper, not the modified one
-        unit: selectedUOM.unit,
-        uom_id: selectedUOM.uom_id,
-        conversion_text: selectedUOM.conversion_text,
-        is_available: selectedUOM.is_available,
-        is_default: selectedUOM.is_default,
-        is_visible: selectedUOM.is_visible,
-        ripeness_types: selectedUOM.ripeness_types,
-        cart_ripeness: selectedRipenessType 
-            ? [{ ripeness_type: selectedRipenessType, qty: String(quantityToAdd) }] // ✅ Use quantityToAdd
-            : undefined, 
-    };
+          // If the UOM *has* ripeness entries, but a specific type wasn't given,
+          // assume we update the first entry as a fallback.
+          if (existingUOM.cart_ripeness && existingUOM.cart_ripeness.length > 0) {
+            const firstRipeness = existingUOM.cart_ripeness[0];
+            firstRipeness.qty = String(Number(firstRipeness.qty) + quantityToAdd);
+          }
+        }
+      } else {
+        // Product/UOM does not exist -> create the product and UOM structure
+        const newUOM: CartUOM = {
+            variant_id: normalizedVariantId,
+            cart_quantity: quantityToAdd, // ✅ Use the quantity being added
+            price: selectedUOM.price,
+            market_price: selectedUOM.market_price,
+            maximum_quantity: selectedUOM.maximum_quantity,
+            minimum_quantity: selectedUOM.minimum_quantity,
+            stepper_quantity: actualStepperQuantity, // ✅ Use the ORIGINAL stepper, not the modified one
+            unit: selectedUOM.unit,
+            uom_id: selectedUOM.uom_id,
+            conversion_text: selectedUOM.conversion_text,
+            is_available: selectedUOM.is_available,
+            is_default: selectedUOM.is_default,
+            is_visible: selectedUOM.is_visible,
+            ripeness_types: selectedUOM.ripeness_types,
+            cart_ripeness: selectedRipenessType 
+                ? [{ ripeness_type: selectedRipenessType, qty: String(quantityToAdd) }] // ✅ Use quantityToAdd
+                : undefined, 
+        };
 
-    if (existingProduct) {
-      existingProduct.multiple_uoms.push(newUOM);
-    } else {
-      const newProduct: CartProduct = {
-        id: normalizedProductId,
-        item_code: product.item_code,
-        name: product.name || product.item_name,
-        image: product.image,
-        bg_color: product.bg_color,
-        is_available: product.is_available,
-        is_greyed: product.is_greyed,
-        is_orderable: product.is_orderable,
-        navigation: product.navigation,
-        tag_url: product.tag_url,
-        multiple_uoms: [newUOM],
-      };
-      state.items.push(newProduct);
-    }
-  }
+        if (existingProduct) {
+          existingProduct.multiple_uoms.push(newUOM);
+        } else {
+          const newProduct: CartProduct = {
+            id: normalizedProductId,
+            item_code: product.item_code,
+            name: product.name || product.item_name,
+            image: product.image,
+            bg_color: product.bg_color,
+            is_available: product.is_available,
+            is_greyed: product.is_greyed,
+            is_orderable: product.is_orderable,
+            navigation: product.navigation,
+            tag_url: product.tag_url,
+            multiple_uoms: [newUOM],
+          };
+          state.items.push(newProduct);
+        }
+      }
 
-  saveCart(state);
-},
+      saveCart(state);
+    },
 
     removeItemFromCart: (state, action: PayloadAction<{ varientId: number; selectedRipenessType: string | null }>) => {
       const { varientId, selectedRipenessType } = action.payload;
@@ -511,6 +565,7 @@ export const {
   setIsProceedButtonEnabled,
   setCartMinimum,
   setDeliveryFee,
+  validateCart, // 🛑 Exported the new action
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
