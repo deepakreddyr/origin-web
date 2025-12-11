@@ -5,10 +5,10 @@ export default function Document() {
     <Html lang="en">
       <Head>
         {/* Favicon and Apple Touch Icons */}
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="shortcut icon" href="/cfavicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/capple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/cfavicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/cfavicon-16x16.png" />
 
         {/* Meta Pixel */}
         <script
