@@ -14,7 +14,7 @@ import infoicon1 from '/public/assets/svg/infoicon1.svg'
 import infoicon2 from '/public/assets/svg/infoicon2.svg'
 import itemRipenessSvg from '/public/assets/svg/itemRipeness.svg';
 
-// Interface Definitions (Keeping them for context)
+// Interface Definitions
 interface UOM {
     conversion_text: string | null;
     is_available: boolean;
@@ -32,6 +32,10 @@ interface UOM {
     formatted_price?: string;
     selected_ripeness_type?: string | null; 
     cart_quantity?: number;
+    basket?: {
+        capacity: number;
+        basket_items: any[];
+    };
 }
 
 interface Product {
@@ -52,7 +56,7 @@ interface Product {
 }
 
 // ==========================================================
-// MAX QUANTITY TOAST COMPONENT (Unchanged)
+// MAX QUANTITY TOAST COMPONENT
 // ==========================================================
 const MaxQuantityToast: FC<{ 
     maxQuantity: number | null; 
@@ -111,7 +115,7 @@ const MaxQuantityToast: FC<{
 };
 
 // --------------------------------------------------------
-// UOM POPUP COMPONENT (Reverted RQ UI, Kept Logic Fix)
+// UOM POPUP COMPONENT
 // --------------------------------------------------------
 const UOMPopup: FC<{
   product: Product;
@@ -122,7 +126,7 @@ const UOMPopup: FC<{
   const modalRef = useRef<HTMLDivElement>(null);
   const cartItems = useSelector((state: any) => state.cart.items);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isRipenessInfoOpen, setIsRipenessInfoOpen] = useState(false); // Reverted to collapsible
+  const [isRipenessInfoOpen, setIsRipenessInfoOpen] = useState(false);
   
   const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
   const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
@@ -131,6 +135,7 @@ const UOMPopup: FC<{
       setToastMaxQuantity(maxQty);
       setShowMaxQuantityToast(true);
   };
+  
   const getRipenessSvg = (ripeness: string) => {
     switch (ripeness.toLowerCase().replace(/ /g, '_')) {
       case 'raw':
@@ -193,7 +198,7 @@ const UOMPopup: FC<{
         setToastMaxQuantity(null);
     } else {
         setIsTransitioning(false);
-        setIsRipenessInfoOpen(false); 
+        setIsRipenessInfoOpen(false);
         setTimeout(() => {
             document.body.style.overflow = 'unset';
         }, 300);
@@ -269,7 +274,7 @@ const UOMPopup: FC<{
             maxQuantity={toastMaxQuantity}
             isVisible={showMaxQuantityToast}
             onClose={() => setShowMaxQuantityToast(false)}
-            itemName={product.name}
+            itemName={product.name} 
             isInsideModal={true}
         />
         
@@ -284,7 +289,7 @@ const UOMPopup: FC<{
           </button>
           
           <div className="flex items-start gap-3 pr-8">
-            <div className="w-10 h-10 rounded-xl overflow-hidden bg-gray-50 flex-shrink-0" style={{ backgroundColor: '#FFF9E5' }}> {/* Retained FFF9E5 background */}
+            <div className="w-10 h-10 rounded-xl overflow-hidden bg-gray-50 flex-shrink-0" style={{ backgroundColor: '#FFF9E5' }}>
               <Image src={product.image || sampleimg} alt={product.name} width={40} height={40} className="w-full h-full object-contain" />
             </div>
             <div className="flex-1 pt-1">
@@ -295,7 +300,6 @@ const UOMPopup: FC<{
           </div>
         </div>
         
-        {/* REVERTED: Collapsible RQ Info Section */}
         {hasRipenessTypes && (
             <div className="p-4 pt-2 pb-2 flex-shrink-0">
                 <button 
@@ -312,7 +316,6 @@ const UOMPopup: FC<{
                 <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isRipenessInfoOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
                     <div className="p-2 rounded-lg text-sm text-gray-700 space-y-1 border border-gray-200">
                         <p className="flex items-center gap-3 mb-3">
-                            {/* <Image src={infoicon1} alt='' width={20} height={20} className="flex-shrink-0" /> */}
                             <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium'>
                                 Choose your level of ripeness:
                             </span>
@@ -329,8 +332,8 @@ const UOMPopup: FC<{
                                 Semi: Consume within 2 days
                             </span>
                         </p>
-                        <p className="flex items-center gap-3">
-                            <Image src={rawSvg} alt='' width={12} height={12} className="flex-shrink-0" />
+                        <p className="flex items-start gap-3">
+                            <Image src={rawSvg} alt='' width={12} height={12} className="flex-shrink-0 mt-1" />
                             <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium mb-3'>
                                 Raw: Consume within 3-4 days (do not refrigrate)
                             </span>
@@ -345,7 +348,6 @@ const UOMPopup: FC<{
                 </div>
             </div>
         )}
-        {/* END REVERTED RQ Info Section */}
         
         <div className={`flex-grow overflow-y-auto ${hasRipenessTypes ? 'p-4 pt-2 space-y-2' : 'p-4 space-y-2'}`}>
           {variantsWithCartInfo.map((variant) => {
@@ -396,10 +398,8 @@ const UOMPopup: FC<{
                     product={product}
                     varientId={variant.variant_id}
                     varientPrice={variant.price}
-                    // LOGIC FIX RETAINED: Passing both quantities
                     stepperQuantity={variant.stepper_quantity}
                     minimumQuantity={variant.minimum_quantity} 
-                    // ------------------------------------------
                     buttonType="black"
                     selectedRipenessType={variant.selected_ripeness_type} 
                     onCartUpdate={() => onSelectionMade(variant, variant.selected_ripeness_type || null)}
@@ -447,7 +447,7 @@ const UOMPopup: FC<{
 };
 
 // --------------------------------------------------------
-// ITEM CARD COMPONENT (Unchanged - just here for context)
+// ITEM CARD COMPONENT
 // --------------------------------------------------------
 const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
   const router = useRouter();
@@ -472,6 +472,10 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
   };
   
   if (!defaultUOM) return null;
+
+  // Check if this is a basket item
+  const isBasketItem = defaultUOM.basket && 
+                       typeof defaultUOM.basket.capacity === 'number';
 
   const availableUOMs =
     itemDetails?.multiple_uoms?.filter((uom: any) => uom?.is_available) || [];
@@ -504,8 +508,14 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
       router.push(`/${slug}/${itemDetails.id}`);
     }
   };
+
+  // Handle basket view button click
+  const handleBasketViewClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    handleNavigation();
+  };
   
-  // ===== CALCULATE TOTAL QUANTITY ACROSS ALL UOMS/RIPENESS =====
+  // Calculate total quantity across all UOMs/ripeness
   const currentCartProduct = cartItems.find((item: any) => item.id === itemDetails.id);
   
   let totalQuantityAcrossProduct = 0;
@@ -513,21 +523,17 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
   if (currentCartProduct && currentCartProduct.multiple_uoms) {
     currentCartProduct.multiple_uoms.forEach((cartUOM: any) => {
       if (cartUOM.cart_ripeness && Array.isArray(cartUOM.cart_ripeness)) {
-        // Sum all ripeness quantities for this UOM
         cartUOM.cart_ripeness.forEach((r: any) => {
           totalQuantityAcrossProduct += Number(r.qty) || 0;
         });
       } else {
-        // Simple item without ripeness
         totalQuantityAcrossProduct += Number(cartUOM.cart_quantity) || 0;
       }
     });
   }
-  // ==============================================================
 
   return (
     <>
-      {/* Toast outside the card wrapper so it's not clipped */}
       <MaxQuantityToast 
           maxQuantity={toastMaxQuantity}
           isVisible={showMaxQuantityToast}
@@ -617,9 +623,17 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
               </div>
 
               <div className="rounded-[1rem] overflow-hidden">
-                {requiresSelection ? (
+                {/* Show "VIEW" button for basket items */}
+                {isBasketItem ? (
+                  <button
+                    type="button"
+                    onClick={handleBasketViewClick}
+                    className="w-full h-7 bg-black text-white font-semibold text-xs rounded-[0.75rem] flex items-center justify-center hover:bg-gray-800 transition-colors font-[SofiaPro]"
+                  >
+                    VIEW
+                  </button>
+                ) : requiresSelection ? (
                   totalQuantityAcrossProduct > 0 ? (
-                    // Show stepper when items are in cart
                     <div className="flex items-center justify-between px-2 bg-white border-[2px] border-[#F3EEDF] rounded-full h-7">
                       <button
                         onClick={(e) => {
@@ -648,7 +662,6 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                       </button>
                     </div>
                   ) : (
-                    // Show "More Options" when cart is empty
                     <button
                       type="button"
                       onClick={handleAddItemClick}
