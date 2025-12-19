@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 const CardsWrapper = () => {
   const products = useSelector((state: any) => state.products);
-  console.log(products,"products");
+  // console.log(products,"products");
   if (products.isProductListLoading) return <ProductCardLoader />;
 
   return (
