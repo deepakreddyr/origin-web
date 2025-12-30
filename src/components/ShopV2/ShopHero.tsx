@@ -10,6 +10,7 @@ import FreshlyArrivedBanner from "/public/assets/images/shop/FreshlyArrivedBanne
 import FruitsBanner from "/public/assets/images/shop/FruitsBanner.png";
 import HydroponicsBanner from "/public/assets/images/shop/HydroponicsBanner.png";
 import GourmetBanner from "/public/assets/images/shop/GourmetBanner.png";
+import NewYearBanner from "/public/assets/images/Web_banner_OG.png";
 import vege from "/public/assets/images/shop/VeggiesBanner.png";
 // Map normalized keywords -> banner images
 const bannerMap: Record<string, any> = {
@@ -81,47 +82,24 @@ export const ShopHeroSingle = () => {
   }, [router]);
 
   return (
-    <div className="relative w-full overflow-hidden mob:pt-[20px]">
+    <div className="relative w-full overflow-x-hidden">
+      {/* HERO HEIGHT - Reduced height */}
       <div
-        className={`relative w-full ${
-          isMobile ? "pt-[50px]" : "aspect-[2.4/1]"
-        }`}
+        className="
+          relative w-full
+          h-[50vw]         
+          bg-[#f7f1dc]
+          mob:mt-20            
+        "
       >
-        {/* Background Image */}
-        <div className="w-full relative">
-          <Image
-            src="https://cdn.originfresh.in/website/landingbanner.png"
-            alt="Shop Hero Single Banner"
-            layout="responsive"
-            width={1920}
-            height={800}
-            className="object-cover"
-            priority
-            quality={100}
-          />
-        </div>
-
-        {/* Button */}
-        <div className="absolute inset-0 z-0 flex items-center justify-start">
-          <button
-            onClick={() =>
-              router.push("/nectacot/567")
-            }
-            className={`
-              absolute bg-[#FFD600] text-black font-[SofiaPro] font-semibold rounded-lg
-              ${
-                isMobile
-                  ? "scale-[0.5] left-[6.5%] top-[78%] text-[4vw] py-2 px-6"
-                  : isTablet
-                    ? "scale-100 left-[6.5%] top-[70%] text-[1.4vw] py-2 px-6"
-                    : "scale-100 left-[7%] top-[70%] text-[1.1vw] py-3 px-10"
-              }
-            `}
-            style={{ transformOrigin: "left top" }}
-          >
-            Shop Now
-          </button>
-        </div>
+        <Image
+          src={NewYearBanner}
+          alt="Shop Hero Single Banner"
+          fill
+          priority
+          quality={100}
+          className="object-cover"
+        />
       </div>
     </div>
   );
