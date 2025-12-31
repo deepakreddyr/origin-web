@@ -10,7 +10,7 @@ import FreshlyArrivedBanner from "/public/assets/images/shop/FreshlyArrivedBanne
 import FruitsBanner from "/public/assets/images/shop/FruitsBanner.png";
 import HydroponicsBanner from "/public/assets/images/shop/HydroponicsBanner.png";
 import GourmetBanner from "/public/assets/images/shop/GourmetBanner.png";
-import NewYearBanner from "/public/assets/images/Web_banner_OG.png";
+import NewYearBanner from "/public/assets/images/Web_Banner_OG.png";
 import vege from "/public/assets/images/shop/VeggiesBanner.png";
 // Map normalized keywords -> banner images
 const bannerMap: Record<string, any> = {
