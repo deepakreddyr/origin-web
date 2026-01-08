@@ -38,68 +38,85 @@ export const removeRouteSourceFromLs = (name: string) => {
  * @returns An object conforming to the API payload structure { items: [...] }.
  */
 export const prepareCartItemsToApi = (cartItems: any) => {
-  // cartItems is expected to be an array of top-level Product objects
-  // console.log(cartItems, "cartItems");
   const apiPayload: any[] = [];
 
   cartItems.forEach((product: any) => {
-    // 1. Check for valid product code and UOMs
     if (!product.item_code || !Array.isArray(product.multiple_uoms)) {
-      return; // Skip invalid product entries
+      return;
     }
 
-    // 2. Initialize the structure for this product
-    const productEntry = {
+    const productEntry: any = {
       item_code: product.item_code,
-      uom: [] as any[]
+      uom: [] as any[],
+      // Default to null, will be updated if a UOM has text
+      gift_text: null,
+      selected_rating: 0
     };
 
-    // 3. Iterate through all UOM/Variant entries within this product
     product.multiple_uoms.forEach((uom: any) => {
-      // We only care about UOMs that have been added to the cart (cart_quantity > 0)
-      if (uom.variant_id && uom.cart_quantity > 0) {
-        
-        // --- NEW LOGIC FOR RIPENESS EXPLOSION ---
+      // Check if UOM has positive quantity OR if it's a basket with valid child items
+      let hasValidBasketItems = false;
+      if (uom.basket && Array.isArray(uom.basket.basket_items)) {
+        hasValidBasketItems = uom.basket.basket_items.some((item: any) => item.cart_qty > 0);
+      }
+
+      const shouldInclude = uom.variant_id && (uom.cart_quantity > 0 || hasValidBasketItems);
+
+      if (shouldInclude) {
+
+        // --- FIX: Capture gift_text from the UOM level ---
+        if (uom.gift_text) {
+          productEntry.gift_text = uom.gift_text;
+        }
+
+        let filteredBasketItems = null;
+        if (uom.basket && Array.isArray(uom.basket.basket_items)) {
+          filteredBasketItems = uom.basket.basket_items.filter((item: any) => item.cart_qty > 0);
+        }
+
         if (Array.isArray(uom.cart_ripeness) && uom.cart_ripeness.length > 0) {
-          // A. Item with Ripeness: Explode into separate UOM entries
-          uom.cart_ripeness.forEach((ripenessObj: { ripeness_type: string, qty: string }) => {
+          uom.cart_ripeness.forEach((ripenessObj: { ripeness_type: string, qty: any }) => {
             const qty = Number(ripenessObj.qty);
             if (qty > 0) {
-              productEntry.uom.push({
+              const entry: any = {
                 id: uom.variant_id,
+                variant_id: uom.variant_id,
                 qty: qty,
-                ripeness_type: ripenessObj.ripeness_type, // Include ripeness_type
-              });
+                ripeness_type: ripenessObj.ripeness_type,
+              };
+              if (filteredBasketItems && filteredBasketItems.length > 0) {
+                entry.basket_items = filteredBasketItems;
+              }
+              productEntry.uom.push(entry);
             }
           });
         } else {
-          // B. Simple Item (No Ripeness split): Use the UOM's total quantity
           const qty = Number(uom.cart_quantity);
           if (qty > 0) {
-            const uomEntry: { id: number, qty: number, ripeness_type?: string } = {
+            const uomEntry: any = {
               id: uom.variant_id,
+              variant_id: uom.variant_id,
               qty: qty,
             };
-            
-            // If the UOM has a default selected_ripeness_type (e.g., if it was 
-            // implicitly selected but not split), include it.
-            // NOTE: The previous version used selected_ripeness_type which is only 
-            // available in the FLAT structure. In the NESTED structure, if cart_ripeness
-            // is empty, we must rely on omitting the ripeness_type key entirely.
-            
+
+            if (uom.gift_text) {
+              uomEntry.gift_text = uom.gift_text;
+            }
+
+            if (filteredBasketItems && filteredBasketItems.length > 0) {
+              uomEntry.basket_items = filteredBasketItems;
+            }
             productEntry.uom.push(uomEntry);
           }
         }
       }
     });
 
-    // 4. Add the product entry to the main payload if it contains UOMs
     if (productEntry.uom.length > 0) {
       apiPayload.push(productEntry);
     }
   });
 
-  // console.log(apiPayload, "apiPayload");
   return { items: apiPayload };
 };
 

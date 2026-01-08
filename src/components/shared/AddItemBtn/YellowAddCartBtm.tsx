@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 // Assuming this is your central button component that takes the new minimumQuantity prop
-import AddItemBtn from './AddItemBtn'; 
+import AddItemBtn from './AddItemBtn';
 // --- SVG IMPORTS ---
 import ripeSvg from '/public/assets/svg/ripe.svg';
 import semiRipeSvg from '/public/assets/svg/semiripe.svg';
@@ -12,6 +12,7 @@ import rawSvg from '/public/assets/svg/raw.svg';
 import infoicon1 from '/public/assets/svg/infoicon1.svg';
 import infoicon2 from '/public/assets/svg/infoicon2.svg';
 import sampleimg from '/public/assets/images/shop/sampleimg2.png';
+import itemRipenessSvg from '/public/assets/svg/itemRipeness.svg';
 
 // ==========================================================
 // 1. Interface Definitions (Consolidated from both files)
@@ -60,7 +61,7 @@ interface YellowBtnProps {
   handleIncrease: (e: any) => void;
   handleAddItem: (e: any) => void;
   handleRemove?: (e: any) => void;
-  product?: Product; 
+  product?: Product;
   selectedRipenessType?: string | null;
   variantId?: number;
 }
@@ -90,9 +91,8 @@ const MaxQuantityToast: FC<{
   if (isInsideModal) {
     return (
       <div
-        className={`absolute left-1/2 -top-14 transform -translate-x-1/2 w-[90%] transition-opacity duration-300 ease-in-out z-[9999] ${
-          isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+        className={`absolute left-1/2 -top-14 transform -translate-x-1/2 w-[90%] transition-opacity duration-300 ease-in-out z-[9999] ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
       >
         <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full relative">
           <div className="flex items-center justify-center w-full gap-2">
@@ -108,15 +108,14 @@ const MaxQuantityToast: FC<{
 
   return (
     <div
-      className={`fixed z-[60] left-1/2 bottom-4 transform -translate-x-1/2 w-[90%] max-w-sm transition-opacity duration-300 ease-in-out ${
-        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-      }`}
+      className={`fixed z-[60] left-1/2 bottom-4 transform -translate-x-1/2 w-[90%] max-w-sm transition-opacity duration-300 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
     >
       <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full relative">
         <div className="flex items-center justify-center w-full gap-2">
           <InfoOutlinedIcon sx={{ color: 'yellow', fontSize: '1.2rem' }} />
           <p className="text-[0.70rem] font-semibold text-white text-center leading-tight">
-            Maximum quantity of **{maxQuantity}** reached for **{itemName}**.
+            Maximum quantity of {maxQuantity} reached for {itemName}.
           </p>
         </div>
       </div>
@@ -134,7 +133,7 @@ const UOMPopup: FC<{
   onSelectionMade: (uom: UOM, ripeness: string | null) => void;
 }> = ({ product, isOpen, onClose, onSelectionMade }) => {
   const modalRef = useRef<HTMLDivElement>(null);
-  const cartItems = useSelector((state: any) => state.cart.items); 
+  const cartItems = useSelector((state: any) => state.cart.items);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isRipenessInfoOpen, setIsRipenessInfoOpen] = useState(false);
 
@@ -145,7 +144,7 @@ const UOMPopup: FC<{
     setToastMaxQuantity(maxQty);
     setShowMaxQuantityToast(true);
   };
-  
+
   const getRipenessSvg = (ripeness: string) => {
     switch (ripeness.toLowerCase().replace(/ /g, '_')) {
       case 'raw':
@@ -171,7 +170,7 @@ const UOMPopup: FC<{
       allVariants.push({ ...uom, selected_ripeness_type: null });
     }
   });
-  
+
   const variantsWithCartInfo = allVariants.map((variant) => {
     const cartProduct = cartItems.find((item: any) => item.id === product.id);
 
@@ -246,7 +245,7 @@ const UOMPopup: FC<{
   );
 
   if (!isOpen && !isTransitioning) return null;
-  
+
   const subTotalQuantity = variantsWithCartInfo.reduce(
     (acc, variant) => acc + (variant.cart_quantity || 0),
     0
@@ -316,27 +315,65 @@ const UOMPopup: FC<{
               onClick={() => setIsRipenessInfoOpen(!isRipenessInfoOpen)}
               className="flex items-center justify-center w-full gap-1 text-sm text-gray-700 font-semibold p-2 mb-1 rounded-lg border border-gray-300 hover:border-gray-400 transition-colors"
             >
-              <Image src={ripeSvg} alt="Ripe" width={14} height={14} />
-              <Image src={semiRipeSvg} alt="Semi Ripe" width={14} height={14} />
-              <Image src={rawSvg} alt="Raw" width={14} height={14} />
+              <Image src={itemRipenessSvg} alt="Ripeness Quotient" width={50} height={50} />
               <span className="text-xs font-bold text-green-700 font-[SofiaPro]">
-                How does Ripeness Quotient Index (RQI) work?
+                How does RQ (Ripeness Quotient) work?
               </span>
               <svg className={`w-3 h-3 text-green-700 transition-transform duration-300 ${isRipenessInfoOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
             </button>
-
             <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isRipenessInfoOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-              <div className="p-2 rounded-lg text-xs text-gray-700 space-y-1 border border-gray-200">
-                <p className="flex items-center gap-3">
-                  <Image src={infoicon1} alt='' width={20} height={20} className="flex-shrink-0" />
-                  <span className='text-xs mob:text-[2.7vw] font-[SofiaPro] font-medium'>
-                    Choose your preferred fruits and specify ripeness level: Ripe, Semi Ripe, or Raw.
+              <div className="p-2 rounded-lg text-sm text-gray-700 space-y-3 border border-gray-200">
+                <p className="flex items-center gap-3 mb-1">
+                  <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium'>
+                    Choose your level of ripeness:
                   </span>
                 </p>
                 <p className="flex items-center gap-3">
-                  <Image src={infoicon2} alt='' width={20} height={20} className="flex-shrink-0" />
-                  <span className='text-xs mob:text-[2.7vw] font-[SofiaPro] font-medium'>
-                    Your selected options will be delivered with your order, ensuring the freshest produce just the way you like it.
+                  <Image
+                    src={ripeSvg}
+                    alt=''
+                    width={16}
+                    height={16}
+                    className="flex-shrink-0"
+                  />
+                  <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium'>
+                    Ripe: Consume immediately
+                  </span>
+                </p>
+                <p className="flex items-center gap-3">
+                  <Image
+                    src={semiRipeSvg}
+                    alt=''
+                    width={16}
+                    height={16}
+                    className="flex-shrink-0"
+                  />
+                  <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium'>
+                    Semi: Consume within 2 days
+                  </span>
+                </p>
+                <p className="flex items-center gap-3">
+                  <Image
+                    src={rawSvg}
+                    alt=''
+                    width={16}
+                    height={16}
+                    className="flex-shrink-0"
+                  />
+                  <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium'>
+                    Raw: Consume within 3-4 days (do not refrigerate)
+                  </span>
+                </p>
+                <p className="flex items-center gap-3">
+                  <Image
+                    src={infoicon2}
+                    alt=''
+                    width={20}
+                    height={20}
+                    className="flex-shrink-0"
+                  />
+                  <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium text-start'>
+                    Your fruit arrives at the selected level or ripeness, fresh and ready for consumption when you are.
                   </span>
                 </p>
               </div>
@@ -358,9 +395,8 @@ const UOMPopup: FC<{
             return (
               <div
                 key={`${variant.variant_id}-${ripenessLabel}`}
-                className={`flex items-center justify-between p-2 rounded-lg border transition-colors ${
-                  isSelected ? 'border-yellow-200' : ' hover:border-gray-300'
-                }`}
+                className={`flex items-center justify-between p-2 rounded-lg border transition-colors ${isSelected ? 'border-yellow-200' : ' hover:border-gray-300'
+                  }`}
               >
                 <div className="flex items-center flex-1 pr-2">
                   {getRipenessSvg(ripenessLabel) && (
@@ -377,7 +413,7 @@ const UOMPopup: FC<{
                   {!getRipenessSvg(ripenessLabel) && (
                     <span className="text-lg mr-2"></span>
                   )}
-                  <div className="flex-1">
+                  <div className="flex-1 text-start">
                     <p className="font-semibold text-gray-800 capitalize leading-none text-sm font-[SofiaPro]">
                       {ripenessLabel || ""}
                     </p>
@@ -448,11 +484,10 @@ const UOMPopup: FC<{
             <button
               onClick={onClose}
               disabled={subTotalQuantity === 0}
-              className={`px-8 py-3 rounded-full font-bold text-sm transition-colors shadow-md font-[SofiaPro] ${
-                subTotalQuantity > 0
-                  ? 'bg-yellow-400 text-black hover:bg-yellow-500'
-                  : 'bg-gray-700 text-gray-400 cursor-not-allowed'
-              }`}
+              className={`px-8 py-3 rounded-full font-bold text-sm transition-colors shadow-md font-[SofiaPro] ${subTotalQuantity > 0
+                ? 'bg-yellow-400 text-black hover:bg-yellow-500'
+                : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                }`}
             >
               CONFIRM
             </button>
@@ -481,7 +516,7 @@ const YellowBtn = (props: YellowBtnProps) => {
   const cartItems = useSelector((state: any) => state.cart.items);
   const [showMaxMessage, setShowMaxMessage] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  
+
   const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
   const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
 
@@ -517,12 +552,12 @@ const YellowBtn = (props: YellowBtnProps) => {
   // Calculate total quantity across all variants for this product
   const getTotalCartQuantity = () => {
     if (!product) return 0;
-    
+
     const cartProduct = cartItems.find((item: any) => item.id === product.id);
     if (!cartProduct) return 0;
 
     let total = 0;
-    
+
     cartProduct.multiple_uoms?.forEach((uom: any) => {
       if (uom.cart_ripeness && uom.cart_ripeness.length > 0) {
         // Sum all ripeness quantities for this UOM
@@ -544,13 +579,13 @@ const YellowBtn = (props: YellowBtnProps) => {
   const onDecrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     // For multi-variant products, open the popup to let user choose which to decrease
     if (requiresSelection && product) {
       setIsPopupOpen(true);
       return;
     }
-    
+
     if (quantity <= 1) {
       handleRemove?.(e);
     } else {
@@ -587,12 +622,12 @@ const YellowBtn = (props: YellowBtnProps) => {
       handleAddItem(e);
     }
   };
-  
+
   const handleSelectionMade = (uom: UOM, ripeness: string | null) => {
     // If a selection is made in the popup, we can close it.
-    setIsPopupOpen(false); 
+    setIsPopupOpen(false);
   };
-  
+
   // Show stepper if: (no selection required AND item present) OR (selection required AND has items in cart)
   const shouldShowStepper = (!requiresSelection && isItemPresent) || (requiresSelection && hasItemsInCart);
 
@@ -604,7 +639,7 @@ const YellowBtn = (props: YellowBtnProps) => {
         onClose={() => setShowMaxQuantityToast(false)}
         itemName={product?.name}
       />
-      
+
       <div className="w-full flex flex-col items-center">
         {shouldShowStepper ? (
           <>

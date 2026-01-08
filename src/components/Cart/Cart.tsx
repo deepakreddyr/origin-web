@@ -12,6 +12,7 @@ import AddressAndTimeSlot from './AddressAndTimeSlot/AddressAndTimeSlot';
 import RestrictOrderInfo from './RestrictOrderInfo';
 import {
   setCartItems,
+  setCartItemsFromServer, // ADD THIS
   setCartMinimum,
   setCartTabType,
   setIsProceedButtonEnabled,
@@ -36,51 +37,15 @@ import { updateTimeSlotId } from '@/store/slice/placeOrderDetails';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { useAtom } from 'jotai';
 // Import InfoOutlinedIcon to be used in the new MaxQuantityToast copy
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined"; 
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import MaxQuantityToast from '../shared/MaxQuantityToast';
 
-// ==========================================================
-// MAX QUANTITY TOAST COMPONENT MOVED/COPIED HERE FOR GLOBAL RENDER
-// ==========================================================
-const MaxQuantityToast: React.FC<{ 
-    maxQuantity: number | null; 
-    isVisible: boolean; 
-    onClose: () => void;
-}> = ({ maxQuantity, isVisible, onClose }) => {
-    
-    // Auto-hide logic
-    React.useEffect(() => {
-        if (isVisible) {
-            const timer = setTimeout(() => {
-                onClose();
-            }, 3000); 
-            return () => clearTimeout(timer);
-        }
-    }, [isVisible, onClose]);
-
-    if (!isVisible || maxQuantity === null) return null;
-
-    return (
-        <div 
-            className={`absolute bottom-22 left-1/2 transform -translate-x-1/2 z-[9999] w-[90%] max-w-md transition-opacity duration-300 ease-in-out ${
-                isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}
-        >
-            <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full">
-                <div className="flex items-center justify-center w-full gap-2">
-                    <InfoOutlinedIcon sx={{color: 'yellow', fontSize: '1.2rem'}}/>
-                    <p className="text-[0.70rem] mob:text-[2.8vw] font-semibold text-white text-center leading-tight">
-                        Maximum quantity of {maxQuantity} reached for this item.
-                    </p>
-                </div>
-            </div>
-        </div>
-    );
-};
-// ==========================================================
+// MaxQuantityToast functionality is now imported from @/components/shared/MaxQuantityToast
 
 
 const Cart = () => {
   const cart = useSelector((state: any) => state.cart);
+  // console.log(cart.cartTabType, "carttabtype")
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
   const [showAddressModal, setAddressModal] = useState(false);
   const [showCouponList, setShowCouponList] = useState(false);
@@ -103,19 +68,20 @@ const Cart = () => {
     distance_from_warehouse: null,
   });
   const [address, setAddress] = useAtom(addressAtom);
-  
+
   // --- ADD TOAST STATE HERE ---
   const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
   const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
 
   const handleMaxQuantityExceededGlobal = (maxQty: number) => {
-      setToastMaxQuantity(maxQty);
-      setShowMaxQuantityToast(true);
+    setToastMaxQuantity(maxQty);
+    setShowMaxQuantityToast(true);
   };
   // ----------------------------
 
 
   const fetchCartItemsFromApi = () => {
+    // console.log("fetchCartItemsFromApi");
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getCartItems'];
     const addressFromLs = getAddressAndStoreId();
     const additionalHeaders = addressFromLs
@@ -123,7 +89,8 @@ const Cart = () => {
       : {};
 
     const successHandler = (data: any) => {
-      dispatch(setCartItems(data.data));
+      // console.log("📥 fetchCartItemsFromApi Response:", data.data);
+      dispatch(setCartItemsFromServer(data.data)); // CHANGED: Use new action instead of setCartItems
       dispatch(setCartMinimum(data.cart_minimum));
       setBillDetails({
         cart_minimum: data.cart_minimum,
@@ -154,20 +121,26 @@ const Cart = () => {
   };
 
   const sendItemsToApi = () => {
+    // console.log("sendItemsToApi");
     const token = localStorage.getItem('user_token');
     if (!token) return;
 
     const apiUrl =
       process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['addToCart'];
-    const cartItemFromLs = localStorage.getItem('cart_items');
+
+    const currentCartItems = cart.items;
+    // console.log(currentCartItems, "currentCartItems");
     const addressFromLs = getAddressAndStoreId();
     const additionalHeaders = addressFromLs
       ? { 'store-id': addressFromLs.store_id }
       : {};
 
-    if (cartItemFromLs) {
-      const cartItems = prepareCartItemsToApi(JSON.parse(cartItemFromLs));
+    if (currentCartItems && currentCartItems.length > 0) {
+      const cartItems = prepareCartItemsToApi(currentCartItems);
+      // console.log("📤 Sending to API:", JSON.stringify(cartItems, null, 2));
+
       const successHandler = () => {
+        // console.log("✅ addToCart Success, fetching fresh items...");
         fetchCartItemsFromApi();
       };
 
@@ -189,10 +162,7 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    const cartItemFromLs = localStorage.getItem('cart_items');
-    if (cartItemFromLs) {
-      const cartItemsParsed = JSON.parse(cartItemFromLs);
-      if (cartItemsParsed.length === 0) return;
+    if (cart.items && cart.items.length > 0) {
       sendItemsToApi();
     } else {
       fetchCartItemsFromApi();
@@ -215,21 +185,21 @@ const Cart = () => {
         dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
         return;
       }
-      
+
       // If we're in the main cart view and no modal is open
       if (cart.cartTabType === TabTypeConstant.CART_MAIN && !showAddressModal) {
         setAddressModal(true);
         dispatch(setIsProceedButtonEnabled(false)); // Disable until timing is selected
         return;
       }
-      
+
       // If modal is open, check if user has selected delivery timing
       if (cart.cartTabType === TabTypeConstant.CART_MAIN && showAddressModal) {
         // Check if user has selected a delivery type and timing
         const hasSelectedDelivery = placeOrderDetails.delivery_type !== '';
-        const hasSelectedTiming = placeOrderDetails.delivery_type === 'INSTANT' || 
-                                  (placeOrderDetails.delivery_type === 'TIME_SLOT' && placeOrderDetails.time_slot_id !== '');
-        
+        const hasSelectedTiming = placeOrderDetails.delivery_type === 'INSTANT' ||
+          (placeOrderDetails.delivery_type === 'TIME_SLOT' && placeOrderDetails.time_slot_id !== '');
+
         if (hasSelectedDelivery && hasSelectedTiming) {
           // User has selected timing, proceed to payment
           setAddressModal(false);
@@ -250,10 +220,16 @@ const Cart = () => {
 
   useEffect(() => {
     const paymentFlow = localStorage.getItem('FLOW_TYPE');
+    // console.log(cart.items.length, "cart.items.length");
+    // console.log(cart.cartTabType, "cart.cartTabType");
+    // console.log(cart.items, "cart.items")
     if (cart.items.length === 0 && !paymentFlow) {
       dispatch(setCartTabType(TabTypeConstant.EMPTY_CART));
+    } else if (cart.items.length > 0 && cart.cartTabType === TabTypeConstant.EMPTY_CART) {
+      // FIX: Switch back to CART_MAIN if items appear (e.g. after API fetch)
+      dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
     }
-  }, [cart.items]);
+  }, [cart.items, cart.cartTabType]);
 
   const SCREEN_MAP: any = {
     COUPON_CODE_LIST: (
@@ -262,12 +238,13 @@ const Cart = () => {
     PAYMENT: <Payment />,
     CART_MAIN: (
       <>
+
         {orderRestrictionData && (
           <RestrictOrderInfo orderRestrictionData={orderRestrictionData} />
         )}
+        <CouponSection setShowCouponList={setShowCouponList} />
         <ReviewList onShowMaxQuantityToast={handleMaxQuantityExceededGlobal} />
         <DeliveryInstruction />
-        <CouponSection setShowCouponList={setShowCouponList} />
         {showAddressModal && (
           <div className="w-[30vw] flex items-end relative justify-end">
             <AddressAndTimeSlot
@@ -276,7 +253,7 @@ const Cart = () => {
             />
           </div>
         )}
-        <BillDetailsWrapper billDetails={billDetails} orderRestrictionData={orderRestrictionData}/>
+        <BillDetailsWrapper billDetails={billDetails} orderRestrictionData={orderRestrictionData} />
         {cart.cartTabType !== TabTypeConstant.CART_ADDRESS_LIST && (
           <ActionCtaWithItems
             btnName={loginDetails.user ? 'PROCEED' : 'LOGIN'}
@@ -294,12 +271,12 @@ const Cart = () => {
   return (
     // RENDER THE MAX QUANTITY TOAST AT THE TOP LEVEL HERE
     <div className="flex flex-col grow gap-[1.1vw] mob:gap-[4.1vw] pb-[6vw] mob:pb-[25vw]">
-        <MaxQuantityToast 
-            maxQuantity={toastMaxQuantity}
-            isVisible={showMaxQuantityToast}
-            onClose={() => setShowMaxQuantityToast(false)}
-        />
-        {SCREEN_MAP[cart.cartTabType]}
+      <MaxQuantityToast
+        maxQuantity={toastMaxQuantity}
+        isVisible={showMaxQuantityToast}
+        onClose={() => setShowMaxQuantityToast(false)}
+      />
+      {SCREEN_MAP[cart.cartTabType]}
     </div>
   );
 };

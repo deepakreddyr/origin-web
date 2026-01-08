@@ -34,8 +34,8 @@ const AddressAndTimeSlot = (props: any) => {
     ADDRESS_TIMESLOT_SELECTOR: (
       <AdressAndTimeSelector
         setTimeSelectorOrListTab={setTimeSelectorOrListTab}
-        // checkoutDetails={checkoutDetails}
-        // setCheckoutDetails={setCheckoutDetails}
+      // checkoutDetails={checkoutDetails}
+      // setCheckoutDetails={setCheckoutDetails}
       />
     ),
     CART_ADDRESS_LIST: <CartAddressList setTimeSelectorOrListTab={setTimeSelectorOrListTab} />
@@ -65,9 +65,8 @@ const AddressAndTimeSlot = (props: any) => {
       className={`fixed bottom-0 h-full mob:left-0 left-[70vw] z-[2] inset-0 mob:w-screen w-[30vw] flex items-end justify-end bg-black bg-opacity-50`}
     >
       <div
-        className={`bg-white w-full min-h-[40vh] mob:min-h-[90vh] max-h-screen pb-[7vw] rounded-t-[1.67vw] relative transform ${
-          delayedModal ? 'translate-y-0' : 'translate-y-full'
-        } transition-all duration-500 ease-in-out`}
+        className={`bg-white w-full min-h-[40vh] mob:min-h-[90vh] max-h-screen pb-[7vw] rounded-t-[1.67vw] relative transform ${delayedModal ? 'translate-y-0' : 'translate-y-full'
+          } transition-all duration-500 ease-in-out`}
       >
         <ModalHeader setAddressModal={setAddressModal} setTimeSelectorOrListTab={setTimeSelectorOrListTab} />
         {SCREEN_MAP[timeSelectorOrListTab]}

@@ -91,8 +91,9 @@ const CouponList = (props: any) => {
       setError(true); // ❌ API failure, show error
       setCouponsTab(COUPON_TABS.COUPON_APPLIED);
     };
-
+    // console.log(cart.items, "cart.items");
     const cartItems = prepareCartItemsToApi(cart.items);
+    // console.log(cartItems, "cartItems");
     const apiData = {
       items: cartItems?.items || [],
       code: couponCode,

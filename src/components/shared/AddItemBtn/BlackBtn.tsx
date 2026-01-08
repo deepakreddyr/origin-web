@@ -1,4 +1,7 @@
 import React, { FC } from "react";
+import addButton from '/public/assets/svg/addButton.svg';
+import subButton from '/public/assets/svg/subButton.svg';
+import Image from "next/image";
 
 interface BlackBtnProps {
   isItemPresent: boolean;
@@ -49,7 +52,7 @@ const BlackBtn: FC<BlackBtnProps> = (props) => {
               className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] rounded-full bg-black text-white text-[1vw] mob:text-[3.5vw] flex items-center justify-center"
               onClick={onDecrease}
             >
-              &#8722;
+              <Image src={subButton} alt=""/>
             </button>
 
             <p className="text-black font-semibold text-[1vw] mob:text-[3.2vw]">
@@ -60,7 +63,7 @@ const BlackBtn: FC<BlackBtnProps> = (props) => {
               className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] rounded-full bg-black text-white text-[1vw] mob:text-[3.5vw] flex items-center justify-center"
               onClick={onIncrease}
             >
-              +
+              <Image src={addButton} alt=""/>
             </button>
           </div>
         </>
