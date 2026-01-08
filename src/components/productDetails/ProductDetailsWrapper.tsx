@@ -344,7 +344,7 @@ const ProductDetailsWrapper = () => {
                     </>
                   )}
                 </div>
-                <div className='font-[SofiaPro] flex justify-start'>
+                <div className='font-[SofiaPro] w-full'>
                   {productDetails.item.type === 'basket' ? (
                     <BasketBtn
                       product={productDetails.item as any}

@@ -32,7 +32,7 @@ const BlackBtn: FC<BlackBtnProps> = (props) => {
   const onIncrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     // Always call handleIncrease - it will handle max quantity logic
     handleIncrease(e);
   };
@@ -47,29 +47,29 @@ const BlackBtn: FC<BlackBtnProps> = (props) => {
     <div className="w-full flex flex-col items-center">
       {isItemPresent ? (
         <>
-          <div className="flex items-center justify-between px-[0.6vw] mob:px-[3vw] bg-white border-[2px] border-[#F3EEDF] rounded-full h-[2.2vw] mob:h-[7vw] w-full">
+          <div className="flex items-center justify-between px-2 bg-white border-[2px] border-[#F3EEDF] rounded-full h-7 w-full">
             <button
-              className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] rounded-full bg-black text-white text-[1vw] mob:text-[3.5vw] flex items-center justify-center"
+              className="h-5 w-5 rounded-full bg-black text-white text-sm flex items-center justify-center"
               onClick={onDecrease}
             >
-              <Image src={subButton} alt=""/>
+              <Image src={subButton} alt="" />
             </button>
 
-            <p className="text-black font-semibold text-[1vw] mob:text-[3.2vw]">
+            <p className="text-black font-semibold text-sm">
               {quantity}
             </p>
 
             <button
-              className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] rounded-full bg-black text-white text-[1vw] mob:text-[3.5vw] flex items-center justify-center"
+              className="h-5 w-5 rounded-full bg-black text-white text-sm flex items-center justify-center"
               onClick={onIncrease}
             >
-              <Image src={addButton} alt=""/>
+              <Image src={addButton} alt="" />
             </button>
           </div>
         </>
       ) : (
         <button
-          className="w-full h-[2.2vw] mob:h-[7vw] bg-black text-white rounded-[0.5vw] mob:rounded-[2vw] font-semibold text-[1vw] mob:text-[3.2vw]"
+          className="w-full h-7 bg-black text-white rounded-[0.75rem] font-semibold text-xs hover:bg-gray-800 transition-colors font-[SofiaPro] flex items-center justify-center"
           onClick={onAdd}
         >
           Add
