@@ -12,7 +12,7 @@ import AddressAndTimeSlot from './AddressAndTimeSlot/AddressAndTimeSlot';
 import RestrictOrderInfo from './RestrictOrderInfo';
 import {
   setCartItems,
-  setCartItemsFromServer, // ADD THIS
+  setCartItemsFromServer,
   setCartMinimum,
   setCartTabType,
   setIsProceedButtonEnabled,
@@ -36,19 +36,16 @@ import Payment from './Payment/Payment';
 import { updateTimeSlotId } from '@/store/slice/placeOrderDetails';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { useAtom } from 'jotai';
-// Import InfoOutlinedIcon to be used in the new MaxQuantityToast copy
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import MaxQuantityToast from '../shared/MaxQuantityToast';
-
-// MaxQuantityToast functionality is now imported from @/components/shared/MaxQuantityToast
-
+import DeliveringToSection from './DeliveringToSection';
 
 const Cart = () => {
   const cart = useSelector((state: any) => state.cart);
-  // console.log(cart.cartTabType, "carttabtype")
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
   const [showAddressModal, setAddressModal] = useState(false);
   const [showCouponList, setShowCouponList] = useState(false);
+  const [showDeliveringModal, setShowDeliveringModal] = useState(false); // NEW STATE
   const [orderRestrictionData, setOrderRestrictionData] = useState<null | {
     title: string;
     description: string;
@@ -69,7 +66,6 @@ const Cart = () => {
   });
   const [address, setAddress] = useAtom(addressAtom);
 
-  // --- ADD TOAST STATE HERE ---
   const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
   const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
 
@@ -77,11 +73,11 @@ const Cart = () => {
     setToastMaxQuantity(maxQty);
     setShowMaxQuantityToast(true);
   };
-  // ----------------------------
 
+  const [receiverDetails, setReceiverDetails] = useState({ receiver_name: '', receiver_phone: '' });
+  const [addressModalTab, setAddressModalTab] = useState('');
 
   const fetchCartItemsFromApi = () => {
-    // console.log("fetchCartItemsFromApi");
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getCartItems'];
     const addressFromLs = getAddressAndStoreId();
     const additionalHeaders = addressFromLs
@@ -89,8 +85,7 @@ const Cart = () => {
       : {};
 
     const successHandler = (data: any) => {
-      // console.log("📥 fetchCartItemsFromApi Response:", data.data);
-      dispatch(setCartItemsFromServer(data.data)); // CHANGED: Use new action instead of setCartItems
+      dispatch(setCartItemsFromServer(data.data));
       dispatch(setCartMinimum(data.cart_minimum));
       setBillDetails({
         cart_minimum: data.cart_minimum,
@@ -121,7 +116,6 @@ const Cart = () => {
   };
 
   const sendItemsToApi = () => {
-    // console.log("sendItemsToApi");
     const token = localStorage.getItem('user_token');
     if (!token) return;
 
@@ -129,7 +123,6 @@ const Cart = () => {
       process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['addToCart'];
 
     const currentCartItems = cart.items;
-    // console.log(currentCartItems, "currentCartItems");
     const addressFromLs = getAddressAndStoreId();
     const additionalHeaders = addressFromLs
       ? { 'store-id': addressFromLs.store_id }
@@ -137,10 +130,8 @@ const Cart = () => {
 
     if (currentCartItems && currentCartItems.length > 0) {
       const cartItems = prepareCartItemsToApi(currentCartItems);
-      // console.log("📤 Sending to API:", JSON.stringify(cartItems, null, 2));
 
       const successHandler = () => {
-        // console.log("✅ addToCart Success, fetching fresh items...");
         fetchCartItemsFromApi();
       };
 
@@ -173,6 +164,7 @@ const Cart = () => {
     if (!loginDetails.isSidebarOpen) {
       setAddressModal(false);
       setShowCouponList(false);
+      setShowDeliveringModal(false); // CLOSE MODAL
       dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
       dispatch(updateTimeSlotId(''));
       dispatch(setIsHeaderVisible(true));
@@ -186,27 +178,23 @@ const Cart = () => {
         return;
       }
 
-      // If we're in the main cart view and no modal is open
       if (cart.cartTabType === TabTypeConstant.CART_MAIN && !showAddressModal) {
+        setAddressModalTab('');
         setAddressModal(true);
-        dispatch(setIsProceedButtonEnabled(false)); // Disable until timing is selected
+        dispatch(setIsProceedButtonEnabled(false));
         return;
       }
 
-      // If modal is open, check if user has selected delivery timing
       if (cart.cartTabType === TabTypeConstant.CART_MAIN && showAddressModal) {
-        // Check if user has selected a delivery type and timing
         const hasSelectedDelivery = placeOrderDetails.delivery_type !== '';
         const hasSelectedTiming = placeOrderDetails.delivery_type === 'INSTANT' ||
           (placeOrderDetails.delivery_type === 'TIME_SLOT' && placeOrderDetails.time_slot_id !== '');
 
         if (hasSelectedDelivery && hasSelectedTiming) {
-          // User has selected timing, proceed to payment
           setAddressModal(false);
           dispatch(setCartTabType(TabTypeConstant.PAYMENT));
           return;
         } else {
-          // User hasn't selected timing, show alert or keep modal open
           alert('Please select a delivery timing to proceed.');
           return;
         }
@@ -218,15 +206,18 @@ const Cart = () => {
     }
   };
 
+  // HANDLE SAVE FROM MODAL
+  const handleSaveReceiverDetails = () => {
+    setShowDeliveringModal(false);
+    // You can add validation here if needed
+    console.log('Receiver details saved:', receiverDetails);
+  };
+
   useEffect(() => {
     const paymentFlow = localStorage.getItem('FLOW_TYPE');
-    // console.log(cart.items.length, "cart.items.length");
-    // console.log(cart.cartTabType, "cart.cartTabType");
-    // console.log(cart.items, "cart.items")
     if (cart.items.length === 0 && !paymentFlow) {
       dispatch(setCartTabType(TabTypeConstant.EMPTY_CART));
     } else if (cart.items.length > 0 && cart.cartTabType === TabTypeConstant.EMPTY_CART) {
-      // FIX: Switch back to CART_MAIN if items appear (e.g. after API fetch)
       dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
     }
   }, [cart.items, cart.cartTabType]);
@@ -235,21 +226,41 @@ const Cart = () => {
     COUPON_CODE_LIST: (
       <CouponFlowWrapper setShowCouponList={setShowCouponList} />
     ),
-    PAYMENT: <Payment />,
+    PAYMENT: <Payment receiverDetails={receiverDetails} />,
     CART_MAIN: (
       <>
-
         {orderRestrictionData && (
           <RestrictOrderInfo orderRestrictionData={orderRestrictionData} />
         )}
         <CouponSection setShowCouponList={setShowCouponList} />
+
+        {/* TRIGGER BUTTON FOR MODAL */}
+        <div className="bg-[#F2EEE44D] flex flex-col border border-[#F2EEE4] p-4 mob:py-[4.1vw] mob:rounded-[4.1vw] rounded-[1.1vw]">
+          <button
+            onClick={() => setShowDeliveringModal(true)}
+            className="w-full text-left"
+          >
+            <div className="flex items-center justify-between">
+              <span className="font-[SofiaPro] font-semibold text-sm text-[#231F20]">Send it as a gift</span>
+              <span className="text-xs text-[#231F20CC]">→</span>
+            </div>
+            {address?.defaultAddress && (
+              <p className="mt-1 font-[SofiaPro] text-xs text-[#231F20CC] line-clamp-1">
+                {address.defaultAddress.address}, {address.defaultAddress.city}, {address.defaultAddress.state} - {address.defaultAddress.pincode}
+              </p>
+            )}
+          </button>
+        </div>
+
         <ReviewList onShowMaxQuantityToast={handleMaxQuantityExceededGlobal} />
+
         <DeliveryInstruction />
         {showAddressModal && (
           <div className="w-[30vw] flex items-end relative justify-end">
             <AddressAndTimeSlot
               showAddressModal={showAddressModal}
               setAddressModal={setAddressModal}
+              activeTab={addressModalTab}
             />
           </div>
         )}
@@ -269,13 +280,28 @@ const Cart = () => {
   };
 
   return (
-    // RENDER THE MAX QUANTITY TOAST AT THE TOP LEVEL HERE
     <div className="flex flex-col grow gap-[1.1vw] mob:gap-[4.1vw] pb-[6vw] mob:pb-[25vw]">
       <MaxQuantityToast
         maxQuantity={toastMaxQuantity}
         isVisible={showMaxQuantityToast}
         onClose={() => setShowMaxQuantityToast(false)}
       />
+
+      {/* DELIVERING TO MODAL */}
+      <DeliveringToSection
+        address={address?.defaultAddress}
+        onChangeClick={() => {
+          setShowDeliveringModal(false);
+          setAddressModalTab(TabTypeConstant.CART_ADDRESS_LIST);
+          setAddressModal(true);
+        }}
+        receiverDetails={receiverDetails}
+        setReceiverDetails={setReceiverDetails}
+        isOpen={showDeliveringModal}
+        onClose={() => setShowDeliveringModal(false)}
+        onSave={handleSaveReceiverDetails}
+      />
+
       {SCREEN_MAP[cart.cartTabType]}
     </div>
   );

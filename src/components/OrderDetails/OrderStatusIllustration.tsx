@@ -112,7 +112,7 @@ const OrderStatusIllustration = (props: any) => {
   return (
     <div className="relative">
       <div className="relative z-[1]">
-        <div className="w-[30vw] mob:h-[90vw]  mob:w-screen h-[25vw] relative rounded-[1.1vw] overflow-hidden">
+        <div className="w-full md:w-[30vw] h-[25vw] mob:h-[90vw] relative rounded-[1.1vw] mob:rounded-none overflow-hidden">
           {renderIllustration()}
         </div>
         {!mapToggle && (

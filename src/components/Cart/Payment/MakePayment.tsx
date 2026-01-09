@@ -10,7 +10,7 @@ const MakePayment = (props: any) => {
   const [showCodButton, setShowCodButton] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [processingPaymentId, setProcessingPaymentId] = useState(null);
-  
+
   // Ref to track if payment is in progress (survives re-renders better than state)
   const isProcessingRef = useRef(false);
 
@@ -42,16 +42,16 @@ const MakePayment = (props: any) => {
       isProcessingRef.current = true;
       setProcessing(true);
       setProcessingPaymentId(paymentMethod.id);
-      
+
       await placeOrderHandler(paymentMethod);
-      
+
     } catch (error) {
       console.error('Payment processing failed:', error);
     } finally {
       setProcessing(false);
       setProcessingPaymentId(null);
       isProcessingRef.current = false;
-      
+
       // Reset COD button visibility if it was a COD payment that failed
       if (!paymentMethod.sub_payment_method) {
         setShowCodButton(false);
@@ -83,68 +83,77 @@ const MakePayment = (props: any) => {
             Payment methods
           </p>
           <div className="flex flex-col gap-[1.1vw] mob:gap-[4.1vw]">
-            {paymentTypeList.map((pay: any) => (
-              <div
-                className={`${pay.sub_payment_method ? 'opacity-100' : `${isCodEnabled ? 'opacity-100' : 'opacity-30'}`} ${
-                  processing && processingPaymentId !== pay.id ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-                } border border-[#F2EEE44D] hover:border-primary-100 bg-[#F2EEE44D] py-[.97vw] mob:py-[3.6vw] mob:px-[4.1vw] px-[1.1vw] mob:rounded-[3.6vw] rounded-[.97vw]`}
-                key={pay.id}
-                onClick={async (e) => {
-                  e.stopPropagation();
-                  
-                  // Prevent clicks if processing or if this specific payment method is disabled
-                  if (processing || isProcessingRef.current || (!pay.sub_payment_method && !isCodEnabled)) {
-                    return;
-                  }
+            {paymentTypeList.map((pay: any) => {
+              const hasReceiverDetails = props.receiverDetails?.receiver_name || props.receiverDetails?.receiver_phone;
+              const isCodDisabledByGift = pay.name === 'Pay On delivery' && hasReceiverDetails;
+              const isOptionEnabled = pay.sub_payment_method ? true : (isCodEnabled && !isCodDisabledByGift);
 
-                  // Handle online payment methods (with sub_payment_method)
-                  if (pay.sub_payment_method) {
-                    await handlePaymentProcessing(pay);
-                  } else {
-                    // Handle COD - just toggle the button visibility
-                    if (isCodEnabled) {
-                      setShowCodButton(!showCodButton);
+              return (
+                <div
+                  className={`${isOptionEnabled ? 'opacity-100' : 'opacity-30'} ${processing && processingPaymentId !== pay.id ? 'opacity-50 cursor-not-allowed' : (isOptionEnabled ? 'cursor-pointer' : 'cursor-not-allowed')
+                    } border border-[#F2EEE44D] hover:border-primary-100 bg-[#F2EEE44D] py-[.97vw] mob:py-[3.6vw] mob:px-[4.1vw] px-[1.1vw] mob:rounded-[3.6vw] rounded-[.97vw]`}
+                  key={pay.id}
+                  onClick={async (e) => {
+                    e.stopPropagation();
+
+                    // Prevent clicks if processing or if this specific payment method is disabled
+                    if (processing || isProcessingRef.current || !isOptionEnabled) {
+                      return;
                     }
-                  }
-                }}
-              >
-                <div className="flex items-center gap-[0.4vw] mob:gap-[1vw]">
-                  <div className="w-[1.8vw] h-[1.8vw] mob:w-[5vw] mob:h-[5vw]  relative ">
-                    <Image src={pay.icon} alt="" />
-                  </div>
-                  <div>
-                    <p className="font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3vw] text-secondary-400 ">
-                      {pay.name}
-                      {processing && processingPaymentId === pay.id && " (Processing...)"}
-                    </p>
-                    {pay.id === 4 && (
-                      <p className="font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3vw] text-error pt-[.2vw] mob:pt-[1vw] ">
-                        Only digital cashless payments are accepted at your door-step.
-                      </p>
-                    )}
-                  </div>
-                </div>
 
-                {showCodButton && !pay.sub_payment_method && isCodEnabled && (
-                  <button
-                    onClick={async (e) => {
-                      e.stopPropagation();
-                      if (processing || isProcessingRef.current) {
-                        return;
-                      }
-
+                    // Handle online payment methods (with sub_payment_method)
+                    if (pay.sub_payment_method) {
                       await handlePaymentProcessing(pay);
-                    }}
-                    disabled={processing || isProcessingRef.current}
-                    className={`font-[SofiaPro] mt-[1.1vw] mob:mt-[4.1vw] font-semibold mob:px-[3vw] px-[.8vw] py-[.5vw] mob:py-[2vw] mob:text-[3vw] text-[.83vw] text-white bg-secondary rounded-[.8vw] transition-all duration-200 ${
-                      processing || isProcessingRef.current ? 'opacity-50 cursor-not-allowed' : 'hover:bg-secondary-600'
-                    }`}
-                  >
-                    {processing ? 'Processing...' : 'Pay on delivery'}
-                  </button>
-                )}
-              </div>
-            ))}
+                    } else {
+                      // Handle COD - just toggle the button visibility
+                      if (isCodEnabled && !isCodDisabledByGift) {
+                        setShowCodButton(!showCodButton);
+                      }
+                    }
+                  }}
+                >
+                  <div className="flex items-center gap-[0.4vw] mob:gap-[1vw]">
+                    <div className="w-[1.8vw] h-[1.8vw] mob:w-[5vw] mob:h-[5vw]  relative ">
+                      <Image src={pay.icon} alt="" />
+                    </div>
+                    <div>
+                      <p className="font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3vw] text-secondary-400 ">
+                        {pay.name}
+                        {processing && processingPaymentId === pay.id && " (Processing...)"}
+                      </p>
+                      {pay.id === 4 && (
+                        <p className="font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3vw] text-error pt-[.2vw] mob:pt-[1vw] ">
+                          Only digital cashless payments are accepted at your door-step.
+                        </p>
+                      )}
+                      {isCodDisabledByGift && (
+                        <p className="font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3vw] text-error pt-[.2vw] mob:pt-[1vw] ">
+                          Pay on delivery is not available for gift orders.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {showCodButton && !pay.sub_payment_method && isCodEnabled && !isCodDisabledByGift && (
+                    <button
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        if (processing || isProcessingRef.current) {
+                          return;
+                        }
+
+                        await handlePaymentProcessing(pay);
+                      }}
+                      disabled={processing || isProcessingRef.current}
+                      className={`font-[SofiaPro] mt-[1.1vw] mob:mt-[4.1vw] font-semibold mob:px-[3vw] px-[.8vw] py-[.5vw] mob:py-[2vw] mob:text-[3vw] text-[.83vw] text-white bg-secondary rounded-[.8vw] transition-all duration-200 ${processing || isProcessingRef.current ? 'opacity-50 cursor-not-allowed' : 'hover:bg-secondary-600'
+                        }`}
+                    >
+                      {processing ? 'Processing...' : 'Pay on delivery'}
+                    </button>
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>

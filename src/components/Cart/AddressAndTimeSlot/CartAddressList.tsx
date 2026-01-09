@@ -13,7 +13,7 @@ import { editAddress } from '@/features/AddressEditDetails/services/editAddress'
 import Address from '@/features/AccountPage/types/Address';
 
 const CartAddressList = (props: any) => {
-  const { setTimeSelectorOrListTab } = props;
+  const { setTimeSelectorOrListTab, setAddressModal } = props;
   const [address, setAddress] = useAtom(addressAtom);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -32,34 +32,37 @@ const CartAddressList = (props: any) => {
       is_default: true
     };
     await editAddress(apiData as Address, setAddress);
-    setTimeSelectorOrListTab(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR);
-    dispatch(setCartTabType(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR));
+    // setTimeSelectorOrListTab(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR);
+    // REMOVED dispatch(setCartTabType) to prevent unmounting the Cart layout
+    if (setAddressModal) {
+      setAddressModal(false);
+    }
   };
 
   return (
-    <div className="p-[1.1vw] h-full flex flex-col grow relative">
-      <div className="flex flex-col h-[60vh] overflow-y-auto pb-[5vw] gap-[.97vw]">
+    <div className="p-[1.1vw] mob:p-[4vw] h-full flex flex-col grow relative">
+      <div className="flex flex-col h-[60vh] overflow-y-auto pb-[5vw] gap-[.97vw] mob:gap-[4vw]">
         {address?.address?.map((item: any) => (
           <button
             onClick={() => handleSetAddress(item)}
-            className="border text-start flex items-center gap-[.78vw] border-[#F2EEE4] bg-[#F2EEE44D] rounded-[1.1vw]  p-[.83vw]"
+            className="border text-start flex items-center gap-[.78vw] mob:gap-[3vw] border-[#F2EEE4] bg-[#F2EEE44D] rounded-[1.1vw] mob:rounded-[4vw] p-[.83vw] mob:p-[3vw]"
           >
-            <div className="w-[3vw] h-[3vw] rounded-[.6vw] relative bg-[#F2EEE4] flex items-center justify-center  ">
-              <div className="p-[.3vw] w-[1.25vw] h-[1.25vw] relative ">
+            <div className="w-[3vw] h-[3vw] mob:w-[10vw] mob:h-[10vw] rounded-[.6vw] mob:rounded-[2vw] relative bg-[#F2EEE4] flex items-center justify-center  ">
+              <div className="p-[.3vw] w-[1.25vw] h-[1.25vw] mob:w-[5vw] mob:h-[5vw] relative ">
                 <Image src={ADDRESS_ICON_MAP[item.address_name]} fill alt="home-icon" />
               </div>
             </div>
-            <div className="w-[19.3vw]">
-              <p className="font-[SofiaPro] text-[.83vw] font-semibold ">{item.address_name}</p>
-              <p className="font-[SofiaPro] text-[.83vw] font-medium text-[#231F20CC]">{item.address}</p>
+            <div className="w-[19.3vw] mob:w-[65vw]">
+              <p className="font-[SofiaPro] text-[.83vw] mob:text-[3.5vw] font-semibold ">{item.address_name}</p>
+              <p className="font-[SofiaPro] text-[.83vw] mob:text-[3.2vw] font-medium text-[#231F20CC] text-ellipsis overflow-hidden whitespace-nowrap">{item.address}</p>
             </div>
           </button>
         ))}
       </div>
-      <div className="fixed bottom-[1.1vw] w-full ">
+      <div className="w-full mt-auto pt-[2vw] flex justify-center pb-[5vw] mob:pb-[20vw]">
         <button
           onClick={sendUserToAddAddress}
-          className="bg-primary w-[28vw] py-[.7vw] font-[SofiaPro] text-[.97vw] font-semibold rounded-full "
+          className="bg-primary w-[28vw] mob:w-[80vw] py-[.7vw] mob:py-[3vw] font-[SofiaPro] text-[.97vw] mob:text-[4vw] font-bold rounded-full "
         >
           Add New Address +
         </button>

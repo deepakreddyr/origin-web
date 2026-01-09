@@ -37,7 +37,7 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'admin.webdev.madrasmandi.in',
-        pathname: '/**' 
+        pathname: '/**'
       }
     ]
   },
@@ -82,17 +82,17 @@ const nextConfig = {
         permanent: false,
       },
       // Default homepage redirect (only when no 'i' parameter)
-      {
-        source: '/',
-        missing: [
-          {
-            type: 'query',
-            key: 'i',
-          },
-        ],
-        destination: '/shop',
-        permanent: false 
-      }
+      // {
+      //   source: '/',
+      //   missing: [
+      //     {
+      //       type: 'query',
+      //       key: 'i',
+      //     },
+      //   ],
+      //   destination: '/shop',
+      //   permanent: false 
+      // }
     ];
   }
 };

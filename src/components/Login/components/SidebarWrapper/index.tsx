@@ -34,15 +34,14 @@ const SidebarWrapper = (props: Props) => {
     <div className="">
       {loginDetails.isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-[10]"
+          className="fixed inset-0 bg-black bg-opacity-50 z-[1000]"
           onClick={() => dispatch(setIsSidebarOpen(false))}
         ></div>
       )}
       <div
-        className={`fixed top-0 ${
-          loginDetails.isSidebarOpen ? 'right-0' : '-right-full'
-        } w-[30vw] mob:w-screen h-screen bg-white shadow-md flex flex-col 
-    transition-all duration-300 ease-in-out z-[20]`}
+        className={`fixed top-0 ${loginDetails.isSidebarOpen ? 'right-0' : '-right-full'
+          } w-[30vw] mob:w-screen h-screen bg-white shadow-md flex flex-col 
+    transition-all duration-300 ease-in-out z-[1001]`}
       >
         {loginDetails.isHeaderVisible && (
           <div
