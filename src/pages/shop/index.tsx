@@ -5,7 +5,7 @@ import CategorySection from '@/components/ShopV2/CategorySection';
 import PopularProduce from '@/components/ShopV2/PopularProduce';
 import PopularProduceMob from '@/components/ShopV2/PopularProduceMob';
 import FeatureProduct from '@/components/ShopV2/FeaturedProduct';
-import VideoBanner from '@/components/ShopV2/VideoBanner'; 
+import VideoBanner from '@/components/ShopV2/VideoBanner';
 import { useEffect, useState } from 'react';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
@@ -22,6 +22,7 @@ import DownloadAppWrapper from '@/components/downloadApp/DownloadAppWrapper';
 import FeatureStrip from '@/components/ShopV2/FeatureStrip';
 import WhyOriginBanner from '@/components/ShopV2/WhyOriginBanner';
 import { ShopHeroSingle } from '@/components/ShopV2/ShopHero';
+import CustomHead from '@/components/shared/CustomHead';
 
 interface HomeProps {
   mainMenuItems: MainMenuType[];
@@ -42,26 +43,26 @@ const ShopPage = (props: HomeProps) => {
   const isMobile = useMediaQuery(768);
   const isTablet = useMediaQuery(1024);
   const filteredCategories = useSelector((state: any) => state.shopCategories);
-  
+
   // console.log(filteredCategories,"Category");
   const { categories } = filteredCategories;
 
   const subCategories = categories?.filter((item: any) => item.type !== 'main-category');
-  
+
   // Preload videos for better performance
   useEffect(() => {
     const preloadVideos = () => {
       const mobileVideo = document.createElement('video');
       const desktopVideo = document.createElement('video');
-      
+
       mobileVideo.src = "https://cdn.originfresh.in/website/Origin_9_16_v1.mp4";
       mobileVideo.preload = "metadata";
       mobileVideo.muted = true;
-      
+
       desktopVideo.src = "https://cdn.originfresh.in/website/Origin_16_9_v1.mp4";
       desktopVideo.preload = "metadata";
       desktopVideo.muted = true;
-      
+
       let loadedCount = 0;
       const handleLoad = () => {
         loadedCount++;
@@ -69,17 +70,17 @@ const ShopPage = (props: HomeProps) => {
           setVideosPreloaded(true);
         }
       };
-      
+
       mobileVideo.addEventListener('loadedmetadata', handleLoad);
       desktopVideo.addEventListener('loadedmetadata', handleLoad);
-      
+
       // Cleanup
       return () => {
         mobileVideo.removeEventListener('loadedmetadata', handleLoad);
         desktopVideo.removeEventListener('loadedmetadata', handleLoad);
       };
     };
-    
+
     preloadVideos();
   }, []);
 
@@ -112,30 +113,30 @@ const ShopPage = (props: HomeProps) => {
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
   }, []);
 
-useEffect(() => {
-  const timer = setTimeout(() => {
-    try {
-      const userToken = localStorage.getItem('user_token');
-      const hasSeenBanner = localStorage.getItem('downloadAppBannerSeen'); 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        const userToken = localStorage.getItem('user_token');
+        const hasSeenBanner = localStorage.getItem('downloadAppBannerSeen');
 
-      if (!userToken && !hasSeenBanner) {
-        setShowDownloadApp(true);
+        if (!userToken && !hasSeenBanner) {
+          setShowDownloadApp(true);
+        }
+
+        setDownloadAppReady(true);
+      } catch (error) {
+        console.error('Error accessing localStorage:', error);
+        setDownloadAppReady(true);
       }
+    }, 500);
 
-      setDownloadAppReady(true);
-    } catch (error) {
-      console.error('Error accessing localStorage:', error);
-      setDownloadAppReady(true);
-    }
-  }, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
-  return () => clearTimeout(timer);
-}, []);
-
-const handleCloseDownloadApp = () => {
-  setShowDownloadApp(false);
-  localStorage.setItem('downloadAppBannerSeen', 'true');
-};
+  const handleCloseDownloadApp = () => {
+    setShowDownloadApp(false);
+    localStorage.setItem('downloadAppBannerSeen', 'true');
+  };
 
 
   const PageLoader = () => (
@@ -159,7 +160,7 @@ const handleCloseDownloadApp = () => {
           loop={true}
           controls={false}
         /> */}
-        <ShopHeroSingle/>
+        <ShopHeroSingle />
         <FeatureStrip />
       </div>
 
@@ -168,29 +169,29 @@ const handleCloseDownloadApp = () => {
       </div>
 
       {subCategories?.[0] && (
-  <div className="px-[2vw] bg-[#FFF9E5]">
-    {(isMobile || isTablet) ? (
-      <PopularProduceMob categoryDetail={subCategories[0]} />
-    ) : (
-      <PopularProduce categoryDetail={subCategories[0]} />
-    )}
-  </div>
-)}
+        <div className="px-[2vw] bg-[#FFF9E5]">
+          {(isMobile || isTablet) ? (
+            <PopularProduceMob categoryDetail={subCategories[0]} />
+          ) : (
+            <PopularProduce categoryDetail={subCategories[0]} />
+          )}
+        </div>
+      )}
 
-{/* Example placeholder for future feature section */}
-{/* <div className="">
+      {/* Example placeholder for future feature section */}
+      {/* <div className="">
   <FeatureProduct featuredItem={subCategories[1]?.data} />
 </div> */}
 
-{subCategories?.[1] && (
-  <div className="px-[2vw] bg-[#FFF9E5]">
-    {(isMobile || isTablet) ? (
-      <PopularProduceMob categoryDetail={subCategories[2]} />
-    ) : (
-      <PopularProduce categoryDetail={subCategories[2]} />
-    )}
-  </div>
-)}
+      {subCategories?.[1] && (
+        <div className="px-[2vw] bg-[#FFF9E5]">
+          {(isMobile || isTablet) ? (
+            <PopularProduceMob categoryDetail={subCategories[2]} />
+          ) : (
+            <PopularProduce categoryDetail={subCategories[2]} />
+          )}
+        </div>
+      )}
       <div className="">
         <WhyOriginBanner />
       </div>
@@ -203,6 +204,10 @@ const handleCloseDownloadApp = () => {
 
   return (
     <Layout mainMenuItems={mainMenuItems} isHeaderSticky={true} footerData={footerData}>
+      <CustomHead
+        title="Shop Fresh Produce | Origin Fresh"
+        description="Browse our wide selection of fresh fruits, vegetables, and kitchen essentials. Handpicked and delivered fresh."
+      />
       {loading ? <PageLoader /> : <LoadedUI />}
     </Layout>
   );
