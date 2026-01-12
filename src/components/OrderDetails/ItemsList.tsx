@@ -74,7 +74,7 @@ const GiftMessageDropdown = ({ giftText }: { giftText: string }) => {
 // Basket Child Items Component
 const BasketChildItems = ({ basketItems }: { basketItems: any[] }) => {
   return (
-    <div className="mt-[.8vw] mob:mt-[3vw] flex flex-col gap-[.6vw] mob:gap-[2.5vw]">
+    <div className="mt-[2vw] mob:mt-[6.5vw] flex flex-col gap-[.6vw] mob:gap-[2.5vw]">
       {basketItems.map((childItem: any) => (
         <div key={childItem.id} className="flex items-center gap-[.7vw] mob:gap-[2.5vw]">
           {/* Child Item Image */}
@@ -90,7 +90,7 @@ const BasketChildItems = ({ basketItems }: { basketItems: any[] }) => {
               {childItem.name}
             </p>
             <p className="font-[SofiaPro] text-[.75vw] mob:text-[2.8vw] font-medium text-black-op-60">
-              {childItem.uom} × {childItem.cart_qty}
+              {childItem.uom} x {childItem.cart_qty}
             </p>
           </div>
 

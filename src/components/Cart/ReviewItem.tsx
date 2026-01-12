@@ -285,13 +285,10 @@ const ReviewItem = (props: {
                           {item.name}
                         </h4>
                         <span className="font-[sofiaPro] text-[.75vw] mob:text-[2.6vw] text-gray-500 capitalize">
-                          {item.uom}
+                          {item.uom} x {item.cart_qty}
                         </span>
                       </div>
                       <div className="flex items-center gap-[1vw] mob:gap-[3vw]">
-                        <span className="font-[sofiaPro] text-[.75vw] mob:text-[2.8vw] text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
-                          Qty: {item.cart_qty}
-                        </span>
                         <span className="font-[sofiaPro] text-[.85vw] mob:text-[3.2vw] font-semibold text-gray-700">
                           ₹{Math.floor(Number(item.price)) * item.cart_qty}
                         </span>

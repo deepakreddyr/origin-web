@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import hamberger from '/public/assets/images/hamberger.png';
+import hamburger from '/public/assets/images/hamburger.png';
 import originLogo from '/public/assets/images/neworiginlogo.png';
 import userIcon from '/public/assets/images/userIcon.png';
 import cartIcon from '/public/assets/icons/cartIcon.png';
@@ -33,6 +33,7 @@ type Props = {
 const getCartItemCount = (cartItems: any[]) => {
   let count = 0;
 
+
   cartItems.forEach((product: any) => {
     product.multiple_uoms?.forEach((uom: any) => {
       if (uom.cart_ripeness && uom.cart_ripeness.length > 0) {
@@ -50,6 +51,7 @@ const getCartItemCount = (cartItems: any[]) => {
     });
   });
 
+
   return count;
 };
 
@@ -62,12 +64,14 @@ const AnimatedPlaceholder = () => {
     const interval = setInterval(() => {
       setIsVisible(false);
 
+
       setTimeout(() => {
         setCurrentFruitIndex((prevIndex) =>
           prevIndex === fruits.length - 1 ? 0 : prevIndex + 1
         );
         setIsVisible(true);
       }, 300);
+
 
     }, 2500);
 
@@ -92,6 +96,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
   const [currentSearchQuery, setCurrentSearchQuery] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+
   const menuRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -100,8 +105,10 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const cart = useSelector((state: any) => state.cart);
 
+
   // Calculate cart item count from nested structure
   const cartItemCount = getCartItemCount(cart?.items || []);
+
 
   // --- NEW LOCATION HOOKS ---
   const [address] = useAtom(addressAtom);
@@ -118,9 +125,11 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
       setSearchQuery(router.query.q);
     }
 
+
     // Check login status on mount
     const token = localStorage.getItem('user_token');
     setIsLoggedIn(!!token);
+
 
   }, [search, router.query.q, loginDetails.tabType]);
 
@@ -168,6 +177,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
     }
   };
 
+
   // --- LOCATION HANDLER ---
   const handleSelectAddress = () => {
     dispatch(setIsSidebarOpen(true));
@@ -177,7 +187,10 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
       return;
     }
 
+
     if (!loginDetails.isLogin) {
+      dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
+      return;
       dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
       return;
     }
@@ -222,6 +235,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
     const value = e.target.value;
     setSearchQuery(value);
 
+
     if (search) {
       setCurrentSearchQuery(value);
       debouncedSearch(value);
@@ -265,6 +279,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
     }
     document.addEventListener('mousedown', handleClickOutside);
 
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
       document.removeEventListener('mousedown', handleClickOutside);
@@ -280,6 +295,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
         <div className="bg-[#FFF9E5] border-gray-200 w-full">
           <div className="max-w-7xl mt-5 mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
+
 
               <div className="flex items-center">
                 <button
@@ -397,8 +413,8 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
       >
         <div className="flex items-center gap-[2vw] mob:gap-[3vw] flex-1">
           {isMobile && (
-            <button onClick={() => setDrawerOpen(!drawerOpen)} className="w-[5vw] h-[4vw] relative flex-shrink-0" aria-label="Open menu">
-              <Image src={hamberger} alt="" fill className="object-contain" aria-hidden="true" />
+            <button onClick={() => setDrawerOpen(!drawerOpen)} className="w-[5vw] h-[4vw] relative flex-shrink-0">
+              <Image src={hamburger} alt="Menu" fill className="object-contain" />
             </button>
           )}
 
@@ -416,6 +432,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
               />
             </div>
           </button>
+
 
           {/* --- MOBILE LOCATION BUTTON WITH CAROUSEL (Visible next to logo) --- */}
           {isMobile && isLoggedIn && (
@@ -457,6 +474,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
             </button>
           )}
           {/* ------------------------------------------------------------------ */}
+
 
           <style jsx>{`
             @keyframes marquee {
@@ -518,6 +536,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
             </button>
           )}
           {/* ------------------------------------------------------------------ */}
+
 
           <div className="flex items-center gap-[2vw] pr-[0] mob:hidden">
             <Link
@@ -615,6 +634,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
               Login
             </button>
           )}
+
 
           {!isMobile && (
             <>

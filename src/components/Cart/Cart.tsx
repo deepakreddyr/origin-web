@@ -222,6 +222,13 @@ const Cart = () => {
     }
   }, [cart.items, cart.cartTabType]);
 
+  const hasBasketInCart = cart.items?.some((product: any) =>
+    product.multiple_uoms?.some((uom: any) =>
+      uom.basket && uom.basket.basket_items?.length > 0 &&
+      (uom.cart_quantity > 0 || uom.cart_ripeness?.some((r: any) => Number(r.qty) > 0))
+    )
+  );
+
   const SCREEN_MAP: any = {
     COUPON_CODE_LIST: (
       <CouponFlowWrapper setShowCouponList={setShowCouponList} />
@@ -235,22 +242,24 @@ const Cart = () => {
         <CouponSection setShowCouponList={setShowCouponList} />
 
         {/* TRIGGER BUTTON FOR MODAL */}
-        <div className="bg-[#F2EEE44D] flex flex-col border border-[#F2EEE4] p-4 mob:py-[4.1vw] mob:rounded-[4.1vw] rounded-[1.1vw]">
-          <button
-            onClick={() => setShowDeliveringModal(true)}
-            className="w-full text-left"
-          >
-            <div className="flex items-center justify-between">
-              <span className="font-[SofiaPro] font-semibold text-sm text-[#231F20]">Send it as a gift</span>
-              <span className="text-xs text-[#231F20CC]">→</span>
-            </div>
-            {address?.defaultAddress && (
-              <p className="mt-1 font-[SofiaPro] text-xs text-[#231F20CC] line-clamp-1">
-                {address.defaultAddress.address}, {address.defaultAddress.city}, {address.defaultAddress.state} - {address.defaultAddress.pincode}
-              </p>
-            )}
-          </button>
-        </div>
+        {hasBasketInCart && (
+          <div className="bg-[#F2EEE44D] flex flex-col border border-[#F2EEE4] p-4 mob:py-[4.1vw] mob:rounded-[4.1vw] rounded-[1.1vw]">
+            <button
+              onClick={() => setShowDeliveringModal(true)}
+              className="w-full text-left"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-[SofiaPro] font-semibold text-sm text-[#231F20]">Send it as a gift</span>
+                <span className="text-xs text-[#231F20CC]">→</span>
+              </div>
+              {address?.defaultAddress && (
+                <p className="mt-1 font-[SofiaPro] text-xs text-[#231F20CC] line-clamp-1">
+                  {address.defaultAddress.address}, {address.defaultAddress.city}, {address.defaultAddress.state} - {address.defaultAddress.pincode}
+                </p>
+              )}
+            </button>
+          </div>
+        )}
 
         <ReviewList onShowMaxQuantityToast={handleMaxQuantityExceededGlobal} />
 

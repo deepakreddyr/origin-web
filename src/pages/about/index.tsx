@@ -11,6 +11,7 @@ import { protectedUrl, unprotectedUrl } from '@/url';
 import { setIsShopCategoriesFetched, setShopCategories } from '@/store/slice/shopCategoriesSlice';
 import { useDispatch } from 'react-redux';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
+import CustomHead from '@/components/shared/CustomHead';
 
 const AboutUsPage = (props: any) => {
   const { mainMenuItems, footerData } = props;
@@ -49,6 +50,10 @@ const AboutUsPage = (props: any) => {
 
   return (
     <Layout isHeaderSticky={false} mainMenuItems={mainMenuItems} footerData={footerData}>
+      <CustomHead
+        title="About Us | Origin Fresh"
+        description="Learn about our commitment to bringing fresh, high-quality produce to your table. We focus on sustainability and quality."
+      />
       <div className="">
         <Hero />
         <Commitment />

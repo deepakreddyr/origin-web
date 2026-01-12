@@ -62,7 +62,7 @@ const SidebarWrapper = (props: Props) => {
               </div>
             )}
             <div className="flex items-center justify-between w-full">
-              <p className="font-[SofiaPro] text-[1.67vw] mob:text-[5vw] font-bold mt-[.6vw] mob:mt-[3vw] ">
+              <p className="font-[SofiaPro] text-[1.67vw] mob:text-[5vw] font-bold">
                 {headerTitle}
               </p>
               <button

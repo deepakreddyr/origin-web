@@ -34,14 +34,14 @@ const clearCacheAndReload = async () => {
       // Clear storage
       sessionStorage.clear();
       localStorage.clear();
-      
+
       // Set new version
       localStorage.setItem('appVersion', APP_VERSION);
       // console.log('Storage cleared and version updated');
 
       // Force reload with cache bypass
       window.location.reload();
-      
+
     } catch (error) {
       console.error('Error clearing cache:', error);
       window.location.reload();
@@ -67,17 +67,17 @@ const handleInvoiceDeepLink = (router: any) => {
     const originalAssign = window.location.assign;
     const originalOpen = window.open;
 
-    window.location.replace = function(url: string | URL) {
+    window.location.replace = function (url: string | URL) {
       if (typeof url === 'string' && /app-store|play-store|intent:\/\/|originfresh:\/\//.test(url)) return;
       return originalReplace.call(window.location, url);
     };
 
-    window.location.assign = function(url: string | URL) {
+    window.location.assign = function (url: string | URL) {
       if (typeof url === 'string' && /app-store|play-store|intent:\/\/|originfresh:\/\//.test(url)) return;
       return originalAssign.call(window.location, url);
     };
 
-    window.open = function(url?: string | URL, target?: string, features?: string) {
+    window.open = function (url?: string | URL, target?: string, features?: string) {
       if (typeof url === 'string' && /intent:\/\/|originfresh:\/\/|app-store|play-store/.test(url)) return null;
       return originalOpen.call(window, url, target, features);
     };
@@ -148,9 +148,8 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
     <Provider store={store}>
       <LocalizationProvider dateAdapter={AdapterLuxon}>
         <Head>
-          {/* Add viewport and title in _app.tsx */}
+          {/* Viewport in _app.tsx as a consistent baseline */}
           <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-          <title>Origin Fresh</title>
         </Head>
 
         <NextNProgress color="#000" />
@@ -166,7 +165,7 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="lazyOnload"
-          // onLoad={() => console.log('Razorpay script loaded')}
+        // onLoad={() => console.log('Razorpay script loaded')}
         />
 
         <Component {...pageProps} />

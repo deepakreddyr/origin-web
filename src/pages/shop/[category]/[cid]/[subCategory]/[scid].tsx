@@ -32,6 +32,7 @@ import ShopHero from '@/components/ShopV2/ShopHero';
 import FeatureStrip from '@/components/ShopV2/FeatureStrip';
 import FeaturedProduct from '@/components/ShopV2/FeaturedProduct';
 import WhyOriginAndTestimonial from '@/components/ShopV2/WhyOriginAndTestimonial';
+import CustomHead from '@/components/shared/CustomHead';
 
 interface HomeProps {
   mainMenuItems: MainMenuType[];
@@ -196,6 +197,10 @@ const ShopDetails = (props: HomeProps) => {
 
   return (
     <Layout mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={true}>
+      <CustomHead
+        title={`${query.category} | Origin Fresh`}
+        description={`Explore our wide range of ${query.category} at Origin Fresh. Quality and freshness guaranteed.`}
+      />
       <ShopHero />
       <FeatureStrip />
       <div className="flex flex-col items-center justify-center mob:pt-[2vw]">

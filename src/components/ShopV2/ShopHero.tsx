@@ -1,6 +1,6 @@
 "use client";
 
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { useMediaQuery } from "@mui/material";
 import { useRouter } from "next/router";
@@ -39,7 +39,7 @@ const ShopHero = () => {
   const path = router.asPath;
 
   // Section = 3rd part of URL (index 2)
-  const rawSection = path.split("/")[2]; 
+  const rawSection = path.split("/")[2];
 
   // Normalize it
   const section = normalize(rawSection);
@@ -50,9 +50,8 @@ const ShopHero = () => {
   return (
     <div className="relative w-full overflow-hidden mob:pt-[20px]">
       <div
-        className={`relative w-full ${
-          isMobile ? "pt-[50px]" : "aspect-[2.4/1]"
-        }`}
+        className={`relative w-full ${isMobile ? "pt-[50px]" : "aspect-[2.4/1]"
+          }`}
       >
         <Image
           src={selectedBanner}

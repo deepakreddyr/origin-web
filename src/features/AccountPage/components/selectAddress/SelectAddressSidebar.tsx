@@ -16,9 +16,9 @@ import {
   addressDetailsAtom,
   isEditingAddress
 } from '@/features/AddressEditDetails/context/atoms';
-import { 
+import {
   addressActiveScreenAtom,
-  activeAccountsPageAtom 
+  activeAccountsPageAtom
 } from '@/features/AccountPage/context/atoms';
 import { manageAddressScreens } from '@/features/AccountPage/enums/ActiveSidebar';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
@@ -29,7 +29,7 @@ const SelectAddressSidebar = () => {
   const [, setAddressActiveScreen] = useAtom(addressActiveScreenAtom);
   const [, setActiveAccountsPage] = useAtom(activeAccountsPageAtom);
   const [editingDetails, setIsEditingAddress] = useAtom(isEditingAddress);
-  
+
   const dispatch = useDispatch();
 
   const [hoveredItemId, setHoveredItemId] = useState<number | null>(null);
@@ -103,23 +103,23 @@ const SelectAddressSidebar = () => {
   );
 
   if (address.loading)
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%',
-        flexDirection: 'column',
-        gap: 2
-      }}
-    >
-      <CircularProgress color="primary" />
-      <Box sx={{ fontFamily: 'SofiaPro', fontSize: { xs: '4vw', sm: '1rem' }, color: '#555' }}>
-        Loading addresses...
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+          flexDirection: 'column',
+          gap: 2
+        }}
+      >
+        <CircularProgress color="primary" />
+        <Box sx={{ fontFamily: 'SofiaPro', fontSize: { xs: '4vw', sm: '1rem' }, color: '#555' }}>
+          Loading addresses...
+        </Box>
       </Box>
-    </Box>
-  );
+    );
 
 
   return (
@@ -127,6 +127,7 @@ const SelectAddressSidebar = () => {
       <div className="flex-1 overflow-y-auto">
         {address.address?.map((data: any) => {
           const isDisabled = !data.deliverable || !data.store_id;
+          const isSelected = data.address_id === address.defaultAddress?.address_id;
 
           return (
             <li
@@ -135,7 +136,8 @@ const SelectAddressSidebar = () => {
               onMouseEnter={() => setHoveredItemId(data.address_id)}
               onMouseLeave={() => setHoveredItemId(null)}
               className={`flex w-full text-start gap-4 mob:gap-4 border-b border-b-beige-200 mb-2 mob:mb-3 transition-all py-4 px-4 mob:py-6 mob:px-6 mob:w-full duration-100 rounded-lg
-                ${hoveredItemId === data.address_id && !isDisabled ? 'bg-[#F2EEE4]' : ''}
+                ${isSelected ? 'bg-[#F2EEE4] border border-[#25874D]' : ''}
+                ${hoveredItemId === data.address_id && !isDisabled && !isSelected ? 'bg-[#F2EEE4]' : ''}
                 ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
               `}
               style={{

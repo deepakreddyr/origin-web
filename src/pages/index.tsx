@@ -9,7 +9,8 @@ import LinkButton from '@/components/LinkButton/LinkButton';
 import { OriginRightArrow } from '@/Icons/OriginIcons';
 import PrimaryFeature from '@/components/OriginGrids/PrimaryFeature';
 import { UspCard } from '@/components/Cards';
- 
+import CustomHead from '@/components/shared/CustomHead';
+
 interface HomeProps {
   uspCardsData: UspCardsData;
   categories: Categories;
@@ -35,13 +36,17 @@ const Home = ({
 
   return (
     <Layout isHeaderSticky={true} mainMenuItems={mainMenuItems} footerData={footerData}>
+      <CustomHead
+        title="Origin Fresh | Fresh Produce Delivered to Your Doorstep"
+        description="Shop for the freshest organic fruits, vegetables, and exotic produce at Origin Fresh. Quality guaranteed, delivered straight to your home."
+      />
       <OriginHero />
       <PrimaryFeature />
 
       <div className="flex items-center justify-center w-full pb-[10vw]">
         <div className="flex items-center justify-between w-[80vw] mob:w-full mob:grid grid-cols-2 mob:gap-[5vw] ">
           {uspCardsData?.map((card) => <UspCard cardData={card} key={card.title} />)}
-          
+
         </div>
       </div>
       <BeforeBox mdTopOffset={isMobile ? -124 : 100} mdBottomOffset={isMobile ? 110 : 220}>

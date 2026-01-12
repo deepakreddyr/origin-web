@@ -2,18 +2,19 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import CustomHead from '@/components/shared/CustomHead';
 import { Loader2, AlertCircle, Download, ArrowLeft, ExternalLink, Eye } from 'lucide-react';
 
 const InvoicePage: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
-  
+
   const [invoiceContent, setInvoiceContent] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const [showFallback, setShowFallback] = useState<boolean>(false);
-  
+
   const invoiceId = Array.isArray(id) ? id[0] : id;
   // console.log(process.env.NEXT_PUBLIC_BACKEND_API_URL);
   const apiUrl = invoiceId ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/public/preview-store-invoice/${invoiceId}` : '';
@@ -26,10 +27,10 @@ const InvoicePage: React.FC = () => {
       const isMobileDevice = /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
       const isAndroid = /android/i.test(userAgent);
       const isChrome = /chrome/i.test(userAgent);
-      
+
       // Android Chrome often has issues with PDF iframes
       const shouldUseFallback = isMobileDevice && (isAndroid || isChrome);
-      
+
       setIsMobile(isMobileDevice);
       setShowFallback(shouldUseFallback);
     };
@@ -47,13 +48,13 @@ const InvoicePage: React.FC = () => {
 
   const fetchInvoice = async (): Promise<void> => {
     if (!invoiceId) return;
-    
+
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await fetch(apiUrl);
-      
+
       if (!response.ok) {
         if (response.status === 404) {
           throw new Error('Invoice not found');
@@ -63,7 +64,7 @@ const InvoicePage: React.FC = () => {
           throw new Error(`Failed to load invoice (${response.status})`);
         }
       }
-      
+
       const blob = await response.blob();
       const pdfUrl = window.URL.createObjectURL(blob);
       setInvoiceContent(pdfUrl);
@@ -112,10 +113,10 @@ const InvoicePage: React.FC = () => {
   if (!invoiceId || loading) {
     return (
       <>
-        <Head>
-          <title>Loading Invoice - Origin Fresh</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        </Head>
+        <CustomHead
+          title="Loading Invoice | Origin Fresh"
+          noIndex={true}
+        />
         <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
           <div className="text-center">
             <Loader2 className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
@@ -131,10 +132,10 @@ const InvoicePage: React.FC = () => {
   if (error) {
     return (
       <>
-        <Head>
-          <title>Invoice Error - Origin Fresh</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        </Head>
+        <CustomHead
+          title="Invoice Error | Origin Fresh"
+          noIndex={true}
+        />
         <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
           <div className="max-w-md mx-auto text-center p-6">
             <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
@@ -161,19 +162,18 @@ const InvoicePage: React.FC = () => {
     );
   }
 
-  const displayId = typeof invoiceId === 'string' && invoiceId.includes('@') 
-    ? invoiceId.split('@')[1] 
+  const displayId = typeof invoiceId === 'string' && invoiceId.includes('@')
+    ? invoiceId.split('@')[1]
     : invoiceId;
 
   // Main invoice display
   return (
     <>
-      <Head>
-        <title>Invoice {displayId} - Origin Fresh</title>
-        <meta name="description" content={`Origin Fresh Invoice ${invoiceId}`} />
-        <meta name="robots" content="noindex, nofollow" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </Head>
+      <CustomHead
+        title={`Invoice ${displayId} | Origin Fresh`}
+        description={`Origin Fresh Invoice ${invoiceId}`}
+        noIndex={true}
+      />
 
       <div className="min-h-screen bg-[#F7F5EE]">
         {/* Header with actions - responsive design */}
@@ -192,7 +192,7 @@ const InvoicePage: React.FC = () => {
                   Invoice {displayId}
                 </h1>
               </div>
-              
+
               <div className="flex items-center space-x-2 sm:space-x-3">
                 {/* Mobile: Show external link and download */}
                 {isMobile ? (
@@ -253,7 +253,7 @@ const InvoicePage: React.FC = () => {
                       Your device doesn't support inline PDF viewing. Please use the options below to view your invoice.
                     </p>
                   </div>
-                  
+
                   <div className="space-y-3 max-w-sm mx-auto">
                     <button
                       onClick={handleOpenExternal}
@@ -262,7 +262,7 @@ const InvoicePage: React.FC = () => {
                       <ExternalLink className="w-5 h-5 mr-2" />
                       Open PDF in New Tab
                     </button>
-                    
+
                     <button
                       onClick={handleDownload}
                       className="w-full flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
@@ -271,7 +271,7 @@ const InvoicePage: React.FC = () => {
                       Download PDF
                     </button>
                   </div>
-                  
+
                   <p className="text-sm text-gray-500 mt-4">
                     For the best experience, download the PDF or open it in your device's PDF viewer.
                   </p>
@@ -289,13 +289,13 @@ const InvoicePage: React.FC = () => {
                       setShowFallback(true);
                     }}
                   />
-                  
+
                   {/* Mobile helper text */}
                   {isMobile && (
                     <div className="p-4 bg-blue-50 border-t border-blue-100">
                       <p className="text-sm text-blue-700 text-center">
-                        Having trouble viewing? 
-                        <button 
+                        Having trouble viewing?
+                        <button
                           onClick={handleOpenExternal}
                           className="ml-1 underline font-medium hover:no-underline"
                         >
