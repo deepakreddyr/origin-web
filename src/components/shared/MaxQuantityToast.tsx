@@ -36,7 +36,7 @@ const MaxQuantityToast: FC<MaxQuantityToastProps> = ({
     if (isInsideModal) {
         return (
             <div
-                className={`absolute left-1/2 -top-14 transform -translate-x-1/2 w-[90%] transition-opacity duration-300 ease-in-out z-[99999] ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                className={`absolute left-1/2 top-4 transform -translate-x-1/2 w-[90%] transition-opacity duration-300 ease-in-out z-[99999] ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
                     }`}
             >
                 <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full relative">

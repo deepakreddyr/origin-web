@@ -289,11 +289,12 @@ const Cart = () => {
   };
 
   return (
-    <div className="flex flex-col grow gap-[1.1vw] mob:gap-[4.1vw] pb-[6vw] mob:pb-[25vw]">
+    <div className="flex flex-col grow gap-[1.1vw] mob:gap-[4.1vw] pb-[6vw] mob:pb-[25vw] relative">
       <MaxQuantityToast
         maxQuantity={toastMaxQuantity}
         isVisible={showMaxQuantityToast}
         onClose={() => setShowMaxQuantityToast(false)}
+        isInsideModal={true}
       />
 
       {/* DELIVERING TO MODAL */}
