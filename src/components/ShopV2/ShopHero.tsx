@@ -10,7 +10,7 @@ import FreshlyArrivedBanner from "/public/assets/images/shop/FreshlyArrivedBanne
 import FruitsBanner from "/public/assets/images/shop/FruitsBanner.png";
 import HydroponicsBanner from "/public/assets/images/shop/HydroponicsBanner.png";
 import GourmetBanner from "/public/assets/images/shop/GourmetBanner.png";
-import NewYearBanner from "/public/assets/images/Web_Banner_OG.png";
+import NewYearBanner from "/public/assets/images/bannertest.webp";
 import vege from "/public/assets/images/shop/VeggiesBanner.png";
 // Map normalized keywords -> banner images
 const bannerMap: Record<string, any> = {
@@ -76,9 +76,6 @@ export const ShopHeroSingle = () => {
   const isTablet = useMediaQuery("(max-width:1024px)");
   const router = useRouter();
 
-  useEffect(() => {
-    router.prefetch("/nectacot/567");
-  }, [router]);
 
   return (
     <div className="relative w-full overflow-x-hidden">
@@ -86,9 +83,10 @@ export const ShopHeroSingle = () => {
       <div
         className="
           relative w-full
-          h-[50vw]         
+          h-[40vw]         
           bg-[#f7f1dc]
-          mob:mt-20            
+          mob:mt-16
+          mob:h-[100vw]         
         "
       >
         <Image

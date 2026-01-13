@@ -303,7 +303,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                   className="flex items-center hover:opacity-80 transition-opacity"
                   aria-label="Go to shop"
                 >
-                  <div className={`relative ${isMobile ? 'w-24 h-10' : 'w-[8vw] h-10'}`}>
+                  <div className={`relative ${isMobile ? 'w-24 h-10' : 'w-[11vw] h-[4.8vw]'}`}>
                     <Image src={originLogo} alt="Origin" fill className="object-contain" />
                   </div>
                 </button>
@@ -409,9 +409,9 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
 
       <div
         className={`bg-white shadow-[4px_4px_32px_0px_rgba(0,0,0,0.08)] z-50 w-[80vw] mob:w-full mob:py-[3vw] mob:px-[5vw] ${topBarTransition ? 'mt-[-1vw]' : 'mt-[1.1vw] mob:mt-0'
-          } transition-all rounded-full mob:rounded-none flex items-center justify-between`}
+          } transition-all rounded-full mob:rounded-none flex items-center justify-between px-[2.5vw] py-[0.8vw] relative`}
       >
-        <div className="flex items-center gap-[2vw] mob:gap-[3vw] flex-1">
+        <div className="flex items-center gap-[1.2vw] mob:gap-[3vw] flex-shrink-0 z-10">
           {isMobile && (
             <button onClick={() => setDrawerOpen(!drawerOpen)} className="w-[5vw] h-[4vw] relative flex-shrink-0">
               <Image src={hamburger} alt="Menu" fill className="object-contain" />
@@ -422,7 +422,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
             onClick={() => router.push('/shop')}
             className="relative flex-shrink-0"
           >
-            <div className="w-[10vw] ml-[2vw] mt-2 mob:w-[25vw] mob:h-[10vw] mob:ml-0 h-[5vw] mr-[4vw] mob:mr-0 relative">
+            <div className="w-[11vw] mob:w-[25vw] mob:h-[10vw] h-[4.8vw] relative">
               <Image
                 src={originLogo}
                 alt="logo"
@@ -433,8 +433,35 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
             </div>
           </button>
 
+          {!isMobile && (
+            <div className="h-[2vw] w-[1px] bg-gray-200"></div>
+          )}
 
-          {/* --- MOBILE LOCATION BUTTON WITH CAROUSEL (Visible next to logo) --- */}
+          {/* --- DESKTOP LOCATION SECTION --- */}
+          {!isMobile && isLoggedIn && (
+            <button
+              onClick={handleSelectAddress}
+              className="flex items-center gap-2 text-left"
+              aria-label="Select Delivery Address"
+            >
+              <svg
+                className="w-[1.1vw] h-[1.1vw] flex-shrink-0 text-black"
+                fill="currentColor" viewBox="0 0 24 24"
+              >
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+              </svg>
+              <div className="flex flex-col">
+                <span className="text-[0.85vw] font-bold text-gray-900 leading-tight">
+                  {address.defaultAddress?.address_name || 'Select Address'}
+                </span>
+                <span className="text-[0.75vw] font-normal text-gray-500 truncate max-w-[10vw] leading-tight">
+                  {address.defaultAddress?.address || 'Set your delivery location'}
+                </span>
+              </div>
+            </button>
+          )}
+
+          {/* --- MOBILE LOCATION BUTTON WITH CAROUSEL --- */}
           {isMobile && isLoggedIn && (
             <button
               onClick={handleSelectAddress}
@@ -458,7 +485,6 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                     <span className="font-normal">
                       {address.defaultAddress.address}
                     </span>
-                    {/* Duplicate for seamless loop */}
                     <span className="font-bold ml-[4vw]">
                       {address.defaultAddress?.address_name}
                     </span>
@@ -473,10 +499,9 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
               )}
             </button>
           )}
-          {/* ------------------------------------------------------------------ */}
+        </div>
 
-
-          <style jsx>{`
+        <style jsx>{`
             @keyframes marquee {
               0% {
                 transform: translateX(0);
@@ -492,108 +517,60 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
               will-change: transform;
             }
           `}</style>
-        </div>
 
-        <div className="flex items-center gap-[1.1vw]">
-          {/* --- DESKTOP LOCATION BUTTON WITH CAROUSEL (Visible before search) --- */}
-          {!isMobile && isLoggedIn && (
-            <button
-              onClick={handleSelectAddress}
-              className="flex items-center gap-2 px-[1.5vw] py-[0.5vw] rounded-full bg-gray-100 hover:bg-gray-200 text-gray-900 transition-colors max-w-[200px]"
-              aria-label="Select Delivery Address"
-            >
-              <svg
-                className="w-[1vw] h-[1vw] flex-shrink-0 text-black-700"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              {address.defaultAddress?.address_name ? (
-                <div className="flex-1 overflow-hidden relative">
-                  <div className="animate-marquee whitespace-nowrap text-[1vw]">
-                    <span className="font-bold">
-                      {address.defaultAddress?.address_name}
-                    </span>
-                    <span className="mx-[0.5vw]">•</span>
-                    <span className="font-light">
-                      {address.defaultAddress.address}
-                    </span>
-                    {/* Duplicate for seamless loop */}
-                    <span className="font-bold ml-[2vw]">
-                      {address.defaultAddress?.address_name}
-                    </span>
-                    <span className="mx-[0.5vw]">•</span>
-                    <span className="font-light">
-                      {address.defaultAddress.address}
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                <span className="font-bold text-[1vw]">Select Address</span>
-              )}
-              <svg className="w-[0.6vw] h-[0.6vw] text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-            </button>
-          )}
-          {/* ------------------------------------------------------------------ */}
+        {/* Center Search Bar - Perfectly Centered */}
+        {!isMobile && (
+          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[25vw] z-0">
+            <form onSubmit={handleSearchSubmit} className="w-full">
+              <div className="relative">
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={handleSearchInputChange}
+                  onClick={handleSearchFieldClick}
+                  onFocus={handleSearchFocus}
+                  onBlur={handleSearchBlur}
+                  className="w-full h-[3.2vw] px-[1.5vw] 
+                            rounded-full border-none bg-[#F8F5EE] 
+                            placeholder:text-gray-500 
+                            text-[0.95vw] font-[SofiaPro] cursor-pointer 
+                            focus:outline-none focus:ring-0 transition-all duration-200"
+                  placeholder="Search products"
+                />
 
+                <button
+                  type="submit"
+                  className="absolute right-[1vw] top-1/2 transform -translate-y-1/2 bg-transparent w-[1.2vw] h-[1.2vw] flex items-center justify-center"
+                >
+                  <svg
+                    className="w-[1vw] h-[1vw] text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
 
-          <div className="flex items-center gap-[2vw] pr-[0] mob:hidden">
+        {/* Right Section: Shop All, Account and Cart */}
+        <div className="flex items-center gap-[0.8vw] flex-shrink-0 z-10">
+          {!isMobile && (
             <Link
               href="/shop"
-              className="h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full bg-primary text-black text-[1.1vw] font-medium font-[SofiaPro]"
+              className="h-[2.4vw] px-[1.5vw] mr-[0.4vw] flex items-center justify-center rounded-full bg-primary text-black text-[0.9vw] font-bold font-[SofiaPro] hover:opacity-90 transition-opacity"
             >
               Shop All
             </Link>
-          </div>
-
-          {/* Desktop Search Bar */}
-          {!isMobile && (
-            <div className="flex-1 max-w-[28vw]">
-              <form onSubmit={handleSearchSubmit} className="relative">
-                <div className="relative">
-                  <input
-                    ref={searchInputRef}
-                    type="text"
-                    value={searchQuery}
-                    onChange={handleSearchInputChange}
-                    onClick={handleSearchFieldClick}
-                    onFocus={handleSearchFocus}
-                    onBlur={handleSearchBlur}
-                    className="w-full h-[2.4vw] px-[1.17vw] 
-                              rounded-full border border-gray-300 bg-transparent 
-                              placeholder:text-gray-400 
-                              text-[1.1vw] font-[SofiaPro] cursor-pointer 
-                              focus:outline-none focus:ring-0 transition-all duration-200"
-                  />
-
-                  {!searchQuery && (
-                    <div className="absolute left-[1vw] top-1/2 transform -translate-y-1/2 pointer-events-none text-[1vw] font-[SofiaPro] text-gray-500">
-                      <AnimatedPlaceholder />
-                    </div>
-                  )}
-
-                  <button
-                    type="submit"
-                    className="absolute right-[0.6vw] top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-gray-100 rounded-full w-[1.6vw] h-[1.6vw] flex items-center justify-center transition-colors duration-200"
-                  >
-                    <svg
-                      className="w-[0.9vw] h-[0.9vw] text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </form>
-            </div>
           )}
 
           {/* Mobile Search Icon */}
@@ -619,33 +596,32 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
             </button>
           )}
 
-          {/* Mobile & Desktop Account/Login */}
+          {/* Account/Login */}
           {loginDetails.isLogin ? (
-            <button onClick={openAccount}>
-              <div className="w-[1.25vw] mob:w-[5.5vw] mob:h-[5.5vw] h-[1.25vw] relative">
+            <button onClick={openAccount} className="hover:bg-gray-50 p-[0.3vw] rounded-full transition-colors">
+              <div className="w-[1.6vw] mob:w-[5.5vw] mob:h-[5.5vw] h-[1.6vw] relative">
                 <Image src={userIcon} alt="account icon" fill className="object-contain" />
               </div>
             </button>
           ) : (
             <button
               onClick={handleProfileMenuOpen}
-              className="border-[1px] border-black h-[2.4vw] mob:h-max px-[1.17vw] mob:px-[5.1vw] mob:py-[1.5vw] rounded-full text-black text-[1.1vw] mob:text-[4.1vw] font-medium font-[SofiaPro]"
+              className="border-[1px] border-black h-[2.6vw] mob:h-max px-[1.5vw] mob:px-[5.1vw] mob:py-[1.5vw] rounded-full text-black text-[0.9vw] mob:text-[4.1vw] font-medium font-[SofiaPro] hover:bg-gray-50 transition-colors"
             >
               Login
             </button>
           )}
 
-
           {!isMobile && (
             <>
-              <div className="h-[1.67vw] w-[.1vw] bg-black-op-30"></div>
-              <button onClick={handleCartOpen} className="relative pr-[1.67vw]">
+              <div className="h-[2vw] w-[1px] bg-gray-200"></div>
+              <button onClick={handleCartOpen} className="relative hover:bg-gray-50 p-[0.3vw] rounded-full transition-colors">
                 {cartItemCount > 0 && (
-                  <div className="absolute top-[-.6vw] left-[.7vw] w-[1.25vw] h-[1.25vw] text-[.78vw] rounded-full bg-secondary-300 z-[1] text-white font-[sofiaPro] flex items-center justify-center">
+                  <div className="absolute top-[0.1vw] right-[0.1vw] w-[0.9vw] h-[0.9vw] text-[0.6vw] rounded-full bg-secondary-300 z-[1] text-white font-[sofiaPro] flex items-center justify-center">
                     {cartItemCount > 99 ? '99+' : cartItemCount}
                   </div>
                 )}
-                <div className="relative w-[1.25vw] h-[1.25vw] z-0">
+                <div className="relative w-[1.6vw] h-[1.6vw] z-0">
                   <Image src={cartIcon} alt="cart-icon" fill className="object-contain" />
                 </div>
               </button>

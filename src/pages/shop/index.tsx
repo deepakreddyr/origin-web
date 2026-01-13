@@ -161,7 +161,7 @@ const ShopPage = (props: HomeProps) => {
           controls={false}
         /> */}
         <ShopHeroSingle />
-        <FeatureStrip />
+        {/* <FeatureStrip /> */}
       </div>
 
       <div className="flex flex-col gap-[6vw] mob:pl-[0vw] w-full mt-[4vw] mob:mt-[8vw]">
