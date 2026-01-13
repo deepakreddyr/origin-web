@@ -11,7 +11,7 @@ import { FooterDataType, MainMenuType } from '@/utilities/types';
 import { any } from 'zod';
 // --- ASSUMED IMPORT FOR THE ITEMCARD COMPONENT ---
 // Please adjust this path to where your ItemCard is actually located.
-import ItemCard from '@/components/shared/ItemCard'; 
+import ItemCard from '@/components/shared/ItemCard';
 // --- END ASSUMED IMPORT ---
 
 // Updated Product interface to match your API response
@@ -76,10 +76,10 @@ const UOMPopup: React.FC<{
 }> = ({ product, isOpen, onClose, selectedUOM, selectedRipeness, onSelectUOM, onSelectRipeness }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const availableUOMs = product.multiple_uoms?.filter((uom) => uom?.is_available) || [];
-  
+
   const [modalUOM, setModalUOM] = useState(selectedUOM);
   const [modalRipeness, setModalRipeness] = useState(selectedRipeness);
-  
+
   const cartItems = useSelector((state: any) => state.cart.items);
 
   useEffect(() => {
@@ -121,29 +121,29 @@ const UOMPopup: React.FC<{
     setModalUOM(uom);
     setModalRipeness(uom.ripeness_types?.length > 0 ? uom.ripeness_types[0] : null);
   };
-  
+
   const handleDone = () => {
     if (modalUOM && (!modalUOM.ripeness_types || modalRipeness !== undefined)) {
-      onSelectUOM(modalUOM); 
+      onSelectUOM(modalUOM);
       onSelectRipeness(modalRipeness);
     }
     onClose();
   }
 
   const hasRipenessTypes = modalUOM?.ripeness_types?.length > 0;
-  
+
   const currentCartItem = cartItems.find(
-    (item: any) => 
-      item.variant_id === modalUOM?.variant_id && 
+    (item: any) =>
+      item.variant_id === modalUOM?.variant_id &&
       item.selected_ripeness_type === modalRipeness
   );
-  
+
   const itemQuantity = currentCartItem?.cart_quantity || 0;
 
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div 
+      <div
         ref={modalRef}
         className="bg-white rounded-2xl max-w-md w-full max-h-[80vh] overflow-hidden shadow-2xl"
       >
@@ -157,7 +157,7 @@ const UOMPopup: React.FC<{
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-          
+
           <div className="flex items-start gap-4 pr-8">
             <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-50 flex-shrink-0">
               <Image
@@ -184,11 +184,10 @@ const UOMPopup: React.FC<{
             {availableUOMs.map((uom) => (
               <button
                 key={uom.variant_id}
-                className={`border-2 rounded-full px-4 py-2 text-sm transition-all ${
-                  modalUOM?.variant_id === uom.variant_id 
-                    ? 'border-yellow bg-yellow-100 text-black font-bold' 
+                className={`border-2 rounded-full px-4 py-2 text-sm transition-all ${modalUOM?.variant_id === uom.variant_id
+                    ? 'border-yellow bg-yellow-100 text-black font-bold'
                     : 'border-gray-200 hover:border-gray-300 text-gray-700'
-                }`}
+                  }`}
                 onClick={() => handleUOMSelect(uom)}
               >
                 {uom.unit} - ₹{uom.price}
@@ -204,11 +203,10 @@ const UOMPopup: React.FC<{
                 {modalUOM.ripeness_types.map((ripeness: string) => (
                   <button
                     key={ripeness}
-                    className={`border-2 rounded-full px-4 py-2 text-sm capitalize transition-all ${
-                      modalRipeness === ripeness 
-                        ? 'border-green-500 bg-green-100 text-green-800 font-bold' 
+                    className={`border-2 rounded-full px-4 py-2 text-sm capitalize transition-all ${modalRipeness === ripeness
+                        ? 'border-green-500 bg-green-100 text-green-800 font-bold'
                         : 'border-gray-200 hover:border-gray-300 text-gray-700'
-                    }`}
+                      }`}
                     onClick={() => setModalRipeness(ripeness)}
                   >
                     {ripeness.replace('_', ' ')}
@@ -221,38 +219,38 @@ const UOMPopup: React.FC<{
           {/* Action/Add to Cart area for the currently selected UOM/Ripeness */}
           {modalUOM && (!hasRipenessTypes || modalRipeness !== null) && (
             <div className="pt-6 border-t mt-6">
-               <h4 className="font-semibold text-gray-700 mb-3">
-                 Current Selection: {modalUOM.unit} 
-                 {modalRipeness && ` (${modalRipeness.replace('_', ' ')})`}
-               </h4>
-               <div className="flex justify-between items-center">
-                 <div className="flex items-center gap-2">
-                   <span className="text-black font-bold text-xl">₹{modalUOM.price}</span>
-                   {modalUOM.market_price > modalUOM.price && (
-                     <span className="text-gray-400 line-through text-md">₹{modalUOM.market_price}</span>
-                   )}
-                 </div>
-                 
-                 <div className="ml-4 min-w-[120px]">
-                    <AddItemBtn
-                      product={product}
-                      varientId={modalUOM.variant_id}
-                      varientPrice={modalUOM.price}
-                      stepperQuantity={modalUOM.stepper_quantity}
-                      buttonType="black"
-                      selectedRipenessType={modalRipeness} 
-                    />
-                 </div>
-               </div>
+              <h4 className="font-semibold text-gray-700 mb-3">
+                Current Selection: {modalUOM.unit}
+                {modalRipeness && ` (${modalRipeness.replace('_', ' ')})`}
+              </h4>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <span className="text-black font-bold text-xl">₹{modalUOM.price}</span>
+                  {modalUOM.market_price > modalUOM.price && (
+                    <span className="text-gray-400 line-through text-md">₹{modalUOM.market_price}</span>
+                  )}
+                </div>
+
+                <div className="ml-4 min-w-[120px]">
+                  <AddItemBtn
+                    product={product}
+                    varientId={modalUOM.variant_id}
+                    varientPrice={modalUOM.price}
+                    stepperQuantity={modalUOM.stepper_quantity}
+                    buttonType="black"
+                    selectedRipenessType={modalRipeness}
+                  />
+                </div>
+              </div>
             </div>
           )}
 
           <div className="pt-4">
             <button
-                onClick={handleDone}
-                className="w-full bg-yellow-500 text-black font-semibold py-3 rounded-xl hover:bg-yellow-600 transition-colors"
+              onClick={handleDone}
+              className="w-full bg-yellow-500 text-black font-semibold py-3 rounded-xl hover:bg-yellow-600 transition-colors"
             >
-                Done and Apply Selection
+              Done and Apply Selection
             </button>
           </div>
         </div>
@@ -296,7 +294,7 @@ const SearchResults = (props: HomeProps) => {
   const [currentSearchQuery, setCurrentSearchQuery] = useState('');
   const [noResults, setNoResults] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
-  
+
   const searchInputRef = useRef<HTMLInputElement>(null);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -304,7 +302,7 @@ const SearchResults = (props: HomeProps) => {
   const searchProducts = async (query: string, pageNum: number = 1): Promise<SearchResponse> => {
     try {
       const userToken = localStorage.getItem("user_token"); // check token in localStorage
-      
+
       // base headers
       const headers: any = {
         "Content-Type": "application/json",
@@ -344,24 +342,24 @@ const SearchResults = (props: HomeProps) => {
 
 
   // Debounced search function
-const debouncedSearch = (query: string) => {
-  if (debounceTimeoutRef.current) {
-    clearTimeout(debounceTimeoutRef.current);
-  }
-
-  debounceTimeoutRef.current = setTimeout(() => {
-    if (query.trim().length >= 2) {
-      handleNewSearch(query);
-      router.push(`/search?q=${encodeURIComponent(query)}`, undefined, { shallow: true });
-    } else if (query.trim().length < 2) {
-      // Clear the URL query parameter when search text is less than 2 characters
-      router.push('/search', undefined, { shallow: true });
-      setProducts([]);
-      setNoResults(false);
-      setTotalCount(0);
+  const debouncedSearch = (query: string) => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
     }
-  }, 500);
-};
+
+    debounceTimeoutRef.current = setTimeout(() => {
+      if (query.trim().length >= 2) {
+        handleNewSearch(query);
+        router.push(`/search?q=${encodeURIComponent(query)}`, undefined, { shallow: true });
+      } else if (query.trim().length < 2) {
+        // Clear the URL query parameter when search text is less than 2 characters
+        router.push('/search', undefined, { shallow: true });
+        setProducts([]);
+        setNoResults(false);
+        setTotalCount(0);
+      }
+    }, 500);
+  };
 
   // Initial search when component mounts or query changes
   useEffect(() => {
@@ -383,12 +381,12 @@ const debouncedSearch = (query: string) => {
   // Handle new search
   const handleNewSearch = async (query: string) => {
     if (!query.trim()) return;
-    
+
     setLoading(true);
     setProducts([]);
     setPage(1);
     setNoResults(false);
-    
+
     try {
       const response = await searchProducts(query, 1);
       setProducts(response.data);
@@ -406,10 +404,10 @@ const debouncedSearch = (query: string) => {
   // Handle load more
   const handleLoadMore = async () => {
     if (loading || !hasMore) return;
-    
+
     setLoading(true);
     const nextPage = page + 1;
-    
+
     try {
       const response = await searchProducts(currentSearchQuery, nextPage);
       setProducts(prev => [...prev, ...response.data]);
@@ -423,9 +421,9 @@ const debouncedSearch = (query: string) => {
   };
 
   return (
-    <Layout mainMenuItems={mainMenuItems} isHeaderSticky={true} footerData={footerData} search={true}>
+    <Layout mainMenuItems={mainMenuItems} isHeaderSticky={true} footerData={footerData} search={true} useTopPadding={true}>
       <div className="min-h-screen bg-[#FFF9E5]">
-        
+
         {/* Search Results */}
         <div className="max-w-[90vw] mx-auto px-[2vw] mob:px-[5vw] py-[3vw] mob:py-[6vw]">
           {/* Results Header */}

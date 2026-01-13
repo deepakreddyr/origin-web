@@ -37,11 +37,11 @@ const MobileDrawer: React.FC<MobileDrawerProps> = ({
       open={drawerOpen}
       onClose={handleMobileMenuOpen}
       classes={{
-        paper: 'rounded-b-3xl shadow-sm border border-primary-200 z-[1300] mt-[0vw]'
+        paper: 'rounded-b-3xl shadow-sm border border-primary-200 z-[1300] mt-[0vw] bg-[#FFF9E5]'
       }}
       sx={{ '.MuiModal-backdrop': { marginTop: '40px' } }}
     >
-      <Container className="relative pt-[5vw] pb-[6vw]">
+      <Container className="relative pt-[16vw] pb-[6vw]">
         {/* Close Icon */}
         <OriginButton
           variant="iconOnly"

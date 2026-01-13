@@ -30,13 +30,15 @@ export default function Layout({
   mainMenuItems,
   footerData,
   isHeaderSticky,
-  search = false // Add search prop with default value
+  search = false, // Add search prop with default value
+  useTopPadding = false // Add useTopPadding prop to type definition
 }: {
   children: React.ReactNode;
   mainMenuItems: MainMenuType[];
   footerData: FooterDataType;
   isHeaderSticky: any;
   search?: boolean; // Add search prop to type definition
+  useTopPadding?: boolean; // Add useTopPadding prop to type definition
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -117,14 +119,16 @@ export default function Layout({
     <CacheProvider value={clientSideEmotionCache}>
       <ThemeProvider theme={theme}>
         {query.type !== 'app' && (
-          <Header 
-            isHeaderSticky={isHeaderSticky} 
-            mainMenuItems={mainMenuItems} 
+          <Header
+            isHeaderSticky={isHeaderSticky}
+            mainMenuItems={mainMenuItems}
             search={search} // Pass search prop to Header
           />
         )}
         <SidebarScreen />
-        {children}
+        <main className={`${useTopPadding ? 'pt-[22vw] mob:pt-[35vw] md:pt-[6vw]' : ''}`}>
+          {children}
+        </main>
         {query.type !== 'app' && <Footer footerData={footerData} />}
       </ThemeProvider>
     </CacheProvider>

@@ -54,10 +54,10 @@ const ProductDetailPage = (props: ProductDetailPageProps) => {
   const mobile = useMediaQuery(600);
 
   return (
-    <Layout mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={mobile ? false : true}>
+    <Layout mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={mobile ? false : true} useTopPadding={true}>
       <ProductDetailsWrapper />
       <div className='mb-[25px]'>
-        <CategorySection/>
+        <CategorySection />
       </div>
     </Layout>
   );

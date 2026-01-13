@@ -10,7 +10,9 @@ import FreshlyArrivedBanner from "/public/assets/images/shop/FreshlyArrivedBanne
 import FruitsBanner from "/public/assets/images/shop/FruitsBanner.png";
 import HydroponicsBanner from "/public/assets/images/shop/HydroponicsBanner.png";
 import GourmetBanner from "/public/assets/images/shop/GourmetBanner.png";
-import NewYearBanner from "/public/assets/images/Web_Banner_OG.png";
+import sankranthiBanner from "/public/assets/images/sankranthibanner.png";
+import sankranthiBannerMob from "/public/assets/images/sankranthimob.png";
+
 import vege from "/public/assets/images/shop/VeggiesBanner.png";
 // Map normalized keywords -> banner images
 const bannerMap: Record<string, any> = {
@@ -48,7 +50,7 @@ const ShopHero = () => {
   const selectedBanner = bannerMap[section] || FruitsBanner;
 
   return (
-    <div className="relative w-full overflow-hidden mob:pt-[20px]">
+    <div className="relative w-full overflow-hidden mob:pt-[20vw]">
       <div
         className={`relative w-full ${isMobile ? "pt-[50px]" : "aspect-[2.4/1]"
           }`}
@@ -76,9 +78,6 @@ export const ShopHeroSingle = () => {
   const isTablet = useMediaQuery("(max-width:1024px)");
   const router = useRouter();
 
-  useEffect(() => {
-    router.prefetch("/nectacot/567");
-  }, [router]);
 
   return (
     <div className="relative w-full overflow-x-hidden">
@@ -86,13 +85,14 @@ export const ShopHeroSingle = () => {
       <div
         className="
           relative w-full
-          h-[50vw]         
+          h-[40vw]         
           bg-[#f7f1dc]
-          mob:mt-20            
+          mob:h-[100vw]         
         "
       >
         <Image
-          src={NewYearBanner}
+          // src="https://cdn.originfresh.in/public-assets/v3_sankranti_banner.png"
+          src={isMobile ? sankranthiBannerMob : sankranthiBanner}
           alt="Shop Hero Single Banner"
           fill
           priority
