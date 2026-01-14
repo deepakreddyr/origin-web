@@ -169,30 +169,34 @@ const ShopPage = (props: HomeProps) => {
         <CategorySection />
       </div>
 
-      {subCategories?.[0] && (
-        <div className="px-[2vw] bg-[#FFF9E5]">
-          {(isMobile || isTablet) ? (
-            <PopularProduceMob categoryDetail={subCategories[0]} />
-          ) : (
-            <PopularProduce categoryDetail={subCategories[0]} />
-          )}
-        </div>
-      )}
+      {subCategories?.map((section: any, index: number) => {
+        if (!section.data) return null;
 
-      {/* Example placeholder for future feature section */}
-      {/* <div className="">
-  <FeatureProduct featuredItem={subCategories[1]?.data} />
-</div> */}
+        if (section.type === 'products-recommendation') {
+          return (
+            <div
+              key={index}
+              className="px-[2vw]"
+            >
+              {(isMobile || isTablet) ? (
+                <PopularProduceMob categoryDetail={section} />
+              ) : (
+                <PopularProduce categoryDetail={section} />
+              )}
+            </div>
+          );
+        }
 
-      {subCategories?.[1] && (
-        <div className="px-[2vw] bg-[#FFF9E5]">
-          {(isMobile || isTablet) ? (
-            <PopularProduceMob categoryDetail={subCategories[2]} />
-          ) : (
-            <PopularProduce categoryDetail={subCategories[2]} />
-          )}
-        </div>
-      )}
+        // if (section.type === 'featured-item') {
+        //   return (
+        //     <div key={index} className="w-full">
+        //       <FeatureProduct featuredItem={section.data} />
+        //     </div>
+        //   );
+        // }
+
+        return null;
+      })}
       <div className="">
         <WhyOriginBanner />
       </div>
