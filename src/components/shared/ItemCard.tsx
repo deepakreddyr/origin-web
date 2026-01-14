@@ -335,7 +335,7 @@ const UOMPopup: FC<{
                         <p className="flex items-start gap-3">
                             <Image src={rawSvg} alt='' width={12} height={12} className="flex-shrink-0 mt-1" />
                             <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium mb-3'>
-                                Raw: Consume within 3-4 days (do not refrigrate)
+                                Raw: Consume within 3-4 days (do not refrigerate)
                             </span>
                         </p>
                         <p className="flex items-center gap-3">
