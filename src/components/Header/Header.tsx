@@ -287,11 +287,13 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
           ? isTransparentHeader
             ? 'bg-transparent px-[5vw] py-[2vw]'
             : 'bg-[#FFF9E5] px-[5vw] py-[2vw]'
-          : 'bg-white rounded-full'
+          : search
+            ? 'bg-transparent w-[96vw] mt-[1vw] max-w-[1920px]'
+            : 'bg-white rounded-full'
           } ${topBarTransition && !isMobile ? 'mt-[-1vw]' : 'mt-[1.1vw] mob:mt-0'} flex flex-col`}
       >
         <div className="flex items-center justify-between w-full">
-          <div className="flex items-center gap-[2vw] mob:gap-[3vw] flex-1">
+          <div className={`flex items-center gap-[2vw] mob:gap-[3vw] ${search && !isMobile ? '' : 'flex-1'}`}>
             {isMobile && (
               <button
                 onClick={() => setDrawerOpen(!drawerOpen)}
@@ -301,7 +303,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                   src={hamburger}
                   alt="Menu"
                   fill
-                  className="object-contain"
+                  className={`object-contain ${isTransparentHeader ? 'brightness-0 invert' : ''}`}
                 />
               </button>
             )}
@@ -315,7 +317,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                   src={originLogo}
                   alt="logo"
                   fill
-                  className="object-contain"
+                  className={`object-contain ${isTransparentHeader ? 'brightness-0 invert' : ''}`}
                   priority
                 />
               </div>
@@ -326,12 +328,12 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
               <div className="flex items-center gap-[3vw]">
                 <button
                   onClick={handleSelectAddress}
-                  className={`flex items-center gap-[1vw] px-[2vw] py-[1.5vw] rounded-full ${isTransparentHeader ? 'bg-black/10 text-black' : 'bg-black/5 text-gray-900'
+                  className={`flex items-center gap-[1vw] px-[2vw] py-[1.5vw] rounded-full ${isTransparentHeader ? 'bg-black/30 text-white' : 'bg-black/5 text-gray-900'
                     } text-[3vw] font-medium font-[SofiaPro] max-w-[25vw]`}
                   aria-label="Select Delivery Address"
                 >
                   <svg
-                    className={`w-[4vw] h-[4vw] flex-shrink-0 ${isTransparentHeader ? 'text-black' : 'text-gray-700'}`}
+                    className={`w-[4vw] h-[4vw] flex-shrink-0 ${isTransparentHeader ? 'text-white' : 'text-gray-700'}`}
                     fill="none" stroke="currentColor" viewBox="0 0 24 24"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z" />
@@ -340,7 +342,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                   <span className="truncate flex-1">
                     {address.defaultAddress?.address_name || 'Select'}
                   </span>
-                  <svg className={`w-[2vw] h-[2vw] ${isTransparentHeader ? 'text-black' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className={`w-[2vw] h-[2vw] ${isTransparentHeader ? 'text-white' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
@@ -355,7 +357,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                       src={userIcon}
                       alt="Account"
                       fill
-                      className="object-contain"
+                      className={`object-contain ${isTransparentHeader ? 'brightness-0 invert' : ''}`}
                     />
                   </div>
                 </button>
@@ -365,57 +367,59 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
 
           </div>
 
-          <div className="flex items-center gap-[1.1vw] mob:hidden">
-            <div className="flex items-center gap-[2vw] pr-[0] mob:hidden">
-              <Link
-                href="/shop"
-                className="h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full bg-primary text-black text-[1.1vw] font-medium font-[SofiaPro]"
-              >
-                Shop All
-              </Link>
-              {!isMobile && isLoggedIn && (
-                <button
-                  onClick={handleSelectAddress}
-                  className="flex items-center gap-2 px-[1.5vw] py-[0.5vw] rounded-full bg-gray-100 hover:bg-gray-200 text-gray-900 transition-colors max-w-[200px]"
-                  aria-label="Select Delivery Address"
+          <div className={`flex items-center gap-[1.1vw] mob:hidden ${search ? 'flex-1 justify-center' : ''}`}>
+            {!search && (
+              <div className="flex items-center gap-[2vw] pr-[0] mob:hidden">
+                <Link
+                  href="/shop"
+                  className="h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full bg-primary text-black text-[1.1vw] font-medium font-[SofiaPro]"
                 >
-                  <svg
-                    className="w-[1vw] h-[1vw] flex-shrink-0 text-gray-700"
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  Shop All
+                </Link>
+                {!isMobile && isLoggedIn && (
+                  <button
+                    onClick={handleSelectAddress}
+                    className="flex items-center gap-2 px-[1.5vw] py-[0.5vw] rounded-full bg-gray-100 hover:bg-gray-200 text-gray-900 transition-colors max-w-[200px]"
+                    aria-label="Select Delivery Address"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  {address.defaultAddress?.address_name ? (
-                    <div className="flex-1 overflow-hidden relative">
-                      <div className="animate-marquee whitespace-nowrap text-[1vw]">
-                        <span className="font-bold">
-                          {address.defaultAddress?.address_name}
-                        </span>
-                        <span className="mx-[0.5vw]">•</span>
-                        <span className="font-light">
-                          {address.defaultAddress.address}
-                        </span>
-                        {/* Duplicate for seamless loop */}
-                        <span className="font-bold ml-[2vw]">
-                          {address.defaultAddress?.address_name}
-                        </span>
-                        <span className="mx-[0.5vw]">•</span>
-                        <span className="font-light">
-                          {address.defaultAddress.address}
-                        </span>
+                    <svg
+                      className="w-[1vw] h-[1vw] flex-shrink-0 text-gray-700"
+                      fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    {address.defaultAddress?.address_name ? (
+                      <div className="flex-1 overflow-hidden relative">
+                        <div className="animate-marquee whitespace-nowrap text-[1vw]">
+                          <span className="font-bold">
+                            {address.defaultAddress?.address_name}
+                          </span>
+                          <span className="mx-[0.5vw]">•</span>
+                          <span className="font-light">
+                            {address.defaultAddress.address}
+                          </span>
+                          {/* Duplicate for seamless loop */}
+                          <span className="font-bold ml-[2vw]">
+                            {address.defaultAddress?.address_name}
+                          </span>
+                          <span className="mx-[0.5vw]">•</span>
+                          <span className="font-light">
+                            {address.defaultAddress.address}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  ) : (
-                    <span className="font-bold text-[1vw]">Select Address</span>
-                  )}
-                  <svg className="w-[0.6vw] h-[0.6vw] text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-                </button>
-              )}
-            </div>
+                    ) : (
+                      <span className="font-bold text-[1vw]">Select Address</span>
+                    )}
+                    <svg className="w-[0.6vw] h-[0.6vw] text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                  </button>
+                )}
+              </div>
+            )}
 
             {/* Desktop Search Bar */}
-            <div className="flex-1 max-w-[28vw]">
+            <div className={`${search ? 'flex-1 mx-[2vw]' : 'flex-1 max-w-[28vw]'}`}>
               <form onSubmit={handleSearchSubmit} className="relative">
                 <div className="relative">
                   <input
@@ -426,14 +430,15 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                     onClick={handleSearchFieldClick}
                     onFocus={handleSearchFocus}
                     onBlur={handleSearchBlur}
-                    className="w-full h-[2.4vw] px-[1.17vw] 
-                              rounded-full border border-gray-300 bg-transparent 
+                    placeholder={search ? "Search here" : ""}
+                    className={`w-full h-[2.5vw] px-[1.5vw] 
+                              rounded-full border border-gray-300 ${search ? 'bg-white' : 'bg-transparent'} 
                               placeholder:text-gray-400 
                               text-[1.1vw] font-[SofiaPro] cursor-pointer 
-                              focus:outline-none focus:ring-0 transition-all duration-200"
+                              focus:outline-none focus:ring-0 transition-all duration-200`}
                   />
 
-                  {!searchQuery && (
+                  {!searchQuery && !search && (
                     <div className="absolute left-[1vw] top-1/2 transform -translate-y-1/2 pointer-events-none text-[1vw] font-[SofiaPro] text-gray-500">
                       <AnimatedPlaceholder />
                     </div>
@@ -441,10 +446,10 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
 
                   <button
                     type="submit"
-                    className="absolute right-[0.6vw] top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-gray-100 rounded-full w-[1.6vw] h-[1.6vw] flex items-center justify-center transition-colors duration-200"
+                    className="absolute right-[1vw] top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-gray-100 rounded-full w-[1.6vw] h-[1.6vw] flex items-center justify-center transition-colors duration-200"
                   >
                     <svg
-                      className="w-[0.9vw] h-[0.9vw] text-gray-600"
+                      className="w-[1.1vw] h-[1.1vw] text-gray-600"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -477,7 +482,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
               </button>
             )}
 
-            <div className="h-[1.67vw] w-[.1vw] bg-black-op-30"></div>
+            {!search && <div className="h-[1.67vw] w-[.1vw] bg-black-op-30"></div>}
             <button onClick={handleCartOpen} className="relative pr-[1.67vw]">
               {cartItemCount > 0 && (
                 <div className="absolute top-[-.6vw] left-[.7vw] w-[1.25vw] h-[1.25vw] text-[.78vw] rounded-full bg-secondary-300 z-[1] text-white font-[sofiaPro] flex items-center justify-center">
@@ -505,18 +510,18 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                   onFocus={handleSearchFocus}
                   onBlur={handleSearchBlur}
                   className={`w-full h-[12vw] pl-[12vw] pr-[4vw] rounded-full text-[4vw] font-[SofiaPro] transition-all duration-300 outline-none ${isTransparentHeader
-                    ? 'bg-black/10 text-black border-none'
-                    : 'bg-white border border-gray-200 text-gray-900'
+                    ? 'bg-black/30 text-white border-none'
+                    : 'bg-white border border-gray-200 text-black'
                     }`}
                 />
                 {!searchQuery && (
-                  <div className={`absolute left-[12vw] top-1/2 -translate-y-1/2 pointer-events-none text-[4vw] font-[SofiaPro] ${isTransparentHeader ? 'text-black/60' : 'text-gray-400'}`}>
+                  <div className={`absolute left-[12vw] top-1/2 -translate-y-1/2 pointer-events-none text-[4vw] font-[SofiaPro] ${isTransparentHeader ? 'text-white' : 'text-gray-400'}`}>
                     <AnimatedPlaceholder />
                   </div>
                 )}
                 <div className="absolute left-[4vw] top-1/2 -translate-y-1/2">
                   <svg
-                    className={`w-[5vw] h-[5vw] ${isTransparentHeader ? 'text-black' : 'text-gray-400'}`}
+                    className={`w-[5vw] h-[5vw] ${isTransparentHeader ? 'text-white' : 'text-gray-400'}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"

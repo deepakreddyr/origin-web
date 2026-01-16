@@ -10,8 +10,6 @@ import FreshlyArrivedBanner from "/public/assets/images/shop/FreshlyArrivedBanne
 import FruitsBanner from "/public/assets/images/shop/FruitsBanner.png";
 import HydroponicsBanner from "/public/assets/images/shop/HydroponicsBanner.png";
 import GourmetBanner from "/public/assets/images/shop/GourmetBanner.png";
-import sankranthiBanner from "/public/assets/images/sankranthibanner.png";
-import sankranthiBannerMob from "/public/assets/images/sankranthimob.png";
 
 import vege from "/public/assets/images/shop/VeggiesBanner.png";
 // Map normalized keywords -> banner images
@@ -92,7 +90,7 @@ export const ShopHeroSingle = () => {
       >
         <Image
           // src="https://cdn.originfresh.in/public-assets/v3_sankranti_banner.png"
-          src={isMobile ? sankranthiBannerMob : sankranthiBanner}
+          src={isMobile ? "https://cdn.originfresh.in/public-assets/website/Mobile_Banner_OG.png" : "https://cdn.originfresh.in/public-assets/website/Web_Banner_OG.png"}
           alt="Shop Hero Single Banner"
           fill
           priority

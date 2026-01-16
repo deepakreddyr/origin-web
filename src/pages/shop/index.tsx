@@ -160,7 +160,6 @@ const ShopPage = (props: HomeProps) => {
           loop={true}
           controls={false}
         /> */}
-        <div className='w-full h-[5vw] bg-[#fcf2c5]'></div>
         <ShopHeroSingle />
         <FeatureStrip />
       </div>
