@@ -114,6 +114,8 @@ const handleInvoiceDeepLink = (router: any) => {
   }
 };
 
+// import GlobalLaunchListener from '@/components/GlobalLaunchListener';
+
 // --- Main App ---
 export default function App({ Component, pageProps, ...rest }: AppProps) {
   const { store } = wrapper.useWrappedStore(rest);
@@ -146,6 +148,7 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
 
   return (
     <Provider store={store}>
+      {/* <GlobalLaunchListener /> */}
       <LocalizationProvider dateAdapter={AdapterLuxon}>
         <Head>
           {/* Viewport in _app.tsx as a consistent baseline */}
@@ -167,6 +170,22 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
           strategy="lazyOnload"
         // onLoad={() => console.log('Razorpay script loaded')}
         />
+
+        {/* Google Analytics Script */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-NM914G6V0P"
+          strategy="afterInteractive"
+        />
+
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-NM914G6V0P');
+        `}
+        </Script>
 
         <Component {...pageProps} />
       </LocalizationProvider>
