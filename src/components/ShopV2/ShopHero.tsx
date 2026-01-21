@@ -89,13 +89,12 @@ export const ShopHeroSingle = () => {
         "
       >
         <Image
-          // src="https://cdn.originfresh.in/public-assets/v3_sankranti_banner.png"
-          src={isMobile ? "https://cdn.originfresh.in/public-assets/website/Mobile_Banner_OG.png" : "https://cdn.originfresh.in/public-assets/website/Web_Banner_OG.png"}
+          src={isMobile ? "https://cdn.originfresh.in/website/banners-jan-21-2026-01.webp" : "https://cdn.originfresh.in/website/banners-jan-21-202602.webp"}
           alt="Shop Hero Single Banner"
           fill
           priority
           quality={100}
-          className="object-cover"
+          className="object-fit"
         />
       </div>
     </div>

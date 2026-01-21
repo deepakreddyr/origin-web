@@ -27,6 +27,7 @@ type Props = {
   mainMenuItems: MainMenuType[];
   isHeaderSticky: any;
   search?: boolean;
+  transparentColor?: 'black'; // NEW PROP
 };
 
 // HELPER FUNCTION: Calculate total cart line items from nested structure
@@ -83,7 +84,7 @@ const AnimatedPlaceholder = () => {
   );
 };
 
-const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
+const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColor = 'black' }: Props) => {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [topBarTransition, setTopBarTransition] = useState(false);
@@ -111,8 +112,60 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
 
   const router = useRouter();
   const isMobile = useMediaQuery(600);
-  const isShopPage = router.pathname === '/shop';
+  const isShopPage = router.pathname === '/shop' || router.pathname === '/';
   const isTransparentHeader = isShopPage && !isOpaque && isMobile;
+
+  // Helper function to get icon filter based on transparent color
+  const getIconFilter = () => {
+    if (!isTransparentHeader) return '';
+    return transparentColor === 'black' ? 'brightness-0' : 'brightness-0 invert';
+  };
+
+  // Helper function to get text color class
+  const getTextColor = () => {
+    if (!isTransparentHeader) return 'text-gray-900';
+    return transparentColor === 'black' ? 'text-black' : 'text-white';
+  };
+
+  // Helper function to get location button styles
+  const getLocationButtonStyles = () => {
+    if (!isTransparentHeader) return 'bg-black/5 text-gray-900';
+    return transparentColor === 'black'
+      ? 'bg-black/10 text-black'
+      : 'bg-white/30 text-white';
+  };
+
+  // Helper function to get location icon color
+  const getLocationIconColor = () => {
+    if (!isTransparentHeader) return 'text-gray-700';
+    return transparentColor === 'black' ? 'text-black' : 'text-white';
+  };
+
+  // Helper function to get dropdown icon color
+  const getDropdownIconColor = () => {
+    if (!isTransparentHeader) return 'text-gray-500';
+    return transparentColor === 'black' ? 'text-black' : 'text-white';
+  };
+
+  // Helper function to get search bar styles
+  const getSearchBarStyles = () => {
+    if (!isTransparentHeader) return 'bg-white border border-gray-200 text-black';
+    return transparentColor === 'black'
+      ? 'bg-black/10 text-black border-none'
+      : 'bg-white/30 text-white border-none';
+  };
+
+  // Helper function to get search icon color
+  const getSearchIconColor = () => {
+    if (!isTransparentHeader) return 'text-gray-400';
+    return transparentColor === 'black' ? 'text-black' : 'text-white';
+  };
+
+  // Helper function to get search placeholder color
+  const getSearchPlaceholderColor = () => {
+    if (!isTransparentHeader) return 'text-gray-400';
+    return transparentColor === 'black' ? 'text-black/70' : 'text-white/90';
+  };
 
   useEffect(() => {
     if (search && router.query.q && typeof router.query.q === 'string') {
@@ -170,7 +223,6 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
     }
   };
 
-  // --- LOCATION HANDLER ---
   const handleSelectAddress = () => {
     dispatch(setIsSidebarOpen(true));
 
@@ -179,23 +231,12 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
       return;
     }
 
-    if (!loginDetails.isLogin) {
-      dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
-      return;
-    }
-
-    if (!profile?.data?.profile) {
-      dispatch(setTabType(TabTypeConstant.REGISTER));
-      return;
-    }
-
-    if (address.address.length > 0) {
+    if (address?.address && address.address.length > 0) {
       dispatch(setTabType(TabTypeConstant.SELECT_ADDRESS));
     } else {
       dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
     }
   };
-  // -------------------------
 
   const debouncedSearch = (query: string) => {
     if (debounceTimeoutRef.current) {
@@ -290,7 +331,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
           : search
             ? 'bg-transparent w-[96vw] mt-[1vw] max-w-[1920px]'
             : 'bg-white rounded-full'
-          } ${topBarTransition && !isMobile ? 'mt-[-1vw]' : 'mt-[1.1vw] mob:mt-0'} flex flex-col`}
+          } ${'mt-[1.1vw] mob:mt-0'} flex flex-col`}
       >
         <div className="flex items-center justify-between w-full">
           <div className={`flex items-center gap-[2vw] mob:gap-[3vw] ${search && !isMobile ? '' : 'flex-1'}`}>
@@ -303,7 +344,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                   src={hamburger}
                   alt="Menu"
                   fill
-                  className={`object-contain ${isTransparentHeader ? 'brightness-0 invert' : ''}`}
+                  className={`object-contain ${getIconFilter()}`}
                 />
               </button>
             )}
@@ -317,7 +358,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                   src={originLogo}
                   alt="logo"
                   fill
-                  className={`object-contain ${isTransparentHeader ? 'brightness-0 invert' : ''}`}
+                  className={`object-contain ${getIconFilter()}`}
                   priority
                 />
               </div>
@@ -328,12 +369,11 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
               <div className="flex items-center gap-[3vw]">
                 <button
                   onClick={handleSelectAddress}
-                  className={`flex items-center gap-[1vw] px-[2vw] py-[1.5vw] rounded-full ${isTransparentHeader ? 'bg-black/30 text-white' : 'bg-black/5 text-gray-900'
-                    } text-[3vw] font-medium font-[SofiaPro] max-w-[25vw]`}
+                  className={`flex items-center gap-[1vw] px-[2vw] py-[1.5vw] rounded-full ${getLocationButtonStyles()} text-[3vw] font-medium font-[SofiaPro] max-w-[25vw]`}
                   aria-label="Select Delivery Address"
                 >
                   <svg
-                    className={`w-[4vw] h-[4vw] flex-shrink-0 ${isTransparentHeader ? 'text-white' : 'text-gray-700'}`}
+                    className={`w-[4vw] h-[4vw] flex-shrink-0 ${getLocationIconColor()}`}
                     fill="none" stroke="currentColor" viewBox="0 0 24 24"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z" />
@@ -342,7 +382,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                   <span className="truncate flex-1">
                     {address.defaultAddress?.address_name || 'Select'}
                   </span>
-                  <svg className={`w-[2vw] h-[2vw] ${isTransparentHeader ? 'text-white' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className={`w-[2vw] h-[2vw] ${getDropdownIconColor()}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
@@ -357,7 +397,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                       src={userIcon}
                       alt="Account"
                       fill
-                      className={`object-contain ${isTransparentHeader ? 'brightness-0 invert' : ''}`}
+                      className={`object-contain ${getIconFilter()}`}
                     />
                   </div>
                 </button>
@@ -509,19 +549,16 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false }: Props) => {
                   onClick={handleSearchFieldClick}
                   onFocus={handleSearchFocus}
                   onBlur={handleSearchBlur}
-                  className={`w-full h-[12vw] pl-[12vw] pr-[4vw] rounded-full text-[4vw] font-[SofiaPro] transition-all duration-300 outline-none ${isTransparentHeader
-                    ? 'bg-black/30 text-white border-none'
-                    : 'bg-white border border-gray-200 text-black'
-                    }`}
+                  className={`w-full h-[12vw] pl-[12vw] pr-[4vw] rounded-full text-[4vw] font-[SofiaPro] transition-all duration-300 outline-none ${getSearchBarStyles()}`}
                 />
                 {!searchQuery && (
-                  <div className={`absolute left-[12vw] top-1/2 -translate-y-1/2 pointer-events-none text-[4vw] font-[SofiaPro] ${isTransparentHeader ? 'text-white' : 'text-gray-400'}`}>
+                  <div className={`absolute left-[12vw] top-1/2 -translate-y-1/2 pointer-events-none text-[4vw] font-[SofiaPro] ${getSearchPlaceholderColor()}`}>
                     <AnimatedPlaceholder />
                   </div>
                 )}
                 <div className="absolute left-[4vw] top-1/2 -translate-y-1/2">
                   <svg
-                    className={`w-[5vw] h-[5vw] ${isTransparentHeader ? 'text-white' : 'text-gray-400'}`}
+                    className={`w-[5vw] h-[5vw] ${getSearchIconColor()}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
