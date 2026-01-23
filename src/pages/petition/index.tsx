@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import originLogo from '/public/assets/images/neworiginlogo.png';
 import Image from 'next/image';
-import petitionImage from '/public/assets/images/PetitionDoc.png';
+import petitionImage from '/public/assets/images/PetitionDocument2.png';
+import petitionImage2 from '/public/assets/images/petitionproductimage.png';
+import formImage from '/public/assets/images/petitionform.png';
 
 export default function PetitionPage() {
   const [formData, setFormData] = useState({
@@ -15,9 +17,8 @@ export default function PetitionPage() {
   const [liveVisitors, setLiveVisitors] = useState<number>(0);
   const [errors, setErrors] = useState({ name: '', phone: '', email: '' });
 
-  // Assets
-  const productImage = '/assets/svg/petitionimage.svg';
-  const formImage = '/assets/svg/petitionformimage.svg';
+  // Check if mandatory fields are filled to enable button
+  const isFormFilled = formData.name.trim() !== '' && formData.phone.trim() !== '';
 
   // Fake live visitors count (40-70)
   useEffect(() => {
@@ -30,7 +31,7 @@ export default function PetitionPage() {
 
   // Fetch petition count
   useEffect(() => {
-    fetch('https://api.webdev.wholesalemandi.com/api/v1/public/petitions')
+    fetch('https://api.originfresh.in/api/v1/public/petitions')
       .then(res => res.json())
       .then(data => {
         if (data?.data?.count) {
@@ -56,8 +57,8 @@ export default function PetitionPage() {
       isValid = false;
     }
 
-    if (!/^\d+$/.test(formData.phone)) {
-      newErrors.phone = 'Phone number must be digits only';
+    if (!/^\d{10,}$/.test(formData.phone)) {
+      newErrors.phone = 'Please enter a valid phone number';
       isValid = false;
     }
 
@@ -80,14 +81,14 @@ export default function PetitionPage() {
     setSubmitStatus('');
 
     try {
-      const response = await fetch('https://api.webdev.wholesalemandi.com/api/v1/public/petitions', {
+      const response = await fetch('https://api.originfresh.in/api/v1/public/petitions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
           phone_number: formData.phone,
-          item_id: 1
+          item_id: 399
         })
       });
 
@@ -117,7 +118,7 @@ export default function PetitionPage() {
           />
           {petitionCount !== null && (
             <div className="absolute right-6 top-1/2 -translate-y-1/2 mt-2.5 text-right flex flex-col items-end">
-              <p className="font-bold text-2xl leading-none tracking-tight">{petitionCount}</p>
+              <p className="font-bold text-2xl leading-none tracking-tight">{722 + petitionCount}</p>
               <p className="font-bold text-[10px] md:text-xs uppercase leading-none mb-1">SIGNED</p>
               <div className="flex items-center gap-1 text-green-700 animate-pulse">
                 <div className="w-1.5 h-1.5 rounded-full bg-green-600"></div>
@@ -129,82 +130,91 @@ export default function PetitionPage() {
       </header>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto p-4 pt-8">
-        {/* Top Section - Equal Sized Side-by-Side Images */}
-        <div className="flex flex-col lg:flex-row gap-6 mb-12 items-stretch">
-
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col lg:flex-row gap-0 mb-12 items-stretch">
           {/* Left - Petition Document (Clickable) */}
           <div
-            className="flex-1 relative min-h-[500px] w-full cursor-pointer transition-transform hover:scale-[1.01] active:scale-100"
+            className="flex-1 relative min-h-[500px] w-full cursor-pointer transition-transform hover:scale-[1.01] active:scale-100 order-2 lg:order-1 mt-[10px]"
             onClick={scrollToForm}
           >
             <Image
               src={petitionImage}
               alt="Petition Document"
               fill
-              className="object-contain"
+              className="object-fit"
               priority
             />
           </div>
 
           {/* Right - Product SVG */}
-          <div className="flex-1 relative min-h-[500px] w-full overflow-hidden bg-white">
-            <img
-              src={productImage}
+          <div className="flex-1 relative w-full overflow-hidden bg-white order-1 lg:order-2">
+            <Image
+              src={petitionImage2}
               alt="Honey Pineapple Product"
-              className="w-full h-full object-contain lg:object-cover"
+              className="w-full h-full object-fit"
             />
           </div>
         </div>
 
         {/* Bottom Section - Sign Up Form */}
-        <div id="signup-form" className="bg-[#ffbe00] rounded-[40px] p-8 md:p-16 relative overflow-hidden scroll-mt-10">
+        <div id="signup-form" className="bg-[#ffbe00] rounded-[32px] p-8 md:p-16 relative overflow-hidden scroll-mt-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
             {/* Form Section */}
             <div className="z-10">
-              <h2 className="text-4xl font-black mb-10 uppercase italic leading-none tracking-tighter">
+              <h2 className="text-4xl font-black mb-10 uppercase leading-none tracking-tighter">
                 SIGN UP HERE!
               </h2>
 
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-black mb-2 uppercase italic">Name</label>
+                  <label className="block text-sm font-black mb-2 uppercase">
+                    Name <span className="text-red-600">*</span>
+                  </label>
                   <input
                     type="text"
+                    placeholder="Enter your full name"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className={`w-full px-5 py-4 border-[3px] ${errors.name ? 'border-red-600' : 'border-black'} rounded-2xl bg-[#ffbe00] focus:bg-white focus:outline-none font-black transition-all`}
+                    className={`w-full px-5 py-4 border-[3px] ${errors.name ? 'border-red-600' : 'border-black'} rounded-2xl bg-[#ffbe00] placeholder:text-black/40 focus:bg-white focus:outline-none font-black transition-all`}
                   />
                   {errors.name && <p className="text-red-700 text-xs mt-2 font-bold italic">{errors.name}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-black mb-2 uppercase italic">Phone Number</label>
+                  <label className="block text-sm font-black mb-2 uppercase">
+                    Phone Number <span className="text-red-600">*</span>
+                  </label>
                   <input
                     type="tel"
+                    placeholder="Enter 10-digit mobile number"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className={`w-full px-5 py-4 border-[3px] ${errors.phone ? 'border-red-600' : 'border-black'} rounded-2xl bg-[#ffbe00] focus:bg-white focus:outline-none font-black transition-all`}
+                    className={`w-full px-5 py-4 border-[3px] ${errors.phone ? 'border-red-600' : 'border-black'} rounded-2xl bg-[#ffbe00] placeholder:text-black/40 focus:bg-white focus:outline-none font-black transition-all`}
                   />
                   {errors.phone && <p className="text-red-700 text-xs mt-2 font-bold italic">{errors.phone}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-black mb-2 uppercase italic">Email (Optional)</label>
+                  <label className="block text-sm font-black mb-2 uppercase">Email (Optional)</label>
                   <input
                     type="email"
+                    placeholder="Email address"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className={`w-full px-5 py-4 border-[3px] ${errors.email ? 'border-red-600' : 'border-black'} rounded-2xl bg-[#ffbe00] focus:bg-white focus:outline-none font-black transition-all`}
+                    className={`w-full px-5 py-4 border-[3px] ${errors.email ? 'border-red-600' : 'border-black'} rounded-2xl bg-[#ffbe00] placeholder:text-black/40 focus:bg-white focus:outline-none font-black transition-all`}
                   />
                   {errors.email && <p className="text-red-700 text-xs mt-2 font-bold italic">{errors.email}</p>}
                 </div>
 
                 <button
                   onClick={handleSubmit}
-                  disabled={isSubmitting}
-                  className="w-full md:w-auto bg-black text-white px-12 py-5 rounded-2xl font-black uppercase hover:bg-zinc-900 transition-all disabled:bg-zinc-800 shadow-2xl text-xl italic tracking-tight active:translate-y-1"
+                  disabled={isSubmitting || !isFormFilled}
+                  className={`w-full md:w-auto px-12 py-5 rounded-2xl font-black uppercase transition-all shadow-2xl text-xl tracking-tight active:translate-y-1 
+                    ${isSubmitting || !isFormFilled
+                      ? 'bg-black/20 text-black/40 cursor-not-allowed border-black/10'
+                      : 'bg-black text-white hover:bg-zinc-900 cursor-pointer'
+                    }`}
                 >
                   {isSubmitting ? 'SUBMITTING...' : 'SUBMIT'}
                 </button>
@@ -212,15 +222,18 @@ export default function PetitionPage() {
                 {submitStatus === 'success' && (
                   <p className="text-green-800 font-black italic mt-4 animate-bounce">✓ Successfully Signed!</p>
                 )}
+                {submitStatus === 'error' && (
+                  <p className="text-red-700 font-black italic mt-4">Something went wrong. Please try again.</p>
+                )}
               </div>
             </div>
 
             {/* Right Side Illustration */}
             <div className="relative flex justify-center lg:justify-end">
-              <img
+              <Image
                 src={formImage}
                 alt="Join the Cult of Fresh"
-                className="w-full max-w-lg object-contain drop-shadow-2xl"
+                className="w-full max-w-2xl object-contain drop-shadow-2xl"
               />
             </div>
           </div>
