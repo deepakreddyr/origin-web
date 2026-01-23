@@ -126,7 +126,7 @@ const HomeCategorySection = ({ categories, loading, title }: HomeCategorySection
 
                             <div className="absolute bottom-[-5%] right-[-5%] w-[80%] h-[80%]">
                                 <Image
-                                    src={category.image}
+                                    src={catimg}
                                     alt={category.name}
                                     fill
                                     className="object-contain object-right-bottom"

@@ -350,7 +350,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
             )}
 
             <button
-              onClick={() => router.push('/shop')}
+              onClick={() => router.push('/')}
               className={`relative flex-shrink-0 ${isMobile ? 'flex-1 flex justify-center' : ''}`}
             >
               <div className="w-[10vw] ml-[2vw] mt-2 mob:w-[35vw] mob:h-[12vw] mob:ml-0 h-[5vw] mr-[4vw] mob:mr-2 relative">
