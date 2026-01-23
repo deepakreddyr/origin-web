@@ -1,4 +1,15 @@
 @import './sofia-style.css';
+@import './stinger-style.css';
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Stinger', sans-serif !important;
+}
+
 /* @import './SofiaPro-style.css'; */
 
 @tailwind base;
@@ -9,6 +20,7 @@
 @layer utilities {
   @import url('./typography.css');
 }
+
 #nprogress .spinner {
   display: none !important;
 }
@@ -23,10 +35,12 @@
     scrollbar-color: #146321 #fff;
     list-style: none;
   }
+
   body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
   @media screen and (max-width: 768px) {
     body::-webkit-scrollbar {
       display: none;
@@ -40,16 +54,19 @@
   ul {
     @apply list-disc list-inside ps-4;
   }
+
   ol li:has(ol, ul),
   ul li:has(ol, ul) {
     @apply list-none;
   }
+
   ol {
     @apply list-decimal list-inside marker:me-4 ps-4;
   }
 }
 
 @import url('./sliders.css');
+
 .b1 {
   border: 1px solid red;
 }
@@ -66,12 +83,14 @@
     -moz-osx-font-smoothing: grayscale;
   }
 }
+
 @import url('./sliders.css');
 
 /* hide scroll bar */
 .noscrollbar {
   scrollbar-width: none;
 }
+
 .noscrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -118,6 +137,7 @@ input[type='number'] {
     transform: translateX(calc(-100% - var(--gap)));
   }
 }
+
 .animate-marquee-left {
   animation: marquee-left var(--duration, 40s) linear infinite;
 }
@@ -126,20 +146,22 @@ input[type='number'] {
   0% {
     transform: translateX(100%);
   }
+
   100% {
     transform: translateX(-100%);
   }
 }
 
 div[style*='animation: scroll'] {
-  width: max-content; /* Ensure the container stretches to fit content */
+  width: max-content;
+  /* Ensure the container stretches to fit content */
 }
 
 .hero-section {
-  background:  url('../assets/svg/hero/illustration.svg'), url('../assets/svg/hero/bg-color.jpg');
+  background: url('../assets/svg/hero/illustration.svg'), url('../assets/svg/hero/bg-color.jpg');
   /* background: url(),url('../assets/svg/hero/newHeroBanner.png'); */
   background-size: 45%, cover;
-  background-position: bottom right,  center center;
+  background-position: bottom right, center center;
   background-repeat: no-repeat;
   position: relative;
   overflow: hidden;
@@ -169,7 +191,9 @@ div[style*='animation: scroll'] {
 .carousel .control-dots .dot {
   box-shadow: none;
 }
-html, body {
+
+html,
+body {
   overflow-x: hidden;
   touch-action: manipulation;
 }
@@ -178,12 +202,15 @@ html, body {
 
 /* Hide scrollbar for webkit browsers */
 .scrollbar-hide {
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
+  display: none;
+  /* Safari and Chrome */
 }
 
 /* Alternative: Custom styled scrollbar */

@@ -55,7 +55,7 @@ const OrderDetailsWrapper = () => {
 
   if (!orderAndRefundDetails.orderDetailsData)
     return <div className="pb-[6vw]  pt-[12vw] p-[10vw]">No Order found for this order</div>;
-    
+
   if (orderAndRefundDetails.isOrderDetailsLoading)
     return (
       <div
@@ -64,14 +64,14 @@ const OrderDetailsWrapper = () => {
         <OrderDetailsSkeleton />
       </div>
     );
-    
+
   return (
     <div
       className={`pb-[6vw] mob:pb-[15vw] p-[10vw] mob:p-0 ${query.type !== 'app' ? 'mob:pt-[28vw]' : ''}  relative `}
     >
       <DetailsHeader orderDetailsData={orderAndRefundDetails.orderDetailsData} />
       <div className="flex gap-[1.67vw] mob:gap-[4.1vw] mob:flex-col  ">
-        <div className="w-[30vw] mob:w-full flex flex-col gap-[1.1vw] mob:gap-[4.1vw] ">
+        <div className="w-[30vw] mob:w-screen flex flex-col gap-[1.1vw] mob:gap-0 ">
           <OrderStatusIllustration
             orderDetailsData={orderAndRefundDetails.orderDetailsData}
             fetchOrderdetails={fetchOrderdetails}

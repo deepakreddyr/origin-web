@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Layout from '@/components/Layout';
 import { FooterDataType, MainMenuType } from '@/utilities/types';
-import CategorySection from '@/components/ShopV2/CategorySection';
+import HomeCategorySection from '@/components/home/HomeCategorySection';
 import PopularProduce from '@/components/ShopV2/PopularProduce';
 import PopularProduceMob from '@/components/ShopV2/PopularProduceMob';
 import FeatureProduct from '@/components/ShopV2/FeaturedProduct';
@@ -23,6 +23,7 @@ import FeatureStrip from '@/components/ShopV2/FeatureStrip';
 import WhyOriginBanner from '@/components/ShopV2/WhyOriginBanner';
 import { ShopHeroSingle } from '@/components/ShopV2/ShopHero';
 import CustomHead from '@/components/shared/CustomHead';
+import CategorySection from '@/components/ShopV2/CategorySection';
 
 interface HomeProps {
   mainMenuItems: MainMenuType[];
@@ -46,7 +47,7 @@ const ShopPage = (props: HomeProps) => {
 
   // console.log(filteredCategories,"Category");
   const { categories } = filteredCategories;
-
+  const mainCategoryData = categories?.find((item: any) => item.type === 'main-category')?.data || [];
   const subCategories = categories?.filter((item: any) => item.type !== 'main-category');
 
   // Preload videos for better performance
@@ -149,23 +150,83 @@ const ShopPage = (props: HomeProps) => {
     </div>
   );
 
+  // const LoadedUI = () => (
+  //   <div className="flex flex-col items-center pb-[2vw] mob:pb-[10vw] overflow-hidden">
+  //     <div className="w-full relative overflow-hidden m-0 p-0">
+  //       {/* <VideoBanner
+  //         mobileVideoSrc="https://cdn.originfresh.in/website/Origin_9_16_v1.mp4"
+  //         desktopVideoSrc="https://cdn.originfresh.in/website/Origin_16_9_v1.mp4"
+  //         autoPlay={true}
+  //         muted={true}
+  //         loop={true}
+  //         controls={false}
+  //       /> */}
+  //       <ShopHeroSingle />
+  //       <FeatureStrip />
+  //     </div>
+
+  //     <div className="flex flex-col gap-[6vw] mob:pl-[0vw] w-full items-center">
+  //       {/* <CategorySection /> */}
+  //       <HomeCategorySection categories={mainCategoryData} loading={loading} title="Shop By Category" />
+  //     </div>
+
+  //     {subCategories?.map((section: any, index: number) => {
+  //       if (!section.data) return null;
+
+  //       if (section.type === 'products-recommendation') {
+  //         return (
+  //           <div
+  //             key={index}
+  //             className="px-[2vw]"
+  //           >
+  //             {(isMobile || isTablet) ? (
+  //               <PopularProduceMob categoryDetail={section} />
+  //             ) : (
+  //               <PopularProduce categoryDetail={section} />
+  //             )}
+  //           </div>
+  //         );
+  //       }
+  //       <div className="w-full px-[2vw] mb-[6vw] mob:mb-[10vw]">
+  //         <div className="w-full aspect-video overflow-hidden rounded-[20px] mob:rounded-[12px] shadow-sm">
+  //           <iframe
+  //             className="w-full h-full"
+  //             src="https://www.youtube.com/embed/5Sz2FzHGpjo"
+  //             title="YouTube video player"
+  //             frameBorder="0"
+  //             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  //             allowFullScreen
+  //           ></iframe>
+  //         </div>
+  //       </div>
+  //       // if (section.type === 'featured-item') {
+  //       //   return (
+  //       //     <div key={index} className="w-full">
+  //       //       <FeatureProduct featuredItem={section.data} />
+  //       //     </div>
+  //       //   );
+  //       // }
+
+  //       return null;
+  //     })}
+  //     {/* <div className="">
+  //       <WhyOriginBanner />
+  //     </div> */}
+
+  //     {/* {downloadAppReady && showDownloadApp && (
+  //       <DownloadAppWrapper onClose={handleCloseDownloadApp} />
+  //     )} */}
+  //   </div>
+  // );
   const LoadedUI = () => (
     <div className="flex flex-col items-center pb-[2vw] mob:pb-[10vw] overflow-hidden">
       <div className="w-full relative overflow-hidden m-0 p-0">
-        {/* <VideoBanner
-          mobileVideoSrc="https://cdn.originfresh.in/website/Origin_9_16_v1.mp4"
-          desktopVideoSrc="https://cdn.originfresh.in/website/Origin_16_9_v1.mp4"
-          autoPlay={true}
-          muted={true}
-          loop={true}
-          controls={false}
-        /> */}
         <ShopHeroSingle />
         <FeatureStrip />
       </div>
 
-      <div className="flex flex-col gap-[6vw] mob:pl-[0vw] w-full mt-[4vw] mob:mt-[8vw]">
-        <CategorySection />
+      <div className="flex flex-col gap-[6vw] mob:pl-[0vw] w-full items-center">
+        <HomeCategorySection categories={mainCategoryData} loading={loading} title="Shop By Category" />
       </div>
 
       {subCategories?.map((section: any, index: number) => {
@@ -173,10 +234,7 @@ const ShopPage = (props: HomeProps) => {
 
         if (section.type === 'products-recommendation') {
           return (
-            <div
-              key={index}
-              className="px-[2vw]"
-            >
+            <div key={index} className="px-[2vw] w-full">
               {(isMobile || isTablet) ? (
                 <PopularProduceMob categoryDetail={section} />
               ) : (
@@ -185,27 +243,12 @@ const ShopPage = (props: HomeProps) => {
             </div>
           );
         }
-
-        // if (section.type === 'featured-item') {
-        //   return (
-        //     <div key={index} className="w-full">
-        //       <FeatureProduct featuredItem={section.data} />
-        //     </div>
-        //   );
-        // }
-
         return null;
       })}
-      <div className="">
-        <WhyOriginBanner />
-      </div>
 
-      {downloadAppReady && showDownloadApp && (
-        <DownloadAppWrapper onClose={handleCloseDownloadApp} />
-      )}
+
     </div>
   );
-
   return (
     <Layout mainMenuItems={mainMenuItems} isHeaderSticky={true} footerData={footerData}>
       <CustomHead

@@ -11,10 +11,11 @@ import type { LoginAtom } from '../types/LoginAtom';
 import { useAtom } from 'jotai';
 import { profileAtom } from '@/features/AccountPage/context/atoms';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoginDetails, setTabType, setUser } from '@/store/slice/loginSlice';
+import { setLoginDetails, setTabType, setUser, setIsFreshLogin } from '@/store/slice/loginSlice';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { removeRouteSourceFromLs } from '@/utilities/utils';
+import { handleLaunchResponse } from '@/utilities/launchHelper';
 import { access } from 'fs';
 
 interface Props {
@@ -33,81 +34,8 @@ const VerifyOTP = (props: Props) => {
   const [address, setAddress] = useAtom(addressAtom);
   const [mobileNumberErrors, setMobileNumberErrors] = useState('');
   const loginDetails = useSelector((state: any) => state.loginDetails);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const fetchAddressDetails = async (token: any) => {
-    let apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + '/api/v1/user/address';
-    const successHandler = (data: any) => {
-      // console.log(data,"DATA");
-      
-      // Find default address that is deliverable
-      let defaultAddress = data.data.find((item: any) => item.is_default && item.deliverable);
-      
-      // If default address is not deliverable, find any other deliverable address
-      if (!defaultAddress) {
-        defaultAddress = data.data.find((item: any) => item.deliverable);
-      }
-      
-      // Store the deliverable address details FIRST before setting state
-      if (defaultAddress && defaultAddress.deliverable) {
-        localStorage.setItem('store-id', JSON.stringify(defaultAddress.store_id));
-        localStorage.setItem('selected_address', JSON.stringify(defaultAddress));
-        // console.log('Selected deliverable address:', defaultAddress);
-      } else {
-        // console.log('No deliverable address found');
-        // Clear any existing stored address if none are deliverable
-        localStorage.removeItem('store-id');
-        localStorage.removeItem('selected_address');
-      }
-
-      setAddress({
-        loading: false,
-        success: false,
-        error: false,
-        address: data.data,
-        defaultAddress
-      });
-      // localStorage.setItem('user_token', loginDetails.user);
-      
-      if (!data?.data || !data.data.length) {
-        dispatch(
-          setLoginDetails({
-            isSidebarOpen: true,
-            isLogin: true,
-            user: token,
-            tabType: TabTypeConstant.MANAGE_ADDRESS
-          })
-        );
-      } else {
-        let tab_source = localStorage.getItem('tab_source');
-
-        if (tab_source) {
-          removeRouteSourceFromLs('tab_source');
-          dispatch(
-            setLoginDetails({
-              isSidebarOpen: true,
-              isLogin: true,
-              user: token,
-              tabType: JSON.parse(tab_source)
-            })
-          );
-        } else {
-          dispatch(
-            setLoginDetails({
-              isSidebarOpen: false,
-              isLogin: true,
-              user: token,
-              tabType: ''
-            })
-          );
-        }
-      }
-    };
-    const failureHandler = (data: any) => {
-      // console.log(data);
-    };
-
-    getDataFromApi(apiUrl, successHandler, failureHandler, {});
-  };
 
   const onSubmitOTP = async () => {
     if (!otp) {
@@ -115,6 +43,7 @@ const VerifyOTP = (props: Props) => {
       return;
     }
     setOtpErrors('');
+    setIsLoading(true);
 
     try {
       const formData = new FormData();
@@ -135,39 +64,40 @@ const VerifyOTP = (props: Props) => {
       });
 
       dispatch(setUser(response.access_token));
-      // console.log("TOKEN ",response.access_token);
       localStorage.setItem('user_token', response.access_token);
-      // console.log(localStorage.getItem('user_token'));
-      const token = localStorage.getItem('user_token')
-      const requestURLProfile = mainApiUrl.getProfileDetails;
 
-      const profileResponse: any = await request(requestURLProfile, {
+      const launchUrl = mainApiUrl.launch;
+      const launchResponse: any = await request(launchUrl, {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${response.access_token}`,
           Accept: 'application/json'
         }
       });
-      if (profileResponse.data) {
-        setMobileNumber('');
-      }
-      setProfileAtom({
-        ...profile,
-        data: profileResponse.data
-      });
-      if (!profileResponse.data.name) {
-        dispatch(setTabType(TabTypeConstant.REGISTER));
-      } else {
-        // this is a temp fix to get the updated state for address and profile
-        // window.location.reload()
-      }
-      if (profileResponse.data.profile) {
-        localStorage.setItem('user_token', response.access_token);
-        fetchAddressDetails(response.access_token);
-      }
+
+      dispatch(setIsFreshLogin(true));
+      handleLaunchResponse(launchResponse, dispatch, setAddress, setProfileAtom, response.access_token, true);
+      setMobileNumber('');
+
     } catch (error: any) {
-      const e = await error.response.json();
-      setOtpErrors(e.message);
+      if (error?.response?.status === 522) {
+        const token = localStorage.getItem('user_token');
+        if (token) {
+          dispatch(setLoginDetails({
+            isSidebarOpen: true,
+            isLogin: true,
+            user: token,
+            tabType: TabTypeConstant.REGISTER
+          }));
+          setMobileNumber('');
+          return;
+        }
+      }
+
+      const e = await error?.response?.json();
+      setOtpErrors(e?.message || 'Something went wrong');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -284,9 +214,10 @@ const VerifyOTP = (props: Props) => {
             setOtpErrors('Enter valid OTP');
           }
         }}
+        disabled={isLoading}
       >
         <div className={'mt-[24px]'}>
-          <PrimaryRoundedCta style="" name="Confirm" handler={onSubmitOTP} isDisabled={otp.length !== 4} />
+          <PrimaryRoundedCta style="" name="Confirm" handler={onSubmitOTP} isDisabled={otp.length !== 4} isLoading={isLoading} />
         </div>
         <TermsAndConditions />
       </button>

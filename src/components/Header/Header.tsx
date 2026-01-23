@@ -414,7 +414,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                   href="/shop"
                   className="h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full bg-primary text-black text-[1.1vw] font-medium font-[SofiaPro]"
                 >
-                  Shop All
+                  Explore Origin
                 </Link>
                 {!isMobile && isLoggedIn && (
                   <button

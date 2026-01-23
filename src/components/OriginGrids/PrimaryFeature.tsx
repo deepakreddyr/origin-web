@@ -2,7 +2,7 @@ import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import { Marquee } from '@devnomic/marquee';
 import { Box, Container, Typography, useTheme } from '@mui/material';
 
-const featureList = ['🥑 More than 500 products', '⏰ Priority Deliveries', '🚛 Easy Refunds/Returns'];
+const featureList = ['150+ Exotics ', '100+ Locally Grown Varieties ', 'Easy Refunds/Returns'];
 
 const PrimaryFeature = () => {
   const theme = useTheme();
@@ -15,18 +15,16 @@ const PrimaryFeature = () => {
             {featureList.map((text, index) => (
               <div
                 key={index}
-                className="flex items-center gap-3 w-max text-[1.25vw] font-[SofiaPro] whitespace-nowrap"
+                className="flex items-center gap-3 w-max text-[3vw] font-[SofiaPro] whitespace-nowrap"
               >
-                <span className="font-[SofiaPro] text-[5vw] font-medium">{text.split(' ')[0]}</span>
-                {text.slice(2)}
+                {text}
               </div>
             ))}
           </Marquee>
         ) : (
           featureList.map((text, index) => (
             <div key={index} className="flex items-center gap-3 font-[SofiaPro] w-max text-[1.25vw] whitespace-nowrap">
-              <span className="text-[1.389vw]  font-[SofiaPro] font-medium ">{text.split(' ')[0]}</span>
-              {text.slice(2)}
+              {text}
             </div>
           ))
         )}

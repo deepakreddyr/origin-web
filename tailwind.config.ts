@@ -11,6 +11,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         SofiaPro: ['"Sofia Pro"'],
+        Stinger: ['"Stinger"'],
       },
       colors: {
         danger: '#C70000',

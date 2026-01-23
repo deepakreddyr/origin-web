@@ -127,9 +127,9 @@ const FeaturedProduct = ({ featuredItem }: FeaturedProductProps) => {
         <div className="w-full md:w-[480px] shadow-md flex flex-col justify-between bg-[#FFFCF1] rounded-3xl mob:rounded-2xl shadow-xs overflow-hidden p-6 md:p-8 mob:p-5">
           {/* Top Content */}
           <div className="flex flex-col gap-3 mob:gap-2">
-            <h3 className="text-2xl md:text-[36px] mob:text-xl font-bold text-black leading-tight">
+            <h1 className="text-2xl md:text-[36px] mob:text-xl font-Stinger font-bold text-black leading-tight">
               {item.name}
-            </h3>
+            </h1>
 
             {defaultUom && (
               <>

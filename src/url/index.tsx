@@ -13,13 +13,15 @@ export const mainApiUrl = {
   cartCheckout: '/api/v5/user/checkout', // this will give time and other details
   placeOrder: '/api/v3/user/orders', // to be removed
   ordersActions: '/api/v3/user/orders',
-  getTestimonials: '/api/v1/public/testimonials'
+  getTestimonials: '/api/v1/public/testimonials',
+  launch: '/api/v5/user/launch'
 };
 
 export const unprotectedUrl: UrlMap = {
   getShopDetails: '/api/v5/public/skip-login/shop-all',
   searchForProduct: '/api/v5/public/skip-login/items',
-  getCategories: '/api/v5/public/skip-login/categories'
+  getCategories: '/api/v5/public/skip-login/categories',
+  getHomepage: '/api/v5/public/skip-login/homepage'
 };
 
 export const protectedUrl: UrlMap = {
@@ -37,6 +39,7 @@ export const protectedUrl: UrlMap = {
   clearCartItems: '/api/v3/user/cart/clear',
   retryPayment: '/api/v1/user/payment/razorpay/init/order',
   searchForProduct: '/api/v5/user/items',
-  updatePayment: '/api/v3/user/order/update/payment-method'
+  updatePayment: '/api/v3/user/order/update/payment-method',
+  getHomepage: '/api/v5/user/homepage'
 };
 // /api/5v / user / items;

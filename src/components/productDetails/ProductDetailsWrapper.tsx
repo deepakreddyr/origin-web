@@ -94,9 +94,8 @@ const MaxQuantityToast: React.FC<{
 
   return (
     <div
-      className={`fixed top-20 left-1/2 -translate-x-1/2 z-40 transition-opacity duration-300 ease-in-out ${
-        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-      }`}
+      className={`fixed top-20 left-1/2 -translate-x-1/2 z-40 transition-opacity duration-300 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
     >
       <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full relative">
         <div className="flex items-center justify-center w-full gap-2">
@@ -207,9 +206,8 @@ const BestPairingCollapsed: React.FC<{ productDetails: ProductDetails }> = ({ pr
           </div>
         </div>
         <svg
-          className={`w-5 h-5 text-gray-400 transform transition-transform duration-200 ${
-            isExpanded ? 'rotate-90' : ''
-          }`}
+          className={`w-5 h-5 text-gray-400 transform transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''
+            }`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -231,6 +229,128 @@ const BestPairingCollapsed: React.FC<{ productDetails: ProductDetails }> = ({ pr
           </div>
         </div>
       )}
+    </div>
+  );
+};
+// Combo Contains Section
+const ComboContains: React.FC<{ productDetails: ProductDetails }> = ({ productDetails }) => {
+  if (!productDetails.combo_items || productDetails.combo_items.length === 0) return null;
+
+  const defaultUOM = productDetails.item.multiple_uoms?.find(uom => uom.is_default) || productDetails.item.multiple_uoms?.[0];
+  const totalItems = productDetails.combo_items.length;
+
+  return (
+    <div className="mt-8 bg-[#FAF7F0] rounded-[24px] border border-[#EDE6CC]/50 p-6 mob:p-5">
+      <h3 className="font-Stinger font-bold text-2xl mob:text-xl text-[#231F20] mb-5 text-center">
+        Combo contains
+      </h3>
+
+      <div className="grid grid-cols-[1fr_auto_auto] items-stretch gap-x-4 mb-2">
+        {productDetails.combo_items.map((item, index) => {
+          const isLast = index === productDetails.combo_items.length - 1;
+          const borderClass = isLast ? "" : "border-b border-[#EDE6CC]/30";
+
+          // Parse name for sub-description (e.g., "Arbi (Colocassia Taro)")
+          const nameParts = item.item_name.match(/([^(]+)(?:\(([^)]+)\))?/);
+          const name = nameParts ? nameParts[1].trim() : item.item_name;
+          const subName = nameParts?.[2]?.trim();
+
+          return (
+            <React.Fragment key={index}>
+              <div className={`py-4 ${borderClass} text-start flex flex-col justify-center`}>
+                <p className="font-[SofiaPro] font-bold text-base mob:text-sm text-[#231F20] leading-tight">
+                  {name}
+                </p>
+                {subName && (
+                  <p className="font-[SofiaPro] italic text-xs text-[#231F20]/60">
+                    {subName}
+                  </p>
+                )}
+              </div>
+              <div className={`py-4 ${borderClass} flex items-center justify-center min-w-[3rem]`}>
+                <p className="font-[SofiaPro] text-base mob:text-sm text-[#231F20]/70">
+                  {item.qty}
+                </p>
+              </div>
+              <div className={`py-4 ${borderClass} flex items-center justify-end min-w-[5rem]`}>
+                <p className="font-[SofiaPro] text-base mob:text-sm text-[#231F20]/70">
+                  {item.uom}
+                </p>
+              </div>
+            </React.Fragment>
+          );
+        })}
+      </div>
+
+      <div className="flex items-center justify-between pt-4 border-t border-[#EDE6CC]">
+        <p className="font-[SofiaPro] font-bold text-lg text-[#231F20]">
+          Total ({totalItems} items)
+        </p>
+        <div className="flex items-center gap-4">
+          {defaultUOM && (
+            <div className="flex items-center gap-2">
+              <span className="text-[#231F20] font-bold text-xl">₹{defaultUOM.price}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Storing Information Section
+const StorageInfo: React.FC<{ info: ProductInfo }> = ({ info }) => {
+  const storageSection = info?.info?.find(section => section.type === 'storage');
+  if (!storageSection || !storageSection.details || storageSection.details.length === 0) return null;
+
+  return (
+    <div className="mt-4 w-[443px] mob:w-full bg-white rounded-[16px] border border-[#EDE6CC]/50 p-4 pb-[16px]">
+      <h3 className="font-Stinger font-bold text-xl text-[#231F20] mb-4 text-start">
+        Storing information
+      </h3>
+      <div className="flex flex-row overflow-x-auto gap-[12px] no-scrollbar">
+        {storageSection.details.map((detail: any, index: number) => (
+          <div key={index} className="flex-shrink-0 w-[184px] h-[50px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex items-center gap-[10px] border border-[#EDE6CC]/20 overflow-hidden">
+            <div className="w-6 h-6 relative flex-shrink-0 bg-white rounded-full p-1">
+              <Image src={detail.image} alt={detail.title} fill className="object-contain p-1" />
+            </div>
+            <div className="min-w-0">
+              <p className="font-[SofiaPro] font-bold text-[13px] text-[#231F20] leading-tight truncate">
+                {detail.title}
+              </p>
+              <p className="font-[SofiaPro] text-[10px] text-[#231F20]/70 leading-tight truncate">
+                {detail.description}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Nutrition Benefits Section
+const NutritionBenefits: React.FC<{ info: ProductInfo }> = ({ info }) => {
+  const nutritionSection = info?.info?.find(section => section.type === 'nutrition');
+  if (!nutritionSection || !nutritionSection.details || nutritionSection.details.length === 0) return null;
+
+  return (
+    <div className="mt-4 w-[443px] mob:w-full bg-white rounded-[16px] border border-[#EDE6CC]/50 p-4 pb-[16px]">
+      <h3 className="font-Stinger font-bold text-xl text-[#231F20] mb-4 text-start">
+        Nutrition benefits
+      </h3>
+      <div className="flex flex-row overflow-x-auto gap-[12px] no-scrollbar">
+        {nutritionSection.details.map((detail: any, index: number) => (
+          <div key={index} className="flex-shrink-0 w-[184px] h-[50px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex flex-col justify-center border border-[#EDE6CC]/20 overflow-hidden">
+            <p className="font-[SofiaPro] font-bold text-base text-[#231F20] leading-tight truncate">
+              {detail.title}
+            </p>
+            <p className="font-[SofiaPro] text-[9px] text-[#231F20]/70 uppercase tracking-wide truncate">
+              {detail.description}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
@@ -378,12 +498,11 @@ const ProductDetailsWrapper = () => {
           onClose={() => setShowMaxQuantityToast(false)}
         />
 
-        <div className="max-w-6xl mx-auto px-8 py-12 mob:px-4 mob:py-6">
+        <div className="max-w-6xl mx-auto py-7 mob:px-4 mob:py-6">
           {mobile ? (
             <div className="space-y-8">
-              <div className="flex justify-center">
-                {/* --- MOBILE VIEW: Image Container UPDATED for relative positioning --- */}
-                <div className="relative w-80 h-80 bg-transparent">
+              <div className="flex flex-col items-start">
+                <div className="relative w-80 h-80 bg-transparent self-center">
                   <Image
                     src={productDetails.item.image}
                     fill
@@ -401,17 +520,19 @@ const ProductDetailsWrapper = () => {
                 </div>
               </div>
               <div className="text-center space-y-4">
-                <h1 className="text-3xl font-bold text-gray-900">{productDetails.item.name}</h1>
+                <h1 className="text-4xl mob:text-[8vw] font-Stinger font-bold text-[#231F20] leading-tight">
+                  {productDetails.item.name}
+                </h1>
 
-                {defaultUOM && (
-                  <>
-                    <div className="text-2xl font-[SofiaPro] font-bold text-gray-900">
+                {/* {defaultUOM && ( */}
+                {/* <> */}
+                {/* <div className="text-2xl font-[SofiaPro] font-bold text-gray-900">
                       ₹{defaultUOM.price}
-                    </div>
-                    {/* Removed the old centralized Image component here */}
-                    <div className="text-gray-500 font-[SofiaPro] text-sm">{defaultUOM.unit}</div>
-                  </>
-                )}
+                    </div> */}
+                {/* Removed the old centralized Image component here */}
+                {/* <div className="text-gray-500 font-[SofiaPro] text-sm">{defaultUOM.unit}</div> */}
+                {/* </> */}
+                {/* )} */}
 
                 <div className='font-[SofiaPro]'>
                   <AddItemBtn
@@ -426,16 +547,22 @@ const ProductDetailsWrapper = () => {
                   />
                 </div>
 
+                <div className="w-full text-start space-y-4">
+                  <StorageInfo info={productDetails.info} />
+                  <NutritionBenefits info={productDetails.info} />
+                </div>
+
                 {productDescription && (
                   <p className="text-gray-700 leading-relaxed text-sm mt-6">{productDescription}</p>
                 )}
 
                 <BestPairingCollapsed productDetails={productDetails} />
+                <ComboContains productDetails={productDetails} />
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-16 min-h-[550px]">
-              <div className="flex-1 flex justify-center">
+            <div className="flex items-start gap-16 min-h-[550px]">
+              <div className="flex-1 flex flex-col items-start">
                 {/* --- DESKTOP VIEW: Image Container UPDATED for relative positioning --- */}
                 <div className="relative w-96 h-96 bg-transparent">
                   <Image
@@ -454,11 +581,15 @@ const ProductDetailsWrapper = () => {
                   )}
                   {/* --- END NEW --- */}
                 </div>
+                <div className="w-96 mt-6 space-y-4">
+                  <StorageInfo info={productDetails.info} />
+                  <NutritionBenefits info={productDetails.info} />
+                </div>
               </div>
 
               <div className="flex-1 max-w-lg space-y-6">
                 <div>
-                  <h1 className="text-4xl font-bold text-gray-900 mb-3 leading-tight">
+                  <h1 className="text-4xl font-Stinger font-bold text-[#231F20] mb-3 leading-tight">
                     {productDetails.item.name}
                   </h1>
 
@@ -486,6 +617,7 @@ const ProductDetailsWrapper = () => {
                 )}
 
                 <BestPairingCollapsed productDetails={productDetails} />
+                <ComboContains productDetails={productDetails} />
               </div>
             </div>
           )}

@@ -5,7 +5,8 @@ const initialState = {
   isLogin: false,
   tabType: '',
   user: null,
-  isHeaderVisible: true
+  isHeaderVisible: true,
+  isFreshLogin: false
 };
 
 export const loginSlice = createSlice({
@@ -27,6 +28,9 @@ export const loginSlice = createSlice({
     setIsHeaderVisible: (state, action) => {
       state.isHeaderVisible = action.payload;
     },
+    setIsFreshLogin: (state, action) => {
+      state.isFreshLogin = action.payload;
+    },
     setLoginDetails: (state, action) => {
       // Ensure the action payload contains the correct keys to prevent unintended state changes
       const { isSidebarOpen, isLogin, tabType, user } = action.payload;
@@ -38,6 +42,6 @@ export const loginSlice = createSlice({
   }
 });
 
-export const { setIsSidebarOpen, setIsLogin, setTabType, setUser, setLoginDetails, setIsHeaderVisible } =
+export const { setIsSidebarOpen, setIsLogin, setTabType, setUser, setLoginDetails, setIsHeaderVisible, setIsFreshLogin } =
   loginSlice.actions;
 export default loginSlice.reducer;

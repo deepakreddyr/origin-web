@@ -156,7 +156,7 @@ const Product = (props: Props) => {
       <Grid item className={styles['product-container']} key={product.id} xs={6}>
         <Box className={`product-list-item ${styles['product-list-item']}`}>
           <Box component="figure" className={styles['img-container']}>
-            <img className={styles.img} src={`https://admin.madrasmandi.in/${product.image}`} alt={product.name} />
+            <img className={styles.img} src={`https://admin.wholesalemandi.com/${product.image}`} alt={product.name} />
           </Box>
           <Box className={styles['details-container']}>
             <Typography component="h3" className={styles.name}>

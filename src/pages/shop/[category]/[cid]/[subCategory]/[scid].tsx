@@ -212,9 +212,9 @@ const ShopDetails = (props: HomeProps) => {
           <CardsWrapper />
         </div>
       </div>
-      <div className='mob:mb-[2vw]'>
+      {/* <div className='mob:mb-[2vw]'>
         <CategorySection />
-      </div>
+      </div> */}
       <div className="flex flex-col gap-[2.2vw] w-[80.7vw] pt-[2.5vw] mob:w-full mob:px-[4vw] pb-[3vw] relative mx-auto">
         <WhyOriginAndTestimonial category={filters.category} />
       </div>

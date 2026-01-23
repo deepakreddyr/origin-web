@@ -35,7 +35,7 @@ type Data = {
 const data: Data = {
   mainMenuItems: [
     {
-      label: 'Shop All',
+      label: 'Explore Origin',
       submenu: [
         { label: 'Essentials', link: '/shop-all/essentials' },
         { label: 'Fresh Fruits', link: '/shop-all/fresh-fruits' },
@@ -65,7 +65,7 @@ const data: Data = {
     footerLinksPrimary: [
       { text: 'Home', href: 'shop' },
       // { text: 'About Us', href: 'about' },
-      { text: 'Shop All', href: 'shop' },
+      { text: 'Explore Origin', href: 'shop' },
       // { text: 'Contact', href: 'contact' }
     ],
     footerLinksSecondary: [
@@ -84,11 +84,11 @@ const data: Data = {
   uspCardsData: [
     {
       icon: '/assets/icons/origin-icons/fresh.svg',
-      title: 'As Fresh as the golden days'
+      title: 'Delivered within 48 hours of harvest '
     },
     {
       icon: '/assets/icons/origin-icons/recycle.svg',
-      title: 'Zero Waste Management'
+      title: 'Less than 5% wastage'
     },
     {
       icon: '/assets/icons/origin-icons/truck.svg',
@@ -103,7 +103,7 @@ const data: Data = {
     {
       actionLabel: 'Shop all',
       url: '/shop',
-      title: 'Shop All',
+      title: 'Explore Origin',
       image: '/assets/images/categories/1.png'
     },
     {

@@ -21,7 +21,7 @@ const RequestOTP = (props: Props) => {
   const { otpErrors, setOtpErrors } = props;
   const [mobileNumberErrors, setMobileNumberErrors] = useState('');
   const [isNumberDisabled, setIsNumberDisabled] = useState(true);
-  // const [otpErrors, setOtpErrors] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
   const isMobileNumberValid = (number: any) => {
@@ -35,6 +35,8 @@ const RequestOTP = (props: Props) => {
       setMobileNumberErrors('Incorrect mobile number');
       return;
     }
+
+    setIsLoading(true);
     try {
       setOtpErrors('');
       const formData = new FormData();
@@ -53,6 +55,8 @@ const RequestOTP = (props: Props) => {
       setMobileNumberErrors('');
     } catch (error) {
       setMobileNumberErrors('Unable to login please try later');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -106,7 +110,7 @@ const RequestOTP = (props: Props) => {
         </div>
 
         <div className={'mt-[24px]'}>
-          <PrimaryRoundedCta style="" name="Get OTP" handler={onSubmitMobileNumber} isDisabled={isButtonDisabled} />
+          <PrimaryRoundedCta style="" name="Get OTP" handler={onSubmitMobileNumber} isDisabled={isButtonDisabled} isLoading={isLoading} />
         </div>
       </div>
       <TermsAndConditions />

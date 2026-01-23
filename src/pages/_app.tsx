@@ -11,6 +11,7 @@ import { wrapper } from '@/store/store';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
+import GlobalLaunchListener from '@/components/GlobalLaunchListener';
 
 const APP_VERSION = '1.1.5';
 
@@ -114,7 +115,6 @@ const handleInvoiceDeepLink = (router: any) => {
   }
 };
 
-// import GlobalLaunchListener from '@/components/GlobalLaunchListener';
 
 // --- Main App ---
 export default function App({ Component, pageProps, ...rest }: AppProps) {
@@ -148,7 +148,7 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
 
   return (
     <Provider store={store}>
-      {/* <GlobalLaunchListener /> */}
+      <GlobalLaunchListener />
       <LocalizationProvider dateAdapter={AdapterLuxon}>
         <Head>
           {/* Viewport in _app.tsx as a consistent baseline */}

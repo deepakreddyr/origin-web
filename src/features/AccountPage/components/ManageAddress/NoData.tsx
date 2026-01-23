@@ -16,74 +16,49 @@ const NoData = (props: Props) => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "between",
-
+        justifyContent: "center", // Changed to center
         textAlign: "center",
         gap: 1,
-        paddingTop: "20px",
-        paddingBottom: "20px",
-        height: "74vh",
+        height: "100%", // Take full height of container
+        minHeight: "60vh", // Minimum height to ensure vertical centering looks good
       }}
     >
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          marginTop: "8vw",
+          width: "80px",
+          height: "80px",
+          marginBottom: "20px",
+          position: "relative"
         }}
       >
-        <Image src={NoDataIcon} alt="" />
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 1,
-          }}
-        >
-          <Typography
-            variant="h6"
-            sx={{ fontWeight: 500, fontFamily: "SofiaPro", fontSize: "20px" }}
-          >
-            No addresses saved
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              color: "rgba(0, 0, 0, 0.60)",
-              fontFamily: "SofiaPro",
-              fontSize: "14px",
-            }}
-          >
-            Add address by clicking on the + New Address button below.
-          </Typography>
-        </Box>
+        <Image src={NoDataIcon} alt="No Address" fill style={{ objectFit: 'contain' }} />
       </Box>
-      {/* <Button
-        variant="contained"
-        color="success"
+
+      <Typography
+        variant="h6"
         sx={{
-          marginTop: "auto",
-          backgroundColor: "#FFDD00",
-          color: "black",
-          borderRadius: "25px",
+          fontWeight: 700,
           fontFamily: "SofiaPro",
-          fontSize: "16px",
-          fontWeight: 600,
-          textTransform: "capitalize",
-          boxShadow: "none",
-          width: "100%",
-          ":hover": {
-            backgroundColor: "#ffdd00a6",
-            color: "black",
-            boxShadow: "none",
-          },
+          fontSize: "20px",
+          color: "#000",
+          marginBottom: "8px"
         }}
-        onClick={onEditAddress}
       >
-        + New Address
-      </Button> */}
+        No addresses saved
+      </Typography>
+
+      <Typography
+        variant="body1"
+        sx={{
+          color: "rgba(0, 0, 0, 0.60)",
+          fontFamily: "SofiaPro",
+          fontSize: "14px",
+          maxWidth: "80%",
+          lineHeight: 1.5
+        }}
+      >
+        Add address by clicking on the + New Address button below.
+      </Typography>
     </Box>
   );
 };

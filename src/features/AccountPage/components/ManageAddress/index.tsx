@@ -54,10 +54,10 @@ const ManageAddress = () => {
   const getDataFromApi = useGetDataFromApi();
 
   useEffect(() => {
-    if (!address?.address) {
+    if (!address?.address || address.address.length === 0) {
       setActiveScreen('NO_DATA');
     }
-  }, []);
+  }, [address]);
 
   const onEditAddress = () => {
     setActiveScreen(manageAddressScreens.SERVICEABILITY);
