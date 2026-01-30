@@ -27,7 +27,7 @@ type Props = {
   mainMenuItems: MainMenuType[];
   isHeaderSticky: any;
   search?: boolean;
-  transparentColor?: 'black'; // NEW PROP
+  transparentColor?: 'white' | 'black';
 };
 
 // HELPER FUNCTION: Calculate total cart line items from nested structure
@@ -84,7 +84,7 @@ const AnimatedPlaceholder = () => {
   );
 };
 
-const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColor = 'black' }: Props) => {
+const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColor = 'white' }: Props) => {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [topBarTransition, setTopBarTransition] = useState(false);

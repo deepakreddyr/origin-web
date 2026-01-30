@@ -10,7 +10,8 @@ import FreshlyArrivedBanner from "/public/assets/images/shop/FreshlyArrivedBanne
 import FruitsBanner from "/public/assets/images/shop/FruitsBanner.png";
 import HydroponicsBanner from "/public/assets/images/shop/HydroponicsBanner.png";
 import GourmetBanner from "/public/assets/images/shop/GourmetBanner.png";
-
+import MobBanner from "/public/assets/images/shop/Mobile_Banner.png";
+import Web from "/public/assets/images/shop/WebBanner.png";
 import vege from "/public/assets/images/shop/VeggiesBanner.png";
 // Map normalized keywords -> banner images
 const bannerMap: Record<string, any> = {
@@ -89,12 +90,12 @@ export const ShopHeroSingle = () => {
         "
       >
         <Image
-          src={isMobile ? "https://cdn.originfresh.in/website/banners-jan-21-2026-01.webp" : "https://cdn.originfresh.in/website/banners-jan-21-202602.webp"}
+          src={isMobile ? MobBanner : Web}
           alt="Shop Hero Single Banner"
           fill
           priority
           quality={100}
-          className="object-fit"
+          className="object-cover"
         />
       </div>
     </div>
