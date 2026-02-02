@@ -12,6 +12,11 @@ import { any } from 'zod';
 // --- ASSUMED IMPORT FOR THE ITEMCARD COMPONENT ---
 // Please adjust this path to where your ItemCard is actually located.
 import ItemCard from '@/components/shared/ItemCard';
+import OriginButton from '@/components/OriginButton/OriginButton';
+import notifymeSvg from '/public/assets/svg/notifyme.svg';
+import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
+import { protectedUrl } from '@/url';
+import { setIsSidebarOpen } from '@/store/slice/loginSlice';
 // --- END ASSUMED IMPORT ---
 
 // Updated Product interface to match your API response
@@ -185,8 +190,8 @@ const UOMPopup: React.FC<{
               <button
                 key={uom.variant_id}
                 className={`border-2 rounded-full px-4 py-2 text-sm transition-all ${modalUOM?.variant_id === uom.variant_id
-                    ? 'border-yellow bg-yellow-100 text-black font-bold'
-                    : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                  ? 'border-yellow bg-yellow-100 text-black font-bold'
+                  : 'border-gray-200 hover:border-gray-300 text-gray-700'
                   }`}
                 onClick={() => handleUOMSelect(uom)}
               >
@@ -204,8 +209,8 @@ const UOMPopup: React.FC<{
                   <button
                     key={ripeness}
                     className={`border-2 rounded-full px-4 py-2 text-sm capitalize transition-all ${modalRipeness === ripeness
-                        ? 'border-green-500 bg-green-100 text-green-800 font-bold'
-                        : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                      ? 'border-green-500 bg-green-100 text-green-800 font-bold'
+                      : 'border-gray-200 hover:border-gray-300 text-gray-700'
                       }`}
                     onClick={() => setModalRipeness(ripeness)}
                   >
@@ -259,9 +264,136 @@ const UOMPopup: React.FC<{
   );
 };
 
-// REMOVING ProductCard definition and using the imported ItemCard instead.
-// The ItemCard component from the previous context is assumed to have replaced this definition.
+// Request Item Modal component
+const RequestItemModal: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  initialValue: string;
+}> = ({ isOpen, onClose, initialValue }) => {
+  const [itemName, setItemName] = useState(initialValue);
+  const [lastSubmittedName, setLastSubmittedName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [isPendingPostLogin, setIsPendingPostLogin] = useState(false);
 
+  const isLogin = useSelector((state: any) => state.loginDetails.isLogin);
+  const dispatch = useDispatch();
+  const sendDataToApi = useSendDataToApi();
+
+  useEffect(() => {
+    if (isOpen) {
+      setItemName(initialValue);
+      setLastSubmittedName("");
+      setSuccess(false);
+      setIsPendingPostLogin(false);
+    }
+  }, [isOpen, initialValue]);
+
+  const submitRequest = async () => {
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['requestItems'];
+    const payload = { item_name: itemName };
+
+    const successHandler = () => {
+      setSuccess(true);
+      setLastSubmittedName(itemName);
+      setIsPendingPostLogin(false);
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+    };
+
+    const failureHandler = (error: any) => {
+      console.error("Request Item API error:", error);
+      setIsPendingPostLogin(false);
+    };
+
+    setLoading(true);
+    await sendDataToApi(apiUrl, payload, 'POST', successHandler, failureHandler, {});
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (isOpen && isLogin && isPendingPostLogin && !loading && !success) {
+      submitRequest();
+    }
+  }, [isLogin, isPendingPostLogin, isOpen]);
+
+  const handleSubmit = async () => {
+    if (!itemName.trim() || itemName === lastSubmittedName) return;
+
+    if (!isLogin) {
+      setIsPendingPostLogin(true);
+      dispatch(setIsSidebarOpen(true));
+      return;
+    }
+
+    await submitRequest();
+  };
+
+  if (!isOpen) return null;
+
+  const isButtonDisabled = !itemName.trim() || loading || itemName === lastSubmittedName;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4">
+      <div className="bg-white rounded-[2rem] p-8 w-full max-w-md relative animate-in fade-in zoom-in duration-300">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-black transition-colors"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <div className="text-center space-y-4">
+          <h3 className="font-[SofiaPro] font-bold text-2xl text-black">Help us stock better</h3>
+
+          {success ? (
+            <div className="py-8">
+              <div className="text-green-500 text-5xl mb-4 text-center flex justify-center">✓</div>
+              <p className="font-[SofiaPro] text-gray-600">Your request has been submitted!</p>
+            </div>
+          ) : (
+            <>
+              <p className="font-[SofiaPro] text-gray-600">
+                Share more about the product you’re looking for.
+              </p>
+              <div className="pt-2 text-start">
+                <label className="text-sm font-semibold text-gray-500 mb-1 block">Item Name</label>
+                <input
+                  type="text"
+                  maxLength={50}
+                  value={itemName}
+                  onChange={(e) => setItemName(e.target.value)}
+                  className="w-full border-2 border-gray-100 rounded-xl px-4 py-3 focus:border-yellow-400 outline-none transition-all font-[SofiaPro] text-black"
+                  placeholder="e.g. Alphonso Mangoes"
+                />
+                <span className="text-[10px] text-gray-400 mt-1 block text-right">
+                  {itemName.length}/50 characters
+                </span>
+              </div>
+              <OriginButton
+                variant={isButtonDisabled && isLogin ? "disabled" : "primary"}
+                buttonText={
+                  loading
+                    ? "Submitting..."
+                    : !isLogin
+                      ? "Login to request for an item"
+                      : (itemName === lastSubmittedName && lastSubmittedName !== "")
+                        ? "Request Submitted"
+                        : "Submit Request"
+                }
+                handleClick={handleSubmit}
+                className="w-full mt-4 !h-14 flex justify-center items-center"
+              />
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // LoadingCard component (KEPT)
 const LoadingCard: React.FC = () => (
@@ -294,6 +426,7 @@ const SearchResults = (props: HomeProps) => {
   const [currentSearchQuery, setCurrentSearchQuery] = useState('');
   const [noResults, setNoResults] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -422,10 +555,10 @@ const SearchResults = (props: HomeProps) => {
 
   return (
     <Layout mainMenuItems={mainMenuItems} isHeaderSticky={true} footerData={footerData} search={true} useTopPadding={true}>
-      <div className="min-h-screen bg-[#FFF9E5]">
-
+      {/* <div className="min-h-screen bg-[#FFF9E5]"> */}
+      <div className="min-h-screen">
         {/* Search Results */}
-        <div className="max-w-[90vw] mx-auto px-[2vw] mob:px-[5vw] py-[3vw] mob:py-[6vw]">
+        <div className="max-w-[90vw] mx-auto px-[2vw] py-[3vw] mob:py-[6vw]">
           {/* Results Header */}
           {!loading && !noResults && totalCount > 0 && (
             <div className="mb-[3vw] mob:mb-[6vw]">
@@ -449,14 +582,21 @@ const SearchResults = (props: HomeProps) => {
 
           {/* No Results */}
           {noResults && !loading && (
-            <div className="text-center py-[8vw] mob:py-[20vw]">
-              <div className="text-[4vw] mob:text-[12vw] mb-[2vw] mob:mb-[4vw]">🔍</div>
-              <h3 className="font-[SofiaPro] font-semibold text-[1.5vw] mob:text-[5vw] text-black mb-[1vw] mob:mb-[3vw]">
-                No products found
-              </h3>
-              <p className="font-[SofiaPro] text-[1vw] mob:text-[3.5vw] text-gray-600 mb-[3vw] mob:mb-[6vw]">
-                Try searching with different keywords or browse our categories
+            <div className="flex flex-col items-center justify-center py-[8vw] mob:py-[20vw] text-center w-full mx-auto">
+              <div className="mb-[2vw] mob:mb-[4vw]">
+                <Image src={notifymeSvg} alt="Notify Me" width={200} height={200} className="w-[20vw] mob:w-[80vw] h-auto" />
+              </div>
+              <p className="font-[SofiaPro] font-semibold text-[1.5vw] mob:text-[4.47vw] text-black mb-[1vw] mob:mb-[3vw]">
+                Sorry, looks like we don’t have {searchQuery}!
               </p>
+              <p className="font-[SofiaPro] text-[1vw] mob:text-[3.5vw] text-gray-600 mb-[3vw] mob:mb-[6vw]">
+                Request the product, and we’ll work on bringing it in.
+              </p>
+              <OriginButton
+                buttonText="Request Item"
+                handleClick={() => setIsRequestModalOpen(true)}
+                className="px-10 py-3 flex justify-center font-[SofiaPro] font-bold items-center"
+              />
             </div>
           )}
 
@@ -495,6 +635,11 @@ const SearchResults = (props: HomeProps) => {
             </>
           )}
         </div>
+        <RequestItemModal
+          isOpen={isRequestModalOpen}
+          onClose={() => setIsRequestModalOpen(false)}
+          initialValue={typeof searchQuery === 'string' ? searchQuery : ''}
+        />
       </div>
     </Layout>
   );

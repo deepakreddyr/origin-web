@@ -1,10 +1,17 @@
 import Image from 'next/image';
+import { Box, useMediaQuery } from '@mui/material';
 import React, { useState, useEffect, useRef, FC } from 'react';
 import AddItemBtn from './AddItemBtn/AddItemBtn';
 import { useRouter } from 'next/router';
 import sampleimg from '/public/assets/images/shop/sampleimg2.png';
 import { useSelector } from 'react-redux';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
+import { getAddressAndStoreId } from '@/utilities/utils';
+import { protectedUrl } from '@/url';
+import { useDispatch } from 'react-redux';
+import { addNotifiedItem } from '@/store/slice/productsSlice';
 
 // --- SVG IMPORTS ---
 import ripeSvg from '/public/assets/svg/ripe.svg';
@@ -105,6 +112,46 @@ const MaxQuantityToast: FC<{
           <InfoOutlinedIcon sx={{ color: 'yellow', fontSize: '1.2rem' }} />
           <p className="text-[0.70rem] font-semibold text-white text-center leading-tight">
             Maximum quantity of {maxQuantity} reached for {itemName}.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --------------------------------------------------------
+// NOTIFY TOAST COMPONENT
+// --------------------------------------------------------
+const NotifyToast: FC<{
+  message: string;
+  isVisible: boolean;
+  onClose: () => void;
+  type: 'success' | 'error';
+}> = ({ message, isVisible, onClose, type }) => {
+
+  useEffect(() => {
+    if (isVisible) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, onClose]);
+
+  if (!isVisible) return null;
+
+  return (
+    <div
+      className={`fixed z-[100] left-1/2 bottom-10 transform -translate-x-1/2 w-[90%] max-w-sm transition-all duration-300 ease-in-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+        }`}
+    >
+      <div className="flex items-center bg-black rounded-full shadow-2xl h-12 px-6 w-full relative">
+        <div className="flex items-center justify-center w-full gap-3">
+          {type === 'error' && (
+            <InfoOutlinedIcon sx={{ color: '#FFDD00', fontSize: '1.2rem' }} />
+          )}
+          <p className="text-[0.80rem] font-medium text-white text-center leading-tight font-[SofiaPro]">
+            {message}
           </p>
         </div>
       </div>
@@ -258,7 +305,7 @@ const UOMPopup: FC<{
 
   return (
     <div
-      className={`fixed inset-0 z-50 transition-opacity duration-300 ${isTransitioning ? 'bg-black bg-opacity-50' : 'bg-black bg-opacity-0 pointer-events-none'}`}
+      className={`fixed inset-0 z-[1001] transition-opacity duration-300 ${isTransitioning ? 'bg-black bg-opacity-50' : 'bg-black bg-opacity-0 pointer-events-none'}`}
       onClick={onClose}
     >
       <div
@@ -279,21 +326,21 @@ const UOMPopup: FC<{
         <div className="flex-shrink-0 p-4 pb-3 border-b border-gray-100 relative">
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 transition-colors"
+            className="absolute top-2 right-2 text-black hover:bg-gray-100 p-2 rounded-full transition-colors z-[60]"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
 
-          <div className="flex items-start gap-3 pr-8">
-            <div className="w-10 h-10 rounded-xl overflow-hidden bg-gray-50 flex-shrink-0" style={{ backgroundColor: '#FFF9E5' }}>
-              <Image src={product.image || sampleimg} alt={product.name} width={40} height={40} className="w-full h-full object-contain" />
+          <div className="flex items-center gap-4 pr-10">
+            <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#FAF7EF] flex-shrink-0 flex items-center justify-center border border-gray-100 p-2">
+              <Image src={product.image || sampleimg} alt={product.name} width={60} height={60} className="w-full h-full object-contain" />
             </div>
-            <div className="flex-1 pt-1">
-              <h3 className="font-[SofiaPro] font-bold text-lg text-gray-900 leading-tight">
+            <div className="flex-1">
+              <p className="font-[SofiaPro] font-bold text-lg text-[#146321] leading-tight">
                 {product.name}
-              </h3>
+              </p>
             </div>
           </div>
         </div>
@@ -355,51 +402,67 @@ const UOMPopup: FC<{
               : '';
 
             const hasDiscount = variant.market_price > variant.price;
+            const discountPercent = hasDiscount
+              ? Math.round(((variant.market_price - variant.price) / variant.market_price) * 100)
+              : 0;
+
+            const ripenessSvg = ripenessLabel ? getRipenessSvg(ripenessLabel) : null;
 
             return (
               <div
                 key={`${variant.variant_id}-${ripenessLabel}`}
-                className={`flex items-center justify-between p-3 rounded-xl border transition-colors ${isSelected ? 'bg-yellow-50' : ' hover:border-gray-300'
-                  }`}
+                className="flex items-center justify-between p-4 border-b border-solid border-[#EDE6D4] last:border-0 relative"
               >
-                <div className="flex items-center flex-1 pr-2">
-                  {getRipenessSvg(ripenessLabel) && (
-                    <Image src={getRipenessSvg(ripenessLabel)!} alt={ripenessLabel} width={20} height={20} className="mr-2 flex-shrink-0" />
+                <div className="flex items-center gap-2 w-1/3 min-w-0 flex-shrink-0">
+                  {ripenessSvg && (
+                    <div className="flex-shrink-0">
+                      <Image src={ripenessSvg} alt={ripenessLabel} width={20} height={20} />
+                    </div>
                   )}
-
-                  <div className="flex-1">
-                    <p className="font-semibold text-gray-800 capitalize leading-none text-base font-[SofiaPro]">
-                      {ripenessLabel}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1 font-[SofiaPro]">
-                      {variant.unit}
-                    </p>
-                  </div>
+                  <p className="font-semibold text-gray-900 text-sm font-[SofiaPro] capitalize truncate">
+                    {ripenessLabel || "Standard"}
+                  </p>
                 </div>
 
-                <div className="flex flex-col items-end mr-3 flex-shrink-0">
+                <div className="flex-1 text-center flex-shrink-0">
+                  <p className="text-gray-600 text-sm font-[SofiaPro]">
+                    {variant.unit}
+                  </p>
+                </div>
+
+                <div className="flex flex-col items-center justify-center px-2 w-[85px] flex-shrink-0">
+                  {/* {discountPercent > 0 && (
+                    <div className="bg-[#146321] text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-tight mb-1">
+                      Save {discountPercent}%
+                    </div>
+                  )} */}
                   <div className="flex items-center gap-1">
                     {hasDiscount && (
-                      <span className="line-through text-xs text-gray-400 font-[SofiaPro]">
+                      <span className="line-through text-[10px] text-gray-400 font-[SofiaPro]">
                         ₹{variant.market_price}
                       </span>
                     )}
-                    <span className="font-bold text-lg text-gray-900 font-[SofiaPro]">
+                    <p className="font-bold text-sm text-[#146321] font-[SofiaPro]">
                       ₹{variant.price}
-                    </span>
+                    </p>
                   </div>
                 </div>
 
-                <div className="w-[90px] flex-shrink-0">
+                <div className="flex-shrink-0 ml-1">
                   <AddItemBtn
                     product={product}
                     varientId={variant.variant_id}
                     varientPrice={variant.price}
                     stepperQuantity={variant.stepper_quantity}
                     minimumQuantity={variant.minimum_quantity}
-                    buttonType="black"
+                    buttonType="white"
                     selectedRipenessType={variant.selected_ripeness_type}
-                    onCartUpdate={() => onSelectionMade(variant, variant.selected_ripeness_type || null)}
+                    onCartUpdate={() =>
+                      onSelectionMade(
+                        variant,
+                        variant.selected_ripeness_type || null
+                      )
+                    }
                     onMaxQuantityExceeded={handleMaxQuantityExceeded}
                   />
                 </div>
@@ -462,9 +525,47 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
   const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
   const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
 
+  // --- NOTIFY ME STATE ---
+  const [showNotifyToast, setShowNotifyToast] = useState(false);
+  const [notifyMsg, setNotifyMsg] = useState("");
+  const [notifyType, setNotifyType] = useState<'success' | 'error'>('success');
+
+  const notifiedItems = useSelector((state: any) => state.products.notifiedItems);
+  const isNotified = notifiedItems.includes(itemDetails.id);
+
+  const dispatch = useDispatch();
+  const sendDataToApi = useSendDataToApi();
+  const isMobile = useMediaQuery('(max-width:600px)');
+  // -----------------------
+
   const handleMaxQuantityExceeded = (maxQty: number) => {
     setToastMaxQuantity(maxQty);
     setShowMaxQuantityToast(true);
+  };
+
+  const handleNotifyMe = async () => {
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['notifyMe'];
+    const addressFromLs = getAddressAndStoreId();
+    const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
+
+    const payload = {
+      item_id: itemDetails.id
+    };
+
+    const successHandler = (data: any) => {
+      setNotifyMsg(data?.message || "Successfully subscribed to notifications");
+      setNotifyType('success');
+      setShowNotifyToast(true);
+      dispatch(addNotifiedItem(itemDetails.id));
+    };
+
+    const failureHandler = (error: any) => {
+      setNotifyMsg(error?.message || "Not successful. Please try again later.");
+      setNotifyType('error');
+      setShowNotifyToast(true);
+    };
+
+    await sendDataToApi(apiUrl, payload, 'POST', successHandler, failureHandler, additionalHeaders);
   };
 
   if (!defaultUOM) return null;
@@ -542,10 +643,9 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
       />
 
       <div
-        className={`w-full md:max-w-[16.67vw] text-start relative ${!selectedUOM.is_available ? 'opacity-50' : 'opacity-100'}`}
+        className="w-full md:max-w-[16.67vw] text-start relative"
       >
         <button
-          disabled={!selectedUOM.is_available}
           onClick={handleNavigation}
           className="cursor-pointer w-full text-start group"
         >
@@ -553,7 +653,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
           <div
             className="relative bg-primary-100 flex items-center justify-center w-[16.67vw] mob:w-[40vw] h-[14.5vw] mob:h-[38vw] rounded-[1.67vw] mob:rounded-[4.1vw] overflow-hidden"
           >
-            <div className="relative w-[12.6vw] h-[12vw] mob:w-[24vw] mob:h-[22vw] transition-transform duration-500 group-hover:scale-105">
+            <div className={`relative w-[12.6vw] h-[12vw] mob:w-[24vw] mob:h-[22vw] transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}>
               <Image
                 src={itemDetails.image || sampleimg}
                 alt={itemDetails.name ? itemDetails.name : 'product image'}
@@ -575,7 +675,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
             )}
 
             {!selectedUOM.is_available && (
-              <div className="bg-black-op-50 absolute bottom-0 w-full px-[1.1vw] mob:px-[4.1vw] py-[.7vw] mob:py-[2vw] rounded-t-[1.1vw] mob:rounded-t-[4.1vw] flex justify-center">
+              <div className="bg-black-op-50 absolute top-0 w-full px-[1.1vw] mob:px-[4.1vw] py-[.7vw] mob:py-[2vw] rounded-t-[1.1vw] mob:rounded-t-[4.1vw] flex justify-center">
                 <p className="text-[.78vw] mob:text-[3vw] font-[SofiaPro] font-semibold text-white">OUT OF STOCK</p>
               </div>
             )}
@@ -607,46 +707,66 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
             </div>
 
             <div className="mb-1">
-              {isBasketItem ? (
+              {!selectedUOM.is_available ? (
+                <button
+                  type="button"
+                  disabled={isNotified}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!isNotified) handleNotifyMe();
+                  }}
+                  className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold h-[2.5vw] mob:h-[8.5vw] px-[1.5vw] mob:px-[4vw] rounded-full transition-colors whitespace-nowrap gap-2 ${isNotified
+                    ? 'border-gray-400 text-gray-400 bg-gray-50 cursor-default'
+                    : 'border-[#146321] text-[#146321] hover:bg-green-50'
+                    }`}
+                >
+                  <span className="text-[.97vw] mob:text-[3.2vw]">
+                    {isNotified ? 'Notified' : 'Notify'}
+                  </span>
+                  <NotificationsNoneOutlinedIcon sx={{ fontSize: isMobile ? '4vw' : '1.2vw', strokeWidth: 1 }} />
+                </button>
+              ) : isBasketItem ? (
                 <button
                   type="button"
                   onClick={handleBasketViewClick}
-                  className="bg-primary flex items-center justify-center h-[2.5vw] mob:h-[7.85vw] rounded-full px-[1.5vw] mob:px-[4.1vw] py-[.4vw] font-[SofiaPro] text-[.97vw] font-bold mob:text-[3.6vw] text-black hover:bg-yellow-400 transition-colors shadow-sm"
+                  className="bg-primary flex items-center justify-center h-[2.5vw] mob:h-[8.5vw] rounded-full px-[1.5vw] mob:px-[4.1vw] py-[.4vw] font-[SofiaPro] text-[.97vw] font-bold mob:text-[3.6vw] text-black hover:bg-yellow-400 transition-colors shadow-sm"
                 >
                   VIEW
                 </button>
               ) : requiresSelection ? (
                 totalQuantityAcrossProduct > 0 ? (
-                  <div className="flex items-center justify-between px-2 bg-white border border-gray-200 rounded-full h-7 mob:h-10 min-w-[70px] mob:min-w-[100px]">
+                  <div className="flex h-[2.5vw]  mob:h-[8.5vw] items-center justify-center border-[2px] border-primary-200 rounded-full bg-white w-max p-[.3vw] mob:px-[.7vw]">
                     <button
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
                         setIsPopupOpen(true);
                       }}
-                      className="h-5 w-5 mob:h-7 mob:w-7 rounded-full bg-black text-white text-sm flex items-center justify-center"
+                      className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.1vw] flex items-center justify-center bg-primary rounded-full border border-primary-200"
                     >
-                      &#8722;
+                      <span className="mb-1">–</span>
                     </button>
-                    <p className="text-black font-semibold text-xs mob:text-base">
-                      {totalQuantityAcrossProduct}
-                    </p>
+                    <div className="w-[1.1vw] mx-[.5vw]  mob:mx-[3vw] flex items-center justify-center">
+                      <p className="text-[1.1vw] mob:text-[4.1vw] font-semibold text-black">
+                        {totalQuantityAcrossProduct}
+                      </p>
+                    </div>
                     <button
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
                         setIsPopupOpen(true);
                       }}
-                      className="h-5 w-5 mob:h-7 mob:w-7 rounded-full bg-black text-white text-sm flex items-center justify-center"
+                      className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.1vw] flex items-center justify-center bg-primary rounded-full border border-primary-200"
                     >
-                      +
+                      <span className="mb-0.5">+</span>
                     </button>
                   </div>
                 ) : (
                   <button
                     type="button"
                     onClick={handleAddItemClick}
-                    className="flex items-center justify-between bg-primary text-black font-[SofiaPro] font-bold h-[2.5vw] mob:h-[6.5vw] px-[1.1vw] mob:px-[3vw] rounded-full hover:bg-yellow-400 transition-colors whitespace-nowrap gap-2"
+                    className="flex items-center justify-between bg-primary text-black font-[SofiaPro] font-bold h-[2.5vw] mob:h-[8.5vw] px-[1.1vw] mob:px-[3vw] rounded-full hover:bg-yellow-400 transition-colors whitespace-nowrap gap-2 border border-[#EDE6D4]"
                   >
                     <span className="text-[.97vw] mob:text-[2.8vw]">
                       {totalOptionsCount} Options
@@ -691,6 +811,13 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
             onSelectionMade={handleSelectionMade}
           />
         )}
+
+        <NotifyToast
+          isVisible={showNotifyToast}
+          message={notifyMsg}
+          type={notifyType}
+          onClose={() => setShowNotifyToast(false)}
+        />
       </div>
     </>
   );

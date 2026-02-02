@@ -16,6 +16,8 @@ import { protectedUrl, unprotectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { getAddressAndStoreId } from '@/utilities/utils';
 import HomeCategorySection from '@/components/home/HomeCategorySection';
+import PopularProduce from '@/components/ShopV2/PopularProduce';
+import PopularProduceMob from '@/components/ShopV2/PopularProduceMob';
 
 
 interface HomeProps {
@@ -41,6 +43,7 @@ const Home = ({
 }: HomeProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
   const [homepageData, setHomepageData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const getDataFromApi = useGetDataFromApi();
@@ -72,11 +75,11 @@ const Home = ({
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
   }, [initialHomepageData]);
 
-  // Extract main-category from homepage data
   const mainCategoryData = (homepageData?.find((item: any) => item.type === 'main-category')?.data) || categories || [];
+  const popularProduceData = homepageData?.find((item: any) => item.type === 'products-recommendation') || { title: 'Popular Produce', data: [] };
 
   return (
-    <div className='bg-[#FFF9E5]'>
+    <div className="overflow-x-hidden max-w-full relative">
       <Layout isHeaderSticky={true} mainMenuItems={mainMenuItems} footerData={footerData}>
         <CustomHead
           title="Origin Fresh | Fresh Produce Delivered to Your Doorstep"
@@ -89,12 +92,20 @@ const Home = ({
         <div className="flex items-center justify-center w-full px-[1vw]">
           <div className="flex items-center justify-between w-[80vw] mob:w-full mob:grid grid-cols-2 mob:gap-[5vw] ">
             {uspCardsData?.map((card) => <UspCard cardData={card} key={card.title} />)}
-
           </div>
         </div>
         {/* Homepage Category Section */}
-        <div className='w-full'>
+        <div className='w-full px-[5vw] mob:mt-[10vw]'>
           <HomeCategorySection categories={mainCategoryData} loading={loading} />
+        </div>
+
+        <div className='w-full px-[5vw]'>
+          {(isMobile || isTablet) ? (
+            <PopularProduceMob categoryDetail={popularProduceData} />
+          ) : (
+            <PopularProduce categoryDetail={popularProduceData} />
+          )}
+          {/* <PopularProduce categoryDetail={popularProduceData} /> */}
         </div>
         <BeforeBox mdTopOffset={isMobile ? -124 : 100} mdBottomOffset={isMobile ? 110 : 220}>
           <Container className="relative z-[2]">
@@ -113,35 +124,37 @@ const Home = ({
               rootClass="bg-secondary-200"
             />
           </Container>
-          <Container maxWidth="lg" className="relative z-[0]">
+          <Container maxWidth="lg" className="relative z-[10] !overflow-visible">
             <SideBySide
               variant="parallax"
-              parallaxTopImageSrc="/assets/images/parallaxImages/top-1.png"
-              parallaxMainImageSrc="/assets/images/parallaxImages/main-1.png"
-              parallaxBottomImageSrc="/assets/images/parallaxImages/bottom-1.png"
+              parallaxTopImageSrc="/assets/images/parallaxImages/top-2.webp"
+              parallaxMainImageSrc="/assets/images/parallaxImages/main-2.webp"
+              // parallaxBottomImageSrc="/assets/images/parallaxImages/bottom-1.png"
               parallaxImageAlt="carefully handpicked"
-              title={`Grown for those who never compromise `}
+              title={`GROWN FOR <br/> THOSE WHO NEVER <br/> COMPROMISE `}
               titleVariant={isMobile ? 'h4' : 'h1'}
+              titleClass="font-Stinger text-[#231F20] !font-bold !leading-[1.1] "
               description={`Everyone has a right to fresh, authentic flavours. But only a few fight for it. Origin Fresh is for those who do.`}
               buttonText="Know more"
               buttonVariant="tertiary"
-              rootClass="bg-transparent z-1 px-0 md:px-6 items-center"
+              rootClass="bg-[#FAF7F0] z-1 px-0 md:px-6 items-center mob:!rounded-none pb-12 !overflow-visible"
               reverse
-              parallaxImgContainerClass="relative py-5 lg:pt-9 lg:pb-20"
-              parallaxTopImageWidth={276}
-              parallaxTopImageHeight={225}
-              parallaxMainImageHeight={700}
-              parallaxMainImageWidth={500}
+              parallaxImgContainerClass="relative py-5 lg:pt-9 lg:pb-20 !lg:w-[45%] !overflow-visible"
+              titleContainerClass="!lg:ps-0 !lg:pe-12"
+              parallaxTopImageWidth={600}
+              parallaxTopImageHeight={800}
+              parallaxMainImageHeight={800}
+              parallaxMainImageWidth={600}
               parallaxBottomImageWidth={234}
               parallaxBottomImageHeight={372}
-              parallaxTopImgClass="absolute w-[156px] sm:w-[256px] md:w-[276px] lg:h-auto rotate-[-5deg] top-[-84px] md:left-[190px] sm:left-[90px] lg:left-[0] left-0 blur-[2.5px]"
+              parallaxTopImgClass="absolute w-[280px] sm:w-[350px] md:w-[450px] lg:h-auto rotate-[15deg] top-[0px] right-[5px] lg:right-[20px] z-0 scale-[1.5] mob:scale-[1.1]"
               parallaxBottomImgClass="absolute w-[154px] sm:w-[234px] md:w-[234px] lg:h-auto rotate-[-15deg] right-[50px] sm:right-[100px] md:right-[200px] lg:right-[-0px] bottom-[-50px] sm:bottom-[-150px] blur-[3px]"
-              parallaxMainImgClass="z-[1] relative mx-auto"
+              parallaxMainImgClass="z-[10] relative ml-auto mr-0 lg:mr-[-4vw] scale-[1.2] lg:scale-[1.5] mob:scale-[1.1]"
               parallaxBottomImgContainerClass="z-[1]"
             />
             <Box className="h-16 md:h-0" />
           </Container>
-          <Container maxWidth="lg" className="relative ">
+          <Container maxWidth="lg" className="relative z-[50] ">
             <SideBySide
               title={`Join the Cult of Fresh`}
               titleVariant={isMobile ? 'h4' : 'h2'}
@@ -158,8 +171,8 @@ const Home = ({
               imageClass="w-full md:max-h-[296px] max-h-[170px] object-cover"
             />
           </Container>
-          <Box className="h-16 lg:h-24" />
-          <Container maxWidth="lg">
+
+          {/* <Container maxWidth="lg">
             <SideBySide
               variant="normal"
               imageSrc="/assets/images/distribution.png"
@@ -175,14 +188,14 @@ const Home = ({
               buttonVariant="tertiary"
               rootClass="bg-transparent px-0 md:px-5 items-center"
             />
+          </Container> */}
+          <Container className="px-0 md:px-6 mt-[15vw]">
+            <TestimonialsSection testimonials={testimonials} />
           </Container>
           <Box className="h-16 lg:h-[128px]" />
         </BeforeBox>
         <Box className="h-16  lg:h-[104px]" />
-        <Container className="px-0 md:px-6 relative z-0">
-          <TestimonialsSection testimonials={testimonials} />
-        </Container>
-        {/* <Container>
+        <Container className="mt-[8vw]">
           <Box className="h-16 lg:h-[104px]" />
           <SideBySide
             variant="normal"
@@ -200,8 +213,8 @@ const Home = ({
             imageClass="rounded-none lg:rounded-none md:w-[375px] lg:w-[375px] w-full h-min mt-[50px] md:mt-0 object-contain"
             imageContainerClass="md:flex justify-end mt-auto items-end md:w-auto lg:pe-[90px]"
           />
-        </Container> */}
-        {/* <Box className="h-16 lg:h-32" /> */}
+        </Container>
+        <Box className="h-16 lg:h-32" />
       </Layout>
     </div>
   );
@@ -212,7 +225,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/originApi`);
     const originApiData = await response.json();
     const { uspCardsData, categories, products, blogs, testimonials, mainMenuItems, footerData } = originApiData;
-
     return {
       props: {
         uspCardsData,

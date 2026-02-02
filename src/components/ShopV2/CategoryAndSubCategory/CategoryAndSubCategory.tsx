@@ -73,7 +73,8 @@ const CategoryAndSubCategory = (props: Props) => {
   };
 
   return (
-    <div className="sticky top-0 pt-10 md:pt-[4vw] pb-3 md:pb-[1.2vw] mb-0 px-4 md:p-[1.1vw] flex flex-col gap-3 md:gap-[1.1vw] bg-[#FFF9E5] z-[1]">
+    // <div className="sticky top-0 pt-10 md:pt-[4vw] pb-3 md:pb-[1.2vw] mb-0 px-4 md:p-[1.1vw] flex flex-col gap-3 md:gap-[1.1vw] bg-[#FFF9E5] z-[1]">
+    <div className="sticky w-full top-[22vw] md:top-[6.5vw] pt-4 md:pt-[1.1vw] pb-3 md:pb-[1.2vw] mb-0 px-4 md:px-0 flex flex-col gap-3 md:gap-[1.1vw] bg-white z-[9]">
       {products.isProductListLoading ? (
         <DropdownAndPillsSkeleton />
       ) : (
@@ -86,10 +87,10 @@ const CategoryAndSubCategory = (props: Props) => {
             handler={handleStateChange}
             list={dropdownList}
           />
-          <SubCategoryPills 
-            value={filters.subCategory} 
-            name={'subCategory'} 
-            handler={handleStateChange} 
+          <SubCategoryPills
+            value={filters.subCategory}
+            name={'subCategory'}
+            handler={handleStateChange}
           />
         </>
       )}

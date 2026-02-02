@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 const initialState = {
     productsList: [],
     isProductListLoading: true,
+    notifiedItems: [] as number[],
 }
 
 export const productsSlice = createSlice({
@@ -15,8 +16,13 @@ export const productsSlice = createSlice({
         setIsProductListLoading(state, action: PayloadAction<boolean>) {
             state.isProductListLoading = action.payload
         },
+        addNotifiedItem(state, action: PayloadAction<number>) {
+            if (!state.notifiedItems.includes(action.payload)) {
+                state.notifiedItems.push(action.payload)
+            }
+        },
     },
 })
 
-export const { setProductList, setIsProductListLoading } = productsSlice.actions
+export const { setProductList, setIsProductListLoading, addNotifiedItem } = productsSlice.actions
 export default productsSlice.reducer

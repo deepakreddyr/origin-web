@@ -25,9 +25,8 @@ interface TestimonialsSectionProps {
 }
 
 const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials }) => {
-  const [testimonialsList, setTestimonialsList] = useState([]);
+  const [testimonialsList, setTestimonialsList] = useState(testimonials || []);
   const initialVisibleItems = 8;
-  const totalTestimonials = testimonials.length;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { isExpanded, setIsExpanded, handleShowAllChange } = useDataToParent(false);
@@ -45,7 +44,10 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials 
       };
     }
     const successHandler = (data: any) => {
-      setTestimonialsList(data?.data);
+      const list = Array.isArray(data) ? data : (data?.data && Array.isArray(data.data) ? data.data : []);
+      if (list.length > 0) {
+        setTestimonialsList(list);
+      }
     };
     const failureHandler = (data: any) => {
       // console.log(data);
@@ -53,52 +55,53 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials 
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
   }, []);
 
-  if (testimonialsList.length === 0) return;
   return (
     <Container className="px-0 md:px-5">
       <RoundContainer className="relative z-0 px-0 md:px-11 pt-[72px] md:pb-0 transition-all duration-500 ease-in-out">
         <Typography variant="h5" className="mb-8 md:mb-11 px-5 md:px-0 md:text-center">
           Customer Stories
         </Typography>
-        <Box
-          className={classNames(
-            'relative after:transition-all after:duration-1000 transition-all ease-in-out duration-1000',
-            isMobile || isExpanded
-              ? 'after:translate-y-[144px] after:opacity-0 md:pb-[100px]'
-              : 'after:after:translate-y-0  after:opacity-1',
-            'after:bg-gradient-to-t after:z-[1] after:from-white after:to-transparent after:absolute after:bottom-0 after:h-[144px] after:w-full'
-          )}
-        >
-          {!isMobile ? (
-            <ShowMoreSection
-              initialVisibleItems={initialVisibleItems}
-              totalItems={testimonialsList.length}
-              onShowAllChange={handleShowAllChange}
-              classes={{
-                buttonsContainer: classNames('absolute z-10 bottom-5')
-              }}
-            >
-              <Masonry columns={{ xs: 1, md: 3, lg: 4 }} spacing={2}>
-                {testimonialsList.map((testimonial, index) => (
+        {testimonialsList.length > 0 && (
+          <Box
+            className={classNames(
+              'relative after:transition-all after:duration-1000 transition-all ease-in-out duration-1000',
+              isMobile || isExpanded
+                ? 'after:translate-y-[144px] after:opacity-0 md:pb-[100px]'
+                : 'after:translate-y-0 after:opacity-100',
+              'after:bg-gradient-to-t after:z-[1] after:from-white after:to-transparent after:absolute after:bottom-0 after:h-[144px] after:w-full'
+            )}
+          >
+            {!isMobile ? (
+              <ShowMoreSection
+                initialVisibleItems={initialVisibleItems}
+                totalItems={testimonialsList.length}
+                onShowAllChange={handleShowAllChange}
+                classes={{
+                  buttonsContainer: classNames('absolute z-10 bottom-5')
+                }}
+              >
+                <Masonry columns={{ xs: 1, md: 3, lg: 4 }} spacing={2}>
+                  {testimonialsList.map((testimonial, index) => (
+                    <TestimonialCard key={index} testimonial={testimonial} />
+                  ))}
+                </Masonry>
+              </ShowMoreSection>
+            ) : (
+              <OriginCarousel
+                navigation={false}
+                slideClassName="first-of-type:ps-5 md:first-of-type:px-0"
+                loop
+                mousewheel={{
+                  forceToAxis: true
+                }}
+                spaceBetween={20}
+                slides={testimonialsList.map((testimonial, index) => (
                   <TestimonialCard key={index} testimonial={testimonial} />
                 ))}
-              </Masonry>
-            </ShowMoreSection>
-          ) : (
-            <OriginCarousel
-              navigation={false}
-              slideClassName="first-of-type:ps-5 md:first-of-type:px-0"
-              loop
-              mousewheel={{
-                forceToAxis: true
-              }}
-              spaceBetween={20}
-              slides={testimonialsList.map((testimonial, index) => (
-                <TestimonialCard key={index} testimonial={testimonial} />
-              ))}
-            />
-          )}
-        </Box>
+              />
+            )}
+          </Box>
+        )}
       </RoundContainer>
     </Container>
   );

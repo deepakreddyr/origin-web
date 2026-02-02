@@ -8,7 +8,7 @@ const TestimonialCard = (props: any) => {
     <Box sx={{ mb: 2 }} className="bg-secondary-100 p-4 rounded-[10px] md:rounded-3xl h-full md:h-auto">
       <OriginAvatar avatar={testimonial} />
       <Typography variant="body1" className="mt-3 md:mt-2 font-light text-xs leading-5">
-        {testimonial.testimonial}
+        {testimonial.content}
       </Typography>
     </Box>
   );

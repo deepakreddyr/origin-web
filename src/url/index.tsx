@@ -40,6 +40,8 @@ export const protectedUrl: UrlMap = {
   retryPayment: '/api/v1/user/payment/razorpay/init/order',
   searchForProduct: '/api/v5/user/items',
   updatePayment: '/api/v3/user/order/update/payment-method',
-  getHomepage: '/api/v5/user/homepage'
+  getHomepage: '/api/v5/user/homepage',
+  notifyMe: '/api/v5/user/items/notify-me',
+  requestItems: '/api/v3/user/request-items'
 };
 // /api/5v / user / items;

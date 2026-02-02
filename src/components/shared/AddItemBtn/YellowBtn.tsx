@@ -6,7 +6,7 @@ const YellowBtn = (props: any) => {
   return (
     <div className="w-full">
       {isItemPresent ? (
-        <div className="flex items-center justify-between px-[0.6vw] mob:px-[3vw] bg-white border-[2px] border-[#F3EEDF] rounded-full h-[2.8vw] mob:h-[9vw]">
+        <div className="flex items-center justify-between px-[0.6vw] mob:px-[3vw] bg-white border-[2px] border-[#EDE6D4] rounded-full h-[2.8vw] mob:h-[9vw]">
           <button
             className="h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] rounded-full bg-[#FFD500] text-black text-[1.1vw] mob:text-[4vw] flex items-center justify-center"
             onClick={handleDecrease}

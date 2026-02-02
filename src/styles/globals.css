@@ -1,5 +1,6 @@
 @import './sofia-style.css';
 @import './stinger-style.css';
+@import './recoleta.css';
 
 h1,
 h2,
@@ -7,7 +8,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Stinger', sans-serif !important;
+  font-family: 'Recoleta', sans-serif !important;
 }
 
 /* @import './SofiaPro-style.css'; */

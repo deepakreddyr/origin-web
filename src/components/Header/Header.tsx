@@ -112,7 +112,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
 
   const router = useRouter();
   const isMobile = useMediaQuery(600);
-  const isShopPage = router.pathname === '/shop' || router.pathname === '/';
+  const isShopPage = router.pathname === '/';
   const isTransparentHeader = isShopPage && !isOpaque && isMobile;
 
   // Helper function to get icon filter based on transparent color
@@ -149,7 +149,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
 
   // Helper function to get search bar styles
   const getSearchBarStyles = () => {
-    if (!isTransparentHeader) return 'bg-white border border-gray-200 text-black';
+    if (!isTransparentHeader) return 'bg-[#F8F4E9] border border-gray-200 text-black';
     return transparentColor === 'black'
       ? 'bg-black/10 text-black border-none'
       : 'bg-white/30 text-white border-none';
@@ -320,17 +320,18 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
 
 
   return (
-    <div ref={menuRef} className={`${isHeaderSticky ? 'fixed top-0' : 'absolute top-0'} flex items-center flex-col w-full z-[10] ${isMobile && loginDetails.isSidebarOpen ? 'hidden' : ''}`}>
+    <div ref={menuRef} className={`${isHeaderSticky ? 'fixed top-0' : 'absolute top-0'} flex items-center flex-col w-full z-[100] ${isMobile && loginDetails.isSidebarOpen ? 'hidden' : ''}`}>
       {/* <OffersRibbon /> */}
 
       <div
         className={`z-50 w-[80vw] mob:w-full transition-all duration-300 ${isMobile
           ? isTransparentHeader
             ? 'bg-transparent px-[5vw] py-[2vw]'
-            : 'bg-[#FFF9E5] px-[5vw] py-[2vw]'
+            // : 'bg-[#FFF9E5] px-[5vw] py-[2vw]'
+            : 'bg-white px-[5vw] py-[2vw] shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
           : search
             ? 'bg-transparent w-[96vw] mt-[1vw] max-w-[1920px]'
-            : 'bg-white rounded-full'
+            : 'bg-white rounded-full shadow-md'
           } ${'mt-[1.1vw] mob:mt-0'} flex flex-col`}
       >
         <div className="flex items-center justify-between w-full">
@@ -414,7 +415,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                   href="/shop"
                   className="h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full bg-primary text-black text-[1.1vw] font-medium font-[SofiaPro]"
                 >
-                  Explore Origin
+                  Shop All
                 </Link>
                 {!isMobile && isLoggedIn && (
                   <button
@@ -540,7 +541,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
         {isMobile && (
           <div className="mt-[3vw] px-[0vw]">
             <form onSubmit={handleSearchSubmit} className="relative">
-              <div className="relative">
+              <div className="relative ">
                 <input
                   ref={searchInputRef}
                   type="text"
@@ -552,7 +553,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                   className={`w-full h-[12vw] pl-[12vw] pr-[4vw] rounded-full text-[4vw] font-[SofiaPro] transition-all duration-300 outline-none ${getSearchBarStyles()}`}
                 />
                 {!searchQuery && (
-                  <div className={`absolute left-[12vw] top-1/2 -translate-y-1/2 pointer-events-none text-[4vw] font-[SofiaPro] ${getSearchPlaceholderColor()}`}>
+                  <div className={`absolute left-[12vw] top-1/2 -translate-y-1/2  pointer-events-none text-[4vw] font-[SofiaPro] ${getSearchPlaceholderColor()}`}>
                     <AnimatedPlaceholder />
                   </div>
                 )}

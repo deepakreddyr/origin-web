@@ -35,7 +35,7 @@ type Data = {
 const data: Data = {
   mainMenuItems: [
     {
-      label: 'Explore Origin',
+      label: 'Shop All',
       submenu: [
         { label: 'Essentials', link: '/shop-all/essentials' },
         { label: 'Fresh Fruits', link: '/shop-all/fresh-fruits' },
@@ -65,7 +65,7 @@ const data: Data = {
     footerLinksPrimary: [
       { text: 'Home', href: 'shop' },
       // { text: 'About Us', href: 'about' },
-      { text: 'Explore Origin', href: 'shop' },
+      { text: 'Shop All', href: 'shop' },
       // { text: 'Contact', href: 'contact' }
     ],
     footerLinksSecondary: [
@@ -103,7 +103,7 @@ const data: Data = {
     {
       actionLabel: 'Shop all',
       url: '/shop',
-      title: 'Explore Origin',
+      title: 'Shop All',
       image: '/assets/images/categories/1.png'
     },
     {

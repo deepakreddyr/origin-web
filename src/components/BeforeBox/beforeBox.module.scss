@@ -4,8 +4,8 @@
   &::before,
   &::after {
     content: "";
-    // @apply absolute block left-0 w-full z-0 md:rounded-[50px] rounded-[20px];
-    @apply absolute block left-0 w-full z-0;
+    @apply absolute block left-0 w-full z-0 md:rounded-[50px] rounded-[20px];
+    // @apply absolute block left-0 w-full z-0;
   }
 
   &::before {

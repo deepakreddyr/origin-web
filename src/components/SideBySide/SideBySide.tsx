@@ -115,7 +115,8 @@ const SideBySide: React.FC<SideBySideProps> = ({
         <Box
           className={CA(
             'px-0 lg:px-0 py-0 lg:py-16 pt-6 w-full lg:w-1/2 z-[1]',
-            reverse ? 'ps-0 lg:ps-[90px]' : 'lg:pe-[90px]'
+            reverse ? 'ps-0 lg:ps-[90px]' : 'lg:pe-[90px]',
+            titleContainerClass
           )}
         >
           <Typography variant={titleVariant} className={CA(titleClass, 'font-bold')}>
@@ -217,10 +218,10 @@ const SideBySide: React.FC<SideBySideProps> = ({
   }
 
   if (variant === 'hero') {
-  return (
-    <Box className={CA('flex flex-wrap p-6 rounded-3xl lg:rounded-[64px]', rootClass)}>
-      <Box className={CA('w-full lg:w-1/2', reverse ? 'mt-5 lg:mt-0 ps-0' : 'pe-0', imageContainerClass)}>
-        {/* <Image
+    return (
+      <Box className={CA('flex flex-wrap p-6 rounded-3xl lg:rounded-[64px]', rootClass)}>
+        <Box className={CA('w-full lg:w-1/2', reverse ? 'mt-5 lg:mt-0 ps-0' : 'pe-0', imageContainerClass)}>
+          {/* <Image
           src={imageSrc || ''}
           width={imageWidth}
           height={imageHeight}
@@ -230,38 +231,38 @@ const SideBySide: React.FC<SideBySideProps> = ({
             imageClass
           )}
         /> */}
-      </Box>
-      <Box
-        className={CA(
-          'px-0 lg:px-0 py-0 lg:py-16 pt-6 w-full lg:w-1/2',
-          reverse ? 'ps-0 lg:ps-[100px]' : 'lg:pe-[100px]',
-          titleContainerClass
-        )}
-      >
-        <Typography variant={titleVariant} className={CA(titleClass, 'font-bold')}>
-          {HTMLReactParser(title)}
-        </Typography>
-
-        <Typography variant="body1" className="lg:my-6 mt-0 mb-6 font-light text-lg">
-          {description}
-        </Typography>
-
-        <OriginButton
-          handleClick={buttonClick1}
-          variant={buttonVariant}
-          buttonText={buttonText}
-          className="mt-4 mx-auto w-fit"
-        />
-
-        {buttonText2 && (
-          <Typography className="text-sm md:text-base mt-4" variant="body1">
-            {buttonText2}
+        </Box>
+        <Box
+          className={CA(
+            'px-0 lg:px-0 py-0 lg:py-16 pt-6 w-full lg:w-1/2',
+            reverse ? 'ps-0 lg:ps-[100px]' : 'lg:pe-[100px]',
+            titleContainerClass
+          )}
+        >
+          <Typography variant={titleVariant} className={CA(titleClass, 'font-bold')}>
+            {HTMLReactParser(title)}
           </Typography>
-        )}
+
+          <Typography variant="body1" className="lg:my-6 mt-0 mb-6 font-light text-lg">
+            {description}
+          </Typography>
+
+          <OriginButton
+            handleClick={buttonClick1}
+            variant={buttonVariant}
+            buttonText={buttonText}
+            className="mt-4 mx-auto w-fit"
+          />
+
+          {buttonText2 && (
+            <Typography className="text-sm md:text-base mt-4" variant="body1">
+              {buttonText2}
+            </Typography>
+          )}
+        </Box>
       </Box>
-    </Box>
-  );
-}
+    );
+  }
   return null;
 };
 

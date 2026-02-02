@@ -6,21 +6,22 @@ import WhiteBtn from './WhiteBtn';
 import BlackBtn from './BlackBtn';
 import BlackAddCartBtm from './BlackAddCartBtm';
 import YellowAddCartBtm from './YellowAddCartBtm';
+import UomModalBtn from './UomModalBtn';
 import { protectedUrl } from '@/url';
 import { getAddressAndStoreId } from '@/utilities/utils';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 
 const AddItemBtn: FC<any> = (props) => {
-  const { 
-    product, 
-    varientId, 
+  const {
+    product,
+    varientId,
     // Accept props from the parent (like UOMPopup)
-    stepperQuantity: stepperQuantityProp, 
+    stepperQuantity: stepperQuantityProp,
     minimumQuantity: minimumQuantityProp, // 🔑 NEW PROP
-    buttonType, 
-    selectedRipenessType = null, 
-    onMaxQuantityExceeded 
+    buttonType,
+    selectedRipenessType = null,
+    onMaxQuantityExceeded
   } = props;
 
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ const AddItemBtn: FC<any> = (props) => {
   const getDataFromApi = useGetDataFromApi();
 
   const normalizedProductId = product.id || product.product_id;
-  
+
   const uomArray = product.multiple_uoms || product.uoms || [];
   const selectedVariant = uomArray.find(
     (variant: any) => {
@@ -38,11 +39,11 @@ const AddItemBtn: FC<any> = (props) => {
       return variantId === varientId;
     }
   );
-  
+
   // 1. DETERMINE FINAL QUANTITIES
   const finalMinQuantity = minimumQuantityProp || selectedVariant?.minimum_quantity || 1;
   // If stepperQuantity is passed as a prop (e.g., from YellowBtn), use it, otherwise use the variant's stepper.
-  const finalStepQuantity = stepperQuantityProp || selectedVariant?.stepper_quantity || 1; 
+  const finalStepQuantity = stepperQuantityProp || selectedVariant?.stepper_quantity || 1;
 
   const maxQuantity = selectedVariant?.maximum_quantity || Infinity;
 
@@ -52,12 +53,12 @@ const AddItemBtn: FC<any> = (props) => {
     const itemProductId = item.id || item.product_id;
     return itemProductId === normalizedProductId;
   });
-  
+
   let cartUOM: any;
 
   if (cartProduct) {
     cartUOM = cartProduct.multiple_uoms?.find((uom: any) => uom.variant_id === varientId);
-    
+
     if (cartUOM) {
       if (selectedRipenessType && cartUOM.cart_ripeness) {
         const ripenessObj = cartUOM.cart_ripeness.find((r: any) => r.ripeness_type === selectedRipenessType);
@@ -70,7 +71,7 @@ const AddItemBtn: FC<any> = (props) => {
 
   // ===== FIX: Calculate total for this specific variant (all ripeness types) =====
   const getVariantTotalQuantity = () => {
-    if (!cartUOM) return 0; 
+    if (!cartUOM) return 0;
 
     if (cartUOM.cart_ripeness && Array.isArray(cartUOM.cart_ripeness)) {
       return cartUOM.cart_ripeness.reduce((sum: number, r: any) => sum + Number(r.qty), 0);
@@ -86,7 +87,7 @@ const AddItemBtn: FC<any> = (props) => {
     if (addressFromLs) {
       additionalHeaders = { 'store-id': addressFromLs.store_id };
     }
-    getDataFromApi(apiUrl, () => {}, () => {}, additionalHeaders);
+    getDataFromApi(apiUrl, () => { }, () => { }, additionalHeaders);
   };
 
   const addItemsToApi = () => {
@@ -112,7 +113,7 @@ const AddItemBtn: FC<any> = (props) => {
       if (cartItemsParsed?.length === 0) {
         handleClearCartFromBackend();
       } else {
-        sendDataToApi(apiUrl, cartItemsToApi, 'POST', () => {}, () => {}, additionalHeaders);
+        sendDataToApi(apiUrl, cartItemsToApi, 'POST', () => { }, () => { }, additionalHeaders);
       }
     }
   };
@@ -130,7 +131,7 @@ const AddItemBtn: FC<any> = (props) => {
 
     // Check if already at max before adding
     const totalQuantityInCart = getVariantTotalQuantity();
-    
+
     if (totalQuantityInCart >= maxQuantity) {
       onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
       return;
@@ -162,7 +163,7 @@ const AddItemBtn: FC<any> = (props) => {
       selectedUOM: {
         ...selectedVariant,
         // Pass the quantity to add, which is finalMinQuantity
-        stepper_quantity: quantityToAdd 
+        stepper_quantity: quantityToAdd
       },
       selectedRipenessType
     }));
@@ -178,15 +179,15 @@ const AddItemBtn: FC<any> = (props) => {
   const handleIncrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     // Check if already at max before increasing
     const totalQuantityInCart = getVariantTotalQuantity();
-    
+
     if (totalQuantityInCart >= maxQuantity) {
       onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
       return;
     }
-    
+
     // Use finalStepQuantity for incremental increases
     const newTotalQuantity = totalQuantityInCart + finalStepQuantity;
 
@@ -194,9 +195,9 @@ const AddItemBtn: FC<any> = (props) => {
       onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
       return;
     }
-    
+
     dispatch(increaseQuantity({ varientId, stepperQuantity: finalStepQuantity, selectedRipenessType }));
-    
+
     if (loginDetails.user) {
       addItemsToApi();
     }
@@ -208,19 +209,19 @@ const AddItemBtn: FC<any> = (props) => {
   const handleDecrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     const itemToRemove = { varientId, selectedRipenessType };
-    
+
     // If the current quantity is equal to or less than the initial minimum quantity, 
     // remove the entire item/variant/ripeness selection.
     if (itemQuantity <= finalMinQuantity) {
-      dispatch(removeItemFromCart(itemToRemove)); 
-      
-    // Otherwise, decrease by the standard finalStepQuantity.
+      dispatch(removeItemFromCart(itemToRemove));
+
+      // Otherwise, decrease by the standard finalStepQuantity.
     } else {
       dispatch(decreaseQuantity({ varientId, stepperQuantity: finalStepQuantity, selectedRipenessType }));
     }
-    
+
     if (loginDetails.user) {
       addItemsToApi();
     }
@@ -229,15 +230,15 @@ const AddItemBtn: FC<any> = (props) => {
   const handleRemoveUOM = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     const itemToRemove = { varientId, selectedRipenessType };
-    dispatch(removeItemFromCart(itemToRemove)); 
-    
+    dispatch(removeItemFromCart(itemToRemove));
+
     if (loginDetails.user) {
       addItemsToApi();
     }
   };
-  
+
   const isVariantPresent = itemQuantity > 0;
 
   const BUTTON_MAP: any = {
@@ -301,12 +302,23 @@ const AddItemBtn: FC<any> = (props) => {
         handleDecrease={handleDecrease}
         handleRemove={handleRemoveUOM}
       />
+    ),
+    uom_modal: (
+      <UomModalBtn
+        isItemPresent={isVariantPresent}
+        quantity={itemQuantity}
+        maxQuantity={maxQuantity}
+        handleAddItem={handleAddItem}
+        handleIncrease={handleIncrease}
+        handleDecrease={handleDecrease}
+        handleRemove={handleRemoveUOM}
+      />
     )
   };
 
   return (
-    <div className="relative z-5"> 
-        {BUTTON_MAP[buttonType]}
+    <div className="relative z-5">
+      {BUTTON_MAP[buttonType]}
     </div>
   );
 };

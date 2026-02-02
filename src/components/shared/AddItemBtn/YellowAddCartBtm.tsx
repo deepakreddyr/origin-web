@@ -290,21 +290,21 @@ const UOMPopup: FC<{
         <div className="flex-shrink-0 p-4 pb-3 border-b border-gray-100 relative">
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 transition-colors"
+            className="absolute top-2 right-2 text-black hover:bg-gray-100 p-2 rounded-full transition-colors z-[60]"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
 
-          <div className="flex items-start gap-3 pr-8">
-            <div className="w-20 h-20 rounded-xl overflow-hidden bg-gray-50 flex-shrink-0">
-              <Image src={product.image || sampleimg} alt={product.name} width={40} height={40} className="w-full h-full object-contain" />
+          <div className="flex items-center gap-4 pr-10">
+            <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#FAF7EF] flex-shrink-0 flex items-center justify-center border border-gray-100 p-2">
+              <Image src={product.image || sampleimg} alt={product.name} width={60} height={60} className="w-full h-full object-contain" />
             </div>
             <div className="flex-1">
-              <h3 className="font-[SofiaPro] font-bold text-lg text-gray-900 leading-tight">
+              <p className="font-[SofiaPro] font-bold text-lg text-[#146321] leading-tight">
                 {product.name}
-              </h3>
+              </p>
             </div>
           </div>
         </div>
@@ -391,65 +391,61 @@ const UOMPopup: FC<{
               : '';
 
             const hasDiscount = variant.market_price > variant.price;
+            const discountPercent = hasDiscount
+              ? Math.round(((variant.market_price - variant.price) / variant.market_price) * 100)
+              : 0;
+
+            const ripenessSvg = ripenessLabel ? getRipenessSvg(ripenessLabel) : null;
 
             return (
               <div
                 key={`${variant.variant_id}-${ripenessLabel}`}
-                className={`flex items-center justify-between p-2 rounded-lg border transition-colors ${isSelected ? 'border-yellow-200' : ' hover:border-gray-300'
-                  }`}
+                className="flex items-center justify-between p-4 border-b border-solid border-[#EDE6D4] last:border-0 relative"
               >
-                <div className="flex items-center flex-1 pr-2">
-                  {getRipenessSvg(ripenessLabel) && (
-                    <Image
-                      src={getRipenessSvg(
-                        ripenessLabel
-                      )!}
-                      alt={ripenessLabel}
-                      width={20}
-                      height={20}
-                      className="mr-2 flex-shrink-0"
-                    />
+                <div className="flex items-center gap-2 w-1/3 min-w-0 flex-shrink-0">
+                  {ripenessSvg && (
+                    <div className="flex-shrink-0">
+                      <Image src={ripenessSvg} alt={ripenessLabel} width={20} height={20} />
+                    </div>
                   )}
-                  {!getRipenessSvg(ripenessLabel) && (
-                    <span className="text-lg mr-2"></span>
-                  )}
-                  <div className="flex-1 text-start">
-                    <p className="font-semibold text-gray-800 capitalize leading-none text-sm font-[SofiaPro]">
-                      {ripenessLabel || ""}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1 font-[SofiaPro]">
-                      {variant.unit}
-                    </p>
-                  </div>
+                  <p className="font-semibold text-gray-900 text-sm font-[SofiaPro] capitalize truncate">
+                    {ripenessLabel || "Standard"}
+                  </p>
                 </div>
 
-                <div className="flex flex-col items-end mr-3 flex-shrink-0">
+                <div className="flex-1 text-center flex-shrink-0">
+                  <p className="text-gray-600 text-sm font-[SofiaPro]">
+                    {variant.unit}
+                  </p>
+                </div>
+
+                <div className="flex flex-col items-center justify-center px-2 w-[85px] flex-shrink-0">
+                  {/* {discountPercent > 0 && (
+                    <div className="bg-[#146321] text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-tight mb-1">
+                      Save {discountPercent}%
+                    </div>
+                  )} */}
                   <div className="flex items-center gap-1">
                     {hasDiscount && (
-                      <span className="line-through text-xs text-gray-400 font-[SofiaPro]">
+                      <span className="line-through text-[10px] text-gray-400 font-[SofiaPro]">
                         ₹{variant.market_price}
                       </span>
                     )}
-                    <span className="font-bold text-base text-gray-900 font-[SofiaPro]">
+                    <p className="font-bold text-sm text-[#146321] font-[SofiaPro]">
                       ₹{variant.price}
-                    </span>
+                    </p>
                   </div>
                 </div>
 
-                <div className="w-[90px] flex-shrink-0">
+                <div className="flex-shrink-0 ml-1">
                   <AddItemBtn
                     product={product}
                     varientId={variant.variant_id}
                     varientPrice={variant.price}
-                    // 🔑 FIX: Pass both the stepper and the minimum quantity 
-                    // This ensures AddItemBtn has the min quantity for the initial 'add' click
                     stepperQuantity={variant.stepper_quantity}
-                    minimumQuantity={variant.minimum_quantity} // <--- NEW PROP ADDED
-                    // ------------------------------------------------------------------
-                    buttonType="black"
-                    selectedRipenessType={
-                      variant.selected_ripeness_type
-                    }
+                    minimumQuantity={variant.minimum_quantity}
+                    buttonType="white"
+                    selectedRipenessType={variant.selected_ripeness_type}
                     onCartUpdate={() =>
                       onSelectionMade(
                         variant,
@@ -643,18 +639,18 @@ const YellowBtn = (props: YellowBtnProps) => {
       <div className="w-full flex flex-col items-center">
         {shouldShowStepper ? (
           <>
-            <div className="flex items-center justify-between px-[0.6vw] mob:px-[3vw] bg-white border-[2px] border-[#F3EEDF] rounded-full h-[2.8vw] mob:h-[9vw] w-full">
+            <div className={`flex h-[2.5vw] mob:h-[8.5vw] items-center justify-center border-[2px] border-primary-200 rounded-full bg-white w-full p-[.3vw] mob:px-[.7vw]`}>
               <button
-                className="h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] rounded-full bg-[#FFDD00] text-black text-[1.1vw] mob:text-[4vw] flex items-center justify-center"
+                className={`h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.67vw] pb-[.3vw] flex items-center justify-center bg-primary rounded-full border border-primary-200`}
                 onClick={onDecrease}
               >
-                –
+                -
               </button>
-              <p className="text-black font-semibold text-[1.1vw] mob:text-[3.6vw]">
-                {requiresSelection ? totalCartQuantity : quantity}
-              </p>
+              <div className="w-[1.1vw] mx-auto mob:mx-auto flex items-center justify-center">
+                <p className="text-[1.1vw] mob:text-[4.1vw]">{requiresSelection ? totalCartQuantity : quantity}</p>
+              </div>
               <button
-                className="h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] rounded-full bg-[#FFDD00] text-black flex items-center justify-center text-[1.1vw] mob:text-[4vw]"
+                className={`h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.4vw] pb-[.3vw] flex items-center justify-center bg-primary rounded-full border border-primary-200`}
                 onClick={onIncrease}
               >
                 +
@@ -679,10 +675,10 @@ const YellowBtn = (props: YellowBtnProps) => {
           </>
         ) : (
           <button
-            className="w-full bg-[#FFDD00] text-black font-medium text-base md:text-lg py-3 md:py-3"
+            className="w-full bg-[#FFDD00] text-black font-bold text-base md:text-sm py-3 md:py-3"
             onClick={onAdd}
           >
-            {requiresSelection ? 'More Options' : 'Add to cart'}
+            {requiresSelection ? 'More Options' : 'Add +'}
           </button>
         )}
       </div>

@@ -30,6 +30,73 @@ interface HomeProps {
   footerData: FooterDataType;
 }
 
+
+
+const featureditemdata = {
+  "item": {
+    "id": 52,
+    "item_code": "EX0023",
+    "name": "Iceberg Lettuce",
+    "image": "https://mm-devlopment.s3.ap-south-1.amazonaws.com/item-images/7f9809d3-37d6-4250-a7f4-3af0c0c3acae.webp?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAX5HSPQTC4X46FOMJ%2F20260130%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20260130T083452Z&X-Amz-SignedHeaders=host&X-Amz-Expires=18000&X-Amz-Signature=b658741b1c2ac1f131144032e724b92908380d52a0de742797b29be78d070df0",
+    "multiple_images": [
+      "https://mm-devlopment.s3.ap-south-1.amazonaws.com/item-images/7f9809d3-37d6-4250-a7f4-3af0c0c3acae.webp?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAX5HSPQTC4X46FOMJ%2F20260130%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20260130T083452Z&X-Amz-SignedHeaders=host&X-Amz-Expires=18000&X-Amz-Signature=b658741b1c2ac1f131144032e724b92908380d52a0de742797b29be78d070df0"
+    ],
+    "bg_color": "#F9F0DA",
+    "navigation": {
+      "to": "/api/v5/public/skip-login/items/52"
+    },
+    "is_greyed": false,
+    "is_available": true,
+    "is_orderable": false,
+    "tag_url": null,
+    "multiple_uoms": [
+      {
+        "variant_id": 310,
+        "uom_id": 2,
+        "unit": "1 piece",
+        "minimum_quantity": 1,
+        "maximum_quantity": 99,
+        "is_visible": true,
+        "is_available": true,
+        "is_default": true,
+        "price": 89,
+        "conversion_text": "300-400g",
+        "ripeness_types": null,
+        "market_price": 104,
+        "stepper_quantity": 1
+      }
+    ]
+  },
+  "info": {
+    "info": [
+      {
+        "type": "normal",
+        "title": "About the Product",
+        "details": [
+          {
+            "description": "Pale, crunchy, and brutally refreshing. It’s what your greasy burger needs, your blue cheese craves, your mouth remembers."
+          }
+        ]
+      },
+      {
+        "type": "storage",
+        "title": "Storing Information",
+        "details": [
+          {
+            "image": "https://admin.webdev.madrasmandi.in/storage/revamp-demo-images/storage-info/storage-info2.png",
+            "title": "5 - 7 days",
+            "description": " Keep it wrapped, chilled, and dry"
+          }
+        ],
+        "sub_title": ""
+      }
+    ]
+  },
+  "upsell_items": [
+
+  ]
+}
+
 const ShopPage = (props: HomeProps) => {
   const { mainMenuItems, footerData } = props;
   const mobile = useMediaQuery(650);
@@ -219,14 +286,18 @@ const ShopPage = (props: HomeProps) => {
   //   </div>
   // );
   const LoadedUI = () => (
-    <div className="flex flex-col items-center pb-[2vw] mob:pb-[10vw] overflow-hidden">
+    <div className="flex flex-col items-center pb-[2vw] mob:pb-[10vw] mob:pt-[25vw] overflow-hidden">
       <div className="w-full relative overflow-hidden m-0 p-0">
-        <ShopHeroSingle />
-        <FeatureStrip />
+        {/* <ShopHeroSingle />
+        <FeatureStrip /> */}
       </div>
 
-      <div className="flex flex-col gap-[6vw] mob:pl-[0vw] w-full items-center">
+      <div className="flex flex-col gap-[6vw] mt-[7vw] mob:pl-[0vw] w-full items-center">
         <HomeCategorySection categories={mainCategoryData} loading={loading} title="Shop By Category" />
+      </div>
+
+      <div className="flex flex-col gap-[6vw] mt-[7vw] mob:pl-[0vw] w-full items-center">
+        <FeatureProduct featuredItems={[featureditemdata]} />
       </div>
 
       {subCategories?.map((section: any, index: number) => {
@@ -234,7 +305,7 @@ const ShopPage = (props: HomeProps) => {
 
         if (section.type === 'products-recommendation') {
           return (
-            <div key={index} className="px-[2vw] w-full">
+            <div key={index} className="w-full">
               {(isMobile || isTablet) ? (
                 <PopularProduceMob categoryDetail={section} />
               ) : (

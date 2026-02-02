@@ -201,9 +201,9 @@ const ShopDetails = (props: HomeProps) => {
         title={`${query.category} | Origin Fresh`}
         description={`Explore our wide range of ${query.category} at Origin Fresh. Quality and freshness guaranteed.`}
       />
-      <ShopHero />
-      <FeatureStrip />
-      <div className="flex flex-col items-center justify-center mob:pt-[2vw]">
+      {/* <ShopHero /> */}
+      {/* <FeatureStrip /> */}
+      <div className="flex flex-col items-center justify-center mob:pt-[25vw] mt-[7vw]">
         <div className="flex flex-col gap-[2.2vw] w-[80.7vw] mob:w-full  mob:px-[4vw] pb-[10vw] relative ">
           {filters.category ? (
             <CategoryAndSubCategory filters={filters} setFilters={setFilters} />
@@ -215,9 +215,9 @@ const ShopDetails = (props: HomeProps) => {
       {/* <div className='mob:mb-[2vw]'>
         <CategorySection />
       </div> */}
-      <div className="flex flex-col gap-[2.2vw] w-[80.7vw] pt-[2.5vw] mob:w-full mob:px-[4vw] pb-[3vw] relative mx-auto">
+      {/* <div className="flex flex-col gap-[2.2vw] w-[80.7vw] pt-[2.5vw] mob:w-full mob:px-[4vw] pb-[3vw] relative mx-auto">
         <WhyOriginAndTestimonial category={filters.category} />
-      </div>
+      </div> */}
     </Layout>
   );
 };

@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 
-const EXTERNAL_DATA_URL = process.env.NEXT_PUBLIC_API_URL || 'https://originfresh.in';
+const EXTERNAL_DATA_URL = 'https://originfresh.in';
 
 function generateSiteMap(originApiData: any) {
     const { categories, blogs, recipes } = originApiData;

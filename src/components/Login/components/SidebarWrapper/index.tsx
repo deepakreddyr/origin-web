@@ -149,14 +149,14 @@ const SidebarWrapper = (props: Props) => {
 
       {loginDetails.isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-[10]"
+          className="fixed inset-0 bg-black bg-opacity-50 z-[110]"
           onClick={handleCloseAttempt}
         ></div>
       )}
       <div
         className={`fixed top-0 ${loginDetails.isSidebarOpen ? 'right-0' : '-right-full'
           } w-[30vw] mob:w-screen h-screen bg-white shadow-md flex flex-col 
-    transition-all duration-300 ease-in-out z-[20]`}
+    transition-all duration-300 ease-in-out z-[120]`}
       >
         {loginDetails.isHeaderVisible && (
           <div

@@ -12,7 +12,9 @@ import ProductDetailsPageLoader from '../skeletonLoaders/shop/ProductDetailsPage
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import itemRipenessSvg from '/public/assets/svg/itemRipeness.svg';
-
+import PopularProduce from '@/components/ShopV2/PopularProduce';
+import Link from 'next/link';
+import CustomHead from '../shared/CustomHead';
 
 // Type definitions
 interface UOM {
@@ -28,7 +30,7 @@ interface UOM {
   maximum_quantity: number;
   stepper_quantity: number;
   conversion_text: string;
-  ripeness_types?: string[]; // KEY PROPERTY TO CHECK
+  ripeness_types?: string[];
   cart_ripeness?: Array<{ ripeness_type: string; qty: string }>;
   cart_quantity?: number;
   [key: string]: any;
@@ -61,6 +63,8 @@ interface ProductItem {
   is_available: boolean;
   is_orderable: boolean;
   multiple_uoms: UOM[];
+  category_name?: string;
+  category_slug?: string;
 }
 
 interface ProductInfo {
@@ -105,130 +109,6 @@ const MaxQuantityToast: React.FC<{
           </p>
         </div>
       </div>
-    </div>
-  );
-};
-
-// Product pairing data
-const PRODUCT_PAIRINGS: Record<number, {
-  productName: string;
-  pairings: Array<{ name: string; description: string; }>;
-}> = {
-  283: {
-    productName: "Raspberry Imported",
-    pairings: [
-      { name: "Strawberry", description: "Sweetens the tartness. Works well in salads or fruit bowls." },
-      { name: "Spinach", description: "Adds a fresh, leafy contrast. Enhances smoothies effortlessly." },
-      { name: "Banana", description: "Rounds off the sharpness with creamy sweetness. Try the pair in parfaits or shakes." }
-    ]
-  },
-  358: {
-    productName: "Enoki Mushrooms",
-    pairings: [
-      { name: "Asparagus", description: "Adds crisp, earthy texture. Works beautifully in stir-fries or soups." },
-      { name: "Spring Onion", description: "Gives a mild, fresh bite. Tastes the best in hot pots." },
-      { name: "Zucchini", description: "Complements with subtle sweetness. Pairs wonderfully in sautés or bowls." }
-    ]
-  },
-  377: {
-    productName: "Hydroponic Butterhead Lettuce",
-    pairings: [
-      { name: "Cucumber", description: "Adds crunch and coolness. Perfect in salads or wraps." },
-      { name: "Tomato", description: "Brings juicy, mild acidity. Enhances sandwiches or bowls." },
-      { name: "Carrot", description: "Adds sweetness and color. Ideal in salads or slaws." }
-    ]
-  },
-  84: {
-    productName: "Muskmelon Indian",
-    pairings: [
-      { name: "Cucumber", description: "Enhances freshness and crunch. Adds a crisp touch to salads or juices." },
-      { name: "Watermelon", description: "Amplifies the fruity sweetness. Brightens chilled bowls or drinks." },
-      { name: "Mint", description: "Adds a fresh herbal lift. Complements fruit salads or drinks effortlessly." }
-    ]
-  }
-};
-
-// Hungry for More Section
-const HungryForMoreSection: React.FC<{ upsellItems: ProductItem[] }> = ({ upsellItems }) => {
-  const mobile = useMediaQuery(768);
-
-  if (!upsellItems || upsellItems.length === 0) return null;
-
-  const transformedItems = upsellItems.map(item => ({
-    ...item,
-    item_name: item.name,
-    multiple_uoms: item.multiple_uoms.map(uom => ({
-      ...uom,
-      formatted_price: `₹${uom.price}`
-    }))
-  }));
-
-  return (
-    <div className="mob:mt-12">
-      <div className="flex items-center justify-between mb-8 mob:mb-6">
-        <h2 className="text-[2.5vw] mob:text-xl font-[SofiaPro] font-bold text-gray-900 mb-2">
-          Hungry for more?
-        </h2>
-      </div>
-      <div className={`grid ${mobile ? "grid-cols-2 gap-3" : "grid-cols-4 gap-[5vw]"}`}>
-        {transformedItems.slice(0, mobile ? 4 : 8).map((item) => (
-          <ItemCard key={item.id} itemDetails={item} />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-// Best Pairing Section
-const BestPairingCollapsed: React.FC<{ productDetails: ProductDetails }> = ({ productDetails }) => {
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-
-  const productId = productDetails.item.id;
-  const pairingData = PRODUCT_PAIRINGS[productId];
-
-  if (!pairingData) return null;
-
-  return (
-    <div className="mt-8">
-      <div
-        className="flex items-center justify-between cursor-pointer py-4 border-t"
-        onClick={() => setIsExpanded(prev => !prev)}
-      >
-        <div className="flex items-center gap-3">
-          <div className="w-6 h-6 flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-            </svg>
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-900 text-base">Best Pairing</h3>
-            <p className="text-sm text-gray-500">Recommended By Chef Rhea, Klaa Kitchen</p>
-          </div>
-        </div>
-        <svg
-          className={`w-5 h-5 text-gray-400 transform transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''
-            }`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          strokeWidth="2"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-        </svg>
-      </div>
-
-      {isExpanded && (
-        <div className="bg-[#FFF9E5] border-t p-4 animate-slideDown">
-          <div className="ml-9 space-y-4">
-            {pairingData.pairings.map((pairing, index) => (
-              <div key={index}>
-                <h4 className="font-semibold text-gray-900 mb-1 text-sm">{pairing.name}</h4>
-                <p className="text-gray-700 text-sm leading-relaxed">{pairing.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 };
@@ -305,12 +185,12 @@ const StorageInfo: React.FC<{ info: ProductInfo }> = ({ info }) => {
 
   return (
     <div className="mt-4 w-[443px] mob:w-full bg-white rounded-[16px] border border-[#EDE6CC]/50 p-4 pb-[16px]">
-      <h3 className="font-Stinger font-bold text-xl text-[#231F20] mb-4 text-start">
+      <p className="font-[Stinger] font-bold text-xl text-[#231F20] mb-6 text-start">
         Storing information
-      </h3>
+      </p>
       <div className="flex flex-row overflow-x-auto gap-[12px] no-scrollbar">
         {storageSection.details.map((detail: any, index: number) => (
-          <div key={index} className="flex-shrink-0 w-[184px] h-[50px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex items-center gap-[10px] border border-[#EDE6CC]/20 overflow-hidden">
+          <div key={index} className="flex-shrink-0 w-[184px] h-[60px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex items-center gap-[10px] border border-[#EDE6CC]/20 overflow-hidden">
             <div className="w-6 h-6 relative flex-shrink-0 bg-white rounded-full p-1">
               <Image src={detail.image} alt={detail.title} fill className="object-contain p-1" />
             </div>
@@ -336,12 +216,12 @@ const NutritionBenefits: React.FC<{ info: ProductInfo }> = ({ info }) => {
 
   return (
     <div className="mt-4 w-[443px] mob:w-full bg-white rounded-[16px] border border-[#EDE6CC]/50 p-4 pb-[16px]">
-      <h3 className="font-Stinger font-bold text-xl text-[#231F20] mb-4 text-start">
+      <p className="font-[Stinger] font-bold text-xl text-[#231F20] mb-6 text-start">
         Nutrition benefits
-      </h3>
+      </p>
       <div className="flex flex-row overflow-x-auto gap-[12px] no-scrollbar">
         {nutritionSection.details.map((detail: any, index: number) => (
-          <div key={index} className="flex-shrink-0 w-[184px] h-[50px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex flex-col justify-center border border-[#EDE6CC]/20 overflow-hidden">
+          <div key={index} className="flex-shrink-0 w-[184px] h-[60px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex flex-col justify-center border border-[#EDE6CC]/20 overflow-hidden">
             <p className="font-[SofiaPro] font-bold text-base text-[#231F20] leading-tight truncate">
               {detail.title}
             </p>
@@ -434,63 +314,101 @@ const ProductDetailsWrapper = () => {
   const aboutSection = productDetails.info?.info?.find(section => section.type === 'normal' && section.title === 'About the Product');
   const productDescription = aboutSection?.details?.[0]?.description || '';
 
-  // Generate SEO data
+  // SEO Logic
+  const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || "https://origin.com";
+  const cleanPath = router.asPath.split('?')[0];
+  const currentUrl = `${frontendUrl}${cleanPath}`;
+
   const seoData = {
     title: `${productDetails.item.name || 'Product'} - Buy Online`,
-    description: productDescription.substring(0, 160) || `Buy ${productDetails.item.name} online. Fresh and high-quality products delivered to your doorstep.`,
-    image: productDetails.item.image,
+    description: (productDescription || `Buy ${productDetails.item.name} online. Fresh and high-quality products delivered to your doorstep.`).substring(0, 155),
+    image: productDetails.item.image || `${frontendUrl}/assets/images/neworiginlogo.png`,
     price: defaultUOM?.price || 0,
     currency: 'INR',
     availability: productDetails.item.is_available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-    url: typeof window !== 'undefined' ? window.location.href : ''
+    url: currentUrl
   };
 
-  // JSON-LD structured data
-  const structuredData = {
+  // Calculate price validity (1 year from now)
+  const priceValidUntil = new Date();
+  priceValidUntil.setFullYear(priceValidUntil.getFullYear() + 1);
+
+  // JSON-LD: Product
+  const productStructuredData = {
     "@context": "https://schema.org/",
     "@type": "Product",
     "name": seoData.title,
     "image": seoData.image,
     "description": seoData.description,
+    "sku": productDetails.item.item_code || productDetails.item.id,
+    "brand": {
+      "@type": "Brand",
+      "name": "Origin Fresh"
+    },
     "offers": {
       "@type": "Offer",
       "url": seoData.url,
       "priceCurrency": seoData.currency,
       "price": seoData.price,
+      "priceValidUntil": priceValidUntil.toISOString().split('T')[0],
       "availability": seoData.availability,
       "itemCondition": "https://schema.org/NewCondition"
     }
+  };
+
+  // JSON-LD: BreadcrumbList
+  const breadcrumbStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": frontendUrl
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": productDetails.item.category_name || "Shop",
+        "item": `${frontendUrl}${productDetails.item.category_slug ? `/shop/${productDetails.item.category_slug}` : '/shop'}`
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": productDetails.item.name,
+        "item": currentUrl
+      }
+    ]
   };
 
   if (productDetails.isLoading) return <ProductDetailsPageLoader />;
 
   return (
     <>
+      <CustomHead
+        title={seoData.title}
+        description={seoData.description}
+        canonical={seoData.url}
+        ogImage={seoData.image}
+        ogType="product"
+        ogUrl={seoData.url}
+      />
       <Head>
-        <title>{seoData.title}</title>
-        <meta name="title" content={seoData.title} />
-        <meta name="description" content={seoData.description} />
-        <meta property="og:type" content="product" />
-        <meta property="og:url" content={seoData.url} />
-        <meta property="og:title" content={seoData.title} />
-        <meta property="og:description" content={seoData.description} />
-        <meta property="og:image" content={seoData.image} />
         <meta property="product:price:amount" content={seoData.price.toString()} />
         <meta property="product:price:currency" content={seoData.currency} />
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content={seoData.url} />
-        <meta property="twitter:title" content={seoData.title} />
-        <meta property="twitter:description" content={seoData.description} />
-        <meta property="twitter:image" content={seoData.image} />
-        <link rel="canonical" href={seoData.url} />
-        <meta name="robots" content="index, follow" />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productStructuredData) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }}
         />
       </Head>
 
-      <div className="mt-[4vw]" style={{ backgroundColor: '#FFF9E5' }}>
+      {/* <div className="mt-[4vw]" style={{ backgroundColor: '#FFF9E5' }}> */}
+      <div className="mt-[4vw]">
         {/* Max Quantity Toast */}
         <MaxQuantityToast
           maxQuantity={toastMaxQuantity}
@@ -498,135 +416,217 @@ const ProductDetailsWrapper = () => {
           onClose={() => setShowMaxQuantityToast(false)}
         />
 
-        <div className="max-w-6xl mx-auto py-7 mob:px-4 mob:py-6">
-          {mobile ? (
-            <div className="space-y-8">
-              <div className="flex flex-col items-start">
-                <div className="relative w-80 h-80 bg-transparent self-center">
-                  <Image
-                    src={productDetails.item.image}
-                    fill
-                    alt={productDetails.item.name || "Product"}
-                    style={{ objectFit: 'contain' }}
-                    priority
-                  />
-                  {/* --- NEW: Ripeness SVG positioned absolutely --- */}
-                  {hasRipenessFeature && (
-                    <div className="absolute bottom-2 right-2 z-10">
-                      <Image src={itemRipenessSvg} alt='Select ripeness' width={28} height={28} />
-                    </div>
-                  )}
-                  {/* --- END NEW --- */}
-                </div>
-              </div>
-              <div className="text-center space-y-4">
-                <h1 className="text-4xl mob:text-[8vw] font-Stinger font-bold text-[#231F20] leading-tight">
-                  {productDetails.item.name}
-                </h1>
-
-                {/* {defaultUOM && ( */}
-                {/* <> */}
-                {/* <div className="text-2xl font-[SofiaPro] font-bold text-gray-900">
-                      ₹{defaultUOM.price}
-                    </div> */}
-                {/* Removed the old centralized Image component here */}
-                {/* <div className="text-gray-500 font-[SofiaPro] text-sm">{defaultUOM.unit}</div> */}
-                {/* </> */}
-                {/* )} */}
-
-                <div className='font-[SofiaPro]'>
-                  <AddItemBtn
-                    product={productDetails?.item}
-                    varientId={defaultUOM?.variant_id}
-                    varientPrice={defaultUOM?.price}
-                    stepperQuantity={defaultUOM?.stepper_quantity}
-                    buttonType={'yellowaddtocart'}
-                    onMaxQuantityExceeded={handleMaxQuantityExceeded}
-                    // 👇 Pass the check result to AddItemBtn for conditional rendering
-                    hasRipenessFeature={hasRipenessFeature}
-                  />
-                </div>
-
-                <div className="w-full text-start space-y-4">
-                  <StorageInfo info={productDetails.info} />
-                  <NutritionBenefits info={productDetails.info} />
-                </div>
-
-                {productDescription && (
-                  <p className="text-gray-700 leading-relaxed text-sm mt-6">{productDescription}</p>
-                )}
-
-                <BestPairingCollapsed productDetails={productDetails} />
-                <ComboContains productDetails={productDetails} />
-              </div>
+        <div className="w-[92vw] md:w-[80vw] mx-auto py-7 mob:px-0 mob:py-6">
+          {/* Breadcrumbs for Mobile - APPEARS BEFORE IMAGE */}
+          {mobile && (
+            <div className="flex items-center gap-2 text-lg font-bold text-[#146321] mb-6 font-[SofiaPro]">
+              <Link href="/" className="hover:underline">
+                Home
+              </Link>
+              <span className="text-gray-300">/</span>
+              <Link href={productDetails.item.category_slug ? `/shop/${productDetails.item.category_slug}` : '/shop'} className="hover:underline">
+                {productDetails.item.category_name || 'Shop'}
+              </Link>
+              <span className="text-gray-300">/</span>
+              <span className="text-gray-900 line-clamp-1">{productDetails.item.name}</span>
             </div>
-          ) : (
-            <div className="flex items-start gap-16 min-h-[550px]">
-              <div className="flex-1 flex flex-col items-start">
-                {/* --- DESKTOP VIEW: Image Container UPDATED for relative positioning --- */}
-                <div className="relative w-96 h-96 bg-transparent">
+          )}
+
+          {mobile ? (
+            <div className="space-y-6">
+              <div className="flex flex-col items-center bg-white rounded-[24px] overflow-hidden pt-8 pb-8 border border-[#EDE6CC]/50">
+                <div className="relative w-[70vw] h-[70vw] max-w-[300px] max-h-[300px] bg-transparent mb-6">
                   <Image
                     src={productDetails.item.image}
                     fill
                     alt={productDetails.item.name || "Product"}
                     style={{ objectFit: 'contain' }}
-                    className="drop-shadow-xl"
                     priority
                   />
-                  {/* --- NEW: Ripeness SVG positioned absolutely --- */}
                   {hasRipenessFeature && (
-                    <div className="absolute top-2 right-2 z-0">
-                      <Image src={itemRipenessSvg} alt='Select ripeness' width={70} height={70} />
+                    <div className="absolute bottom-0 right-0 z-10">
+                      <Image src={itemRipenessSvg} alt='Select ripeness' width={50} height={50} />
                     </div>
                   )}
-                  {/* --- END NEW --- */}
                 </div>
-                <div className="w-96 mt-6 space-y-4">
-                  <StorageInfo info={productDetails.info} />
-                  <NutritionBenefits info={productDetails.info} />
-                </div>
-              </div>
 
-              <div className="flex-1 max-w-lg space-y-6">
-                <div>
-                  <h1 className="text-4xl font-Stinger font-bold text-[#231F20] mb-3 leading-tight">
+                <div className="w-full px-6 space-y-2 text-start">
+                  <h1 className="text-2xl font-Stinger font-bold text-[#231F20] leading-tight">
                     {productDetails.item.name}
                   </h1>
-
-                  {defaultUOM && (
-                    <>
-                      <div className="text-2xl font-bold text-gray-900 mb-1">₹{defaultUOM.price}</div>
-                      <div className="text-gray-500 text-sm mb-6">{defaultUOM.unit}</div>
-                    </>
-                  )}
                 </div>
 
-                <AddItemBtn
-                  product={productDetails?.item}
-                  varientId={defaultUOM?.variant_id}
-                  varientPrice={defaultUOM?.price}
-                  stepperQuantity={defaultUOM?.stepper_quantity}
-                  buttonType={'yellowaddtocart'}
-                  onMaxQuantityExceeded={handleMaxQuantityExceeded}
-                  // 👇 Pass the check result to AddItemBtn for conditional rendering
-                  hasRipenessFeature={hasRipenessFeature}
-                />
-
-                {productDescription && (
-                  <p className="text-gray-700 leading-relaxed">{productDescription}</p>
+                {/* Mobile Price Strip */}
+                {defaultUOM && (
+                  <div className="w-[calc(100%-3rem)] mt-6 bg-[#F8F4E9] rounded-xl p-3 flex items-center justify-between border border-[#F3EEDF]">
+                    <div className="flex flex-col">
+                      <span className="text-sm font-semibold text-gray-900">{defaultUOM.unit}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl font-bold text-[#231F20]">₹{defaultUOM.price}</span>
+                        {defaultUOM.market_price > defaultUOM.price && (
+                          <span className="text-sm text-gray-400 line-through">₹{defaultUOM.market_price}</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="w-24 rounded-full overflow-hidden">
+                      <AddItemBtn
+                        product={productDetails?.item}
+                        varientId={defaultUOM?.variant_id}
+                        varientPrice={defaultUOM?.price}
+                        stepperQuantity={defaultUOM?.stepper_quantity}
+                        buttonType={'yellowaddtocart'}
+                        onMaxQuantityExceeded={handleMaxQuantityExceeded}
+                        hasRipenessFeature={hasRipenessFeature}
+                        minimumQuantity={defaultUOM?.minimum_quantity}
+                      />
+                    </div>
+                  </div>
                 )}
+              </div>
 
-                <BestPairingCollapsed productDetails={productDetails} />
-                <ComboContains productDetails={productDetails} />
+              {/* Mobile About Card */}
+              <div className="bg-white rounded-[16px] border border-[#EDE6CC]/50 p-5">
+                <h3 className="font-Stinger font-bold text-xl text-[#231F20] mb-3">About</h3>
+                <p className="text-sm text-gray-700 leading-relaxed font-[SofiaPro]">
+                  {productDescription || "Grapefruit is a natural cross between pomelo and orange, known for its large fruit size, thick peel, and bitter tinges due to its high content of naringin, limonoids, and furanocoum..."}
+                </p>
+              </div>
+
+              <div className="w-full text-start space-y-4">
+                <StorageInfo info={productDetails.info} />
+                <NutritionBenefits info={productDetails.info} />
+              </div>
+              <ComboContains productDetails={productDetails} />
+            </div>
+          ) : (
+            // Desktop View
+            <div className="space-y-12">
+              {/* Top Section Grid */}
+              <div className="grid grid-cols-[1fr_1.2fr] gap-12 items-start">
+
+                {/* Left: Product Image Card */}
+                <div className="bg-white rounded-[32px] border border-[#EDE6CC]/50 p-12 flex items-center justify-center min-h-[500px] relative">
+                  <div className="relative w-96 h-96">
+                    <Image
+                      src={productDetails.item.image}
+                      fill
+                      alt={productDetails.item.name || "Product"}
+                      style={{ objectFit: 'contain' }}
+                      className="drop-shadow-sm"
+                      priority
+                    />
+                    {hasRipenessFeature && (
+                      <div className="absolute bottom-0 right-0 z-10">
+                        <Image src={itemRipenessSvg} alt='Select ripeness' width={80} height={80} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Right: Info & Actions */}
+                <div className="flex flex-col space-y-8">
+
+                  {/* Breadcrumbs */}
+                  <div className="flex items-center gap-2 text-lg font-bold text-[#146321] font-[SofiaPro]">
+                    <Link href="/" className="hover:underline">
+                      Home
+                    </Link>
+                    <span className="text-gray-300">/</span>
+                    <Link href={productDetails.item.category_slug ? `/shop/${productDetails.item.category_slug}` : '/shop'} className="hover:underline">
+                      {productDetails.item.category_name || 'Shop'}
+                    </Link>
+                    <span className="text-gray-300">/</span>
+                    <span className="text-gray-900 line-clamp-1">{productDetails.item.name}</span>
+                  </div>
+
+                  {/* Title & Subtitle */}
+                  <div>
+                    <h1 className="text-5xl font-Stinger font-bold text-[#231F20] mb-2 leading-tight">
+                      {productDetails.item.name}
+                    </h1>
+                    <p className="font-[SofiaPro] italic text-lg text-[#231F20]/60">
+                      Geeru Gundu Badanekaayi
+                    </p>
+                  </div>
+
+                  {/* Price Strip */}
+                  {defaultUOM && (
+                    <div className="w-full max-w-md bg-[#FAF9F5] rounded-2xl px-6 py-4 flex items-center justify-between border border-[#F3EEDF]">
+                      <div className="flex items-center gap-6">
+                        <span className="text-base font-semibold text-gray-900">{defaultUOM.unit}</span>
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl font-bold text-[#231F20]">₹{defaultUOM.price}</span>
+                          {defaultUOM.market_price > defaultUOM.price && (
+                            <span className="text-base text-gray-400 line-through">₹{defaultUOM.market_price}</span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="w-[80px] rounded-full overflow-hidden">
+                        <AddItemBtn
+                          product={productDetails?.item}
+                          varientId={defaultUOM?.variant_id}
+                          varientPrice={defaultUOM?.price}
+                          stepperQuantity={defaultUOM?.stepper_quantity}
+                          buttonType={'yellowaddtocart'}
+                          onMaxQuantityExceeded={handleMaxQuantityExceeded}
+                          hasRipenessFeature={hasRipenessFeature}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* About Card */}
+                  <div className="bg-white rounded-[24px] border border-[#EDE6CC]/50 p-8 w-full">
+                    <h3 className="font-Stinger font-bold text-2xl text-[#231F20] mb-4">About</h3>
+                    <p className="text-base text-gray-700 leading-relaxed font-[SofiaPro]">
+                      {productDescription || "Grapefruit is a natural cross between pomelo and orange, known for its large fruit size, thick peel, and bitter tinges due to its high content of naringin, limonoids, and furanocoum..."}
+                    </p>
+                  </div>
+
+                  {/* Combo & Pairing */}
+                  <ComboContains productDetails={productDetails} />
+                </div>
+              </div>
+
+              {/* Secondary Info Grid (Storage, etc. if needed below) */}
+              {/* The desktop image shows 'Storing information' as a card. If it was distinct from the Right Col, it would be here. 
+                   Based on the image, if 'Storing information' is below 'About', I should put it there. 
+                   The prompt image shows 'Storing information' essentially as a separate block.
+                   I will put StorageInfo and NutritionBenefits in a row below the main grid. */}
+
+              <div className="flex gap-8 items-start">
+                <StorageInfo info={productDetails.info} />
+                <NutritionBenefits info={productDetails.info} />
               </div>
             </div>
           )}
 
-          <div className="mt-12 space-y-8">
-            <AboutTheProduct productDetails={productDetails} />
+          {/* Forgot to Add / Popular Produce */}
+          <div className="mt-16">
+            {/* <div className="flex items-center justify-between mb-8">
+              <h2 className="text-[2.5vw] mob:text-[7vw] font-Stinger font-bold text-[#231F20]">
+                Forgot to add?
+              </h2>s
+            </div> */}
+            {/* Use PopularProduce (rebranded) for the list */}
+            {productDetails.upsell_items && productDetails.upsell_items.length > 0 && (
+              <div className="w-full">
+                {/* We reuse the structure by mocking the categoryDetail expected by PopularProduce */}
+                <PopularProduce
+                  categoryDetail={{
+                    title: "", // Title handled above
+                    data: productDetails.upsell_items.map(item => ({
+                      ...item,
+                      multiple_uoms: item.multiple_uoms.map(uom => ({
+                        ...uom,
+                        formatted_price: `₹${uom.price}`
+                      }))
+                    }))
+                  }}
+                />
+              </div>
+            )}
           </div>
-
-          <HungryForMoreSection upsellItems={productDetails.upsell_items} />
         </div>
 
         <style jsx>{`
