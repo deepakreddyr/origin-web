@@ -598,12 +598,10 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
   };
 
   const handleNavigation = () => {
-    if (selectedUOM.is_available) {
-      const slug = encodeURIComponent(
-        itemDetails.name.replace(/ /g, '-').toLowerCase()
-      );
-      router.push(`/${slug}/${itemDetails.id}`);
-    }
+    const slug = encodeURIComponent(
+      itemDetails.name.replace(/ /g, '-').toLowerCase()
+    );
+    router.push(`/${slug}/${itemDetails.id}`);
   };
 
   // Handle basket view button click

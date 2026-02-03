@@ -1,5 +1,6 @@
 import { mainApiUrl, protectedUrl, unprotectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
+import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { getAddressAndStoreId } from '@/utilities/utils';
 import Image from 'next/image';
 import Head from 'next/head';
@@ -15,6 +16,9 @@ import itemRipenessSvg from '/public/assets/svg/itemRipeness.svg';
 import PopularProduce from '@/components/ShopV2/PopularProduce';
 import Link from 'next/link';
 import CustomHead from '../shared/CustomHead';
+import { useDispatch, useSelector } from 'react-redux';
+import { addNotifiedItem } from '@/store/slice/productsSlice';
+import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 
 // Type definitions
 interface UOM {
@@ -112,6 +116,47 @@ const MaxQuantityToast: React.FC<{
     </div>
   );
 };
+
+// --------------------------------------------------------
+// NOTIFY TOAST COMPONENT
+// --------------------------------------------------------
+const NotifyToast: React.FC<{
+  message: string;
+  isVisible: boolean;
+  onClose: () => void;
+  type: 'success' | 'error';
+}> = ({ message, isVisible, onClose, type }) => {
+
+  useEffect(() => {
+    if (isVisible) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, onClose]);
+
+  if (!isVisible) return null;
+
+  return (
+    <div
+      className={`fixed z-[100] left-1/2 bottom-10 transform -translate-x-1/2 w-[90%] max-w-sm transition-all duration-300 ease-in-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+        }`}
+    >
+      <div className="flex items-center bg-black rounded-full shadow-2xl h-12 px-6 w-full relative">
+        <div className="flex items-center justify-center w-full gap-3">
+          {type === 'error' && (
+            <InfoOutlinedIcon sx={{ color: '#FFDD00', fontSize: '1.2rem' }} />
+          )}
+          <p className="text-[0.80rem] font-medium text-white text-center leading-tight font-[SofiaPro]">
+            {message}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Combo Contains Section
 const ComboContains: React.FC<{ productDetails: ProductDetails }> = ({ productDetails }) => {
   if (!productDetails.combo_items || productDetails.combo_items.length === 0) return null;
@@ -261,6 +306,12 @@ const ProductDetailsWrapper = () => {
   const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
   const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
 
+  // --- NOTIFY ME STATE ---
+  const [showNotifyToast, setShowNotifyToast] = useState(false);
+  const [notifyMsg, setNotifyMsg] = useState("");
+  const [notifyType, setNotifyType] = useState<'success' | 'error'>('success');
+  const dispatch = useDispatch();
+
   const handleMaxQuantityExceeded = (maxQty: number) => {
     setToastMaxQuantity(maxQty);
     setShowMaxQuantityToast(true);
@@ -269,6 +320,35 @@ const ProductDetailsWrapper = () => {
   const getDataFromApi = useGetDataFromApi();
   const router = useRouter();
   const { isReady, query } = router;
+
+  const notifiedItems = useSelector((state: any) => state.products.notifiedItems);
+  const isNotified = productDetails.item ? notifiedItems.includes(productDetails.item.id) : false;
+  const sendDataToApi = useSendDataToApi();
+
+  const handleNotifyMe = async () => {
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['notifyMe'];
+    const addressFromLs = getAddressAndStoreId();
+    const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
+
+    const payload = {
+      item_id: productDetails.item.id
+    };
+
+    const successHandler = (data: any) => {
+      setNotifyMsg(data?.message || "Successfully subscribed to notifications");
+      setNotifyType('success');
+      setShowNotifyToast(true);
+      dispatch(addNotifiedItem(productDetails.item.id));
+    };
+
+    const failureHandler = (error: any) => {
+      setNotifyMsg(error?.message || "Not successful. Please try again later.");
+      setNotifyType('error');
+      setShowNotifyToast(true);
+    };
+
+    await sendDataToApi(apiUrl, payload, 'POST', successHandler, failureHandler, additionalHeaders);
+  };
 
   useEffect(() => {
     if (isReady) {
@@ -415,6 +495,12 @@ const ProductDetailsWrapper = () => {
           isVisible={showMaxQuantityToast}
           onClose={() => setShowMaxQuantityToast(false)}
         />
+        <NotifyToast
+          message={notifyMsg}
+          isVisible={showNotifyToast}
+          onClose={() => setShowNotifyToast(false)}
+          type={notifyType}
+        />
 
         <div className="w-[92vw] md:w-[80vw] mx-auto py-7 mob:px-0 mob:py-6">
           {/* Breadcrumbs for Mobile - APPEARS BEFORE IMAGE */}
@@ -448,6 +534,12 @@ const ProductDetailsWrapper = () => {
                       <Image src={itemRipenessSvg} alt='Select ripeness' width={50} height={50} />
                     </div>
                   )}
+                  {/* Out of Stock Overlay */}
+                  {(!defaultUOM?.is_available || !productDetails.item.is_available) && (
+                    <div className="bg-black-op-50 absolute top-0 w-full py-2 flex justify-center z-20">
+                      <p className="text-sm font-[SofiaPro] font-semibold text-white">OUT OF STOCK</p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="w-full px-6 space-y-2 text-start">
@@ -468,17 +560,37 @@ const ProductDetailsWrapper = () => {
                         )}
                       </div>
                     </div>
-                    <div className="w-24 rounded-full overflow-hidden">
-                      <AddItemBtn
-                        product={productDetails?.item}
-                        varientId={defaultUOM?.variant_id}
-                        varientPrice={defaultUOM?.price}
-                        stepperQuantity={defaultUOM?.stepper_quantity}
-                        buttonType={'yellowaddtocart'}
-                        onMaxQuantityExceeded={handleMaxQuantityExceeded}
-                        hasRipenessFeature={hasRipenessFeature}
-                        minimumQuantity={defaultUOM?.minimum_quantity}
-                      />
+                    {/* Action Button: Notify Me OR Add to Cart */}
+                    <div className={`${(!defaultUOM?.is_available || !productDetails.item.is_available) ? 'w-auto' : 'w-24'} rounded-full overflow-hidden`}>
+                      {(!defaultUOM?.is_available || !productDetails.item.is_available) ? (
+                        <button
+                          type="button"
+                          disabled={isNotified}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (!isNotified) handleNotifyMe();
+                          }}
+                          className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 ${isNotified
+                            ? 'border-gray-400 text-gray-400 bg-gray-50 cursor-default'
+                            : 'border-[#146321] text-[#146321] hover:bg-green-50'
+                            }`}
+                        >
+                          <span className="text-sm">
+                            {isNotified ? 'Notified' : 'Notify'}
+                          </span>
+                          <NotificationsNoneOutlinedIcon sx={{ fontSize: '1.2rem', strokeWidth: 1 }} />
+                        </button>
+                      ) : (
+                        <AddItemBtn
+                          product={productDetails?.item}
+                          varientId={defaultUOM?.variant_id}
+                          varientPrice={defaultUOM?.price}
+                          stepperQuantity={defaultUOM?.stepper_quantity}
+                          buttonType={'yellowaddtocart'}
+                          onMaxQuantityExceeded={handleMaxQuantityExceeded}
+                          hasRipenessFeature={hasRipenessFeature}
+                        />
+                      )}
                     </div>
                   </div>
                 )}
@@ -520,6 +632,11 @@ const ProductDetailsWrapper = () => {
                         <Image src={itemRipenessSvg} alt='Select ripeness' width={80} height={80} />
                       </div>
                     )}
+                    {(!defaultUOM?.is_available || !productDetails.item.is_available) && (
+                      <div className="bg-black-op-50 absolute top-0 w-full py-2 flex justify-center z-20">
+                        <p className="text-lg font-[SofiaPro] font-semibold text-white">OUT OF STOCK</p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -544,9 +661,6 @@ const ProductDetailsWrapper = () => {
                     <h1 className="text-5xl font-Stinger font-bold text-[#231F20] mb-2 leading-tight">
                       {productDetails.item.name}
                     </h1>
-                    <p className="font-[SofiaPro] italic text-lg text-[#231F20]/60">
-                      Geeru Gundu Badanekaayi
-                    </p>
                   </div>
 
                   {/* Price Strip */}
@@ -561,16 +675,36 @@ const ProductDetailsWrapper = () => {
                           )}
                         </div>
                       </div>
-                      <div className="w-[80px] rounded-full overflow-hidden">
-                        <AddItemBtn
-                          product={productDetails?.item}
-                          varientId={defaultUOM?.variant_id}
-                          varientPrice={defaultUOM?.price}
-                          stepperQuantity={defaultUOM?.stepper_quantity}
-                          buttonType={'yellowaddtocart'}
-                          onMaxQuantityExceeded={handleMaxQuantityExceeded}
-                          hasRipenessFeature={hasRipenessFeature}
-                        />
+                      <div className={`${(!defaultUOM?.is_available || !productDetails.item.is_available) ? 'w-auto' : 'w-[80px]'} rounded-full overflow-hidden`}>
+                        {(!defaultUOM?.is_available || !productDetails.item.is_available) ? (
+                          <button
+                            type="button"
+                            disabled={isNotified}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (!isNotified) handleNotifyMe();
+                            }}
+                            className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 ${isNotified
+                              ? 'border-gray-400 text-gray-400 bg-gray-50 cursor-default'
+                              : 'border-[#146321] text-[#146321] hover:bg-green-50'
+                              }`}
+                          >
+                            <span className="text-sm">
+                              {isNotified ? 'Notified' : 'Notify'}
+                            </span>
+                            <NotificationsNoneOutlinedIcon sx={{ fontSize: '1.2rem', strokeWidth: 1 }} />
+                          </button>
+                        ) : (
+                          <AddItemBtn
+                            product={productDetails?.item}
+                            varientId={defaultUOM?.variant_id}
+                            varientPrice={defaultUOM?.price}
+                            stepperQuantity={defaultUOM?.stepper_quantity}
+                            buttonType={'yellowaddtocart'}
+                            onMaxQuantityExceeded={handleMaxQuantityExceeded}
+                            hasRipenessFeature={hasRipenessFeature}
+                          />
+                        )}
                       </div>
                     </div>
                   )}

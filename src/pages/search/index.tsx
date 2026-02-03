@@ -16,7 +16,8 @@ import OriginButton from '@/components/OriginButton/OriginButton';
 import notifymeSvg from '/public/assets/svg/notifyme.svg';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { protectedUrl } from '@/url';
-import { setIsSidebarOpen } from '@/store/slice/loginSlice';
+import { setIsSidebarOpen, setTabType } from '@/store/slice/loginSlice';
+import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 // --- END ASSUMED IMPORT ---
 
 // Updated Product interface to match your API response
@@ -323,6 +324,7 @@ const RequestItemModal: React.FC<{
 
     if (!isLogin) {
       setIsPendingPostLogin(true);
+      dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
       dispatch(setIsSidebarOpen(true));
       return;
     }

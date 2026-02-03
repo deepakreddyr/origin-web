@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 // Assuming this is your central button component that takes the new minimumQuantity prop
 import AddItemBtn from './AddItemBtn';
 // --- SVG IMPORTS ---
@@ -678,7 +679,14 @@ const YellowBtn = (props: YellowBtnProps) => {
             className="w-full bg-[#FFDD00] text-black font-bold text-base md:text-sm py-3 md:py-3"
             onClick={onAdd}
           >
-            {requiresSelection ? 'More Options' : 'Add +'}
+            {requiresSelection ? (
+              <div className="flex items-center justify-center gap-1">
+                <span>Add</span>
+                <KeyboardArrowDownIcon fontSize="small" />
+              </div>
+            ) : (
+              'Add +'
+            )}
           </button>
         )}
       </div>

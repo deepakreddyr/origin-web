@@ -412,6 +412,12 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
             {!search && (
               <div className="flex items-center gap-[2vw] pr-[0] mob:hidden">
                 <Link
+                  href="/about"
+                  className="h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full bg-primary text-black text-[1.1vw] font-medium font-[SofiaPro]"
+                >
+                  About Us
+                </Link>
+                <Link
                   href="/shop"
                   className="h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full bg-primary text-black text-[1.1vw] font-medium font-[SofiaPro]"
                 >
