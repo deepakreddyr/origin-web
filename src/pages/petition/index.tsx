@@ -16,9 +16,22 @@ export default function PetitionPage() {
   const [petitionCount, setPetitionCount] = useState<number | null>(null);
   const [liveVisitors, setLiveVisitors] = useState<number>(0);
   const [errors, setErrors] = useState({ name: '', phone: '', email: '' });
+  const [showPopup, setShowPopup] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   // Check if mandatory fields are filled to enable button
   const isFormFilled = formData.name.trim() !== '' && formData.phone.trim() !== '';
+
+  // Show popup on page load
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPopup(true);
+      setShowConfetti(true);
+      // Stop confetti after 3 seconds
+      setTimeout(() => setShowConfetti(false), 3000);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Fake live visitors count (40-70)
   useEffect(() => {
@@ -95,6 +108,10 @@ export default function PetitionPage() {
       if (response.ok) {
         setSubmitStatus('success');
         setFormData({ name: '', phone: '', email: '' });
+        // Redirect to product page after 1.5 seconds
+        setTimeout(() => {
+          window.location.href = 'https://originfresh.in/honey-baby-pineapple-peeled/399';
+        }, 1500);
       } else {
         setSubmitStatus('error');
       }
@@ -105,15 +122,93 @@ export default function PetitionPage() {
     }
   };
 
+  const handleProductNavigate = () => {
+    window.location.href = 'https://originfresh.in/honey-baby-pineapple-peeled/399';
+  };
+
   return (
     <div className="min-h-screen bg-white font-sans selection:bg-black selection:text-yellow-400">
+      {/* Confetti Effect */}
+      {showConfetti && (
+        <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+          {[...Array(50)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute animate-confetti"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: '-10px',
+                animationDelay: `${Math.random() * 0.5}s`,
+                animationDuration: `${2 + Math.random() * 2}s`,
+              }}
+            >
+              <div
+                className="w-2 h-2 md:w-3 md:h-3"
+                style={{
+                  backgroundColor: ['#ffbe00', '#000000', '#ff6b6b', '#4ecdc4', '#95e1d3'][Math.floor(Math.random() * 5)],
+                  transform: `rotate(${Math.random() * 360}deg)`,
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Notification Popup */}
+      {showPopup && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-40 p-4 animate-fadeIn">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-8 md:p-10 relative animate-scaleIn border-4 border-[#ffbe00]">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowPopup(false)}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-black text-white hover:bg-zinc-800 transition-colors font-black"
+            >
+              ✕
+            </button>
+
+            {/* Popup Content */}
+            <div className="text-center">
+              <div className="mb-6">
+                <div className="text-6xl mb-4">🍯🍍</div>
+                <h2 className="font-[SofiaPro] text-3xl md:text-4xl font-black tracking-tight mb-3">
+                  You made it happen! 
+                </h2>
+                <p className="text-lg font-semibold mb-2">
+                  Honey baby pineapples are back in stock. 
+                </p>
+                {/* <p className="text-base text-gray-600">
+                  Join <span className="font-black text-[#ffbe00]">{petitionCount ? 722 + petitionCount : '1000+'}</span> people who've already signed the petition!
+                </p> */}
+              </div>
+
+              {/* <div className="bg-[#ffbe00]/20 rounded-2xl p-4 mb-6 border-2 border-[#ffbe00]">
+                <p className="font-black text-sm uppercase mb-1">Limited Time Offer</p>
+                <p className="text-2xl font-black">Get 20% OFF</p>
+                <p className="text-sm">on your first order</p>
+              </div> */}
+
+              {/* CTA Buttons */}
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={handleProductNavigate}
+                  className="w-full px-8 py-4 bg-black text-white rounded-2xl font-black uppercase hover:bg-zinc-900 transition-all shadow-lg active:translate-y-1"
+                >
+                  Shop Now →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="px-2 md:px-10">
         <div className="bg-[#ffbe00] rounded-b-[32px] py-3 px-6 flex justify-center items-center shadow-sm relative">
           <Image
             src={originLogo}
             alt="origin Fresh"
-            className="h-10 md:h-12 w-auto object-contain mt-5"
+            className="h-10 md:h-12 w-auto object-contain mt-5 cursor-pointer"
+            onClick={() => window.location.href = '/shop'}
             priority
           />
           {petitionCount !== null && (
@@ -242,6 +337,51 @@ export default function PetitionPage() {
 
       {/* Footer Buffer */}
       <div className="h-20" />
+
+      <style jsx>{`
+        @keyframes confetti {
+          0% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(100vh) rotate(720deg);
+            opacity: 0;
+          }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes scaleIn {
+          from {
+            transform: scale(0.9);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+
+        .animate-confetti {
+          animation: confetti linear forwards;
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+
+        .animate-scaleIn {
+          animation: scaleIn 0.3s ease-out;
+        }
+      `}</style>
     </div>
   );
 }
