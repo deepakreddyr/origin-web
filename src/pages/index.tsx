@@ -76,6 +76,7 @@ const Home = ({
   }, [initialHomepageData]);
 
   const mainCategoryData = (homepageData?.find((item: any) => item.type === 'main-category')?.data) || categories || [];
+  const blendsCategoryData = homepageData?.find((item: any) => item.type === 'blends-category')?.data;
   const popularProduceData = homepageData?.find((item: any) => item.type === 'products-recommendation') || { title: 'Popular Produce', data: [] };
 
   return (
@@ -96,7 +97,7 @@ const Home = ({
         </div>
         {/* Homepage Category Section */}
         <div className='w-full px-[5vw] mob:mt-[10vw]'>
-          <HomeCategorySection categories={mainCategoryData} loading={loading} />
+          <HomeCategorySection categories={mainCategoryData} blendsCategory={blendsCategoryData} loading={loading} />
         </div>
 
         <div className='w-full px-[5vw]'>

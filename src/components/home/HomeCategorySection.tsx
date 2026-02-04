@@ -6,11 +6,12 @@ import catimg from '/public/assets/images/landingCatSampleImg.webp';
 
 interface HomeCategorySectionProps {
     categories: any[];
+    blendsCategory?: any[];
     loading?: boolean;
     title?: string;
 }
 
-const HomeCategorySection = ({ categories, loading, title }: HomeCategorySectionProps) => {
+const HomeCategorySection = ({ categories, blendsCategory, loading, title }: HomeCategorySectionProps) => {
     const mobile = useMediaQuery(768);
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -55,6 +56,9 @@ const HomeCategorySection = ({ categories, loading, title }: HomeCategorySection
                     transition-all duration-500 ease-in-out
                     ${!isExpanded && hasMore ? 'max-h-[125vw] md:max-h-[45vw] overflow-hidden' : 'max-h-[5000px]'}
                 `}>
+                        {blendsCategory && blendsCategory.length > 0 && (
+                            <BlendsCategoryCard category={blendsCategory[0]} />
+                        )}
                         {displayedCategories.map((category: any) => (
                             <CategoryCard key={category.id} category={category} generateHref={generateHref} />
                         ))}
@@ -82,6 +86,37 @@ const HomeCategorySection = ({ categories, loading, title }: HomeCategorySection
     );
 };
 
+const BlendsCategoryCard = ({ category }: { category: any }) => {
+    return (
+        <Link
+            href={`/shop/${category.name.replace(/ /g, '-').toLowerCase()}/${category.id}`}
+            className="lg:col-span-2 col-span-2 relative rounded-[20px] mob:rounded-[15px] overflow-visible group min-h-[18vw] mob:min-h-[45vw] flex flex-col items-center justify-end p-[1.5vw] mob:p-[4vw]"
+            style={{
+                background: 'linear-gradient(180deg, #CBB270 0%, #F7E1BA 100%)'
+            }}
+        >
+            {/* Image Container */}
+            <div className="absolute top-[-3vw] mob:top-[-7vw] inset-0 w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-110 p-[10%]">
+                <div className="relative w-full h-[18vw] mob:h-[35vw]">
+                    <Image
+                        src={category.image || catimg}
+                        alt={category.name}
+                        fill
+                        className="object-contain object-center"
+                    />
+                </div>
+            </div>
+
+            {/* Category Name */}
+            <div className="relative w-full mb-[0.5vw] mob:mb-[1vw]">
+                <h2 className="font-[Recoleta] font-bold text-[1.25vw] mob:text-[4vw] text-[#231F20] text-center px-2">
+                    {category.name}
+                </h2>
+            </div>
+        </Link>
+    );
+};
+
 const CategoryCard = ({ category, generateHref }: { category: any, generateHref: (cat: any) => string }) => {
     return (
         <Link
@@ -96,7 +131,7 @@ const CategoryCard = ({ category, generateHref }: { category: any, generateHref:
             <div className="absolute top-[-3vw] mob:top-[-7vw] inset-0 w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-110 p-[10%]">
                 <div className="relative w-[18vw] h-[18vw] mob:w-[35vw] mob:h-[35vw]">
                     <Image
-                        src={catimg}
+                        src={category.image || catimg}
                         alt={category.name}
                         fill
                         className="object-contain object-center"
