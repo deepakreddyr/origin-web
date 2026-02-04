@@ -6,7 +6,7 @@ import ReviewItem from './ReviewItem';
 const ReviewList = ({ onShowMaxQuantityToast }: { onShowMaxQuantityToast: (maxQty: number) => void }) => {
   const cart = useSelector((state: any) => state.cart);
   const dispatch = useDispatch();
-  
+
   // console.log(cart, "cart state");
 
   // ✅ VALIDATE AND CLEAN CART ON MOUNT AND WHEN ITEMS CHANGE
@@ -18,14 +18,17 @@ const ReviewList = ({ onShowMaxQuantityToast }: { onShowMaxQuantityToast: (maxQt
 
   return (
     <div className="bg-[#F2EEE44D] flex flex-col border border-[#F2EEE4] p-[1.1vw] mob:py-[4.1vw] px-0 mob:rounded-[4.1vw] rounded-[1.1vw]">
-      <h3 className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] font-semibold text-[#231F20CC] px-[1.1vw] mob:px-[4.1vw] pb-[.97vw]">
+      <h3 className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] font-bold text-[#231F20CC] px-[1.1vw] mob:px-[4.1vw] pb-[.97vw]">
         Review cart
       </h3>
-      
+
       {cart.items?.length > 0 ? (
         <ul className="review-cart-list list-none m-0 p-0 flex flex-col gap-[0vw] w-full">
           {cart.items.map((product: any) => (
             product.multiple_uoms.map((uom: any) => {
+              // Check if this is a free item
+              const isFreeItem = product.isFreeItem === true;
+
               // Check if this UOM has valid ripeness types in the cart
               if (uom.cart_ripeness && uom.cart_ripeness.length > 0) {
                 // Render one ReviewItem per ripeness type
@@ -39,13 +42,14 @@ const ReviewList = ({ onShowMaxQuantityToast }: { onShowMaxQuantityToast: (maxQt
                         uom={uom}
                         ripenessType={ripeness.ripeness_type}
                         onShowMaxQuantityToast={onShowMaxQuantityToast}
+                        isFreeItem={isFreeItem}
                       />
                     );
                   }
                   return null;
                 }).filter(Boolean);
-              } else if (uom.cart_quantity > 0) { 
-                // Simple item without ripeness
+              } else if (uom.cart_quantity > 0 || isFreeItem) {
+                // Simple item without ripeness (or free item)
                 return (
                   <ReviewItem
                     key={`${product.id}-${uom.variant_id}-none`}
@@ -53,6 +57,7 @@ const ReviewList = ({ onShowMaxQuantityToast }: { onShowMaxQuantityToast: (maxQt
                     uom={uom}
                     ripenessType={null}
                     onShowMaxQuantityToast={onShowMaxQuantityToast}
+                    isFreeItem={isFreeItem}
                   />
                 );
               }

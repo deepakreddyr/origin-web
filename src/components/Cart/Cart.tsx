@@ -15,6 +15,7 @@ import {
   setCartMinimum,
   setCartTabType,
   setIsProceedButtonEnabled,
+  setFreeItems,
 } from '@/store/slice/CartSlice';
 import { TabTypeConstant } from '../Login/constants/tabTypeContent';
 import {
@@ -32,49 +33,49 @@ import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import CouponFlowWrapper from './ApplyCoupon/CouponFlowWrapper';
 import BillDetailsWrapper from './billDetails/BillDetailsWrapper';
 import Payment from './Payment/Payment';
+import FreeItemSection from './FreeItemSection/FreeItemSection';
 import { updateTimeSlotId } from '@/store/slice/placeOrderDetails';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { useAtom } from 'jotai';
 // Import InfoOutlinedIcon to be used in the new MaxQuantityToast copy
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined"; 
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 // ==========================================================
 // MAX QUANTITY TOAST COMPONENT MOVED/COPIED HERE FOR GLOBAL RENDER
 // ==========================================================
-const MaxQuantityToast: React.FC<{ 
-    maxQuantity: number | null; 
-    isVisible: boolean; 
-    onClose: () => void;
+const MaxQuantityToast: React.FC<{
+  maxQuantity: number | null;
+  isVisible: boolean;
+  onClose: () => void;
 }> = ({ maxQuantity, isVisible, onClose }) => {
-    
-    // Auto-hide logic
-    React.useEffect(() => {
-        if (isVisible) {
-            const timer = setTimeout(() => {
-                onClose();
-            }, 3000); 
-            return () => clearTimeout(timer);
-        }
-    }, [isVisible, onClose]);
 
-    if (!isVisible || maxQuantity === null) return null;
+  // Auto-hide logic
+  React.useEffect(() => {
+    if (isVisible) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, onClose]);
 
-    return (
-        <div 
-            className={`absolute bottom-22 left-1/2 transform -translate-x-1/2 z-[9999] w-[90%] max-w-md transition-opacity duration-300 ease-in-out ${
-                isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}
-        >
-            <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full">
-                <div className="flex items-center justify-center w-full gap-2">
-                    <InfoOutlinedIcon sx={{color: 'yellow', fontSize: '1.2rem'}}/>
-                    <p className="text-[0.70rem] mob:text-[2.8vw] font-semibold text-white text-center leading-tight">
-                        Maximum quantity of {maxQuantity} reached for this item.
-                    </p>
-                </div>
-            </div>
+  if (!isVisible || maxQuantity === null) return null;
+
+  return (
+    <div
+      className={`absolute bottom-22 left-1/2 transform -translate-x-1/2 z-[9999] w-[90%] max-w-md transition-opacity duration-300 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+    >
+      <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full">
+        <div className="flex items-center justify-center w-full gap-2">
+          <InfoOutlinedIcon sx={{ color: 'yellow', fontSize: '1.2rem' }} />
+          <p className="text-[0.70rem] mob:text-[2.8vw] font-semibold text-white text-center leading-tight">
+            Maximum quantity of {maxQuantity} reached for this item.
+          </p>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 // ==========================================================
 
@@ -103,14 +104,14 @@ const Cart = () => {
     distance_from_warehouse: null,
   });
   const [address, setAddress] = useAtom(addressAtom);
-  
+
   // --- ADD TOAST STATE HERE ---
   const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
   const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
 
   const handleMaxQuantityExceededGlobal = (maxQty: number) => {
-      setToastMaxQuantity(maxQty);
-      setShowMaxQuantityToast(true);
+    setToastMaxQuantity(maxQty);
+    setShowMaxQuantityToast(true);
   };
   // ----------------------------
 
@@ -143,6 +144,16 @@ const Cart = () => {
       } else {
         setOrderRestrictionData(null);
       }
+
+      // Store free items data
+      if (data.free_items && data.free_items.length > 0) {
+        dispatch(setFreeItems({
+          freeItems: data.free_items,
+          freeItemsMov: Number(data.free_items_mov) || 0,
+        }));
+      } else {
+        dispatch(setFreeItems({ freeItems: [], freeItemsMov: 0 }));
+      }
     };
 
     const failureHandler = (err: any) => {
@@ -172,7 +183,7 @@ const Cart = () => {
       };
 
       const failureHandler = () => {
-        // handle error
+        fetchCartItemsFromApi();
       };
 
       if (loginDetails.isSidebarOpen) {
@@ -215,21 +226,21 @@ const Cart = () => {
         dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
         return;
       }
-      
+
       // If we're in the main cart view and no modal is open
       if (cart.cartTabType === TabTypeConstant.CART_MAIN && !showAddressModal) {
         setAddressModal(true);
         dispatch(setIsProceedButtonEnabled(false)); // Disable until timing is selected
         return;
       }
-      
+
       // If modal is open, check if user has selected delivery timing
       if (cart.cartTabType === TabTypeConstant.CART_MAIN && showAddressModal) {
         // Check if user has selected a delivery type and timing
         const hasSelectedDelivery = placeOrderDetails.delivery_type !== '';
-        const hasSelectedTiming = placeOrderDetails.delivery_type === 'INSTANT' || 
-                                  (placeOrderDetails.delivery_type === 'TIME_SLOT' && placeOrderDetails.time_slot_id !== '');
-        
+        const hasSelectedTiming = placeOrderDetails.delivery_type === 'INSTANT' ||
+          (placeOrderDetails.delivery_type === 'TIME_SLOT' && placeOrderDetails.time_slot_id !== '');
+
         if (hasSelectedDelivery && hasSelectedTiming) {
           // User has selected timing, proceed to payment
           setAddressModal(false);
@@ -265,9 +276,10 @@ const Cart = () => {
         {orderRestrictionData && (
           <RestrictOrderInfo orderRestrictionData={orderRestrictionData} />
         )}
+        <CouponSection setShowCouponList={setShowCouponList} />
+        <FreeItemSection />
         <ReviewList onShowMaxQuantityToast={handleMaxQuantityExceededGlobal} />
         <DeliveryInstruction />
-        <CouponSection setShowCouponList={setShowCouponList} />
         {showAddressModal && (
           <div className="w-[30vw] flex items-end relative justify-end">
             <AddressAndTimeSlot
@@ -276,7 +288,7 @@ const Cart = () => {
             />
           </div>
         )}
-        <BillDetailsWrapper billDetails={billDetails} orderRestrictionData={orderRestrictionData}/>
+        <BillDetailsWrapper billDetails={billDetails} orderRestrictionData={orderRestrictionData} />
         {cart.cartTabType !== TabTypeConstant.CART_ADDRESS_LIST && (
           <ActionCtaWithItems
             btnName={loginDetails.user ? 'PROCEED' : 'LOGIN'}
@@ -294,12 +306,12 @@ const Cart = () => {
   return (
     // RENDER THE MAX QUANTITY TOAST AT THE TOP LEVEL HERE
     <div className="flex flex-col grow gap-[1.1vw] mob:gap-[4.1vw] pb-[6vw] mob:pb-[25vw]">
-        <MaxQuantityToast 
-            maxQuantity={toastMaxQuantity}
-            isVisible={showMaxQuantityToast}
-            onClose={() => setShowMaxQuantityToast(false)}
-        />
-        {SCREEN_MAP[cart.cartTabType]}
+      <MaxQuantityToast
+        maxQuantity={toastMaxQuantity}
+        isVisible={showMaxQuantityToast}
+        onClose={() => setShowMaxQuantityToast(false)}
+      />
+      {SCREEN_MAP[cart.cartTabType]}
     </div>
   );
 };

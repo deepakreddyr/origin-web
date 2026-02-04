@@ -26,12 +26,12 @@ const RipenessIndicator = ({ uom }: { uom: any }) => {
     <div className="flex items-center">
       {/* SVG Icon */}
       <div className="w-[.6vw] h-[.6vw] mob:w-[2.2vw] mob:h-[2.2vw] flex items-center justify-center mr-[.2vw]">
-        <Image 
-            src={info.image} 
-            alt={`${info.text} ripeness`} 
-            width={10} 
-            height={10} 
-            className="object-contain" 
+        <Image
+          src={info.image}
+          alt={`${info.text} ripeness`}
+          width={10}
+          height={10}
+          className="object-contain"
         />
       </div>
       {/* Ripeness Text */}
@@ -44,9 +44,9 @@ const RipenessIndicator = ({ uom }: { uom: any }) => {
 
 // Helper component to render the separator dot
 const SeparatorDot = () => (
-    <span className="font-[SofiaPro] font-extrabold text-[.83vw] mob:text-[3vw] text-black-op-60 mx-[.15vw]">
-        •
-    </span>
+  <span className="font-[SofiaPro] font-extrabold text-[.83vw] mob:text-[3vw] text-black-op-60 mx-[.15vw]">
+    •
+  </span>
 );
 
 const ItemsList = (props: any) => {
@@ -80,13 +80,13 @@ const ItemsList = (props: any) => {
           // Map through each ordered_uom for this product
           item.ordered_uoms?.map((uom: any, uomIndex: number) => {
             const isUnavailable = uom.shortage_qty >= 1;
-            
+
             // Check for ripeness existence
             const hasRipeness = !!uom.ripeness;
-            
+
             return (
-              <div 
-                key={`${item.id}-${uom.variant_id}-${uom.ripeness || 'none'}`} 
+              <div
+                key={`${item.id}-${uom.variant_id}-${uom.ripeness || 'none'}`}
                 className={`flex gap-[.9vw] mob:gap-[2vw] relative items-center`}
               >
                 <div
@@ -105,10 +105,10 @@ const ItemsList = (props: any) => {
                     </p>
                     {/* COMBINED LINE: Ripeness (Icon+Text) + Dot + UOM/Quantity */}
                     <div className="flex items-center pt-[.4vw] mob:pt-[1vw]">
-                      
+
                       {/* Ripeness Icon and Text (Renders only if ripeness exists) */}
                       {hasRipeness && <RipenessIndicator uom={uom} />}
-                      
+
                       {/* Separator Dot (Renders only if ripeness exists) */}
                       {hasRipeness && <SeparatorDot />}
 
@@ -119,14 +119,23 @@ const ItemsList = (props: any) => {
                     </div>
                   </div>
                   <div className="text-right">
-                    {uom.market_price_sub_total && uom.market_price_sub_total > uom.subtotal && (
-                      <p className="font-[SofiaPro] text-[.82vw] mob:text-[2.8vw] font-medium line-through text-black-op-60 ">
-                        ₹{uom.market_price_sub_total}
+                    {/* Check if this is a free item (price is 0, null, or 1) */}
+                    {(uom.price === 0 || uom.price === null || uom.price === 1) ? (
+                      <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold text-[#25874D]">
+                        Free Item
                       </p>
+                    ) : (
+                      <>
+                        {uom.market_price_sub_total && uom.market_price_sub_total > uom.subtotal && (
+                          <p className="font-[SofiaPro] text-[.82vw] mob:text-[2.8vw] font-medium line-through text-black-op-60 ">
+                            ₹{uom.market_price_sub_total}
+                          </p>
+                        )}
+                        <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-medium ">
+                          ₹{uom.subtotal}
+                        </p>
+                      </>
                     )}
-                    <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-medium ">
-                      ₹{uom.subtotal}
-                    </p>
                   </div>
                 </div>
                 {isUnavailable && (

@@ -41,6 +41,7 @@ interface CartProduct {
   };
   tag_url: string | null;
   multiple_uoms: CartUOM[]; // Nested UOMs/Variants
+  isFreeItem?: boolean; // Flag for free items
 }
 
 interface CartState {
@@ -55,6 +56,8 @@ interface CartState {
   discountAmount: number | null;
   cart_minimum: number | null;
   deliveryFee: number;
+  freeItems: any[]; // Free items from API
+  freeItemsMov: number; // Minimum order value for free items
 }
 
 const initialState: CartState = {
@@ -69,6 +72,8 @@ const initialState: CartState = {
   discountAmount: null,
   cart_minimum: null,
   deliveryFee: 0,
+  freeItems: [],
+  freeItemsMov: 0,
 };
 
 // --- UTILITY FUNCTIONS ---
@@ -106,7 +111,7 @@ const updateCartTotals = (state: CartState) => {
     });
   });
   // Calculate final amount to pay 
-  state.amountToPay = state.totalPrice; 
+  state.amountToPay = state.totalPrice;
 };
 
 const isProceedBtnEnabled = (state: CartState): boolean => {
@@ -148,13 +153,13 @@ const findUOMAndRipeness = (state: CartState, productId: number, variantId: numb
 };
 
 const updateCartQuantityInNestedStructure = (
-  uom: CartUOM, 
-  ripeness: CartRipeness | null, 
-  stepperQuantity: number, 
+  uom: CartUOM,
+  ripeness: CartRipeness | null,
+  stepperQuantity: number,
   action: 'increase' | 'decrease'
 ) => {
   const amount = action === 'increase' ? stepperQuantity : -stepperQuantity;
-  
+
   if (action === 'increase') {
     // If max quantity is reached, prevent increasing (handled in reducers, but good safety check)
     if (uom.cart_quantity + amount > uom.maximum_quantity) return;
@@ -172,50 +177,50 @@ const updateCartQuantityInNestedStructure = (
 };
 
 const saveCart = (state: CartState) => {
-    state.items.forEach(product => {
-        product.multiple_uoms.forEach(uom => {
+  state.items.forEach(product => {
+    product.multiple_uoms.forEach(uom => {
 
-            // --- RIPENESS CLEANUP RULE (TS FIX) ---
-            if (uom.cart_ripeness) {
-                // Use nullish coalescing to ensure uom.cart_ripeness is treated as an array for filtering
-                const validRipeness = (uom.cart_ripeness ?? []).filter(
-                    r => r.ripeness_type !== null && r.ripeness_type !== undefined && Number(r.qty) > 0
-                );
-
-                // If valid entries exist → keep them
-                if (validRipeness.length > 0) {
-                    uom.cart_ripeness = validRipeness;
-                } 
-                // If nothing valid → explicitly set to undefined
-                else {
-                    uom.cart_ripeness = undefined; 
-                }
-            }
-
-            // If ripeness exists → cart_quantity must be the sum(ripeness.qty)
-            if (uom.cart_ripeness?.length && uom.cart_ripeness.length > 0) { 
-                uom.cart_quantity = uom.cart_ripeness.reduce(
-                    (sum, r) => sum + Number(r.qty),
-                    0
-                );
-            }
-        });
-
-        // Remove UOMs with zero quantity
-        product.multiple_uoms = product.multiple_uoms.filter(
-            uom => uom.cart_quantity > 0
+      // --- RIPENESS CLEANUP RULE (TS FIX) ---
+      if (uom.cart_ripeness) {
+        // Use nullish coalescing to ensure uom.cart_ripeness is treated as an array for filtering
+        const validRipeness = (uom.cart_ripeness ?? []).filter(
+          r => r.ripeness_type !== null && r.ripeness_type !== undefined && Number(r.qty) > 0
         );
+
+        // If valid entries exist → keep them
+        if (validRipeness.length > 0) {
+          uom.cart_ripeness = validRipeness;
+        }
+        // If nothing valid → explicitly set to undefined
+        else {
+          uom.cart_ripeness = undefined;
+        }
+      }
+
+      // If ripeness exists → cart_quantity must be the sum(ripeness.qty)
+      if (uom.cart_ripeness?.length && uom.cart_ripeness.length > 0) {
+        uom.cart_quantity = uom.cart_ripeness.reduce(
+          (sum, r) => sum + Number(r.qty),
+          0
+        );
+      }
     });
 
-    // Remove empty products
-    state.items = state.items.filter(product => product.multiple_uoms.length > 0);
+    // Remove UOMs with zero quantity
+    product.multiple_uoms = product.multiple_uoms.filter(
+      uom => uom.cart_quantity > 0
+    );
+  });
 
-    // Recalculate totals + enable proceed btn
-    updateCartTotals(state);
-    state.isProceedBtnEnabled = isProceedBtnEnabled(state);
+  // Remove empty products
+  state.items = state.items.filter(product => product.multiple_uoms.length > 0);
 
-    // IMPORTANT: LS now receives cleaned structure
-    updateCartItemsToLs(state.items);
+  // Recalculate totals + enable proceed btn
+  updateCartTotals(state);
+  state.isProceedBtnEnabled = isProceedBtnEnabled(state);
+
+  // IMPORTANT: LS now receives cleaned structure
+  updateCartItemsToLs(state.items);
 };
 
 
@@ -232,20 +237,20 @@ export const cartSlice = createSlice({
       const { product, selectedUOM, selectedRipenessType } = action.payload;
       const normalizedProductId = product.id || product.product_id;
       const normalizedVariantId = selectedUOM.variant_id || selectedUOM.varientId;
-      
+
       // ✅ FIX: Separate the quantity to add from the stepper quantity
       const quantityToAdd = selectedUOM.stepper_quantity; // This is the quantity being added (could be min qty on first add)
-      
+
       // ✅ FIX: Get the ORIGINAL stepper from the product's UOM, not from selectedUOM
-      const originalVariant = product.multiple_uoms.find((uom: any) => 
+      const originalVariant = product.multiple_uoms.find((uom: any) =>
         (uom.variant_id || uom.varientId) === normalizedVariantId
       );
       const actualStepperQuantity = originalVariant?.stepper_quantity || 1;
 
       const { product: existingProduct, uom: existingUOM, ripeness: existingRipeness } = findUOMAndRipeness(
-        state, 
-        normalizedProductId, 
-        normalizedVariantId, 
+        state,
+        normalizedProductId,
+        normalizedVariantId,
         selectedRipenessType
       );
 
@@ -265,7 +270,7 @@ export const cartSlice = createSlice({
           } else {
             // UOM exists but ripeness object doesn't -> create new ripeness object
             if (!existingUOM.cart_ripeness) existingUOM.cart_ripeness = [];
-            
+
             existingUOM.cart_ripeness.push({
               ripeness_type: selectedRipenessType,
               qty: String(quantityToAdd),
@@ -286,23 +291,23 @@ export const cartSlice = createSlice({
       } else {
         // Product/UOM does not exist -> create the product and UOM structure
         const newUOM: CartUOM = {
-            variant_id: normalizedVariantId,
-            cart_quantity: quantityToAdd, // ✅ Use the quantity being added
-            price: selectedUOM.price,
-            market_price: selectedUOM.market_price,
-            maximum_quantity: selectedUOM.maximum_quantity,
-            minimum_quantity: selectedUOM.minimum_quantity,
-            stepper_quantity: actualStepperQuantity, // ✅ Use the ORIGINAL stepper, not the modified one
-            unit: selectedUOM.unit,
-            uom_id: selectedUOM.uom_id,
-            conversion_text: selectedUOM.conversion_text,
-            is_available: selectedUOM.is_available,
-            is_default: selectedUOM.is_default,
-            is_visible: selectedUOM.is_visible,
-            ripeness_types: selectedUOM.ripeness_types,
-            cart_ripeness: selectedRipenessType 
-                ? [{ ripeness_type: selectedRipenessType, qty: String(quantityToAdd) }] // ✅ Use quantityToAdd
-                : undefined, 
+          variant_id: normalizedVariantId,
+          cart_quantity: quantityToAdd, // ✅ Use the quantity being added
+          price: selectedUOM.price,
+          market_price: selectedUOM.market_price,
+          maximum_quantity: selectedUOM.maximum_quantity,
+          minimum_quantity: selectedUOM.minimum_quantity,
+          stepper_quantity: actualStepperQuantity, // ✅ Use the ORIGINAL stepper, not the modified one
+          unit: selectedUOM.unit,
+          uom_id: selectedUOM.uom_id,
+          conversion_text: selectedUOM.conversion_text,
+          is_available: selectedUOM.is_available,
+          is_default: selectedUOM.is_default,
+          is_visible: selectedUOM.is_visible,
+          ripeness_types: selectedUOM.ripeness_types,
+          cart_ripeness: selectedRipenessType
+            ? [{ ripeness_type: selectedRipenessType, qty: String(quantityToAdd) }] // ✅ Use quantityToAdd
+            : undefined,
         };
 
         if (existingProduct) {
@@ -348,7 +353,7 @@ export const cartSlice = createSlice({
             } else {
               // Case: Simple item (or fallback removal) -> zero out cart_quantity and clear ripeness
               uom.cart_quantity = 0;
-              uom.cart_ripeness = undefined; 
+              uom.cart_ripeness = undefined;
             }
           }
         });
@@ -364,16 +369,16 @@ export const cartSlice = createSlice({
       if (!product) return;
 
       const { uom, ripeness } = findUOMAndRipeness(
-        state, 
-        product.id, 
-        varientId, 
+        state,
+        product.id,
+        varientId,
         selectedRipenessType
       );
-      
+
       if (uom) {
         // Check max quantity at the start
         if (uom.cart_quantity + stepperQuantity > uom.maximum_quantity) {
-          saveCart(state); 
+          saveCart(state);
           return;
         }
 
@@ -384,15 +389,15 @@ export const cartSlice = createSlice({
           }
         } else {
           // Case 2: Null ripeness type (Simple item or complex item fallback)
-          
+
           // Update the overall UOM cart_quantity
-          updateCartQuantityInNestedStructure(uom, null, stepperQuantity, 'increase'); 
+          updateCartQuantityInNestedStructure(uom, null, stepperQuantity, 'increase');
 
           // **FALLBACK FIX:** If cart_ripeness exists, update the quantity of the *first* entry
           if (uom.cart_ripeness && uom.cart_ripeness.length > 0) {
-              const firstRipeness = uom.cart_ripeness[0];
-              const currentQty = Number(firstRipeness.qty);
-              firstRipeness.qty = String(currentQty + stepperQuantity);
+            const firstRipeness = uom.cart_ripeness[0];
+            const currentQty = Number(firstRipeness.qty);
+            firstRipeness.qty = String(currentQty + stepperQuantity);
           }
         }
       }
@@ -407,12 +412,12 @@ export const cartSlice = createSlice({
       if (!product) return;
 
       const { uom, ripeness } = findUOMAndRipeness(
-        state, 
-        product.id, 
-        varientId, 
+        state,
+        product.id,
+        varientId,
         selectedRipenessType
       );
-      
+
       if (uom) {
         if (selectedRipenessType) {
           if (ripeness) {
@@ -421,19 +426,19 @@ export const cartSlice = createSlice({
           }
         } else {
           // Case 2: Null ripeness type (Simple item or complex item fallback)
-          
+
           // Update the overall UOM cart_quantity
           updateCartQuantityInNestedStructure(uom, null, stepperQuantity, 'decrease');
-          
+
           // **FALLBACK FIX:** If cart_ripeness exists, update the quantity of the *first* entry
           if (uom.cart_ripeness && uom.cart_ripeness.length > 0) {
-              const firstRipeness = uom.cart_ripeness[0];
-              let currentQty = Number(firstRipeness.qty);
-              
-              if (currentQty > 0) {
-                  currentQty = Math.max(0, currentQty - stepperQuantity);
-                  firstRipeness.qty = String(currentQty);
-              }
+            const firstRipeness = uom.cart_ripeness[0];
+            let currentQty = Number(firstRipeness.qty);
+
+            if (currentQty > 0) {
+              currentQty = Math.max(0, currentQty - stepperQuantity);
+              firstRipeness.qty = String(currentQty);
+            }
           }
         }
       }
@@ -453,9 +458,9 @@ export const cartSlice = createSlice({
           // If cart has ripeness data, validate against available types
           if (uom.cart_ripeness && uom.cart_ripeness.length > 0) {
             const originalLength = uom.cart_ripeness.length;
-            
+
             // Filter out ripeness types that are no longer available
-            uom.cart_ripeness = uom.cart_ripeness.filter((ripeness) => 
+            uom.cart_ripeness = uom.cart_ripeness.filter((ripeness) =>
               availableRipenessTypes.includes(ripeness.ripeness_type) && Number(ripeness.qty) > 0
             );
 
@@ -492,7 +497,7 @@ export const cartSlice = createSlice({
       state.cart_minimum = action.payload;
       saveCart(state); // Re-evaluate proceed button status
     },
-    
+
     setCartTabType: (state, action: PayloadAction<string>) => {
       state.cartTabType = action.payload;
     },
@@ -500,29 +505,98 @@ export const cartSlice = createSlice({
     setCouponDetails: (state, action: PayloadAction<any>) => {
       state.couponDetails = action.payload;
     },
-    
+
     resetCouponDetails: (state) => {
       state.couponDetails = couponDetailsInitialState;
     },
-    
+
     setTotalPrice: (state, action: PayloadAction<number>) => {
       state.totalPrice = action.payload;
     },
-    
+
     setDiscountAmount: (state, action: PayloadAction<number>) => {
       state.discountAmount = action.payload;
     },
-    
+
     setAmountToPay: (state, action: PayloadAction<number>) => {
       state.amountToPay = action.payload;
     },
-    
+
     setDeliveryFee: (state, action: PayloadAction<number>) => {
       state.deliveryFee = action.payload;
     },
-    
+
     setIsProceedButtonEnabled: (state, action: PayloadAction<boolean>) => {
       state.isProceedBtnEnabled = action.payload;
+    },
+
+    // --- FREE ITEM REDUCERS ---
+    setFreeItems: (state, action: PayloadAction<{ freeItems: any[]; freeItemsMov: number }>) => {
+      state.freeItems = action.payload.freeItems;
+      state.freeItemsMov = action.payload.freeItemsMov;
+    },
+
+    addFreeItemToCart: (state, action: PayloadAction<any>) => {
+      const freeItem = action.payload;
+
+      // Check if free item already exists in cart
+      const existingFreeItemIndex = state.items.findIndex(
+        (item) => item.isFreeItem && item.item_code === freeItem.item_code
+      );
+
+      if (existingFreeItemIndex === -1) {
+        // Get the first UOM from the free item
+        const uom = freeItem.multiple_uoms?.[0] || freeItem.uom?.[0];
+        if (!uom) return;
+
+        const newProduct: CartProduct = {
+          id: freeItem.id,
+          item_code: freeItem.item_code,
+          name: freeItem.name || freeItem.item_name,
+          image: freeItem.image || freeItem.logo,
+          bg_color: freeItem.bg_color || '',
+          is_available: true,
+          is_greyed: false,
+          is_orderable: true,
+          navigation: { to: '' },
+          tag_url: null,
+          multiple_uoms: [{
+            variant_id: uom.variant_id,
+            cart_quantity: 1, // Free item quantity is always 1
+            price: 0, // Free item has 0 price
+            market_price: uom.market_price || uom.price,
+            maximum_quantity: 1,
+            minimum_quantity: 1,
+            stepper_quantity: 1,
+            unit: uom.unit,
+            uom_id: uom.uom_id,
+            conversion_text: uom.conversion_text || '',
+            is_available: true,
+            is_default: true,
+            is_visible: true,
+            ripeness_types: null,
+            cart_ripeness: undefined,
+          }],
+          isFreeItem: true,
+        };
+
+        state.items.unshift(newProduct); // Add at the beginning
+        state.totalQuantity += 1;
+        saveCart(state);
+      }
+    },
+
+    removeFreeItemFromCart: (state, action: PayloadAction<string>) => {
+      const itemCode = action.payload;
+      const freeItemIndex = state.items.findIndex(
+        (item) => item.isFreeItem && item.item_code === itemCode
+      );
+
+      if (freeItemIndex !== -1) {
+        state.items.splice(freeItemIndex, 1);
+        state.totalQuantity = Math.max(0, state.totalQuantity - 1);
+        saveCart(state);
+      }
     },
 
     clearCart: (state) => {
@@ -533,6 +607,8 @@ export const cartSlice = createSlice({
       state.cartTabType = '';
       state.couponDetails = couponDetailsInitialState;
       state.deliveryFee = 0;
+      state.freeItems = [];
+      state.freeItemsMov = 0;
       localStorage.removeItem('cart_items');
     }
   }
@@ -554,7 +630,10 @@ export const {
   setIsProceedButtonEnabled,
   setCartMinimum,
   setDeliveryFee,
-  validateAndCleanCart, // ✅ NEW EXPORT
+  validateAndCleanCart,
+  setFreeItems,
+  addFreeItemToCart,
+  removeFreeItemFromCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

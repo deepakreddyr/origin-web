@@ -60,10 +60,10 @@ const BillDetailsWrapper = (props: any) => {
     }
 
     // If no free tier exists, find the highest to_amount + 1 (next threshold for potential free delivery)
-    const sortedTiers = [...billDetails.distance_delivery_fees].sort((a, b) => 
+    const sortedTiers = [...billDetails.distance_delivery_fees].sort((a, b) =>
       parseFloat(b.to_amount) - parseFloat(a.to_amount)
     );
-    
+
     if (sortedTiers.length > 0) {
       const highestTier = sortedTiers[0];
       // Return the next tier threshold (to_amount + 0.01 rounded up)
@@ -76,19 +76,19 @@ const BillDetailsWrapper = (props: any) => {
   useEffect(() => {
     let amountTobePaid;
     const { totalPrice, amountToPay, discountAmount } = cart;
-    
+
     // Calculate dynamic delivery fee
     const deliveryFee = calculateDeliveryFee();
-    
+
     // Dispatch delivery fee to cart state
     dispatch(setDeliveryFee(deliveryFee));
-    
+
     if (deliveryFee > 0) {
       amountTobePaid = totalPrice + deliveryFee;
     } else {
       amountTobePaid = totalPrice;
     }
-    
+
     if (couponDetails.code && couponDetails.isValid === 1) {
       if (amountToPay < couponDetails.min_cart_value) {
         amountTobePaid = amountTobePaid + discountAmount;
@@ -132,7 +132,7 @@ const BillDetailsWrapper = (props: any) => {
 
   return (
     <div className="bg-[#F2EEE44D] flex flex-col border border-[#F2EEE4] p-[1.1vw] mob:p-[4.1vw] mob:rounded-[4.1vw] rounded-[1.1vw]">
-      <h3 className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] mob:pb-[1.5vw] pb-[.6vw] font-semibold text-[#231F20CC]">
+      <h3 className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] mob:pb-[1.5vw] pb-[.6vw] font-bold text-[#231F20]">
         Bill details
       </h3>
       <ul className="p-0 flex flex-col mob:gap-[1vw] gap-[.3vw]">
@@ -254,9 +254,8 @@ const BillDetailsWrapper = (props: any) => {
         </li>
       </ul>
 
-      {billDetails.cart_minimum &&
-        Number(billDetails.cart_minimum) > 0 &&
-        cart.amountToPay < billDetails.cart_minimum && (
+      {Number(billDetails.cart_minimum) > 0 &&
+        cart.amountToPay < Number(billDetails.cart_minimum) && (
           <div className="font-[SofiaPro] font-bold bg-green-50 border border-green-200 rounded-md p-3 mt-3">
             <p className="font-[SofiaPro] font-bold text-green-700 text-sm mt-1">
               Add <span className="font-[SofiaPro] font-bold">₹{remainingAmount}</span> more to reach the minimum order!

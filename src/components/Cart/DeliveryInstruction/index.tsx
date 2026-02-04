@@ -12,9 +12,8 @@ const DeliveryInstruction = () => {
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
   const renderDeliveryInstruction = (item: SingleDeliveryInstruction) => {
     const cssRules = {
-      containerClassName: `${
-        item.isActivated ? styles['delivery-instruction-list-active-item'] : ''
-      } ${styles['delivery-instruction-list-item']}
+      containerClassName: `${item.isActivated ? styles['delivery-instruction-list-active-item'] : ''
+        } ${styles['delivery-instruction-list-item']}
       `
     };
 
@@ -67,9 +66,9 @@ const DeliveryInstruction = () => {
         borderRadius: '16px'
       }}
     >
-      <p className="font-[SofiaPro] font-semibold text-[1.1vw] mob:text-[4.1vw] text-[#231F20CC]">
+      <h3 className="font-[SofiaPro] font-bold text-[1.1vw] mob:text-[4.1vw] text-[#231F20CC]">
         Delivery Instructions
-      </p>
+      </h3>
       {renderInstruction()}
     </Box>
   );
