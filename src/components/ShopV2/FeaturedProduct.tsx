@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import AddItemBtn from '@/components/shared/AddItemBtn/AddItemBtn';
+import { OriginCircleLeftArrow, OriginCircleRightArrow } from '../../Icons/OriginIcons';
 
 interface UomType {
   variant_id: number;
@@ -60,6 +61,11 @@ interface FeaturedProductProps {
 }
 
 const FeaturedProduct = ({ featuredItems }: FeaturedProductProps) => {
+  const itemsArray = React.useMemo(() =>
+    Array.isArray(featuredItems) ? featuredItems : (featuredItems ? [featuredItems] : []),
+    [featuredItems]
+  );
+
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
@@ -81,7 +87,7 @@ const FeaturedProduct = ({ featuredItems }: FeaturedProductProps) => {
     checkScrollPosition();
     window.addEventListener('resize', checkScrollPosition);
     return () => window.removeEventListener('resize', checkScrollPosition);
-  }, [featuredItems]);
+  }, [itemsArray]);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
@@ -93,28 +99,28 @@ const FeaturedProduct = ({ featuredItems }: FeaturedProductProps) => {
     }
   };
 
-  if (!featuredItems || featuredItems.length === 0) return null;
+  if (itemsArray.length === 0) return null;
 
   return (
     <div className="w-full py-12 mob:py-8 overflow-hidden">
       <div className="w-[92vw] md:w-[80vw] mx-auto relative">
 
-        {/* Desktop Arrows */}
+        {/* Desktop Side Arrows */}
         {showLeftArrow && (
           <button
             onClick={() => scroll('left')}
-            className="hidden md:flex absolute -left-16 top-1/2 z-10 w-12 h-12 border border-gray-200 bg-white rounded-full items-center justify-center hover:bg-gray-50 shadow-md transition-all"
+            className="hidden md:flex absolute -left-16 top-1/2 -translate-y-1/2 z-10 group transition-all"
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6" /></svg>
+            <OriginCircleLeftArrow className="group-hover:scale-110 w-[3.5vw] h-[3.5vw] hover:bg-primary-100 rounded-full transition-transform" />
           </button>
         )}
 
         {showRightArrow && (
           <button
             onClick={() => scroll('right')}
-            className="hidden md:flex absolute -right-16 top-1/2 z-10 w-12 h-12 border border-gray-200 bg-white rounded-full items-center justify-center hover:bg-gray-50 shadow-md transition-all"
+            className="hidden md:flex absolute -right-16 top-1/2 -translate-y-1/2 z-10 group transition-all"
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6" /></svg>
+            <OriginCircleRightArrow className="group-hover:scale-110 w-[3.5vw] h-[3.5vw] hover:bg-primary-100 rounded-full transition-transform" />
           </button>
         )}
 
@@ -124,16 +130,16 @@ const FeaturedProduct = ({ featuredItems }: FeaturedProductProps) => {
           onScroll={checkScrollPosition}
           className="flex gap-10 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide pb-4"
         >
-          {featuredItems.map((featuredItem, index) => (
-            <div key={featuredItem.item.id || index} className="w-full flex-shrink-0 snap-start">
+          {itemsArray.map((featuredItem, index) => (
+            <div key={featuredItem?.item?.id || index} className="w-full flex-shrink-0 snap-start">
               <FeaturedProductCard featuredItem={featuredItem} />
             </div>
           ))}
         </div>
 
-        {/* Progress Bar */}
-        {featuredItems.length > 1 && (
-          <div className="w-full flex justify-center mt-12">
+        {/* Progress Bar (Centered at bottom) */}
+        {itemsArray.length > 1 && (
+          <div className="w-full flex justify-center mt-12 mob:mt-8">
             <div className="w-64 mob:w-48 h-2 bg-gray-200 rounded-full overflow-hidden">
               <div
                 className="h-full bg-gray-500 rounded-full transition-all duration-150"
@@ -153,10 +159,14 @@ const FeaturedProduct = ({ featuredItems }: FeaturedProductProps) => {
 };
 
 const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType }) => {
-  const { item, info } = featuredItem;
-  const defaultUom = item.multiple_uoms?.find((uom) => uom.is_default) || item.multiple_uoms?.[0];
+  const item = featuredItem?.item;
+  const info = featuredItem?.info;
 
-  const aboutProduct = info.info.find((section) => section.type === 'normal');
+  if (!item) return null;
+
+  const defaultUom = item?.multiple_uoms?.find((uom) => uom.is_default) || item?.multiple_uoms?.[0];
+
+  const aboutProduct = info?.info?.find((section) => section.type === 'normal');
   const description = aboutProduct?.details?.[0]?.description || '';
   const bestFor = aboutProduct?.details?.[1]?.description || '';
 
@@ -172,10 +182,7 @@ const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType 
   return (
     <div className="flex flex-col md:flex-row items-center gap-10 lg:gap-20 w-full">
       {/* Left Image Section */}
-      {/* Increased padding from p-12 to p-24 to make image appear smaller */}
       <div className="w-full md:w-1/2 relative aspect-square bg-[#F9F7F0] rounded-[60px] mob:rounded-[40px] flex items-center justify-center p-24 mob:p-16 transition-colors hover:bg-[#F3F1E8]">
-        {/* Heart button removed here */}
-
         <div className="relative w-full h-full">
           <Image
             src={item.image || '/assets/images/shop/testing_img.png'}
@@ -206,21 +213,15 @@ const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType 
           </div>
         )}
 
-        {/* Pricing and Action - Justify Between pushes button to right */}
         <div className="flex items-center justify-between w-full mt-auto">
           {/* Price Section */}
           <div className="flex items-baseline gap-3">
-            {/* Quantity in Grey */}
             <span className="text-gray-500 text-xl font-medium">
               {defaultUom?.unit}
             </span>
-
-            {/* Selling Price in Green */}
             <span className="text-xl md:text-xl font-bold text-[#4B7C59]">
               ₹{defaultUom?.price}
             </span>
-
-            {/* Scored Out Price in Grey */}
             {defaultUom?.market_price && defaultUom.market_price > defaultUom.price && (
               <span className="text-xl text-gray-300 line-through font-medium ml-2">
                 ₹{defaultUom.market_price}
@@ -232,16 +233,11 @@ const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType 
           {item.is_available && (
             <div className="flex-shrink-0">
               {item.multiple_uoms?.length > 1 ? (
-                // Made button bigger (px-12 py-5, text-xl) and fully rounded
                 <button className="bg-[#FBE363] hover:bg-[#f0d85a] text-gray-900 font-bold px-12 py-5 rounded-full flex items-center gap-4 transition-all text-xl shadow-sm">
                   {item.multiple_uoms.length} Options
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M7 15l5 5 5-5M7 9l5-5 5 5" /></svg>
                 </button>
               ) : (
-                // Wrapper to style the AddItemBtn container to be big and pill-shaped if the inner button inherits size, 
-                // or assuming AddItemBtn accepts custom styling via wrapper classes in your project.
-                // If AddItemBtn has strict internal sizing, you might need to adjust props, 
-                // but here I'm scaling the wrapper context.
                 <div className="scale-110 origin-right rounded-full overflow-hidden w-[80px] my-4 mob:w-[80px]">
                   <AddItemBtn
                     product={productForAddBtn}

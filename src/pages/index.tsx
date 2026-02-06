@@ -63,6 +63,7 @@ const Home = ({
     }
 
     const successHandler = (data: any) => {
+      console.log(data);
       setHomepageData(data?.data);
       setLoading(false);
     };
@@ -112,11 +113,11 @@ const Home = ({
           <Container className="relative z-[2]">
             <SideBySide
               variant="normal"
-              imageSrc="/assets/images/commitment.png"
+              imageSrc="/assets/images/about/home2.webp"
               imageAlt="commitment"
               imageWidth={424}
               imageHeight={499}
-              imageClass="object-cover w-full max-h-[200px] md:max-h-max"
+              imageClass="object-cover w-full h-[300px] lg:h-[450px] scale-[1.05]"
               title={`It’s fresh. Properly fresh.`}
               titleVariant={isMobile ? 'h4' : 'h2'}
               description={`We partner directly with farms across the world and across India.No middlemen. No dark stores.Just produce that moves from the farm to you at peak flavour.`}
@@ -163,13 +164,13 @@ const Home = ({
               description={`Nature takes time. It refuses to be hurried. It carefully crafts every single fruit and vegetable that you find here. This patience is what we worship, and that’s what we share with the world.`}
               buttonText="Know more"
               variant="vertical"
-              imageSrc="/assets/images/smallworld.jpeg"
+              imageSrc="/assets/images/about/home3.webp"
               imageAlt="commitment"
               imageWidth={1047}
               imageHeight={296}
               buttonVariant="tertiary"
               rootClass="bg-primary"
-              imageClass="w-full md:max-h-[296px] max-h-[170px] object-cover"
+              imageClass="w-full md:max-h-[296px] max-h-[170px] object-fit"
             />
           </Container>
 
@@ -200,7 +201,7 @@ const Home = ({
           <Box className="h-16 lg:h-[104px]" />
           <SideBySide
             variant="normal"
-            imageSrc="/assets/images/mobiles.png"
+            imageSrc="/assets/images/about/mobiledownload.webp"
             imageAlt="commitment"
             imageWidth={424}
             imageHeight={499}
