@@ -58,7 +58,7 @@ const AboutUsPage = (props: any) => {
         <Hero />
         <Commitment />
         <Handpicked />
-        <FarmDetails />
+        {/* <FarmDetails /> */}
         {/* <div className="px-[10vw] pb-[10vw] mob:px-[4vw] mob:pt-[8vw] ">{!loading && <CategorySection />}</div> */}
       </div>
     </Layout>

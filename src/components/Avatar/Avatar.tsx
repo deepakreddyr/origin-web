@@ -16,12 +16,12 @@ export default function OriginAvatar(props: any) {
 
   return (
     <Stack direction="row" className="gap-[18px]">
-      <Avatar
+      {/* <Avatar
         className="place-content-center grid bg-primary rounded-xl"
         variant="rounded"
         alt={title}
         src={image}
-      />
+      /> */}
       <Box className="flex flex-col">
         <Typography variant="body1" className="font-normal text-black text-sm">
           {title}

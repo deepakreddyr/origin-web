@@ -1,45 +1,45 @@
-import React, { useEffect } from "react";
-import Image from "next/image";
-import { useMediaQuery } from "@mui/material";
-import { useRouter } from "next/router";
+import React, { useEffect } from 'react';
+import Image from 'next/image';
+import { useMediaQuery } from '@mui/material';
+import { useRouter } from 'next/router';
 
 // Import your banners
-import FreshlyArrivedBanner from "/public/assets/images/shop/FreshlyArrivedBanner.png";
-import FruitsBanner from "/public/assets/images/shop/FruitsBanner.png";
-import HydroponicsBanner from "/public/assets/images/shop/HydroponicsBanner.png";
-import GourmetBanner from "/public/assets/images/shop/GourmetBanner.png";
-import banner from "/public/assets/images/shop/homepagebanner.webp";
-import mobbanner from "/public/assets/images/shop/homepagebannermob.webp";
+import FreshlyArrivedBanner from '/public/assets/images/shop/FreshlyArrivedBanner.png';
+import FruitsBanner from '/public/assets/images/shop/FruitsBanner.png';
+import HydroponicsBanner from '/public/assets/images/shop/HydroponicsBanner.png';
+import GourmetBanner from '/public/assets/images/shop/GourmetBanner.png';
+import banner from '/public/assets/images/shop/homepagebanner.webp';
+import mobbanner from '/public/assets/images/shop/homepagebannermob.webp';
 
-import vege from "/public/assets/images/shop/VeggiesBanner.png";
+import vege from '/public/assets/images/shop/VeggiesBanner.png';
 // Map normalized keywords -> banner images
 const bannerMap: Record<string, any> = {
-  "freshly-arrived": FreshlyArrivedBanner,
-  "fruits": FruitsBanner,
-  "hydroponics": HydroponicsBanner,
-  "gourmet": GourmetBanner,
-  "veggies": vege
+  'freshly-arrived': FreshlyArrivedBanner,
+  fruits: FruitsBanner,
+  hydroponics: HydroponicsBanner,
+  gourmet: GourmetBanner,
+  veggies: vege
 };
 
 // Normalizer function to handle: raw spaces, encoded spaces, mixed case
 const normalize = (value?: string): string => {
-  if (!value) return "";
+  if (!value) return '';
 
-  return decodeURIComponent(value)      // converts "%20" → " "
-    .trim()                              // remove extra spaces
-    .toLowerCase()                       // case-insensitive
-    .replace(/\s+/g, "-");               // convert spaces → hyphens
+  return decodeURIComponent(value) // converts "%20" → " "
+    .trim() // remove extra spaces
+    .toLowerCase() // case-insensitive
+    .replace(/\s+/g, '-'); // convert spaces → hyphens
 };
 
 const ShopHero = () => {
-  const isMobile = useMediaQuery("(max-width:768px)");
+  const isMobile = useMediaQuery('(max-width:768px)');
   const router = useRouter();
 
   // Example: "/shop/Freshly Arrived/2/New Items/11"
   const path = router.asPath;
 
   // Section = 3rd part of URL (index 2)
-  const rawSection = path.split("/")[2];
+  const rawSection = path.split('/')[2];
 
   // Normalize it
   const section = normalize(rawSection);
@@ -49,10 +49,7 @@ const ShopHero = () => {
 
   return (
     <div className="relative w-full overflow-hidden mob:pt-[20vw]">
-      <div
-        className={`relative w-full ${isMobile ? "pt-[50px]" : "aspect-[2.4/1]"
-          }`}
-      >
+      <div className={`relative w-full ${isMobile ? 'pt-[50px]' : 'aspect-[2.4/1]'}`}>
         <Image
           src={selectedBanner}
           alt="Shop Section Banner"
@@ -70,15 +67,27 @@ const ShopHero = () => {
 
 export default ShopHero;
 
-
-export const ShopHeroSingle = () => {
-  const isMobile = useMediaQuery("(max-width:768px)");
-  const isTablet = useMediaQuery("(max-width:1024px)");
+export const ShopHeroSingle = ({ bannerData }: { bannerData?: any }) => {
+  const isMobile = useMediaQuery('(max-width:768px)');
+  const isTablet = useMediaQuery('(max-width:1024px)');
   const router = useRouter();
+  const desktopImage = bannerData?.[0]?.website_image;
+  const mobileImage = bannerData?.[0]?.website_mobile_view_image;
 
+  const bannerSrc = isMobile ? mobileImage || mobbanner : desktopImage || banner;
+  const navigationTo = bannerData?.[0]?.navigation?.to;
+
+  const handleNavigation = () => {
+    if (navigationTo) {
+      router.push(navigationTo);
+    }
+  };
 
   return (
-    <div className="relative w-full overflow-x-hidden">
+    <div
+      className={`relative w-full overflow-x-hidden ${navigationTo ? 'cursor-pointer' : ''}`}
+      onClick={handleNavigation}
+    >
       {/* HERO HEIGHT - Reduced height */}
       <div
         className="
@@ -88,14 +97,7 @@ export const ShopHeroSingle = () => {
           mob:h-[100vw]         
         "
       >
-        <Image
-          src={isMobile ? mobbanner : banner}
-          alt="Shop Hero Single Banner"
-          fill
-          priority
-          quality={100}
-          className="object-cover"
-        />
+        <Image src={bannerSrc} alt="Shop Hero Single Banner" fill priority quality={100} className="object-cover" />
       </div>
     </div>
   );

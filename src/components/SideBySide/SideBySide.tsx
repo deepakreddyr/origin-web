@@ -123,7 +123,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
             {HTMLReactParser(title)}
           </Typography>
           <Typography variant="body1" className="lg:my-6 mt-4 mb-6 font-light text-lg">
-            {description}
+            {description && HTMLReactParser(description)}
           </Typography>
           {/* <OriginButton handleClick={buttonClick1} variant={buttonVariant} buttonText={buttonText} /> */}
         </Box>
@@ -163,7 +163,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
             {HTMLReactParser(title)}
           </Typography>
           <Typography variant="body1" className="lg:my-6 mt-0 mb-6 font-light text-lg">
-            {description}
+            {description && HTMLReactParser(description)}
           </Typography>
           <Box className="flex items-center gap-5">
             {/* {buttonText && <OriginButton handleClick={buttonClick1} variant={buttonVariant} buttonText={buttonText} />} */}
@@ -200,7 +200,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
             </Typography>
             <Box className="w-full lg:w-[calc(50%-3rem)]">
               <Typography variant="body1" className="mt-0 mb-6 lg:mb-6 font-light text-lg">
-                {description}
+                {description && HTMLReactParser(description)}
               </Typography>
               {/* {buttonText && (
                 <OriginButton handleClick={buttonClick1} variant={buttonVariant} buttonText={buttonText} />
@@ -244,7 +244,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
           </Typography>
 
           <Typography variant="body1" className="lg:my-6 mt-0 mb-6 font-light text-lg">
-            {description}
+            {description && HTMLReactParser(description)}
           </Typography>
 
           <OriginButton

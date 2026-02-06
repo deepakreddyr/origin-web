@@ -19,7 +19,6 @@ import HomeCategorySection from '@/components/home/HomeCategorySection';
 import PopularProduce from '@/components/ShopV2/PopularProduce';
 import PopularProduceMob from '@/components/ShopV2/PopularProduceMob';
 
-
 interface HomeProps {
   uspCardsData: UspCardsData;
   categories: Categories;
@@ -76,9 +75,13 @@ const Home = ({
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
   }, [initialHomepageData]);
 
-  const mainCategoryData = (homepageData?.find((item: any) => item.type === 'main-category')?.data) || categories || [];
+  const mainCategoryData = homepageData?.find((item: any) => item.type === 'main-category')?.data || categories || [];
   const blendsCategoryData = homepageData?.find((item: any) => item.type === 'blends-category')?.data;
-  const popularProduceData = homepageData?.find((item: any) => item.type === 'products-recommendation') || { title: 'Popular Produce', data: [] };
+  const popularProduceData = homepageData?.find((item: any) => item.type === 'products-recommendation') || {
+    title: 'Popular Produce',
+    data: []
+  };
+  const heroBannerData = homepageData?.find((item: any) => item.type === 'banner-hero-web')?.data;
 
   return (
     <div className="overflow-x-hidden max-w-full relative">
@@ -88,7 +91,7 @@ const Home = ({
           description="Shop for the freshest organic fruits, vegetables, and exotic produce at Origin Fresh. Quality guaranteed, delivered straight to your home."
         />
         {/* <OriginHero /> */}
-        <ShopHeroSingle />
+        <ShopHeroSingle bannerData={heroBannerData} />
         <PrimaryFeature />
 
         <div className="flex items-center justify-center w-full px-[1vw]">
@@ -97,19 +100,19 @@ const Home = ({
           </div>
         </div>
         {/* Homepage Category Section */}
-        <div className='w-full px-[5vw] mob:mt-[10vw]'>
+        <div className="w-full px-[5vw] mob:mt-[10vw]">
           <HomeCategorySection categories={mainCategoryData} blendsCategory={blendsCategoryData} loading={loading} />
         </div>
 
-        <div className='w-full px-[5vw]'>
-          {(isMobile || isTablet) ? (
+        <div className="w-full px-[5vw]">
+          {isMobile || isTablet ? (
             <PopularProduceMob categoryDetail={popularProduceData} />
           ) : (
             <PopularProduce categoryDetail={popularProduceData} />
           )}
           {/* <PopularProduce categoryDetail={popularProduceData} /> */}
         </div>
-        <BeforeBox mdTopOffset={isMobile ? -124 : 100} mdBottomOffset={isMobile ? 110 : 220}>
+        <BeforeBox mdTopOffset={isMobile ? -90 : 50} mdBottomOffset={isMobile ? 20 : 80}>
           <Container className="relative z-[2]">
             <SideBySide
               variant="normal"
@@ -120,7 +123,7 @@ const Home = ({
               imageClass="object-cover w-full h-[300px] lg:h-[450px] scale-[1.05]"
               title={`It’s fresh. Properly fresh.`}
               titleVariant={isMobile ? 'h4' : 'h2'}
-              description={`We partner directly with farms across the world and across India.No middlemen. No dark stores.Just produce that moves from the farm to you at peak flavour.`}
+              description={`We partner directly with farms across the world and across India. <br/> No middlemen. No dark stores. <br/> Just produce that moves from the farm to you at peak flavour.`}
               buttonText="Know more"
               buttonVariant="tertiary"
               rootClass="bg-secondary-200"
@@ -133,7 +136,7 @@ const Home = ({
               parallaxMainImageSrc="/assets/images/parallaxImages/main-2.webp"
               // parallaxBottomImageSrc="/assets/images/parallaxImages/bottom-1.png"
               parallaxImageAlt="carefully handpicked"
-              title={`GROWN FOR <br/> THOSE WHO NEVER <br/> COMPROMISE `}
+              title={`Grown For <br/> Those Who Never <br/> Compromise `}
               titleVariant={isMobile ? 'h4' : 'h1'}
               titleClass="font-Stinger text-[#231F20] !font-bold !leading-[1.1] "
               description={`Everyone has a right to fresh, authentic flavours. But only a few fight for it. Origin Fresh is for those who do.`}
@@ -142,7 +145,7 @@ const Home = ({
               rootClass="bg-[#FAF7F0] z-1 px-0 md:px-6 items-center mob:!rounded-none pb-12 !overflow-visible"
               reverse
               parallaxImgContainerClass="relative py-5 lg:pt-9 lg:pb-20 !lg:w-[45%] !overflow-visible"
-              titleContainerClass="!lg:ps-0 !lg:pe-12"
+              titleContainerClass="!pl-0 !lg:ps-0 !lg:pe-12 !pr-12"
               parallaxTopImageWidth={600}
               parallaxTopImageHeight={800}
               parallaxMainImageHeight={800}
@@ -154,7 +157,7 @@ const Home = ({
               parallaxMainImgClass="z-[10] relative ml-auto mr-0 lg:mr-[-4vw] scale-[1.2] lg:scale-[1.5] mob:scale-[1.1]"
               parallaxBottomImgContainerClass="z-[1]"
             />
-            <Box className="h-16 md:h-0" />
+            <Box className="h-8 md:h-0" />
           </Container>
           <Container maxWidth="lg" className="relative z-[50] ">
             <SideBySide
@@ -191,12 +194,12 @@ const Home = ({
               rootClass="bg-transparent px-0 md:px-5 items-center"
             />
           </Container> */}
-          <Container className="px-0 md:px-6 mt-[15vw]">
+          <Container className="px-0 md:px-6 mt-[8vw]">
             <TestimonialsSection testimonials={testimonials} />
           </Container>
-          <Box className="h-16 lg:h-[128px]" />
+          <Box className="h-8 lg:h-[64px]" />
         </BeforeBox>
-        <Box className="h-16  lg:h-[104px]" />
+        {/* <Box className="h-8 lg:h-[52px]" /> */}
         <Container className="mt-[8vw]">
           <Box className="h-16 lg:h-[104px]" />
           <SideBySide
@@ -205,7 +208,7 @@ const Home = ({
             imageAlt="commitment"
             imageWidth={424}
             imageHeight={499}
-            title={`Download the App and Get FLAT 15% Off on 1st Order use ${"INSTALL15"}`}
+            title={`Download the App and Get FLAT 15% Off on 1st Order use ${'INSTALL15'}`}
             titleVariant="h5"
             titleClass="text-black md:pe-0"
             titleContainerClass="flex-col lg:block flex items-center text-center md:text-left"
@@ -230,7 +233,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     return {
       props: {
         uspCardsData,
-        categories,
+        // categories,
         products,
         blogs,
         testimonials,

@@ -65,7 +65,7 @@ const data: Data = {
     footerLinksPrimary: [
       { text: 'Home', href: 'shop' },
       // { text: 'About Us', href: 'about' },
-      { text: 'Shop All', href: 'shop' },
+      { text: 'Shop All', href: 'shop' }
       // { text: 'Contact', href: 'contact' }
     ],
     footerLinksSecondary: [
@@ -913,111 +913,111 @@ const data: Data = {
     {
       user: {
         image: '/assets/images/avatars/avatar.png',
-        title: 'Ram jayan',
-        subtitle: 'Koramangala'
+        title: 'Ananya G.',
+        subtitle: ''
       },
       content:
-        'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis tortor leo nisi nisl. Tempor pellentesque at nulla sem tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
+        'There’s a certain trust I’ve built with Origin Fresh. When I order, I know I’m getting quality produce that hasn’t been sitting around. That assurance matters to me.'
     },
     {
       user: {
         image: '/assets/images/avatars/avatar.png',
-        title: 'Ram jayan',
-        subtitle: 'Koramangala'
+        title: 'Rahul T.',
+        subtitle: ''
       },
       content:
-        'Lorem ipsum dolor sit amet consectetur. Turpis sapien sed vestibulum nisi diam. Dictum quam urna risus feugiat feugiat. Dui lectus magnis arcu massa egestas. A interdum maecenas odio habitasse quis in varius quam. Eget amet massa netus ut adipiscing vel eget non. Volutpat id facilisi malesuada nisl vivamus aliquam mauris. Non egestas mi eget consectetur faucibus.'
+        'Origin Fresh has changed the way I shop for fruits and vegetables. It feels less like buying groceries and more like choosing good ingredients on purpose.'
     },
     {
       user: {
         image: '/assets/images/avatars/avatar.png',
-        title: 'Ram jayan',
-        subtitle: 'Koramangala'
+        title: 'Rhea M.',
+        subtitle: ''
       },
       content:
-        'Lorem ipsum dolor sit amet consectetur. Turpis sapien sed vestibulum nisi diam. Dictum quam urna risus feugiat feugiat. Dui lectus magnis arcu massa egestas. A interdum maecenas odio habitasse quis in varius quam. Eget amet massa netus ut adipiscing vel eget non. Volutpat id facilisi malesuada nisl vivamus aliquam mauris. Non egestas mi eget consectetur faucibus.'
+        'I started ordering from Origin Fresh out of curiosity, but I stayed for consistency. The produce looks the way it should actually look fresh, vibrant, and handled with care. You can tell there’s thought behind what they source.'
     },
     {
       user: {
         image: '/assets/images/avatars/avatar.png',
-        title: 'Ram jayan',
-        subtitle: 'Koramangala'
+        title: 'Arjun K.',
+        subtitle: ''
       },
       content:
-        'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis tortor leo nisi nisl. Tempor pellentesque at nulla sem tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
-    },
-    {
-      user: {
-        image: '/assets/images/avatars/avatar.png',
-        title: 'Ram jayan',
-        subtitle: 'Koramangala'
-      },
-      content:
-        'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis tortor leo nisi nisl. Tempor.Arcu vitae felis tortor leo nisi nisl. Tempor pellentesque at nulla sem tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
-    },
-    {
-      user: {
-        image: '/assets/images/avatars/avatar.png',
-        title: 'Ram jayan',
-        subtitle: 'Koramangala'
-      },
-      content:
-        'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis. Tempor pellentesque at nulla sem,tortor leo nisi nisl. Tempor pellentesque at nulla sem, Arcu vitae felis tortor leo nisi nisl. Tempor tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
-    },
-    {
-      user: {
-        image: '/assets/images/avatars/avatar.png',
-        title: 'Ram jayan',
-        subtitle: 'Koramangala'
-      },
-      content:
-        'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis tortor leo nisi nisl. Tempor pellentesque at nulla sem tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
-    },
-    {
-      user: {
-        image: '/assets/images/avatars/avatar.png',
-        title: 'Ram jayan',
-        subtitle: 'Koramangala'
-      },
-      content:
-        'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis tortor leo nisi nisl. Tempor.Arcu vitae felis tortor leo nisi nisl. Tempor pellentesque at nulla sem tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
-    },
-    {
-      user: {
-        image: '/assets/images/avatars/avatar.png',
-        title: 'Ram jayan',
-        subtitle: 'Koramangala'
-      },
-      content:
-        'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis. Tempor pellentesque at nulla sem,tortor leo nisi nisl. Tempor pellentesque at nulla sem, Arcu vitae felis tortor leo nisi nisl. Tempor tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
-    },
-    {
-      user: {
-        image: '/assets/images/avatars/avatar.png',
-        title: 'Ram jayan',
-        subtitle: 'Koramangala'
-      },
-      content:
-        'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis tortor leo nisi nisLorem ipsum dolor sit amet consectetur. Arcu vitae felis tortor leo nisi nisLorem ipsum dolor sit amet consectetur. Arcu vitae felis tortor leo nisi nisl. Tempor pellentesque at nulla sem tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
-    },
-    {
-      user: {
-        image: '/assets/images/avatars/avatar.png',
-        title: 'Ram jayan',
-        subtitle: 'Koramangala'
-      },
-      content:
-        'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis tortor leo nisi nisl. Tempor.Arcu vitae felis tortor leo nisi nisl. Tempor pellentesque at nulla sem tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
-    },
-    {
-      user: {
-        image: '/assets/images/avatars/avatar.png',
-        title: 'Ram jayan',
-        subtitle: 'Koramangala'
-      },
-      content:
-        'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis. Tempor pellentesque at nulla sem,tortor leo nisi nisl. Tempor pellentesque at nulla sem, Arcu vitae felis tortor leo nisi nisl. Tempor tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
+        'I cook a lot, and ingredients matter. Origin Fresh is one of the few places where the vegetables and fruits taste the way they’re supposed to. Clean flavours, no surprises. That alone keeps me coming back.'
     }
+    // {
+    //   user: {
+    //     image: '/assets/images/avatars/avatar.png',
+    //     title: 'Ram jayan',
+    //     subtitle: 'Koramangala'
+    //   },
+    //   content:
+    //     'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis tortor leo nisi nisl. Tempor.Arcu vitae felis tortor leo nisi nisl. Tempor pellentesque at nulla sem tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
+    // },
+    // {
+    //   user: {
+    //     image: '/assets/images/avatars/avatar.png',
+    //     title: 'Ram jayan',
+    //     subtitle: 'Koramangala'
+    //   },
+    //   content:
+    //     'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis. Tempor pellentesque at nulla sem,tortor leo nisi nisl. Tempor pellentesque at nulla sem, Arcu vitae felis tortor leo nisi nisl. Tempor tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
+    // },
+    // {
+    //   user: {
+    //     image: '/assets/images/avatars/avatar.png',
+    //     title: 'Ram jayan',
+    //     subtitle: 'Koramangala'
+    //   },
+    //   content:
+    //     'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis tortor leo nisi nisl. Tempor pellentesque at nulla sem tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
+    // },
+    // {
+    //   user: {
+    //     image: '/assets/images/avatars/avatar.png',
+    //     title: 'Ram jayan',
+    //     subtitle: 'Koramangala'
+    //   },
+    //   content:
+    //     'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis tortor leo nisi nisl. Tempor.Arcu vitae felis tortor leo nisi nisl. Tempor pellentesque at nulla sem tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
+    // },
+    // {
+    //   user: {
+    //     image: '/assets/images/avatars/avatar.png',
+    //     title: 'Ram jayan',
+    //     subtitle: 'Koramangala'
+    //   },
+    //   content:
+    //     'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis. Tempor pellentesque at nulla sem,tortor leo nisi nisl. Tempor pellentesque at nulla sem, Arcu vitae felis tortor leo nisi nisl. Tempor tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
+    // },
+    // {
+    //   user: {
+    //     image: '/assets/images/avatars/avatar.png',
+    //     title: 'Ram jayan',
+    //     subtitle: 'Koramangala'
+    //   },
+    //   content:
+    //     'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis tortor leo nisi nisLorem ipsum dolor sit amet consectetur. Arcu vitae felis tortor leo nisi nisLorem ipsum dolor sit amet consectetur. Arcu vitae felis tortor leo nisi nisl. Tempor pellentesque at nulla sem tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
+    // },
+    // {
+    //   user: {
+    //     image: '/assets/images/avatars/avatar.png',
+    //     title: 'Ram jayan',
+    //     subtitle: 'Koramangala'
+    //   },
+    //   content:
+    //     'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis tortor leo nisi nisl. Tempor.Arcu vitae felis tortor leo nisi nisl. Tempor pellentesque at nulla sem tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
+    // },
+    // {
+    //   user: {
+    //     image: '/assets/images/avatars/avatar.png',
+    //     title: 'Ram jayan',
+    //     subtitle: 'Koramangala'
+    //   },
+    //   content:
+    //     'Lorem ipsum dolor sit amet consectetur. Arcu vitae felis. Tempor pellentesque at nulla sem,tortor leo nisi nisl. Tempor pellentesque at nulla sem, Arcu vitae felis tortor leo nisi nisl. Tempor tristique. Mi interdum scelerisque turpis quisque venenatis pellentesque. Ut nibh in eu ornare.'
+    // }
   ],
   howItWorks: {
     banner: {
