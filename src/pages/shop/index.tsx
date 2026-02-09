@@ -7,6 +7,7 @@ import PopularProduceMob from '@/components/ShopV2/PopularProduceMob';
 import FeatureProduct from '@/components/ShopV2/FeaturedProduct';
 import VideoBanner from '@/components/ShopV2/VideoBanner';
 import { useEffect, useState } from 'react';
+import * as gtag from '@/utilities/gtag';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { useRouter } from 'next/router';
@@ -57,12 +58,12 @@ const ShopPage = (props: HomeProps) => {
       const mobileVideo = document.createElement('video');
       const desktopVideo = document.createElement('video');
 
-      mobileVideo.src = "https://cdn.originfresh.in/website/Origin_9_16_v1.mp4";
-      mobileVideo.preload = "metadata";
+      mobileVideo.src = 'https://cdn.originfresh.in/website/Origin_9_16_v1.mp4';
+      mobileVideo.preload = 'metadata';
       mobileVideo.muted = true;
 
-      desktopVideo.src = "https://cdn.originfresh.in/website/Origin_16_9_v1.mp4";
-      desktopVideo.preload = "metadata";
+      desktopVideo.src = 'https://cdn.originfresh.in/website/Origin_16_9_v1.mp4';
+      desktopVideo.preload = 'metadata';
       desktopVideo.muted = true;
 
       let loadedCount = 0;
@@ -100,7 +101,7 @@ const ShopPage = (props: HomeProps) => {
     }
 
     const successHandler = (data: any) => {
-      console.log(data, "DATA");
+      console.log(data, 'DATA');
       dispatch(setShopCategories(data?.data));
       dispatch(setIsShopCategoriesFetched(true));
       setLoading(false);
@@ -113,6 +114,13 @@ const ShopPage = (props: HomeProps) => {
     };
 
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+
+    // Track Shop All View
+    gtag.event({
+      action: 'view_item_list',
+      category: 'Navigation',
+      label: 'Shop All'
+    });
   }, []);
 
   useEffect(() => {
@@ -139,7 +147,6 @@ const ShopPage = (props: HomeProps) => {
     setShowDownloadApp(false);
     localStorage.setItem('downloadAppBannerSeen', 'true');
   };
-
 
   const PageLoader = () => (
     <div className="flex flex-col gap-[6vw] pl-[10.6vw] mob:pl-[4.1vw] relative top-[12vw] mob:top-[32vw] overflow-hidden">
@@ -227,7 +234,12 @@ const ShopPage = (props: HomeProps) => {
       </div>
 
       <div className="flex flex-col gap-[6vw] mt-[7vw] mob:pl-[0vw] w-full items-center">
-        <HomeCategorySection categories={mainCategoryData} blendsCategory={blendsCategoryData} loading={loading} title="Shop By Category" />
+        <HomeCategorySection
+          categories={mainCategoryData}
+          blendsCategory={blendsCategoryData}
+          loading={loading}
+          title="Shop By Category"
+        />
       </div>
 
       <div className="flex flex-col gap-[6vw] mt-[7vw] mob:pl-[0vw] w-full items-center">
@@ -240,7 +252,7 @@ const ShopPage = (props: HomeProps) => {
         if (section.type === 'products-recommendation') {
           return (
             <div key={index} className="w-full">
-              {(isMobile || isTablet) ? (
+              {isMobile || isTablet ? (
                 <PopularProduceMob categoryDetail={section} />
               ) : (
                 <PopularProduce categoryDetail={section} />
@@ -250,8 +262,6 @@ const ShopPage = (props: HomeProps) => {
         }
         return null;
       })}
-
-
     </div>
   );
   return (

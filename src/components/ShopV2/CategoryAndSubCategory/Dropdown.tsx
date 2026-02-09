@@ -13,14 +13,8 @@ const Dropdown = (props: any) => {
         className="flex items-center gap-[.97vw] mob:gap-[2vw] cursor-pointer"
       >
         <h1 className="text-black font-semibold text-[1.67vw] mob:text-[5.1vw]">{value}</h1>
-        <div
-          className={`transition-transform duration-300 ${showDropdown ? 'rotate-180' : 'rotate-0'
-            }`}
-        >
-          <ChevronDown
-            size={40}
-            className="text-black w-[1.6vw] h-[1.6vw] mob:w-[6vw] mob:h-[6vw]"
-          />
+        <div className={`transition-transform duration-300 ${showDropdown ? 'rotate-180' : 'rotate-0'}`}>
+          <ChevronDown size={40} className="text-black w-[1.6vw] h-[1.6vw] mob:w-[6vw] mob:h-[6vw]" />
         </div>
       </div>
 
@@ -33,8 +27,9 @@ const Dropdown = (props: any) => {
                   handler(data, name);
                   setShowDropdown(false);
                 }}
-                className={`font-[Stinger] text-start w-full font-semibold text-[1.25vw] mob:text-[4.5vw] ${value === data.name ? 'text-secondary' : 'text-black'
-                  }`}
+                className={`font-[SofiaPro] text-start w-full font-semibold text-[1.25vw] mob:text-[4.5vw] ${
+                  value === data.name ? 'text-secondary' : 'text-black'
+                }`}
               >
                 {data.name}
               </button>

@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 const SubCategoryPills = (props: any) => {
-  const { name, value, handler } = props;
+  const { name, value, valueId, handler } = props;
   const shopCategories = useSelector((state: any) => state.shopCategories);
 
   if (!shopCategories?.subCategories?.length) return null;
@@ -13,15 +13,21 @@ const SubCategoryPills = (props: any) => {
       <div className="overflow-x-auto md:overflow-visible noscrollbar">
         <div className="flex md:flex-wrap gap-2 md:gap-[0.8vw] whitespace-nowrap">
           {shopCategories.subCategories.map((item: any) => {
-            const isSelected = value === item.name;
+            const isSelected =
+              (value &&
+                item.name &&
+                value.toLowerCase().replace(/-/g, ' ') === item.name.toLowerCase().replace(/-/g, ' ')) ||
+              String(valueId) === String(item.id);
             return (
               <button
                 onClick={() => handler(item, name)}
                 key={item.id}
-                className={`px-3 py-2 text-sm md:px-[1vw] md:py-[.7vw] md:text-[.9vw] rounded-lg md:rounded-[0.6vw] font-medium text-center shadow-md border transition-all duration-200
-                  ${isSelected
-                    ? 'bg-gradient-to-tr from-[#146321] to-[#29C943] text-white'
-                    : 'bg-white text-black border-gray-300 hover:bg-gray-100 active:bg-gray-200'}
+                className={`px-[4vw] py-[2vw] text-[3.6vw] md:px-[1.5vw] md:py-[0.6vw] md:text-[1vw] rounded-full font-semibold text-center border transition-all duration-200
+                  ${
+                    isSelected
+                      ? 'bg-[#2D8A4E] text-white border-[#2D8A4E]'
+                      : 'bg-white text-[#231F20] border-[#E8E1D2] hover:bg-gray-50'
+                  }
                 `}
               >
                 {item.name}

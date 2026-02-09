@@ -11,7 +11,7 @@ import AddItemBtn from '../shared/AddItemBtn/AddItemBtn';
 import AboutTheProduct from './AboutTheProduct';
 import ProductDetailsPageLoader from '../skeletonLoaders/shop/ProductDetailsPageLoader';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import itemRipenessSvg from '/public/assets/svg/itemRipeness.svg';
 import PopularProduce from '@/components/ShopV2/PopularProduce';
 import Link from 'next/link';
@@ -19,6 +19,7 @@ import CustomHead from '../shared/CustomHead';
 import { useDispatch, useSelector } from 'react-redux';
 import { addNotifiedItem } from '@/store/slice/productsSlice';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import * as gtag from '@/utilities/gtag';
 
 // Type definitions
 interface UOM {
@@ -102,8 +103,9 @@ const MaxQuantityToast: React.FC<{
 
   return (
     <div
-      className={`fixed top-20 left-1/2 -translate-x-1/2 z-40 transition-opacity duration-300 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+      className={`fixed top-20 left-1/2 -translate-x-1/2 z-40 transition-opacity duration-300 ease-in-out ${
+        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
     >
       <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full relative">
         <div className="flex items-center justify-center w-full gap-2">
@@ -126,7 +128,6 @@ const NotifyToast: React.FC<{
   onClose: () => void;
   type: 'success' | 'error';
 }> = ({ message, isVisible, onClose, type }) => {
-
   useEffect(() => {
     if (isVisible) {
       const timer = setTimeout(() => {
@@ -140,17 +141,14 @@ const NotifyToast: React.FC<{
 
   return (
     <div
-      className={`fixed z-[100] left-1/2 bottom-10 transform -translate-x-1/2 w-[90%] max-w-sm transition-all duration-300 ease-in-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
-        }`}
+      className={`fixed z-[100] left-1/2 bottom-10 transform -translate-x-1/2 w-[90%] max-w-sm transition-all duration-300 ease-in-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+      }`}
     >
       <div className="flex items-center bg-black rounded-full shadow-2xl h-12 px-6 w-full relative">
         <div className="flex items-center justify-center w-full gap-3">
-          {type === 'error' && (
-            <InfoOutlinedIcon sx={{ color: '#FFDD00', fontSize: '1.2rem' }} />
-          )}
-          <p className="text-[0.80rem] font-medium text-white text-center leading-tight font-[SofiaPro]">
-            {message}
-          </p>
+          {type === 'error' && <InfoOutlinedIcon sx={{ color: '#FFDD00', fontSize: '1.2rem' }} />}
+          <p className="text-[0.80rem] font-medium text-white text-center leading-tight font-[SofiaPro]">{message}</p>
         </div>
       </div>
     </div>
@@ -161,19 +159,18 @@ const NotifyToast: React.FC<{
 const ComboContains: React.FC<{ productDetails: ProductDetails }> = ({ productDetails }) => {
   if (!productDetails.combo_items || productDetails.combo_items.length === 0) return null;
 
-  const defaultUOM = productDetails.item.multiple_uoms?.find(uom => uom.is_default) || productDetails.item.multiple_uoms?.[0];
+  const defaultUOM =
+    productDetails.item.multiple_uoms?.find((uom) => uom.is_default) || productDetails.item.multiple_uoms?.[0];
   const totalItems = productDetails.combo_items.length;
 
   return (
     <div className="mt-8 bg-[#FAF7F0] rounded-[24px] border border-[#EDE6CC]/50 p-6 mob:p-5">
-      <h3 className="font-Stinger font-bold text-2xl mob:text-xl text-[#231F20] mb-5 text-center">
-        Combo contains
-      </h3>
+      <h3 className="font-Stinger font-bold text-2xl mob:text-xl text-[#231F20] mb-5 text-center">Combo contains</h3>
 
       <div className="grid grid-cols-[1fr_auto_auto] items-stretch gap-x-4 mb-2">
         {productDetails.combo_items.map((item, index) => {
           const isLast = index === productDetails.combo_items.length - 1;
-          const borderClass = isLast ? "" : "border-b border-[#EDE6CC]/30";
+          const borderClass = isLast ? '' : 'border-b border-[#EDE6CC]/30';
 
           // Parse name for sub-description (e.g., "Arbi (Colocassia Taro)")
           const nameParts = item.item_name.match(/([^(]+)(?:\(([^)]+)\))?/);
@@ -183,24 +180,14 @@ const ComboContains: React.FC<{ productDetails: ProductDetails }> = ({ productDe
           return (
             <React.Fragment key={index}>
               <div className={`py-4 ${borderClass} text-start flex flex-col justify-center`}>
-                <p className="font-[SofiaPro] font-bold text-base mob:text-sm text-[#231F20] leading-tight">
-                  {name}
-                </p>
-                {subName && (
-                  <p className="font-[SofiaPro] italic text-xs text-[#231F20]/60">
-                    {subName}
-                  </p>
-                )}
+                <p className="font-[SofiaPro] font-bold text-base mob:text-sm text-[#231F20] leading-tight">{name}</p>
+                {subName && <p className="font-[SofiaPro] italic text-xs text-[#231F20]/60">{subName}</p>}
               </div>
               <div className={`py-4 ${borderClass} flex items-center justify-center min-w-[3rem]`}>
-                <p className="font-[SofiaPro] text-base mob:text-sm text-[#231F20]/70">
-                  {item.qty}
-                </p>
+                <p className="font-[SofiaPro] text-base mob:text-sm text-[#231F20]/70">{item.qty}</p>
               </div>
               <div className={`py-4 ${borderClass} flex items-center justify-end min-w-[5rem]`}>
-                <p className="font-[SofiaPro] text-base mob:text-sm text-[#231F20]/70">
-                  {item.uom}
-                </p>
+                <p className="font-[SofiaPro] text-base mob:text-sm text-[#231F20]/70">{item.uom}</p>
               </div>
             </React.Fragment>
           );
@@ -208,9 +195,7 @@ const ComboContains: React.FC<{ productDetails: ProductDetails }> = ({ productDe
       </div>
 
       <div className="flex items-center justify-between pt-4 border-t border-[#EDE6CC]">
-        <p className="font-[SofiaPro] font-bold text-lg text-[#231F20]">
-          Total ({totalItems} items)
-        </p>
+        <p className="font-[SofiaPro] font-bold text-lg text-[#231F20]">Total ({totalItems} items)</p>
         <div className="flex items-center gap-4">
           {defaultUOM && (
             <div className="flex items-center gap-2">
@@ -225,17 +210,18 @@ const ComboContains: React.FC<{ productDetails: ProductDetails }> = ({ productDe
 
 // Storing Information Section
 const StorageInfo: React.FC<{ info: ProductInfo }> = ({ info }) => {
-  const storageSection = info?.info?.find(section => section.type === 'storage');
+  const storageSection = info?.info?.find((section) => section.type === 'storage');
   if (!storageSection || !storageSection.details || storageSection.details.length === 0) return null;
 
   return (
     <div className="mt-4 w-[443px] mob:w-full bg-white rounded-[16px] border border-[#EDE6CC]/50 p-4 pb-[16px]">
-      <p className="font-[Stinger] font-bold text-xl text-[#231F20] mb-6 text-start">
-        Storing information
-      </p>
+      <p className="font-[Stinger] font-bold text-xl text-[#231F20] mb-6 text-start">Storing information</p>
       <div className="flex flex-row overflow-x-auto gap-[12px] no-scrollbar">
         {storageSection.details.map((detail: any, index: number) => (
-          <div key={index} className="flex-shrink-0 w-[184px] h-[60px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex items-center gap-[10px] border border-[#EDE6CC]/20 overflow-hidden">
+          <div
+            key={index}
+            className="flex-shrink-0 w-[184px] h-[60px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex items-center gap-[10px] border border-[#EDE6CC]/20 overflow-hidden"
+          >
             <div className="w-6 h-6 relative flex-shrink-0 bg-white rounded-full p-1">
               <Image src={detail.image} alt={detail.title} fill className="object-contain p-1" />
             </div>
@@ -256,20 +242,19 @@ const StorageInfo: React.FC<{ info: ProductInfo }> = ({ info }) => {
 
 // Nutrition Benefits Section
 const NutritionBenefits: React.FC<{ info: ProductInfo }> = ({ info }) => {
-  const nutritionSection = info?.info?.find(section => section.type === 'nutrition');
+  const nutritionSection = info?.info?.find((section) => section.type === 'nutrition');
   if (!nutritionSection || !nutritionSection.details || nutritionSection.details.length === 0) return null;
 
   return (
     <div className="mt-4 w-[443px] mob:w-full bg-white rounded-[16px] border border-[#EDE6CC]/50 p-4 pb-[16px]">
-      <p className="font-[Stinger] font-bold text-xl text-[#231F20] mb-6 text-start">
-        Nutrition benefits
-      </p>
+      <p className="font-[Stinger] font-bold text-xl text-[#231F20] mb-6 text-start">Nutrition benefits</p>
       <div className="flex flex-row overflow-x-auto gap-[12px] no-scrollbar">
         {nutritionSection.details.map((detail: any, index: number) => (
-          <div key={index} className="flex-shrink-0 w-[184px] h-[60px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex flex-col justify-center border border-[#EDE6CC]/20 overflow-hidden">
-            <p className="font-[SofiaPro] font-bold text-base text-[#231F20] leading-tight truncate">
-              {detail.title}
-            </p>
+          <div
+            key={index}
+            className="flex-shrink-0 w-[184px] h-[60px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex flex-col justify-center border border-[#EDE6CC]/20 overflow-hidden"
+          >
+            <p className="font-[SofiaPro] font-bold text-base text-[#231F20] leading-tight truncate">{detail.title}</p>
             <p className="font-[SofiaPro] text-[9px] text-[#231F20]/70 uppercase tracking-wide truncate">
               {detail.description}
             </p>
@@ -308,7 +293,7 @@ const ProductDetailsWrapper = () => {
 
   // --- NOTIFY ME STATE ---
   const [showNotifyToast, setShowNotifyToast] = useState(false);
-  const [notifyMsg, setNotifyMsg] = useState("");
+  const [notifyMsg, setNotifyMsg] = useState('');
   const [notifyType, setNotifyType] = useState<'success' | 'error'>('success');
   const dispatch = useDispatch();
 
@@ -335,14 +320,14 @@ const ProductDetailsWrapper = () => {
     };
 
     const successHandler = (data: any) => {
-      setNotifyMsg(data?.message || "Successfully subscribed to notifications");
+      setNotifyMsg(data?.message || 'Successfully subscribed to notifications');
       setNotifyType('success');
       setShowNotifyToast(true);
       dispatch(addNotifiedItem(productDetails.item.id));
     };
 
     const failureHandler = (error: any) => {
-      setNotifyMsg(error?.message || "Not successful. Please try again later.");
+      setNotifyMsg(error?.message || 'Not successful. Please try again later.');
       setNotifyType('error');
       setShowNotifyToast(true);
     };
@@ -373,35 +358,60 @@ const ProductDetailsWrapper = () => {
       const successHandler = (data: any) => {
         if (data?.data) {
           setProductDetails({ ...data.data, isLoading: false });
+
+          // Track GA Event: view_item
+          const item = data.data.item;
+          const defaultUOM = item?.multiple_uoms?.find((uom: any) => uom.is_default) || item?.multiple_uoms?.[0];
+
+          gtag.event({
+            action: 'view_item',
+            category: 'Ecommerce',
+            items: [
+              {
+                item_id: item?.id,
+                item_name: item?.name,
+                price: defaultUOM?.price,
+                item_category: item?.category_name,
+                item_variant: defaultUOM?.variant_name
+              }
+            ]
+          });
         }
       };
 
       const failureHandler = (data: any) => {
-        setProductDetails(prev => ({ ...prev, isLoading: false }));
+        setProductDetails((prev) => ({ ...prev, isLoading: false }));
       };
 
       getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
     }
-  }, [isReady]);
+  }, [isReady, getDataFromApi, query.id]);
 
   // Find default UOM
-  const defaultUOM: UOM | undefined = productDetails?.item?.multiple_uoms?.find((uom: UOM) => uom?.is_default === true) || productDetails?.item?.multiple_uoms?.[0];
+  const defaultUOM: UOM | undefined =
+    productDetails?.item?.multiple_uoms?.find((uom: UOM) => uom?.is_default === true) ||
+    productDetails?.item?.multiple_uoms?.[0];
 
   // CHECK FOR RIPENESS FEATURE: Check if the array exists and has content
   const hasRipenessFeature = !!(defaultUOM?.ripeness_types && defaultUOM.ripeness_types.length > 0);
 
   // Get product description
-  const aboutSection = productDetails.info?.info?.find(section => section.type === 'normal' && section.title === 'About the Product');
+  const aboutSection = productDetails.info?.info?.find(
+    (section) => section.type === 'normal' && section.title === 'About the Product'
+  );
   const productDescription = aboutSection?.details?.[0]?.description || '';
 
   // SEO Logic
-  const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || "https://origin.com";
+  const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || 'https://origin.com';
   const cleanPath = router.asPath.split('?')[0];
   const currentUrl = `${frontendUrl}${cleanPath}`;
 
   const seoData = {
     title: `${productDetails.item.name || 'Product'} - Buy Online`,
-    description: (productDescription || `Buy ${productDetails.item.name} online. Fresh and high-quality products delivered to your doorstep.`).substring(0, 155),
+    description: (
+      productDescription ||
+      `Buy ${productDetails.item.name} online. Fresh and high-quality products delivered to your doorstep.`
+    ).substring(0, 155),
     image: productDetails.item.image || `${frontendUrl}/assets/images/neworiginlogo.png`,
     price: defaultUOM?.price || 0,
     currency: 'INR',
@@ -415,49 +425,49 @@ const ProductDetailsWrapper = () => {
 
   // JSON-LD: Product
   const productStructuredData = {
-    "@context": "https://schema.org/",
-    "@type": "Product",
-    "name": seoData.title,
-    "image": seoData.image,
-    "description": seoData.description,
-    "sku": productDetails.item.item_code || productDetails.item.id,
-    "brand": {
-      "@type": "Brand",
-      "name": "Origin Fresh"
+    '@context': 'https://schema.org/',
+    '@type': 'Product',
+    name: seoData.title,
+    image: seoData.image,
+    description: seoData.description,
+    sku: productDetails.item.item_code || productDetails.item.id,
+    brand: {
+      '@type': 'Brand',
+      name: 'Origin Fresh'
     },
-    "offers": {
-      "@type": "Offer",
-      "url": seoData.url,
-      "priceCurrency": seoData.currency,
-      "price": seoData.price,
-      "priceValidUntil": priceValidUntil.toISOString().split('T')[0],
-      "availability": seoData.availability,
-      "itemCondition": "https://schema.org/NewCondition"
+    offers: {
+      '@type': 'Offer',
+      url: seoData.url,
+      priceCurrency: seoData.currency,
+      price: seoData.price,
+      priceValidUntil: priceValidUntil.toISOString().split('T')[0],
+      availability: seoData.availability,
+      itemCondition: 'https://schema.org/NewCondition'
     }
   };
 
   // JSON-LD: BreadcrumbList
   const breadcrumbStructuredData = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
       {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": frontendUrl
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: frontendUrl
       },
       {
-        "@type": "ListItem",
-        "position": 2,
-        "name": productDetails.item.category_name || "Shop",
-        "item": `${frontendUrl}${productDetails.item.category_slug ? `/shop/${productDetails.item.category_slug}` : '/shop'}`
+        '@type': 'ListItem',
+        position: 2,
+        name: productDetails.item.category_name || 'Shop',
+        item: `${frontendUrl}${productDetails.item.category_slug ? `/shop/${productDetails.item.category_slug}` : '/shop'}`
       },
       {
-        "@type": "ListItem",
-        "position": 3,
-        "name": productDetails.item.name,
-        "item": currentUrl
+        '@type': 'ListItem',
+        position: 3,
+        name: productDetails.item.name,
+        item: currentUrl
       }
     ]
   };
@@ -510,7 +520,10 @@ const ProductDetailsWrapper = () => {
                 Home
               </Link>
               <span className="text-gray-300">/</span>
-              <Link href={productDetails.item.category_slug ? `/shop/${productDetails.item.category_slug}` : '/shop'} className="hover:underline">
+              <Link
+                href={productDetails.item.category_slug ? `/shop/${productDetails.item.category_slug}` : '/shop'}
+                className="hover:underline"
+              >
                 {productDetails.item.category_name || 'Shop'}
               </Link>
               <span className="text-gray-300">/</span>
@@ -525,13 +538,18 @@ const ProductDetailsWrapper = () => {
                   <Image
                     src={productDetails.item.image}
                     fill
-                    alt={productDetails.item.name || "Product"}
+                    alt={productDetails.item.name || 'Product'}
                     style={{ objectFit: 'contain' }}
                     priority
                   />
+                  {defaultUOM?.conversion_text && (
+                    <div className="absolute top-2 right-2 text-[#146321] text-[10px] font-bold px-2 py-0.5 rounded-full z-10 font-[SofiaPro]">
+                      {defaultUOM.conversion_text}
+                    </div>
+                  )}
                   {hasRipenessFeature && (
                     <div className="absolute bottom-0 right-0 z-10">
-                      <Image src={itemRipenessSvg} alt='Select ripeness' width={50} height={50} />
+                      <Image src={itemRipenessSvg} alt="Select ripeness" width={50} height={50} />
                     </div>
                   )}
                   {/* Out of Stock Overlay */}
@@ -561,8 +579,10 @@ const ProductDetailsWrapper = () => {
                       </div>
                     </div>
                     {/* Action Button: Notify Me OR Add to Cart */}
-                    <div className={`${(!defaultUOM?.is_available || !productDetails.item.is_available) ? 'w-auto' : 'w-24'} rounded-full overflow-hidden`}>
-                      {(!defaultUOM?.is_available || !productDetails.item.is_available) ? (
+                    <div
+                      className={`${!defaultUOM?.is_available || !productDetails.item.is_available ? 'w-auto' : 'w-24'} rounded-full overflow-hidden`}
+                    >
+                      {!defaultUOM?.is_available || !productDetails.item.is_available ? (
                         <button
                           type="button"
                           disabled={isNotified}
@@ -570,14 +590,13 @@ const ProductDetailsWrapper = () => {
                             e.stopPropagation();
                             if (!isNotified) handleNotifyMe();
                           }}
-                          className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 ${isNotified
-                            ? 'border-gray-400 text-gray-400 bg-gray-50 cursor-default'
-                            : 'border-[#146321] text-[#146321] hover:bg-green-50'
-                            }`}
+                          className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 ${
+                            isNotified
+                              ? 'border-gray-400 text-gray-400 bg-gray-50 cursor-default'
+                              : 'border-[#146321] text-[#146321] hover:bg-green-50'
+                          }`}
                         >
-                          <span className="text-sm">
-                            {isNotified ? 'Notified' : 'Notify'}
-                          </span>
+                          <span className="text-sm">{isNotified ? 'Notified' : 'Notify'}</span>
                           <NotificationsNoneOutlinedIcon sx={{ fontSize: '1.2rem', strokeWidth: 1 }} />
                         </button>
                       ) : (
@@ -600,7 +619,8 @@ const ProductDetailsWrapper = () => {
               <div className="bg-white rounded-[16px] border border-[#EDE6CC]/50 p-5">
                 <h3 className="font-Stinger font-bold text-xl text-[#231F20] mb-3">About</h3>
                 <p className="text-sm text-gray-700 leading-relaxed font-[SofiaPro]">
-                  {productDescription || "Grapefruit is a natural cross between pomelo and orange, known for its large fruit size, thick peel, and bitter tinges due to its high content of naringin, limonoids, and furanocoum..."}
+                  {productDescription ||
+                    'Grapefruit is a natural cross between pomelo and orange, known for its large fruit size, thick peel, and bitter tinges due to its high content of naringin, limonoids, and furanocoum...'}
                 </p>
               </div>
 
@@ -615,21 +635,25 @@ const ProductDetailsWrapper = () => {
             <div className="space-y-12">
               {/* Top Section Grid */}
               <div className="grid grid-cols-[1fr_1.2fr] gap-12 items-start">
-
                 {/* Left: Product Image Card */}
                 <div className="bg-white rounded-[32px] border border-[#EDE6CC]/50 p-12 flex items-center justify-center min-h-[500px] relative">
                   <div className="relative w-96 h-96">
                     <Image
                       src={productDetails.item.image}
                       fill
-                      alt={productDetails.item.name || "Product"}
+                      alt={productDetails.item.name || 'Product'}
                       style={{ objectFit: 'contain' }}
                       className="drop-shadow-sm"
                       priority
                     />
+                    {defaultUOM?.conversion_text && (
+                      <div className="absolute top-4 right-4 text-[#146321] text-sm font-bold px-3 py-1 rounded-full z-10 font-[SofiaPro]">
+                        {defaultUOM.conversion_text}
+                      </div>
+                    )}
                     {hasRipenessFeature && (
                       <div className="absolute bottom-0 right-0 z-10">
-                        <Image src={itemRipenessSvg} alt='Select ripeness' width={80} height={80} />
+                        <Image src={itemRipenessSvg} alt="Select ripeness" width={80} height={80} />
                       </div>
                     )}
                     {(!defaultUOM?.is_available || !productDetails.item.is_available) && (
@@ -642,14 +666,16 @@ const ProductDetailsWrapper = () => {
 
                 {/* Right: Info & Actions */}
                 <div className="flex flex-col space-y-8">
-
                   {/* Breadcrumbs */}
                   <div className="flex items-center gap-2 text-lg font-bold text-[#146321] font-[SofiaPro]">
                     <Link href="/" className="hover:underline">
                       Home
                     </Link>
                     <span className="text-gray-300">/</span>
-                    <Link href={productDetails.item.category_slug ? `/shop/${productDetails.item.category_slug}` : '/shop'} className="hover:underline">
+                    <Link
+                      href={productDetails.item.category_slug ? `/shop/${productDetails.item.category_slug}` : '/shop'}
+                      className="hover:underline"
+                    >
                       {productDetails.item.category_name || 'Shop'}
                     </Link>
                     <span className="text-gray-300">/</span>
@@ -675,8 +701,10 @@ const ProductDetailsWrapper = () => {
                           )}
                         </div>
                       </div>
-                      <div className={`${(!defaultUOM?.is_available || !productDetails.item.is_available) ? 'w-auto' : 'w-[80px]'} rounded-full overflow-hidden`}>
-                        {(!defaultUOM?.is_available || !productDetails.item.is_available) ? (
+                      <div
+                        className={`${!defaultUOM?.is_available || !productDetails.item.is_available ? 'w-auto' : 'w-[80px]'} rounded-full overflow-hidden`}
+                      >
+                        {!defaultUOM?.is_available || !productDetails.item.is_available ? (
                           <button
                             type="button"
                             disabled={isNotified}
@@ -684,14 +712,13 @@ const ProductDetailsWrapper = () => {
                               e.stopPropagation();
                               if (!isNotified) handleNotifyMe();
                             }}
-                            className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 ${isNotified
-                              ? 'border-gray-400 text-gray-400 bg-gray-50 cursor-default'
-                              : 'border-[#146321] text-[#146321] hover:bg-green-50'
-                              }`}
+                            className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 ${
+                              isNotified
+                                ? 'border-gray-400 text-gray-400 bg-gray-50 cursor-default'
+                                : 'border-[#146321] text-[#146321] hover:bg-green-50'
+                            }`}
                           >
-                            <span className="text-sm">
-                              {isNotified ? 'Notified' : 'Notify'}
-                            </span>
+                            <span className="text-sm">{isNotified ? 'Notified' : 'Notify'}</span>
                             <NotificationsNoneOutlinedIcon sx={{ fontSize: '1.2rem', strokeWidth: 1 }} />
                           </button>
                         ) : (
@@ -713,7 +740,8 @@ const ProductDetailsWrapper = () => {
                   <div className="bg-white rounded-[24px] border border-[#EDE6CC]/50 p-8 w-full">
                     <h3 className="font-Stinger font-bold text-2xl text-[#231F20] mb-4">About</h3>
                     <p className="text-base text-gray-700 leading-relaxed font-[SofiaPro]">
-                      {productDescription || "Grapefruit is a natural cross between pomelo and orange, known for its large fruit size, thick peel, and bitter tinges due to its high content of naringin, limonoids, and furanocoum..."}
+                      {productDescription ||
+                        'Grapefruit is a natural cross between pomelo and orange, known for its large fruit size, thick peel, and bitter tinges due to its high content of naringin, limonoids, and furanocoum...'}
                     </p>
                   </div>
 
@@ -748,10 +776,10 @@ const ProductDetailsWrapper = () => {
                 {/* We reuse the structure by mocking the categoryDetail expected by PopularProduce */}
                 <PopularProduce
                   categoryDetail={{
-                    title: "", // Title handled above
-                    data: productDetails.upsell_items.map(item => ({
+                    title: '', // Title handled above
+                    data: productDetails.upsell_items.map((item) => ({
                       ...item,
-                      multiple_uoms: item.multiple_uoms.map(uom => ({
+                      multiple_uoms: item.multiple_uoms.map((uom) => ({
                         ...uom,
                         formatted_price: `₹${uom.price}`
                       }))

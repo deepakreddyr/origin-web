@@ -86,7 +86,7 @@ const RetryOrPayonlineWrapper: React.FC<RetryOrPayonlineWrapperProps> = ({ fetch
           'store-id': addressFromLs.store_id
         };
       }
-      
+
       const successHandler = (data: any) => {
         // console.log('Payment method updated successfully:', data);
         setIsUpdatingPayment(false);
@@ -95,18 +95,18 @@ const RetryOrPayonlineWrapper: React.FC<RetryOrPayonlineWrapperProps> = ({ fetch
           fetchOrderdetails();
         }
       };
-      
+
       const failureHandler = (data: any) => {
         console.error('Failed to update payment method:', data);
         setIsUpdatingPayment(false);
         alert('Failed to update payment method. Please try again.');
       };
-      
+
       let apiData = {
         order_id: orderAndRefundDetails.orderDetailsData.order_id,
         payment_method: 'COD'
       };
-      
+
       // console.log('Updating payment method to COD for order:', apiData.order_id);
       setIsUpdatingPayment(true);
       sendDataToApi(apiUrl, apiData, 'POST', successHandler, failureHandler, additionalHeaders);
@@ -114,7 +114,7 @@ const RetryOrPayonlineWrapper: React.FC<RetryOrPayonlineWrapperProps> = ({ fetch
   };
 
   if (paymentStatus === 'complete') return null;
-  
+
   return (
     <div className="bg-[#F2EEE44D] border border-[#F2EEE4] rounded-[1.1vw] mob:rounded-[4.1vw] mob:p-[4.1vw] p-[1.1vw] flex mob:flex-col items-end mob:items-center justify-between mob:mb-[4.1vw] w-full">
       <div className="w-[25vw] mob:w-full">

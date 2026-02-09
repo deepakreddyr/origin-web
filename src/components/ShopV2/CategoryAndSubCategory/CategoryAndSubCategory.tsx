@@ -41,18 +41,24 @@ const CategoryAndSubCategory = (props: Props) => {
       const list = shopCategories.categories.find((item: any) => item.type === 'main-category');
       setDropdownList(list.data);
     }
-  }, [shopCategories.isCategoriesFetched]);
+  }, [shopCategories.isCategoriesFetched, shopCategories.categories]);
 
   const handleStateChange = (value: any, name: any) => {
     let url: any;
     if (name === 'category') {
       const categories = shopCategories.categories.find((item: any) => item.type === 'main-category');
       const defaultSubCategoryList = categories.data.find((item: any) => item.name === value.name);
-      let subCategoryName = defaultSubCategoryList.sub_categories[0].name;
-      let subCategoryId = defaultSubCategoryList.sub_categories[0].id;
-      url = `/shop/${value.name}/${value.id}/${subCategoryName}/${subCategoryId}`;
+
+      const categorySlug = value.name.replace(/ /g, '-').toLowerCase();
+      const firstSub = defaultSubCategoryList.sub_categories[0];
+      const subCategorySlug = firstSub.name.replace(/ /g, '-').toLowerCase();
+      const subCategoryId = firstSub.id;
+
+      url = `/shop/${categorySlug}/${value.id}/${subCategorySlug}/${subCategoryId}`;
     } else if (name === 'subCategory') {
-      url = `/shop/${filters.category}/${filters.cid}/${value.name}/${value.id}`;
+      const categorySlug = String(filters.category).replace(/ /g, '-').toLowerCase();
+      const subCategorySlug = value.name.replace(/ /g, '-').toLowerCase();
+      url = `/shop/${categorySlug}/${filters.cid}/${subCategorySlug}/${value.id}`;
     }
 
     router.push(url, undefined, { shallow: true, scroll: false });
@@ -60,16 +66,16 @@ const CategoryAndSubCategory = (props: Props) => {
 
   const handleSubCategoryChange = (value: any, name: any) => {
     let url: any;
-    url = `/shop/${filters.category}/${filters.cid}/${value.name}/${value.id}`;
+    const categorySlug = String(filters.category).replace(/ /g, '-').toLowerCase();
+    const subCategorySlug = value.name.replace(/ /g, '-').toLowerCase();
+    url = `/shop/${categorySlug}/${filters.cid}/${subCategorySlug}/${value.id}`;
     router.push(url, undefined, { shallow: true, scroll: false });
   };
   const toTitleCase = (str: string) => {
     // console.log(str);
     return str
-      .replace(/-/g, ' ')                   // Replace hyphens with spaces
-      .replace(/\w\S*/g, (txt) =>
-        txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-      );
+      .replace(/-/g, ' ') // Replace hyphens with spaces
+      .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
   };
 
   return (
@@ -89,6 +95,7 @@ const CategoryAndSubCategory = (props: Props) => {
           />
           <SubCategoryPills
             value={filters.subCategory}
+            valueId={filters.scid}
             name={'subCategory'}
             handler={handleStateChange}
           />

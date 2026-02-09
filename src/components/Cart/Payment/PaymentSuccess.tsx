@@ -6,13 +6,28 @@ import { useDispatch } from 'react-redux';
 import { setIsSidebarOpen } from '@/store/slice/loginSlice';
 import { resetOrderDetails } from '@/store/slice/placeOrderDetails';
 import { clearCart } from '@/store/slice/CartSlice';
+import * as gtag from '@/utilities/gtag';
 const PaymentSuccess = (props: any) => {
   const { paymentModalDetails } = props;
   const [timer, setTimer] = useState(5);
   const router = useRouter();
   const dispatch = useDispatch();
-  const total_to_pay= localStorage.getItem("total_to_pay")
-  localStorage.removeItem("total_to_pay")
+  const total_to_pay = localStorage.getItem('total_to_pay');
+  // localStorage.removeItem("total_to_pay"); // Moved inside useEffect or handle properly to avoid re-runs
+
+  useEffect(() => {
+    if (paymentModalDetails?.orderResponse?.order_id) {
+      gtag.event({
+        action: 'purchase',
+        category: 'Ecommerce',
+        transaction_id: paymentModalDetails.orderResponse.order_id,
+        value: Number(total_to_pay),
+        items: [] // Ideally, we should pull items from storage or state here
+      });
+      localStorage.removeItem('total_to_pay');
+    }
+  }, [paymentModalDetails, total_to_pay]);
+
   useEffect(() => {
     if (timer > 0) {
       const countdown = setInterval(() => {
@@ -27,7 +42,7 @@ const PaymentSuccess = (props: any) => {
       dispatch(resetOrderDetails());
       dispatch(clearCart());
     }
-  }, [timer]);
+  }, [timer, dispatch, paymentModalDetails.orderResponse.order_id, router]);
 
   return (
     <div className="flex flex-col items-center justify-center  grow">
@@ -41,8 +56,7 @@ const PaymentSuccess = (props: any) => {
 
         <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] text-[#231F2099] font-regular pt-[.97vw] mob:pt-[3.6vw] ">
           Paid
-          <span className="font-semibold text-[.97vw] mob:text-[3.6vw]">
-          </span>using{' '}
+          <span className="font-semibold text-[.97vw] mob:text-[3.6vw]"></span>using{' '}
           <span className="font-semibold text-[.97vw] mob:text-[3.6vw]">{paymentModalDetails.paymentType}</span>
         </p>
         <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] mob:pt-[4.1vw] pt-[1.1vw] text-[#231F2099]">

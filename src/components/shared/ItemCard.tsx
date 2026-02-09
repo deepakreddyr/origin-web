@@ -5,7 +5,7 @@ import AddItemBtn from './AddItemBtn/AddItemBtn';
 import { useRouter } from 'next/router';
 import sampleimg from '/public/assets/images/shop/sampleimg2.png';
 import { useSelector } from 'react-redux';
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { getAddressAndStoreId } from '@/utilities/utils';
@@ -17,8 +17,8 @@ import { addNotifiedItem } from '@/store/slice/productsSlice';
 import ripeSvg from '/public/assets/svg/ripe.svg';
 import semiRipeSvg from '/public/assets/svg/semiripe.svg';
 import rawSvg from '/public/assets/svg/raw.svg';
-import infoicon1 from '/public/assets/svg/infoicon1.svg'
-import infoicon2 from '/public/assets/svg/infoicon2.svg'
+import infoicon1 from '/public/assets/svg/infoicon1.svg';
+import infoicon2 from '/public/assets/svg/infoicon2.svg';
 import itemRipenessSvg from '/public/assets/svg/itemRipeness.svg';
 
 // Interface Definitions
@@ -71,8 +71,7 @@ const MaxQuantityToast: FC<{
   onClose: () => void;
   itemName?: string;
   isInsideModal?: boolean;
-}> = ({ maxQuantity, isVisible, onClose, itemName = "this item", isInsideModal = false }) => {
-
+}> = ({ maxQuantity, isVisible, onClose, itemName = 'this item', isInsideModal = false }) => {
   useEffect(() => {
     if (isVisible) {
       const timer = setTimeout(() => {
@@ -87,8 +86,9 @@ const MaxQuantityToast: FC<{
   if (isInsideModal) {
     return (
       <div
-        className={`absolute left-1/2 -top-14 transform -translate-x-1/2 w-[90%] transition-opacity duration-300 ease-in-out z-[9999] ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
+        className={`absolute left-1/2 -top-14 transform -translate-x-1/2 w-[90%] transition-opacity duration-300 ease-in-out z-[9999] ${
+          isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
       >
         <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full relative">
           <div className="flex items-center justify-center w-full gap-2">
@@ -104,8 +104,9 @@ const MaxQuantityToast: FC<{
 
   return (
     <div
-      className={`fixed z-[60] left-1/2 bottom-4 transform -translate-x-1/2 w-[90%] max-w-sm transition-opacity duration-300 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+      className={`fixed z-[60] left-1/2 bottom-4 transform -translate-x-1/2 w-[90%] max-w-sm transition-opacity duration-300 ease-in-out ${
+        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
     >
       <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full relative">
         <div className="flex items-center justify-center w-full gap-2">
@@ -128,7 +129,6 @@ const NotifyToast: FC<{
   onClose: () => void;
   type: 'success' | 'error';
 }> = ({ message, isVisible, onClose, type }) => {
-
   useEffect(() => {
     if (isVisible) {
       const timer = setTimeout(() => {
@@ -142,17 +142,14 @@ const NotifyToast: FC<{
 
   return (
     <div
-      className={`fixed z-[100] left-1/2 bottom-10 transform -translate-x-1/2 w-[90%] max-w-sm transition-all duration-300 ease-in-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
-        }`}
+      className={`fixed z-[100] left-1/2 bottom-10 transform -translate-x-1/2 w-[90%] max-w-sm transition-all duration-300 ease-in-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+      }`}
     >
       <div className="flex items-center bg-black rounded-full shadow-2xl h-12 px-6 w-full relative">
         <div className="flex items-center justify-center w-full gap-3">
-          {type === 'error' && (
-            <InfoOutlinedIcon sx={{ color: '#FFDD00', fontSize: '1.2rem' }} />
-          )}
-          <p className="text-[0.80rem] font-medium text-white text-center leading-tight font-[SofiaPro]">
-            {message}
-          </p>
+          {type === 'error' && <InfoOutlinedIcon sx={{ color: '#FFDD00', fontSize: '1.2rem' }} />}
+          <p className="text-[0.80rem] font-medium text-white text-center leading-tight font-[SofiaPro]">{message}</p>
         </div>
       </div>
     </div>
@@ -192,7 +189,7 @@ const UOMPopup: FC<{
       default:
         return null;
     }
-  }
+  };
 
   const allVariants: UOM[] = [];
   product.multiple_uoms.forEach((uom) => {
@@ -213,9 +210,7 @@ const UOMPopup: FC<{
     let cart_quantity = 0;
 
     if (cartProduct) {
-      const cartUOM = cartProduct.multiple_uoms?.find(
-        (uom: any) => uom.variant_id === variant.variant_id
-      );
+      const cartUOM = cartProduct.multiple_uoms?.find((uom: any) => uom.variant_id === variant.variant_id);
 
       if (cartUOM) {
         if (variant.selected_ripeness_type && cartUOM.cart_ripeness) {
@@ -231,7 +226,7 @@ const UOMPopup: FC<{
 
     return {
       ...variant,
-      cart_quantity,
+      cart_quantity
     };
   });
 
@@ -276,32 +271,26 @@ const UOMPopup: FC<{
     };
   }, [isTransitioning, onClose, isOpen]);
 
-  const hasRipenessTypes = product.multiple_uoms.some(uom =>
-    uom.ripeness_types && uom.ripeness_types.length > 0
-  );
+  const hasRipenessTypes = product.multiple_uoms.some((uom) => uom.ripeness_types && uom.ripeness_types.length > 0);
 
   if (!isOpen && !isTransitioning) return null;
 
-  const subTotalQuantity = variantsWithCartInfo.reduce(
-    (acc, variant) => acc + (variant.cart_quantity || 0),
-    0
-  );
+  const subTotalQuantity = variantsWithCartInfo.reduce((acc, variant) => acc + (variant.cart_quantity || 0), 0);
 
   const subTotalPrice = variantsWithCartInfo.reduce(
-    (acc, variant) => acc + (variant.price * (variant.cart_quantity || 0)),
+    (acc, variant) => acc + variant.price * (variant.cart_quantity || 0),
     0
   );
 
-  const cartVariants = variantsWithCartInfo.filter(v => v.cart_quantity > 0);
+  const cartVariants = variantsWithCartInfo.filter((v) => v.cart_quantity > 0);
 
   const totalMarketPrice = cartVariants.reduce(
-    (acc, variant) => acc + (variant.market_price * (variant.cart_quantity || 0)),
+    (acc, variant) => acc + variant.market_price * (variant.cart_quantity || 0),
     0
   );
 
-  const isSlashedSubtotalVisible = cartVariants.length > 0 && cartVariants.every(
-    variant => variant.market_price > variant.price
-  );
+  const isSlashedSubtotalVisible =
+    cartVariants.length > 0 && cartVariants.every((variant) => variant.market_price > variant.price);
 
   return (
     <div
@@ -335,12 +324,16 @@ const UOMPopup: FC<{
 
           <div className="flex items-center gap-4 pr-10">
             <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#FAF7EF] flex-shrink-0 flex items-center justify-center border border-gray-100 p-2">
-              <Image src={product.image || sampleimg} alt={product.name} width={60} height={60} className="w-full h-full object-contain" />
+              <Image
+                src={product.image || sampleimg}
+                alt={product.name}
+                width={60}
+                height={60}
+                className="w-full h-full object-contain"
+              />
             </div>
             <div className="flex-1">
-              <p className="font-[SofiaPro] font-bold text-lg text-[#146321] leading-tight">
-                {product.name}
-              </p>
+              <p className="font-[SofiaPro] font-bold text-lg text-[#146321] leading-tight">{product.name}</p>
             </div>
           </div>
         </div>
@@ -355,37 +348,46 @@ const UOMPopup: FC<{
               <span className="text-xs font-bold text-green-700 font-[SofiaPro]">
                 How does RQ (Ripeness Quotient) work?
               </span>
-              <svg className={`w-3 h-3 text-green-700 transition-transform duration-300 ${isRipenessInfoOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              <svg
+                className={`w-3 h-3 text-green-700 transition-transform duration-300 ${isRipenessInfoOpen ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
             </button>
 
-            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isRipenessInfoOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${isRipenessInfoOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+            >
               <div className="p-2 rounded-lg text-sm text-gray-700 space-y-1 border border-gray-200">
                 <p className="flex items-center gap-3 mb-3">
-                  <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium'>
+                  <span className="text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium">
                     Choose your level of ripeness:
                   </span>
                 </p>
                 <p className="flex items-center gap-3">
-                  <Image src={ripeSvg} alt='' width={12} height={12} className="flex-shrink-0" />
-                  <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium'>
+                  <Image src={ripeSvg} alt="" width={12} height={12} className="flex-shrink-0" />
+                  <span className="text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium">
                     Ripe: Consume immediately
                   </span>
                 </p>
                 <p className="flex items-center gap-3">
-                  <Image src={semiRipeSvg} alt='' width={12} height={12} className="flex-shrink-0" />
-                  <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium'>
+                  <Image src={semiRipeSvg} alt="" width={12} height={12} className="flex-shrink-0" />
+                  <span className="text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium">
                     Semi: Consume within 2 days
                   </span>
                 </p>
                 <p className="flex items-start gap-3">
-                  <Image src={rawSvg} alt='' width={12} height={12} className="flex-shrink-0 mt-1" />
-                  <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium mb-3'>
+                  <Image src={rawSvg} alt="" width={12} height={12} className="flex-shrink-0 mt-1" />
+                  <span className="text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium mb-3">
                     Raw: Consume within 3-4 days (do not refrigerate)
                   </span>
                 </p>
                 <p className="flex items-center gap-3">
-                  <Image src={infoicon2} alt='' width={18} height={18} className="flex-shrink-0" />
-                  <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium'>
+                  <Image src={infoicon2} alt="" width={18} height={18} className="flex-shrink-0" />
+                  <span className="text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium">
                     Your fruit arrives at the selected level or ripeness, fresh and ready for consumption when you are.
                   </span>
                 </p>
@@ -420,14 +422,12 @@ const UOMPopup: FC<{
                     </div>
                   )}
                   <p className="font-semibold text-gray-900 text-sm font-[SofiaPro] capitalize truncate">
-                    {ripenessLabel || "Standard"}
+                    {ripenessLabel || 'Standard'}
                   </p>
                 </div>
 
                 <div className="flex-1 text-center flex-shrink-0">
-                  <p className="text-gray-600 text-sm font-[SofiaPro]">
-                    {variant.unit}
-                  </p>
+                  <p className="text-gray-600 text-sm font-[SofiaPro]">{variant.unit}</p>
                 </div>
 
                 <div className="flex flex-col items-center justify-center px-2 w-[85px] flex-shrink-0">
@@ -442,9 +442,7 @@ const UOMPopup: FC<{
                         ₹{variant.market_price}
                       </span>
                     )}
-                    <p className="font-bold text-sm text-[#146321] font-[SofiaPro]">
-                      ₹{variant.price}
-                    </p>
+                    <p className="font-bold text-sm text-[#146321] font-[SofiaPro]">₹{variant.price}</p>
                   </div>
                 </div>
 
@@ -457,12 +455,7 @@ const UOMPopup: FC<{
                     minimumQuantity={variant.minimum_quantity}
                     buttonType="white"
                     selectedRipenessType={variant.selected_ripeness_type}
-                    onCartUpdate={() =>
-                      onSelectionMade(
-                        variant,
-                        variant.selected_ripeness_type || null
-                      )
-                    }
+                    onCartUpdate={() => onSelectionMade(variant, variant.selected_ripeness_type || null)}
                     onMaxQuantityExceeded={handleMaxQuantityExceeded}
                   />
                 </div>
@@ -472,18 +465,18 @@ const UOMPopup: FC<{
         </div>
 
         <div className="flex-shrink-0 p-3 bg-white">
-          <div className={`
+          <div
+            className={`
             flex justify-between items-center bg-black
             h-14 md:h-16
             p-4 rounded-full
-          `}>
+          `}
+          >
             <p className="font-normal font-[SofiaPro] text-sm text-white">
               Sub total
-              <span className='block text-xs font-normal mt-0.5 font-[SofiaPro]'>
+              <span className="block text-xs font-normal mt-0.5 font-[SofiaPro]">
                 {isSlashedSubtotalVisible && (
-                  <span className="text-gray-400 line-through mr-1 text-xs font-normal">
-                    ₹{totalMarketPrice}
-                  </span>
+                  <span className="text-gray-400 line-through mr-1 text-xs font-normal">₹{totalMarketPrice}</span>
                 )}
                 <span className="text-base font-bold">₹{subTotalPrice}</span>
               </span>
@@ -491,10 +484,11 @@ const UOMPopup: FC<{
             <button
               onClick={onClose}
               disabled={subTotalQuantity === 0}
-              className={`px-8 py-3 rounded-full font-bold text-sm transition-colors shadow-md font-[SofiaPro] ${subTotalQuantity > 0
-                ? 'bg-yellow-400 text-black hover:bg-yellow-500'
-                : 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                }`}
+              className={`px-8 py-3 rounded-full font-bold text-sm transition-colors shadow-md font-[SofiaPro] ${
+                subTotalQuantity > 0
+                  ? 'bg-yellow-400 text-black hover:bg-yellow-500'
+                  : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+              }`}
             >
               CONFIRM
             </button>
@@ -512,11 +506,9 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
   const router = useRouter();
   const cartItems = useSelector((state: any) => state.cart.items);
 
-  const defaultUOM =
-    itemDetails?.multiple_uoms?.find((uom: any) => uom?.is_default) ||
-    itemDetails?.multiple_uoms?.[0];
+  const defaultUOM = itemDetails?.multiple_uoms?.find((uom: any) => uom?.is_default) || itemDetails?.multiple_uoms?.[0];
 
-  const initialRipeness = defaultUOM ? (defaultUOM.ripeness_types?.[0] || null) : null;
+  const initialRipeness = defaultUOM ? defaultUOM.ripeness_types?.[0] || null : null;
 
   const [selectedUOM, setSelectedUOM] = useState(defaultUOM);
   const [selectedRipeness, setSelectedRipeness] = useState<string | null>(initialRipeness);
@@ -527,7 +519,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
 
   // --- NOTIFY ME STATE ---
   const [showNotifyToast, setShowNotifyToast] = useState(false);
-  const [notifyMsg, setNotifyMsg] = useState("");
+  const [notifyMsg, setNotifyMsg] = useState('');
   const [notifyType, setNotifyType] = useState<'success' | 'error'>('success');
 
   const notifiedItems = useSelector((state: any) => state.products.notifiedItems);
@@ -553,14 +545,14 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
     };
 
     const successHandler = (data: any) => {
-      setNotifyMsg(data?.message || "Successfully subscribed to notifications");
+      setNotifyMsg(data?.message || 'Successfully subscribed to notifications');
       setNotifyType('success');
       setShowNotifyToast(true);
       dispatch(addNotifiedItem(itemDetails.id));
     };
 
     const failureHandler = (error: any) => {
-      setNotifyMsg(error?.message || "Not successful. Please try again later.");
+      setNotifyMsg(error?.message || 'Not successful. Please try again later.');
       setNotifyType('error');
       setShowNotifyToast(true);
     };
@@ -571,16 +563,12 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
   if (!defaultUOM) return null;
 
   // Check if this is a basket item
-  const isBasketItem = defaultUOM.basket &&
-    typeof defaultUOM.basket.capacity === 'number';
+  const isBasketItem = defaultUOM.basket && typeof defaultUOM.basket.capacity === 'number';
 
-  const availableUOMs =
-    itemDetails?.multiple_uoms?.filter((uom: any) => uom?.is_available) || [];
+  const availableUOMs = itemDetails?.multiple_uoms?.filter((uom: any) => uom?.is_available) || [];
 
   const hasMultipleUOMs = availableUOMs.length > 1;
-  const hasRipenessOptions = availableUOMs.some(uom =>
-    uom.ripeness_types && uom.ripeness_types.length > 0
-  );
+  const hasRipenessOptions = availableUOMs.some((uom) => uom.ripeness_types && uom.ripeness_types.length > 0);
   const requiresSelection = hasMultipleUOMs || hasRipenessOptions;
 
   const handleSelectionMade = (uom: UOM, ripeness: string | null) => {
@@ -598,9 +586,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
   };
 
   const handleNavigation = () => {
-    const slug = encodeURIComponent(
-      itemDetails.name.replace(/ /g, '-').toLowerCase()
-    );
+    const slug = encodeURIComponent(itemDetails.name.replace(/ /g, '-').toLowerCase());
     router.push(`/${slug}/${itemDetails.id}`);
   };
 
@@ -640,18 +626,13 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
         itemName={itemDetails.name}
       />
 
-      <div
-        className="w-full md:max-w-[16.67vw] text-start relative"
-      >
-        <button
-          onClick={handleNavigation}
-          className="cursor-pointer w-full text-start group"
-        >
+      <div className="w-full md:max-w-[16.67vw] text-start relative">
+        <button onClick={handleNavigation} className="cursor-pointer w-full text-start group">
           {/* Image Container */}
-          <div
-            className="relative bg-primary-100 flex items-center justify-center w-[16.67vw] mob:w-[40vw] h-[14.5vw] mob:h-[38vw] rounded-[1.67vw] mob:rounded-[4.1vw] overflow-hidden"
-          >
-            <div className={`relative w-[12.6vw] h-[12vw] mob:w-[24vw] mob:h-[22vw] transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}>
+          <div className="relative bg-primary-100 flex items-center justify-center w-[16.67vw] mob:w-[40vw] h-[14.5vw] mob:h-[38vw] rounded-[1.67vw] mob:rounded-[4.1vw] overflow-hidden">
+            <div
+              className={`relative w-[12.6vw] h-[12vw] mob:w-[24vw] mob:h-[22vw] transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
+            >
               <Image
                 src={itemDetails.image || sampleimg}
                 alt={itemDetails.name ? itemDetails.name : 'product image'}
@@ -661,14 +642,15 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
               />
             </div>
 
+            {defaultUOM.conversion_text && (
+              <div className="absolute top-2 right-2 text-[#146321] text-[0.7vw] mob:text-[2.5vw] font-bold px-2 py-0.5 rounded-full z-10 font-[SofiaPro]">
+                {defaultUOM.conversion_text}
+              </div>
+            )}
+
             {hasRipenessOptions && (
               <div className="absolute bottom-2 right-2 p-1 bg-white rounded-full shadow-lg">
-                <Image
-                  src={itemRipenessSvg}
-                  alt="Multiple Ripeness Options"
-                  width={35}
-                  height={35}
-                />
+                <Image src={itemRipenessSvg} alt="Multiple Ripeness Options" width={35} height={35} />
               </div>
             )}
 
@@ -689,9 +671,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
           {/* Price and Action Area */}
           <div className="flex items-end justify-between">
             <div>
-              <p className="font-[SofiaPro] text-[.97vw] mob:text-[2.8vw] text-black-op-50">
-                {selectedUOM.unit}
-              </p>
+              <p className="font-[SofiaPro] text-[.97vw] mob:text-[2.8vw] text-black-op-50">{selectedUOM.unit}</p>
               <div className="flex items-center gap-1 mob:pt-[01vw] pt-[.4vw]">
                 {selectedUOM.market_price > selectedUOM.price && (
                   <p className="text-gray-400 line-through text-[0.8vw] mob:text-[2.2vw] font-[SofiaPro]">
@@ -713,14 +693,13 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                     e.stopPropagation();
                     if (!isNotified) handleNotifyMe();
                   }}
-                  className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold h-[2.5vw] mob:h-[8.5vw] px-[1.5vw] mob:px-[4vw] rounded-full transition-colors whitespace-nowrap gap-2 ${isNotified
-                    ? 'border-gray-400 text-gray-400 bg-gray-50 cursor-default'
-                    : 'border-[#146321] text-[#146321] hover:bg-green-50'
-                    }`}
+                  className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold h-[2.5vw] mob:h-[8.5vw] px-[1.5vw] mob:px-[4vw] rounded-full transition-colors whitespace-nowrap gap-2 ${
+                    isNotified
+                      ? 'border-gray-400 text-gray-400 bg-gray-50 cursor-default'
+                      : 'border-[#146321] text-[#146321] hover:bg-green-50'
+                  }`}
                 >
-                  <span className="text-[.97vw] mob:text-[3.2vw]">
-                    {isNotified ? 'Notified' : 'Notify'}
-                  </span>
+                  <span className="text-[.97vw] mob:text-[3.2vw]">{isNotified ? 'Notified' : 'Notify'}</span>
                   <NotificationsNoneOutlinedIcon sx={{ fontSize: isMobile ? '4vw' : '1.2vw', strokeWidth: 1 }} />
                 </button>
               ) : isBasketItem ? (
@@ -766,9 +745,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                     onClick={handleAddItemClick}
                     className="flex items-center justify-between bg-primary text-black font-[SofiaPro] font-bold h-[2.5vw] mob:h-[8.5vw] px-[1.1vw] mob:px-[3vw] rounded-full hover:bg-yellow-400 transition-colors whitespace-nowrap gap-2 border border-[#EDE6D4]"
                   >
-                    <span className="text-[.97vw] mob:text-[2.8vw]">
-                      {totalOptionsCount} Options
-                    </span>
+                    <span className="text-[.97vw] mob:text-[2.8vw]">{totalOptionsCount} Options</span>
                     <svg
                       viewBox="0 0 24 24"
                       className="w-[1.2vw] h-[1.2vw] mob:w-[3.2vw] mob:h-[3.2vw]"

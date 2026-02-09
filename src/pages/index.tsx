@@ -12,6 +12,7 @@ import { UspCard } from '@/components/Cards';
 import CustomHead from '@/components/shared/CustomHead';
 import { ShopHeroSingle } from '@/components/ShopV2/ShopHero';
 import { useEffect, useState } from 'react';
+import * as gtag from '@/utilities/gtag';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { getAddressAndStoreId } from '@/utilities/utils';
@@ -62,7 +63,7 @@ const Home = ({
     }
 
     const successHandler = (data: any) => {
-      // console.log(data);
+      console.log(data);
       setHomepageData(data?.data);
       setLoading(false);
     };
@@ -73,6 +74,13 @@ const Home = ({
     };
 
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+
+    // Track Home Page View
+    gtag.event({
+      action: 'view_home_page',
+      category: 'Navigation',
+      label: 'Home'
+    });
   }, [initialHomepageData]);
 
   const mainCategoryData = homepageData?.find((item: any) => item.type === 'main-category')?.data || categories || [];
@@ -92,7 +100,9 @@ const Home = ({
         />
         {/* <OriginHero /> */}
         <ShopHeroSingle bannerData={heroBannerData} />
-        <PrimaryFeature />
+        <div className="w-full pt-[1.5vw]">
+          <PrimaryFeature />
+        </div>
 
         <div className="flex items-center justify-center w-full px-[1vw]">
           <div className="flex items-center justify-between w-[80vw] mob:w-full mob:grid grid-cols-2 mob:gap-[5vw] ">
@@ -100,11 +110,11 @@ const Home = ({
           </div>
         </div>
         {/* Homepage Category Section */}
-        <div className="w-full px-[5vw] mob:mt-[10vw]">
+        <div className="w-full px-[3vw] mob:mt-[10vw]">
           <HomeCategorySection categories={mainCategoryData} blendsCategory={blendsCategoryData} loading={loading} />
         </div>
 
-        <div className="w-full px-[5vw]">
+        <div className="w-full px-[3vw]">
           {isMobile || isTablet ? (
             <PopularProduceMob categoryDetail={popularProduceData} />
           ) : (

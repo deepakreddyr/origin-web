@@ -12,7 +12,7 @@ const ripenessMap: {
 } = {
   raw: { text: 'RAW', image: rawSvg, color: '#878787' },
   semi_ripe: { text: 'SEMI', image: semiRipeSvg, color: '#878787' },
-  ripe: { text: 'RIPE', image: ripeSvg, color: '#878787' },
+  ripe: { text: 'RIPE', image: ripeSvg, color: '#878787' }
 };
 
 // Helper component to render the Ripeness Icon and Text
@@ -26,13 +26,7 @@ const RipenessIndicator = ({ uom }: { uom: any }) => {
     <div className="flex items-center">
       {/* SVG Icon */}
       <div className="w-[.6vw] h-[.6vw] mob:w-[2.2vw] mob:h-[2.2vw] flex items-center justify-center mr-[.2vw]">
-        <Image
-          src={info.image}
-          alt={`${info.text} ripeness`}
-          width={10}
-          height={10}
-          className="object-contain"
-        />
+        <Image src={info.image} alt={`${info.text} ripeness`} width={10} height={10} className="object-contain" />
       </div>
       {/* Ripeness Text */}
       <p className={`font-[SofiaPro] text-[.83vw] mob:text-[3vw] font-medium capitalize`} style={{ color: info.color }}>
@@ -44,9 +38,7 @@ const RipenessIndicator = ({ uom }: { uom: any }) => {
 
 // Helper component to render the separator dot
 const SeparatorDot = () => (
-  <span className="font-[SofiaPro] font-extrabold text-[.83vw] mob:text-[3vw] text-black-op-60 mx-[.15vw]">
-    •
-  </span>
+  <span className="font-[SofiaPro] font-extrabold text-[.83vw] mob:text-[3vw] text-black-op-60 mx-[.15vw]">•</span>
 );
 
 const ItemsList = (props: any) => {
@@ -64,7 +56,7 @@ const ItemsList = (props: any) => {
     >
       <div className="flex items-end justify-between border-b border-b-[#F2EEE4] pb-[.97vw] mob:pb-[3.6vw] mob:mb-[4.1vw] mb-[1.1vw] ">
         <div className="">
-          <p className="font-[SofiaPro] text-[1.25vw] mob:text-[5vw] font-semibold text-black-op-80 ">Order Details</p>
+          <p className="font-[Recoleta] text-[1.25vw] mob:text-[5vw] font-bold text-black-op-80 ">Order Details</p>
           <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-medium text-black-op-60 pt-[.4vw] ">
             Order ID {order_code}
           </p>
@@ -76,7 +68,7 @@ const ItemsList = (props: any) => {
         </div>
       </div>
       <div className="flex flex-col gap-[1.25vw] mob:gap-[5.1vw] ">
-        {items.map((item: any) => (
+        {items.map((item: any) =>
           // Map through each ordered_uom for this product
           item.ordered_uoms?.map((uom: any, uomIndex: number) => {
             const isUnavailable = uom.shortage_qty >= 1;
@@ -96,16 +88,13 @@ const ItemsList = (props: any) => {
                     <Image src={item.image} alt={item.name} fill className="object-contain" />
                   </div>
                 </div>
-                <div
-                  className={`flex justify-between w-full items-center ${isUnavailable ? 'opacity-40' : ''} `}
-                >
+                <div className={`flex justify-between w-full items-center ${isUnavailable ? 'opacity-40' : ''} `}>
                   <div>
                     <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold text-black ">
                       {item.name}
                     </p>
                     {/* COMBINED LINE: Ripeness (Icon+Text) + Dot + UOM/Quantity */}
                     <div className="flex items-center pt-[.4vw] mob:pt-[1vw]">
-
                       {/* Ripeness Icon and Text (Renders only if ripeness exists) */}
                       {hasRipeness && <RipenessIndicator uom={uom} />}
 
@@ -120,7 +109,7 @@ const ItemsList = (props: any) => {
                   </div>
                   <div className="text-right">
                     {/* Check if this is a free item (price is 0, null, or 1) */}
-                    {(uom.price === 0 || uom.price === null || uom.price === 1) ? (
+                    {uom.price === 0 || uom.price === null || uom.price === 1 ? (
                       <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold text-[#25874D]">
                         Free Item
                       </p>
@@ -131,9 +120,7 @@ const ItemsList = (props: any) => {
                             ₹{uom.market_price_sub_total}
                           </p>
                         )}
-                        <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-medium ">
-                          ₹{uom.subtotal}
-                        </p>
+                        <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-medium ">₹{uom.subtotal}</p>
                       </>
                     )}
                   </div>
@@ -146,7 +133,7 @@ const ItemsList = (props: any) => {
               </div>
             );
           })
-        ))}
+        )}
       </div>
     </div>
   );

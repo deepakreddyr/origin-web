@@ -64,21 +64,16 @@ const AnimatedPlaceholder = () => {
       setIsVisible(false);
 
       setTimeout(() => {
-        setCurrentFruitIndex((prevIndex) =>
-          prevIndex === fruits.length - 1 ? 0 : prevIndex + 1
-        );
+        setCurrentFruitIndex((prevIndex) => (prevIndex === fruits.length - 1 ? 0 : prevIndex + 1));
         setIsVisible(true);
       }, 300);
-
     }, 2500);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [fruits.length]);
 
   return (
-    <span
-      className={`transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
-    >
+    <span className={`transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
       Search for '{fruits[currentFruitIndex]}'
     </span>
   );
@@ -130,9 +125,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
   // Helper function to get location button styles
   const getLocationButtonStyles = () => {
     if (!isTransparentHeader) return 'bg-black/5 text-gray-900';
-    return transparentColor === 'black'
-      ? 'bg-black/10 text-black'
-      : 'bg-white/30 text-white';
+    return transparentColor === 'black' ? 'bg-black/10 text-black' : 'bg-white/30 text-white';
   };
 
   // Helper function to get location icon color
@@ -150,9 +143,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
   // Helper function to get search bar styles
   const getSearchBarStyles = () => {
     if (!isTransparentHeader) return 'bg-[#F8F4E9] border border-gray-200 text-black';
-    return transparentColor === 'black'
-      ? 'bg-black/10 text-black border-none'
-      : 'bg-white/30 text-white border-none';
+    return transparentColor === 'black' ? 'bg-black/10 text-black border-none' : 'bg-white/30 text-white border-none';
   };
 
   // Helper function to get search icon color
@@ -177,11 +168,15 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
     const token = localStorage.getItem('user_token');
     setIsLoggedIn(!!token);
 
-  }, [search, router.query.q, loginDetails.tabType]);
+    // Auto-focus search bar on search page
+    if (search && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [search, router.query.q, loginDetails.tabType, isMobile]);
 
   const handleSearchFieldClick = () => {
     if (!search) {
-      router.push("/search");
+      router.push('/search');
     }
   };
 
@@ -318,35 +313,30 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
     };
   }, [isMobile, search]);
 
-
   return (
-    <div ref={menuRef} className={`${isHeaderSticky ? 'fixed top-0' : 'absolute top-0'} flex items-center flex-col w-full z-[100] ${isMobile && loginDetails.isSidebarOpen ? 'hidden' : ''}`}>
+    <div
+      ref={menuRef}
+      className={`${isHeaderSticky ? 'fixed top-0' : 'absolute top-0'} flex items-center flex-col w-full z-[100] ${isMobile && loginDetails.isSidebarOpen ? 'hidden' : ''}`}
+    >
       {/* <OffersRibbon /> */}
 
       <div
-        className={`z-50 w-[80vw] mob:w-full transition-all duration-300 ${isMobile
-          ? isTransparentHeader
-            ? 'bg-transparent px-[5vw] py-[2vw]'
-            // : 'bg-[#FFF9E5] px-[5vw] py-[2vw]'
-            : 'bg-white px-[5vw] py-[2vw] shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
-          : search
-            ? 'bg-transparent w-[96vw] mt-[1vw] max-w-[1920px]'
-            : 'bg-white rounded-full shadow-md'
-          } ${'mt-[1.1vw] mob:mt-0'} flex flex-col`}
+        className={`z-50 w-[80vw] mob:w-full transition-all duration-300 ${
+          isMobile
+            ? isTransparentHeader
+              ? 'bg-transparent px-[5vw] py-[2vw]'
+              : // : 'bg-[#FFF9E5] px-[5vw] py-[2vw]'
+                'bg-white px-[5vw] py-[2vw] shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
+            : search
+              ? 'bg-transparent w-[96vw] mt-[1vw] max-w-[1920px]'
+              : 'bg-white rounded-full shadow-md'
+        } ${'mt-[1.1vw] mob:mt-0'} flex flex-col`}
       >
         <div className="flex items-center justify-between w-full">
           <div className={`flex items-center gap-[2vw] mob:gap-[3vw] ${search && !isMobile ? '' : 'flex-1'}`}>
             {isMobile && (
-              <button
-                onClick={() => setDrawerOpen(!drawerOpen)}
-                className="w-[6vw] h-[6vw] relative flex-shrink-0"
-              >
-                <Image
-                  src={hamburger}
-                  alt="Menu"
-                  fill
-                  className={`object-contain ${getIconFilter()}`}
-                />
+              <button onClick={() => setDrawerOpen(!drawerOpen)} className="w-[6vw] h-[6vw] relative flex-shrink-0">
+                <Image src={hamburger} alt="Menu" fill className={`object-contain ${getIconFilter()}`} />
               </button>
             )}
 
@@ -355,13 +345,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
               className={`relative flex-shrink-0 ${isMobile ? 'flex-1 flex justify-center' : ''}`}
             >
               <div className="w-[10vw] ml-[2vw] mt-2 mob:w-[35vw] mob:h-[12vw] mob:ml-0 h-[5vw] mr-[4vw] mob:mr-2 relative">
-                <Image
-                  src={originLogo}
-                  alt="logo"
-                  fill
-                  className={`object-contain ${getIconFilter()}`}
-                  priority
-                />
+                <Image src={originLogo} alt="logo" fill className={`object-contain ${getIconFilter()}`} priority />
               </div>
             </button>
 
@@ -375,15 +359,30 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                 >
                   <svg
                     className={`w-[4vw] h-[4vw] flex-shrink-0 ${getLocationIconColor()}`}
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
                   </svg>
-                  <span className="truncate flex-1">
-                    {address.defaultAddress?.address_name || 'Select'}
-                  </span>
-                  <svg className={`w-[2vw] h-[2vw] ${getDropdownIconColor()}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <span className="truncate flex-1">{address.defaultAddress?.address_name || 'Select'}</span>
+                  <svg
+                    className={`w-[2vw] h-[2vw] ${getDropdownIconColor()}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
@@ -394,18 +393,12 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                   aria-label="Account"
                 >
                   <div className="w-[6vw] h-[6vw] relative">
-                    <Image
-                      src={userIcon}
-                      alt="Account"
-                      fill
-                      className={`object-contain ${getIconFilter()}`}
-                    />
+                    <Image src={userIcon} alt="Account" fill className={`object-contain ${getIconFilter()}`} />
                   </div>
                 </button>
               </div>
             )}
             {/* ------------------------------------------------------------------ */}
-
           </div>
 
           <div className={`flex items-center gap-[1.1vw] mob:hidden ${search ? 'flex-1 justify-center' : ''}`}>
@@ -431,35 +424,46 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                   >
                     <svg
                       className="w-[1vw] h-[1vw] flex-shrink-0 text-gray-700"
-                      fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
                     </svg>
                     {address.defaultAddress?.address_name ? (
                       <div className="flex-1 overflow-hidden relative">
                         <div className="animate-marquee whitespace-nowrap text-[1vw]">
-                          <span className="font-bold">
-                            {address.defaultAddress?.address_name}
-                          </span>
+                          <span className="font-bold">{address.defaultAddress?.address_name}</span>
                           <span className="mx-[0.5vw]">•</span>
-                          <span className="font-light">
-                            {address.defaultAddress.address}
-                          </span>
+                          <span className="font-light">{address.defaultAddress.address}</span>
                           {/* Duplicate for seamless loop */}
-                          <span className="font-bold ml-[2vw]">
-                            {address.defaultAddress?.address_name}
-                          </span>
+                          <span className="font-bold ml-[2vw]">{address.defaultAddress?.address_name}</span>
                           <span className="mx-[0.5vw]">•</span>
-                          <span className="font-light">
-                            {address.defaultAddress.address}
-                          </span>
+                          <span className="font-light">{address.defaultAddress.address}</span>
                         </div>
                       </div>
                     ) : (
                       <span className="font-bold text-[1vw]">Select Address</span>
                     )}
-                    <svg className="w-[0.6vw] h-[0.6vw] text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                    <svg
+                      className="w-[0.6vw] h-[0.6vw] text-gray-500 flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
                   </button>
                 )}
               </div>
@@ -477,7 +481,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                     onClick={handleSearchFieldClick}
                     onFocus={handleSearchFocus}
                     onBlur={handleSearchBlur}
-                    placeholder={search ? "Search here" : ""}
+                    placeholder={search ? 'Search here' : ''}
                     className={`w-full h-[2.5vw] px-[1.5vw] 
                               rounded-full border border-gray-300 ${search ? 'bg-white' : 'bg-transparent'} 
                               placeholder:text-gray-400 
@@ -559,7 +563,9 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                   className={`w-full h-[12vw] pl-[12vw] pr-[4vw] rounded-full text-[4vw] font-[SofiaPro] transition-all duration-300 outline-none ${getSearchBarStyles()}`}
                 />
                 {!searchQuery && (
-                  <div className={`absolute left-[12vw] top-1/2 -translate-y-1/2  pointer-events-none text-[4vw] font-[SofiaPro] ${getSearchPlaceholderColor()}`}>
+                  <div
+                    className={`absolute left-[12vw] top-1/2 -translate-y-1/2  pointer-events-none text-[4vw] font-[SofiaPro] ${getSearchPlaceholderColor()}`}
+                  >
                     <AnimatedPlaceholder />
                   </div>
                 )}
@@ -584,21 +590,19 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
         )}
       </div>
 
-      {
-        isMobile && cartItemCount > 0 && (
-          <button
-            onClick={handleCartOpen}
-            className="fixed bottom-[5vw] right-[5vw] z-[99] bg-white p-[4vw] rounded-full shadow-xl border border-gray-200"
-          >
-            <div className="absolute top-[-2vw] left-[7vw] w-[6vw] h-[6vw] text-[3vw] rounded-full bg-secondary-300 z-[1] text-white flex items-center justify-center">
-              {cartItemCount > 99 ? '99+' : cartItemCount}
-            </div>
-            <div className="relative w-[6vw] h-[6vw]">
-              <Image src={cartIcon} alt="cart-icon" fill className="object-contain" />
-            </div>
-          </button>
-        )
-      }
+      {isMobile && cartItemCount > 0 && (
+        <button
+          onClick={handleCartOpen}
+          className="fixed bottom-[5vw] right-[5vw] z-[99] bg-white p-[4vw] rounded-full shadow-xl border border-gray-200"
+        >
+          <div className="absolute top-[-2vw] left-[7vw] w-[6vw] h-[6vw] text-[3vw] rounded-full bg-secondary-300 z-[1] text-white flex items-center justify-center">
+            {cartItemCount > 99 ? '99+' : cartItemCount}
+          </div>
+          <div className="relative w-[6vw] h-[6vw]">
+            <Image src={cartIcon} alt="cart-icon" fill className="object-contain" />
+          </div>
+        </button>
+      )}
 
       <MobileDrawer
         drawerOpen={drawerOpen}
@@ -610,8 +614,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
         topBarTransition={topBarTransition}
       />
 
-      {
-        !isMobile &&
+      {!isMobile &&
         mainMenuItems.map(
           (item) =>
             item.submenu && (
@@ -623,9 +626,8 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                 transitionBool={topBarTransition}
               />
             )
-        )
-      }
-    </div >
+        )}
+    </div>
   );
 };
 

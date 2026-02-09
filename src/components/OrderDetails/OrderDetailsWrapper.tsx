@@ -22,7 +22,7 @@ const OrderDetailsWrapper = () => {
   const { isReady, query } = router;
   const dispatch = useDispatch();
 
-  const fetchOrderdetails = () => {
+  const fetchOrderdetails = React.useCallback(() => {
     const apiUrl =
       process.env.NEXT_PUBLIC_BACKEND_API_URL + mainApiUrl.ordersActions + `/${query.id}?showAllBills=true`;
 
@@ -44,14 +44,14 @@ const OrderDetailsWrapper = () => {
       dispatch(setIsOrderDetailsLoading(false));
     };
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
-  };
+  }, [dispatch, getDataFromApi, query.id]);
 
   // Only fetch on initial load - no more frequent polling
   useEffect(() => {
-    if (isReady) {
+    if (isReady && query.id) {
       fetchOrderdetails();
     }
-  }, [isReady, query.id]); // Only depend on isReady and query.id
+  }, [isReady, query.id, fetchOrderdetails]); // Only depend on isReady and query.id and fetchOrderdetails
 
   if (!orderAndRefundDetails.orderDetailsData)
     return <div className="pb-[6vw]  pt-[12vw] p-[10vw]">No Order found for this order</div>;
@@ -71,15 +71,15 @@ const OrderDetailsWrapper = () => {
     >
       <DetailsHeader orderDetailsData={orderAndRefundDetails.orderDetailsData} />
       <div className="flex gap-[1.67vw] mob:gap-[4.1vw] mob:flex-col  ">
-        <div className="w-[30vw] mob:w-screen flex flex-col gap-[1.1vw] mob:gap-0 ">
+        <div className="mob:w-screen flex flex-col gap-[1.1vw] mob:gap-0 ">
           <OrderStatusIllustration
             orderDetailsData={orderAndRefundDetails.orderDetailsData}
             fetchOrderdetails={fetchOrderdetails}
           />
           <div className="w-full mob:block hidden mob:px-[4.1vw] ">
-            {/* {(orderAndRefundDetails.orderDetailsData.status !== "Cancelled by user") && 
+            {orderAndRefundDetails.orderDetailsData.status !== 'Cancelled by user' && (
               <RetryOrPayonlineWrapper fetchOrderdetails={fetchOrderdetails} />
-            } */}
+            )}
             <ItemsList orderDetailsData={orderAndRefundDetails.orderDetailsData} />
           </div>
           <div className="mob:px-[4.1vw] flex flex-col gap-[1.671vw] mob:gap-[4.1vw] ">
@@ -94,9 +94,10 @@ const OrderDetailsWrapper = () => {
           </div>
         </div>
         <div className="w-full flex flex-col mob:hidden gap-[1.67vw]">
-          {/* {(orderAndRefundDetails.orderDetailsData.status !== "Cancelled by user") && (orderAndRefundDetails.orderDetailsData.payment_status === "pending") &&
-            <RetryOrPayonlineWrapper fetchOrderdetails={fetchOrderdetails} />
-          } */}
+          {orderAndRefundDetails.orderDetailsData.status !== 'Cancelled by user' &&
+            orderAndRefundDetails.orderDetailsData.payment_status === 'pending' && (
+              <RetryOrPayonlineWrapper fetchOrderdetails={fetchOrderdetails} />
+            )}
           <ItemsList orderDetailsData={orderAndRefundDetails.orderDetailsData} />
         </div>
       </div>

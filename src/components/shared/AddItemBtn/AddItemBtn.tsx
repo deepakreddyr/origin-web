@@ -11,6 +11,7 @@ import { protectedUrl } from '@/url';
 import { getAddressAndStoreId } from '@/utilities/utils';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
+import * as gtag from '@/utilities/gtag';
 
 const AddItemBtn: FC<any> = (props) => {
   const {
@@ -33,12 +34,10 @@ const AddItemBtn: FC<any> = (props) => {
   const normalizedProductId = product.id || product.product_id;
 
   const uomArray = product.multiple_uoms || product.uoms || [];
-  const selectedVariant = uomArray.find(
-    (variant: any) => {
-      const variantId = variant.variant_id || variant.varientId;
-      return variantId === varientId;
-    }
-  );
+  const selectedVariant = uomArray.find((variant: any) => {
+    const variantId = variant.variant_id || variant.varientId;
+    return variantId === varientId;
+  });
 
   // 1. DETERMINE FINAL QUANTITIES
   const finalMinQuantity = minimumQuantityProp || selectedVariant?.minimum_quantity || 1;
@@ -87,7 +86,12 @@ const AddItemBtn: FC<any> = (props) => {
     if (addressFromLs) {
       additionalHeaders = { 'store-id': addressFromLs.store_id };
     }
-    getDataFromApi(apiUrl, () => { }, () => { }, additionalHeaders);
+    getDataFromApi(
+      apiUrl,
+      () => {},
+      () => {},
+      additionalHeaders
+    );
   };
 
   const addItemsToApi = () => {
@@ -113,7 +117,14 @@ const AddItemBtn: FC<any> = (props) => {
       if (cartItemsParsed?.length === 0) {
         handleClearCartFromBackend();
       } else {
-        sendDataToApi(apiUrl, cartItemsToApi, 'POST', () => { }, () => { }, additionalHeaders);
+        sendDataToApi(
+          apiUrl,
+          cartItemsToApi,
+          'POST',
+          () => {},
+          () => {},
+          additionalHeaders
+        );
       }
     }
   };
@@ -158,19 +169,36 @@ const AddItemBtn: FC<any> = (props) => {
       multiple_uoms: uomArray
     };
 
-    dispatch(addItemToCart({
-      product: normalizedProduct,
-      selectedUOM: {
-        ...selectedVariant,
-        // Pass the quantity to add, which is finalMinQuantity
-        stepper_quantity: quantityToAdd
-      },
-      selectedRipenessType
-    }));
+    dispatch(
+      addItemToCart({
+        product: normalizedProduct,
+        selectedUOM: {
+          ...selectedVariant,
+          // Pass the quantity to add, which is finalMinQuantity
+          stepper_quantity: quantityToAdd
+        },
+        selectedRipenessType
+      })
+    );
 
     if (loginDetails.user) {
       addItemsToApi();
     }
+
+    // Track GA Event
+    gtag.event({
+      action: 'add_to_cart',
+      category: 'Ecommerce',
+      items: [
+        {
+          item_id: normalizedProductId,
+          item_name: product.name || product.item_name,
+          price: selectedVariant?.price,
+          quantity: quantityToAdd,
+          item_variant: selectedVariant?.variant_name
+        }
+      ]
+    });
   };
 
   // ==========================================================
@@ -201,6 +229,21 @@ const AddItemBtn: FC<any> = (props) => {
     if (loginDetails.user) {
       addItemsToApi();
     }
+
+    // Track GA Event
+    gtag.event({
+      action: 'add_to_cart',
+      category: 'Ecommerce',
+      items: [
+        {
+          item_id: normalizedProductId,
+          item_name: product.name || product.item_name,
+          price: selectedVariant?.price,
+          quantity: finalStepQuantity,
+          item_variant: selectedVariant?.variant_name
+        }
+      ]
+    });
   };
 
   // ==========================================================
@@ -212,7 +255,7 @@ const AddItemBtn: FC<any> = (props) => {
 
     const itemToRemove = { varientId, selectedRipenessType };
 
-    // If the current quantity is equal to or less than the initial minimum quantity, 
+    // If the current quantity is equal to or less than the initial minimum quantity,
     // remove the entire item/variant/ripeness selection.
     if (itemQuantity <= finalMinQuantity) {
       dispatch(removeItemFromCart(itemToRemove));
@@ -316,11 +359,7 @@ const AddItemBtn: FC<any> = (props) => {
     )
   };
 
-  return (
-    <div className="relative z-5">
-      {BUTTON_MAP[buttonType]}
-    </div>
-  );
+  return <div className="relative z-5">{BUTTON_MAP[buttonType]}</div>;
 };
 
 export default AddItemBtn;

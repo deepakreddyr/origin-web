@@ -45,24 +45,24 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
     }
   };
 
-  const saveScrollPosition = () => {
+  const saveScrollPosition = React.useCallback(() => {
     if (sliderRef.current) {
       const scrollPosition = sliderRef.current.scrollLeft;
       localStorage.setItem(scrollKey, String(scrollPosition));
     }
-  };
+  }, [scrollKey]);
 
-  const restoreScrollPosition = () => {
+  const restoreScrollPosition = React.useCallback(() => {
     const savedPosition = localStorage.getItem(scrollKey);
     if (sliderRef.current && savedPosition) {
       sliderRef.current.scrollLeft = parseInt(savedPosition, 10);
     }
-  };
+  }, [scrollKey]);
 
   useEffect(() => {
     restoreScrollPosition();
     return () => saveScrollPosition();
-  }, []);
+  }, [restoreScrollPosition, saveScrollPosition]);
 
   return (
     <div className="relative w-[92vw] md:w-[80vw] mx-auto py-0 md:py-9 transition-all duration-50 ease-in-out">

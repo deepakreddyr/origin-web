@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import * as gtag from '@/utilities/gtag';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -69,7 +70,6 @@ const getDefaultRipeness = (uom: any): string | null => {
   return uom?.ripeness_types?.length > 0 ? uom.ripeness_types[0] : null;
 };
 
-
 // UOM Popup Modal Component (KEPT AS IT IS USED LOCALLY)
 const UOMPopup: React.FC<{
   product: Product;
@@ -134,25 +134,19 @@ const UOMPopup: React.FC<{
       onSelectRipeness(modalRipeness);
     }
     onClose();
-  }
+  };
 
   const hasRipenessTypes = modalUOM?.ripeness_types?.length > 0;
 
   const currentCartItem = cartItems.find(
-    (item: any) =>
-      item.variant_id === modalUOM?.variant_id &&
-      item.selected_ripeness_type === modalRipeness
+    (item: any) => item.variant_id === modalUOM?.variant_id && item.selected_ripeness_type === modalRipeness
   );
 
   const itemQuantity = currentCartItem?.cart_quantity || 0;
 
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div
-        ref={modalRef}
-        className="bg-white rounded-2xl max-w-md w-full max-h-[80vh] overflow-hidden shadow-2xl"
-      >
+      <div ref={modalRef} className="bg-white rounded-2xl max-w-md w-full max-h-[80vh] overflow-hidden shadow-2xl">
         {/* Header */}
         <div className="relative p-6 pb-4 border-b border-gray-100">
           <button
@@ -175,9 +169,7 @@ const UOMPopup: React.FC<{
               />
             </div>
             <div className="flex-1">
-              <h3 className="font-[SofiaPro] font-semibold text-lg text-gray-900 leading-tight">
-                {product.name}
-              </h3>
+              <h3 className="font-[SofiaPro] font-semibold text-lg text-gray-900 leading-tight">{product.name}</h3>
             </div>
           </div>
         </div>
@@ -190,10 +182,11 @@ const UOMPopup: React.FC<{
             {availableUOMs.map((uom) => (
               <button
                 key={uom.variant_id}
-                className={`border-2 rounded-full px-4 py-2 text-sm transition-all ${modalUOM?.variant_id === uom.variant_id
-                  ? 'border-yellow bg-yellow-100 text-black font-bold'
-                  : 'border-gray-200 hover:border-gray-300 text-gray-700'
-                  }`}
+                className={`border-2 rounded-full px-4 py-2 text-sm transition-all ${
+                  modalUOM?.variant_id === uom.variant_id
+                    ? 'border-yellow bg-yellow-100 text-black font-bold'
+                    : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                }`}
                 onClick={() => handleUOMSelect(uom)}
               >
                 {uom.unit} - ₹{uom.price}
@@ -209,10 +202,11 @@ const UOMPopup: React.FC<{
                 {modalUOM.ripeness_types.map((ripeness: string) => (
                   <button
                     key={ripeness}
-                    className={`border-2 rounded-full px-4 py-2 text-sm capitalize transition-all ${modalRipeness === ripeness
-                      ? 'border-green-500 bg-green-100 text-green-800 font-bold'
-                      : 'border-gray-200 hover:border-gray-300 text-gray-700'
-                      }`}
+                    className={`border-2 rounded-full px-4 py-2 text-sm capitalize transition-all ${
+                      modalRipeness === ripeness
+                        ? 'border-green-500 bg-green-100 text-green-800 font-bold'
+                        : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                    }`}
                     onClick={() => setModalRipeness(ripeness)}
                   >
                     {ripeness.replace('_', ' ')}
@@ -272,7 +266,7 @@ const RequestItemModal: React.FC<{
   initialValue: string;
 }> = ({ isOpen, onClose, initialValue }) => {
   const [itemName, setItemName] = useState(initialValue);
-  const [lastSubmittedName, setLastSubmittedName] = useState("");
+  const [lastSubmittedName, setLastSubmittedName] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [isPendingPostLogin, setIsPendingPostLogin] = useState(false);
@@ -284,7 +278,7 @@ const RequestItemModal: React.FC<{
   useEffect(() => {
     if (isOpen) {
       setItemName(initialValue);
-      setLastSubmittedName("");
+      setLastSubmittedName('');
       setSuccess(false);
       setIsPendingPostLogin(false);
     }
@@ -304,7 +298,7 @@ const RequestItemModal: React.FC<{
     };
 
     const failureHandler = (error: any) => {
-      console.error("Request Item API error:", error);
+      console.error('Request Item API error:', error);
       setIsPendingPostLogin(false);
     };
 
@@ -339,10 +333,7 @@ const RequestItemModal: React.FC<{
   return (
     <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4">
       <div className="bg-white rounded-[2rem] p-8 w-full max-w-md relative animate-in fade-in zoom-in duration-300">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-black transition-colors"
-        >
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-black transition-colors">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
@@ -358,9 +349,7 @@ const RequestItemModal: React.FC<{
             </div>
           ) : (
             <>
-              <p className="font-[SofiaPro] text-gray-600">
-                Share more about the product you’re looking for.
-              </p>
+              <p className="font-[SofiaPro] text-gray-600">Share more about the product you’re looking for.</p>
               <div className="pt-2 text-start">
                 <label className="text-sm font-semibold text-gray-500 mb-1 block">Item Name</label>
                 <input
@@ -371,20 +360,18 @@ const RequestItemModal: React.FC<{
                   className="w-full border-2 border-gray-100 rounded-xl px-4 py-3 focus:border-yellow-400 outline-none transition-all font-[SofiaPro] text-black"
                   placeholder="e.g. Alphonso Mangoes"
                 />
-                <span className="text-[10px] text-gray-400 mt-1 block text-right">
-                  {itemName.length}/50 characters
-                </span>
+                <span className="text-[10px] text-gray-400 mt-1 block text-right">{itemName.length}/50 characters</span>
               </div>
               <OriginButton
-                variant={isButtonDisabled && isLogin ? "disabled" : "primary"}
+                variant={isButtonDisabled && isLogin ? 'disabled' : 'primary'}
                 buttonText={
                   loading
-                    ? "Submitting..."
+                    ? 'Submitting...'
                     : !isLogin
-                      ? "Login to request for an item"
-                      : (itemName === lastSubmittedName && lastSubmittedName !== "")
-                        ? "Request Submitted"
-                        : "Submit Request"
+                      ? 'Login to request for an item'
+                      : itemName === lastSubmittedName && lastSubmittedName !== ''
+                        ? 'Request Submitted'
+                        : 'Submit Request'
                 }
                 handleClick={handleSubmit}
                 className="w-full mt-4 !h-14 flex justify-center items-center"
@@ -436,26 +423,26 @@ const SearchResults = (props: HomeProps) => {
   // API call function
   const searchProducts = async (query: string, pageNum: number = 1): Promise<SearchResponse> => {
     try {
-      const userToken = localStorage.getItem("user_token"); // check token in localStorage
+      const userToken = localStorage.getItem('user_token'); // check token in localStorage
 
       // base headers
       const headers: any = {
-        "Content-Type": "application/json",
-        "Delivery-Type": "instant",
+        'Content-Type': 'application/json',
+        'Delivery-Type': 'instant'
       };
 
       let apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v5/public/skip-login/items?query=${query}`;
 
       if (userToken) {
         apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v5/user/items?query=${query}`;
-        headers["Authorization"] = `Bearer ${userToken}`;
+        headers['Authorization'] = `Bearer ${userToken}`;
         headers['MM-Device-Type'] = 'web';
         headers['MM-Build-Version'] = '1.0.1';
       }
 
       const response = await fetch(apiUrl, {
-        method: "GET",
-        headers,
+        method: 'GET',
+        headers
       });
 
       const data = await response.json();
@@ -463,18 +450,17 @@ const SearchResults = (props: HomeProps) => {
       return {
         data: data.data || [],
         totalCount: data.data?.length || 0,
-        hasMore: data.hasMore || false,
+        hasMore: data.hasMore || false
       };
     } catch (error) {
-      console.error("Search API error:", error);
+      console.error('Search API error:', error);
       return {
         data: [],
         totalCount: 0,
-        hasMore: false,
+        hasMore: false
       };
     }
   };
-
 
   // Debounced search function
   const debouncedSearch = (query: string) => {
@@ -545,7 +531,7 @@ const SearchResults = (props: HomeProps) => {
 
     try {
       const response = await searchProducts(currentSearchQuery, nextPage);
-      setProducts(prev => [...prev, ...response.data]);
+      setProducts((prev) => [...prev, ...response.data]);
       setHasMore(response.hasMore || false);
       setPage(nextPage);
     } catch (error) {
@@ -556,7 +542,13 @@ const SearchResults = (props: HomeProps) => {
   };
 
   return (
-    <Layout mainMenuItems={mainMenuItems} isHeaderSticky={true} footerData={footerData} search={true} useTopPadding={true}>
+    <Layout
+      mainMenuItems={mainMenuItems}
+      isHeaderSticky={true}
+      footerData={footerData}
+      search={true}
+      useTopPadding={true}
+    >
       {/* <div className="min-h-screen bg-[#FFF9E5]"> */}
       <div className="min-h-screen">
         {/* Search Results */}
@@ -586,7 +578,13 @@ const SearchResults = (props: HomeProps) => {
           {noResults && !loading && (
             <div className="flex flex-col items-center justify-center py-[8vw] mob:py-[20vw] text-center w-full mx-auto">
               <div className="mb-[2vw] mob:mb-[4vw]">
-                <Image src={notifymeSvg} alt="Notify Me" width={200} height={200} className="w-[20vw] mob:w-[80vw] h-auto" />
+                <Image
+                  src={notifymeSvg}
+                  alt="Notify Me"
+                  width={200}
+                  height={200}
+                  className="w-[20vw] mob:w-[80vw] h-auto"
+                />
               </div>
               <p className="font-[SofiaPro] font-semibold text-[1.5vw] mob:text-[4.47vw] text-black mb-[1vw] mob:mb-[3vw]">
                 Sorry, looks like we don’t have {searchQuery}!

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import farm from '/public/assets/images/about/farm.webp';
+import farm from '/public/assets/images/about/about4.jpg';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import farmIll1 from '/public/assets/images/about/farmIll1.webp';
 import farmIll2 from '/public/assets/images/about/farmIll2.webp';
@@ -37,7 +37,7 @@ const FarmDetails = () => {
         <div className="w-full h-[35vw] mob:h-[60vw] relative overflow-hidden">
           <div
             style={{
-              transform: `scale(${mobile ? 1.1 : scaleFactor > 1 ? scaleFactor : 1})`,
+              transform: `scale(${scaleFactor > 1 ? scaleFactor : 1})`,
               transformOrigin: 'center',
               transition: 'transform .5s ease-out',
               width: '100%',

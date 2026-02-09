@@ -129,7 +129,7 @@ const BillDetails = (props: any) => {
     );
   };
   return (
-    <div className="bg-[#F2EEE44D] border border-[#F2EEE4] rounded-[1.1vw] mob:rounded-[4.1vw] mob:p-[4.1vw] p-[1.1vw]">
+    <div className="bg-[#F2EEE44D] mt-[5vw] border border-[#F2EEE4] rounded-[1.1vw] mob:rounded-[4.1vw] mob:p-[4.1vw] p-[1.1vw]">
       <h3 className="font-bold text-[1.25vw] mob:text-[5vw]  pb-[1.1vw] mob:pb-[4.1vw] text-black opacity-80">
         Bill Details
       </h3>

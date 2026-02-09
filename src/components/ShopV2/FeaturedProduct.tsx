@@ -2,6 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import AddItemBtn from '@/components/shared/AddItemBtn/AddItemBtn';
 import { OriginCircleLeftArrow, OriginCircleRightArrow } from '../../Icons/OriginIcons';
+import { useDispatch, useSelector } from 'react-redux';
+import { addNotifiedItem } from '@/store/slice/productsSlice';
+import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
+import { protectedUrl } from '@/url';
+import { getAddressAndStoreId } from '@/utilities/utils';
+import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 interface UomType {
   variant_id: number;
@@ -61,8 +68,8 @@ interface FeaturedProductProps {
 }
 
 const FeaturedProduct = ({ featuredItems }: FeaturedProductProps) => {
-  const itemsArray = React.useMemo(() =>
-    Array.isArray(featuredItems) ? featuredItems : (featuredItems ? [featuredItems] : []),
+  const itemsArray = React.useMemo(
+    () => (Array.isArray(featuredItems) ? featuredItems : featuredItems ? [featuredItems] : []),
     [featuredItems]
   );
 
@@ -94,7 +101,7 @@ const FeaturedProduct = ({ featuredItems }: FeaturedProductProps) => {
       const scrollAmount = scrollContainerRef.current.clientWidth;
       scrollContainerRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
+        behavior: 'smooth'
       });
     }
   };
@@ -104,7 +111,6 @@ const FeaturedProduct = ({ featuredItems }: FeaturedProductProps) => {
   return (
     <div className="w-full py-12 mob:py-8 overflow-hidden">
       <div className="w-[92vw] md:w-[80vw] mx-auto relative">
-
         {/* Desktop Side Arrows */}
         {showLeftArrow && (
           <button
@@ -151,17 +157,63 @@ const FeaturedProduct = ({ featuredItems }: FeaturedProductProps) => {
       </div>
 
       <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
       `}</style>
+    </div>
+  );
+};
+// --------------------------------------------------------
+// NOTIFY TOAST COMPONENT
+// --------------------------------------------------------
+const NotifyToast: React.FC<{
+  message: string;
+  isVisible: boolean;
+  onClose: () => void;
+  type: 'success' | 'error';
+}> = ({ message, isVisible, onClose, type }) => {
+  useEffect(() => {
+    if (isVisible) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, onClose]);
+
+  if (!isVisible) return null;
+
+  return (
+    <div
+      className={`fixed z-[100] left-1/2 bottom-10 transform -translate-x-1/2 w-[90%] max-w-sm transition-all duration-300 ease-in-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+      }`}
+    >
+      <div className="flex items-center bg-black rounded-full shadow-2xl h-12 px-6 w-full relative">
+        <div className="flex items-center justify-center w-full gap-3">
+          {type === 'error' && <InfoOutlinedIcon sx={{ color: '#FFDD00', fontSize: '1.2rem' }} />}
+          <p className="text-[0.80rem] font-medium text-white text-center font-[SofiaPro] leading-tight">{message}</p>
+        </div>
+      </div>
     </div>
   );
 };
 
 const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType }) => {
+  const [showNotifyToast, setShowNotifyToast] = useState(false);
+  const [notifyMsg, setNotifyMsg] = useState('');
+  const [notifyType, setNotifyType] = useState<'success' | 'error'>('success');
+  const dispatch = useDispatch();
+  const sendDataToApi = useSendDataToApi();
+  const notifiedItems = useSelector((state: any) => state.products.notifiedItems);
+
   const item = featuredItem?.item;
   const info = featuredItem?.info;
-
   if (!item) return null;
 
   const defaultUom = item?.multiple_uoms?.find((uom) => uom.is_default) || item?.multiple_uoms?.[0];
@@ -170,13 +222,40 @@ const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType 
   const description = aboutProduct?.details?.[0]?.description || '';
   const bestFor = aboutProduct?.details?.[1]?.description || '';
 
+  const isNotified = item ? notifiedItems.includes(item.id) : false;
+
+  const handleNotifyMe = async () => {
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['notifyMe'];
+    const addressFromLs = getAddressAndStoreId();
+    const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
+
+    const payload = {
+      item_id: item.id
+    };
+
+    const successHandler = (data: any) => {
+      setNotifyMsg(data?.message || 'Successfully subscribed to notifications');
+      setNotifyType('success');
+      setShowNotifyToast(true);
+      dispatch(addNotifiedItem(item.id));
+    };
+
+    const failureHandler = (error: any) => {
+      setNotifyMsg(error?.message || 'Not successful. Please try again later.');
+      setNotifyType('error');
+      setShowNotifyToast(true);
+    };
+
+    await sendDataToApi(apiUrl, payload, 'POST', successHandler, failureHandler, additionalHeaders);
+  };
+
   const productForAddBtn = {
     ...item,
     item_name: item.name,
     logo: item.image,
     website_image: item.image,
     availability: item.is_available,
-    uom: item.multiple_uoms,
+    uom: item.multiple_uoms
   };
 
   return (
@@ -192,17 +271,18 @@ const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType 
             className="object-contain"
           />
         </div>
+        {defaultUom?.conversion_text && (
+          <div className="absolute top-8 right-8 text-[#146321] text-lg font-bold px-2 py-0.5 rounded-full z-10 font-[SofiaPro]">
+            {defaultUom.conversion_text}
+          </div>
+        )}
       </div>
 
       {/* Right Details Section */}
       <div className="w-full md:w-1/2 flex flex-col items-start text-left">
-        <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#4B7C59] mb-6 leading-tight">
-          {item.name}
-        </h3>
+        <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#4B7C59] mb-6 leading-tight">{item.name}</h3>
 
-        <p className="text-gray-600 text-lg md:text-xl leading-relaxed mb-8 max-w-lg">
-          {description}
-        </p>
+        <p className="text-gray-600 text-lg md:text-xl leading-relaxed mb-8 max-w-lg">{description}</p>
 
         {bestFor && (
           <div className="mb-12">
@@ -216,42 +296,68 @@ const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType 
         <div className="flex items-center justify-between w-full mt-auto">
           {/* Price Section */}
           <div className="flex items-baseline gap-3">
-            <span className="text-gray-500 text-xl font-medium">
-              {defaultUom?.unit}
-            </span>
-            <span className="text-xl md:text-xl font-bold text-[#4B7C59]">
-              ₹{defaultUom?.price}
-            </span>
+            <span className="text-gray-500 text-xl font-medium">{defaultUom?.unit}</span>
+            <span className="text-xl md:text-xl font-bold text-[#4B7C59]">₹{defaultUom?.price}</span>
             {defaultUom?.market_price && defaultUom.market_price > defaultUom.price && (
-              <span className="text-xl text-gray-300 line-through font-medium ml-2">
-                ₹{defaultUom.market_price}
-              </span>
+              <span className="text-xl text-gray-300 line-through font-medium ml-2">₹{defaultUom.market_price}</span>
             )}
           </div>
 
           {/* Button Section */}
-          {item.is_available && (
-            <div className="flex-shrink-0">
-              {item.multiple_uoms?.length > 1 ? (
-                <button className="bg-[#FBE363] hover:bg-[#f0d85a] text-gray-900 font-bold px-12 py-5 rounded-full flex items-center gap-4 transition-all text-xl shadow-sm">
-                  {item.multiple_uoms.length} Options
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M7 15l5 5 5-5M7 9l5-5 5 5" /></svg>
-                </button>
-              ) : (
-                <div className="scale-110 origin-right rounded-full overflow-hidden w-[80px] my-4 mob:w-[80px]">
-                  <AddItemBtn
-                    product={productForAddBtn}
-                    varientId={defaultUom?.variant_id}
-                    varientPrice={`₹${defaultUom?.price}`}
-                    stepperQuantity={defaultUom?.stepper_quantity || 1}
-                    buttonType="yellowaddtocart"
-                  />
-                </div>
-              )}
-            </div>
-          )}
+          <div className="flex-shrink-0">
+            {!item.is_available ? (
+              <button
+                type="button"
+                disabled={isNotified}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!isNotified) handleNotifyMe();
+                }}
+                className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-8 py-4 rounded-full transition-colors whitespace-nowrap gap-2 ${
+                  isNotified
+                    ? 'border-gray-400 text-gray-400 bg-gray-50 cursor-default'
+                    : 'border-[#146321] text-[#146321] hover:bg-green-50'
+                }`}
+              >
+                <span className="text-xl">{isNotified ? 'Notified' : 'Notify Me'}</span>
+                <NotificationsNoneOutlinedIcon sx={{ fontSize: '1.8rem', strokeWidth: 1 }} />
+              </button>
+            ) : item.multiple_uoms?.length > 1 ? (
+              <button className="bg-[#FBE363] hover:bg-[#f0d85a] text-gray-900 font-bold px-12 py-5 rounded-full flex items-center gap-4 transition-all text-xl shadow-sm">
+                {item.multiple_uoms.length} Options
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
+                </svg>
+              </button>
+            ) : (
+              <div className="scale-110 origin-right rounded-full overflow-hidden w-[80px] my-4 mob:w-[80px]">
+                <AddItemBtn
+                  product={productForAddBtn}
+                  varientId={defaultUom?.variant_id}
+                  varientPrice={`₹${defaultUom?.price}`}
+                  stepperQuantity={defaultUom?.stepper_quantity || 1}
+                  buttonType="yellowaddtocart"
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
+      <NotifyToast
+        message={notifyMsg}
+        isVisible={showNotifyToast}
+        onClose={() => setShowNotifyToast(false)}
+        type={notifyType}
+      />
     </div>
   );
 };

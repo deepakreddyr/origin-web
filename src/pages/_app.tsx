@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import GlobalLaunchListener from '@/components/GlobalLaunchListener';
+import * as gtag from '@/utilities/gtag';
 
 const APP_VERSION = '1.1.5';
 
@@ -28,7 +29,7 @@ const clearCacheAndReload = async () => {
       // Clear all caches
       if ('caches' in window) {
         const cacheNames = await caches.keys();
-        await Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)));
+        await Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName)));
         // console.log('All caches cleared');
       }
 
@@ -42,7 +43,6 @@ const clearCacheAndReload = async () => {
 
       // Force reload with cache bypass
       window.location.reload();
-
     } catch (error) {
       console.error('Error clearing cache:', error);
       window.location.reload();
@@ -115,7 +115,6 @@ const handleInvoiceDeepLink = (router: any) => {
   }
 };
 
-
 // --- Main App ---
 export default function App({ Component, pageProps, ...rest }: AppProps) {
   const { store } = wrapper.useWrappedStore(rest);
@@ -128,14 +127,25 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
 
     // Handle invoice deep links
     const timeoutId = setTimeout(() => handleInvoiceDeepLink(router), 100);
-    return () => clearTimeout(timeoutId);
+
+    // Track page views
+    const handleRouteChange = (url: string) => {
+      gtag.pageview(url);
+    };
+
+    router.events.on('routeChangeComplete', handleRouteChange);
+
+    return () => {
+      clearTimeout(timeoutId);
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
   }, [router]);
 
   // Block unwanted scripts on route changes
   useEffect(() => {
     if (sessionStorage.getItem('invoiceView')) {
       const blockInterval = setInterval(() => {
-        document.querySelectorAll('script').forEach(script => {
+        document.querySelectorAll('script').forEach((script) => {
           if (script.innerHTML && /app-store|play-store|deep-link|intent:\/\//.test(script.innerHTML)) {
             script.remove();
             // console.log('Removed app redirect script');
@@ -168,14 +178,11 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="lazyOnload"
-        // onLoad={() => console.log('Razorpay script loaded')}
+          // onLoad={() => console.log('Razorpay script loaded')}
         />
 
         {/* Google Analytics Script */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-NM914G6V0P"
-          strategy="afterInteractive"
-        />
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-NM914G6V0P" strategy="afterInteractive" />
 
         <Script id="google-analytics" strategy="afterInteractive">
           {`

@@ -12,6 +12,7 @@ import { axiosFetch } from '@/utilities/hooks/useAxiosFetch';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
+import * as gtag from '@/utilities/gtag';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
@@ -152,6 +153,8 @@ const ShopDetails = (props: HomeProps) => {
         scid,
         subCategory
       });
+      dispatch(setProductList([]));
+      dispatch(setIsProductListLoading(true));
       const successHandler = (data: any) => {
         dispatch(setProductList(data?.items));
         dispatch(setIsProductListLoading(false));
@@ -160,11 +163,20 @@ const ShopDetails = (props: HomeProps) => {
         dispatch(setIsShopSubCategoriesFetched(false));
         setFeaturedItem(data?.featured_item || null);
       };
-      const failureHandler = (data: any) => { };
+      const failureHandler = (data: any) => {
+        dispatch(setIsProductListLoading(false));
+      };
       getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+
+      // Track Category View
+      gtag.event({
+        action: 'view_item_list',
+        category: 'Navigation',
+        label: `${query.category} - ${query.subCategory}`,
+        items: [] // Optionally pass items once fetched
+      });
     }
   }, [isReady, query]);
-
 
   useEffect(() => {
     if (!shopCategories.isCategoriesFetched) {
@@ -205,9 +217,7 @@ const ShopDetails = (props: HomeProps) => {
       {/* <FeatureStrip /> */}
       <div className="flex flex-col items-center justify-center mob:pt-[25vw] mt-[7vw]">
         <div className="flex flex-col gap-[2.2vw] w-[80.7vw] mob:w-full  mob:px-[4vw] pb-[10vw] relative ">
-          {filters.category ? (
-            <CategoryAndSubCategory filters={filters} setFilters={setFilters} />
-          ) : null}
+          {filters.category ? <CategoryAndSubCategory filters={filters} setFilters={setFilters} /> : null}
           {/* {featuredItem && <FeaturedProduct featuredItem={featuredItem} />} */}
           <CardsWrapper />
         </div>
@@ -223,7 +233,6 @@ const ShopDetails = (props: HomeProps) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-
   // console.log("hello");
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/originApi`);
