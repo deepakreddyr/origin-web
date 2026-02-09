@@ -18,7 +18,15 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
     const data = Array.isArray(categoryDetail?.data) ? categoryDetail.data : [];
     const length = data.length;
 
-    // Logic: 13 items -> ceil(6.5) = 7. Top gets 7, Bottom gets 6.
+    // If 2 or fewer items, keep them in one row
+    if (length <= 2) {
+      return {
+        topRow: data,
+        bottomRow: []
+      };
+    }
+
+    // Otherwise, split into two rows
     const splitIndex = Math.ceil(length / 2);
 
     return {
@@ -32,7 +40,7 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
       const scrollAmount = 300;
       sliderRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
+        behavior: 'smooth'
       });
     }
   };
@@ -73,8 +81,7 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
             horizontally to fit all children, enabling the scroll on the parent.
             flex-col stacks the two rows vertically.
         */}
-        <div className="flex flex-col gap-[4vw] mob:gap-[4vw] w-max pr-[5vw]">
-
+        <div className={`flex ${bottomRow.length > 0 ? 'flex-col gap-[4vw] mob:gap-[4vw]' : ''} w-max pr-[5vw]`}>
           {/* ROW 1 (TOP) */}
           <div className="flex gap-[2.2vw] mob:gap-[5vw]">
             {topRow.map((item: any) => (
@@ -85,14 +92,15 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
           </div>
 
           {/* ROW 2 (BOTTOM) */}
-          <div className="flex gap-[2.2vw] mob:gap-[5vw]">
-            {bottomRow.map((item: any) => (
-              <div key={item.id} className="flex-shrink-0 mob:w-[40vw]">
-                <ItemCard itemDetails={item} />
-              </div>
-            ))}
-          </div>
-
+          {bottomRow.length > 0 && (
+            <div className="flex gap-[2.2vw] mob:gap-[5vw]">
+              {bottomRow.map((item: any) => (
+                <div key={item.id} className="flex-shrink-0 mob:w-[40vw]">
+                  <ItemCard itemDetails={item} />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

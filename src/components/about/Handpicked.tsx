@@ -29,10 +29,13 @@ const Handpicked = () => {
             {/* Carefully
             <br />
             Handpicked */}
-            A lot is going wrong in the world.
+            We help you waste less food
           </p>
           <p className="font-[SofiaPro] font-light text-[1.25vw]  mob:text-[4.1vw] leading-[2vw] mob:leading-[6vw] mob:text-left">
-            But food still has a strange and steady power to comfort, to ground, to surprise. That’s why we have partnered with 10,000+ microfarmers across the globe. Let your tastebuds travel. Discover something new.
+            Food waste isn’t usually the result of neglect. It’s the byproduct of busy lives colliding with the narrow
+            window in which fresh produce stays usable. Fruits ripen, greens wilt, and meals get postponed. Our Ripeness
+            Quotient addresses this mismatch by letting you choose produce at the exact stage of ripeness you need. With
+            better timing comes better planning, fewer surprises in the fridge, and far less food thrown away.
           </p>
           {/* <p className="font-[SofiaPro] font-light text-[1.25vw] leading-[2vw] py-[2.2vw] mob:py-[5vw] mob:text-[4.1vw]  mob:leading-[6vw]">
             When you indulge in the essence of pure goodness with our products, you're embarking on a journey of
@@ -47,13 +50,7 @@ const Handpicked = () => {
           </p> */}
         </div>
         <div className="w-[38.5vw] mob:w-full mob:h-[90vw] h-[45vw] relative mr-[10vw] mob:mr-0">
-          <Image
-            src={handpickedImg1}
-            alt="handpicked image"
-            fill
-            className='object-contain'
-            quality={100}
-          />
+          <Image src={handpickedImg1} alt="handpicked image" fill className="object-contain" quality={100} />
         </div>
       </div>
     </div>

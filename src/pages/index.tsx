@@ -62,7 +62,7 @@ const Home = ({
     }
 
     const successHandler = (data: any) => {
-      console.log(data);
+      // console.log(data);
       setHomepageData(data?.data);
       setLoading(false);
     };
@@ -120,11 +120,11 @@ const Home = ({
               imageAlt="commitment"
               imageWidth={424}
               imageHeight={499}
-              imageClass="object-cover w-full h-[300px] lg:h-[450px] scale-[1.05]"
+              imageClass="object-cover w-full h-[300px] lg:h-[450px] scale-[1]"
               title={`It’s fresh. Properly fresh.`}
               titleVariant={isMobile ? 'h4' : 'h2'}
               description={`We partner directly with farms across the world and across India. <br/> No middlemen. No dark stores. <br/> Just produce that moves from the farm to you at peak flavour.`}
-              buttonText="Know more"
+              // buttonText="Know more"
               buttonVariant="tertiary"
               rootClass="bg-secondary-200"
             />
@@ -140,7 +140,7 @@ const Home = ({
               titleVariant={isMobile ? 'h4' : 'h1'}
               titleClass="font-Stinger text-[#231F20] !font-bold !leading-[1.1] "
               description={`Everyone has a right to fresh, authentic flavours. But only a few fight for it. Origin Fresh is for those who do.`}
-              buttonText="Know more"
+              // buttonText="Know more"
               buttonVariant="tertiary"
               rootClass="bg-[#FAF7F0] z-1 px-0 md:px-6 items-center mob:!rounded-none pb-12 !overflow-visible"
               reverse
@@ -166,6 +166,7 @@ const Home = ({
               titleClass="text-black"
               description={`Nature takes time. It refuses to be hurried. It carefully crafts every single fruit and vegetable that you find here. This patience is what we worship, and that’s what we share with the world.`}
               buttonText="Know more"
+              buttonClick1={() => (window.location.href = '/about')}
               variant="vertical"
               imageSrc="/assets/images/about/home3.webp"
               imageAlt="commitment"
@@ -208,12 +209,28 @@ const Home = ({
             imageAlt="commitment"
             imageWidth={424}
             imageHeight={499}
-            title={`Download the App and Get FLAT 15% Off on 1st Order use ${'INSTALL15'}`}
+            title={`Download the app on Play Store and App Store.`}
             titleVariant="h5"
             titleClass="text-black md:pe-0"
             titleContainerClass="flex-col lg:block flex items-center text-center md:text-left"
-            buttonText="Download Origin"
+            buttonText="Download Origin Fresh"
             buttonVariant="tertiary"
+            buttonClick1={() => {
+              const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+              if (/android/i.test(userAgent)) {
+                window.open(
+                  'https://play.google.com/store/apps/details?id=com.originfresh.user&hl=en_IN&pli=1',
+                  '_blank'
+                );
+              } else if (/iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream) {
+                window.open('https://apps.apple.com/in/app/origin-fresh-fruits-veggies/id6505096700', '_blank');
+              } else {
+                window.open(
+                  'https://play.google.com/store/apps/details?id=com.originfresh.user&hl=en_IN&pli=1',
+                  '_blank'
+                );
+              }
+            }}
             rootClass="bg-primary-100 items-center justify-center pb-0 md:p-5 md:pb-0 flex-col-reverse lg:flex-row"
             imageClass="rounded-none lg:rounded-none md:w-[375px] lg:w-[375px] w-full h-min mt-[50px] md:mt-0 object-contain"
             imageContainerClass="md:flex justify-end mt-auto items-end md:w-auto lg:pe-[90px]"
