@@ -643,7 +643,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
             </div>
 
             {defaultUOM.conversion_text && (
-              <div className="absolute top-2 right-2 text-[#146321] text-[0.7vw] mob:text-[2.5vw] font-bold px-2 py-0.5 rounded-full z-10 font-[SofiaPro]">
+              <div className="absolute top-2 right-2 text-[#146321] text-[0.7vw] mob:text-[2.5vw] font-bold px-2 py-0.5 rounded-full font-[SofiaPro]">
                 {defaultUOM.conversion_text}
               </div>
             )}
