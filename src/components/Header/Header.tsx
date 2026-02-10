@@ -221,7 +221,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
   const handleSelectAddress = () => {
     dispatch(setIsSidebarOpen(true));
 
-    if (!isLoggedIn) {
+    if (!loginDetails.isLogin) {
       dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
       return;
     }
@@ -517,7 +517,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                       </div>
                     </div>
                   ) : (
-                    <span className="font-bold text-[1vw]">Select Address</span>
+                    <span className="font-bold text-[1vw] whitespace-nowrap">Select Address</span>
                   )}
                   <svg
                     className="w-[0.6vw] h-[0.6vw] text-gray-500 flex-shrink-0"
