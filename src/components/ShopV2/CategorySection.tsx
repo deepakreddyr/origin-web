@@ -14,11 +14,10 @@ const CategorySection = () => {
   const { categories } = filteredCategories;
   const mobile = useMediaQuery(600);
 
-  const mainCategoryList =
-    categories.find((item: any) => item.type === 'main-category')?.data || [];
+  const mainCategoryList = categories.find((item: any) => item.type === 'main-category')?.data || [];
 
   // Merge the real categories with test categories for testing
-  const combinedCategoryList = [...mainCategoryList,];
+  const combinedCategoryList = [...mainCategoryList];
 
   // State for showing more categories
   const [showAll, setShowAll] = useState(false);
@@ -82,9 +81,7 @@ const CategorySection = () => {
 
   const mobUI = () => {
     const INITIAL_DISPLAY_COUNT = 10;
-    const itemsToShow = showAll
-      ? combinedCategoryList
-      : combinedCategoryList.slice(0, INITIAL_DISPLAY_COUNT);
+    const itemsToShow = showAll ? combinedCategoryList : combinedCategoryList.slice(0, INITIAL_DISPLAY_COUNT);
     const hasMore = combinedCategoryList.length > INITIAL_DISPLAY_COUNT;
 
     // First 2 larger cards
@@ -111,9 +108,7 @@ const CategorySection = () => {
                   className="object-cover rounded-[2vw]"
                 />
               </div>
-              <p className="font-[SofiaPro] text-[3.6vw] font-semibold text-center mt-[2vw]">
-                {category.name}
-              </p>
+              <p className="font-[SofiaPro] text-[3.6vw] font-semibold text-center mt-[2vw]">{category.name}</p>
             </Link>
           ))}
         </div>
@@ -122,12 +117,7 @@ const CategorySection = () => {
         {rest.length > 0 && (
           <div className="grid grid-cols-3 gap-[4.1vw]">
             {rest.map((category: any) => (
-              <Link
-                replace
-                key={category.id}
-                href={generateHref(category)}
-                className="flex flex-col items-center"
-              >
+              <Link replace key={category.id} href={generateHref(category)} className="flex flex-col items-center">
                 <div className="relative w-full h-[30vw] border border-[#E3E3E3] rounded-[2vw] shadow-sm hover:shadow-md transition-shadow duration-200">
                   <Image
                     src={category.website_image || category.image || catimg}
@@ -136,9 +126,7 @@ const CategorySection = () => {
                     className="object-cover rounded-[2vw]"
                   />
                 </div>
-                <p className="font-[SofiaPro] text-[3.6vw] font-semibold text-center mt-[2vw]">
-                  {category.name}
-                </p>
+                <p className="font-[SofiaPro] text-[3.6vw] font-semibold text-center mt-[2vw]">{category.name}</p>
               </Link>
             ))}
           </div>
@@ -169,12 +157,11 @@ const CategorySection = () => {
     );
   };
 
-
   return (
     <>
       {combinedCategoryList.length > 0 && (
         <div className="px-[7vw]">
-          <h1 className="font-Stinger text-start font-bold text-[2.08vw] mob:text-[5.1vw] pb-[2.1vw]">
+          <h1 className="font-[Recoleta] text-start font-semibold text-[2.08vw] mob:text-[5.1vw] pb-[2.1vw]">
             Shop by category
           </h1>
           {mobile ? mobUI() : webUI()}

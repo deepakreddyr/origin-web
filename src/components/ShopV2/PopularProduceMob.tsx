@@ -66,7 +66,7 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
 
   return (
     <div className="relative w-[92vw] md:w-[80vw] mx-auto py-0 md:py-9 transition-all duration-50 ease-in-out">
-      <h1 className="font-Stinger text-[2.5vw] mob:text-[7vw] pb-[2.1vw] font-bold py-[1.1vw] mob:py-[4.1vw]">
+      <h1 className="font-[Recoleta] text-[2.5vw] mob:text-[7vw] pb-[2.1vw] font-semibold py-[1.1vw] mob:py-[4.1vw]">
         {categoryDetail.title}
       </h1>
 

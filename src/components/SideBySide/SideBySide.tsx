@@ -119,12 +119,17 @@ const SideBySide: React.FC<SideBySideProps> = ({
             titleContainerClass
           )}
         >
-          <Typography variant={titleVariant} className={CA(titleClass, 'font-bold')}>
+          <Typography variant={titleVariant} className={CA(titleClass, 'font-semibold')}>
             {HTMLReactParser(title)}
           </Typography>
-          <Typography variant="body1" className="lg:my-6 mt-4 mb-6 font-light text-lg">
-            {description && HTMLReactParser(description)}
-          </Typography>
+          {description && (
+            <Typography
+              variant="body1"
+              className="lg:my-6 mt-4 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-relaxed"
+            >
+              {HTMLReactParser(description)}
+            </Typography>
+          )}
           {buttonText && <OriginButton handleClick={buttonClick1} variant={buttonVariant} buttonText={buttonText} />}
         </Box>
       </TwoRowFlex>
@@ -159,12 +164,17 @@ const SideBySide: React.FC<SideBySideProps> = ({
             titleContainerClass
           )}
         >
-          <Typography variant={titleVariant} className={CA(titleClass, 'font-bold')}>
+          <Typography variant={titleVariant} className={CA(titleClass, 'font-semibold')}>
             {HTMLReactParser(title)}
           </Typography>
-          <Typography variant="body1" className="lg:my-6 mt-0 mb-6 font-light text-lg">
-            {description && HTMLReactParser(description)}
-          </Typography>
+          {description && (
+            <Typography
+              variant="body1"
+              className="lg:my-6 mt-0 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-relaxed"
+            >
+              {HTMLReactParser(description)}
+            </Typography>
+          )}
           <Box className="flex items-center gap-5">
             {buttonText && <OriginButton handleClick={buttonClick1} variant={buttonVariant} buttonText={buttonText} />}
             {buttonText2 && (
@@ -195,11 +205,14 @@ const SideBySide: React.FC<SideBySideProps> = ({
         </Box>
         <Box className={CA('py-0 lg:py-0 px-0 lg:px-16 pt-6 w-full flex', reverse ? 'pt-0 lg:pt-[0]' : 'lg:pb-[0]')}>
           <TwoRowFlex rootClass={CA('items-start px-0 py-0 lg:gap-12', rootClass)}>
-            <Typography variant={titleVariant} className={CA(titleClass, 'w-full lg:w-[calc(50%-3rem)] font-bold')}>
+            <Typography variant={titleVariant} className={CA(titleClass, 'w-full lg:w-[calc(50%-3rem)] font-semibold')}>
               {HTMLReactParser(title)}
             </Typography>
             <Box className="w-full lg:w-[calc(50%-3rem)]">
-              <Typography variant="body1" className="mt-0 mb-6 lg:mb-6 font-light text-lg">
+              <Typography
+                variant="body1"
+                className="mt-0 mb-6 lg:mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-relaxed"
+              >
                 {description && HTMLReactParser(description)}
               </Typography>
               {buttonText && (
@@ -239,11 +252,14 @@ const SideBySide: React.FC<SideBySideProps> = ({
             titleContainerClass
           )}
         >
-          <Typography variant={titleVariant} className={CA(titleClass, 'font-bold')}>
+          <Typography variant={titleVariant} className={CA(titleClass, 'font-semibold')}>
             {HTMLReactParser(title)}
           </Typography>
 
-          <Typography variant="body1" className="lg:my-6 mt-0 mb-6 font-light text-lg">
+          <Typography
+            variant="body1"
+            className="lg:my-6 mt-0 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-relaxed"
+          >
             {description && HTMLReactParser(description)}
           </Typography>
 

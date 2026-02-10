@@ -50,36 +50,39 @@ const FarmDetails = () => {
         </div>
 
         {/* Bottom Yellow Section */}
-        <div className="bg-[#FBDF13] px-[6vw] py-[62px] mob:px-[8vw] mob:py-[10vw]">
-          <div className="flex flex-row mob:flex-col justify-between items-start gap-[4vw] mob:gap-[8vw]">
+        <div className="bg-primary px-[6vw] py-[4vw] mob:px-[8vw] mob:py-[10vw] flex items-center">
+          <div className="flex flex-row mob:flex-col justify-between items-start w-full gap-[2vw] mob:gap-[8vw]">
             {/* Left Headline */}
-            <div className="w-[40%] mob:w-full">
-              <h1 className="font-[Recoleta] text-[4.2vw] mob:text-[10vw] leading-[1.1] font-bold text-[#1D1D1D]">
-                A lot is <br /> going wrong <br /> in the world.
+            <div className="w-[40vw] mob:w-full">
+              <h1 className="font-[Recoleta] text-[4.4vw] mob:text-[10vw] leading-[1.1] font-semibold text-[#231F20]">
+                A lot is <br className="mob:hidden" /> going wrong <br className="mob:hidden" /> in the world.
               </h1>
             </div>
 
             {/* Right Content */}
-            <div className="w-[55%] mob:w-full flex flex-col gap-[0.3vw] mob:gap-[0.7vw]">
-              <p className="font-[SofiaPro] text-[1.4vw] mob:text-[4vw] leading-[1.4] text-[#1D1D1D] font-normal">
+            <div className="w-[48vw] mob:w-full flex flex-col gap-[0.2vw] mob:gap-[6vw]">
+              <p className="font-[SofiaPro] text-[1.4vw] mob:text-[4vw] leading-[1.3] text-[#231F20] font-medium">
                 But food still has a strange and steady power to comfort, <br className="hidden md:block" />
                 to ground, to surprise. That’s why we have partnered with
               </p>
 
-              <div className="flex items-center gap-[1vw] mob:gap-[2.5vw]">
-                <span className="font-[Recoleta] text-[6.5vw] mob:text-[10vw] font-bold text-[#1D1D1D] leading-none">
+              <div className="flex mob:flex-col items-start gap-[1vw] mob:gap-[2vw]">
+                <span className="font-[Recoleta] text-[4.5vw] mob:text-[14vw] font-bold text-[#231F20] leading-[0.85]">
                   10,000+
                 </span>
-                <div className="flex flex-col justify-center">
-                  <p className="font-[SofiaPro] text-[1.4vw] mob:text-[4vw] leading-[1.3] text-[#1D1D1D] font-normal">
-                    microfarmers across the globe. <br />
-                    Let your tastebuds travel. <br />
+                <div className="flex flex-col justify-start pt-[0.2vw] mob:pt-2">
+                  <p className="font-[SofiaPro] text-[1.375vw] mob:text-[3.8vw] leading-[1.3] text-[#231F20] font-medium">
+                    microfarmers across the globe. <br className="mob:hidden" />
+                    Let your tastebuds travel. <br className="mob:hidden" />
                     Discover something new.
                   </p>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
 
-              {/* <div className="grid grid-cols-2 mob:grid-cols-1 mt-[6.2vw] mob:gap-[8vw] mob:mt-[8vw] gap-[1.8vw] ">
+        {/* <div className="grid grid-cols-2 mob:grid-cols-1 mt-[6.2vw] mob:gap-[8vw] mob:mt-[8vw] gap-[1.8vw] ">
                 {list.map((data: any) => (
                   <div key={data.id} className="w-[17.4vw] mob:w-[88.7vw]">
                     <div className="relative w-[17.4vw] mob:w-[91.5vw] mob:h-[51vw] h-[12.1vw]  ">
@@ -89,9 +92,6 @@ const FarmDetails = () => {
                   </div>
                 ))}
               </div> */}
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

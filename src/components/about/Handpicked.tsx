@@ -25,17 +25,22 @@ const Handpicked = () => {
     <div className=" mob:h-max w-full rounded-[6.6vw] mob:rounded-t-[4vw] mob:top-0 relative pb-[0vw] ">
       <div className="flex items-center mob:flex-col-reverse justify-between pt-[6vw]  bg-beige-100 pb-[8vw]">
         <div className="w-[38vw] mob:w-full ml-[10vw] mob:ml-0 mob:px-[4vw] pb-[5vw] pt-[5vw] mob:pt-[8vw] mob:pb-[10vw]">
-          <p className="text-[4.4vw] mob:text-[10.2vw] font-[Recoleta] text-secondary leading-none font-bold pb-[4vw] mob:text-left">
+          <p className="text-[4.4vw] mob:text-[10.2vw] font-[Recoleta] text-secondary leading-none font-semibold pb-[4vw] mob:text-left">
             {/* Carefully
             <br />
             Handpicked */}
             We help you waste less food
           </p>
-          <p className="font-[SofiaPro] font-light text-[1.25vw]  mob:text-[4.1vw] leading-[2vw] mob:leading-[6vw] mob:text-left">
-            Food waste isn’t usually the result of neglect. It’s the byproduct of busy lives colliding with the narrow
-            window in which fresh produce stays usable. Fruits ripen, greens wilt, and meals get postponed. Our Ripeness
-            Quotient addresses this mismatch by letting you choose produce at the exact stage of ripeness you need. With
-            better timing comes better planning, fewer surprises in the fridge, and far less food thrown away.
+          <p className="font-[SofiaPro] font-medium text-[1.7vw]  mob:text-[4.1vw] leading-[2vw] mob:leading-[6vw] mob:text-left">
+            Food waste isn’t usually the result of neglect. <br className="mob:hidden" />
+            It’s the byproduct of busy lives colliding with <br className="mob:hidden" />
+            the narrow window in which fresh produce <br className="mob:hidden" /> stays usable. Fruits ripen, greens
+            wilt, and <br className="mob:hidden" /> meals get postponed. Our Ripeness Quotient{' '}
+            <br className="mob:hidden" />
+            addresses this mismatch by letting you <br className="mob:hidden" />
+            choose produce at the exact stage of <br className="mob:hidden" />
+            ripeness you need. With better timing comes <br className="mob:hidden" /> better planning, fewer surprises
+            in the fridge, <br className="mob:hidden" /> and far less food thrown away.
           </p>
           {/* <p className="font-[SofiaPro] font-light text-[1.25vw] leading-[2vw] py-[2.2vw] mob:py-[5vw] mob:text-[4.1vw]  mob:leading-[6vw]">
             When you indulge in the essence of pure goodness with our products, you're embarking on a journey of

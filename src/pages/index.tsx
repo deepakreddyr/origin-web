@@ -127,37 +127,38 @@ const Home = ({
           )}
           {/* <PopularProduce categoryDetail={popularProduceData} /> */}
         </div>
-        <BeforeBox mdTopOffset={isMobile ? -90 : 50} mdBottomOffset={isMobile ? 20 : 80}>
-          <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[2]">
-            <SideBySide
-              variant="normal"
-              imageSrc="/assets/images/about/home2.webp"
-              imageAlt="commitment"
-              imageWidth={424}
-              imageHeight={499}
-              imageClass="object-cover w-full h-[300px] lg:h-[450px] scale-[1]"
-              title={`It’s fresh. Properly fresh.`}
-              titleVariant={isMobile ? 'h4' : 'h2'}
-              description={`We partner directly with farms across the world and across India. <br/> No middlemen. No dark stores. <br/> Just produce that moves from the farm to you at peak flavour.`}
-              // buttonText="Know more"
-              buttonVariant="tertiary"
-              rootClass="bg-secondary-200"
-            />
-          </Container>
+        {/* <BeforeBox mdTopOffset={isMobile ? -90 : 50} mdBottomOffset={isMobile ? 20 : 80}> */}
+        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[2]">
+          <SideBySide
+            variant="normal"
+            imageSrc="/assets/images/about/home2.webp"
+            imageAlt="commitment"
+            imageWidth={424}
+            imageHeight={400}
+            imageClass="object-cover w-full h-[300px] lg:h-[450px] scale-[1]"
+            title={`It’s Fresh. Properly&nbsp;Fresh.`}
+            titleVariant={isMobile ? 'h4' : 'h2'}
+            description={`We partner directly with farms across the world and across India. <br/> No middlemen. No dark stores. <br/> Just produce that moves from the farm to you at peak&nbsp;flavour.`}
+            // buttonText="Know more"
+            buttonVariant="tertiary"
+            rootClass="bg-secondary-200"
+          />
+        </Container>
+        <div className="bg-[#FAF7F0] my-[2vw]">
           <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[10] !overflow-visible">
             <SideBySide
               variant="parallax"
               parallaxTopImageSrc="/assets/images/parallaxImages/top-2.webp"
               parallaxMainImageSrc="/assets/images/parallaxImages/main-2.webp"
               // parallaxBottomImageSrc="/assets/images/parallaxImages/bottom-1.png"
-              parallaxImageAlt="carefully handpicked"
-              title={`Grown For <br/> Those Who Never <br/> Compromise `}
+              parallaxImageAlt=""
+              title={`Grown For <br/> Those Who Never&nbsp;Compromise `}
               titleVariant={isMobile ? 'h4' : 'h1'}
-              titleClass="font-Stinger text-[#231F20] !font-bold !leading-[1.1] "
-              description={`Everyone has a right to fresh, authentic flavours. But only a few fight for it. Origin Fresh is for those who do.`}
+              titleClass="font-[Recoleta] text-[#231F20] !font-semibold !leading-[1.1] "
+              description={`Everyone has a right to fresh, authentic <br/> flavours. But only a few fight for it. Origin Fresh <br/> is for those&nbsp;who&nbsp;do.`}
               // buttonText="Know more"
               buttonVariant="tertiary"
-              rootClass="bg-[#FAF7F0] z-1 px-0 md:px-6 items-center mob:!rounded-none pb-12 !overflow-visible"
+              rootClass="bg-[#FAF7F0] z-1 px-[10vw] mob:px-[3vw] items-center !rounded-none pb-12 !overflow-visible"
               reverse
               parallaxImgContainerClass="relative py-5 lg:pt-9 lg:pb-20 !lg:w-[45%] !overflow-visible"
               titleContainerClass="!pl-0 !lg:ps-0 !lg:pe-12 !pr-12"
@@ -174,26 +175,27 @@ const Home = ({
             />
             <Box className="h-8 md:h-0" />
           </Container>
-          <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[50] ">
-            <SideBySide
-              title={`Join the Cult of Fresh`}
-              titleVariant={isMobile ? 'h4' : 'h2'}
-              titleClass="text-black"
-              description={`Nature takes time. It refuses to be hurried. It carefully crafts every single fruit and vegetable that you find here. This patience is what we worship, and that’s what we share with the world.`}
-              buttonText="Know more"
-              buttonClick1={() => (window.location.href = '/about')}
-              variant="vertical"
-              imageSrc="/assets/images/about/home3.webp"
-              imageAlt="commitment"
-              imageWidth={1047}
-              imageHeight={400}
-              buttonVariant="tertiary"
-              rootClass="bg-primary"
-              imageClass="w-full md:max-h-[400px] max-h-[170px] object-fit"
-            />
-          </Container>
+        </div>
+        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[50] ">
+          <SideBySide
+            title={`Join The Cult <br/> Of&nbsp;Fresh`}
+            titleVariant={isMobile ? 'h4' : 'h2'}
+            titleClass="text-black"
+            description={`Nature takes time. It refuses to be hurried. It carefully crafts every single fruit and vegetable that you find here. This patience is what we worship, and that’s what we share with the&nbsp;world.`}
+            buttonText="Know more"
+            buttonClick1={() => (window.location.href = '/about')}
+            variant="vertical"
+            imageSrc="/assets/images/about/home3.webp"
+            imageAlt="commitment"
+            imageWidth={1047}
+            imageHeight={400}
+            buttonVariant="tertiary"
+            rootClass="bg-primary"
+            imageClass="w-full md:max-h-[400px] max-h-[170px] object-fit"
+          />
+        </Container>
 
-          {/* <Container maxWidth="lg">
+        {/* <Container maxWidth="lg">
             <SideBySide
               variant="normal"
               imageSrc="/assets/images/distribution.png"
@@ -210,24 +212,25 @@ const Home = ({
               rootClass="bg-transparent px-0 md:px-5 items-center"
             />
           </Container> */}
-          <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[2] mt-[8vw] mob:mt-[15vw]">
-            <TestimonialsSection testimonials={testimonials} />
-          </Container>
-          <Box className="h-8 lg:h-[64px]" />
-        </BeforeBox>
+        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[2] mt-[8vw] mob:mt-[15vw]">
+          <TestimonialsSection testimonials={testimonials} />
+        </Container>
+        <Box className="h-8 lg:h-[64px]" />
+        {/* </BeforeBox> */}
         {/* <Box className="h-8 lg:h-[52px]" /> */}
-        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] mt-[8vw]">
-          <Box className="h-16 lg:h-[104px]" />
+        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw]">
           <SideBySide
             variant="normal"
             imageSrc="/assets/images/about/mobiledownload.webp"
-            imageAlt="commitment"
-            imageWidth={424}
-            imageHeight={499}
-            title={`Download the app on Play Store and App Store.`}
-            titleVariant="h5"
-            titleClass="text-black md:pe-0"
-            titleContainerClass="flex-col lg:block flex items-center text-center md:text-left"
+            imageAlt="Download app"
+            imageWidth={600}
+            imageHeight={500}
+            imageClass="object-contain"
+            title={`Download <br/> the app on <br/> Play Store and <br/> App Store.`}
+            titleVariant="h2"
+            titleClass="font-[Recoleta] text-[#231F20] !font-semibold !leading-[1.1] mb-8"
+            imageContainerClass="flex justify-center items-center lg:!pe-0"
+            titleContainerClass="flex flex-col justify-center items-center lg:items-start lg:!ps-0 lg:!pe-0"
             buttonText="Download Origin Fresh"
             buttonVariant="tertiary"
             buttonClick1={() => {
@@ -246,9 +249,7 @@ const Home = ({
                 );
               }
             }}
-            rootClass="bg-primary-100 items-center md:items-start justify-center pb-0 md:p-5 md:pb-0 flex-col-reverse lg:flex-row"
-            imageClass="rounded-none lg:rounded-none md:w-[375px] lg:w-[375px] w-full h-min mt-[50px] md:mt-0 object-contain"
-            imageContainerClass="md:flex justify-end mt-auto items-end md:w-auto lg:pe-[90px]"
+            rootClass="bg-white items-center py-[5vw] mob:py-[10vw]"
           />
         </Container>
         <Box className="h-16 lg:h-32" />

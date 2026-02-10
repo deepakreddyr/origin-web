@@ -1,9 +1,9 @@
 // Parallax.tsx
-import React from "react";
-import { Box } from "@mui/material";
-import Image from "next/image";
-import CA from "classnames";
-import { Parallax } from "react-scroll-parallax";
+import React from 'react';
+import { Box } from '@mui/material';
+import Image from 'next/image';
+import CA from 'classnames';
+import { Parallax } from 'react-scroll-parallax';
 
 type ParallaxProps = {
   topImageSrc: string;
@@ -40,48 +40,42 @@ const ParallaxImageBox: React.FC<ParallaxProps> = ({
   bottomImageClass,
   parallaxSpeed = 15,
   topImageContainerClass,
-  bottomImageContainerClass,
+  bottomImageContainerClass
 }) => {
   const speed = parallaxSpeed;
   return (
     <>
-      <Parallax
-        speed={-speed}
-        className={CA("relative", topImageContainerClass)}
-      >
+      {topImageSrc && (
+        <Parallax speed={-speed} className={CA('relative', topImageContainerClass)}>
+          <Image
+            src={topImageSrc}
+            width={topImageWidth}
+            height={topImageHeight}
+            alt={imageAlt}
+            className={CA('rounded-[10px] object-cover', topImageClass)}
+          />
+        </Parallax>
+      )}
+      {mainImageSrc && (
         <Image
-          src={topImageSrc}
-          width={topImageWidth}
-          height={topImageHeight}
+          src={mainImageSrc}
+          width={mainImageWidth}
+          height={mainImageHeight}
           alt={imageAlt}
-          className={CA("rounded-[10px] object-cover", topImageClass)}
+          className={CA('rounded-[10px] md:aspect-[unset] object-cover', mainImageClass)}
         />
-      </Parallax>
-      <Image
-        src={mainImageSrc}
-        width={mainImageWidth}
-        height={mainImageHeight}
-        alt={imageAlt}
-        className={CA(
-          "rounded-[10px] md:aspect-[unset] object-cover",
-          mainImageClass
-        )}
-      />
-      <Parallax
-        speed={speed}
-        className={CA("relative", bottomImageContainerClass)}
-      >
-        <Image
-          src={bottomImageSrc}
-          width={bottomImageWidth}
-          height={bottomImageHeight}
-          alt={imageAlt}
-          className={CA(
-            "rounded-[10px] md:aspect-[unset] object-cover",
-            bottomImageClass
-          )}
-        />
-      </Parallax>
+      )}
+      {bottomImageSrc && (
+        <Parallax speed={speed} className={CA('relative', bottomImageContainerClass)}>
+          <Image
+            src={bottomImageSrc}
+            width={bottomImageWidth}
+            height={bottomImageHeight}
+            alt={imageAlt}
+            className={CA('rounded-[10px] md:aspect-[unset] object-cover', bottomImageClass)}
+          />
+        </Parallax>
+      )}
     </>
   );
 };

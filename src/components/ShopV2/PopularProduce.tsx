@@ -48,9 +48,7 @@ const PopularProduce = (props: categoryProp) => {
   return (
     <div className="bg-white mb-[5vw] relative w-[92vw] md:w-[80vw] mx-auto py-12 mob:py-10 border border-[#EDE6D4] rounded-[48px] mob:rounded-[32px] transition-all duration-300 ease-in-out px-10 mob:px-2">
       <div className="flex justify-between items-center mb-8 mob:mb-8">
-        <h1 className="font-Stinger text-[2.5vw] mob:text-[6vw] font-bold text-black">
-          {categoryDetail.title}
-        </h1>
+        <h1 className="font-[Recoleta] text-[2.5vw] mob:text-[6vw] font-semibold text-black">{categoryDetail.title}</h1>
 
         {/* Toggle - Today / Tomorrow */}
         {/* <div className="hidden md:flex bg-[#F8F8F8] p-1 rounded-full border border-gray-100">

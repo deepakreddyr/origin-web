@@ -44,7 +44,9 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
       <div className="w-[92vw] md:w-[80vw] mx-auto">
         {title && (
           <div className="w-full mb-[2.1vw] mob:pb-[5vw]">
-            <h1 className="font-Stinger text-start font-bold text-[2.5vw] mob:text-[7vw] text-[#231F20] ">{title}</h1>
+            <h1 className="font-Stinger text-start font-semibold text-[2.5vw] mob:text-[7vw] text-[#231F20] ">
+              {title}
+            </h1>
           </div>
         )}
 
@@ -103,7 +105,7 @@ const BlendsCategoryCard = ({ category }: { category: any }) => {
 
       {/* Category Name - Styled to sit over the background */}
       <div className="relative w-full p-[1.5vw] mob:p-[4vw] z-10">
-        <h2 className="font-[Recoleta] font-bold text-[1.25vw] mob:text-[4vw] text-black mob:text-white text-center px-2 drop-shadow-md">
+        <h2 className="font-[Recoleta] font-semibold text-[1.25vw] mob:text-[4vw] text-black mob:text-white text-center px-2 drop-shadow-md">
           {category.name}
         </h2>
       </div>
@@ -130,7 +132,7 @@ const CategoryCard = ({ category, generateHref }: { category: any; generateHref:
 
       {/* Category Name */}
       <div className="relative w-full mb-[0.5vw] mob:mb-[1vw]">
-        <p className="font-[Recoleta] font-bold text-[1.25vw] mob:text-[4vw] text-[#231F20] text-center px-2">
+        <p className="font-[Recoleta] font-semibold text-[1.25vw] mob:text-[4vw] text-[#231F20] text-center px-2">
           {category.name}
         </p>
       </div>

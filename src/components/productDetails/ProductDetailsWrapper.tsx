@@ -214,8 +214,8 @@ const StorageInfo: React.FC<{ info: ProductInfo }> = ({ info }) => {
   if (!storageSection || !storageSection.details || storageSection.details.length === 0) return null;
 
   return (
-    <div className="mt-4 w-[443px] mob:w-full bg-white rounded-[16px] border border-[#EDE6CC]/50 p-4 pb-[16px]">
-      <p className="font-[Stinger] font-bold text-xl text-[#231F20] mb-6 text-start">Storing information</p>
+    <div className="mt-4 w-[300px] mob:w-full bg-white rounded-[16px] border border-[#EDE6CC]/50 p-4 pb-[16px]">
+      <p className="font-[Recoleta] font-bold text-xl text-[#231F20] mb-6 text-start">Storing information</p>
       <div className="flex flex-row overflow-x-auto gap-[12px] no-scrollbar">
         {storageSection.details.map((detail: any, index: number) => (
           <div
@@ -247,7 +247,7 @@ const NutritionBenefits: React.FC<{ info: ProductInfo }> = ({ info }) => {
 
   return (
     <div className="mt-4 w-[443px] mob:w-full bg-white rounded-[16px] border border-[#EDE6CC]/50 p-4 pb-[16px]">
-      <p className="font-[Stinger] font-bold text-xl text-[#231F20] mb-6 text-start">Nutrition benefits</p>
+      <p className="font-[Recoleta] font-bold text-xl text-[#231F20] mb-6 text-start">Nutrition benefits</p>
       <div className="flex flex-row overflow-x-auto gap-[12px] no-scrollbar">
         {nutritionSection.details.map((detail: any, index: number) => (
           <div
@@ -617,7 +617,7 @@ const ProductDetailsWrapper = () => {
 
               {/* Mobile About Card */}
               <div className="bg-white rounded-[16px] border border-[#EDE6CC]/50 p-5">
-                <h3 className="font-Stinger font-bold text-xl text-[#231F20] mb-3">About</h3>
+                <h3 className="font-[Recoleta] font-bold text-xl text-[#231F20] mb-3">About</h3>
                 <p className="text-sm text-gray-700 leading-relaxed font-[SofiaPro]">
                   {productDescription ||
                     'Grapefruit is a natural cross between pomelo and orange, known for its large fruit size, thick peel, and bitter tinges due to its high content of naringin, limonoids, and furanocoum...'}
