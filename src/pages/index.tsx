@@ -106,7 +106,12 @@ const Home = ({
 
         <div className="flex items-center justify-center w-full px-[1vw]">
           <div className="flex items-center justify-between w-[80vw] mob:w-full mob:grid grid-cols-2 mob:gap-[5vw] ">
-            {uspCardsData?.map((card) => <UspCard cardData={card} key={card.title} />)}
+            {uspCardsData?.map((card, index) => {
+              let icon = card.icon;
+              if (index === 0) icon = '/assets/images/uspCard1.svg';
+              if (index === 1) icon = '/assets/images/uspCard2.svg';
+              return <UspCard cardData={{ ...card, icon }} key={card.title} />;
+            })}
           </div>
         </div>
         {/* Homepage Category Section */}
@@ -115,7 +120,7 @@ const Home = ({
         </div>
 
         <div className="w-full px-[3vw]">
-          {isMobile || isTablet ? (
+          {isMobile ? (
             <PopularProduceMob categoryDetail={popularProduceData} />
           ) : (
             <PopularProduce categoryDetail={popularProduceData} />
@@ -123,7 +128,7 @@ const Home = ({
           {/* <PopularProduce categoryDetail={popularProduceData} /> */}
         </div>
         <BeforeBox mdTopOffset={isMobile ? -90 : 50} mdBottomOffset={isMobile ? 20 : 80}>
-          <Container className="relative z-[2]">
+          <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[2]">
             <SideBySide
               variant="normal"
               imageSrc="/assets/images/about/home2.webp"
@@ -139,7 +144,7 @@ const Home = ({
               rootClass="bg-secondary-200"
             />
           </Container>
-          <Container maxWidth="lg" className="relative z-[10] !overflow-visible">
+          <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[10] !overflow-visible">
             <SideBySide
               variant="parallax"
               parallaxTopImageSrc="/assets/images/parallaxImages/top-2.webp"
@@ -169,7 +174,7 @@ const Home = ({
             />
             <Box className="h-8 md:h-0" />
           </Container>
-          <Container maxWidth="lg" className="relative z-[50] ">
+          <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[50] ">
             <SideBySide
               title={`Join the Cult of Fresh`}
               titleVariant={isMobile ? 'h4' : 'h2'}
@@ -181,10 +186,10 @@ const Home = ({
               imageSrc="/assets/images/about/home3.webp"
               imageAlt="commitment"
               imageWidth={1047}
-              imageHeight={296}
+              imageHeight={400}
               buttonVariant="tertiary"
               rootClass="bg-primary"
-              imageClass="w-full md:max-h-[296px] max-h-[170px] object-fit"
+              imageClass="w-full md:max-h-[400px] max-h-[170px] object-fit"
             />
           </Container>
 
@@ -205,13 +210,13 @@ const Home = ({
               rootClass="bg-transparent px-0 md:px-5 items-center"
             />
           </Container> */}
-          <Container className="px-0 md:px-6 mt-[8vw]">
+          <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[2] mt-[8vw] mob:mt-[15vw]">
             <TestimonialsSection testimonials={testimonials} />
           </Container>
           <Box className="h-8 lg:h-[64px]" />
         </BeforeBox>
         {/* <Box className="h-8 lg:h-[52px]" /> */}
-        <Container className="mt-[8vw]">
+        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] mt-[8vw]">
           <Box className="h-16 lg:h-[104px]" />
           <SideBySide
             variant="normal"
@@ -241,7 +246,7 @@ const Home = ({
                 );
               }
             }}
-            rootClass="bg-primary-100 items-center justify-center pb-0 md:p-5 md:pb-0 flex-col-reverse lg:flex-row"
+            rootClass="bg-primary-100 items-center md:items-start justify-center pb-0 md:p-5 md:pb-0 flex-col-reverse lg:flex-row"
             imageClass="rounded-none lg:rounded-none md:w-[375px] lg:w-[375px] w-full h-min mt-[50px] md:mt-0 object-contain"
             imageContainerClass="md:flex justify-end mt-auto items-end md:w-auto lg:pe-[90px]"
           />

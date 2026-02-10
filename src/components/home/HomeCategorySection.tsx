@@ -88,21 +88,22 @@ const BlendsCategoryCard = ({ category }: { category: any }) => {
   return (
     <Link
       href={`/shop/${category.name.replace(/ /g, '-').toLowerCase()}/${category.id}`}
-      className="lg:col-span-2 col-span-2 relative rounded-[20px] mob:rounded-[15px] overflow-visible group min-h-[18vw] mob:min-h-[45vw] flex flex-col items-center justify-end p-[1.5vw] mob:p-[4vw]"
+      className="lg:col-span-2 col-span-2 relative rounded-[20px] mob:rounded-[15px] overflow-hidden group min-h-[18vw] mob:min-h-[45vw] flex flex-col items-center justify-end"
       style={{
         background: 'linear-gradient(180deg, #CBB270 0%, #F7E1BA 100%)'
       }}
     >
-      {/* Image Container */}
-      <div className="absolute top-[-3vw] mob:top-[-7vw] inset-0 w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-110 p-[10%]">
-        <div className="relative w-full h-[18vw] mob:h-[35vw]">
-          <Image src={category.image || catimg} alt={category.name} fill className="object-contain object-center" />
-        </div>
+      {/* Image Container - Now spans the full background */}
+      <div className="absolute inset-0 w-full h-full transition-transform duration-500 group-hover:scale-105">
+        <Image src={category.image || catimg} alt={category.name} fill className="object-cover object-center" />
+
+        {/* Subtle Gradient Overlay to ensure text visibility */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
       </div>
 
-      {/* Category Name */}
-      <div className="relative w-full mb-[0.5vw] mob:mb-[1vw]">
-        <h2 className="font-[Recoleta] font-bold text-[1.25vw] mob:text-[4vw] text-[#231F20] text-center px-2">
+      {/* Category Name - Styled to sit over the background */}
+      <div className="relative w-full p-[1.5vw] mob:p-[4vw] z-10">
+        <h2 className="font-[Recoleta] font-bold text-[1.25vw] mob:text-[4vw] text-white mob:text-white text-center px-2 drop-shadow-md">
           {category.name}
         </h2>
       </div>

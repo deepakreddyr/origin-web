@@ -281,7 +281,7 @@ const TwoColFlex = ({
     <Box
       className={CA(
         rootClass,
-        'flex flex-wrap p-6 rounded-3xl lg:rounded-[64px]',
+        'flex flex-wrap p-4 md:p-6 rounded-3xl lg:rounded-[64px]',
         reverse ? 'lg:flex-col-reverse' : 'lg:flex-col'
       )}
     >
@@ -301,7 +301,7 @@ const TwoRowFlex = ({
   return (
     <Box
       className={CA(
-        'flex flex-wrap p-6 rounded-3xl lg:rounded-[64px]',
+        'flex flex-wrap p-4 md:p-6 rounded-3xl lg:rounded-[64px]',
         reverse ? 'lg:flex-row-reverse' : 'lg:flex-row',
         rootClass
       )}

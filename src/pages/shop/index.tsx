@@ -252,11 +252,7 @@ const ShopPage = (props: HomeProps) => {
         if (section.type === 'products-recommendation') {
           return (
             <div key={index} className="w-full">
-              {isMobile || isTablet ? (
-                <PopularProduceMob categoryDetail={section} />
-              ) : (
-                <PopularProduce categoryDetail={section} />
-              )}
+              {isMobile ? <PopularProduceMob categoryDetail={section} /> : <PopularProduce categoryDetail={section} />}
             </div>
           );
         }

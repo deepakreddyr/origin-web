@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import Image from 'next/image';
 import { useMediaQuery } from '@mui/material';
 import { useRouter } from 'next/router';
+import OriginCarousel from '../OriginCarousel';
 
 // Import your banners
 import FreshlyArrivedBanner from '/public/assets/images/shop/FreshlyArrivedBanner.png';
@@ -69,36 +70,73 @@ export default ShopHero;
 
 export const ShopHeroSingle = ({ bannerData }: { bannerData?: any }) => {
   const isMobile = useMediaQuery('(max-width:768px)');
-  const isTablet = useMediaQuery('(max-width:1024px)');
   const router = useRouter();
-  const desktopImage = bannerData?.[0]?.website_image;
-  const mobileImage = bannerData?.[0]?.website_mobile_view_image;
 
-  const bannerSrc = isMobile ? mobileImage || mobbanner : desktopImage || banner;
-  const navigationTo = bannerData?.[0]?.navigation?.to;
+  console.log('ShopHeroSingle bannerData:', bannerData);
 
-  const handleNavigation = () => {
-    if (navigationTo) {
-      router.push(navigationTo);
-    }
-  };
+  // If no data, fallback to default single banner logic (optional, but good for safety)
+  // or just create a single slide with default data
+  const safeBannerData =
+    bannerData && bannerData.length > 0
+      ? bannerData
+      : [
+          {
+            website_image: banner,
+            website_mobile_view_image: mobbanner,
+            navigation: { to: '/' }
+          }
+        ];
+
+  const slides = safeBannerData.map((item: any, index: number) => {
+    const desktopImage = item?.website_desktop_view_image || item?.website_image;
+    const mobileImage = item?.website_mobile_view_image;
+    const bannerSrc = isMobile ? mobileImage || mobbanner : desktopImage || banner;
+    const navigationTo = item?.navigation?.to;
+    const handleNavigation = () => {
+      if (navigationTo) {
+        router.push(navigationTo);
+      }
+    };
+
+    return (
+      <div
+        key={index}
+        className={`relative w-full h-[40vw] mob:h-[100vw] bg-[#f7f1dc] ${navigationTo ? 'cursor-pointer' : ''}`}
+        onClick={handleNavigation}
+      >
+        <Image src={bannerSrc} alt={`Hero Banner ${index}`} fill priority quality={100} className="object-cover" />
+      </div>
+    );
+  });
 
   return (
     <div
-      className={`relative w-full overflow-x-hidden ${navigationTo ? 'cursor-pointer' : ''}`}
-      onClick={handleNavigation}
+      className="w-full relative overflow-hidden hero-banner-carousel"
+      style={{
+        ['--swiper-pagination-color' as any]: '#25874D',
+        ['--swiper-pagination-bullet-inactive-color' as any]: '#000',
+        ['--swiper-pagination-bullet-inactive-opacity' as any]: '0.2'
+      }}
     >
-      {/* HERO HEIGHT - Reduced height */}
-      <div
-        className="
-          relative w-full
-          h-[40vw]         
-          bg-[#f7f1dc]
-          mob:h-[100vw]         
-        "
-      >
-        <Image src={bannerSrc} alt="Shop Hero Single Banner" fill priority quality={100} className="object-cover" />
-      </div>
+      <OriginCarousel
+        className="w-full"
+        slides={slides}
+        slidesPerView={1}
+        spaceBetween={0}
+        breakpoints={{
+          320: { slidesPerView: 1 },
+          768: { slidesPerView: 1 },
+          1024: { slidesPerView: 1 }
+        }}
+        pagination={safeBannerData.length > 1 ? { clickable: true } : false}
+        navigation={false}
+        autoplay={{
+          delay: 4000,
+          disableOnInteraction: false
+        }}
+        loop={true}
+        slideClassName="w-full"
+      />
     </div>
   );
 };

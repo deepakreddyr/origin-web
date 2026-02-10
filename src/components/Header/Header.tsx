@@ -321,7 +321,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
       {/* <OffersRibbon /> */}
 
       <div
-        className={`z-50 w-[80vw] mob:w-full transition-all duration-300 ${
+        className={`z-50 w-[92vw] lg:w-[80vw] mob:w-full transition-all duration-300 ${
           isMobile
             ? isTransparentHeader
               ? 'bg-transparent px-[5vw] py-[2vw]'
@@ -333,7 +333,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
         } ${'mt-[1.1vw] mob:mt-0'} flex flex-col`}
       >
         <div className="flex items-center justify-between w-full">
-          <div className={`flex items-center gap-[2vw] mob:gap-[3vw] ${search && !isMobile ? '' : 'flex-1'}`}>
+          <div className={`flex items-center gap-[2vw] mob:gap-[3vw] ${isMobile ? 'flex-1' : ''}`}>
             {isMobile && (
               <button onClick={() => setDrawerOpen(!drawerOpen)} className="w-[6vw] h-[6vw] relative flex-shrink-0">
                 <Image src={hamburger} alt="Menu" fill className={`object-contain ${getIconFilter()}`} />
@@ -344,7 +344,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
               onClick={() => router.push('/')}
               className={`relative flex-shrink-0 ${isMobile ? 'flex-1 flex justify-center' : ''}`}
             >
-              <div className="w-[10vw] ml-[2vw] mt-2 mob:w-[35vw] mob:h-[12vw] mob:ml-0 h-[5vw] mr-[4vw] mob:mr-2 relative">
+              <div className="w-[10vw] ml-[2vw] mt-2 mob:w-[35vw] mob:h-[12vw] mob:ml-0 h-[5vw] mr-[1vw] mob:mr-2 relative">
                 <Image src={originLogo} alt="logo" fill className={`object-contain ${getIconFilter()}`} priority />
               </div>
             </button>
@@ -401,76 +401,10 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
             {/* ------------------------------------------------------------------ */}
           </div>
 
-          <div className={`flex items-center gap-[1.1vw] mob:hidden ${search ? 'flex-1 justify-center' : ''}`}>
-            {!search && (
-              <div className="flex items-center gap-[2vw] pr-[0] mob:hidden">
-                <Link
-                  href="/about"
-                  className="h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full bg-primary text-black text-[1.1vw] font-medium font-[SofiaPro]"
-                >
-                  About Us
-                </Link>
-                <Link
-                  href="/shop"
-                  className="h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full bg-primary text-black text-[1.1vw] font-medium font-[SofiaPro]"
-                >
-                  Shop All
-                </Link>
-                {!isMobile && isLoggedIn && (
-                  <button
-                    onClick={handleSelectAddress}
-                    className="flex items-center gap-2 px-[1.5vw] py-[0.5vw] rounded-full bg-gray-100 hover:bg-gray-200 text-gray-900 transition-colors max-w-[200px]"
-                    aria-label="Select Delivery Address"
-                  >
-                    <svg
-                      className="w-[1vw] h-[1vw] flex-shrink-0 text-gray-700"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
-                    {address.defaultAddress?.address_name ? (
-                      <div className="flex-1 overflow-hidden relative">
-                        <div className="animate-marquee whitespace-nowrap text-[1vw]">
-                          <span className="font-bold">{address.defaultAddress?.address_name}</span>
-                          <span className="mx-[0.5vw]">•</span>
-                          <span className="font-light">{address.defaultAddress.address}</span>
-                          {/* Duplicate for seamless loop */}
-                          <span className="font-bold ml-[2vw]">{address.defaultAddress?.address_name}</span>
-                          <span className="mx-[0.5vw]">•</span>
-                          <span className="font-light">{address.defaultAddress.address}</span>
-                        </div>
-                      </div>
-                    ) : (
-                      <span className="font-bold text-[1vw]">Select Address</span>
-                    )}
-                    <svg
-                      className="w-[0.6vw] h-[0.6vw] text-gray-500 flex-shrink-0"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                )}
-              </div>
-            )}
-
-            {/* Desktop Search Bar */}
-            <div className={`${search ? 'flex-1 mx-[2vw]' : 'flex-1 max-w-[28vw]'}`}>
+          {/* Desktop New Layout */}
+          <div className={`flex items-center flex-1 mob:hidden`}>
+            {/* 1. Search Bar (Moved First) */}
+            <div className={`flex-1 ml-[1vw] max-w-[20vw] mr-[2.9vw]`}>
               <form onSubmit={handleSearchSubmit} className="relative">
                 <div className="relative">
                   <input
@@ -482,25 +416,26 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                     onFocus={handleSearchFocus}
                     onBlur={handleSearchBlur}
                     placeholder={search ? 'Search here' : ''}
-                    className={`w-full h-[2.5vw] px-[1.5vw] 
-                              rounded-full border border-gray-300 ${search ? 'bg-white' : 'bg-transparent'} 
-                              placeholder:text-gray-400 
-                              text-[1.1vw] font-[SofiaPro] cursor-pointer 
-                              focus:outline-none focus:ring-0 transition-all duration-200`}
+                    className={`w-full h-[3vw] pl-[1.5vw] pr-[3.5vw] 
+                                rounded-full border-none bg-[#F2EADA]
+                                placeholder:text-black/60 text-black
+                                text-[1.1vw] font-[SofiaPro] cursor-pointer 
+                                focus:outline-none focus:ring-0 transition-all duration-200`}
                   />
 
                   {!searchQuery && !search && (
-                    <div className="absolute left-[1vw] top-1/2 transform -translate-y-1/2 pointer-events-none text-[1vw] font-[SofiaPro] text-gray-500">
+                    <div className="absolute left-[1.5vw] top-1/2 transform -translate-y-1/2 pointer-events-none text-[1.1vw] font-[SofiaPro] text-black/60 truncate max-w-[14vw]">
                       <AnimatedPlaceholder />
                     </div>
                   )}
 
+                  {/* Search Icon inside Input */}
                   <button
                     type="submit"
-                    className="absolute right-[1vw] top-1/2 transform -translate-y-1/2 bg-transparent hover:bg-gray-100 rounded-full w-[1.6vw] h-[1.6vw] flex items-center justify-center transition-colors duration-200"
+                    className="absolute right-[1vw] top-1/2 transform -translate-y-1/2 bg-transparent w-[1.6vw] h-[1.6vw] flex items-center justify-center"
                   >
                     <svg
-                      className="w-[1.1vw] h-[1.1vw] text-gray-600"
+                      className="w-[1.1vw] h-[1.1vw] text-black"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -517,33 +452,114 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
               </form>
             </div>
 
-            {/* Desktop Account/Login */}
-            {loginDetails.isLogin ? (
-              <button onClick={openAccount}>
-                <div className="w-[1.25vw] h-[1.25vw] relative">
-                  <Image src={userIcon} alt="account icon" fill className="object-contain" />
-                </div>
-              </button>
-            ) : (
-              <button
-                onClick={handleProfileMenuOpen}
-                className="border-[1px] border-black h-[2.4vw] px-[1.17vw] rounded-full text-black text-[1.1vw] font-medium font-[SofiaPro]"
+            {/* 2. Navigation Links */}
+            <div className="flex items-center gap-[1vw]">
+              <Link
+                href="/shop"
+                className={`h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full text-[1.1vw] font-medium font-[SofiaPro] transition-colors ${
+                  router.pathname === '/' || router.pathname.startsWith('/shop')
+                    ? 'bg-[#FFDE00] text-black'
+                    : 'hover:bg-gray-100 text-black'
+                }`}
               >
-                Login
-              </button>
-            )}
+                Shop All
+              </Link>
+              <Link
+                href="/about"
+                className={`h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full text-[1.1vw] font-medium font-[SofiaPro] transition-colors ${
+                  router.pathname === '/about' ? 'bg-[#FFDE00] text-black' : 'hover:bg-gray-100 text-black'
+                }`}
+              >
+                About Us
+              </Link>
 
-            {!search && <div className="h-[1.67vw] w-[.1vw] bg-black-op-30"></div>}
-            <button onClick={handleCartOpen} className="relative pr-[1.67vw]">
-              {cartItemCount > 0 && (
-                <div className="absolute top-[-.6vw] left-[.7vw] w-[1.25vw] h-[1.25vw] text-[.78vw] rounded-full bg-secondary-300 z-[1] text-white font-[sofiaPro] flex items-center justify-center">
-                  {cartItemCount > 99 ? '99+' : cartItemCount}
-                </div>
+              {/* Stores button explicitely removed */}
+            </div>
+
+            {/* 3. Location Selector & Icons */}
+            <div className="flex items-center gap-[1.5vw] ml-[1vw]">
+              {/* Location Selector */}
+              {!isMobile && isLoggedIn && (
+                <button
+                  onClick={handleSelectAddress}
+                  className="flex items-center gap-2 px-[1.5vw] py-[0.5vw] rounded-full bg-gray-100/50 hover:bg-gray-100 text-gray-900 transition-colors max-w-[200px]"
+                  aria-label="Select Delivery Address"
+                >
+                  <svg
+                    className="w-[1vw] h-[1vw] flex-shrink-0 text-gray-700"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                  {address.defaultAddress?.address_name ? (
+                    <div className="flex-1 overflow-hidden relative">
+                      <div className="animate-marquee whitespace-nowrap text-[1vw]">
+                        <span className="font-bold">{address.defaultAddress?.address_name}</span>
+                        <span className="mx-[0.5vw]">•</span>
+                        <span className="font-light">{address.defaultAddress.address}</span>
+                        {/* Duplicate for seamless loop */}
+                        <span className="font-bold ml-[2vw]">{address.defaultAddress?.address_name}</span>
+                        <span className="mx-[0.5vw]">•</span>
+                        <span className="font-light">{address.defaultAddress.address}</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <span className="font-bold text-[1vw]">Select Address</span>
+                  )}
+                  <svg
+                    className="w-[0.6vw] h-[0.6vw] text-gray-500 flex-shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
               )}
-              <div className="relative w-[1.25vw] h-[1.25vw] z-0">
-                <Image src={cartIcon} alt="cart-icon" fill className="object-contain" />
-              </div>
-            </button>
+
+              {/* Account Icon */}
+              {loginDetails.isLogin ? (
+                <button onClick={openAccount}>
+                  <div className="w-[1.5vw] h-[1.5vw] relative">
+                    <Image src={userIcon} alt="account icon" fill className="object-contain" />
+                  </div>
+                </button>
+              ) : (
+                <button onClick={handleProfileMenuOpen}>
+                  <div className="w-[1.5vw] h-[1.5vw] relative">
+                    <Image src={userIcon} alt="account icon" fill className="object-contain" />
+                  </div>
+                </button>
+              )}
+
+              {/* Separator */}
+              <div className="h-[1.5vw] w-[1px] bg-gray-300"></div>
+
+              {/* Cart Icon */}
+              <button onClick={handleCartOpen} className="relative">
+                {cartItemCount > 0 && (
+                  <div className="absolute top-[-0.5vw] -right-[0.5vw] w-[1.1vw] h-[1.1vw] text-[0.7vw] rounded-full bg-[#27ae60] border border-white text-white font-[sofiaPro] flex items-center justify-center z-[10]">
+                    {cartItemCount > 99 ? '99+' : cartItemCount}
+                  </div>
+                )}
+                <div className="relative w-[1.5vw] h-[1.5vw]">
+                  <Image src={cartIcon} alt="cart-icon" fill className="object-contain" />
+                </div>
+              </button>
+            </div>
           </div>
         </div>
 
