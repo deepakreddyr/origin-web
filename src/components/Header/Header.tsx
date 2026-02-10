@@ -479,7 +479,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
             {/* 3. Location Selector & Icons */}
             <div className="flex items-center gap-[1.5vw] ml-[1vw]">
               {/* Location Selector */}
-              {!isMobile && isLoggedIn && (
+              {!isMobile && (
                 <button
                   onClick={handleSelectAddress}
                   className="flex items-center gap-2 px-[1.5vw] py-[0.5vw] rounded-full bg-gray-100/50 hover:bg-gray-100 text-gray-900 transition-colors max-w-[200px]"
