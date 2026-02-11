@@ -141,8 +141,8 @@ const SideBySide: React.FC<SideBySideProps> = ({
       <TwoRowFlex reverse={reverse} rootClass={rootClass}>
         <Box
           className={CA(
-            'w-full lg:w-1/2 ',
-            reverse ? 'mt-5 lg:mt-0 ps-0 lg:ps-[100px]' : 'pe-0 lg:pe-[100px]',
+            'w-full md:w-1/2 ',
+            reverse ? 'mt-5 md:mt-0 ps-0 md:ps-[100px]' : 'pe-0 md:pe-[100px]',
             imageContainerClass
           )}
         >
@@ -152,15 +152,15 @@ const SideBySide: React.FC<SideBySideProps> = ({
             height={imageHeight}
             alt={imageAlt || ''}
             className={CA(
-              'rounded-[10px] lg:rounded-[46px] w-full sm:h-[200px] md:h-[300px] lg:w-auto lg:h-auto',
+              'rounded-[10px] md:rounded-[46px] w-full sm:h-[200px] md:h-auto lg:w-auto lg:h-auto',
               imageClass
             )}
           />
         </Box>
         <Box
           className={CA(
-            'px-0 lg:px-0 py-0 lg:py-16 pt-6 w-full lg:w-1/2',
-            reverse ? 'ps-0 lg:ps-[100px]' : 'lg:pe-[100px]',
+            'px-0 md:px-0 py-0 md:py-16 pt-6 w-full md:w-1/2',
+            reverse ? 'ps-0 md:ps-[100px]' : 'md:pe-[100px]',
             titleContainerClass
           )}
         >
@@ -318,7 +318,7 @@ const TwoRowFlex = ({
     <Box
       className={CA(
         'flex flex-wrap p-4 md:p-6 rounded-3xl lg:rounded-[64px]',
-        reverse ? 'lg:flex-row-reverse' : 'lg:flex-row',
+        reverse ? 'md:flex-row-reverse' : 'md:flex-row',
         rootClass
       )}
     >

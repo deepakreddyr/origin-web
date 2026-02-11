@@ -1,55 +1,55 @@
 // app/theme.ts
-'use client'
-import { createTheme } from '@mui/material/styles'
+'use client';
+import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
-    breakpoints: {
-        values: {
-            xs: 0,
-            sm: 600,
-            md: 900,
-            lg: 1150,
-            xl: 1450,
-        },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1150,
+      xl: 1450
+    }
+  },
+  typography: {
+    fontFamily: 'SofiaPro, sans-serif',
+    body1: {
+      fontFamily: 'SofiaPro, sans-serif'
     },
-    typography: {
-        fontFamily: 'SofiaPro, sans-serif',
-        body1: {
-            fontFamily: 'SofiaPro, sans-serif',
-        },
-        button: {
-            fontFamily: 'SofiaPro, sans-serif',
-        },
+    button: {
+      fontFamily: 'SofiaPro, sans-serif'
+    }
+  },
+  palette: {
+    primary: {
+      main: '#Ffc024',
+      100: '#F8F4E9',
+      200: '#EDE6D4'
     },
-    palette: {
-        primary: {
-            main: '#FFDD00',
-            100: '#F8F4E9',
-            200: '#EDE6D4',
-        },
-        secondary: {
-            main: '#25874D',
-            100: '#DDEEDD',
-            200: '#CFE6D2',
-            300: '#26B45F',
-        },
+    secondary: {
+      main: '#25874D',
+      100: '#DDEEDD',
+      200: '#CFE6D2',
+      300: '#26B45F'
+    }
+  },
+  components: {
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          paddingInline: '20px'
+        }
+      }
     },
-    components: {
-        MuiContainer: {
-            styleOverrides: {
-                root: {
-                    paddingInline: '20px',
-                },
-            },
-        },
-        MuiButton: {
-            styleOverrides: {
-                root: {
-                    height: 'fit-content',
-                },
-            },
-        },
-    },
-})
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          height: 'fit-content'
+        }
+      }
+    }
+  }
+});
 
-export default theme
+export default theme;

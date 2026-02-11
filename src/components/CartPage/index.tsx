@@ -106,7 +106,7 @@
 //         </Box>
 //         <Box
 //           sx={{
-//             backgroundColor: '#FFDD00',
+//             backgroundColor: '#Ffc024',
 //             border: 'none',
 //             borderRadius: '58px',
 //             position: 'absolute',
@@ -142,17 +142,17 @@
 //             <Button
 //               onClick={onProceed}
 //               sx={{
-//                 color: '#ffdd00',
+//                 color: '#Ffc024',
 //                 backgroundColor: '#231F20',
 //                 padding: '0.5rem 1rem 0.5rem 1rem',
 //                 border: 'none',
 //                 borderRadius: '36px',
 //                 ':disabled': {
-//                   color: '#ffdd00',
+//                   color: '#Ffc024',
 //                   backgroundColor: '#636363'
 //                 },
 //                 ':hover': {
-//                   color: '#ffdd00',
+//                   color: '#Ffc024',
 //                   backgroundColor: '#231F20'
 //                 }
 //               }}

@@ -12,14 +12,8 @@ import { Button, Typography } from '@mui/material';
 import { CircularProgress, Box } from '@mui/material';
 
 // Import the required atoms and enums for new address functionality
-import {
-  addressDetailsAtom,
-  isEditingAddress
-} from '@/features/AddressEditDetails/context/atoms';
-import { 
-  addressActiveScreenAtom,
-  activeAccountsPageAtom 
-} from '@/features/AccountPage/context/atoms';
+import { addressDetailsAtom, isEditingAddress } from '@/features/AddressEditDetails/context/atoms';
+import { addressActiveScreenAtom, activeAccountsPageAtom } from '@/features/AccountPage/context/atoms';
 import { manageAddressScreens } from '@/features/AccountPage/enums/ActiveSidebar';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 
@@ -29,7 +23,7 @@ const SelectAddressSidebar = () => {
   const [, setAddressActiveScreen] = useAtom(addressActiveScreenAtom);
   const [, setActiveAccountsPage] = useAtom(activeAccountsPageAtom);
   const [editingDetails, setIsEditingAddress] = useAtom(isEditingAddress);
-  
+
   const dispatch = useDispatch();
 
   const [hoveredItemId, setHoveredItemId] = useState<number | null>(null);
@@ -78,7 +72,7 @@ const SelectAddressSidebar = () => {
       color="success"
       sx={{
         width: '100%',
-        backgroundColor: '#FFDD00',
+        backgroundColor: '#Ffc024',
         position: 'sticky',
         bottom: '0',
         color: 'black',
@@ -91,7 +85,7 @@ const SelectAddressSidebar = () => {
         boxShadow: 'none',
         margin: '16px 0',
         ':hover': {
-          backgroundColor: '#ffdd00a6',
+          backgroundColor: '#Ffc024a6',
           color: 'black',
           boxShadow: 'none'
         }
@@ -103,24 +97,23 @@ const SelectAddressSidebar = () => {
   );
 
   if (address.loading)
-  return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%',
-        flexDirection: 'column',
-        gap: 2
-      }}
-    >
-      <CircularProgress color="primary" />
-      <Box sx={{ fontFamily: 'SofiaPro', fontSize: { xs: '4vw', sm: '1rem' }, color: '#555' }}>
-        Loading addresses...
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+          flexDirection: 'column',
+          gap: 2
+        }}
+      >
+        <CircularProgress color="primary" />
+        <Box sx={{ fontFamily: 'SofiaPro', fontSize: { xs: '4vw', sm: '1rem' }, color: '#555' }}>
+          Loading addresses...
+        </Box>
       </Box>
-    </Box>
-  );
-
+    );
 
   return (
     <div className="flex flex-col h-full">
@@ -140,9 +133,7 @@ const SelectAddressSidebar = () => {
               `}
               style={{
                 marginBottom:
-                  data.address_id === address.address?.[address.address.length - 1]?.address_id
-                    ? 0
-                    : undefined
+                  data.address_id === address.address?.[address.address.length - 1]?.address_id ? 0 : undefined
               }}
             >
               <div>
@@ -181,9 +172,7 @@ const SelectAddressSidebar = () => {
       </div>
 
       {/* Add the + New Address button at the bottom */}
-      <div className="px-[1vw] mob:px-[4vw] pb-[1vw] mob:pb-[4vw]">
-        {addAddressCTA()}
-      </div>
+      <div className="px-[1vw] mob:px-[4vw] pb-[1vw] mob:pb-[4vw]">{addAddressCTA()}</div>
     </div>
   );
 };

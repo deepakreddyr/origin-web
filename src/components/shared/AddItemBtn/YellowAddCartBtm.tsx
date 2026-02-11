@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, FC } from 'react';
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 // Assuming this is your central button component that takes the new minimumQuantity prop
 import AddItemBtn from './AddItemBtn';
@@ -76,8 +76,7 @@ const MaxQuantityToast: FC<{
   onClose: () => void;
   itemName?: string;
   isInsideModal?: boolean;
-}> = ({ maxQuantity, isVisible, onClose, itemName = "this item", isInsideModal = false }) => {
-
+}> = ({ maxQuantity, isVisible, onClose, itemName = 'this item', isInsideModal = false }) => {
   useEffect(() => {
     if (isVisible) {
       const timer = setTimeout(() => {
@@ -92,8 +91,9 @@ const MaxQuantityToast: FC<{
   if (isInsideModal) {
     return (
       <div
-        className={`absolute left-1/2 -top-14 transform -translate-x-1/2 w-[90%] transition-opacity duration-300 ease-in-out z-[9999] ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
+        className={`absolute left-1/2 -top-14 transform -translate-x-1/2 w-[90%] transition-opacity duration-300 ease-in-out z-[9999] ${
+          isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
       >
         <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full relative">
           <div className="flex items-center justify-center w-full gap-2">
@@ -109,8 +109,9 @@ const MaxQuantityToast: FC<{
 
   return (
     <div
-      className={`fixed z-[60] left-1/2 bottom-4 transform -translate-x-1/2 w-[90%] max-w-sm transition-opacity duration-300 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+      className={`fixed z-[60] left-1/2 bottom-4 transform -translate-x-1/2 w-[90%] max-w-sm transition-opacity duration-300 ease-in-out ${
+        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
     >
       <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full relative">
         <div className="flex items-center justify-center w-full gap-2">
@@ -157,7 +158,7 @@ const UOMPopup: FC<{
       default:
         return null;
     }
-  }
+  };
 
   const allVariants: UOM[] = [];
   product.multiple_uoms.forEach((uom) => {
@@ -178,9 +179,7 @@ const UOMPopup: FC<{
     let cart_quantity = 0;
 
     if (cartProduct) {
-      const cartUOM = cartProduct.multiple_uoms?.find(
-        (uom: any) => uom.variant_id === variant.variant_id
-      );
+      const cartUOM = cartProduct.multiple_uoms?.find((uom: any) => uom.variant_id === variant.variant_id);
 
       if (cartUOM) {
         if (variant.selected_ripeness_type && cartUOM.cart_ripeness) {
@@ -196,7 +195,7 @@ const UOMPopup: FC<{
 
     return {
       ...variant,
-      cart_quantity,
+      cart_quantity
     };
   });
 
@@ -241,32 +240,26 @@ const UOMPopup: FC<{
     };
   }, [isTransitioning, onClose, isOpen]);
 
-  const hasRipenessTypes = product.multiple_uoms.some(uom =>
-    uom.ripeness_types && uom.ripeness_types.length > 0
-  );
+  const hasRipenessTypes = product.multiple_uoms.some((uom) => uom.ripeness_types && uom.ripeness_types.length > 0);
 
   if (!isOpen && !isTransitioning) return null;
 
-  const subTotalQuantity = variantsWithCartInfo.reduce(
-    (acc, variant) => acc + (variant.cart_quantity || 0),
-    0
-  );
+  const subTotalQuantity = variantsWithCartInfo.reduce((acc, variant) => acc + (variant.cart_quantity || 0), 0);
 
   const subTotalPrice = variantsWithCartInfo.reduce(
-    (acc, variant) => acc + (variant.price * (variant.cart_quantity || 0)),
+    (acc, variant) => acc + variant.price * (variant.cart_quantity || 0),
     0
   );
 
-  const cartVariants = variantsWithCartInfo.filter(v => v.cart_quantity && v.cart_quantity > 0);
+  const cartVariants = variantsWithCartInfo.filter((v) => v.cart_quantity && v.cart_quantity > 0);
 
   const totalMarketPrice = cartVariants.reduce(
-    (acc, variant) => acc + (variant.market_price * (variant.cart_quantity || 0)),
+    (acc, variant) => acc + variant.market_price * (variant.cart_quantity || 0),
     0
   );
 
-  const isSlashedSubtotalVisible = cartVariants.length > 0 && cartVariants.every(
-    variant => variant.market_price > variant.price
-  );
+  const isSlashedSubtotalVisible =
+    cartVariants.length > 0 && cartVariants.every((variant) => variant.market_price > variant.price);
 
   return (
     <div
@@ -300,12 +293,16 @@ const UOMPopup: FC<{
 
           <div className="flex items-center gap-4 pr-10">
             <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#FAF7EF] flex-shrink-0 flex items-center justify-center border border-gray-100 p-2">
-              <Image src={product.image || sampleimg} alt={product.name} width={60} height={60} className="w-full h-full object-contain" />
+              <Image
+                src={product.image || sampleimg}
+                alt={product.name}
+                width={60}
+                height={60}
+                className="w-full h-full object-contain"
+              />
             </div>
             <div className="flex-1">
-              <p className="font-[SofiaPro] font-bold text-lg text-[#146321] leading-tight">
-                {product.name}
-              </p>
+              <p className="font-[SofiaPro] font-bold text-lg text-[#146321] leading-tight">{product.name}</p>
             </div>
           </div>
         </div>
@@ -320,60 +317,45 @@ const UOMPopup: FC<{
               <span className="text-xs font-bold text-green-700 font-[SofiaPro]">
                 How does RQ (Ripeness Quotient) work?
               </span>
-              <svg className={`w-3 h-3 text-green-700 transition-transform duration-300 ${isRipenessInfoOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              <svg
+                className={`w-3 h-3 text-green-700 transition-transform duration-300 ${isRipenessInfoOpen ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
             </button>
-            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isRipenessInfoOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-in-out ${isRipenessInfoOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+            >
               <div className="p-2 rounded-lg text-sm text-gray-700 space-y-3 border border-gray-200">
                 <p className="flex items-center gap-3 mb-1">
-                  <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium'>
+                  <span className="text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium">
                     Choose your level of ripeness:
                   </span>
                 </p>
                 <p className="flex items-center gap-3">
-                  <Image
-                    src={ripeSvg}
-                    alt=''
-                    width={16}
-                    height={16}
-                    className="flex-shrink-0"
-                  />
-                  <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium'>
+                  <Image src={ripeSvg} alt="" width={16} height={16} className="flex-shrink-0" />
+                  <span className="text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium">
                     Ripe: Consume immediately
                   </span>
                 </p>
                 <p className="flex items-center gap-3">
-                  <Image
-                    src={semiRipeSvg}
-                    alt=''
-                    width={16}
-                    height={16}
-                    className="flex-shrink-0"
-                  />
-                  <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium'>
+                  <Image src={semiRipeSvg} alt="" width={16} height={16} className="flex-shrink-0" />
+                  <span className="text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium">
                     Semi: Consume within 2 days
                   </span>
                 </p>
                 <p className="flex items-center gap-3">
-                  <Image
-                    src={rawSvg}
-                    alt=''
-                    width={16}
-                    height={16}
-                    className="flex-shrink-0"
-                  />
-                  <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium'>
+                  <Image src={rawSvg} alt="" width={16} height={16} className="flex-shrink-0" />
+                  <span className="text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium">
                     Raw: Consume within 3-4 days (do not refrigerate)
                   </span>
                 </p>
                 <p className="flex items-center gap-3">
-                  <Image
-                    src={infoicon2}
-                    alt=''
-                    width={20}
-                    height={20}
-                    className="flex-shrink-0"
-                  />
-                  <span className='text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium text-start'>
+                  <Image src={infoicon2} alt="" width={20} height={20} className="flex-shrink-0" />
+                  <span className="text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium text-start">
                     Your fruit arrives at the selected level or ripeness, fresh and ready for consumption when you are.
                   </span>
                 </p>
@@ -382,9 +364,7 @@ const UOMPopup: FC<{
           </div>
         )}
 
-        <div
-          className={`flex-grow overflow-y-auto ${hasRipenessTypes ? 'p-4 pt-2 space-y-2' : 'p-4 space-y-2'}`}
-        >
+        <div className={`flex-grow overflow-y-auto ${hasRipenessTypes ? 'p-4 pt-2 space-y-2' : 'p-4 space-y-2'}`}>
           {variantsWithCartInfo.map((variant) => {
             const isSelected = (variant.cart_quantity || 0) > 0;
             const ripenessLabel = variant.selected_ripeness_type
@@ -410,14 +390,12 @@ const UOMPopup: FC<{
                     </div>
                   )}
                   <p className="font-semibold text-gray-900 text-sm font-[SofiaPro] capitalize truncate">
-                    {ripenessLabel || "Standard"}
+                    {ripenessLabel || 'Standard'}
                   </p>
                 </div>
 
                 <div className="flex-1 text-center flex-shrink-0">
-                  <p className="text-gray-600 text-sm font-[SofiaPro]">
-                    {variant.unit}
-                  </p>
+                  <p className="text-gray-600 text-sm font-[SofiaPro]">{variant.unit}</p>
                 </div>
 
                 <div className="flex flex-col items-center justify-center px-2 w-[85px] flex-shrink-0">
@@ -432,9 +410,7 @@ const UOMPopup: FC<{
                         ₹{variant.market_price}
                       </span>
                     )}
-                    <p className="font-bold text-sm text-[#146321] font-[SofiaPro]">
-                      ₹{variant.price}
-                    </p>
+                    <p className="font-bold text-sm text-[#146321] font-[SofiaPro]">₹{variant.price}</p>
                   </div>
                 </div>
 
@@ -447,12 +423,7 @@ const UOMPopup: FC<{
                     minimumQuantity={variant.minimum_quantity}
                     buttonType="white"
                     selectedRipenessType={variant.selected_ripeness_type}
-                    onCartUpdate={() =>
-                      onSelectionMade(
-                        variant,
-                        variant.selected_ripeness_type || null
-                      )
-                    }
+                    onCartUpdate={() => onSelectionMade(variant, variant.selected_ripeness_type || null)}
                     onMaxQuantityExceeded={handleMaxQuantityExceeded}
                   />
                 </div>
@@ -462,18 +433,18 @@ const UOMPopup: FC<{
         </div>
 
         <div className="flex-shrink-0 p-3 bg-white">
-          <div className={`
+          <div
+            className={`
             flex justify-between items-center bg-black
             h-14 md:h-16
             p-4 rounded-full
-          `}>
+          `}
+          >
             <p className="font-normal font-[SofiaPro] text-sm text-white">
               Sub total
-              <span className='block text-xs font-normal mt-0.5 font-[SofiaPro]'>
+              <span className="block text-xs font-normal mt-0.5 font-[SofiaPro]">
                 {isSlashedSubtotalVisible && (
-                  <span className="text-gray-400 line-through mr-1 text-xs font-normal">
-                    ₹{totalMarketPrice}
-                  </span>
+                  <span className="text-gray-400 line-through mr-1 text-xs font-normal">₹{totalMarketPrice}</span>
                 )}
                 <span className="text-base font-bold">₹{subTotalPrice}</span>
               </span>
@@ -481,10 +452,11 @@ const UOMPopup: FC<{
             <button
               onClick={onClose}
               disabled={subTotalQuantity === 0}
-              className={`px-8 py-3 rounded-full font-bold text-sm transition-colors shadow-md font-[SofiaPro] ${subTotalQuantity > 0
-                ? 'bg-yellow-400 text-black hover:bg-yellow-500'
-                : 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                }`}
+              className={`px-8 py-3 rounded-full font-bold text-sm transition-colors shadow-md font-[SofiaPro] ${
+                subTotalQuantity > 0
+                  ? 'bg-yellow-400 text-black hover:bg-yellow-500'
+                  : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+              }`}
             >
               CONFIRM
             </button>
@@ -499,16 +471,8 @@ const UOMPopup: FC<{
 // 4. YellowBtn Component (Steppers logic relies on the UOMPopup fix above)
 // ==========================================================
 const YellowBtn = (props: YellowBtnProps) => {
-  const {
-    isItemPresent,
-    handleDecrease,
-    quantity,
-    maxQuantity,
-    handleIncrease,
-    handleAddItem,
-    handleRemove,
-    product,
-  } = props;
+  const { isItemPresent, handleDecrease, quantity, maxQuantity, handleIncrease, handleAddItem, handleRemove, product } =
+    props;
 
   const cartItems = useSelector((state: any) => state.cart.items);
   const [showMaxMessage, setShowMaxMessage] = useState(false);
@@ -535,16 +499,10 @@ const YellowBtn = (props: YellowBtnProps) => {
     }
   }, [showMaxMessage]);
 
-  const availableUOMs =
-    product?.multiple_uoms?.filter(
-      (uom: any) => uom?.is_available
-    ) || [];
+  const availableUOMs = product?.multiple_uoms?.filter((uom: any) => uom?.is_available) || [];
   const hasMultipleUOMs = availableUOMs.length > 1;
-  const hasRipenessOptions = availableUOMs.some(
-    (uom: any) => uom?.ripeness_types?.length > 0
-  );
-  const requiresSelection =
-    hasMultipleUOMs || hasRipenessOptions;
+  const hasRipenessOptions = availableUOMs.some((uom: any) => uom?.ripeness_types?.length > 0);
+  const requiresSelection = hasMultipleUOMs || hasRipenessOptions;
 
   // Calculate total quantity across all variants for this product
   const getTotalCartQuantity = () => {
@@ -640,7 +598,9 @@ const YellowBtn = (props: YellowBtnProps) => {
       <div className="w-full flex flex-col items-center">
         {shouldShowStepper ? (
           <>
-            <div className={`flex h-[2.5vw] mob:h-[8.5vw] items-center justify-center border-[2px] border-primary-200 rounded-full bg-white w-full p-[.3vw] mob:px-[.7vw]`}>
+            <div
+              className={`flex h-[2.5vw] mob:h-[8.5vw] items-center justify-center border-[2px] border-primary-200 rounded-full bg-white w-full p-[.3vw] mob:px-[.7vw]`}
+            >
               <button
                 className={`h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.67vw] pb-[.3vw] flex items-center justify-center bg-primary rounded-full border border-primary-200`}
                 onClick={onDecrease}
@@ -676,7 +636,7 @@ const YellowBtn = (props: YellowBtnProps) => {
           </>
         ) : (
           <button
-            className="w-full bg-[#FFDD00] text-black font-bold text-base md:text-sm py-3 md:py-3"
+            className="w-full bg-[#Ffc024] text-black font-bold text-base md:text-sm py-3 md:py-3"
             onClick={onAdd}
           >
             {requiresSelection ? (

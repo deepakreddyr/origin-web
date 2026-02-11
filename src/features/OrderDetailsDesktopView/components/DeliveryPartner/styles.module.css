@@ -9,35 +9,41 @@
 
   .payment-pending-details {
     width: 40%;
+
     .payment-pending-heading {
       font-weight: 500;
       font-size: 18px;
       color: #000000;
     }
+
     .payment-pending-text {
       margin-top: 0.5rem;
       font-weight: 400;
       font-size: 18px;
       color: #484848;
     }
+
     .payment-pending {
       font-weight: 400;
       font-size: 14px;
       color: #484848;
     }
   }
+
   .payment-pending-counter {
     border: 1px solid #ece6cd;
     padding: 0.5rem 0.8rem;
     border-radius: 8px;
+
     @media only screen and (max-width: 767px) {
       flex-direction: column;
     }
+
     .payment-pending-retry-button {
       width: calc(100%-1rem);
-      background: #ffdd00;
+      background: #Ffc024;
       border-radius: 48px;
-      border: 1px solid #ffdd00;
+      border: 1px solid #Ffc024;
       color: #231f20;
       font-weight: 500;
       font-size: 14px;
@@ -45,6 +51,7 @@
       margin: 0.5rem;
       cursor: pointer;
     }
+
     .payment-pending-pay-button {
       margin: 0.5rem;
       width: calc(100%-1rem);
@@ -111,6 +118,7 @@
   width: 100%;
   cursor: pointer;
 }
+
 .payment-button {
   background: none;
   color: #000;

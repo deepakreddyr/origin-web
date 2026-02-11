@@ -458,7 +458,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                 href="/shop"
                 className={`h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full text-[1.1vw] font-medium font-[SofiaPro] transition-colors ${
                   router.pathname === '/' || router.pathname.startsWith('/shop')
-                    ? 'bg-[#FFDE00] text-black'
+                    ? 'bg-primary text-black'
                     : 'hover:bg-gray-100 text-black'
                 }`}
               >
@@ -467,7 +467,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
               <Link
                 href="/about"
                 className={`h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full text-[1.1vw] font-medium font-[SofiaPro] transition-colors ${
-                  router.pathname === '/about' ? 'bg-[#FFDE00] text-black' : 'hover:bg-gray-100 text-black'
+                  router.pathname === '/about' ? 'bg-primary text-black' : 'hover:bg-gray-100 text-black'
                 }`}
               >
                 About Us

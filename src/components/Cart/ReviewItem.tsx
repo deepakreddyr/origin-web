@@ -4,7 +4,7 @@ import Image from 'next/image';
 import deleteIcon from '/public/assets/icons/deleteIcon.png';
 import { removeItemFromCart, removeFreeItemFromCart } from '@/store/slice/CartSlice';
 import { useDispatch } from 'react-redux';
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 // --- NEW IMPORTS for Ripeness Icons ---
 import ripeSvg from '/public/assets/svg/ripe.svg';
@@ -17,7 +17,7 @@ const ripenessMap: {
 } = {
   raw: { text: 'Raw', image: rawSvg, color: '#878787' },
   semi_ripe: { text: 'Semi', image: semiRipeSvg, color: '#878787' },
-  ripe: { text: 'Ripe', image: ripeSvg, color: '#878787' },
+  ripe: { text: 'Ripe', image: ripeSvg, color: '#878787' }
 };
 
 // Helper component to render the Ripeness Icon and Text
@@ -32,13 +32,7 @@ const RipenessIndicator = ({ ripenessType }: { ripenessType: string }) => {
     <div className="flex items-center whitespace-nowrap">
       {/* SVG Icon */}
       <div className="w-[.6vw] h-[.6vw] mob:w-[2.2vw] mob:h-[2.2vw] flex items-center justify-center mr-[.2vw]">
-        <Image
-          src={info.image}
-          alt={`${info.text} ripeness`}
-          width={10}
-          height={10}
-          className="object-contain"
-        />
+        <Image src={info.image} alt={`${info.text} ripeness`} width={10} height={10} className="object-contain" />
       </div>
       {/* Ripeness Text */}
       <span
@@ -54,7 +48,7 @@ const RipenessIndicator = ({ ripenessType }: { ripenessType: string }) => {
 
 // ==========================================================
 // MAX QUANTITY TOAST COMPONENT FOR REVIEW CART (KEPT FOR REFERENCE/IMPORT)
-// This component should be moved to a shared file if used in other places, 
+// This component should be moved to a shared file if used in other places,
 // but we keep it here for now and ensure it's rendered higher up.
 // ==========================================================
 const MaxQuantityToast: React.FC<{
@@ -62,7 +56,6 @@ const MaxQuantityToast: React.FC<{
   isVisible: boolean;
   onClose: () => void;
 }> = ({ maxQuantity, isVisible, onClose }) => {
-
   React.useEffect(() => {
     if (isVisible) {
       const timer = setTimeout(() => {
@@ -76,8 +69,9 @@ const MaxQuantityToast: React.FC<{
 
   return (
     <div
-      className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-md transition-opacity duration-300 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+      className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-md transition-opacity duration-300 ease-in-out ${
+        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
     >
       <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full">
         <div className="flex items-center justify-center w-full gap-2">
@@ -155,36 +149,26 @@ const ReviewItem = (props: {
             />
             {/* Free Badge */}
             {isFreeItem && (
-              <div className="absolute bottom-0 left-0 bg-[#FFDD00] text-black text-[.5vw] mob:text-[2vw] font-semibold px-[.3vw] mob:px-[1.2vw] py-[.1vw] mob:py-[.4vw] rounded-tr-md">
+              <div className="absolute bottom-0 left-0 bg-[#Ffc024] text-black text-[.5vw] mob:text-[2vw] font-semibold px-[.3vw] mob:px-[1.2vw] py-[.1vw] mob:py-[.4vw] rounded-tr-md">
                 Free
               </div>
             )}
           </figure>
           <div className="review-cart-information flex flex-col">
-            <p className="font-[sofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold">
-              {product?.name}
-            </p>
+            <p className="font-[sofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold">{product?.name}</p>
 
             {/* --- UPDATED DISPLAY: Ripeness (Icon+Text) + Dot + Unit --- */}
             <div className="flex items-center text-black/60 text-[.83vw] mob:text-[3vw] font-[sofiaPro] capitalize">
-
               {/* Ripeness Icon and Text (Only renders if ripenessType is defined) */}
               {hasRipeness && <RipenessIndicator ripenessType={ripenessType} />}
 
               {/* Separator Dot (Only renders if ripenessType is defined) */}
-              {hasRipeness && (
-                <span className="font-extrabold text-[.83vw] mob:text-[3vw] mx-[.15vw]">
-                  •
-                </span>
-              )}
+              {hasRipeness && <span className="font-extrabold text-[.83vw] mob:text-[3vw] mx-[.15vw]">•</span>}
 
               {/* Unit Display */}
-              <span>
-                {uom.unit}
-              </span>
+              <span>{uom.unit}</span>
             </div>
             {/* --- END UPDATED DISPLAY --- */}
-
           </div>
         </div>
 
@@ -212,11 +196,14 @@ const ReviewItem = (props: {
                 />
               </div>
               <div className="review-cart-counter flex flex-col items-center w-[2vw] mob:w-[12vw]">
-                {uom.market_price !== null && uom.market_price !== undefined && uom.market_price !== 0 && uom.market_price > uom.price && (
-                  <span className="font-[sofiaPro] text-[.78vw] mob:text-[2.8vw] line-through text-[#231F2099]">
-                    ₹{calculateItemTotalPrice(uom.market_price, itemQuantity)}
-                  </span>
-                )}
+                {uom.market_price !== null &&
+                  uom.market_price !== undefined &&
+                  uom.market_price !== 0 &&
+                  uom.market_price > uom.price && (
+                    <span className="font-[sofiaPro] text-[.78vw] mob:text-[2.8vw] line-through text-[#231F2099]">
+                      ₹{calculateItemTotalPrice(uom.market_price, itemQuantity)}
+                    </span>
+                  )}
                 <span className="font-[sofiaPro] text-[.83vw] mob:text-[3.3vw]">
                   ₹{calculateItemTotalPrice(uom.price, itemQuantity)}
                 </span>

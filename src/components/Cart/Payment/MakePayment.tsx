@@ -10,7 +10,7 @@ const MakePayment = (props: any) => {
   const [showCodButton, setShowCodButton] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [processingPaymentId, setProcessingPaymentId] = useState(null);
-  
+
   // Ref to track if payment is in progress (survives re-renders better than state)
   const isProcessingRef = useRef(false);
 
@@ -42,16 +42,15 @@ const MakePayment = (props: any) => {
       isProcessingRef.current = true;
       setProcessing(true);
       setProcessingPaymentId(paymentMethod.id);
-      
+
       await placeOrderHandler(paymentMethod);
-      
     } catch (error) {
       console.error('Payment processing failed:', error);
     } finally {
       setProcessing(false);
       setProcessingPaymentId(null);
       isProcessingRef.current = false;
-      
+
       // Reset COD button visibility if it was a COD payment that failed
       if (!paymentMethod.sub_payment_method) {
         setShowCodButton(false);
@@ -63,7 +62,7 @@ const MakePayment = (props: any) => {
     <>
       <div className="">
         {!paymentFlow && (
-          <div className="bg-[#FFEB66] border border-[#FFDD0066] rounded-b-[1.1vw] mob:rounded-[4.1vw]  m-[-1.1vw] mob:m-[-4.1vw] mob:p-[4.2vw] p-[1.19vw] mob:mb-[4vw]  mb-[2vw] flex items-center justify-between  ">
+          <div className="bg-[#Ffc024] border border-[#Ffc02466] rounded-b-[1.1vw] mob:rounded-[4.1vw]  m-[-1.1vw] mob:m-[-4.1vw] mob:p-[4.2vw] p-[1.19vw] mob:mb-[4vw]  mb-[2vw] flex items-center justify-between  ">
             <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  text-[#231F20CC] ">
               {deliveryType}
             </p>
@@ -91,7 +90,7 @@ const MakePayment = (props: any) => {
                 key={pay.id}
                 onClick={async (e) => {
                   e.stopPropagation();
-                  
+
                   // Prevent clicks if processing or if this specific payment method is disabled
                   if (processing || isProcessingRef.current || (!pay.sub_payment_method && !isCodEnabled)) {
                     return;
@@ -115,7 +114,7 @@ const MakePayment = (props: any) => {
                   <div>
                     <p className="font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3vw] text-secondary-400 ">
                       {pay.name}
-                      {processing && processingPaymentId === pay.id && " (Processing...)"}
+                      {processing && processingPaymentId === pay.id && ' (Processing...)'}
                     </p>
                     {pay.id === 4 && (
                       <p className="font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3vw] text-error pt-[.2vw] mob:pt-[1vw] ">

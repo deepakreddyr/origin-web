@@ -1,8 +1,8 @@
-import { Box, Button, IconButton, Typography } from "@mui/material";
-import Image from "next/image";
-import React from "react";
+import { Box, Button, IconButton, Typography } from '@mui/material';
+import Image from 'next/image';
+import React from 'react';
 
-import Cross from "../../../../assets/svg/xmark.svg";
+import Cross from '../../../../assets/svg/xmark.svg';
 
 interface Props {
   onDelete?: () => void;
@@ -16,89 +16,87 @@ const RemoveAccount = (props: Props) => {
       className="remove-account-wrapper"
       sx={{
         maxWidth: 434,
-        width: "100%",
-        height: "80svh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        paddingTop: "20px",
-        paddingBottom: "20px",
+        width: '100%',
+        height: '80svh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: '20px',
+        paddingBottom: '20px'
       }}
     >
       <Box
         className="remove-account"
         sx={{
-          display: "flex",
-          flexDirection: "column",
+          display: 'flex',
+          flexDirection: 'column',
           gap: 4,
-          maxWidth: "100%",
-          marginLeft: "auto",
-          marginRight: "auto",
+          maxWidth: '100%',
+          marginLeft: 'auto',
+          marginRight: 'auto'
         }}
       >
         <Box
           className="confirm-account-delete"
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 2
           }}
         >
           <Typography
             variant="h5"
             sx={{
-              fontFamily: "SofiaPro",
+              fontFamily: 'SofiaPro',
               fontWeight: 600,
-              fontSize: "18px",
+              fontSize: '18px'
             }}
           >
             Confirm Account Delete?
           </Typography>
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "12px",
-              textAlign: "center",
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+              textAlign: 'center'
             }}
           >
             <Typography
               component="span"
               variant="body1"
               sx={{
-                fontFamily: "SofiaPro",
-                color: "#5A5A5A",
+                fontFamily: 'SofiaPro',
+                color: '#5A5A5A',
                 fontWeight: 400,
-                fontSize: 14,
+                fontSize: 14
               }}
             >
-              You about to loose all the data and rewards attached with this
-              mobile number permanently!
+              You about to loose all the data and rewards attached with this mobile number permanently!
             </Typography>
             <Typography
               component="small"
               variant="body2"
               sx={{
-                fontFamily: "SofiaPro",
-                color: "#5A5A5A",
+                fontFamily: 'SofiaPro',
+                color: '#5A5A5A',
                 fontWeight: 400,
-                fontSize: 14,
+                fontSize: 14
               }}
             >
-              Please contact our leading customer support team get any issues
-              sorted.
+              Please contact our leading customer support team get any issues sorted.
             </Typography>
           </Box>
         </Box>
         <Box
           className="button-group"
           sx={{
-            display: "flex",
-            flexDirection: "row",
+            display: 'flex',
+            flexDirection: 'row',
             gap: 2,
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: 'center',
+            justifyContent: 'center'
           }}
         >
           <Button
@@ -106,12 +104,12 @@ const RemoveAccount = (props: Props) => {
             color="error"
             onClick={onDelete}
             sx={{
-              borderRadius: "25px",
-              fontFamily: "SofiaPro",
-              textTransform: "capitalize",
-              height: "48px",
-              paddingLeft: "20px",
-              paddingRight: "20px",
+              borderRadius: '25px',
+              fontFamily: 'SofiaPro',
+              textTransform: 'capitalize',
+              height: '48px',
+              paddingLeft: '20px',
+              paddingRight: '20px'
             }}
           >
             Delete Account
@@ -120,21 +118,21 @@ const RemoveAccount = (props: Props) => {
             variant="contained"
             color="warning"
             sx={{
-              backgroundColor: "#FFDD00",
-              color: "black",
-              borderRadius: "25px",
-              fontFamily: "SofiaPro",
+              backgroundColor: '#Ffc024',
+              color: 'black',
+              borderRadius: '25px',
+              fontFamily: 'SofiaPro',
 
-              boxShadow: "none",
-              textTransform: "capitalize",
-              height: "48px",
-              paddingLeft: "20px",
-              paddingRight: "20px",
-              ":hover": {
-                backgroundColor: "#FFDD00",
-                color: "black",
-                boxShadow: "none",
-              },
+              boxShadow: 'none',
+              textTransform: 'capitalize',
+              height: '48px',
+              paddingLeft: '20px',
+              paddingRight: '20px',
+              ':hover': {
+                backgroundColor: '#Ffc024',
+                color: 'black',
+                boxShadow: 'none'
+              }
             }}
           >
             Contact Support

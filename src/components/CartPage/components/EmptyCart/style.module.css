@@ -5,24 +5,28 @@
   margin: auto;
   display: flex;
   flex-direction: column;
+
   .container {
     margin-top: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
+
     .cart-heading {
       font-size: 16px;
       font-weight: 500;
     }
+
     .cart-details {
       font-size: 14px;
       font-weight: 500;
       color: rgba(0, 0, 0, 0.6);
     }
+
     .empty-btn {
       margin-top: 1rem;
-      border: 1px solid #ffdd00;
-      background: #ffdd00;
+      border: 1px solid #Ffc024;
+      background: #Ffc024;
       color: #000;
       font-size: 14px;
       border-radius: 40px;

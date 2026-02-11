@@ -348,7 +348,7 @@ const SignUp: FC<Props> = ({ renderTermsAndCondition }) => {
               minHeight: 48,
               width: '100%',
               marginTop: 8,
-              backgroundColor: '#FFDD00',
+              backgroundColor: '#Ffc024',
               textTransform: 'uppercase',
               border: 'none',
               color: '#000',
@@ -357,7 +357,7 @@ const SignUp: FC<Props> = ({ renderTermsAndCondition }) => {
                 backgroundColor: 'rgba(255, 221, 0, 0.5)'
               },
               ':hover': {
-                backgroundColor: '#ffdd00d3'
+                backgroundColor: '#Ffc024d3'
               }
             }}
             onClick={onSubmitRegister}

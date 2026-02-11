@@ -271,7 +271,7 @@ const Login = () => {
               minHeight: 48,
               width: '100%',
               marginTop: 8,
-              backgroundColor: '#FFDD00',
+              backgroundColor: '#Ffc024',
               border: 'none',
               color: '#000',
               borderRadius: '48px',
@@ -280,7 +280,7 @@ const Login = () => {
                 color: 'rgba(35, 31, 32, 1)'
               },
               ':hover': {
-                backgroundColor: '#ffdd00d3'
+                backgroundColor: '#Ffc024d3'
               }
             }}
             onClick={onSubmitMobileNumber}
@@ -389,14 +389,14 @@ const Login = () => {
               fontSize: '16px',
               fontWeight: '500',
               borderRadius: '48px',
-              backgroundColor: '#FFDD00',
+              backgroundColor: '#Ffc024',
               color: '#231F20',
               // textTransform: "uppercase",
               '&:disabled': {
                 backgroundColor: 'rgba(255, 221, 0, 0.5)'
               },
               ':hover': {
-                backgroundColor: '#ffdd00d3'
+                backgroundColor: '#Ffc024d3'
               }
             }}
             onClick={() => {

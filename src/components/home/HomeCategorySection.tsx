@@ -74,7 +74,7 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
             >
               <button
                 onClick={() => setIsExpanded(true)}
-                className="mb-[2vw] mob:mb-[4vw] bg-[#FFDD00] text-black font-[SofiaPro] font-bold py-[1vw] px-[3vw] mob:py-[3vw] mob:px-[8vw] rounded-full text-[1.1vw] mob:text-[3.5vw] transition-colors pointer-events-auto shadow-sm hover:bg-[#f2d200]"
+                className="mb-[2vw] mob:mb-[4vw] bg-[#Ffc024] text-black font-[SofiaPro] font-bold py-[1vw] px-[3vw] mob:py-[3vw] mob:px-[8vw] rounded-full text-[1.1vw] mob:text-[3.5vw] transition-colors pointer-events-auto shadow-sm hover:bg-[#f2d200]"
               >
                 Show more ({categories.length})
               </button>
@@ -106,7 +106,7 @@ const BlendsCategoryCard = ({ category }: { category: any }) => {
       {/* Category Name - Styled to sit over the background */}
       <div className="relative w-full p-[1.5vw] mob:p-[4vw] z-10">
         <h2 className="font-[Recoleta] font-semibold text-[1.25vw] mob:text-[4vw] text-black mob:text-white text-center px-2 drop-shadow-md">
-          {category.name}
+          {/* {category.name} */}
         </h2>
       </div>
     </Link>

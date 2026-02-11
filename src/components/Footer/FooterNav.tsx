@@ -24,7 +24,7 @@ const FooterNav = ({ links, xs, sm, md, lg, xl }: LinksProps) => {
           <Link
             href={`/${link.href}`}
             rel="noopener noreferrer"
-            className="text-white font-[SofiaPro] text-[1rem] hover:underline"
+            className="text-black font-[SofiaPro] text-[1rem] hover:underline"
           >
             {link.text}
           </Link>

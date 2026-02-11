@@ -1,10 +1,10 @@
-import { Grid } from "@mui/material";
-import React from "react";
-import Image from "next/image";
+import { Grid } from '@mui/material';
+import React from 'react';
+import Image from 'next/image';
 
 // Import your custom SVGs
-import InstagramIcon from "/public/assets/icons/instagram.svg";
-import LinkedInIcon from "/public/assets/icons/linkedinicon.svg";
+import InstagramIcon from '/public/assets/icons/instagram.svg';
+import LinkedInIcon from '/public/assets/icons/linkedinicon.svg';
 // import FacebookIcon from "/public/assets/icons/facebook.svg"; // Optional
 
 const SocialLinks = () => {
@@ -16,13 +16,7 @@ const SocialLinks = () => {
         rel="noopener noreferrer"
         className="rounded-lg p-1"
       >
-        <Image
-          src={InstagramIcon}
-          alt="Instagram"
-          width={32}
-          height={32}
-          className="w-8 h-8"
-        />
+        <Image src={InstagramIcon} alt="Instagram" width={32} height={32} className="w-8 h-8 filter invert" />
       </a>
       <a
         href="https://www.linkedin.com/company/origin-fresh-tech/"
@@ -30,13 +24,7 @@ const SocialLinks = () => {
         rel="noopener noreferrer"
         className="rounded-lg p-1"
       >
-        <Image
-          src={LinkedInIcon}
-          alt="LinkedIn"
-          width={32}
-          height={32}
-          className="w-8 h-8"
-        />
+        <Image src={LinkedInIcon} alt="LinkedIn" width={32} height={32} className="w-8 h-8 filter invert" />
       </a>
       {/* <a
         href="#"
