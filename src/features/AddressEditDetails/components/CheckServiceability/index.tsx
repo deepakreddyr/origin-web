@@ -320,7 +320,7 @@ export default function CheckServiceability(props: Props) {
         color="success"
         sx={{
           marginTop: 'auto',
-          backgroundColor: '#Ffc024',
+          backgroundColor: '#fac510',
           color: !addressDetails.deliverable ? '#FFD700' : 'black',
           fontFamily: 'SofiaPro',
           fontSize: '16px',
@@ -330,7 +330,7 @@ export default function CheckServiceability(props: Props) {
           textTransform: 'capitalize',
           boxShadow: 'none',
           ':hover': {
-            backgroundColor: '#Ffc024a6',
+            backgroundColor: '#fac510a6',
             color: 'black',
             boxShadow: 'none'
           }

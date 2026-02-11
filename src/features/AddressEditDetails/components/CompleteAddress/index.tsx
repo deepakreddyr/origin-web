@@ -352,7 +352,7 @@ export default function CompleteAddress(props: Props) {
         sx={{
           marginY: '1rem',
           width: '100%',
-          backgroundColor: '#Ffc024',
+          backgroundColor: '#fac510',
           color: 'black',
           fontFamily: 'SofiaPro',
           fontSize: '16px',
@@ -362,7 +362,7 @@ export default function CompleteAddress(props: Props) {
           textTransform: 'capitalize',
           boxShadow: 'none',
           ':hover': {
-            backgroundColor: '#Ffc024a6',
+            backgroundColor: '#fac510a6',
             color: 'black',
             boxShadow: 'none'
           }

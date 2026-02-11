@@ -94,7 +94,7 @@ const ManageAddress = () => {
         sx={{
           // marginTop: "auto",
           width: '100%',
-          backgroundColor: '#Ffc024',
+          backgroundColor: '#fac510',
           position: 'sticky',
           bottom: '0',
           color: 'black',
@@ -106,7 +106,7 @@ const ManageAddress = () => {
           textTransform: 'capitalize',
           boxShadow: 'none',
           ':hover': {
-            backgroundColor: '#Ffc024a6',
+            backgroundColor: '#fac510a6',
             color: 'black',
             boxShadow: 'none'
           }

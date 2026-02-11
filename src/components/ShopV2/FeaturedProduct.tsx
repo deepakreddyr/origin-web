@@ -196,7 +196,7 @@ const NotifyToast: React.FC<{
     >
       <div className="flex items-center bg-black rounded-full shadow-2xl h-12 px-6 w-full relative">
         <div className="flex items-center justify-center w-full gap-3">
-          {type === 'error' && <InfoOutlinedIcon sx={{ color: '#Ffc024', fontSize: '1.2rem' }} />}
+          {type === 'error' && <InfoOutlinedIcon sx={{ color: '#fac510', fontSize: '1.2rem' }} />}
           <p className="text-[0.80rem] font-medium text-white text-center font-[SofiaPro] leading-tight">{message}</p>
         </div>
       </div>

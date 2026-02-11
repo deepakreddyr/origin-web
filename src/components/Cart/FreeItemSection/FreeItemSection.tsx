@@ -57,7 +57,7 @@ const FreeItemSection = () => {
       {/* Free Item Card */}
       <div
         className="relative border-2 rounded-[1vw] mob:rounded-[3vw] p-[1vw] mob:p-[3vw] overflow-hidden"
-        style={{ borderColor: isUnlocked ? '#Ffc024' : '#E5E7EB' }}
+        style={{ borderColor: isUnlocked ? '#fac510' : '#E5E7EB' }}
       >
         <div className="flex items-center justify-between gap-[1vw] mob:gap-[3vw]">
           {/* Product Image & Info */}
@@ -69,7 +69,7 @@ const FreeItemSection = () => {
                 style={{ width: '100%', height: '100%', objectFit: 'contain' }}
               />
               {/* Free Badge */}
-              <div className="absolute bottom-0 left-0 bg-[#Ffc024] text-black text-[.6vw] mob:text-[2.5vw] font-semibold px-[.4vw] mob:px-[1.5vw] py-[.1vw] mob:py-[.5vw] rounded-tr-md">
+              <div className="absolute bottom-0 left-0 bg-[#fac510] text-black text-[.6vw] mob:text-[2.5vw] font-semibold px-[.4vw] mob:px-[1.5vw] py-[.1vw] mob:py-[.5vw] rounded-tr-md">
                 Free
               </div>
             </figure>
@@ -90,7 +90,7 @@ const FreeItemSection = () => {
               isFreeItemAdded
                 ? 'bg-white border border-[#231F20] text-[#231F20]'
                 : isUnlocked
-                  ? 'bg-[#Ffc024] border border-[#Ffc024] text-black hover:opacity-90'
+                  ? 'bg-[#fac510] border border-[#fac510] text-black hover:opacity-90'
                   : 'bg-gray-100 border border-gray-300 text-gray-400 cursor-not-allowed'
             }`}
           >
@@ -101,7 +101,7 @@ const FreeItemSection = () => {
         {/* Progress Bar */}
         <div className="mt-[1vw] mob:mt-[3vw] h-[.3vw] mob:h-[1vw] bg-gray-200 rounded-full overflow-hidden">
           <div
-            className="h-full bg-[#Ffc024] transition-all duration-300"
+            className="h-full bg-[#fac510] transition-all duration-300"
             style={{ width: `${progressPercentage}%` }}
           />
         </div>

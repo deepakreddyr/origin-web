@@ -636,7 +636,7 @@ const YellowBtn = (props: YellowBtnProps) => {
           </>
         ) : (
           <button
-            className="w-full bg-[#Ffc024] text-black font-bold text-base md:text-sm py-3 md:py-3"
+            className="w-full bg-[#fac510] text-black font-bold text-base md:text-sm py-3 md:py-3"
             onClick={onAdd}
           >
             {requiresSelection ? (

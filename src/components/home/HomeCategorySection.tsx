@@ -74,7 +74,7 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
             >
               <button
                 onClick={() => setIsExpanded(true)}
-                className="mb-[2vw] mob:mb-[4vw] bg-[#Ffc024] text-black font-[SofiaPro] font-bold py-[1vw] px-[3vw] mob:py-[3vw] mob:px-[8vw] rounded-full text-[1.1vw] mob:text-[3.5vw] transition-colors pointer-events-auto shadow-sm hover:bg-[#f2d200]"
+                className="mb-[2vw] mob:mb-[4vw] bg-[#fac510] text-black font-[SofiaPro] font-bold py-[1vw] px-[3vw] mob:py-[3vw] mob:px-[8vw] rounded-full text-[1.1vw] mob:text-[3.5vw] transition-colors pointer-events-auto shadow-sm hover:bg-[#f2d200]"
               >
                 Show more ({categories.length})
               </button>

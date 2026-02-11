@@ -59,7 +59,7 @@ export const CounterYellowStyled = styled.div`
   justify-content: space-between;
   position: relative;
   .button {
-    background-color: #ffc024;
+    background-color: #fac510;
     width: 20px;
     height: 20px;
     .image {
@@ -101,7 +101,7 @@ export const CounterYellowStyled = styled.div`
 `;
 
 export const CounterFullYellowStyled = styled.div`
-  background-color: #ffc024;
+  background-color: #fac510;
   width: 74px;
   padding-left: 2px;
   padding-right: 2px;
@@ -114,7 +114,7 @@ export const CounterFullYellowStyled = styled.div`
   justify-content: space-between;
   position: relative;
   .button {
-    background-color: #ffc024;
+    background-color: #fac510;
     width: 20px;
     height: 20px;
     .image {

@@ -118,7 +118,7 @@ const RemoveAccount = (props: Props) => {
             variant="contained"
             color="warning"
             sx={{
-              backgroundColor: '#Ffc024',
+              backgroundColor: '#fac510',
               color: 'black',
               borderRadius: '25px',
               fontFamily: 'SofiaPro',
@@ -129,7 +129,7 @@ const RemoveAccount = (props: Props) => {
               paddingLeft: '20px',
               paddingRight: '20px',
               ':hover': {
-                backgroundColor: '#Ffc024',
+                backgroundColor: '#fac510',
                 color: 'black',
                 boxShadow: 'none'
               }

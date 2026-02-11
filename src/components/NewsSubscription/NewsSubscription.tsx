@@ -32,7 +32,7 @@ const NewsletterSubscription = () => {
               className="flex items-center bg-black rounded-full w-10 h-10"
               sx={{
                 'path:nth-of-type(2)': {
-                  fill: '#Ffc024'
+                  fill: '#fac510'
                 }
               }}
             />

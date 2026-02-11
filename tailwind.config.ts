@@ -21,7 +21,7 @@ const config: Config = {
           200: '#F2EEE4'
         },
         primary: {
-          DEFAULT: '#Ffc024',
+          DEFAULT: '#fac510',
           100: '#F8F4E9',
           '100-0': '#F8F4E900',
           '100-80': '#F8F4E9cc',

@@ -330,7 +330,7 @@ const AddressAndTimeSlot = () => {
           </Box>
           <Box
             sx={{
-              backgroundColor: '#Ffc024',
+              backgroundColor: '#fac510',
               border: 'none',
               borderRadius: '58px',
               ml: '1rem',
@@ -374,17 +374,17 @@ const AddressAndTimeSlot = () => {
               {/* <Button
                 // disabled={!cartDetails.cartValues?.timeSlotId}
                 sx={{
-                  color: "#Ffc024",
+                  color: "#fac510",
                   backgroundColor: "#231F20",
                   padding: "0.5rem 1rem 0.5rem 1rem",
                   border: "none",
                   borderRadius: "36px",
                   ":disabled": {
-                    color: "#Ffc024",
+                    color: "#fac510",
                     backgroundColor: "#636363",
                   },
                   ":hover": {
-                    color: "#Ffc024",
+                    color: "#fac510",
                     backgroundColor: "#231F20",
                   },
                 }}

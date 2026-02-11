@@ -347,9 +347,9 @@ const UomModel = (props: Props) => {
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
-            backgroundColor: '#Ffc024',
+            backgroundColor: '#fac510',
             color: '#231f20',
-            border: '1px solid #Ffc024',
+            border: '1px solid #fac510',
             borderRadius: '48px',
             padding: '10px 24px'
           }}

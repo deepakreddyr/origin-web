@@ -37,9 +37,9 @@
 
     .payment-pending-retry-button {
       width: calc(100%-1rem);
-      background: #Ffc024;
+      background: #fac510;
       border-radius: 48px;
-      border: 1px solid #Ffc024;
+      border: 1px solid #fac510;
       color: #231f20;
       font-weight: 500;
       font-size: 14px;

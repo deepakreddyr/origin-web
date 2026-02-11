@@ -62,7 +62,7 @@ const MakePayment = (props: any) => {
     <>
       <div className="">
         {!paymentFlow && (
-          <div className="bg-[#Ffc024] border border-[#Ffc02466] rounded-b-[1.1vw] mob:rounded-[4.1vw]  m-[-1.1vw] mob:m-[-4.1vw] mob:p-[4.2vw] p-[1.19vw] mob:mb-[4vw]  mb-[2vw] flex items-center justify-between  ">
+          <div className="bg-[#fac510] border border-[#fac51066] rounded-b-[1.1vw] mob:rounded-[4.1vw]  m-[-1.1vw] mob:m-[-4.1vw] mob:p-[4.2vw] p-[1.19vw] mob:mb-[4vw]  mb-[2vw] flex items-center justify-between  ">
             <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  text-[#231F20CC] ">
               {deliveryType}
             </p>

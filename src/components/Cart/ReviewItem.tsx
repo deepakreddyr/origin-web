@@ -149,7 +149,7 @@ const ReviewItem = (props: {
             />
             {/* Free Badge */}
             {isFreeItem && (
-              <div className="absolute bottom-0 left-0 bg-[#Ffc024] text-black text-[.5vw] mob:text-[2vw] font-semibold px-[.3vw] mob:px-[1.2vw] py-[.1vw] mob:py-[.4vw] rounded-tr-md">
+              <div className="absolute bottom-0 left-0 bg-[#fac510] text-black text-[.5vw] mob:text-[2vw] font-semibold px-[.3vw] mob:px-[1.2vw] py-[.1vw] mob:py-[.4vw] rounded-tr-md">
                 Free
               </div>
             )}

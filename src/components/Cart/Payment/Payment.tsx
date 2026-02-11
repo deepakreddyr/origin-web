@@ -124,7 +124,7 @@ const Payment = (props: any) => {
           }
         },
         theme: {
-          color: '#Ffc024'
+          color: '#fac510'
         }
       };
       const rzp1 = new (window as any).Razorpay(razorpayOptions);
@@ -178,7 +178,7 @@ const Payment = (props: any) => {
             }
           },
           theme: {
-            color: '#Ffc024'
+            color: '#fac510'
           }
         };
         const rzp1 = new (window as any).Razorpay(razorpayOptions);

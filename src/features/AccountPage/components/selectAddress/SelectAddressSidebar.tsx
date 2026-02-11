@@ -72,7 +72,7 @@ const SelectAddressSidebar = () => {
       color="success"
       sx={{
         width: '100%',
-        backgroundColor: '#Ffc024',
+        backgroundColor: '#fac510',
         position: 'sticky',
         bottom: '0',
         color: 'black',
@@ -85,7 +85,7 @@ const SelectAddressSidebar = () => {
         boxShadow: 'none',
         margin: '16px 0',
         ':hover': {
-          backgroundColor: '#Ffc024a6',
+          backgroundColor: '#fac510a6',
           color: 'black',
           boxShadow: 'none'
         }
