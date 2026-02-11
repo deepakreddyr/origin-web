@@ -223,7 +223,10 @@ const Home = ({
             variant="normal"
             imageSrc="/assets/images/about/mobiledownload.webp"
             imageAlt="Download app"
-            imageHeight={850}
+            imageWidth={800}
+            imageHeight={1000}
+            quality={100}
+            priority
             imageClass="object-contain md:!h-auto md:max-h-[400px] lg:!h-[500px] md:!ml-0 lg:!ml-[6vw]"
             title={`Download <br/> the app on <br/> Play Store and <br/> App Store.`}
             titleVariant="h2"

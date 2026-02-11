@@ -46,6 +46,8 @@ type SideBySideProps = {
   imageWidth?: number;
   imageHeight?: number;
   imageClass?: string;
+  quality?: number;
+  priority?: boolean;
 };
 
 const SideBySide: React.FC<SideBySideProps> = ({
@@ -84,7 +86,9 @@ const SideBySide: React.FC<SideBySideProps> = ({
   imageContainerClass,
   titleContainerClass,
   reverse = false,
-  imageClass
+  imageClass,
+  quality,
+  priority
 }) => {
   if (variant === 'parallax') {
     return (
@@ -151,6 +155,8 @@ const SideBySide: React.FC<SideBySideProps> = ({
             width={imageWidth}
             height={imageHeight}
             alt={imageAlt || ''}
+            quality={quality}
+            priority={priority}
             className={CA(
               'rounded-[10px] md:rounded-[46px] w-full sm:h-[200px] md:h-auto lg:w-auto lg:h-auto',
               imageClass
