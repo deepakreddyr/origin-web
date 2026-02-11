@@ -29,7 +29,7 @@ const Handpicked = () => {
             {/* Carefully
             <br />
             Handpicked */}
-            We help you waste less food
+            We help you waste less food.
           </p>
           <p className="font-[SofiaPro] font-medium text-[1.7vw]  mob:text-[4.1vw] leading-[2vw] mob:leading-[6vw] mob:text-left">
             Food waste isn’t usually the result of neglect. <br className="mob:hidden" />

@@ -126,7 +126,7 @@ const CategoryCard = ({ category, generateHref }: { category: any; generateHref:
       {/* Image Container */}
       <div className="absolute top-[-3vw] mob:top-[-7vw] inset-0 w-full h-full flex items-center justify-center transition-transform duration-500 group-hover:scale-110 p-[10%]">
         <div className="relative w-[18vw] h-[18vw] mob:w-[35vw] mob:h-[35vw]">
-          <Image src={catimg} alt={category.name} fill className="object-contain object-center" />
+          <Image src={category.image || catimg} alt={category.name} fill className="object-contain object-center" />
         </div>
       </div>
 

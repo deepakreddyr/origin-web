@@ -224,13 +224,13 @@ const Home = ({
             imageSrc="/assets/images/about/mobiledownload.webp"
             imageAlt="Download app"
             imageWidth={600}
-            imageHeight={500}
-            imageClass="object-contain"
+            imageHeight={850}
+            imageClass="object-cover lg:!h-[500px] lg:!ml-[6vw]"
             title={`Download <br/> the app on <br/> Play Store and <br/> App Store.`}
             titleVariant="h2"
-            titleClass="font-[Recoleta] text-[#231F20] !font-semibold !leading-[1.1] mb-8"
+            titleClass="font-[Recoleta] text-[#231F20] text-[4vw] mob:text-[9vw] !font-semibold !leading-[1.1] mb-8"
             imageContainerClass="flex justify-center items-center lg:!pe-0"
-            titleContainerClass="flex flex-col justify-center items-center lg:items-start lg:!ps-0 lg:!pe-0"
+            titleContainerClass="flex flex-col justify-center items-center lg:items-start lg:!ps-24 lg:!pe-0"
             buttonText="Download Origin Fresh"
             buttonVariant="tertiary"
             buttonClick1={() => {

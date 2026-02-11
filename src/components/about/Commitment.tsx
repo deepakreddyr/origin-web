@@ -7,7 +7,7 @@ import Image from 'next/image';
 const Commitment = () => {
   return (
     <div className="w-full bg-primary relative flex items-center mob:flex-col justify-between mob:pb-[10vw]">
-      <div className="w-[40vw] mob:w-[92vw] h-[35vw] mob:h-[105vw] relative">
+      <div className="w-[40vw] mob:w-full h-[35vw] mob:h-[105vw] relative">
         <Image src={commitmentImg1} alt="commitment image" fill className="object-cover" quality={100} />
       </div>
       <div className="w-[42vw] mob:w-full mob:px-[4vw] mob:pt-[8vw] mr-[5vw] mob:text-left">

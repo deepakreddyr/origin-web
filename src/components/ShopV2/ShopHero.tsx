@@ -110,14 +110,48 @@ export const ShopHeroSingle = ({ bannerData }: { bannerData?: any }) => {
   });
 
   return (
-    <div
-      className="w-full relative overflow-hidden hero-banner-carousel"
-      style={{
-        ['--swiper-pagination-color' as any]: '#25874D',
-        ['--swiper-pagination-bullet-inactive-color' as any]: '#000',
-        ['--swiper-pagination-bullet-inactive-opacity' as any]: '0.2'
-      }}
-    >
+    <div className="w-full relative overflow-hidden hero-banner-carousel">
+      <style>{`
+        .hero-banner-carousel .swiper-pagination {
+          background: rgba(255, 255, 255, 0.4);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          padding: 6px 12px;
+          border-radius: 100px;
+          width: fit-content !important;
+          left: 50% !important;
+          transform: translateX(-50%);
+          bottom: 60px !important;
+          display: flex !important;
+          align-items: center;
+          gap: 8px;
+          z-index: 10;
+        }
+        .hero-banner-carousel .swiper-pagination-bullet {
+          width: 8px;
+          height: 8px;
+          background: #fff !important;
+          opacity: 0.5;
+          margin: 0 !important;
+          transition: all 0.3s ease;
+        }
+        .hero-banner-carousel .swiper-pagination-bullet-active {
+          opacity: 1;
+          transform: scale(1.1);
+          background: #fff !important;
+        }
+        @media (max-width: 768px) {
+          .hero-banner-carousel .swiper-pagination {
+            bottom: 40px !important;
+            padding: 4px 10px;
+            gap: 6px;
+          }
+          .hero-banner-carousel .swiper-pagination-bullet {
+            width: 6px;
+            height: 6px;
+          }
+        }
+      `}</style>
       <OriginCarousel
         className="w-full"
         slides={slides}
