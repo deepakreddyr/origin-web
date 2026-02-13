@@ -374,7 +374,7 @@ const RequestItemModal: React.FC<{
                         : 'Submit Request'
                 }
                 handleClick={handleSubmit}
-                className="w-full mt-4 !h-14 flex justify-center items-center"
+                className="w-full mt-4 !h-14 flex !justify-center items-center"
               />
             </>
           )}
@@ -549,7 +549,6 @@ const SearchResults = (props: HomeProps) => {
       search={true}
       useTopPadding={true}
     >
-      {/* <div className="min-h-screen bg-[#FFF9E5]"> */}
       <div className="min-h-screen">
         {/* Search Results */}
         <div className="max-w-[90vw] mx-auto px-[2vw] py-[3vw] mob:py-[6vw]">
@@ -595,7 +594,7 @@ const SearchResults = (props: HomeProps) => {
               <OriginButton
                 buttonText="Request Item"
                 handleClick={() => setIsRequestModalOpen(true)}
-                className="px-10 py-3 flex justify-center font-[SofiaPro] font-bold items-center"
+                className="px-10 py-3 flex !justify-center font-[SofiaPro] font-bold items-center"
               />
             </div>
           )}

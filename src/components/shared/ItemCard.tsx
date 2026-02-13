@@ -6,7 +6,8 @@ import { useRouter } from 'next/router';
 import sampleimg from '/public/assets/images/shop/sampleimg2.png';
 import { useSelector } from 'react-redux';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { getAddressAndStoreId } from '@/utilities/utils';
 import { protectedUrl } from '@/url';
@@ -693,14 +694,16 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                     e.stopPropagation();
                     if (!isNotified) handleNotifyMe();
                   }}
-                  className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold h-[2.5vw] mob:h-[8.5vw] px-[1.5vw] mob:px-[4vw] rounded-full transition-colors whitespace-nowrap gap-2 ${
-                    isNotified
-                      ? 'border-gray-400 text-gray-400 bg-gray-50 cursor-default'
-                      : 'border-[#146321] text-[#146321] hover:bg-green-50'
+                  className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold h-[2.5vw] mob:h-[8.5vw] px-[1.5vw] mob:px-[4vw] rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${
+                    isNotified ? 'cursor-default' : 'hover:bg-green-50'
                   }`}
                 >
-                  <span className="text-[.97vw] mob:text-[3.2vw]">{isNotified ? 'Notified' : 'Notify'}</span>
-                  <NotificationsNoneOutlinedIcon sx={{ fontSize: isMobile ? '4vw' : '1.2vw', strokeWidth: 1 }} />
+                  {!isNotified && <span className="text-[.97vw] mob:text-[3.2vw]">Notify</span>}
+                  {isNotified ? (
+                    <NotificationsActiveIcon sx={{ fontSize: isMobile ? '4vw' : '1.2vw' }} />
+                  ) : (
+                    <NotificationsIcon sx={{ fontSize: isMobile ? '4vw' : '1.2vw' }} />
+                  )}
                 </button>
               ) : isBasketItem ? (
                 <button

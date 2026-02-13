@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { validateAndCleanCart } from '@/store/slice/CartSlice'; // ✅ Import the action
+import { validateAndCleanCart, removeFreeItemFromCart } from '@/store/slice/CartSlice';
 import ReviewItem from './ReviewItem';
 
 const ReviewList = ({ onShowMaxQuantityToast }: { onShowMaxQuantityToast: (maxQty: number) => void }) => {
@@ -9,12 +9,12 @@ const ReviewList = ({ onShowMaxQuantityToast }: { onShowMaxQuantityToast: (maxQt
 
   // console.log(cart, "cart state");
 
-  // ✅ VALIDATE AND CLEAN CART ON MOUNT AND WHEN ITEMS CHANGE
+  // ✅ VALIDATE AND CLEAN CART ON MOUNT
   useEffect(() => {
     if (cart.items?.length > 0) {
       dispatch(validateAndCleanCart());
     }
-  }, [dispatch]); // Run once on mount, or you can add cart.items to dependencies if you want it to run on every cart update
+  }, [dispatch]); // Run once on mount
 
   return (
     <div className="bg-[#F2EEE44D] flex flex-col border border-[#F2EEE4] p-[1.1vw] mob:py-[4.1vw] px-0 mob:rounded-[4.1vw] rounded-[1.1vw]">

@@ -18,7 +18,8 @@ import Link from 'next/link';
 import CustomHead from '../shared/CustomHead';
 import { useDispatch, useSelector } from 'react-redux';
 import { addNotifiedItem } from '@/store/slice/productsSlice';
-import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import * as gtag from '@/utilities/gtag';
 
 // Type definitions
@@ -590,14 +591,16 @@ const ProductDetailsWrapper = () => {
                             e.stopPropagation();
                             if (!isNotified) handleNotifyMe();
                           }}
-                          className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 ${
-                            isNotified
-                              ? 'border-gray-400 text-gray-400 bg-gray-50 cursor-default'
-                              : 'border-[#146321] text-[#146321] hover:bg-green-50'
+                          className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${
+                            isNotified ? 'cursor-default' : 'hover:bg-green-50'
                           }`}
                         >
-                          <span className="text-sm">{isNotified ? 'Notified' : 'Notify'}</span>
-                          <NotificationsNoneOutlinedIcon sx={{ fontSize: '1.2rem', strokeWidth: 1 }} />
+                          {!isNotified && <span className="text-sm">Notify</span>}
+                          {isNotified ? (
+                            <NotificationsActiveIcon sx={{ fontSize: '1.2rem' }} />
+                          ) : (
+                            <NotificationsIcon sx={{ fontSize: '1.2rem' }} />
+                          )}
                         </button>
                       ) : (
                         <AddItemBtn
@@ -712,14 +715,16 @@ const ProductDetailsWrapper = () => {
                               e.stopPropagation();
                               if (!isNotified) handleNotifyMe();
                             }}
-                            className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 ${
-                              isNotified
-                                ? 'border-gray-400 text-gray-400 bg-gray-50 cursor-default'
-                                : 'border-[#146321] text-[#146321] hover:bg-green-50'
+                            className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${
+                              isNotified ? 'cursor-default' : 'hover:bg-green-50'
                             }`}
                           >
-                            <span className="text-sm">{isNotified ? 'Notified' : 'Notify'}</span>
-                            <NotificationsNoneOutlinedIcon sx={{ fontSize: '1.2rem', strokeWidth: 1 }} />
+                            {!isNotified && <span className="text-sm">Notify</span>}
+                            {isNotified ? (
+                              <NotificationsActiveIcon sx={{ fontSize: '1.2rem' }} />
+                            ) : (
+                              <NotificationsIcon sx={{ fontSize: '1.2rem' }} />
+                            )}
                           </button>
                         ) : (
                           <AddItemBtn

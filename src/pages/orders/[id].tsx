@@ -38,8 +38,10 @@ const OrderDetailsPage = (props: layoutProp) => {
   }, [isReady]);
 
   return (
-    <Layout isHeaderSticky={false} mainMenuItems={mainMenuItems} footerData={footerData}>
-      <OrderDetailsWrapper />
+    <Layout isHeaderSticky={true} mainMenuItems={mainMenuItems} footerData={footerData}>
+      <div className="mob:pt-[12vw]">
+        <OrderDetailsWrapper />
+      </div>
     </Layout>
   );
 };

@@ -15,7 +15,8 @@ import {
   setCartMinimum,
   setCartTabType,
   setIsProceedButtonEnabled,
-  setFreeItems
+  setFreeItems,
+  removeFreeItemFromCart
 } from '@/store/slice/CartSlice';
 import { TabTypeConstant } from '../Login/constants/tabTypeContent';
 import { getAddressAndStoreId, prepareCartItemsToApi, setRouteSourceToLs } from '@/utilities/utils';
@@ -104,6 +105,16 @@ const Cart = () => {
     setInfoToastMessage(message);
     setShowInfoToast(true);
   };
+
+  // ✅ TRIGGER: AUTO-REMOVE FREE ITEMS IF MOV NOT MET
+  useEffect(() => {
+    if (cart.freeItemsMov > 0 && cart.totalPrice < cart.freeItemsMov) {
+      const freeItem = cart.items.find((item: any) => item.isFreeItem);
+      if (freeItem) {
+        dispatch(removeFreeItemFromCart(freeItem.item_code));
+      }
+    }
+  }, [cart.totalPrice, cart.freeItemsMov, cart.items, dispatch]);
 
   const handleMaxQuantityExceededGlobal = (maxQty: number) => {
     handleShowToast(`Maximum quantity of ${maxQty} reached for this item.`);

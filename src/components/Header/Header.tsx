@@ -328,7 +328,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
               : // : 'bg-[#FFF9E5] px-[5vw] py-[2vw]'
                 'bg-white px-[5vw] py-[2vw] shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
             : search
-              ? 'bg-transparent w-[96vw] mt-[1vw] max-w-[1920px]'
+              ? 'bg-transparent w-full px-[2vw] mt-[1vw] max-w-[1920px]'
               : 'bg-white rounded-full shadow-md'
         } ${'mt-[1.1vw] mob:mt-0'} flex flex-col`}
       >
@@ -344,7 +344,9 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
               onClick={() => router.push('/')}
               className={`relative flex-shrink-0 ${isMobile ? 'flex-1 flex justify-center' : ''}`}
             >
-              <div className="w-[10vw] ml-[2vw] mt-2 mob:w-[35vw] mob:h-[12vw] mob:ml-0 h-[5vw] mr-[1vw] mob:mr-2 relative">
+              <div
+                className={`${search ? 'w-[12vw] h-[4vw] mt-0' : 'w-[10vw] h-[5vw] mt-2'} ml-[2vw] mob:w-[35vw] mob:h-[12vw] mob:ml-0 mr-[1vw] mob:mr-2 relative`}
+              >
                 <Image src={originLogo} alt="logo" fill className={`object-contain ${getIconFilter()}`} priority />
               </div>
             </button>
@@ -404,7 +406,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
           {/* Desktop New Layout */}
           <div className={`flex items-center flex-1 mob:hidden`}>
             {/* 1. Search Bar (Moved First) */}
-            <div className={`flex-1 ml-[1vw] max-w-[20vw] mr-[2.9vw]`}>
+            <div className={`flex-1 ${search ? 'mx-[1.5vw]' : 'ml-[1vw] max-w-[20vw] mr-[2.9vw]'}`}>
               <form onSubmit={handleSearchSubmit} className="relative">
                 <div className="relative">
                   <input
@@ -416,9 +418,9 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                     onFocus={handleSearchFocus}
                     onBlur={handleSearchBlur}
                     placeholder={search ? 'Search here' : ''}
-                    className={`w-full h-[3vw] pl-[1.5vw] pr-[3.5vw] 
-                                rounded-full border-none bg-[#F2EADA]
-                                placeholder:text-black/60 text-black
+                    className={`w-full ${search ? 'h-[3.5vw] bg-white border border-gray-200' : 'h-[3vw] bg-[#F2EADA] border-none'} pl-[1.5vw] pr-[3.5vw] 
+                                rounded-full 
+                                placeholder:text-black/40 text-black
                                 text-[1.1vw] font-[SofiaPro] cursor-pointer 
                                 focus:outline-none focus:ring-0 transition-all duration-200`}
                   />
@@ -432,10 +434,10 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                   {/* Search Icon inside Input */}
                   <button
                     type="submit"
-                    className="absolute right-[1vw] top-1/2 transform -translate-y-1/2 bg-transparent w-[1.6vw] h-[1.6vw] flex items-center justify-center"
+                    className="absolute right-[1.5vw] top-1/2 transform -translate-y-1/2 bg-transparent w-[1.6vw] h-[1.6vw] flex items-center justify-center"
                   >
                     <svg
-                      className="w-[1.1vw] h-[1.1vw] text-black"
+                      className="w-[1.2vw] h-[1.2vw] text-gray-400"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -453,33 +455,35 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
             </div>
 
             {/* 2. Navigation Links */}
-            <div className="flex items-center gap-[1vw]">
-              <Link
-                href="/shop"
-                className={`h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full text-[1.1vw] font-medium font-[SofiaPro] transition-colors ${
-                  router.pathname === '/' || router.pathname.startsWith('/shop')
-                    ? 'bg-primary text-black'
-                    : 'hover:bg-gray-100 text-black'
-                }`}
-              >
-                Shop All
-              </Link>
-              <Link
-                href="/about"
-                className={`h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full text-[1.1vw] font-medium font-[SofiaPro] transition-colors ${
-                  router.pathname === '/about' ? 'bg-primary text-black' : 'hover:bg-gray-100 text-black'
-                }`}
-              >
-                About Us
-              </Link>
+            {!search && (
+              <div className="flex items-center gap-[1vw]">
+                <Link
+                  href="/shop"
+                  className={`h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full text-[1.1vw] font-medium font-[SofiaPro] transition-colors ${
+                    router.pathname === '/' || router.pathname.startsWith('/shop')
+                      ? 'bg-primary text-black'
+                      : 'hover:bg-gray-100 text-black'
+                  }`}
+                >
+                  Shop All
+                </Link>
+                <Link
+                  href="/about"
+                  className={`h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full text-[1.1vw] font-medium font-[SofiaPro] transition-colors ${
+                    router.pathname === '/about' ? 'bg-primary text-black' : 'hover:bg-gray-100 text-black'
+                  }`}
+                >
+                  About Us
+                </Link>
 
-              {/* Stores button explicitely removed */}
-            </div>
+                {/* Stores button explicitely removed */}
+              </div>
+            )}
 
             {/* 3. Location Selector & Icons */}
             <div className="flex items-center gap-[1.5vw] ml-[1vw]">
               {/* Location Selector */}
-              {!isMobile && (
+              {!isMobile && !search && (
                 <button
                   onClick={handleSelectAddress}
                   className="flex items-center gap-2 px-[1.5vw] py-[0.5vw] rounded-full bg-gray-100/50 hover:bg-gray-100 text-gray-900 transition-colors max-w-[200px]"

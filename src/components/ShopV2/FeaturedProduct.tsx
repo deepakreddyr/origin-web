@@ -7,7 +7,8 @@ import { addNotifiedItem } from '@/store/slice/productsSlice';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { protectedUrl } from '@/url';
 import { getAddressAndStoreId } from '@/utilities/utils';
-import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 interface UomType {
@@ -313,14 +314,16 @@ const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType 
                   e.stopPropagation();
                   if (!isNotified) handleNotifyMe();
                 }}
-                className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-8 py-4 rounded-full transition-colors whitespace-nowrap gap-2 ${
-                  isNotified
-                    ? 'border-gray-400 text-gray-400 bg-gray-50 cursor-default'
-                    : 'border-[#146321] text-[#146321] hover:bg-green-50'
+                className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-8 py-4 rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${
+                  isNotified ? 'cursor-default' : 'hover:bg-green-50'
                 }`}
               >
-                <span className="text-xl">{isNotified ? 'Notified' : 'Notify Me'}</span>
-                <NotificationsNoneOutlinedIcon sx={{ fontSize: '1.8rem', strokeWidth: 1 }} />
+                {!isNotified && <span className="text-xl">Notify Me</span>}
+                {isNotified ? (
+                  <NotificationsActiveIcon sx={{ fontSize: '1.8rem' }} />
+                ) : (
+                  <NotificationsIcon sx={{ fontSize: '1.8rem' }} />
+                )}
               </button>
             ) : item.multiple_uoms?.length > 1 ? (
               <button className="bg-[#FBE363] hover:bg-[#f0d85a] text-gray-900 font-bold px-12 py-5 rounded-full flex items-center gap-4 transition-all text-xl shadow-sm">
