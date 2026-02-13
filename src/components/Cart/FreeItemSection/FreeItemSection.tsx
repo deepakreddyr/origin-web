@@ -34,7 +34,9 @@ const FreeItemSection = ({ onShowToast }: { onShowToast: (message: string) => vo
   const progressPercentage = Math.min(100, (cartTotal / freeItemsMov) * 100);
 
   // Check if free item is already added to cart
-  const isFreeItemAdded = cart.items.some((item: any) => item.isFreeItem && item.item_code === freeItem.item_code);
+  const isFreeItemAdded = cart.items.some(
+    (item: any) => (item.isFreeItem || item.free || item.isFree) && item.item_code === freeItem.item_code
+  );
 
   const handleAddFreeItem = () => {
     if (couponDetails && couponDetails.id) {

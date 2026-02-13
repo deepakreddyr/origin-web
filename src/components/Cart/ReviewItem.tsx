@@ -148,7 +148,7 @@ const ReviewItem = (props: {
               style={{ width: '100%', height: '100%', objectFit: 'contain' }}
             />
             {/* Free Badge */}
-            {isFreeItem && (
+            {(isFreeItem || product.free || product.isFree) && (
               <div className="absolute bottom-0 left-0 bg-[#fac510] text-black text-[.5vw] mob:text-[2vw] font-semibold px-[.3vw] mob:px-[1.2vw] py-[.1vw] mob:py-[.4vw] rounded-tr-md">
                 Free
               </div>
@@ -173,7 +173,7 @@ const ReviewItem = (props: {
         </div>
 
         {uom.is_available ? (
-          isFreeItem ? (
+          isFreeItem || product.free || product.isFree ? (
             // Free item: show REMOVE button
             <button
               onClick={() => dispatch(removeFreeItemFromCart(product.item_code))}

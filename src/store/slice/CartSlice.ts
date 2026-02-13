@@ -42,6 +42,8 @@ interface CartProduct {
   tag_url: string | null;
   multiple_uoms: CartUOM[]; // Nested UOMs/Variants
   isFreeItem?: boolean; // Flag for free items
+  free?: boolean; // Additional flag for free items
+  isFree?: boolean; // Third flag as requested by user
 }
 
 interface CartState {
@@ -84,17 +86,21 @@ const updateCartTotals = (state: CartState) => {
   state.totalQuantity = 0;
 
   state.items.forEach((product) => {
-    product.multiple_uoms.forEach((uom) => {
+    const isProductFree = product.isFreeItem || product.free;
+
+    product.multiple_uoms.forEach((uom: CartUOM) => {
       let totalUOMQuantity = 0;
 
       if (uom.cart_ripeness && uom.cart_ripeness.length > 0) {
         // CASE 1: Ripeness objects exist (Complex Item)
-        uom.cart_ripeness.forEach((ripeness) => {
+        uom.cart_ripeness.forEach((ripeness: CartRipeness) => {
           const qty = Number(ripeness.qty);
           if (qty > 0) {
-            state.totalPrice += uom.price * qty;
-            const original = uom.market_price && uom.market_price > 0 ? uom.market_price : uom.price;
-            state.totalOriginalPrice += original * qty;
+            if (!isProductFree) {
+              state.totalPrice += uom.price * qty;
+              const original = uom.market_price && uom.market_price > 0 ? uom.market_price : uom.price;
+              state.totalOriginalPrice += original * qty;
+            }
             state.totalQuantity += 1; // Count each ripeness entry as a line item
             totalUOMQuantity += qty;
           }
@@ -103,13 +109,16 @@ const updateCartTotals = (state: CartState) => {
         uom.cart_quantity = totalUOMQuantity;
       } else if (uom.cart_quantity > 0) {
         // CASE 2: Legacy/simple cart item (no ripeness split)
-        state.totalPrice += uom.price * uom.cart_quantity;
-        const original = uom.market_price && uom.market_price > 0 ? uom.market_price : uom.price;
-        state.totalOriginalPrice += original * uom.cart_quantity;
+        if (!isProductFree) {
+          state.totalPrice += uom.price * uom.cart_quantity;
+          const original = uom.market_price && uom.market_price > 0 ? uom.market_price : uom.price;
+          state.totalOriginalPrice += original * uom.cart_quantity;
+        }
         state.totalQuantity += 1; // Count the UOM as a single line item
       }
     });
   });
+
   // Calculate final amount to pay
   state.amountToPay = state.totalPrice;
 };
@@ -126,6 +135,35 @@ const isProceedBtnEnabled = (state: CartState): boolean => {
     }
   }
   return true;
+};
+
+// --- HELPER FUNCTIONS FOR PERSISTENT FREE ITEMS ---
+
+const PERSISTENT_FREE_ITEMS_KEY = 'added_free_items';
+
+const getPersistentFreeItems = (): string[] => {
+  if (typeof window === 'undefined') return [];
+  const stored = localStorage.getItem(PERSISTENT_FREE_ITEMS_KEY);
+  return stored ? JSON.parse(stored) : [];
+};
+
+const addPersistentFreeItem = (itemCode: string) => {
+  const items = getPersistentFreeItems();
+  if (!items.includes(itemCode)) {
+    items.push(itemCode);
+    localStorage.setItem(PERSISTENT_FREE_ITEMS_KEY, JSON.stringify(items));
+  }
+};
+
+const removePersistentFreeItem = (itemCode: string) => {
+  const items = getPersistentFreeItems().filter((code) => code !== itemCode);
+  localStorage.setItem(PERSISTENT_FREE_ITEMS_KEY, JSON.stringify(items));
+};
+
+const clearPersistentFreeItems = () => {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(PERSISTENT_FREE_ITEMS_KEY);
+  }
 };
 
 // --- HELPER FUNCTION TO FIND AND UPDATE UOM/RIPENESS ---
@@ -227,7 +265,37 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     setCartItems: (state, action: PayloadAction<CartProduct[]>) => {
-      state.items = action.payload;
+      const persistentFreeItems = getPersistentFreeItems();
+
+      // Preserve ANY existing free items that are already in the cart
+      const preservedFreeItems = state.items.filter((item) => item.isFreeItem || item.free || item.isFree);
+
+      const itemsFromApi = action.payload.map((item) => {
+        // Force free status if item_code is in our persistent list
+        const isActuallyFree =
+          persistentFreeItems.includes(item.item_code) ||
+          item.isFreeItem ||
+          item.free ||
+          item.isFree ||
+          (item.multiple_uoms && item.multiple_uoms.some((u) => Number(u.price) === 0));
+
+        return {
+          ...item,
+          isFreeItem: isActuallyFree,
+          free: isActuallyFree,
+          isFree: isActuallyFree,
+          multiple_uoms: item.multiple_uoms.map((uom) => ({
+            ...uom,
+            price: isActuallyFree ? 0 : uom.price // Ensure price is 0 if marked free
+          }))
+        };
+      });
+
+      // Filter preserved items to avoid duplicates if the API actually returned them
+      const apiItemCodes = new Set(itemsFromApi.map((i) => i.item_code));
+      const finalRestoredItems = preservedFreeItems.filter((i) => !apiItemCodes.has(i.item_code));
+
+      state.items = [...finalRestoredItems, ...itemsFromApi];
       saveCart(state);
     },
 
@@ -533,6 +601,62 @@ export const cartSlice = createSlice({
     setFreeItems: (state, action: PayloadAction<{ freeItems: any[]; freeItemsMov: number }>) => {
       state.freeItems = action.payload.freeItems;
       state.freeItemsMov = action.payload.freeItemsMov;
+
+      const persistentFreeItems = getPersistentFreeItems();
+      const currentItemCodes = state.items.map((item) => item.item_code);
+
+      // Find items in persistent list that are missing from the current state
+      const missingFreeItems = persistentFreeItems.filter((code) => !currentItemCodes.includes(code));
+
+      let itemsAdded = false;
+      missingFreeItems.forEach((code) => {
+        const freeItemDef = action.payload.freeItems.find((f: any) => f.item_code === code);
+        if (freeItemDef) {
+          const uom = freeItemDef.multiple_uoms?.[0] || freeItemDef.uom?.[0];
+          if (uom) {
+            const newProduct: CartProduct = {
+              id: freeItemDef.id,
+              item_code: freeItemDef.item_code,
+              name: freeItemDef.name || freeItemDef.item_name,
+              image: freeItemDef.image || freeItemDef.logo,
+              bg_color: freeItemDef.bg_color || '',
+              is_available: true,
+              is_greyed: false,
+              is_orderable: true,
+              navigation: { to: '' },
+              tag_url: null,
+              multiple_uoms: [
+                {
+                  variant_id: uom.variant_id,
+                  cart_quantity: 1,
+                  price: 0,
+                  market_price: uom.market_price || uom.price,
+                  maximum_quantity: uom.maximum_quantity || 1,
+                  minimum_quantity: uom.minimum_quantity || 1,
+                  stepper_quantity: uom.stepper_quantity || 1,
+                  unit: uom.unit,
+                  uom_id: uom.uom_id,
+                  conversion_text: uom.conversion_text || '',
+                  is_available: true,
+                  is_default: true,
+                  is_visible: true,
+                  ripeness_types: uom.ripeness_types || null,
+                  cart_ripeness: undefined
+                }
+              ],
+              isFreeItem: true,
+              free: true,
+              isFree: true
+            };
+            state.items.unshift(newProduct);
+            itemsAdded = true;
+          }
+        }
+      });
+
+      if (itemsAdded) {
+        saveCart(state);
+      }
     },
 
     addFreeItemToCart: (state, action: PayloadAction<any>) => {
@@ -584,22 +708,28 @@ export const cartSlice = createSlice({
               cart_ripeness: undefined
             }
           ],
-          isFreeItem: true
+          isFreeItem: true,
+          free: true,
+          isFree: true
         };
 
         state.items.unshift(newProduct); // Add at the beginning
         state.totalQuantity += 1;
+        addPersistentFreeItem(newProduct.item_code);
         saveCart(state);
       }
     },
 
     removeFreeItemFromCart: (state, action: PayloadAction<string>) => {
       const itemCode = action.payload;
-      const freeItemIndex = state.items.findIndex((item) => item.isFreeItem && item.item_code === itemCode);
+      const freeItemIndex = state.items.findIndex(
+        (item) => (item.isFreeItem || item.free) && item.item_code === itemCode
+      );
 
       if (freeItemIndex !== -1) {
         state.items.splice(freeItemIndex, 1);
         state.totalQuantity = Math.max(0, state.totalQuantity - 1);
+        removePersistentFreeItem(itemCode);
         saveCart(state);
       }
     },
@@ -615,6 +745,7 @@ export const cartSlice = createSlice({
       state.freeItems = [];
       state.freeItemsMov = 0;
       localStorage.removeItem('cart_items');
+      clearPersistentFreeItems();
     }
   }
 });

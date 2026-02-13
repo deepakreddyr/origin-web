@@ -37,7 +37,7 @@ export const removeRouteSourceFromLs = (name: string) => {
  * * @param cartItems Array of top-level Product objects (the nested structure from Redux/LS).
  * @returns An object conforming to the API payload structure { items: [...] }.
  */
-export const prepareCartItemsToApi = (cartItems: any) => {
+export const prepareCartItemsToApi = (cartItems: any, includeFreeItems: boolean = false) => {
   // cartItems is expected to be an array of top-level Product objects
   // console.log(cartItems, "cartItems");
   const apiPayload: any[] = [];
@@ -46,6 +46,11 @@ export const prepareCartItemsToApi = (cartItems: any) => {
     // 1. Check for valid product code and UOMs
     if (!product.item_code || !Array.isArray(product.multiple_uoms)) {
       return; // Skip invalid product entries
+    }
+
+    // Filter out free items ONLY if includeFreeItems is false
+    if (!includeFreeItems && (product.isFreeItem || product.free || product.isFree)) {
+      return; // Skip free product entries for sync API
     }
 
     // 2. Initialize the structure for this product
@@ -58,17 +63,16 @@ export const prepareCartItemsToApi = (cartItems: any) => {
     product.multiple_uoms.forEach((uom: any) => {
       // We only care about UOMs that have been added to the cart (cart_quantity > 0)
       if (uom.variant_id && uom.cart_quantity > 0) {
-        
         // --- NEW LOGIC FOR RIPENESS EXPLOSION ---
         if (Array.isArray(uom.cart_ripeness) && uom.cart_ripeness.length > 0) {
           // A. Item with Ripeness: Explode into separate UOM entries
-          uom.cart_ripeness.forEach((ripenessObj: { ripeness_type: string, qty: string }) => {
+          uom.cart_ripeness.forEach((ripenessObj: { ripeness_type: string; qty: string }) => {
             const qty = Number(ripenessObj.qty);
             if (qty > 0) {
               productEntry.uom.push({
                 id: uom.variant_id,
                 qty: qty,
-                ripeness_type: ripenessObj.ripeness_type, // Include ripeness_type
+                ripeness_type: ripenessObj.ripeness_type // Include ripeness_type
               });
             }
           });
@@ -76,17 +80,17 @@ export const prepareCartItemsToApi = (cartItems: any) => {
           // B. Simple Item (No Ripeness split): Use the UOM's total quantity
           const qty = Number(uom.cart_quantity);
           if (qty > 0) {
-            const uomEntry: { id: number, qty: number, ripeness_type?: string } = {
+            const uomEntry: { id: number; qty: number; ripeness_type?: string } = {
               id: uom.variant_id,
-              qty: qty,
+              qty: qty
             };
-            
-            // If the UOM has a default selected_ripeness_type (e.g., if it was 
+
+            // If the UOM has a default selected_ripeness_type (e.g., if it was
             // implicitly selected but not split), include it.
-            // NOTE: The previous version used selected_ripeness_type which is only 
+            // NOTE: The previous version used selected_ripeness_type which is only
             // available in the FLAT structure. In the NESTED structure, if cart_ripeness
             // is empty, we must rely on omitting the ripeness_type key entirely.
-            
+
             productEntry.uom.push(uomEntry);
           }
         }

@@ -27,7 +27,7 @@ const ReviewList = ({ onShowMaxQuantityToast }: { onShowMaxQuantityToast: (maxQt
           {cart.items.map((product: any) =>
             product.multiple_uoms.map((uom: any) => {
               // Check if this is a free item
-              const isFreeItem = product.isFreeItem === true;
+              const isFreeItem = product.isFreeItem || product.free || product.isFree;
 
               // Check if this UOM has valid ripeness types in the cart
               if (uom.cart_ripeness && uom.cart_ripeness.length > 0) {

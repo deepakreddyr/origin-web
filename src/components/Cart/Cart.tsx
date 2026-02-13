@@ -97,6 +97,21 @@ const Cart = () => {
   });
   const [address, setAddress] = useAtom(addressAtom);
 
+  // ✅ HYDRATION: LOAD CART FROM LS ON MOUNT
+  useEffect(() => {
+    const savedCart = localStorage.getItem('cart_items');
+    if (savedCart) {
+      try {
+        const parsedCart = JSON.parse(savedCart);
+        if (parsedCart && parsedCart.length > 0) {
+          dispatch(setCartItems(parsedCart));
+        }
+      } catch (err) {
+        console.error('Failed to parse cart from LS:', err);
+      }
+    }
+  }, [dispatch]);
+
   // --- ADD TOAST STATE HERE ---
   const [infoToastMessage, setInfoToastMessage] = useState<string | null>(null);
   const [showInfoToast, setShowInfoToast] = useState(false);
@@ -109,7 +124,7 @@ const Cart = () => {
   // ✅ TRIGGER: AUTO-REMOVE FREE ITEMS IF MOV NOT MET
   useEffect(() => {
     if (cart.freeItemsMov > 0 && cart.totalPrice < cart.freeItemsMov) {
-      const freeItem = cart.items.find((item: any) => item.isFreeItem);
+      const freeItem = cart.items.find((item: any) => item.isFreeItem || item.free);
       if (freeItem) {
         dispatch(removeFreeItemFromCart(freeItem.item_code));
       }

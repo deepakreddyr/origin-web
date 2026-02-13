@@ -223,7 +223,7 @@ const Payment = (props: any) => {
       isPlacingOrderRef.current = true;
 
       let storeId: any = localStorage.getItem('store-id');
-      const { items } = prepareCartItemsToApi(cart.items);
+      const { items } = prepareCartItemsToApi(cart.items, true);
       let apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + mainApiUrl['ordersActions'];
       const addressFromLs = getAddressAndStoreId();
 
