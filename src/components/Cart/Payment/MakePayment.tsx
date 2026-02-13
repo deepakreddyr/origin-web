@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { paymentTypeList } from '@/constants';
 
 const MakePayment = (props: any) => {
-  const { placeOrderHandler } = props;
+  const { placeOrderHandler, primeAudio } = props;
   const [showCodButton, setShowCodButton] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [processingPaymentId, setProcessingPaymentId] = useState(null);
@@ -90,6 +90,7 @@ const MakePayment = (props: any) => {
                 key={pay.id}
                 onClick={async (e) => {
                   e.stopPropagation();
+                  primeAudio?.();
 
                   // Prevent clicks if processing or if this specific payment method is disabled
                   if (processing || isProcessingRef.current || (!pay.sub_payment_method && !isCodEnabled)) {
@@ -128,6 +129,7 @@ const MakePayment = (props: any) => {
                   <button
                     onClick={async (e) => {
                       e.stopPropagation();
+                      primeAudio?.();
                       if (processing || isProcessingRef.current) {
                         return;
                       }

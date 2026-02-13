@@ -5,13 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addFreeItemToCart, removeFreeItemFromCart } from '@/store/slice/CartSlice';
 import LockIcon from '@mui/icons-material/Lock';
 
-const FreeItemSection = () => {
+const FreeItemSection = ({ onShowToast }: { onShowToast: (message: string) => void }) => {
   const dispatch = useDispatch();
   const cart = useSelector((state: any) => state.cart);
 
   const freeItems = cart.freeItems || [];
   const freeItemsMov = cart.freeItemsMov || 0;
   const cartTotal = cart.totalPrice || 0;
+  const couponDetails = cart.couponDetails;
 
   // Don't render if no free items available
   if (!freeItems || freeItems.length === 0) {
@@ -36,6 +37,11 @@ const FreeItemSection = () => {
   const isFreeItemAdded = cart.items.some((item: any) => item.isFreeItem && item.item_code === freeItem.item_code);
 
   const handleAddFreeItem = () => {
+    if (couponDetails && couponDetails.id) {
+      onShowToast('Free item cannot be added when the coupon is added');
+      return;
+    }
+
     if (isUnlocked && !isFreeItemAdded) {
       dispatch(addFreeItemToCart(freeItem));
     }
@@ -50,7 +56,7 @@ const FreeItemSection = () => {
 
   return (
     <div className="bg-[#F2EEE44D] flex flex-col border border-[#F2EEE4] p-[1.1vw] mob:p-[4.1vw] mob:rounded-[4.1vw] rounded-[1.1vw]">
-      <h3 className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] font-bold text-[#231F20CC] pb-[.97vw] mob:pb-[3vw]">
+      <h3 className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] font-bold text-black pb-[.97vw] mob:pb-[3vw]">
         Best deal on your cart
       </h3>
 
@@ -86,7 +92,7 @@ const FreeItemSection = () => {
           <button
             onClick={isFreeItemAdded ? handleRemoveFreeItem : handleAddFreeItem}
             disabled={!isUnlocked && !isFreeItemAdded}
-            className={`px-[1.5vw] mob:px-[5vw] py-[.5vw] mob:py-[2vw] rounded-full font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3vw] transition-all ${
+            className={`px-[1.5vw] mob:px-[5vw] py-[.5vw] mob:py-[2vw] rounded-full font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3vw] flex items-center justify-center min-w-[7vw] mob:min-w-[24vw] ${
               isFreeItemAdded
                 ? 'bg-white border border-[#231F20] text-[#231F20]'
                 : isUnlocked
@@ -110,7 +116,7 @@ const FreeItemSection = () => {
         <div className="mt-[.8vw] mob:mt-[2.5vw] flex items-center gap-[.4vw] mob:gap-[1.5vw]">
           {isUnlocked || isFreeItemAdded ? (
             <>
-              <span className="text-[1vw] mob:text-[4vw]">🎉</span>
+              <span className="text-[1vw] mob:text-[4vw]">🎉 </span>
               <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-[#231F20]">
                 You've unlocked a <span className="font-bold">FREE</span> item!
               </p>

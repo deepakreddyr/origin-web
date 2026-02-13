@@ -15,18 +15,11 @@ import {
   setCartMinimum,
   setCartTabType,
   setIsProceedButtonEnabled,
-  setFreeItems,
+  setFreeItems
 } from '@/store/slice/CartSlice';
 import { TabTypeConstant } from '../Login/constants/tabTypeContent';
-import {
-  getAddressAndStoreId,
-  prepareCartItemsToApi,
-  setRouteSourceToLs,
-} from '@/utilities/utils';
-import {
-  setIsHeaderVisible,
-  setTabType,
-} from '@/store/slice/loginSlice';
+import { getAddressAndStoreId, prepareCartItemsToApi, setRouteSourceToLs } from '@/utilities/utils';
+import { setIsHeaderVisible, setTabType } from '@/store/slice/loginSlice';
 import { protectedUrl } from '@/url';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
@@ -38,18 +31,16 @@ import { updateTimeSlotId } from '@/store/slice/placeOrderDetails';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { useAtom } from 'jotai';
 // Import InfoOutlinedIcon to be used in the new MaxQuantityToast copy
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 // ==========================================================
 // MAX QUANTITY TOAST COMPONENT MOVED/COPIED HERE FOR GLOBAL RENDER
 // ==========================================================
-const MaxQuantityToast: React.FC<{
-  maxQuantity: number | null;
+const InfoToast: React.FC<{
+  message: string | null;
   isVisible: boolean;
   onClose: () => void;
-}> = ({ maxQuantity, isVisible, onClose }) => {
-
-  // Auto-hide logic
+}> = ({ message, isVisible, onClose }) => {
   React.useEffect(() => {
     if (isVisible) {
       const timer = setTimeout(() => {
@@ -59,18 +50,19 @@ const MaxQuantityToast: React.FC<{
     }
   }, [isVisible, onClose]);
 
-  if (!isVisible || maxQuantity === null) return null;
+  if (!isVisible || message === null) return null;
 
   return (
     <div
-      className={`absolute bottom-22 left-1/2 transform -translate-x-1/2 z-[9999] w-[90%] max-w-md transition-opacity duration-300 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+      className={`absolute bottom-22 left-1/2 transform -translate-x-1/2 z-[9999] w-[90%] max-w-md transition-opacity duration-300 ease-in-out ${
+        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
     >
       <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full">
         <div className="flex items-center justify-center w-full gap-2">
           <InfoOutlinedIcon sx={{ color: 'yellow', fontSize: '1.2rem' }} />
           <p className="text-[0.70rem] mob:text-[2.8vw] font-semibold text-white text-center leading-tight">
-            Maximum quantity of {maxQuantity} reached for this item.
+            {message}
           </p>
         </div>
       </div>
@@ -78,7 +70,6 @@ const MaxQuantityToast: React.FC<{
   );
 };
 // ==========================================================
-
 
 const Cart = () => {
   const cart = useSelector((state: any) => state.cart);
@@ -101,27 +92,28 @@ const Cart = () => {
     delivery_charge: '',
     free_delivery_charge: '',
     distance_delivery_fees: null,
-    distance_from_warehouse: null,
+    distance_from_warehouse: null
   });
   const [address, setAddress] = useAtom(addressAtom);
 
   // --- ADD TOAST STATE HERE ---
-  const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
-  const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
+  const [infoToastMessage, setInfoToastMessage] = useState<string | null>(null);
+  const [showInfoToast, setShowInfoToast] = useState(false);
+
+  const handleShowToast = (message: string) => {
+    setInfoToastMessage(message);
+    setShowInfoToast(true);
+  };
 
   const handleMaxQuantityExceededGlobal = (maxQty: number) => {
-    setToastMaxQuantity(maxQty);
-    setShowMaxQuantityToast(true);
+    handleShowToast(`Maximum quantity of ${maxQty} reached for this item.`);
   };
   // ----------------------------
-
 
   const fetchCartItemsFromApi = () => {
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getCartItems'];
     const addressFromLs = getAddressAndStoreId();
-    const additionalHeaders = addressFromLs
-      ? { 'store-id': addressFromLs.store_id }
-      : {};
+    const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
 
     const successHandler = (data: any) => {
       dispatch(setCartItems(data.data));
@@ -131,7 +123,7 @@ const Cart = () => {
         delivery_charge: data.delivery_charge,
         free_delivery_charge: data.free_delivery_charge || '',
         distance_delivery_fees: data.distance_delivery_fees || null,
-        distance_from_warehouse: data.distance_from_warehouse || null,
+        distance_from_warehouse: data.distance_from_warehouse || null
       });
 
       if (data.order_restricted) {
@@ -139,7 +131,7 @@ const Cart = () => {
           title: data.order_restricted.title,
           description: data.order_restricted.description,
           until: data.order_restricted.until,
-          is_available: data.order_restricted.is_available,
+          is_available: data.order_restricted.is_available
         });
       } else {
         setOrderRestrictionData(null);
@@ -147,10 +139,12 @@ const Cart = () => {
 
       // Store free items data
       if (data.free_items && data.free_items.length > 0) {
-        dispatch(setFreeItems({
-          freeItems: data.free_items,
-          freeItemsMov: Number(data.free_items_mov) || 0,
-        }));
+        dispatch(
+          setFreeItems({
+            freeItems: data.free_items,
+            freeItemsMov: Number(data.free_items_mov) || 0
+          })
+        );
       } else {
         dispatch(setFreeItems({ freeItems: [], freeItemsMov: 0 }));
       }
@@ -160,21 +154,17 @@ const Cart = () => {
       // handle error
     };
 
-    if (addressFromLs)
-      getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+    if (addressFromLs) getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
   };
 
   const sendItemsToApi = () => {
     const token = localStorage.getItem('user_token');
     if (!token) return;
 
-    const apiUrl =
-      process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['addToCart'];
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['addToCart'];
     const cartItemFromLs = localStorage.getItem('cart_items');
     const addressFromLs = getAddressAndStoreId();
-    const additionalHeaders = addressFromLs
-      ? { 'store-id': addressFromLs.store_id }
-      : {};
+    const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
 
     if (cartItemFromLs) {
       const cartItems = prepareCartItemsToApi(JSON.parse(cartItemFromLs));
@@ -187,14 +177,7 @@ const Cart = () => {
       };
 
       if (loginDetails.isSidebarOpen) {
-        sendDataToApi(
-          apiUrl,
-          cartItems,
-          'POST',
-          successHandler,
-          failureHandler,
-          additionalHeaders,
-        );
+        sendDataToApi(apiUrl, cartItems, 'POST', successHandler, failureHandler, additionalHeaders);
       }
     }
   };
@@ -238,7 +221,8 @@ const Cart = () => {
       if (cart.cartTabType === TabTypeConstant.CART_MAIN && showAddressModal) {
         // Check if user has selected a delivery type and timing
         const hasSelectedDelivery = placeOrderDetails.delivery_type !== '';
-        const hasSelectedTiming = placeOrderDetails.delivery_type === 'INSTANT' ||
+        const hasSelectedTiming =
+          placeOrderDetails.delivery_type === 'INSTANT' ||
           (placeOrderDetails.delivery_type === 'TIME_SLOT' && placeOrderDetails.time_slot_id !== '');
 
         if (hasSelectedDelivery && hasSelectedTiming) {
@@ -267,25 +251,18 @@ const Cart = () => {
   }, [cart.items]);
 
   const SCREEN_MAP: any = {
-    COUPON_CODE_LIST: (
-      <CouponFlowWrapper setShowCouponList={setShowCouponList} />
-    ),
+    COUPON_CODE_LIST: <CouponFlowWrapper setShowCouponList={setShowCouponList} />,
     PAYMENT: <Payment />,
     CART_MAIN: (
       <>
-        {orderRestrictionData && (
-          <RestrictOrderInfo orderRestrictionData={orderRestrictionData} />
-        )}
-        <CouponSection setShowCouponList={setShowCouponList} />
-        <FreeItemSection />
+        {orderRestrictionData && <RestrictOrderInfo orderRestrictionData={orderRestrictionData} />}
+        <CouponSection setShowCouponList={setShowCouponList} onShowToast={handleShowToast} />
+        <FreeItemSection onShowToast={handleShowToast} />
         <ReviewList onShowMaxQuantityToast={handleMaxQuantityExceededGlobal} />
         <DeliveryInstruction />
         {showAddressModal && (
           <div className="w-[30vw] flex items-end relative justify-end">
-            <AddressAndTimeSlot
-              showAddressModal={showAddressModal}
-              setAddressModal={setAddressModal}
-            />
+            <AddressAndTimeSlot showAddressModal={showAddressModal} setAddressModal={setAddressModal} />
           </div>
         )}
         <BillDetailsWrapper billDetails={billDetails} orderRestrictionData={orderRestrictionData} />
@@ -300,17 +277,13 @@ const Cart = () => {
         )}
       </>
     ),
-    EMPTY_CART: <EmptyCart />,
+    EMPTY_CART: <EmptyCart />
   };
 
   return (
     // RENDER THE MAX QUANTITY TOAST AT THE TOP LEVEL HERE
     <div className="flex flex-col grow gap-[1.1vw] mob:gap-[4.1vw] pb-[6vw] mob:pb-[25vw]">
-      <MaxQuantityToast
-        maxQuantity={toastMaxQuantity}
-        isVisible={showMaxQuantityToast}
-        onClose={() => setShowMaxQuantityToast(false)}
-      />
+      <InfoToast message={infoToastMessage} isVisible={showInfoToast} onClose={() => setShowInfoToast(false)} />
       {SCREEN_MAP[cart.cartTabType]}
     </div>
   );

@@ -81,8 +81,8 @@ export default function Layout({
         'store-id': addressFromLs.store_id
       };
     }
-    const successHandler = (data: any) => {
-      dispatch(setCartItems(data.data));
+    const successHandler = (data?: any) => {
+      dispatch(setCartItems(data?.data));
       localStorage.setItem('cart_items', JSON.stringify(data.data));
     };
     const failureHandler = (data: any) => {
@@ -126,9 +126,7 @@ export default function Layout({
           />
         )}
         <SidebarScreen />
-        <main className={`${useTopPadding ? 'pt-[22vw] mob:pt-[35vw] md:pt-[6vw]' : ''}`}>
-          {children}
-        </main>
+        <main className={`${useTopPadding ? 'pt-[22vw] mob:pt-[35vw] md:pt-[6vw]' : ''}`}>{children}</main>
         {query.type !== 'app' && <Footer footerData={footerData} />}
       </ThemeProvider>
     </CacheProvider>

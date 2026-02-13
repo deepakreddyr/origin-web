@@ -30,6 +30,12 @@ const Payment = (props: any) => {
   const getDataFromApi = useGetDataFromApi();
 
   const orderAndRefundDetails = useSelector((state: any) => state.orderAndRefundDetails);
+  const successAudio = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    successAudio.current = new Audio('/assets/audio/orderAudio.mp3');
+    successAudio.current.load();
+  }, []);
 
   // Add ref to prevent duplicate order placement
   const isPlacingOrderRef = useRef(false);
@@ -281,9 +287,25 @@ const Payment = (props: any) => {
     });
   };
 
+  const primeAudio = () => {
+    if (successAudio.current) {
+      // Playing and immediately pausing is a common way to "unlock" audio on mobile
+      successAudio.current
+        .play()
+        .then(() => {
+          successAudio.current?.pause();
+          successAudio.current!.currentTime = 0;
+        })
+        .catch((e) => {
+          // This might fail if called outside a click, which is fine, we're just trying to unlock
+          console.log('Audio priming attempt:', e.message);
+        });
+    }
+  };
+
   const PAYMENT_SCREEN_MAP: any = {
-    MAKE_PAYMENT: <MakePayment placeOrderHandler={placeOrderHandler} />,
-    PAYMENT_SUCCESS: <PaymentSuccess paymentModalDetails={paymentModalDetails} />,
+    MAKE_PAYMENT: <MakePayment placeOrderHandler={placeOrderHandler} primeAudio={primeAudio} />,
+    PAYMENT_SUCCESS: <PaymentSuccess paymentModalDetails={paymentModalDetails} successAudio={successAudio} />,
     PAYMENT_FAILED: (
       <PaymentFailure
         paymentModalDetails={paymentModalDetails}

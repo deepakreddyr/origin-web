@@ -22,7 +22,12 @@ const OrderDetailsWrapper = () => {
   const { isReady, query } = router;
   const dispatch = useDispatch();
 
+  const requestCount = useRef(0);
+
   const fetchOrderdetails = React.useCallback(() => {
+    if (requestCount.current >= 2) return;
+    requestCount.current += 1;
+
     const apiUrl =
       process.env.NEXT_PUBLIC_BACKEND_API_URL + mainApiUrl.ordersActions + `/${query.id}?showAllBills=true`;
 
@@ -46,12 +51,11 @@ const OrderDetailsWrapper = () => {
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
   }, [dispatch, getDataFromApi, query.id]);
 
-  // Only fetch on initial load - no more frequent polling
   useEffect(() => {
     if (isReady && query.id) {
       fetchOrderdetails();
     }
-  }, [isReady, query.id, fetchOrderdetails]); // Only depend on isReady and query.id and fetchOrderdetails
+  }, [isReady, query.id, fetchOrderdetails]);
 
   if (!orderAndRefundDetails.orderDetailsData)
     return <div className="pb-[6vw]  pt-[12vw] p-[10vw]">No Order found for this order</div>;

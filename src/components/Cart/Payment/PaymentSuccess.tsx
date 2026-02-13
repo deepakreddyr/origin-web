@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Lottie from 'lottie-react';
 import successAnimation from '../../../../src/assets/json/Success.json';
 import { useRouter } from 'next/router';
@@ -12,6 +12,7 @@ const PaymentSuccess = (props: any) => {
   const [timer, setTimer] = useState(5);
   const router = useRouter();
   const dispatch = useDispatch();
+  const hasPlayedAudio = useRef(false);
   const total_to_pay = localStorage.getItem('total_to_pay');
   // localStorage.removeItem("total_to_pay"); // Moved inside useEffect or handle properly to avoid re-runs
 
@@ -26,7 +27,15 @@ const PaymentSuccess = (props: any) => {
       });
       localStorage.removeItem('total_to_pay');
     }
-  }, [paymentModalDetails, total_to_pay]);
+
+    // Play success audio only once using the primed audio from props
+    if (props.successAudio?.current && !hasPlayedAudio.current) {
+      props.successAudio.current.play().catch((error: any) => {
+        console.error('Error playing order success audio:', error);
+      });
+      hasPlayedAudio.current = true;
+    }
+  }, [paymentModalDetails, total_to_pay, props.successAudio]);
 
   useEffect(() => {
     if (timer > 0) {
@@ -46,7 +55,7 @@ const PaymentSuccess = (props: any) => {
 
   return (
     <div className="flex flex-col items-center justify-center  grow">
-      <div className="w-[10vw]">
+      <div className="w-[10vw] mob:w-[45vw]">
         <Lottie animationData={successAnimation} />
       </div>
       <div className="text-center pt-[1.67vw] mob:pt-[5.1vw] ">

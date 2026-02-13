@@ -73,7 +73,7 @@ const initialState: CartState = {
   cart_minimum: null,
   deliveryFee: 0,
   freeItems: [],
-  freeItemsMov: 0,
+  freeItemsMov: 0
 };
 
 // --- UTILITY FUNCTIONS ---
@@ -110,7 +110,7 @@ const updateCartTotals = (state: CartState) => {
       }
     });
   });
-  // Calculate final amount to pay 
+  // Calculate final amount to pay
   state.amountToPay = state.totalPrice;
 };
 
@@ -130,7 +130,12 @@ const isProceedBtnEnabled = (state: CartState): boolean => {
 
 // --- HELPER FUNCTION TO FIND AND UPDATE UOM/RIPENESS ---
 
-const findUOMAndRipeness = (state: CartState, productId: number, variantId: number, selectedRipenessType: string | null) => {
+const findUOMAndRipeness = (
+  state: CartState,
+  productId: number,
+  variantId: number,
+  selectedRipenessType: string | null
+) => {
   const product = state.items.find((p) => p.id === productId);
   if (!product) return { product: null, uom: null, ripeness: null, productIndex: -1 };
 
@@ -177,14 +182,13 @@ const updateCartQuantityInNestedStructure = (
 };
 
 const saveCart = (state: CartState) => {
-  state.items.forEach(product => {
-    product.multiple_uoms.forEach(uom => {
-
+  state.items.forEach((product) => {
+    product.multiple_uoms.forEach((uom) => {
       // --- RIPENESS CLEANUP RULE (TS FIX) ---
       if (uom.cart_ripeness) {
         // Use nullish coalescing to ensure uom.cart_ripeness is treated as an array for filtering
         const validRipeness = (uom.cart_ripeness ?? []).filter(
-          r => r.ripeness_type !== null && r.ripeness_type !== undefined && Number(r.qty) > 0
+          (r) => r.ripeness_type !== null && r.ripeness_type !== undefined && Number(r.qty) > 0
         );
 
         // If valid entries exist → keep them
@@ -199,21 +203,16 @@ const saveCart = (state: CartState) => {
 
       // If ripeness exists → cart_quantity must be the sum(ripeness.qty)
       if (uom.cart_ripeness?.length && uom.cart_ripeness.length > 0) {
-        uom.cart_quantity = uom.cart_ripeness.reduce(
-          (sum, r) => sum + Number(r.qty),
-          0
-        );
+        uom.cart_quantity = uom.cart_ripeness.reduce((sum, r) => sum + Number(r.qty), 0);
       }
     });
 
     // Remove UOMs with zero quantity
-    product.multiple_uoms = product.multiple_uoms.filter(
-      uom => uom.cart_quantity > 0
-    );
+    product.multiple_uoms = product.multiple_uoms.filter((uom) => uom.cart_quantity > 0);
   });
 
   // Remove empty products
-  state.items = state.items.filter(product => product.multiple_uoms.length > 0);
+  state.items = state.items.filter((product) => product.multiple_uoms.length > 0);
 
   // Recalculate totals + enable proceed btn
   updateCartTotals(state);
@@ -222,7 +221,6 @@ const saveCart = (state: CartState) => {
   // IMPORTANT: LS now receives cleaned structure
   updateCartItemsToLs(state.items);
 };
-
 
 export const cartSlice = createSlice({
   name: 'cart',
@@ -233,7 +231,10 @@ export const cartSlice = createSlice({
       saveCart(state);
     },
 
-    addItemToCart: (state, action: PayloadAction<{ product: any; selectedUOM: any; selectedRipenessType: string | null }>) => {
+    addItemToCart: (
+      state,
+      action: PayloadAction<{ product: any; selectedUOM: any; selectedRipenessType: string | null }>
+    ) => {
       const { product, selectedUOM, selectedRipenessType } = action.payload;
       const normalizedProductId = product.id || product.product_id;
       const normalizedVariantId = selectedUOM.variant_id || selectedUOM.varientId;
@@ -242,21 +243,26 @@ export const cartSlice = createSlice({
       const quantityToAdd = selectedUOM.stepper_quantity; // This is the quantity being added (could be min qty on first add)
 
       // ✅ FIX: Get the ORIGINAL stepper from the product's UOM, not from selectedUOM
-      const originalVariant = product.multiple_uoms.find((uom: any) =>
-        (uom.variant_id || uom.varientId) === normalizedVariantId
+      const originalVariant = product.multiple_uoms.find(
+        (uom: any) => (uom.variant_id || uom.varientId) === normalizedVariantId
       );
       const actualStepperQuantity = originalVariant?.stepper_quantity || 1;
 
-      const { product: existingProduct, uom: existingUOM, ripeness: existingRipeness } = findUOMAndRipeness(
-        state,
-        normalizedProductId,
-        normalizedVariantId,
-        selectedRipenessType
-      );
+      const {
+        product: existingProduct,
+        uom: existingUOM,
+        ripeness: existingRipeness
+      } = findUOMAndRipeness(state, normalizedProductId, normalizedVariantId, selectedRipenessType);
 
       if (existingUOM) {
         // Prevent adding beyond max quantity
         if (existingUOM.cart_quantity + quantityToAdd > existingUOM.maximum_quantity) {
+          saveCart(state);
+          return;
+        }
+
+        // Prevent adding free items if coupon is applied
+        if (state.couponDetails && state.couponDetails.id && product.isFreeItem) {
           saveCart(state);
           return;
         }
@@ -273,7 +279,7 @@ export const cartSlice = createSlice({
 
             existingUOM.cart_ripeness.push({
               ripeness_type: selectedRipenessType,
-              qty: String(quantityToAdd),
+              qty: String(quantityToAdd)
             });
             existingUOM.cart_quantity += quantityToAdd;
           }
@@ -307,7 +313,7 @@ export const cartSlice = createSlice({
           ripeness_types: selectedUOM.ripeness_types,
           cart_ripeness: selectedRipenessType
             ? [{ ripeness_type: selectedRipenessType, qty: String(quantityToAdd) }] // ✅ Use quantityToAdd
-            : undefined,
+            : undefined
         };
 
         if (existingProduct) {
@@ -324,7 +330,7 @@ export const cartSlice = createSlice({
             is_orderable: product.is_orderable,
             navigation: product.navigation,
             tag_url: product.tag_url,
-            multiple_uoms: [newUOM],
+            multiple_uoms: [newUOM]
           };
           state.items.push(newProduct);
         }
@@ -342,7 +348,7 @@ export const cartSlice = createSlice({
             if (selectedRipenessType) {
               // Case: Item with Ripeness -> remove the specific ripeness object
               if (uom.cart_ripeness) {
-                uom.cart_ripeness = uom.cart_ripeness.filter(r => {
+                uom.cart_ripeness = uom.cart_ripeness.filter((r) => {
                   const isMatch = r.ripeness_type === selectedRipenessType;
                   if (isMatch) {
                     uom.cart_quantity -= Number(r.qty);
@@ -362,18 +368,16 @@ export const cartSlice = createSlice({
       saveCart(state);
     },
 
-    increaseQuantity: (state, action: PayloadAction<{ varientId: number; stepperQuantity: number; selectedRipenessType: string | null }>) => {
+    increaseQuantity: (
+      state,
+      action: PayloadAction<{ varientId: number; stepperQuantity: number; selectedRipenessType: string | null }>
+    ) => {
       const { varientId, stepperQuantity, selectedRipenessType } = action.payload;
 
-      const product = state.items.find(p => p.multiple_uoms.some(u => u.variant_id === varientId));
+      const product = state.items.find((p) => p.multiple_uoms.some((u) => u.variant_id === varientId));
       if (!product) return;
 
-      const { uom, ripeness } = findUOMAndRipeness(
-        state,
-        product.id,
-        varientId,
-        selectedRipenessType
-      );
+      const { uom, ripeness } = findUOMAndRipeness(state, product.id, varientId, selectedRipenessType);
 
       if (uom) {
         // Check max quantity at the start
@@ -405,18 +409,16 @@ export const cartSlice = createSlice({
       saveCart(state);
     },
 
-    decreaseQuantity: (state, action: PayloadAction<{ varientId: number; stepperQuantity: number; selectedRipenessType: string | null }>) => {
+    decreaseQuantity: (
+      state,
+      action: PayloadAction<{ varientId: number; stepperQuantity: number; selectedRipenessType: string | null }>
+    ) => {
       const { varientId, stepperQuantity, selectedRipenessType } = action.payload;
 
-      const product = state.items.find(p => p.multiple_uoms.some(u => u.variant_id === varientId));
+      const product = state.items.find((p) => p.multiple_uoms.some((u) => u.variant_id === varientId));
       if (!product) return;
 
-      const { uom, ripeness } = findUOMAndRipeness(
-        state,
-        product.id,
-        varientId,
-        selectedRipenessType
-      );
+      const { uom, ripeness } = findUOMAndRipeness(state, product.id, varientId, selectedRipenessType);
 
       if (uom) {
         if (selectedRipenessType) {
@@ -460,8 +462,8 @@ export const cartSlice = createSlice({
             const originalLength = uom.cart_ripeness.length;
 
             // Filter out ripeness types that are no longer available
-            uom.cart_ripeness = uom.cart_ripeness.filter((ripeness) =>
-              availableRipenessTypes.includes(ripeness.ripeness_type) && Number(ripeness.qty) > 0
+            uom.cart_ripeness = uom.cart_ripeness.filter(
+              (ripeness) => availableRipenessTypes.includes(ripeness.ripeness_type) && Number(ripeness.qty) > 0
             );
 
             // If items were filtered out, mark that we had changes
@@ -471,10 +473,7 @@ export const cartSlice = createSlice({
 
             // Recalculate cart_quantity based on remaining valid ripeness entries
             if (uom.cart_ripeness.length > 0) {
-              uom.cart_quantity = uom.cart_ripeness.reduce(
-                (sum, r) => sum + Number(r.qty),
-                0
-              );
+              uom.cart_quantity = uom.cart_ripeness.reduce((sum, r) => sum + Number(r.qty), 0);
             } else {
               // No valid ripeness entries left, set to undefined
               uom.cart_ripeness = undefined;
@@ -545,6 +544,12 @@ export const cartSlice = createSlice({
       );
 
       if (existingFreeItemIndex === -1) {
+        // Prevent adding free item if a coupon is already applied
+        if (state.couponDetails && state.couponDetails.id) {
+          saveCart(state);
+          return;
+        }
+
         // Get the first UOM from the free item
         const uom = freeItem.multiple_uoms?.[0] || freeItem.uom?.[0];
         if (!uom) return;
@@ -560,24 +565,26 @@ export const cartSlice = createSlice({
           is_orderable: true,
           navigation: { to: '' },
           tag_url: null,
-          multiple_uoms: [{
-            variant_id: uom.variant_id,
-            cart_quantity: 1, // Free item quantity is always 1
-            price: 0, // Free item has 0 price
-            market_price: uom.market_price || uom.price,
-            maximum_quantity: 1,
-            minimum_quantity: 1,
-            stepper_quantity: 1,
-            unit: uom.unit,
-            uom_id: uom.uom_id,
-            conversion_text: uom.conversion_text || '',
-            is_available: true,
-            is_default: true,
-            is_visible: true,
-            ripeness_types: null,
-            cart_ripeness: undefined,
-          }],
-          isFreeItem: true,
+          multiple_uoms: [
+            {
+              variant_id: uom.variant_id,
+              cart_quantity: 1, // Free item quantity is always 1
+              price: 0, // Free item has 0 price
+              market_price: uom.market_price || uom.price,
+              maximum_quantity: 1,
+              minimum_quantity: 1,
+              stepper_quantity: 1,
+              unit: uom.unit,
+              uom_id: uom.uom_id,
+              conversion_text: uom.conversion_text || '',
+              is_available: true,
+              is_default: true,
+              is_visible: true,
+              ripeness_types: null,
+              cart_ripeness: undefined
+            }
+          ],
+          isFreeItem: true
         };
 
         state.items.unshift(newProduct); // Add at the beginning
@@ -588,9 +595,7 @@ export const cartSlice = createSlice({
 
     removeFreeItemFromCart: (state, action: PayloadAction<string>) => {
       const itemCode = action.payload;
-      const freeItemIndex = state.items.findIndex(
-        (item) => item.isFreeItem && item.item_code === itemCode
-      );
+      const freeItemIndex = state.items.findIndex((item) => item.isFreeItem && item.item_code === itemCode);
 
       if (freeItemIndex !== -1) {
         state.items.splice(freeItemIndex, 1);
@@ -633,7 +638,7 @@ export const {
   validateAndCleanCart,
   setFreeItems,
   addFreeItemToCart,
-  removeFreeItemFromCart,
+  removeFreeItemFromCart
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

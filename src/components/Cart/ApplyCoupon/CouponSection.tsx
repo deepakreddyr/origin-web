@@ -16,6 +16,12 @@ const CouponSection = (props: any) => {
   const loginDetails = useSelector((state: any) => state.loginDetails);
 
   const handleAddCoupon = () => {
+    const hasFreeItem = cart.items.some((item: any) => item.isFreeItem);
+    if (hasFreeItem) {
+      props.onShowToast?.('Coupons cannot be added with free items in cart');
+      return;
+    }
+
     if (loginDetails.user) {
       setShowCouponList(true);
       dispatch(setCartTabType(TabTypeConstant.COUPON_CODE_LIST));
@@ -34,7 +40,7 @@ const CouponSection = (props: any) => {
   return (
     // <></>
     <div className=" bg-[#F2EEE44D]  flex flex-col border border-[#F2EEE4] p-[1.1vw] mob:p-[4.1vw] mob:rounded-[4.1vw] rounded-[1.1vw]">
-      <h3 className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] mob:pb-[2vw] pb-[.6vw] font-bold text-[#231F20CC]">
+      <h3 className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] mob:pb-[2vw] pb-[.6vw] font-bold text-black">
         Save with coupons
       </h3>
 
