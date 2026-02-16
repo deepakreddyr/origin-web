@@ -45,11 +45,20 @@ const YourOrders = () => {
       setOrders((prevOrders) => ({
         ...prevOrders,
         loading: false,
-        data: [...(prevOrders.data || []), ...data.data] // Concatenate new data with old
+        success: true,
+        data: [...(prevOrders.data || []), ...(data?.data || [])] // Concatenate new data with old, with safety checks
       }));
-      if (data.meta.has_next_page) setPage(data.meta.current_page + 1);
+      if (data?.meta?.has_next_page) {
+        setPage(data.meta.current_page + 1);
+      }
     };
-    const failureHandler = (data: any) => {};
+    const failureHandler = (err: any) => {
+      setOrders((prevOrders) => ({
+        ...prevOrders,
+        loading: false,
+        error: true
+      }));
+    };
     getDataFromApi(url, successHandler, failureHandler, additionalHeaders);
   };
 
@@ -76,7 +85,20 @@ const YourOrders = () => {
     >
       {orders?.data?.map((order: any, index: number) => <OrderCard key={index} order={order} />)}
       {orders.loading && <OrdersSkeleton />}
-      {!orders.loading && orders.data?.length === 0 && <div>No orders found.</div>}
+      {!orders.loading && orders.error && (
+        <div className="flex flex-col items-center justify-center py-[10vw] mob:py-[20vw] px-[5vw]">
+          <p className="text-[1.1vw] mob:text-[4.5vw] font-medium text-red-500 text-center">
+            Something went wrong while fetching your orders. Please try again later.
+          </p>
+        </div>
+      )}
+      {!orders.loading && !orders.error && orders.data && orders.data.length === 0 && (
+        <div className="flex flex-col items-center justify-center flex-1 py-[10vw] mob:py-[20vw] px-[5vw] text-center h-full min-h-[55vh]">
+          <h3 className="text-[2vw] mob:text-[7vw] font-[Recoleta] font-bold text-black mb-[0.8vw] mob:mb-[2vw]">
+            No orders yet
+          </h3>
+        </div>
+      )}
     </div>
   );
 };

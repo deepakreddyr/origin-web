@@ -109,7 +109,7 @@ const ItemsList = (props: any) => {
                   </div>
                   <div className="text-right">
                     {/* Check if this is a free item (price is 0, null, or 1) */}
-                    {uom.price === 0 || uom.price === null || uom.price === 1 ? (
+                    {uom.price === 0 || uom.price === null || uom.price < 0 ? (
                       <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold text-[#25874D]">
                         Free Item
                       </p>

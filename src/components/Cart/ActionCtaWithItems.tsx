@@ -22,7 +22,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
   handler,
   isDisabled,
   orderRestrictionData,
-  showAddressModal = false,
+  showAddressModal = false
 }) => {
   const cart = useSelector((state: any) => state.cart);
   const loginDetails = useSelector((state: any) => state.loginDetails);
@@ -129,7 +129,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
   // Calculate total amount including instant delivery fee
   const getTotalAmount = () => {
     let total = parseFloat(cart.amountToPay) || 0;
-    
+
     // Add instant delivery fee if instant delivery is selected
     if (placeOrderDetails.delivery_type === 'INSTANT') {
       const instantFee = placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_fee;
@@ -137,7 +137,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
         total += parseFloat(instantFee);
       }
     }
-    
+
     return total.toFixed(2);
   };
 
@@ -157,7 +157,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
       <div
         className={`fixed flex items-center justify-between h-[4vw] mob:h-[15vw] ${
           finalIsDisabled ? 'bg-gray-400' : 'bg-primary'
-        } z-[2] mob:z-[9999] bottom-[1.67vw] mob:bottom-[5vw] w-[calc(30vw-2vw)] mob:w-[calc(100vw-4vw)] mob:p-[2vw] p-[.6vw] rounded-full mob:left-[2vw] mob:shadow-xl transition-all duration-300`}
+        } z-[2] mob:z-[9999] bottom-[1.67vw] mob:bottom-[5vw] w-[calc(30vw-2.78vw)] mob:w-[calc(100vw-10vw)] mob:p-[2vw] p-[.6vw] rounded-full mob:left-[5vw] mob:shadow-xl transition-all duration-300`}
       >
         <div className="pl-[1vw] mob:pl-[2.1vw]">
           <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-black-op-60 font-medium">

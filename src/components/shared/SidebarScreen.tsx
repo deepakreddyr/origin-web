@@ -31,6 +31,9 @@ const SidebarScreen = () => {
   const router = useRouter();
 
   const onClickBackButton = () => {
+    const tabSource = localStorage.getItem('tab_source');
+    const parsedTabSource = tabSource ? JSON.parse(tabSource) : null;
+
     switch (loginDetails.tabType) {
       case TabTypeConstant.ENTER_MOBILE_NUMBER: {
         break;
@@ -58,14 +61,31 @@ const SidebarScreen = () => {
           activeScreen === TabTypeConstant.COMPLETE_ADDRESS ||
           activeScreen === TabTypeConstant.NO_DATA
         ) {
-          if (address.address) {
+          if (address.address && address.address.length > 0) {
             setActiveScreen(TabTypeConstant.ADDRESS_LIST);
-          } else {
-            dispatch(setTabType(TabTypeConstant.ACCOUNT_MAIN));
             return;
           }
         }
-        dispatch(setTabType(TabTypeConstant.ACCOUNT_MAIN));
+
+        if (parsedTabSource === TabTypeConstant.CART) {
+          dispatch(setTabType(TabTypeConstant.CART));
+          dispatch(setCartTabType(TabTypeConstant.CART_ADDRESS_LIST));
+        } else if (parsedTabSource === TabTypeConstant.SELECT_ADDRESS) {
+          dispatch(setTabType(TabTypeConstant.SELECT_ADDRESS));
+        } else if (parsedTabSource === TabTypeConstant.ACCOUNT_MAIN) {
+          dispatch(setTabType(TabTypeConstant.ACCOUNT_MAIN));
+        } else {
+          dispatch(setTabType(TabTypeConstant.ACCOUNT_MAIN));
+        }
+        break;
+
+      case TabTypeConstant.SELECT_ADDRESS:
+        if (parsedTabSource === TabTypeConstant.CART) {
+          dispatch(setTabType(TabTypeConstant.CART));
+          dispatch(setCartTabType(TabTypeConstant.CART_ADDRESS_LIST));
+        } else {
+          dispatch(setTabType(TabTypeConstant.ACCOUNT_MAIN));
+        }
         break;
       // case TabTypeConstant.ADDRESS_LIST:
       //   dispatch(setTabType(TabTypeConstant.ACCOUNT_MAIN));
@@ -76,6 +96,14 @@ const SidebarScreen = () => {
           dispatch(resetCouponDetails());
           break;
         }
+        if (
+          cart.cartTabType === TabTypeConstant.CART_ADDRESS_LIST ||
+          cart.cartTabType === TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR
+        ) {
+          dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
+          break;
+        }
+        break;
 
       case TabTypeConstant.PAYMENT:
         dispatch(setTabType(TabTypeConstant.CART));
@@ -101,7 +129,13 @@ const SidebarScreen = () => {
 
       case TabTypeConstant.CART:
         if (cart.cartTabType === TabTypeConstant.COUPON_CODE_LIST) return true;
+        if (
+          cart.cartTabType === TabTypeConstant.CART_ADDRESS_LIST ||
+          cart.cartTabType === TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR
+        )
+          return true;
         if (cart.cartTabType === TabTypeConstant.CART_MAIN) return false;
+        return false;
 
       case TabTypeConstant.EMPTY_CART:
         return false;

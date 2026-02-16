@@ -36,14 +36,14 @@ const ModalHeader = (props: any) => {
   }, [cart.cartTabType]);
 
   return (
-    <div className="flex items-center justify-between shadow-[4px_4px_32px_0px_rgba(0,0,0,0.08)] mob:p-[3vw] p-[1.389vw]">
-      <div className="flex items-start  gap-[.6vw] ">
+    <div className="flex items-center justify-between mob:p-[5vw] p-[1.389vw] bg-white">
+      <div className="flex items-center gap-[.6vw] mob:gap-[2vw]">
         {isBackButtonEnable && (
-          <button onClick={onClickBackButton} className="relative w-[1.25vw] mob:w-[5vw] mob:h-[5vw] h-[1.25vw]">
+          <button onClick={onClickBackButton} className="relative w-[1.25vw] mob:w-[6vw] mob:h-[6vw] h-[1.25vw]">
             <Image src={backIcon} alt="back" />
           </button>
         )}
-        <p className="font-[SofiaPro] font-bold text-[1.25vw] mob:text-[4.1vw] mob:pt-[1vw] ">Select your delivery</p>
+        <p className="font-[Recoleta] font-bold text-[1.4vw] mob:text-[5.5vw] text-black ">Select your delivery</p>
       </div>
       <button
         onClick={() => {
@@ -52,9 +52,9 @@ const ModalHeader = (props: any) => {
           dispatch(updateDeliveryType(''));
           dispatch(updateTimeSlotId(''));
         }}
-        className="w-[2vw] h-[2vw] mob:w-[5vw] mob:h-[5vw] mob:mt-[-1vw] mt-[-.4vw] rounded-full flex items-center justify-center hover:bg-gray-100 active:bg-gray-100 transition-colors duration-200"
+        className="w-[2vw] h-[2vw] mob:w-[8vw] mob:h-[8vw] mob:mt-0 mt-[-.4vw] rounded-full flex items-center justify-center hover:bg-gray-100 active:bg-gray-100 transition-colors duration-200"
       >
-        <div className="w-[1.67vw] h-[1.67vw] mob:w-[5vw] mob:h-[5vw] relative">
+        <div className="w-[1.67vw] h-[1.67vw] mob:w-[6vw] mob:h-[6vw] relative">
           <Image src={Cross} alt="close" fill />
         </div>
       </button>

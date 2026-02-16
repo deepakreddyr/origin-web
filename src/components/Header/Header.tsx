@@ -13,6 +13,7 @@ import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { profileAtom } from '@/features/AccountPage/context/atoms';
 import whiteDropdownIcon from '/public/assets/images/whiteDropdown.png';
+import { setRouteSourceToLs } from '@/utilities/utils';
 // --------------------------------------------------------
 
 import { MobileDrawer, Submenu } from '.';
@@ -225,6 +226,8 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
       dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
       return;
     }
+
+    setRouteSourceToLs(TabTypeConstant.ACCOUNT_MAIN);
 
     if (address?.address && address.address.length > 0) {
       dispatch(setTabType(TabTypeConstant.SELECT_ADDRESS));

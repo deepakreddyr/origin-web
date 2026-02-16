@@ -19,8 +19,7 @@ const DeliveryPrefencetype = () => {
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
 
   const fetchCheckoutDetails = () => {
-    const apiUrl =
-      process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['proceedToCheckout'];
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['proceedToCheckout'];
     const addressFromLs = getAddressAndStoreId();
     const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
 
@@ -64,21 +63,19 @@ const DeliveryPrefencetype = () => {
   if (loading) return <>loading</>;
 
   // Check if instant delivery is available
-  const isInstantDeliveryAvailable = placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_available && placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_enabled && placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_time_enabled && !placeOrderDetails?.checkoutDetails?.dash_delivery?.is_immediate_delivery_busy;
+  const isInstantDeliveryAvailable =
+    placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_available &&
+    placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_enabled &&
+    placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_time_enabled &&
+    !placeOrderDetails?.checkoutDetails?.dash_delivery?.is_immediate_delivery_busy;
 
   return (
     <div>
-      <div className={`grid ${isInstantDeliveryAvailable ? 'grid-cols-2' : 'grid-cols-1'} p-[1.1vw] mob:p-[4.1vw] mob:gap-[4.1vw] gap-[1.1vw]`}>
+      <div className={`grid ${isInstantDeliveryAvailable ? 'grid-cols-2' : 'grid-cols-1'} mob:gap-[2vw] gap-[0.5vw]`}>
         {isInstantDeliveryAvailable && (
-          <InstantDeliveryBtn
-            activeDeliveryType={activeDeliveryType}
-            setActiveDeliveryType={setActiveDeliveryType}
-          />
+          <InstantDeliveryBtn activeDeliveryType={activeDeliveryType} setActiveDeliveryType={setActiveDeliveryType} />
         )}
-        <ScheduledDeliveryBtn
-          activeDeliveryType={activeDeliveryType}
-          setActiveDeliveryType={setActiveDeliveryType}
-        />
+        <ScheduledDeliveryBtn activeDeliveryType={activeDeliveryType} setActiveDeliveryType={setActiveDeliveryType} />
       </div>
 
       {/* CONDITIONAL RENDERING: Only show DeliveryTimings if TIME_SLOT is active */}

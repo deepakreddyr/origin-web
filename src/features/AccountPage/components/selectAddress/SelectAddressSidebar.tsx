@@ -16,6 +16,7 @@ import { addressDetailsAtom, isEditingAddress } from '@/features/AddressEditDeta
 import { addressActiveScreenAtom, activeAccountsPageAtom } from '@/features/AccountPage/context/atoms';
 import { manageAddressScreens } from '@/features/AccountPage/enums/ActiveSidebar';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
+import { setRouteSourceToLs } from '@/utilities/utils';
 
 const SelectAddressSidebar = () => {
   const [address, setAddress] = useAtom(addressAtom);
@@ -57,6 +58,8 @@ const SelectAddressSidebar = () => {
       ...editingDetails,
       isActive: false
     });
+
+    setRouteSourceToLs(TabTypeConstant.SELECT_ADDRESS);
 
     dispatch({
       type: 'loginDetails/setTabType',
@@ -149,7 +152,14 @@ const SelectAddressSidebar = () => {
               </div>
 
               <div className="w-[22vw] mob:w-[80vw]">
-                <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold">{data.address_name}</p>
+                <div className="flex items-center gap-2">
+                  <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold">{data.address_name}</p>
+                  {data.address_id === address.defaultAddress?.address_id && (
+                    <span className="bg-[#E7F6EC] text-[#039855] text-[.7vw] mob:text-[2.5vw] px-[.5vw] mob:px-[2vw] py-[.2vw] mob:py-[.5vw] rounded-full font-bold">
+                      Selected Location
+                    </span>
+                  )}
+                </div>
                 <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] text-black-op-80">{data.address}</p>
 
                 {isDisabled && (

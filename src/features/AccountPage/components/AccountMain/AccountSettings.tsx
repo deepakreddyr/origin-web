@@ -24,6 +24,7 @@ import { setLoginDetails, setTabType } from '@/store/slice/loginSlice';
 import { getAddress } from '../../services/getAddress';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { clearCart } from '@/store/slice/CartSlice';
+import { setRouteSourceToLs } from '@/utilities/utils';
 
 const AccountSettings = () => {
   const [, setIsOpen] = useAtom(isAccountIsOpen);
@@ -34,12 +35,14 @@ const AccountSettings = () => {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const handleLogout = () => {
-    dispatch(setLoginDetails({
-      isLogin: false,
-      user: null,
-      tabType: TabTypeConstant.ENTER_MOBILE_NUMBER,
-      isSidebarOpen: false
-    }));
+    dispatch(
+      setLoginDetails({
+        isLogin: false,
+        user: null,
+        tabType: TabTypeConstant.ENTER_MOBILE_NUMBER,
+        isSidebarOpen: false
+      })
+    );
     dispatch(clearCart());
     localStorage.clear();
     sessionStorage.clear();
@@ -70,22 +73,34 @@ const AccountSettings = () => {
     {
       title: 'My Orders',
       desc: 'Order history & Statues',
-      onClick: () => dispatch(setTabType(TabTypeConstant.YOUR_ORDERS))
+      onClick: () => {
+        setRouteSourceToLs(TabTypeConstant.ACCOUNT_MAIN);
+        dispatch(setTabType(TabTypeConstant.YOUR_ORDERS));
+      }
     },
     {
       title: 'Addresses',
       desc: 'Manage & add new address',
-      onClick: () => dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS))
+      onClick: () => {
+        setRouteSourceToLs(TabTypeConstant.ACCOUNT_MAIN);
+        dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
+      }
     },
     {
       title: 'Settings',
       desc: 'Notifications & Account informations',
-      onClick: () => dispatch(setTabType(TabTypeConstant.SETTING))
+      onClick: () => {
+        setRouteSourceToLs(TabTypeConstant.ACCOUNT_MAIN);
+        dispatch(setTabType(TabTypeConstant.SETTING));
+      }
     },
     {
       title: 'Help',
       desc: 'FAQs & Support',
-      onClick: () => dispatch(setTabType(TabTypeConstant.HELP_FAQ))
+      onClick: () => {
+        setRouteSourceToLs(TabTypeConstant.ACCOUNT_MAIN);
+        dispatch(setTabType(TabTypeConstant.HELP_FAQ));
+      }
     },
     {
       title: 'Log Out',

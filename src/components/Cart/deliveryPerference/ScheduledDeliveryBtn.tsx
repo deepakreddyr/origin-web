@@ -11,14 +11,14 @@ const ScheduledDeliveryBtn = (props: any) => {
   const { checkoutDetails, delivery_type } = placeOrderDetails;
 
   let isButtonEnabled = checkoutDetails?.timeslots?.length > 0;
-  
+
   // Auto-select this button if user has selected a time slot
   const isAutoSelected = placeOrderDetails.time_slot_id !== '' || delivery_type === 'TIME_SLOT';
   const isSelected = isAutoSelected || activeDeliveryType === 'TIME_SLOT';
 
   const handleScheduledDeliverySelection = () => {
     if (!isButtonEnabled) return;
-    
+
     setActiveDeliveryType('TIME_SLOT');
     dispatch(updateDeliveryType('TIME_SLOT'));
     // Clear any previously selected time slot when manually clicking the button
@@ -29,49 +29,37 @@ const ScheduledDeliveryBtn = (props: any) => {
     <button
       onClick={handleScheduledDeliverySelection}
       disabled={!isButtonEnabled}
-      className={`flex flex-col items-center justify-center text-center border transition-all duration-200 ${
+      className={`flex flex-col items-start text-start border transition-all duration-200 ${
         isButtonEnabled
           ? `text-[#006C37] ${
               isSelected
-                ? 'border-2 border-[#006C37] shadow-md'
-                : 'border border-[#006C3733] hover:border-[#006C37] hover:shadow-sm'
-            } bg-[#E6F4EC]`
-          : 'text-[#231F204D] border-[#231F2005] bg-[#E6F4EC] cursor-not-allowed'
-      } p-[1vw] mob:p-[5vw] rounded-[0.8vw] mob:rounded-[4vw] w-full`}
+                ? 'border-2 border-[#006C37] shadow-[0_4px_12px_rgba(3,152,85,0.1)]'
+                : 'border border-[#E7F6EC] hover:border-[#006C3733]'
+            } bg-[#E7F6EC]`
+          : 'text-[#231F204D] border-[#231F2005] bg-[#231F2005] cursor-not-allowed'
+      } p-[1vw] mob:p-[4vw] rounded-[1vw] mob:rounded-[4vw] w-full min-h-[10vw] mob:min-h-[35vw]`}
     >
-      <div className="mb-[0.5vw] mob:mb-[3vw] relative">
-        <Image
-          src={clock}
-          alt="green clock"
-          width={28}
-          height={28}
-          className="mob:w-[40px] mob:h-[40px]"
-        />
+      {/* Icon in top left */}
+      <div className="mb-[1vw] mob:mb-[3.5vw] relative w-[1.4vw] h-[1.4vw] mob:w-[6vw] mob:h-[6vw]">
+        <Image src={clock} alt="green clock" fill className="object-contain" />
       </div>
-      
-      <p className="font-[SofiaPro] text-[1vw] mob:text-[5vw] font-semibold mb-[0.4vw] mob:mb-[2vw]">
-        Time Slot Delivery
-        {isSelected && (
-          <span className="ml-2 text-[#006C37] font-bold">✓</span>
-        )}
-      </p>
-      
-      <p className="font-[SofiaPro] text-[0.85vw] mob:text-[3.8vw] leading-snug">
-        {isButtonEnabled ? (
-          <>
-            Pick a time slot between <br />
-            <span className="font-bold text-[1vw] mob:text-[4.5vw]">
+
+      <div className="flex flex-col gap-[0.4vw] mob:gap-[1.5vw]">
+        <p className="font-[Recoleta] text-[1.1vw] mob:text-[4.5vw] font-bold leading-tight">Time slot delivery</p>
+
+        <p className="font-[SofiaPro] text-[.75vw] mob:text-[3vw] opacity-80 leading-tight">
+          {isButtonEnabled ? (
+            <>
+              Pick a time slot between{' '}
               {`${checkoutDetails.timeslots[0].from} - ${
                 checkoutDetails.timeslots[checkoutDetails.timeslots.length - 1].to
               }`}
-            </span>
-          </>
-        ) : (
-          <span className="font-bold text-[1vw] mob:text-[4.5vw]">
-            {checkoutDetails?.dash_delivery?.timeslot_order_full_message || 'No time slots available'}
-          </span>
-        )}
-      </p>
+            </>
+          ) : (
+            <span>{checkoutDetails?.dash_delivery?.timeslot_order_full_message || 'No time slots available'}</span>
+          )}
+        </p>
+      </div>
     </button>
   );
 };

@@ -9,16 +9,18 @@ import ModalHeader from './ModalHeader';
 import { useDispatch, useSelector } from 'react-redux';
 import Payment from '../Payment/Payment';
 import { setIsProceedButtonEnabled } from '@/store/slice/CartSlice';
+import LocationChangedPopup from './LocationChangedPopup';
 
 const AddressAndTimeSlot = (props: any) => {
   const cart = useSelector((state: any) => state.cart);
 
-  const { showAddressModal, setAddressModal } = props;
+  const { showAddressModal, setAddressModal, setShowLocationPopup } = props;
   const [timeSelectorOrListTab, setTimeSelectorOrListTab] = useState(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR);
   const [delayedModal, setDelayedModal] = useState(false);
   // const [checkoutDetails, setCheckoutDetails] = useState({});
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
   const dispatch = useDispatch();
+
   useEffect(() => {
     if (showAddressModal) {
       const timer = setTimeout(() => {
@@ -30,16 +32,22 @@ const AddressAndTimeSlot = (props: any) => {
     }
   }, [showAddressModal]);
 
+  const handleAddressChanged = () => {
+    setShowLocationPopup(true);
+  };
+
+  const activeModalTab =
+    cart.cartTabType === TabTypeConstant.CART_ADDRESS_LIST
+      ? TabTypeConstant.CART_ADDRESS_LIST
+      : TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR;
+
   const SCREEN_MAP: any = {
-    ADDRESS_TIMESLOT_SELECTOR: (
-      <AdressAndTimeSelector
-        setTimeSelectorOrListTab={setTimeSelectorOrListTab}
-        // checkoutDetails={checkoutDetails}
-        // setCheckoutDetails={setCheckoutDetails}
-      />
+    [TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR]: (
+      <AdressAndTimeSelector setTimeSelectorOrListTab={setTimeSelectorOrListTab} />
     ),
-    CART_ADDRESS_LIST: <CartAddressList setTimeSelectorOrListTab={setTimeSelectorOrListTab} />
-    // PAYMENT: <Payment />
+    [TabTypeConstant.CART_ADDRESS_LIST]: (
+      <CartAddressList setTimeSelectorOrListTab={setTimeSelectorOrListTab} onAddressChanged={handleAddressChanged} />
+    )
   };
 
   useEffect(() => {
@@ -65,12 +73,12 @@ const AddressAndTimeSlot = (props: any) => {
       className={`fixed bottom-0 h-full mob:left-0 left-[70vw] z-[2] inset-0 mob:w-screen w-[30vw] flex items-end justify-end bg-black bg-opacity-50`}
     >
       <div
-        className={`bg-white w-full min-h-[40vh] mob:min-h-[90vh] max-h-screen pb-[7vw] rounded-t-[1.67vw] relative transform ${
+        className={`bg-white w-full min-h-[40vh] mob:min-h-[40vh] mob:max-h-[75vh] max-h-screen pb-[7vw] mob:pb-[20vw] mob:rounded-t-[8vw] rounded-t-[1.67vw] relative transform ${
           delayedModal ? 'translate-y-0' : 'translate-y-full'
-        } transition-all duration-500 ease-in-out`}
+        } transition-all duration-500 ease-in-out flex flex-col`}
       >
         <ModalHeader setAddressModal={setAddressModal} setTimeSelectorOrListTab={setTimeSelectorOrListTab} />
-        {SCREEN_MAP[timeSelectorOrListTab]}
+        <div className="flex-1 overflow-y-auto">{SCREEN_MAP[activeModalTab]}</div>
       </div>
     </div>
   );

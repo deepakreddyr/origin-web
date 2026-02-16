@@ -33,6 +33,7 @@ import { addressAtom } from '@/features/Address/context/atoms';
 import { useAtom } from 'jotai';
 // Import InfoOutlinedIcon to be used in the new MaxQuantityToast copy
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import LocationChangedPopup from './AddressAndTimeSlot/LocationChangedPopup';
 
 // ==========================================================
 // MAX QUANTITY TOAST COMPONENT MOVED/COPIED HERE FOR GLOBAL RENDER
@@ -112,9 +113,10 @@ const Cart = () => {
     }
   }, [dispatch]);
 
-  // --- ADD TOAST STATE HERE ---
+  // --- TOAST/POPUP STATE ---
   const [infoToastMessage, setInfoToastMessage] = useState<string | null>(null);
   const [showInfoToast, setShowInfoToast] = useState(false);
+  const [showLocationPopup, setShowLocationPopup] = useState(false);
 
   const handleShowToast = (message: string) => {
     setInfoToastMessage(message);
@@ -229,6 +231,20 @@ const Cart = () => {
     }
   }, [loginDetails.isSidebarOpen]);
 
+  // Ensure proceed button is enabled when returning to main cart view
+  useEffect(() => {
+    if (cart.cartTabType === TabTypeConstant.CART_MAIN) {
+      dispatch(setIsProceedButtonEnabled(true));
+    }
+    // Also ensure modal is open if we returned to an address selection screen
+    if (
+      cart.cartTabType === TabTypeConstant.CART_ADDRESS_LIST ||
+      cart.cartTabType === TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR
+    ) {
+      setAddressModal(true);
+    }
+  }, [dispatch, cart.cartTabType]);
+
   const proceedButtonHandler = () => {
     if (loginDetails.user) {
       if (!address.address) {
@@ -276,40 +292,63 @@ const Cart = () => {
     }
   }, [cart.items]);
 
+  const cartMainContent = (
+    <>
+      {orderRestrictionData && <RestrictOrderInfo orderRestrictionData={orderRestrictionData} />}
+      <CouponSection setShowCouponList={setShowCouponList} onShowToast={handleShowToast} />
+      <FreeItemSection onShowToast={handleShowToast} />
+      <ReviewList onShowMaxQuantityToast={handleMaxQuantityExceededGlobal} />
+      <DeliveryInstruction />
+      {showAddressModal && (
+        <div className="w-[30vw] flex items-end relative justify-end">
+          <AddressAndTimeSlot
+            showAddressModal={showAddressModal}
+            setAddressModal={setAddressModal}
+            setShowLocationPopup={setShowLocationPopup}
+          />
+        </div>
+      )}
+      <BillDetailsWrapper billDetails={billDetails} orderRestrictionData={orderRestrictionData} />
+      {cart.cartTabType !== TabTypeConstant.CART_ADDRESS_LIST && (
+        <ActionCtaWithItems
+          btnName={loginDetails.user ? 'PROCEED' : 'LOGIN'}
+          handler={proceedButtonHandler}
+          isDisabled={!cart.isProceedBtnEnabled}
+          orderRestrictionData={orderRestrictionData}
+          showAddressModal={showAddressModal}
+        />
+      )}
+    </>
+  );
+
   const SCREEN_MAP: any = {
     COUPON_CODE_LIST: <CouponFlowWrapper setShowCouponList={setShowCouponList} />,
     PAYMENT: <Payment />,
-    CART_MAIN: (
-      <>
-        {orderRestrictionData && <RestrictOrderInfo orderRestrictionData={orderRestrictionData} />}
-        <CouponSection setShowCouponList={setShowCouponList} onShowToast={handleShowToast} />
-        <FreeItemSection onShowToast={handleShowToast} />
-        <ReviewList onShowMaxQuantityToast={handleMaxQuantityExceededGlobal} />
-        <DeliveryInstruction />
-        {showAddressModal && (
-          <div className="w-[30vw] flex items-end relative justify-end">
-            <AddressAndTimeSlot showAddressModal={showAddressModal} setAddressModal={setAddressModal} />
-          </div>
-        )}
-        <BillDetailsWrapper billDetails={billDetails} orderRestrictionData={orderRestrictionData} />
-        {cart.cartTabType !== TabTypeConstant.CART_ADDRESS_LIST && (
-          <ActionCtaWithItems
-            btnName={loginDetails.user ? 'PROCEED' : 'LOGIN'}
-            handler={proceedButtonHandler}
-            isDisabled={!cart.isProceedBtnEnabled}
-            orderRestrictionData={orderRestrictionData}
-            showAddressModal={showAddressModal}
-          />
-        )}
-      </>
-    ),
+    CART_MAIN: cartMainContent,
+    ADDRESS_TIMESLOT_SELECTOR: cartMainContent,
+    CART_ADDRESS_LIST: cartMainContent,
     EMPTY_CART: <EmptyCart />
   };
 
   return (
-    // RENDER THE MAX QUANTITY TOAST AT THE TOP LEVEL HERE
     <div className="flex flex-col grow gap-[1.1vw] mob:gap-[4.1vw] pb-[6vw] mob:pb-[25vw]">
       <InfoToast message={infoToastMessage} isVisible={showInfoToast} onClose={() => setShowInfoToast(false)} />
+      <LocationChangedPopup
+        isVisible={showLocationPopup}
+        onClose={() => {
+          setShowLocationPopup(false);
+          setAddressModal(false);
+          dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
+
+          // Trigger API sync after location change
+          const cartItemFromLs = localStorage.getItem('cart_items');
+          if (cartItemFromLs && JSON.parse(cartItemFromLs).length > 0) {
+            sendItemsToApi();
+          } else {
+            fetchCartItemsFromApi();
+          }
+        }}
+      />
       {SCREEN_MAP[cart.cartTabType]}
     </div>
   );
