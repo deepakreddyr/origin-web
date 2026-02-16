@@ -662,62 +662,64 @@ export const cartSlice = createSlice({
     addFreeItemToCart: (state, action: PayloadAction<any>) => {
       const freeItem = action.payload;
 
-      // Check if free item already exists in cart
-      const existingFreeItemIndex = state.items.findIndex(
-        (item) => item.isFreeItem && item.item_code === freeItem.item_code
-      );
-
-      if (existingFreeItemIndex === -1) {
-        // Prevent adding free item if a coupon is already applied
-        if (state.couponDetails && state.couponDetails.id) {
-          saveCart(state);
-          return;
+      // 1. Remove ANY existing free items from the cart first (SINGLE FREE ITEM RULE)
+      state.items = state.items.filter((item) => {
+        const isFree = item.isFreeItem || item.free || item.isFree;
+        if (isFree) {
+          removePersistentFreeItem(item.item_code);
+          return false;
         }
+        return true;
+      });
 
-        // Get the first UOM from the free item
-        const uom = freeItem.multiple_uoms?.[0] || freeItem.uom?.[0];
-        if (!uom) return;
-
-        const newProduct: CartProduct = {
-          id: freeItem.id,
-          item_code: freeItem.item_code,
-          name: freeItem.name || freeItem.item_name,
-          image: freeItem.image || freeItem.logo,
-          bg_color: freeItem.bg_color || '',
-          is_available: true,
-          is_greyed: false,
-          is_orderable: true,
-          navigation: { to: '' },
-          tag_url: null,
-          multiple_uoms: [
-            {
-              variant_id: uom.variant_id,
-              cart_quantity: 1, // Free item quantity is always 1
-              price: 0, // Free item has 0 price
-              market_price: uom.market_price || uom.price,
-              maximum_quantity: 1,
-              minimum_quantity: 1,
-              stepper_quantity: 1,
-              unit: uom.unit,
-              uom_id: uom.uom_id,
-              conversion_text: uom.conversion_text || '',
-              is_available: true,
-              is_default: true,
-              is_visible: true,
-              ripeness_types: null,
-              cart_ripeness: undefined
-            }
-          ],
-          isFreeItem: true,
-          free: true,
-          isFree: true
-        };
-
-        state.items.unshift(newProduct); // Add at the beginning
-        state.totalQuantity += 1;
-        addPersistentFreeItem(newProduct.item_code);
+      // 2. Prevent adding free item if a coupon is already applied
+      if (state.couponDetails && state.couponDetails.id) {
         saveCart(state);
+        return;
       }
+
+      // 3. Get the first UOM from the free item
+      const uom = freeItem.multiple_uoms?.[0] || freeItem.uom?.[0];
+      if (!uom) return;
+
+      const newProduct: CartProduct = {
+        id: freeItem.id,
+        item_code: freeItem.item_code,
+        name: freeItem.name || freeItem.item_name,
+        image: freeItem.image || freeItem.logo,
+        bg_color: freeItem.bg_color || '',
+        is_available: true,
+        is_greyed: false,
+        is_orderable: true,
+        navigation: { to: '' },
+        tag_url: null,
+        multiple_uoms: [
+          {
+            variant_id: uom.variant_id,
+            cart_quantity: 1, // Free item quantity is always 1
+            price: 0, // Free item has 0 price
+            market_price: uom.market_price || uom.price,
+            maximum_quantity: 1,
+            minimum_quantity: 1,
+            stepper_quantity: 1,
+            unit: uom.unit,
+            uom_id: uom.uom_id,
+            conversion_text: uom.conversion_text || '',
+            is_available: true,
+            is_default: true,
+            is_visible: true,
+            ripeness_types: null,
+            cart_ripeness: undefined
+          }
+        ],
+        isFreeItem: true,
+        free: true,
+        isFree: true
+      };
+
+      state.items.unshift(newProduct); // Add at the beginning
+      addPersistentFreeItem(newProduct.item_code);
+      saveCart(state);
     },
 
     removeFreeItemFromCart: (state, action: PayloadAction<string>) => {
