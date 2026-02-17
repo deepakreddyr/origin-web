@@ -65,7 +65,7 @@ const FreeItemSection = ({ onShowToast }: { onShowToast: (message: string) => vo
           return (
             <div
               key={item.id}
-              className="flex-shrink-0 w-80 snap-center border-2  border-primary rounded-[1vw] mob:rounded-[3vw] p-[1vw] mob:p-[3vw] transition-all duration-300 bg-[#F2EEE44D]"
+              className={`flex-shrink-0 ${freeItems.length === 1 ? 'w-full' : 'w-80'} snap-center border-2  border-primary rounded-[1vw] mob:rounded-[3vw] p-[1vw] mob:p-[3vw] transition-all duration-300 bg-[#F2EEE44D]`}
             >
               <div className="flex items-center justify-between gap-[1vw] mob:gap-[3vw]">
                 {/* Product Image & Info */}
@@ -120,18 +120,22 @@ const FreeItemSection = ({ onShowToast }: { onShowToast: (message: string) => vo
               <div className="mt-[.5vw] mob:mt-[2vw] flex items-center gap-[.4vw] mob:gap-[1.5vw]">
                 {isUnlocked || addedFreeItem ? (
                   <>
-                    <span className="text-[1vw] mob:text-[4vw]">🎉 </span>
-                    <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-[#231F20]">
-                      {isCurrentlyAdded ? (
-                        <>
-                          You've added a <span className="font-bold">FREE</span> item!
-                        </>
-                      ) : (
-                        <>
-                          You've unlocked <span className="font-bold">FREE</span> items! Pick one.
-                        </>
-                      )}
-                    </p>
+                    {/* <span className="text-[1vw] mob:text-[4vw]">🎉 </span> */}
+                    {isCurrentlyAdded ? (
+                      <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-[#231F20]">
+                        <span className="text-[1vw] mob:text-[4vw]">🎉 </span>
+                        You've added a <span className="font-bold">FREE</span> item!
+                      </p>
+                    ) : addedFreeItem ? (
+                      <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-red-500">
+                        You can add only 1 <span className="font-bold">FREE</span> item.
+                      </p>
+                    ) : (
+                      <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-[#231F20]">
+                        <span className="text-[1vw] mob:text-[4vw]">🎉 </span>
+                        You've unlocked a <span className="font-bold">FREE</span> item!
+                      </p>
+                    )}
                   </>
                 ) : (
                   <>

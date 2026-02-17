@@ -169,7 +169,7 @@ const AccountSettings = () => {
               <Box className="account-list-info">
                 <Typography
                   variant="body1"
-                  component="h5"
+                  component="p"
                   sx={{
                     fontFamily: 'SofiaPro',
                     fontSize: '14px',
