@@ -484,7 +484,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
             )}
 
             {/* 3. Location Selector & Icons */}
-            <div className="flex items-center gap-[1.5vw] ml-[1vw]">
+            <div className="flex items-center gap-[1.5vw] ml-auto mr-[2vw]">
               {/* Location Selector */}
               {!isMobile && !search && (
                 <button
