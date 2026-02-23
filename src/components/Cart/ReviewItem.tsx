@@ -148,11 +148,7 @@ const ReviewItem = (props: {
               style={{ width: '100%', height: '100%', objectFit: 'contain' }}
             />
             {/* Free Badge */}
-            {(isFreeItem || product.free || product.isFree) && (
-              <div className="absolute bottom-0 left-0 bg-[#fac510] text-black text-[.5vw] mob:text-[2vw] font-semibold px-[.3vw] mob:px-[1.2vw] py-[.1vw] mob:py-[.4vw] rounded-tr-md">
-                Free
-              </div>
-            )}
+            {/* Free Badge Removed */}
           </figure>
           <div className="review-cart-information flex flex-col">
             <p className="font-[sofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold">{product?.name}</p>
@@ -168,6 +164,17 @@ const ReviewItem = (props: {
               {/* Unit Display */}
               <span>{uom.unit}</span>
             </div>
+
+            {(isFreeItem || product.free || product.isFree) && (
+              <div className="flex items-center gap-[.5vw] mob:gap-[2vw] mt-[.2vw] mob:mt-[.5vw]">
+                <span className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-[#BFBFBF] line-through">
+                  ₹{uom.market_price || uom.price}
+                </span>
+                <span className="font-[SofiaPro] text-[.7vw] mob:text-[2.5vw] font-bold text-black bg-[#fac510] px-[.4vw] mob:px-[1.5vw] py-[.1vw] mob:py-[.5vw] rounded-md">
+                  Free
+                </span>
+              </div>
+            )}
             {/* --- END UPDATED DISPLAY --- */}
           </div>
         </div>

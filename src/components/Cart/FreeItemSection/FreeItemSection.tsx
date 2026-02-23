@@ -65,7 +65,7 @@ const FreeItemSection = ({ onShowToast }: { onShowToast: (message: string) => vo
           return (
             <div
               key={item.id}
-              className={`flex-shrink-0 ${freeItems.length === 1 ? 'w-full' : 'w-80'} snap-center border-2  border-primary rounded-[1vw] mob:rounded-[3vw] p-[1vw] mob:p-[3vw] transition-all duration-300 bg-[#F2EEE44D]`}
+              className={`flex-shrink-0 ${freeItems.length === 1 ? 'w-full' : 'w-[80%] mob:w-[70vw]'} snap-center border-2  border-primary rounded-[1vw] mob:rounded-[3vw] p-[1vw] mob:p-[3vw] transition-all duration-300 bg-[#F2EEE44D]`}
             >
               <div className="flex items-center justify-between gap-[1vw] mob:gap-[3vw]">
                 {/* Product Image & Info */}
@@ -76,17 +76,21 @@ const FreeItemSection = ({ onShowToast }: { onShowToast: (message: string) => vo
                       alt={item.name || item.item_name}
                       style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                     />
-                    {/* Free Badge */}
-                    <div className="absolute bottom-0 left-0 bg-[#fac510] text-black text-[.6vw] mob:text-[2.5vw] font-semibold px-[.4vw] mob:px-[1.5vw] py-[.1vw] mob:py-[.5vw] rounded-tr-md">
-                      Free
-                    </div>
                   </figure>
 
                   <div className="flex flex-col">
-                    <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold text-[#231F20] line-clamp-2 max-w-[12vw] mob:max-w-[40vw]">
+                    <p className="font-[SofiaPro] text-[.9vw] mob:text-[3.6vw] font-semibold text-[#231F20] line-clamp-2 max-w-[12vw] mob:max-w-[40vw]">
                       {item.name || item.item_name}
                     </p>
                     <span className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-black/60">{uom.unit}</span>
+                    <div className="flex items-center gap-[.5vw] mob:gap-[2vw] mt-[.2vw] mob:mt-[.5vw]">
+                      <span className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-[#BFBFBF] line-through">
+                        ₹{uom.price || uom.market_price}
+                      </span>
+                      <span className="font-[SofiaPro] text-[.7vw] mob:text-[2.5vw] font-semibold text-black bg-[#fac510] px-[.4vw] mob:px-[1.5vw] py-[.1vw] mob:py-[.5vw] rounded-md">
+                        Free
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -94,7 +98,7 @@ const FreeItemSection = ({ onShowToast }: { onShowToast: (message: string) => vo
                 <button
                   onClick={() => (isCurrentlyAdded ? handleRemoveFreeItem(item.item_code) : handleAddFreeItem(item))}
                   disabled={!isUnlocked && !isCurrentlyAdded}
-                  className={`px-[1.5vw] mob:px-[5vw] py-[.5vw] mob:py-[2vw] rounded-full font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3vw] flex items-center justify-center min-w-[7vw] mob:min-w-[24vw] transition-all duration-200 ${
+                  className={`px-[1.2vw] mob:px-[3.5vw] py-[.5vw] mob:py-[2vw] rounded-full font-[SofiaPro] font-semibold text-[.83vw] mob:text-[3vw] flex items-center justify-center min-w-[6vw] mob:min-w-[20vw] transition-all duration-200 ${
                     isCurrentlyAdded
                       ? 'bg-white border border-[#231F20] text-[#231F20]'
                       : isUnlocked

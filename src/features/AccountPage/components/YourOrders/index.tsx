@@ -46,7 +46,7 @@ const YourOrders = () => {
         ...prevOrders,
         loading: false,
         success: true,
-        data: [...(prevOrders.data || []), ...(data?.data || [])] // Concatenate new data with old, with safety checks
+        data: [...(prevOrders.data || []), ...(data?.data || [])]
       }));
       if (data?.meta?.has_next_page) {
         setPage(data.meta.current_page + 1);

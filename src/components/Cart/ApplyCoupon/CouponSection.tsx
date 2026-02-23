@@ -18,7 +18,7 @@ const CouponSection = (props: any) => {
   const handleAddCoupon = () => {
     const hasFreeItem = cart.items.some((item: any) => item.isFreeItem);
     if (hasFreeItem) {
-      props.onShowToast?.('Coupons cannot be added with free items in cart');
+      props.onShowToast?.('Please remove free items to apply coupon');
       return;
     }
 
