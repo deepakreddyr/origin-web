@@ -112,14 +112,19 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({ open, onLocationSel
     }
   };
 
+  const [errorType, setErrorType] = useState<'PERMISSION' | 'GENERIC' | null>(null);
+
   const handleCurrentLocation = () => {
     if (!navigator.geolocation) {
       setError('Geolocation is not supported by your browser.');
+      setErrorType('GENERIC');
       return;
     }
 
     setLoading(true);
     setError(null);
+    setErrorType(null);
+
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude: lat, longitude: lng } = position.coords;
@@ -130,23 +135,34 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({ open, onLocationSel
             handleSelect(results[0].formatted_address);
           } else {
             setError('Could not determine address for your location.');
+            setErrorType('GENERIC');
             setLoading(false);
           }
         } catch (e) {
           setError('Error fetching address. Please search manually.');
+          setErrorType('GENERIC');
           setLoading(false);
         }
       },
       (geoError) => {
-        let msg = 'Location access denied. Please search manually.';
-        if (geoError.code === geoError.PERMISSION_DENIED)
-          msg = 'Location permission denied. Please allow it in browser settings or search manually.';
-        else if (geoError.code === geoError.POSITION_UNAVAILABLE) msg = 'Location information is unavailable.';
-        else if (geoError.code === geoError.TIMEOUT) msg = ' ';
-        setError(msg);
+        if (geoError.code === geoError.PERMISSION_DENIED) {
+          setError(
+            'Location access is blocked. Please click the lock icon (🔒) in your address bar to allow location permissions and try again.'
+          );
+          setErrorType('PERMISSION');
+        } else if (geoError.code === geoError.POSITION_UNAVAILABLE) {
+          setError('Location information is unavailable.');
+          setErrorType('GENERIC');
+        } else if (geoError.code === geoError.TIMEOUT) {
+          setError('Location request timed out.');
+          setErrorType('GENERIC');
+        } else {
+          setError('An unknown error occurred.');
+          setErrorType('GENERIC');
+        }
         setLoading(false);
       },
-      { enableHighAccuracy: true, timeout: 5000 }
+      { enableHighAccuracy: true, timeout: 8000 }
     );
   };
 
@@ -293,21 +309,30 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({ open, onLocationSel
         </Button>
 
         {error && (
-          <Typography
-            color="error"
-            variant="caption"
+          <Box
             sx={{
-              display: 'block',
-              mb: 2,
-              mt: 1,
-              textAlign: 'center',
-              fontFamily: 'SofiaPro',
-              fontWeight: 500,
-              lineHeight: 1.4
+              mt: 2,
+              mb: 1,
+              p: 1.5,
+              borderRadius: '12px',
+              bgcolor: errorType === 'PERMISSION' ? '#FFF5F5' : 'transparent',
+              border: errorType === 'PERMISSION' ? '1px solid #FED7D7' : 'none',
+              textAlign: 'center'
             }}
           >
-            {error}
-          </Typography>
+            <Typography
+              variant="caption"
+              sx={{
+                color: errorType === 'PERMISSION' ? '#C53030' : '#d32f2f',
+                display: 'block',
+                fontFamily: 'SofiaPro',
+                fontWeight: errorType === 'PERMISSION' ? 600 : 500,
+                lineHeight: 1.4
+              }}
+            >
+              {error}
+            </Typography>
+          </Box>
         )}
 
         {status === 'ZERO_RESULTS' && (
