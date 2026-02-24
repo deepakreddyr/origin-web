@@ -5,7 +5,7 @@ import { getAddressAndStoreId } from '@/utilities/utils';
 import Image from 'next/image';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ItemCard from '../shared/ItemCard';
 import AddItemBtn from '../shared/AddItemBtn/AddItemBtn';
 import AboutTheProduct from './AboutTheProduct';
@@ -336,8 +336,16 @@ const ProductDetailsWrapper = () => {
     await sendDataToApi(apiUrl, payload, 'POST', successHandler, failureHandler, additionalHeaders);
   };
 
+  const fetchedIdRef = useRef<string | null>(null);
+
   useEffect(() => {
-    if (isReady) {
+    if (isReady && query.id) {
+      const currentId = String(query.id);
+      if (fetchedIdRef.current === currentId) {
+        return;
+      }
+      fetchedIdRef.current = currentId;
+
       const token = localStorage.getItem('user_token');
       const addressFromLs = getAddressAndStoreId();
       let additionalHeaders: Record<string, string> = {};
@@ -354,6 +362,11 @@ const ProductDetailsWrapper = () => {
         }
       } else {
         apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['searchForProduct'] + `/${query.id}`;
+        // if (addressFromLs) {
+        //   additionalHeaders = {
+        //     'store-id': addressFromLs.store_id
+        //   };
+        // }
       }
 
       const successHandler = (data: any) => {
@@ -386,7 +399,8 @@ const ProductDetailsWrapper = () => {
 
       getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
     }
-  }, [isReady, getDataFromApi, query.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isReady, query.id]);
 
   // Find default UOM
   const defaultUOM: UOM | undefined =

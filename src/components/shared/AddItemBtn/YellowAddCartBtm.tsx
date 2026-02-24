@@ -263,7 +263,7 @@ const UOMPopup: FC<{
 
   return (
     <div
-      className={`fixed inset-0 z-50 transition-opacity duration-300 ${isTransitioning ? 'bg-black bg-opacity-50' : 'bg-black bg-opacity-0 pointer-events-none'}`}
+      className={`fixed inset-0 z-[1001] transition-opacity duration-300 ${isTransitioning ? 'bg-black bg-opacity-50' : 'bg-black bg-opacity-0 pointer-events-none'}`}
       onClick={onClose}
     >
       <div
@@ -308,59 +308,69 @@ const UOMPopup: FC<{
         </div>
 
         {hasRipenessTypes && (
-          <div className="p-4 pt-2 pb-2 flex-shrink-0">
-            <button
-              onClick={() => setIsRipenessInfoOpen(!isRipenessInfoOpen)}
-              className="flex items-center justify-center w-full gap-1 text-sm text-gray-700 font-semibold p-2 mb-1 rounded-lg border border-gray-300 hover:border-gray-400 transition-colors"
-            >
-              <Image src={itemRipenessSvg} alt="Ripeness Quotient" width={50} height={50} />
-              <span className="text-xs font-bold text-green-700 font-[SofiaPro]">
-                How does RQ (Ripeness Quotient) work?
-              </span>
-              <svg
-                className={`w-3 h-3 text-green-700 transition-transform duration-300 ${isRipenessInfoOpen ? 'rotate-180' : ''}`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+          <div className="px-4 pt-2 pb-2 flex-shrink-0 relative z-[70]">
+            <div className="flex justify-center">
+              <button
+                onClick={() => setIsRipenessInfoOpen(!isRipenessInfoOpen)}
+                className="flex items-center justify-center gap-1.5 px-4 py-1.5 mb-1 rounded-full bg-[#F8F4E9]"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <div
-              className={`overflow-hidden transition-all duration-300 ease-in-out ${isRipenessInfoOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
-            >
-              <div className="p-2 rounded-lg text-sm text-gray-700 space-y-3 border border-gray-200">
-                <p className="flex items-center gap-3 mb-1">
-                  <span className="text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium">
-                    Choose your level of ripeness:
-                  </span>
-                </p>
-                <p className="flex items-center gap-3">
-                  <Image src={ripeSvg} alt="" width={16} height={16} className="flex-shrink-0" />
-                  <span className="text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium">
-                    Ripe: Consume immediately
-                  </span>
-                </p>
-                <p className="flex items-center gap-3">
-                  <Image src={semiRipeSvg} alt="" width={16} height={16} className="flex-shrink-0" />
-                  <span className="text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium">
-                    Semi: Consume within 2 days
-                  </span>
-                </p>
-                <p className="flex items-center gap-3">
-                  <Image src={rawSvg} alt="" width={16} height={16} className="flex-shrink-0" />
-                  <span className="text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium">
-                    Raw: Consume within 3-4 days (do not refrigerate)
-                  </span>
-                </p>
-                <p className="flex items-center gap-3">
-                  <Image src={infoicon2} alt="" width={20} height={20} className="flex-shrink-0" />
-                  <span className="text-sm mob:text-[2.7vw] font-[SofiaPro] font-medium text-start">
-                    Your fruit arrives at the selected level or ripeness, fresh and ready for consumption when you are.
-                  </span>
-                </p>
-              </div>
+                <Image
+                  src={itemRipenessSvg}
+                  alt="Ripeness Quotient"
+                  width={38}
+                  height={18}
+                  className="object-contain"
+                />
+                <span className="text-[13px] font-bold text-[#0A8B5B] font-[SofiaPro]">
+                  How does RQ (Ripeness Quotient) work?
+                </span>
+              </button>
             </div>
+
+            <AnimatePresence>
+              {isRipenessInfoOpen && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden w-full"
+                >
+                  <div className="mt-2 bg-white rounded-2xl border border-[#F2EEE4] p-4 text-sm text-gray-700 space-y-3">
+                    <p className="flex items-center gap-3 mb-1">
+                      <span className="text-sm mob:text-[3vw] font-[SofiaPro] font-medium">
+                        Choose your level of ripeness:
+                      </span>
+                    </p>
+                    <p className="flex items-center gap-3">
+                      <Image src={ripeSvg} alt="" width={16} height={16} className="flex-shrink-0" />
+                      <span className="text-sm mob:text-[3vw] font-[SofiaPro] font-medium">
+                        Ripe: Consume immediately
+                      </span>
+                    </p>
+                    <p className="flex items-center gap-3">
+                      <Image src={semiRipeSvg} alt="" width={16} height={16} className="flex-shrink-0" />
+                      <span className="text-sm mob:text-[3vw] font-[SofiaPro] font-medium">
+                        Semi: Consume within 2 days
+                      </span>
+                    </p>
+                    <p className="flex items-center gap-3">
+                      <Image src={rawSvg} alt="" width={16} height={16} className="flex-shrink-0" />
+                      <span className="text-sm mob:text-[3vw] font-[SofiaPro] font-medium">
+                        Raw: Consume within 3-4 days (do not refrigerate)
+                      </span>
+                    </p>
+                    <p className="flex items-center gap-3">
+                      <Image src={infoicon2} alt="" width={20} height={20} className="flex-shrink-0" />
+                      <span className="text-sm mob:text-[3vw] font-[SofiaPro] font-medium text-start">
+                        Your fruit arrives at the selected level or ripeness, fresh and ready for consumption when you
+                        are.
+                      </span>
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         )}
 
