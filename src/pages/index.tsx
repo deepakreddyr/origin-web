@@ -67,6 +67,9 @@ const Home = ({
       additionalHeaders = { 'store-id': addressFromLs.store_id };
     } else {
       apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['getHomepage'];
+      if (addressFromLs) {
+        additionalHeaders = { 'store-id': addressFromLs.store_id };
+      }
     }
 
     const successHandler = (data: any) => {

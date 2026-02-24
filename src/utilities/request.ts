@@ -56,12 +56,10 @@ export async function request(
   if (typeof window !== 'undefined') {
     headers['Delivery-Type'] = localStorage.getItem('Delivery-Type') || 'instant';
 
-    // headers['store-id'] = '1'
-
-    // const storeId = localStorage.getItem('store-id');
-    // if (storeId && storeId !== 'null') {
-    //   headers['store-id'] = storeId;
-    // }
+    const storeId = localStorage.getItem('store-id');
+    if (storeId && storeId !== 'null') {
+      headers['store-id'] = JSON.parse(storeId);
+    }
   }
 
   const fetchResponse = await fetch(requestUrl, {

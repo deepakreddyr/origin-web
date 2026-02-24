@@ -24,6 +24,8 @@ import { addressAtom } from '@/features/Address/context/atoms';
 import { protectedUrl } from '@/url';
 import { clearPostPaymentItemsinLs, getAddressAndStoreId } from '@/utilities/utils';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
+import LocationSelector from '../shared/LocationSelector';
+import { isLocationSelectorOpenAtom } from '@/context/global';
 
 export default function Layout({
   children,
@@ -117,11 +119,49 @@ export default function Layout({
     }
   }, [isReady, profileDetails?.data?.profile]);
 
+  const [isLocationSelectorOpen, setIsLocationSelectorOpen] = useAtom(isLocationSelectorOpenAtom);
+
+  useEffect(() => {
+    const userToken = localStorage.getItem('user_token');
+    const storeId = localStorage.getItem('store-id');
+    const selectedAddress = localStorage.getItem('selected_address');
+
+    // For skip-login users, sync localStorage address to atom if not already set
+    if (!userToken && selectedAddress && !address.address) {
+      try {
+        const parsedAddress = JSON.parse(selectedAddress);
+        setAddressAtom((prev) => ({
+          ...prev,
+          defaultAddress: parsedAddress,
+          success: true
+        }));
+      } catch (e) {
+        console.error('Error parsing selected_address', e);
+      }
+    }
+
+    // Only open if NOT logged in and NO store-id is present
+    if (!userToken && !storeId) {
+      setIsLocationSelectorOpen(true);
+    }
+  }, [address.address]);
+
+  const handleLocationSelected = (storeId: string, address: any) => {
+    setIsLocationSelectorOpen(false);
+    // Refresh page or trigger data fetch if necessary
+    router.reload();
+  };
+
   return (
     <CacheProvider value={clientSideEmotionCache}>
       <ThemeProvider theme={theme}>
-        {isHeader && query.type !== 'app' && (
-          <Header isHeaderSticky={isHeaderSticky} mainMenuItems={mainMenuItems} search={search} />
+        <LocationSelector open={isLocationSelectorOpen} onLocationSelected={handleLocationSelected} />
+        {query.type !== 'app' && (
+          <Header
+            isHeaderSticky={isHeaderSticky}
+            mainMenuItems={mainMenuItems}
+            search={search} // Pass search prop to Header
+          />
         )}
         <SidebarScreen />
         <main className={`${useTopPadding ? 'pt-[22vw] mob:pt-[35vw] md:pt-[6vw]' : ''}`}>{children}</main>

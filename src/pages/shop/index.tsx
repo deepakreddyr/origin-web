@@ -98,6 +98,9 @@ const ShopPage = (props: HomeProps) => {
       additionalHeaders = { 'store-id': addressFromLs.store_id };
     } else {
       apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['getShopDetails'];
+      if (addressFromLs) {
+        additionalHeaders = { 'store-id': addressFromLs.store_id };
+      }
     }
 
     const successHandler = (data: any) => {

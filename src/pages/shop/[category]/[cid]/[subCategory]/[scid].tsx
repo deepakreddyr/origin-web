@@ -144,6 +144,11 @@ const ShopDetails = (props: HomeProps) => {
           unprotectedUrl['getCategories'] +
           `/${query.cid}` +
           `/sub-categories/${query.scid}`;
+        if (addressFromLs) {
+          additionalHeaders = {
+            'store-id': addressFromLs.store_id
+          };
+        }
       }
       const { category, cid, subCategory, scid } = query;
       setFilters({
@@ -192,6 +197,11 @@ const ShopDetails = (props: HomeProps) => {
         };
       } else {
         apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['getShopDetails'];
+        if (addressFromLs) {
+          additionalHeaders = {
+            'store-id': addressFromLs.store_id
+          };
+        }
       }
       const successHandler = (data: any) => {
         // console.log(data,"data")

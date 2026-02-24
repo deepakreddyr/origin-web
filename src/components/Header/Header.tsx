@@ -14,6 +14,7 @@ import { addressAtom } from '@/features/Address/context/atoms';
 import { profileAtom } from '@/features/AccountPage/context/atoms';
 import whiteDropdownIcon from '/public/assets/images/whiteDropdown.png';
 import { setRouteSourceToLs } from '@/utilities/utils';
+import { isLocationSelectorOpenAtom } from '@/context/global';
 // --------------------------------------------------------
 
 import { MobileDrawer, Submenu } from '.';
@@ -104,6 +105,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
   // --- NEW LOCATION HOOKS ---
   const [address] = useAtom(addressAtom);
   const [profile] = useAtom(profileAtom);
+  const [, setIsLocationSelectorOpen] = useAtom(isLocationSelectorOpenAtom);
   // --------------------------
 
   const router = useRouter();
@@ -220,13 +222,12 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
   };
 
   const handleSelectAddress = () => {
-    dispatch(setIsSidebarOpen(true));
-
     if (!loginDetails.isLogin) {
-      dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
+      setIsLocationSelectorOpen(true);
       return;
     }
 
+    dispatch(setIsSidebarOpen(true));
     setRouteSourceToLs(TabTypeConstant.ACCOUNT_MAIN);
 
     if (address?.address && address.address.length > 0) {
@@ -381,7 +382,9 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                       d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                     />
                   </svg>
-                  <span className="truncate flex-1">{address.defaultAddress?.address_name || 'Select'}</span>
+                  <span className="truncate flex-1">
+                    {address.defaultAddress?.address_name || address.defaultAddress?.name || 'Select'}
+                  </span>
                   <svg
                     className={`w-[2vw] h-[2vw] ${getDropdownIconColor()}`}
                     fill="none"
@@ -511,16 +514,24 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                       d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                     />
                   </svg>
-                  {address.defaultAddress?.address_name ? (
+                  {address.defaultAddress ? (
                     <div className="flex-1 overflow-hidden relative">
                       <div className="animate-marquee whitespace-nowrap text-[1vw]">
-                        <span className="font-bold">{address.defaultAddress?.address_name}</span>
+                        <span className="font-bold">
+                          {address.defaultAddress?.address_name || address.defaultAddress?.name}
+                        </span>
                         <span className="mx-[0.5vw]">•</span>
-                        <span className="font-light">{address.defaultAddress.address}</span>
+                        <span className="font-light">
+                          {address.defaultAddress.address || address.defaultAddress.formatted_address}
+                        </span>
                         {/* Duplicate for seamless loop */}
-                        <span className="font-bold ml-[2vw]">{address.defaultAddress?.address_name}</span>
+                        <span className="font-bold ml-[2vw]">
+                          {address.defaultAddress?.address_name || address.defaultAddress?.name}
+                        </span>
                         <span className="mx-[0.5vw]">•</span>
-                        <span className="font-light">{address.defaultAddress.address}</span>
+                        <span className="font-light">
+                          {address.defaultAddress.address || address.defaultAddress.formatted_address}
+                        </span>
                       </div>
                     </div>
                   ) : (
