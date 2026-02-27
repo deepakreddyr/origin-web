@@ -1,43 +1,43 @@
-import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
-import { Marquee } from '@devnomic/marquee';
-import { Box, Container, Typography, useTheme } from '@mui/material';
 import Image from 'next/image';
 
 const featureList = [
-  { text: '150+ Exotics ', icon: '/assets/images/primaryFeature1.svg' },
-  { text: '100+ Locally Grown Varieties ', icon: '/assets/images/primaryFeature2.svg' },
+  { text: '150+ Exotics', icon: '/assets/images/primaryFeature1.svg' },
+  { text: '100+ Locally Grown Varieties', icon: '/assets/images/primaryFeature2.svg' },
   { text: 'Easy Refunds/Returns', icon: '/assets/images/primaryFeature3.svg' }
 ];
 
 const PrimaryFeature = () => {
-  const theme = useTheme();
-  const mobile = useMediaQuery(600);
   return (
-    <div className="flex items-center justify-center">
-      <div className="relative z-20 flex items-center justify-around px-[3.3vw] w-[80vw] mob:w-screen mob:h-[15vw] bg-primary-100 top-[-5vw] h-[7vw] rounded-full mob:rounded-none md:overflow-[unset] overflow-x-auto noscrollbar">
-        {mobile ? (
-          <Marquee className="gap-[3rem] [--duration:15s] text-nowrap" innerClassName="gap-[3rem] [--gap:3rem]">
-            {featureList.map((item, index) => (
-              <div key={index} className="flex items-center w-max text-[3vw] font-[SofiaPro] whitespace-nowrap">
-                <div className="relative w-[8vw] h-[8vw]">
-                  <Image src={item.icon} alt={item.text} fill className="object-contain" />
-                </div>
-                {item.text}
+    <div className="w-full overflow-hidden">
+      {/* Mobile Auto-scrolling Marquee */}
+      <div className="hidden mob:flex w-full">
+        <div className="flex animate-infinite-scroll gap-4 items-center whitespace-nowrap">
+          {[...featureList, ...featureList, ...featureList].map((item, index) => (
+            <div key={index} className="flex items-center gap-4 px-6 py-3 bg-[#fcefae] rounded-full shrink-0">
+              <div className="relative w-6 h-6">
+                <Image src={item.icon} alt={item.text} fill className="object-contain scale-125" />
               </div>
-            ))}
-          </Marquee>
-        ) : (
-          featureList.map((item, index) => (
-            <div key={index} className="flex items-center font-[SofiaPro] w-max text-[1.25vw] whitespace-nowrap">
-              <div className="relative w-[3vw] h-[3vw]">
-                <Image src={item.icon} alt={item.text} fill className="object-contain" />
-              </div>
-              {item.text}
+              <span className="text-[#1A202C] font-bold text-lg whitespace-nowrap">{item.text}</span>
             </div>
-          ))
-        )}
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop Static View */}
+      <div className="flex mob:hidden flex-wrap items-center justify-center gap-8 w-full">
+        {featureList.map((item, index) => (
+          <div key={index} className="flex items-center gap-3 px-10 py-4 bg-[#fcefae] rounded-full">
+            <div className="relative w-6 h-6">
+              <Image src={item.icon} alt={item.text} fill className="object-contain scale-125" />
+            </div>
+            <span className="text-[#1A202C] font-semibold text-lg md:text-xl lg:text-[1.7vw] whitespace-nowrap">
+              {item.text}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
+
 export default PrimaryFeature;

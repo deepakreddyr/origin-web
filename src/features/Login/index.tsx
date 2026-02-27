@@ -125,6 +125,10 @@ const Login = () => {
           isLogin: true,
           user: response.access_token
         }));
+        // Hard refresh after 3 seconds to fetch all API data fresh with the new auth token
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       }
     } catch (error: any) {
       const e = await error.response.json();
@@ -369,7 +373,7 @@ const Login = () => {
             }}
           />
         </Box>
-        <button
+        <div
           style={{ width: '100%', marginTop: '1rem' }}
           onClick={() => {
             if (otp.length < 4) {
@@ -405,7 +409,7 @@ const Login = () => {
           >
             <Typography>Confirm</Typography>
           </Button>
-        </button>
+        </div>
         {renderTermsAndCondition()}
       </Box>
     );

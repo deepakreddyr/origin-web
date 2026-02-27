@@ -10,12 +10,17 @@ type USPPROPS = {
 const UspCard = ({ cardData }: USPPROPS) => {
   const { icon, title } = cardData;
   return (
-    <div className="flex flex-col items-center w-[16.319vw] mob:w-full  ">
-      <div className="w-[7vw] mob:w-[26.67vw] mob:h-[26.67vw]  h-[7vw] relative ">
-        <Image src={icon} alt={title} fill />
+    <div className="flex flex-col items-center justify-center p-3 md:p-6 border-2 border-dashed rounded-[1vw] mob:rounded-[2vw] border-primary h-17 mob:h-[40vw]">
+      {/* Icon Container */}
+      <div className="w-14 h-14 md:w-28 md:h-28 relative mb-4 md:mb-8">
+        <Image src={icon} alt={title} fill className="object-contain" />
       </div>
-      <div className="h-[6vw] mt-[1.67vw] mob:w-[25.5vw] ">
-        <p className="font-[SofiaPro] font-medium text-[1.52vw] mob:text-[3.6vw] text-center ">{title}</p>
+
+      {/* Title Text */}
+      <div className="w-full">
+        <p className="font-[SofiaPro] font-bold text-[13px] md:text-[22px] leading-snug text-center text-black px-1 md:px-2">
+          {title}
+        </p>
       </div>
     </div>
   );

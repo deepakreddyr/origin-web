@@ -10,6 +10,7 @@ import { ADDRESS_ICON_MAP_PNG } from '@/utilities/maps';
 import Other from '/public/assets/icons/addressIcons/others.png';
 import { Button, Typography } from '@mui/material';
 import { CircularProgress, Box } from '@mui/material';
+import LocationChangedPopup from '@/components/Cart/AddressAndTimeSlot/LocationChangedPopup';
 
 // Import the required atoms and enums for new address functionality
 import { addressDetailsAtom, isEditingAddress } from '@/features/AddressEditDetails/context/atoms';
@@ -28,13 +29,15 @@ const SelectAddressSidebar = () => {
   const dispatch = useDispatch();
 
   const [hoveredItemId, setHoveredItemId] = useState<number | null>(null);
+  const [showLocationPopup, setShowLocationPopup] = useState(false);
 
   const handleSetAddress = async (addr: any) => {
     if (!addr.deliverable || !addr.store_id) return; // prevent selection
 
     const apiData = { ...addr, is_default: true };
     await editAddress(apiData as Address, setAddress);
-    dispatch(setIsSidebarOpen(false));
+    // Show location changed popup; on Alright → hard refresh
+    setShowLocationPopup(true);
   };
 
   const addNewAddressHandler = () => {
@@ -120,6 +123,12 @@ const SelectAddressSidebar = () => {
 
   return (
     <div className="flex flex-col h-full">
+      <LocationChangedPopup
+        isVisible={showLocationPopup}
+        onClose={() => {
+          window.location.reload();
+        }}
+      />
       <div className="flex-1 overflow-y-auto">
         {address.address?.map((data: any) => {
           const isDisabled = !data.deliverable || !data.store_id;

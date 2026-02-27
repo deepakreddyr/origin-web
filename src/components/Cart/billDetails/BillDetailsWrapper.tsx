@@ -8,8 +8,8 @@ import {
 } from '@/store/slice/CartSlice';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Tooltip, IconButton, useMediaQuery } from "@mui/material";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { Tooltip, IconButton, useMediaQuery } from '@mui/material';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 const BillDetailsWrapper = (props: any) => {
   const { billDetails } = props;
@@ -18,7 +18,7 @@ const BillDetailsWrapper = (props: any) => {
   const dispatch = useDispatch();
 
   const [tooltipOpen, setTooltipOpen] = useState(false);
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   // Function to calculate delivery fee based on distance_delivery_fees
   const calculateDeliveryFee = () => {
@@ -60,8 +60,8 @@ const BillDetailsWrapper = (props: any) => {
     }
 
     // If no free tier exists, find the highest to_amount + 1 (next threshold for potential free delivery)
-    const sortedTiers = [...billDetails.distance_delivery_fees].sort((a, b) =>
-      parseFloat(b.to_amount) - parseFloat(a.to_amount)
+    const sortedTiers = [...billDetails.distance_delivery_fees].sort(
+      (a, b) => parseFloat(b.to_amount) - parseFloat(a.to_amount)
     );
 
     if (sortedTiers.length > 0) {
@@ -72,6 +72,13 @@ const BillDetailsWrapper = (props: any) => {
 
     return null;
   };
+
+  const loginDetails = useSelector((state: any) => state.loginDetails);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     let amountTobePaid;
@@ -101,12 +108,12 @@ const BillDetailsWrapper = (props: any) => {
     }
     dispatch(setIsProceedButtonEnabled(amountTobePaid > cart.cart_minimum));
     dispatch(setAmountToPay(amountTobePaid));
-    localStorage.setItem('total_to_pay', cart.amountToPay);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('total_to_pay', cart.amountToPay);
+    }
   }, [couponDetails, cart, billDetails, dispatch]);
 
-  const remainingAmount = billDetails.cart_minimum
-    ? Number(billDetails.cart_minimum) - cart.amountToPay
-    : 0;
+  const remainingAmount = billDetails.cart_minimum ? Number(billDetails.cart_minimum) - cart.amountToPay : 0;
 
   const handleTooltipToggle = () => {
     if (isMobile) {
@@ -130,6 +137,8 @@ const BillDetailsWrapper = (props: any) => {
   // Check if info icon should be shown - only when there's a delivery fee
   const shouldShowInfo = currentDeliveryFee > 0 && freeDeliveryThreshold;
 
+  const isLoggedIn = mounted && loginDetails.user;
+
   return (
     <div className="bg-[#F2EEE44D] flex flex-col border border-[#F2EEE4] p-[1.1vw] mob:p-[4.1vw] mob:rounded-[4.1vw] rounded-[1.1vw]">
       <h3 className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] mob:pb-[1.5vw] pb-[.6vw] font-bold text-[#231F20]">
@@ -141,9 +150,7 @@ const BillDetailsWrapper = (props: any) => {
             <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw] flex items-center gap-[0.4vw]">
               Item total
             </p>
-            <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
-              ₹{cart.totalOriginalPrice}
-            </p>
+            <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">₹{cart.totalOriginalPrice}</p>
           </div>
         </li>
 
@@ -169,7 +176,7 @@ const BillDetailsWrapper = (props: any) => {
           </li>
         )}
 
-        {localStorage.getItem("user_token") && (
+        {isLoggedIn && (
           <li>
             <div className="flex items-center text-secondary justify-between">
               <div className="flex items-center gap-[0.3vw] mob:gap-[1vw]">
@@ -204,10 +211,10 @@ const BillDetailsWrapper = (props: any) => {
                           padding: isMobile ? '2vw' : '0.8vw',
                           maxWidth: isMobile ? '70vw' : '18vw',
                           '& .MuiTooltip-arrow': {
-                            color: '#231F20',
-                          },
-                        },
-                      },
+                            color: '#231F20'
+                          }
+                        }
+                      }
                     }}
                   >
                     <IconButton
@@ -216,14 +223,14 @@ const BillDetailsWrapper = (props: any) => {
                       sx={{
                         padding: isMobile ? '1vw' : '0.2vw',
                         '&:hover': {
-                          backgroundColor: 'rgba(0, 0, 0, 0.04)',
-                        },
+                          backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                        }
                       }}
                     >
                       <InfoOutlinedIcon
                         sx={{
                           fontSize: isMobile ? '4vw' : '1.1vw',
-                          color: '#231F20CC',
+                          color: '#231F20CC'
                         }}
                       />
                     </IconButton>
@@ -236,11 +243,7 @@ const BillDetailsWrapper = (props: any) => {
                     ₹{billDetails.free_delivery_charge}
                   </span>
                 )}
-                {currentDeliveryFee === 0 ? (
-                  <span className="text-secondary">FREE</span>
-                ) : (
-                  `₹${currentDeliveryFee}`
-                )}
+                {currentDeliveryFee === 0 ? <span className="text-secondary">FREE</span> : `₹${currentDeliveryFee}`}
               </p>
             </div>
           </li>
@@ -254,14 +257,13 @@ const BillDetailsWrapper = (props: any) => {
         </li>
       </ul>
 
-      {Number(billDetails.cart_minimum) > 0 &&
-        cart.amountToPay < Number(billDetails.cart_minimum) && (
-          <div className="font-[SofiaPro] font-bold bg-green-50 border border-green-200 rounded-md p-3 mt-3">
-            <p className="font-[SofiaPro] font-bold text-green-700 text-sm mt-1">
-              Add <span className="font-[SofiaPro] font-bold">₹{remainingAmount}</span> more to reach the minimum order!
-            </p>
-          </div>
-        )}
+      {Number(billDetails.cart_minimum) > 0 && cart.amountToPay < Number(billDetails.cart_minimum) && (
+        <div className="font-[SofiaPro] font-bold bg-green-50 border border-green-200 rounded-md p-3 mt-3">
+          <p className="font-[SofiaPro] font-bold text-green-700 text-sm mt-1">
+            Add <span className="font-[SofiaPro] font-bold">₹{remainingAmount}</span> more to reach the minimum order!
+          </p>
+        </div>
+      )}
     </div>
   );
 };

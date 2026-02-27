@@ -1,64 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import handpickedImg from '/public/assets/images/about/handpicked.webp';
+import React from 'react';
 import handpickedImg1 from '/public/assets/images/about/about3.webp';
-import farm from '/public/assets/images/about/farm.webp';
 import Image from 'next/image';
-import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 
 const Handpicked = () => {
-  const [scrollY, setScrollY] = useState(0);
-  const mobile = useMediaQuery(600);
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  // Increase the zoom factor by adjusting the multiplier
-  const scaleFactor = 0.688 + scrollY * 0.0002; // Adjusted multiplier for a stronger zoom effect
   return (
-    <div className=" mob:h-max w-full rounded-[6.6vw] mob:rounded-t-[4vw] mob:top-0 relative pb-[0vw] ">
-      <div className="flex items-center mob:flex-col-reverse justify-between pt-[6vw]  bg-beige-100 pb-[8vw]">
-        <div className="w-[38vw] mob:w-full ml-[10vw] mob:ml-0 mob:px-[4vw] pb-[5vw] pt-[5vw] mob:pt-[8vw] mob:pb-[10vw]">
-          <p className="text-[4.4vw] mob:text-[10.2vw] font-[Recoleta] text-secondary leading-none font-semibold pb-[4vw] mob:text-left">
-            {/* Carefully
-            <br />
-            Handpicked */}
-            We help you waste less food.
-          </p>
-          <p className="font-[SofiaPro] font-medium text-[1.7vw]  mob:text-[4.1vw] leading-[2vw] mob:leading-[6vw] mob:text-left">
-            Food waste isn’t usually the result of neglect. <br className="mob:hidden" />
-            It’s the byproduct of busy lives colliding with <br className="mob:hidden" />
-            the narrow window in which fresh produce <br className="mob:hidden" /> stays usable. Fruits ripen, greens
-            wilt, and <br className="mob:hidden" /> meals get postponed. Our Ripeness Quotient{' '}
-            <br className="mob:hidden" />
-            addresses this mismatch by letting you <br className="mob:hidden" />
-            choose produce at the exact stage of <br className="mob:hidden" />
-            ripeness you need. With better timing comes <br className="mob:hidden" /> better planning, fewer surprises
-            in the fridge, <br className="mob:hidden" /> and far less food thrown away.
-          </p>
-          {/* <p className="font-[SofiaPro] font-light text-[1.25vw] leading-[2vw] py-[2.2vw] mob:py-[5vw] mob:text-[4.1vw]  mob:leading-[6vw]">
-            When you indulge in the essence of pure goodness with our products, you're embarking on a journey of
-            culinary delight. Every bite is a testament to our dedication to providing you with the finest ingredients,
-            thoughtfully chosen and masterfully crafted. Our commitment goes beyond just the plate; it extends to our
-            planet. By choosing our products, you are making a choice for sustainability and responsible consumption.
-            It's a boon for the planet, as we prioritize ethical sourcing, reduced waste, and eco-friendly practices in
-            every aspect of our product journey.
-          </p>
-          <p className="font-[SofiaPro] font-light text-[1.25vw]  leading-[2vw]  mob:text-[4.1vw]  mob:leading-[6vw]">
-            Join us in savoring the pure goodness and making a positive impact, one delicious bite at a time.
-          </p> */}
+    <section className="w-full bg-[#FAF7F0] relative flex flex-col justify-start overflow-hidden min-h-[75vw] md:min-h-[50vw]">
+      {/* Upper Content Part */}
+      <div className="flex flex-col md:flex-row items-start justify-start w-full px-[8vw] md:pl-[15vw] pb-[50vw] md:pb-0 z-10 relative">
+        {/* Left: Heading */}
+        <div className="w-full md:w-auto mt-[10vw] md:mt-[2vw] mb-[2vw] md:mb-0 text-left md:text-right">
+          <h2 className="font-[Recoleta] font-bold text-[17vw] md:text-[7.6vw] leading-[1.1] md:leading-[1.05] tracking-tight">
+            <span className="text-black">We have a</span> <br className="md:hidden" />
+            <span className="text-[#f2ae25]">dream.</span>
+          </h2>
         </div>
-        <div className="w-[38.5vw] mob:w-full mob:h-[90vw] h-[45vw] relative mr-[10vw] mob:mr-0">
-          <Image src={handpickedImg1} alt="handpicked image" fill className="object-contain" quality={100} />
+
+        {/* Right: Stats and Description */}
+        <div className="w-full md:w-[32vw] md:ml-[3vw] mt-[4vw] md:mt-[10vw] flex flex-col items-start text-left md:pt-4">
+          <p className="font-[SofiaPro] font-medium text-[4vw] md:text-[1.38vw] leading-[1.25] text-black mb-4">
+            It is both modest and ambitious. <br className="hidden md:block" />
+            That no one should ever have to <br className="hidden md:block" />
+            eat a boring plate of food again. <br className="hidden md:block" />
+            So we source more&nbsp;than
+          </p>
+
+          <div className="mb-2 flex items-baseline gap-2">
+            <span className="text-secondary text-[25vw] md:text-[6vw] font-black leading-[0.85] font-[Recoleta]">
+              150
+            </span>
+            <span className="text-secondary text-[8vw] md:text-[3.8vw] font-bold font-[Recoleta]">exotic</span>
+          </div>
+
+          <p className="font-[SofiaPro] font-medium text-[4vw] md:text-[1.38vw] leading-[1.25] text-black">
+            ingredients alongside carefully <br className="hidden md:block" />
+            grown local produce, for people <br className="hidden md:block" />
+            who care not just about taste, but <br className="hidden md:block" />
+            about the story behind&nbsp;it.
+          </p>
         </div>
       </div>
-    </div>
+
+      {/* Bottom Illustration - Absolute so it sits behind text, reducing gap */}
+      <div className="absolute bottom-0 left-0 w-full h-full">
+        <Image
+          src={handpickedImg1}
+          alt="farm illustration"
+          fill
+          className="object-contain object-bottom"
+          quality={100}
+          priority
+        />
+      </div>
+    </section>
   );
 };
 

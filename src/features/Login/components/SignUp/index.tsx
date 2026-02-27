@@ -123,7 +123,11 @@ const SignUp: FC<Props> = ({ renderTermsAndCondition }) => {
         isLogin: true
       }));
 
-      if (window) window.location.reload();
+      if (window) {
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      }
     } catch (error: any) {
       if (error?.response?.status === 500) {
         setErrors((prev) => ({

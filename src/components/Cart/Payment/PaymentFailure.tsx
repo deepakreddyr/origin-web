@@ -18,7 +18,13 @@ const PaymentFailure = (props: any) => {
   const [activeScreenIndex, setActiveScreenIndex] = useState(1);
   const router = useRouter();
   const dispatch = useDispatch();
-  let paymentFlow = localStorage.getItem('FLOW_TYPE') ? localStorage.getItem('FLOW_TYPE') : null;
+  const [mounted, setMounted] = useState(false);
+  const [paymentFlow, setPaymentFlow] = useState<string | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+    setPaymentFlow(localStorage.getItem('FLOW_TYPE'));
+  }, []);
   // console.log(paymentFlow);
   // useEffect(() => {
   //   const timer = setTimeout(() => {
@@ -86,7 +92,9 @@ const PaymentFailure = (props: any) => {
     return (
       <>
         <div onClick={() => setActiveScreenIndex(2)} className="absolute top-[1.4vw] right-[1.4vw]">
-          <button className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-danger font-semibold ">CANCEL ORDER</button>
+          <button className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-danger font-semibold ">
+            CANCEL ORDER
+          </button>
         </div>
         <div className="w-[10vw] mob:w-[30vw]">
           <Lottie animationData={failureAnimation} />

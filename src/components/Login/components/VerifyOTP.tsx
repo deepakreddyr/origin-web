@@ -36,7 +36,6 @@ const VerifyOTP = (props: Props) => {
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const [isLoading, setIsLoading] = useState(false);
 
-
   const onSubmitOTP = async () => {
     if (!otp) {
       setOtpErrors('Incorrect OTP');
@@ -78,17 +77,18 @@ const VerifyOTP = (props: Props) => {
       dispatch(setIsFreshLogin(true));
       handleLaunchResponse(launchResponse, dispatch, setAddress, setProfileAtom, response.access_token, true);
       setMobileNumber('');
-
     } catch (error: any) {
       if (error?.response?.status === 522) {
         const token = localStorage.getItem('user_token');
         if (token) {
-          dispatch(setLoginDetails({
-            isSidebarOpen: true,
-            isLogin: true,
-            user: token,
-            tabType: TabTypeConstant.REGISTER
-          }));
+          dispatch(
+            setLoginDetails({
+              isSidebarOpen: true,
+              isLogin: true,
+              user: token,
+              tabType: TabTypeConstant.REGISTER
+            })
+          );
           setMobileNumber('');
           return;
         }
@@ -207,20 +207,25 @@ const VerifyOTP = (props: Props) => {
           }}
         />
       </Box>
-      <button
+      <div
         style={{ width: '100%', marginTop: '1rem' }}
         onClick={() => {
           if (otp.length < 4) {
             setOtpErrors('Enter valid OTP');
           }
         }}
-        disabled={isLoading}
       >
         <div className={'mt-[24px]'}>
-          <PrimaryRoundedCta style="" name="Confirm" handler={onSubmitOTP} isDisabled={otp.length !== 4} isLoading={isLoading} />
+          <PrimaryRoundedCta
+            style=""
+            name="Confirm"
+            handler={onSubmitOTP}
+            isDisabled={otp.length !== 4}
+            isLoading={isLoading}
+          />
         </div>
-        <TermsAndConditions />
-      </button>
+      </div>
+      <TermsAndConditions />
     </Box>
   );
 };

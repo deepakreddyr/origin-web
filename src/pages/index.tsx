@@ -2,11 +2,17 @@ import { Box, Container, Typography, useMediaQuery, useTheme } from '@mui/materi
 import Layout from '@/components/Layout';
 import { GetServerSideProps } from 'next';
 import { Blog, Categories, FooterDataType, MainMenuType, Products, Testimonial, UspCardsData } from '@/utilities/types';
-import { PopularItemsSlider as PopularProducts, TestimonialsSection, OriginHero } from '@/components/OriginGrids';
+import {
+  PopularItemsSlider as PopularProducts,
+  TestimonialsSection,
+  OriginHero,
+  StoryTestimonials
+} from '@/components/OriginGrids';
 import SideBySide from '@/components/SideBySide';
 import BeforeBox from '@/components/BeforeBox';
 import LinkButton from '@/components/LinkButton/LinkButton';
 import { OriginRightArrow } from '@/Icons/OriginIcons';
+import JoinCultSection from '@/components/OriginGrids/JoinCultSection';
 import PrimaryFeature from '@/components/OriginGrids/PrimaryFeature';
 import { UspCard } from '@/components/Cards';
 import CustomHead from '@/components/shared/CustomHead';
@@ -19,6 +25,7 @@ import { getAddressAndStoreId } from '@/utilities/utils';
 import HomeCategorySection from '@/components/home/HomeCategorySection';
 import PopularProduce from '@/components/ShopV2/PopularProduce';
 import PopularProduceMob from '@/components/ShopV2/PopularProduceMob';
+import ScrollUnderline from '@/components/shared/ScrollUnderline';
 
 interface HomeProps {
   uspCardsData: UspCardsData;
@@ -100,20 +107,23 @@ const Home = ({
         />
         {/* <OriginHero /> */}
         <ShopHeroSingle bannerData={heroBannerData} />
-        <div className="w-full pt-[1.5vw]">
+        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[4vw] py-8 mob:py-4 mt-8 mob:mt-4">
           <PrimaryFeature />
-        </div>
+        </Container>
 
-        <div className="flex items-center justify-center w-full px-[1vw]">
-          <div className="flex items-center justify-between w-[80vw] mob:w-full mob:grid grid-cols-2 mob:gap-[5vw] ">
+        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[4vw] py-12 mob:py-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 w-full">
             {uspCardsData?.map((card, index) => {
+              // Mapping icons as per your logic
               let icon = card.icon;
               if (index === 0) icon = '/assets/images/uspCard1.svg';
               if (index === 1) icon = '/assets/images/uspCard2.svg';
-              return <UspCard cardData={{ ...card, icon }} key={card.title} />;
+              if (index === 2) icon = '/assets/images/uspCard3.svg';
+              if (index === 3) icon = '/assets/images/uspCard4.svg';
+              return <UspCard cardData={{ ...card, icon }} key={index} />;
             })}
           </div>
-        </div>
+        </Container>
         {/* Homepage Category Section */}
         <div className="w-full px-[3vw] mob:mt-[10vw]">
           <HomeCategorySection categories={mainCategoryData} blendsCategory={blendsCategoryData} loading={loading} />
@@ -134,17 +144,26 @@ const Home = ({
             imageSrc="/assets/images/about/home2.webp"
             imageAlt="commitment"
             imageWidth={424}
-            imageHeight={400}
-            imageClass="object-cover w-full h-[300px] md:h-auto lg:h-[450px] scale-[1]"
-            title={`It’s Fresh. Properly&nbsp;Fresh.`}
+            imageHeight={450}
+            imageClass="object-cover w-full h-auto md:h-[400px] lg:h-[450px] rounded-[24px] md:rounded-[46px]"
+            title={
+              <span className="text-black">
+                <span className="text-secondary">It’s Fresh.</span> <br />{' '}
+                <ScrollUnderline underlineColor="#E18D1F">Properly&nbsp;Fresh.</ScrollUnderline>
+              </span>
+            }
             titleVariant={isMobile ? 'h4' : 'h2'}
             description={`We partner directly with farms across the world and across India. <br/> No middlemen. No dark stores. <br/> Just produce that moves from the farm to you at peak&nbsp;flavour.`}
             // buttonText="Know more"
             buttonVariant="tertiary"
-            rootClass="bg-secondary-200"
+            rootClass="bg-[#fff8d5] items-center !p-6 md:!p-8 lg:!p-12"
+            titleContainerClass="!py-0 md:!py-0"
           />
         </Container>
-        <div className="bg-[#FAF7F0] my-[2vw]">
+        <div className="mt-[5vw]">
+          <StoryTestimonials />
+        </div>
+        <div className="bg-[#FAF7F0]">
           <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[10] !overflow-visible">
             <SideBySide
               variant="parallax"
@@ -152,9 +171,16 @@ const Home = ({
               parallaxMainImageSrc="/assets/images/parallaxImages/main-2.webp"
               // parallaxBottomImageSrc="/assets/images/parallaxImages/bottom-1.png"
               parallaxImageAlt=""
-              title={`Grown For <br/> Those Who Never&nbsp;Compromise `}
+              title={
+                <a className="text-[4vw] mob:text-[10vw]">
+                  Grown For <br /> Those Who Never <br />
+                  <ScrollUnderline underlineColor="#E18D1F">
+                    <span className="text-[#619269]">Compromise </span>
+                  </ScrollUnderline>
+                </a>
+              }
               titleVariant={isMobile ? 'h4' : 'h1'}
-              titleClass="font-[Recoleta] text-[#231F20] !font-semibold !leading-[1.1] "
+              titleClass="font-[Recoleta] !font-bold !leading-[1.1] "
               description={`Everyone has a right to fresh, authentic <br/ className="mob:hidden"> flavours. But only a few fight for it. Origin Fresh <br/ className="mob:hidden"> is for those&nbsp;who&nbsp;do.`}
               // buttonText="Know more"
               buttonVariant="tertiary"
@@ -177,7 +203,7 @@ const Home = ({
           </Container>
         </div>
         <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[50] ">
-          <SideBySide
+          {/* <SideBySide
             title={`Join The Cult <br/> Of&nbsp;Fresh`}
             titleVariant={isMobile ? 'h4' : 'h2'}
             titleClass="text-black"
@@ -192,7 +218,8 @@ const Home = ({
             buttonVariant="tertiary"
             rootClass="bg-primary"
             imageClass="w-full md:max-h-[400px] max-h-[170px] object-fit"
-          />
+          /> */}
+          <JoinCultSection />
         </Container>
 
         {/* <Container maxWidth="lg">
@@ -212,13 +239,10 @@ const Home = ({
               rootClass="bg-transparent px-0 md:px-5 items-center"
             />
           </Container> */}
-        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[2] mt-[8vw] mob:mt-[15vw]">
-          <TestimonialsSection testimonials={testimonials} />
-        </Container>
-        <Box className="h-8 lg:h-[64px]" />
+
         {/* </BeforeBox> */}
         {/* <Box className="h-8 lg:h-[52px]" /> */}
-        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw]">
+        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] bg-[#FFFBEB]">
           <SideBySide
             variant="normal"
             imageSrc="/assets/images/about/mobiledownload.webp"
@@ -228,9 +252,9 @@ const Home = ({
             quality={100}
             priority
             imageClass="object-contain md:!h-auto md:max-h-[400px] lg:!h-[500px] md:!ml-0 lg:!ml-[6vw]"
-            title={`Download <br/> the app on <br/> Play Store and <br/> App Store.`}
+            title={`Download <br/> the app on <br/> <span className="text-secondary">App Store</span> <span className="text-secondary">and</span> <br/> <span className="text-secondary">Play Store.</span>`}
             titleVariant="h2"
-            titleClass="font-[Recoleta] text-[#231F20] text-[4vw] md:text-[4vw] mob:text-[9vw] !font-semibold !leading-[1.1] mb-8 mob:text-center"
+            titleClass="font-[Recoleta] text-black text-[4vw] md:text-[4vw] mob:text-[9vw] !font-bold !leading-[1.1] mb-8 mob:text-center"
             imageContainerClass="flex justify-center items-center md:!pe-5"
             titleContainerClass="flex flex-col justify-center items-center md:items-start md:!ps-12 lg:!ps-24 md:!pe-0"
             buttonText="Download Origin Fresh"
@@ -251,10 +275,9 @@ const Home = ({
                 );
               }
             }}
-            rootClass="bg-white items-center py-[5vw] mob:py-[10vw]"
+            rootClass="bg-[#FFFBEB] items-center py-[5vw] mob:py-[10vw]"
           />
         </Container>
-        <Box className="h-16 lg:h-32" />
       </Layout>
     </div>
   );

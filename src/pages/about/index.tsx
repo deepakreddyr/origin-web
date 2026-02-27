@@ -1,6 +1,7 @@
 import Commitment from '@/components/about/Commitment';
 import FarmDetails from '@/components/about/FarmDetails';
 import Handpicked from '@/components/about/Handpicked';
+import OriginOfFresh from '@/components/about/OriginOfFresh';
 import Hero from '@/components/about/Hero';
 import Layout from '@/components/Layout';
 import { GetServerSideProps } from 'next';
@@ -49,7 +50,7 @@ const AboutUsPage = (props: any) => {
   }, []);
 
   return (
-    <Layout isHeaderSticky={false} mainMenuItems={mainMenuItems} footerData={footerData}>
+    <Layout isHeaderSticky={true} mainMenuItems={mainMenuItems} footerData={footerData}>
       <CustomHead
         title="About Us | Origin Fresh"
         description="Learn about our commitment to bringing fresh, high-quality produce to your table. We focus on sustainability and quality."
@@ -58,7 +59,8 @@ const AboutUsPage = (props: any) => {
         <Hero />
         <Commitment />
         <Handpicked />
-        <FarmDetails />
+        <OriginOfFresh />
+        {/* <FarmDetails /> */}
         {/* <div className="px-[10vw] pb-[10vw] mob:px-[4vw] mob:pt-[8vw] ">{!loading && <CategorySection />}</div> */}
       </div>
     </Layout>

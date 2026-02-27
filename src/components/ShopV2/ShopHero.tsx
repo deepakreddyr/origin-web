@@ -9,8 +9,8 @@ import FreshlyArrivedBanner from '/public/assets/images/shop/FreshlyArrivedBanne
 import FruitsBanner from '/public/assets/images/shop/FruitsBanner.png';
 import HydroponicsBanner from '/public/assets/images/shop/HydroponicsBanner.png';
 import GourmetBanner from '/public/assets/images/shop/GourmetBanner.png';
-import banner from '/public/assets/images/shop/homepagebanner.webp';
-import mobbanner from '/public/assets/images/shop/homepagebannermob.webp';
+import banner from '/public/assets/images/shop/homepagebanner1.webp';
+import mobbanner from '/public/assets/images/shop/homepagebannermob1.webp';
 
 import vege from '/public/assets/images/shop/VeggiesBanner.png';
 // Map normalized keywords -> banner images
@@ -71,11 +71,6 @@ export default ShopHero;
 export const ShopHeroSingle = ({ bannerData }: { bannerData?: any }) => {
   const isMobile = useMediaQuery('(max-width:768px)');
   const router = useRouter();
-
-  console.log('ShopHeroSingle bannerData:', bannerData);
-
-  // If no data, fallback to default single banner logic (optional, but good for safety)
-  // or just create a single slide with default data
   const safeBannerData =
     bannerData && bannerData.length > 0
       ? bannerData

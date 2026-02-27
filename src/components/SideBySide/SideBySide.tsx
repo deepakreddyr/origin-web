@@ -9,7 +9,7 @@ import { Variant } from '@mui/material/styles/createTypography';
 import HTMLReactParser from 'html-react-parser/lib/index';
 
 type SideBySideProps = {
-  title: string;
+  title: React.ReactNode;
   titleVariant?: Variant;
   titleClass?: string;
   description?: string;
@@ -124,12 +124,12 @@ const SideBySide: React.FC<SideBySideProps> = ({
           )}
         >
           <Typography variant={titleVariant} className={CA(titleClass, 'font-semibold')}>
-            {HTMLReactParser(title)}
+            {typeof title === 'string' ? HTMLReactParser(title) : title}
           </Typography>
           {description && (
             <Typography
               variant="body1"
-              className="lg:my-6 mt-4 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-relaxed"
+              className="lg:my-6 mt-4 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-[1.3]"
             >
               {HTMLReactParser(description)}
             </Typography>
@@ -171,12 +171,12 @@ const SideBySide: React.FC<SideBySideProps> = ({
           )}
         >
           <Typography variant={titleVariant} className={CA(titleClass, 'font-semibold')}>
-            {HTMLReactParser(title)}
+            {typeof title === 'string' ? HTMLReactParser(title) : title}
           </Typography>
           {description && (
             <Typography
               variant="body1"
-              className="lg:my-6 mt-0 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-relaxed"
+              className="lg:my-6 mt-0 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-[1.3]"
             >
               {HTMLReactParser(description)}
             </Typography>
@@ -212,12 +212,12 @@ const SideBySide: React.FC<SideBySideProps> = ({
         <Box className={CA('py-0 lg:py-0 px-0 lg:px-16 pt-6 w-full flex', reverse ? 'pt-0 lg:pt-[0]' : 'lg:pb-[0]')}>
           <TwoRowFlex rootClass={CA('items-start px-0 py-0 lg:gap-12', rootClass)}>
             <Typography variant={titleVariant} className={CA(titleClass, 'w-full lg:w-[calc(50%-3rem)] font-semibold')}>
-              {HTMLReactParser(title)}
+              {typeof title === 'string' ? HTMLReactParser(title) : title}
             </Typography>
             <Box className="w-full lg:w-[calc(50%-3rem)]">
               <Typography
                 variant="body1"
-                className="mt-0 mb-6 lg:mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-relaxed"
+                className="mt-0 mb-6 lg:mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-[1.3]"
               >
                 {description && HTMLReactParser(description)}
               </Typography>
@@ -259,12 +259,12 @@ const SideBySide: React.FC<SideBySideProps> = ({
           )}
         >
           <Typography variant={titleVariant} className={CA(titleClass, 'font-semibold')}>
-            {HTMLReactParser(title)}
+            {typeof title === 'string' ? HTMLReactParser(title) : title}
           </Typography>
 
           <Typography
             variant="body1"
-            className="lg:my-6 mt-0 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-relaxed"
+            className="lg:my-6 mt-0 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-[1.3]"
           >
             {description && HTMLReactParser(description)}
           </Typography>

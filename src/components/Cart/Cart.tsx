@@ -336,17 +336,8 @@ const Cart = () => {
       <LocationChangedPopup
         isVisible={showLocationPopup}
         onClose={() => {
-          setShowLocationPopup(false);
-          setAddressModal(false);
-          dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
-
-          // Trigger API sync after location change
-          const cartItemFromLs = localStorage.getItem('cart_items');
-          if (cartItemFromLs && JSON.parse(cartItemFromLs).length > 0) {
-            sendItemsToApi();
-          } else {
-            fetchCartItemsFromApi();
-          }
+          // Hard refresh so all API data is fetched fresh with the new location
+          window.location.reload();
         }}
       />
       {SCREEN_MAP[cart.cartTabType]}

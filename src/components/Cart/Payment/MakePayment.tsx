@@ -14,7 +14,13 @@ const MakePayment = (props: any) => {
   // Ref to track if payment is in progress (survives re-renders better than state)
   const isProcessingRef = useRef(false);
 
-  let paymentFlow = localStorage.getItem('FLOW_TYPE') ? localStorage.getItem('FLOW_TYPE') : null;
+  const [mounted, setMounted] = useState(false);
+  const [paymentFlow, setPaymentFlow] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    setMounted(true);
+    setPaymentFlow(localStorage.getItem('FLOW_TYPE'));
+  }, []);
 
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
   const cart = useSelector((state: any) => state.cart);

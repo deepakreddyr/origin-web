@@ -13,6 +13,8 @@ import { useAtom } from 'jotai';
 import Image from 'next/image';
 import React from 'react';
 
+import LocationChangedPopup from '@/components/Cart/AddressAndTimeSlot/LocationChangedPopup';
+
 import family from '/public/assets/svg/familyTag.svg';
 import Home from '/public/assets/svg/HouseTag.svg';
 import Location from '/public/assets/svg/locationTag.svg';
@@ -62,6 +64,7 @@ export default function CompleteAddress(props: Props) {
   const [editingDetails] = useAtom(isEditingAddress);
   const [address, setAddress] = useAtom(addressAtom);
   const dispatch = useDispatch();
+  const [showLocationPopup, setShowLocationPopup] = React.useState(false);
 
   const onSubmit = async () => {
     try {
@@ -100,6 +103,9 @@ export default function CompleteAddress(props: Props) {
         ...prevState,
         isSaved: true
       }));
+
+      // Show location changed popup; on Alright → hard refresh
+      setShowLocationPopup(true);
     } catch (e) {
       // console.log(e, 'error while submitting new address');
     }
@@ -318,6 +324,12 @@ export default function CompleteAddress(props: Props) {
 
   return (
     <Box className={styles['main-container']}>
+      <LocationChangedPopup
+        isVisible={showLocationPopup}
+        onClose={() => {
+          window.location.reload();
+        }}
+      />
       <Box
         sx={{
           marginTop: '0',

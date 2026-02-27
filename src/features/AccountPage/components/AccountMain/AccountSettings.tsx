@@ -67,6 +67,9 @@ const AccountSettings = () => {
       error: false,
       data: null
     });
+
+    // Hard refresh so all API data and auth state is completely cleared
+    window.location.reload();
   };
 
   const list = [

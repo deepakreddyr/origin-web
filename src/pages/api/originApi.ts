@@ -55,11 +55,11 @@ const data: Data = {
     {
       label: 'About Us',
       link: '/about'
-    },
-    {
-      label: 'Our Process',
-      link: '/our-process'
     }
+    // {
+    //   label: 'Our Process',
+    //   link: '/our-process'
+    // }
   ],
   footerData: {
     footerLinksPrimary: [

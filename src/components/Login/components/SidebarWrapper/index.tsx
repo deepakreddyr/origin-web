@@ -7,7 +7,7 @@ import backIcon from '/public/assets/icons/backIcon.png';
 import { TabTypeConstant } from '../../constants/tabTypeContent';
 import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 interface Props {
   children: React.ReactNode;
@@ -26,7 +26,6 @@ const AlertToast: React.FC<{
   isVisible: boolean;
   onClose: () => void;
 }> = ({ message, isVisible, onClose }) => {
-
   useEffect(() => {
     if (isVisible) {
       const timer = setTimeout(() => {
@@ -40,15 +39,14 @@ const AlertToast: React.FC<{
 
   return (
     <div
-      className={`fixed top-10 left-1/2 transform -translate-x-1/2 z-[99999] w-[90%] max-w-md transition-opacity duration-300 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+      className={`fixed top-10 left-1/2 transform -translate-x-1/2 z-[99999] w-[90%] max-w-md transition-opacity duration-300 ease-in-out ${
+        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
     >
       <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full">
         <div className="flex items-center justify-center w-full gap-2">
           <InfoOutlinedIcon sx={{ color: 'yellow', fontSize: '1.2rem' }} />
-          <p className="text-[0.8rem] font-semibold text-white text-center leading-tight font-[SofiaPro]">
-            {message}
-          </p>
+          <p className="text-[0.8rem] font-semibold text-white text-center leading-tight font-[SofiaPro]">{message}</p>
         </div>
       </div>
     </div>
@@ -78,12 +76,11 @@ const SidebarWrapper = (props: Props) => {
     // Allow close
     dispatch(setIsSidebarOpen(false));
     if (loginDetails.isFreshLogin) {
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     }
-    if (
-      loginDetails.tabType === TabTypeConstant.SELECT_ADDRESS ||
-      loginDetails.tabType === TabTypeConstant.CART
-    ) {
+    if (loginDetails.tabType === TabTypeConstant.SELECT_ADDRESS || loginDetails.tabType === TabTypeConstant.CART) {
       dispatch(setTabType(''));
     }
   };
@@ -92,15 +89,15 @@ const SidebarWrapper = (props: Props) => {
     // Check if going back should be blocked (same logic usually, or if back takes them out of the mandatory flow)
     // If back button just goes to previous sidebar state, we might allow it?
     // But if back button closes sidebar (which it acts as in some contexts if no history), we should block.
-    // For now, let's block strict exit. 
+    // For now, let's block strict exit.
     // BUT: The prop `onClickBackButton` is passed from parent. We can't easily intercept what it does unless we know what it does.
     // However, `SidebarWrapper` title/header implies this back button often navigates WITHIN sidebar.
-    // Restriction: "Enter details to proceed". If they are on Register, they shouldn't go back to Login (OTP) if they already did OTP? 
+    // Restriction: "Enter details to proceed". If they are on Register, they shouldn't go back to Login (OTP) if they already did OTP?
     // Actually, if they are on Register, Back might take them to OTP (re-enter number). That seems okay?
     // The request says "close the view". Back usually navigates back.
-    // If Back closes the sidebar, we block. 
+    // If Back closes the sidebar, we block.
     // Let's assume Back is navigation and might be safe, BUT the user said "close the tab with x or back button".
-    // If `onClickBackButton` closes, we must block. 
+    // If `onClickBackButton` closes, we must block.
     // We can wrap it.
 
     const isRegistering = loginDetails.tabType === TabTypeConstant.REGISTER;
@@ -110,12 +107,12 @@ const SidebarWrapper = (props: Props) => {
     // If strictly blocking exit:
     if (isRegistering || (isManagingAddress && hasNoAddress)) {
       // If back button is enabled, it usually means there is a previous screen.
-      // If we are enforcing "Must finish registration", maybe we shouldn't allow going back to OTP? 
-      // Or if "Manage Address", going back might imply going to Account menu? 
+      // If we are enforcing "Must finish registration", maybe we shouldn't allow going back to OTP?
+      // Or if "Manage Address", going back might imply going to Account menu?
       // The user wants to avoid "avoiding the address selection process".
       // If Back takes them deeper into flow (e.g. Add Address -> Manage Address), it's fine.
       // But if Back takes them OUT (e.g. Manage Address -> Sidebar Close / Account), we might care.
-      // Given the prompt: "close the tab with x or back button... avoiding address selection", 
+      // Given the prompt: "close the tab with x or back button... avoiding address selection",
       // it seems "Manage Address" is the root of this mandatory flow.
       // If they are on "Manage Address" (root of this flow), Back might not even be enabled?
       // If it IS enabled, we block it just in case.
@@ -125,7 +122,6 @@ const SidebarWrapper = (props: Props) => {
 
     onClickBackButton();
   };
-
 
   useEffect(() => {
     if (loginDetails.isSidebarOpen) {
@@ -148,14 +144,12 @@ const SidebarWrapper = (props: Props) => {
       />
 
       {loginDetails.isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-[110]"
-          onClick={handleCloseAttempt}
-        ></div>
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-[110]" onClick={handleCloseAttempt}></div>
       )}
       <div
-        className={`fixed top-0 ${loginDetails.isSidebarOpen ? 'right-0' : '-right-full'
-          } w-[30vw] mob:w-screen h-screen bg-white shadow-md flex flex-col 
+        className={`fixed top-0 ${
+          loginDetails.isSidebarOpen ? 'right-0' : '-right-full'
+        } w-[30vw] mob:w-screen h-screen bg-white shadow-md flex flex-col 
     transition-all duration-300 ease-in-out z-[120]`}
       >
         {loginDetails.isHeaderVisible && (
@@ -180,9 +174,7 @@ const SidebarWrapper = (props: Props) => {
 
             {/* Center Section: Title */}
             <div className="flex-grow flex justify-start">
-              <h1 className="text-[1.67vw] mob:text-[5vw] mt-[7px] font-bold text-center">
-                {headerTitle}
-              </h1>
+              <h1 className="text-[1.67vw] mob:text-[5vw] mt-[7px] font-bold text-center">{headerTitle}</h1>
             </div>
 
             {/* Right Section: Close Button */}

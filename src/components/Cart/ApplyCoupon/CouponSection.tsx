@@ -12,6 +12,7 @@ const CouponSection = (props: any) => {
   const { setShowCouponList } = props;
   const cart = useSelector((state: any) => state.cart);
   const { couponDetails } = cart;
+  console.log(couponDetails);
   const dispatch = useDispatch();
   const loginDetails = useSelector((state: any) => state.loginDetails);
 
@@ -55,9 +56,9 @@ const CouponSection = (props: any) => {
             </div>
             <div className="">
               <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  ">View coupons & Offers</p>
-              <p className="font-[SofiaPro] text-[.78vw] mob:text-[3vw] font-regular pt-[.3vw] mob:pt-[1.5vw] ">
+              {/* <p className="font-[SofiaPro] text-[.78vw] mob:text-[3vw] font-regular pt-[.3vw] mob:pt-[1.5vw] ">
                 Find and apply to save on this order
-              </p>
+              </p> */}
             </div>
           </div>
           <div className="relative w-[1.25vw] h-[1.25vw] mob:w-[5vw] mob:h-[5vw]   ">
@@ -71,9 +72,11 @@ const CouponSection = (props: any) => {
               <Image src={percentageIcon} alt="percentage icon" fill />{' '}
             </div>
             <div className="">
-              <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  ">View coupons & Offers</p>
+              <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  ">
+                Applied Coupon '{couponDetails.name}'
+              </p>
               <p className="font-[SofiaPro] text-[.78vw] mob:text-[3vw] font-regular pt-[.3vw] mob:pt-[2vw] ">
-                You Saved {couponDetails.offer} on this order
+                You Saved ₹{couponDetails.discount} on this order
               </p>
             </div>
           </div>

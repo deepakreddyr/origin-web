@@ -28,7 +28,7 @@ type Props = {
   mainMenuItems: MainMenuType[];
   isHeaderSticky: any;
   search?: boolean;
-  transparentColor?: 'black'; // NEW PROP
+  transparentColor?: 'white'; // NEW PROP
 };
 
 // HELPER FUNCTION: Calculate total cart line items from nested structure
@@ -80,7 +80,7 @@ const AnimatedPlaceholder = () => {
   );
 };
 
-const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColor = 'black' }: Props) => {
+const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColor }: Props) => {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [topBarTransition, setTopBarTransition] = useState(false);
@@ -114,49 +114,49 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
   // Helper function to get icon filter based on transparent color
   const getIconFilter = () => {
     if (!isTransparentHeader) return '';
-    return transparentColor === 'black' ? 'brightness-0' : 'brightness-0 invert';
+    return transparentColor === 'white' ? 'brightness-0' : 'brightness-0 invert';
   };
 
   // Helper function to get text color class
   const getTextColor = () => {
     if (!isTransparentHeader) return 'text-gray-900';
-    return transparentColor === 'black' ? 'text-black' : 'text-white';
+    return transparentColor === 'white' ? 'text-black' : 'text-white';
   };
 
   // Helper function to get location button styles
   const getLocationButtonStyles = () => {
     if (!isTransparentHeader) return 'bg-black/5 text-gray-900';
-    return transparentColor === 'black' ? 'bg-black/10 text-black' : 'bg-white/30 text-white';
+    return transparentColor === 'white' ? 'bg-black/10 text-black' : 'bg-white/30 text-white';
   };
 
   // Helper function to get location icon color
   const getLocationIconColor = () => {
     if (!isTransparentHeader) return 'text-gray-700';
-    return transparentColor === 'black' ? 'text-black' : 'text-white';
+    return transparentColor === 'white' ? 'text-black' : 'text-white';
   };
 
   // Helper function to get dropdown icon color
   const getDropdownIconColor = () => {
     if (!isTransparentHeader) return 'text-gray-500';
-    return transparentColor === 'black' ? 'text-black' : 'text-white';
+    return transparentColor === 'white' ? 'text-black' : 'text-white';
   };
 
   // Helper function to get search bar styles
   const getSearchBarStyles = () => {
     if (!isTransparentHeader) return 'bg-[#F8F4E9] border border-gray-200 text-black';
-    return transparentColor === 'black' ? 'bg-black/10 text-black border-none' : 'bg-white/30 text-white border-none';
+    return transparentColor === 'white' ? 'bg-black/10 text-black border-none' : 'bg-white/30 text-white border-none';
   };
 
   // Helper function to get search icon color
   const getSearchIconColor = () => {
     if (!isTransparentHeader) return 'text-gray-400';
-    return transparentColor === 'black' ? 'text-black' : 'text-white';
+    return transparentColor === 'white' ? 'text-black' : 'text-white';
   };
 
   // Helper function to get search placeholder color
   const getSearchPlaceholderColor = () => {
     if (!isTransparentHeader) return 'text-gray-400';
-    return transparentColor === 'black' ? 'text-black/70' : 'text-white/90';
+    return transparentColor === 'white' ? 'text-black/70' : 'text-white/90';
   };
 
   useEffect(() => {

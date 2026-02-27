@@ -30,7 +30,7 @@ const config: Config = {
           '200-80': '#EDE6D4CC'
         },
         secondary: {
-          DEFAULT: '#25874D',
+          DEFAULT: '#619269',
           100: '#DDEEDD',
           200: '#CFE6D2',
           300: '#26B45F',
@@ -75,7 +75,7 @@ const config: Config = {
         noise: "url('/assets/noise-texture.png')"
       },
       animation: {
-        'infinite-scroll': 'infinite-scroll 25s linear infinite'
+        'infinite-scroll': 'infinite-scroll 50s linear infinite'
       },
       keyframes: {
         'infinite-scroll': {
