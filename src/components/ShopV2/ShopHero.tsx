@@ -49,7 +49,7 @@ const ShopHero = () => {
   const selectedBanner = bannerMap[section] || FruitsBanner;
 
   return (
-    <div className="relative w-full overflow-hidden mob:pt-[20vw]">
+    <div className="relative w-full overflow-hidden mob:pt-[20vw] cursor-pointer" onClick={() => router.push('/shop')}>
       <div className={`relative w-full ${isMobile ? 'pt-[50px]' : 'aspect-[2.4/1]'}`}>
         <Image
           src={selectedBanner}
@@ -78,7 +78,7 @@ export const ShopHeroSingle = ({ bannerData }: { bannerData?: any }) => {
           {
             website_image: banner,
             website_mobile_view_image: mobbanner,
-            navigation: { to: '/' }
+            navigation: { to: '/shop' }
           }
         ];
 
@@ -86,17 +86,15 @@ export const ShopHeroSingle = ({ bannerData }: { bannerData?: any }) => {
     const desktopImage = item?.website_desktop_view_image || item?.website_image;
     const mobileImage = item?.website_mobile_view_image;
     const bannerSrc = isMobile ? mobileImage || mobbanner : desktopImage || banner;
-    const navigationTo = item?.navigation?.to;
+    const navigationTo = item?.navigation?.to || '/shop';
     const handleNavigation = () => {
-      if (navigationTo) {
-        router.push(navigationTo);
-      }
+      router.push(navigationTo);
     };
 
     return (
       <div
         key={index}
-        className={`relative w-full h-[40vw] mob:h-[100vw] bg-[#f7f1dc] ${navigationTo ? 'cursor-pointer' : ''}`}
+        className={`relative w-full h-[40vw] mob:h-[100vw] bg-[#f7f1dc] cursor-pointer`}
         onClick={handleNavigation}
       >
         <Image src={bannerSrc} alt={`Hero Banner ${index}`} fill priority quality={100} className="object-cover" />
