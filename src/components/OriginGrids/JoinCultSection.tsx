@@ -61,7 +61,9 @@ const JoinCultSection = () => {
 
             {/* Instagram */}
             <a
-              href="#"
+              href="https://www.instagram.com/originfresh.in?igsh=ZXYxNnFvYXR4cWd5"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center justify-center gap-3 border border-[#231F20] rounded-full px-6 py-3 w-full hover:bg-[#231F20] transition-colors duration-200 group"
             >
               <svg
@@ -85,7 +87,9 @@ const JoinCultSection = () => {
             {/* Youtube + LinkedIn */}
             <div className="flex gap-3">
               <a
-                href="#"
+                href="https://www.youtube.com/@origin_fresh"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex flex-1 items-center justify-center gap-2 border border-[#231F20] rounded-full px-4 py-3 hover:bg-[#231F20] transition-colors duration-200 group"
               >
                 <span className="w-7 h-7 bg-[#E18D1F] group-hover:bg-white rounded-full flex items-center justify-center transition-colors shrink-0">
@@ -103,7 +107,9 @@ const JoinCultSection = () => {
               </a>
 
               <a
-                href="#"
+                href="https://www.linkedin.com/company/origin-fresh-tech/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex flex-1 items-center justify-center gap-2 border border-[#231F20] rounded-full px-4 py-3 hover:bg-[#231F20] transition-colors duration-200 group"
               >
                 <span className="w-7 h-7 bg-[#E18D1F] group-hover:bg-white rounded-full flex items-center justify-center transition-colors shrink-0">
