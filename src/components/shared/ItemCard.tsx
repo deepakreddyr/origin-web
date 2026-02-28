@@ -636,7 +636,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
         itemName={itemDetails.name}
       />
 
-      <div className="w-full md:max-w-[16.67vw] text-start relative">
+      <div className="w-full md:max-w-[16.67vw] mob:max-w-[40vw] text-start relative mx-auto">
         <button onClick={handleNavigation} className="cursor-pointer w-full text-start group">
           {/* Image Container */}
           <div className="relative bg-primary-100 flex items-center justify-center w-[16.67vw] mob:w-[40vw] h-[14.5vw] mob:h-[38vw] rounded-[1.67vw] mob:rounded-[4.1vw] overflow-hidden">
@@ -703,7 +703,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                     e.stopPropagation();
                     if (!isNotified) handleNotifyMe();
                   }}
-                  className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold h-[2.5vw] mob:h-[8.5vw] px-[1.5vw] mob:px-[4vw] rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${
+                  className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold h-[2.5vw] mob:h-[8.5vw] px-[1.5vw] mob:px-[3vw] rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${
                     isNotified ? 'cursor-default' : 'hover:bg-green-50'
                   }`}
                 >
@@ -718,7 +718,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                 <button
                   type="button"
                   onClick={handleBasketViewClick}
-                  className="bg-primary flex items-center justify-center h-[2.5vw] mob:h-[8.5vw] rounded-full px-[1.5vw] mob:px-[4.1vw] py-[.4vw] font-[SofiaPro] text-[.97vw] font-bold mob:text-[3.6vw] text-black hover:bg-yellow-400 transition-colors shadow-sm"
+                  className="bg-primary flex items-center justify-center h-[2.5vw] mob:h-[8.5vw] rounded-full px-[1.5vw] mob:px-[3vw] py-[.4vw] font-[SofiaPro] text-[.97vw] font-bold mob:text-[3.6vw] text-black hover:bg-yellow-400 transition-colors shadow-sm"
                 >
                   VIEW
                 </button>

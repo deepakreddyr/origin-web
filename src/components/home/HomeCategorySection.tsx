@@ -32,6 +32,10 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
       return `/shop/${catName}/${catId}/${subName}/${subId}`;
     }
 
+    if (catId === 15 || catName.includes('blends')) {
+      return `/shop/blends/15/cold-press/53`;
+    }
+
     return `/shop/${catName}/${catId}/${catName}/${catId}`;
   };
 
@@ -63,11 +67,15 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
                     ${!isExpanded && hasMore ? 'max-h-[125vw] tabp:max-h-[45vw] overflow-hidden' : 'max-h-[5000px]'}
                 `}
           >
-            {mobile && finalBlendsCategory && <BlendsCategoryCard category={finalBlendsCategory} />}
+            {mobile && finalBlendsCategory && (
+              <BlendsCategoryCard category={finalBlendsCategory} generateHref={generateHref} />
+            )}
             {displayedCategories.map((category: any) => (
               <CategoryCard key={category.id} category={category} generateHref={generateHref} />
             ))}
-            {!mobile && finalBlendsCategory && <BlendsCategoryCard category={finalBlendsCategory} />}
+            {!mobile && finalBlendsCategory && (
+              <BlendsCategoryCard category={finalBlendsCategory} generateHref={generateHref} />
+            )}
           </div>
 
           {!isExpanded && hasMore && (
@@ -92,10 +100,10 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
   );
 };
 
-const BlendsCategoryCard = ({ category }: { category: any }) => {
+const BlendsCategoryCard = ({ category, generateHref }: { category: any; generateHref: (cat: any) => string }) => {
   return (
     <Link
-      href={`/shop/${category.name.replace(/ /g, '-').toLowerCase()}/${category.id}`}
+      href={generateHref(category)}
       className="lg:col-span-2 col-span-2 relative rounded-[20px] mob:rounded-[15px] overflow-hidden group min-h-[17vw] mob:min-h-[44vw] flex flex-col items-center justify-end"
       style={{
         background: 'linear-gradient(180deg, #CBB270 0%, #F7E1BA 100%)'
