@@ -155,9 +155,10 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
   return (
     <div className="relative">
       <div
+        style={{ transform: 'translateZ(0)' }}
         className={`fixed flex items-center justify-between h-[4vw] mob:h-[15vw] ${
           finalIsDisabled ? 'bg-gray-400' : 'bg-primary'
-        } z-[2] mob:z-[9999] bottom-[1.67vw] mob:bottom-[5vw] w-[calc(30vw-2.78vw)] mob:w-[calc(100vw-10vw)] mob:p-[2vw] p-[.6vw] rounded-full mob:left-[5vw] mob:shadow-xl transition-all duration-300`}
+        } z-[130] mob:z-[9999] bottom-[1.67vw] mob:bottom-[5vw] right-[1.39vw] mob:right-[5vw] w-[calc(30vw-2.78vw)] mob:w-[calc(100vw-10vw)] mob:p-[2vw] p-[.6vw] rounded-full mob:left-[5vw] mob:shadow-xl transition-all duration-300`}
       >
         <div className="pl-[1vw] mob:pl-[2.1vw]">
           <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-black-op-60 font-medium">
