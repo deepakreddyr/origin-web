@@ -111,7 +111,7 @@ const Home = ({
           <PrimaryFeature />
         </Container>
 
-        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[4vw] py-12 mob:py-6">
+        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[4vw] pt-12 pb-4 mob:pb-2">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 w-full">
             {uspCardsData?.map((card, index) => {
               // Mapping icons as per your logic
@@ -125,7 +125,7 @@ const Home = ({
           </div>
         </Container>
         {/* Homepage Category Section */}
-        <div className="w-full px-[3vw] mob:mt-[10vw]">
+        <div className="w-full px-[3vw] mob:mt-[2vw]">
           <HomeCategorySection categories={mainCategoryData} blendsCategory={blendsCategoryData} loading={loading} />
         </div>
 

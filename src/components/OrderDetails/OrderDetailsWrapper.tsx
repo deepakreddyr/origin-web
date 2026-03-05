@@ -81,9 +81,12 @@ const OrderDetailsWrapper = () => {
             fetchOrderdetails={fetchOrderdetails}
           />
           <div className="w-full mob:block hidden mob:px-[4.1vw] ">
-            {orderAndRefundDetails.orderDetailsData.status !== 'Cancelled by user' && (
-              <RetryOrPayonlineWrapper fetchOrderdetails={fetchOrderdetails} />
-            )}
+            {orderAndRefundDetails.orderDetailsData.status?.toLowerCase() !== 'cancelled by user' &&
+              !(
+                orderAndRefundDetails.orderDetailsData.status?.toLowerCase() === 'rejected by admin' &&
+                (orderAndRefundDetails.orderDetailsData.payment_method === 'COD' ||
+                  orderAndRefundDetails.orderDetailsData.payment_method === 'Cash')
+              ) && <RetryOrPayonlineWrapper fetchOrderdetails={fetchOrderdetails} />}
             <ItemsList orderDetailsData={orderAndRefundDetails.orderDetailsData} />
           </div>
           <div className="mob:px-[4.1vw] flex flex-col gap-[1.671vw] mob:gap-[4.1vw] ">
@@ -98,7 +101,12 @@ const OrderDetailsWrapper = () => {
           </div>
         </div>
         <div className="w-full flex flex-col mob:hidden gap-[1.67vw]">
-          {orderAndRefundDetails.orderDetailsData.status !== 'Cancelled by user' &&
+          {orderAndRefundDetails.orderDetailsData.status?.toLowerCase() !== 'cancelled by user' &&
+            !(
+              orderAndRefundDetails.orderDetailsData.status?.toLowerCase() === 'rejected by admin' &&
+              (orderAndRefundDetails.orderDetailsData.payment_method === 'COD' ||
+                orderAndRefundDetails.orderDetailsData.payment_method === 'Cash')
+            ) &&
             orderAndRefundDetails.orderDetailsData.payment_status === 'pending' && (
               <RetryOrPayonlineWrapper fetchOrderdetails={fetchOrderdetails} />
             )}

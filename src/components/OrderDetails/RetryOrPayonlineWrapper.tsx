@@ -113,7 +113,17 @@ const RetryOrPayonlineWrapper: React.FC<RetryOrPayonlineWrapperProps> = ({ fetch
     }
   };
 
-  if (paymentStatus === 'complete') return null;
+  const isOrderRejected = React.useMemo(() => {
+    const status = orderAndRefundDetails.orderDetailsData?.status?.toLowerCase();
+    const lastStatus =
+      orderAndRefundDetails.orderDetailsData?.status_list?.[
+        orderAndRefundDetails.orderDetailsData.status_list.length - 1
+      ]?.status_message?.toLowerCase();
+
+    return status === 'rejected by admin' || lastStatus === 'rejected by admin';
+  }, [orderAndRefundDetails.orderDetailsData]);
+
+  if (paymentStatus === 'complete' || isOrderRejected) return null;
 
   return (
     <div className="bg-[#F2EEE44D] border border-[#F2EEE4] rounded-[1.1vw] mob:rounded-[4.1vw] mob:p-[4.1vw] p-[1.1vw] flex mob:flex-col items-end mob:items-center justify-between mob:mb-[4.1vw] w-full">
