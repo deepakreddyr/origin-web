@@ -155,7 +155,11 @@ export default function Layout({
   return (
     <CacheProvider value={clientSideEmotionCache}>
       <ThemeProvider theme={theme}>
-        <LocationSelector open={isLocationSelectorOpen} onLocationSelected={handleLocationSelected} />
+        <LocationSelector
+          open={isLocationSelectorOpen}
+          onLocationSelected={handleLocationSelected}
+          onClose={() => setIsLocationSelectorOpen(false)}
+        />
         {query.type !== 'app' && (
           <Header
             isHeaderSticky={isHeaderSticky}

@@ -222,8 +222,17 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
   };
 
   const handleSelectAddress = () => {
+    const hasLocation = localStorage.getItem('selected_address');
+
     if (!loginDetails.isLogin) {
-      setIsLocationSelectorOpen(true);
+      setIsLocationSelectorOpen((prev) => {
+        // If it's already open and we have a location, we can toggle it off.
+        // If we don't have a location, we must keep it open.
+        if (prev && hasLocation) {
+          return false;
+        }
+        return true;
+      });
       return;
     }
 

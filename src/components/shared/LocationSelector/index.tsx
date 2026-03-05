@@ -18,20 +18,28 @@ import MyLocationIcon from '@mui/icons-material/MyLocation';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 import Image from 'next/image';
+import CloseIcon from '@mui/icons-material/Close';
 import { useAtom } from 'jotai';
 import { isGMapLoadedAtom } from '@/context/global';
-import locationPin from '@/assets/svg/location-pin.svg';
 
 interface LocationSelectorProps {
   open: boolean;
   onLocationSelected: (storeId: string, address: any) => void;
+  onClose?: () => void;
 }
 
-const LocationSelector: React.FC<LocationSelectorProps> = ({ open, onLocationSelected }) => {
+const LocationSelector: React.FC<LocationSelectorProps> = ({ open, onLocationSelected, onClose }) => {
   const [isGMapLoaded] = useAtom(isGMapLoadedAtom);
   const [shaking, setShaking] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [hasLocation, setHasLocation] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setHasLocation(!!localStorage.getItem('selected_address'));
+    }
+  }, [open]);
 
   const {
     ready,
@@ -55,8 +63,12 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({ open, onLocationSel
   }, [isGMapLoaded, open, init]);
 
   const handleClose = () => {
-    setShaking(true);
-    setTimeout(() => setShaking(false), 300);
+    if (hasLocation && onClose) {
+      onClose();
+    } else {
+      setShaking(true);
+      setTimeout(() => setShaking(false), 300);
+    }
   };
 
   const handleSelect = async (description: string) => {
@@ -197,6 +209,20 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({ open, onLocationSel
           position: 'relative'
         }}
       >
+        {hasLocation && (
+          <IconButton
+            onClick={() => onClose?.()}
+            sx={{
+              position: 'absolute',
+              right: 16,
+              top: 16,
+              color: '#231F20CC',
+              '&:hover': { bgcolor: 'rgba(0,0,0,0.05)' }
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        )}
         <Typography
           id="location-selector-title"
           variant="h5"
@@ -242,14 +268,14 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({ open, onLocationSel
           </IconButton>
           <InputBase
             sx={{ flex: 1, ml: 1, fontFamily: 'SofiaPro', fontSize: '14px' }}
-            placeholder={!isGMapLoaded ? 'Loading Maps...' : 'Search for your street, area, or landmark'}
+            placeholder={!isGMapLoaded ? 'Loading Maps...' : 'Search for your location'}
             value={value}
             onChange={(e) => setValue(e.target.value)}
             disabled={!isGMapLoaded}
           />
-          {(loading || (!ready && value && isGMapLoaded)) && (
+          {/* {(loading || (!ready && value && isGMapLoaded)) && (
             <CircularProgress size={20} sx={{ mr: 1, color: '#fac510' }} />
-          )}
+          )} */}
         </Paper>
 
         {status === 'OK' && (
@@ -294,8 +320,8 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({ open, onLocationSel
           onClick={handleCurrentLocation}
           disabled={loading}
           sx={{
-            justifyContent: 'flex-start',
-            color: '#fac510',
+            justifyContent: 'center',
+            color: '#619269',
             fontFamily: 'SofiaPro',
             fontWeight: 600,
             fontSize: '14px',
@@ -344,12 +370,6 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({ open, onLocationSel
             No results found for "{value}".
           </Typography>
         )}
-
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
-          <Box sx={{ position: 'relative', width: 120, height: 120, animation: 'bounce 2s infinite ease-in-out' }}>
-            <Image src={locationPin} alt="Location" fill style={{ objectFit: 'contain' }} />
-          </Box>
-        </Box>
 
         <style jsx global>{`
           @keyframes bounce {
