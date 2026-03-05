@@ -167,9 +167,9 @@ const ReviewItem = (props: {
 
             {(isFreeItem || product.free || product.isFree) && (
               <div className="flex items-center gap-[.5vw] mob:gap-[2vw] mt-[.2vw] mob:mt-[.5vw]">
-                <span className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-[#BFBFBF] line-through">
+                {/* <span className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-[#BFBFBF] line-through">
                   ₹{uom.market_price || uom.price}
-                </span>
+                </span> */}
                 <span className="font-[SofiaPro] text-[.7vw] mob:text-[2.5vw] font-bold text-black bg-[#fac510] px-[.4vw] mob:px-[1.5vw] py-[.1vw] mob:py-[.5vw] rounded-md">
                   Free
                 </span>

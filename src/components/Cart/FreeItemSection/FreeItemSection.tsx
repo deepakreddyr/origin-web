@@ -84,9 +84,9 @@ const FreeItemSection = ({ onShowToast }: { onShowToast: (message: string) => vo
                     </p>
                     <span className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-black/60">{uom.unit}</span>
                     <div className="flex items-center gap-[.5vw] mob:gap-[2vw] mt-[.2vw] mob:mt-[.5vw]">
-                      <span className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-[#BFBFBF] line-through">
+                      {/* <span className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-[#BFBFBF] line-through">
                         ₹{uom.price || uom.market_price}
-                      </span>
+                      </span> */}
                       <span className="font-[SofiaPro] text-[.7vw] mob:text-[2.5vw] font-semibold text-black bg-[#fac510] px-[.4vw] mob:px-[1.5vw] py-[.1vw] mob:py-[.5vw] rounded-md">
                         Free
                       </span>
