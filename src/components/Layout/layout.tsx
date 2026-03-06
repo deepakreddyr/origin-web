@@ -141,10 +141,13 @@ export default function Layout({
     }
 
     // Only open if NOT logged in and NO store-id is present
-    if (!userToken && !storeId) {
+    // Do not show for About Us page
+    if (!userToken && !storeId && router.pathname !== '/about') {
       setIsLocationSelectorOpen(true);
+    } else if (router.pathname === '/about') {
+      setIsLocationSelectorOpen(false);
     }
-  }, [address.address]);
+  }, [address.address, router.pathname]);
 
   const handleLocationSelected = (storeId: string, address: any) => {
     setIsLocationSelectorOpen(false);
