@@ -107,7 +107,7 @@ const Home = ({
         />
         {/* <OriginHero /> */}
         <ShopHeroSingle bannerData={heroBannerData} />
-        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[4vw] py-8 mob:py-4 mt-8 mob:mt-4">
+        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[4vw] py-8 mob:py-4 mt-8 mob:mt-8">
           <PrimaryFeature />
         </Container>
 

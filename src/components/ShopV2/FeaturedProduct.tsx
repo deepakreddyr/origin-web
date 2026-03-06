@@ -212,7 +212,7 @@ const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType 
   return (
     <div className="flex flex-col md:flex-row items-center gap-10 lg:gap-20 w-full">
       {/* Left Image Section */}
-      <div className="w-full md:w-1/2 relative aspect-square bg-[#F9F7F0] rounded-[60px] mob:rounded-[40px] flex items-center justify-center p-24 mob:p-16 transition-colors hover:bg-[#F3F1E8]">
+      <div className="w-full md:w-1/2 relative aspect-square bg-[#F9F7F0] rounded-[60px] mob:rounded-[40px] flex items-center justify-center p-16 mob:p-8 transition-colors hover:bg-[#F3F1E8]">
         <div className="relative w-full h-full">
           <Image
             src={item.image || '/assets/images/shop/testing_img.png'}

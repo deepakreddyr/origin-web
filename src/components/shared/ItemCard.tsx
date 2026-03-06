@@ -160,7 +160,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
           {/* Image Container */}
           <div className="relative bg-primary-100 flex items-center justify-center w-[16.67vw] mob:w-[40vw] h-[14.5vw] mob:h-[38vw] rounded-[1.67vw] mob:rounded-[4.1vw] overflow-hidden">
             <div
-              className={`relative w-[12.6vw] h-[12vw] mob:w-[24vw] mob:h-[22vw] transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
+              className={`relative w-[12.6vw] h-[12vw] mob:w-[38vw] mob:h-[38vw] transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
             >
               <Image
                 src={itemDetails.image || sampleimg}

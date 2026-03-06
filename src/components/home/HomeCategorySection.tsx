@@ -52,7 +52,7 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
     <div className="py-[4vw] mob:py-[8vw] relative">
       <div className="w-[92vw] md:w-[80vw] mx-auto">
         {title && (
-          <div className="w-full mb-[2.1vw] mob:pb-[5vw]">
+          <div className="w-full mb-[2.1vw] mob:pb-[0vw]">
             <h1 className="font-Stinger text-start font-semibold text-[2.5vw] mob:text-[7vw] text-[#231F20] ">
               {title}
             </h1>
