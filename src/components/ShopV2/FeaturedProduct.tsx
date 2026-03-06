@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useMediaQuery } from '@mui/material';
 import Image from 'next/image';
 import AddItemBtn from '@/components/shared/AddItemBtn/AddItemBtn';
 import { OriginCircleLeftArrow, OriginCircleRightArrow } from '../../Icons/OriginIcons';
@@ -10,46 +11,11 @@ import { getAddressAndStoreId } from '@/utilities/utils';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-
-interface UomType {
-  variant_id: number;
-  name?: string | null;
-  uom_id: number;
-  unit: string;
-  minimum_quantity: number;
-  maximum_quantity: number;
-  stepper_quantity: number;
-  is_visible: boolean;
-  is_available: boolean;
-  is_default: boolean;
-  price: number;
-  platform_id?: number;
-  formatted_price?: string;
-  cart_quantity?: number;
-  conversion_text: string;
-  is_not_discounted?: boolean;
-  ripeness_types?: any;
-  cart_ripeness?: any;
-  market_price: number;
-}
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { UOMPopup, NotifyToast, MaxQuantityToast, Product, UOM } from '../shared/UOMPopup';
 
 interface FeaturedItemType {
-  item: {
-    id: number;
-    item_code: string;
-    name: string;
-    image: string;
-    multiple_images: string[];
-    bg_color: string;
-    navigation: {
-      to: string;
-    };
-    is_greyed: boolean;
-    is_available: boolean;
-    is_orderable: boolean;
-    tag_url: string | null;
-    multiple_uoms: UomType[];
-  };
+  item: Product;
   info: {
     info: Array<{
       type: string;
@@ -169,49 +135,20 @@ const FeaturedProduct = ({ featuredItems }: FeaturedProductProps) => {
     </div>
   );
 };
-// --------------------------------------------------------
-// NOTIFY TOAST COMPONENT
-// --------------------------------------------------------
-const NotifyToast: React.FC<{
-  message: string;
-  isVisible: boolean;
-  onClose: () => void;
-  type: 'success' | 'error';
-}> = ({ message, isVisible, onClose, type }) => {
-  useEffect(() => {
-    if (isVisible) {
-      const timer = setTimeout(() => {
-        onClose();
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [isVisible, onClose]);
-
-  if (!isVisible) return null;
-
-  return (
-    <div
-      className={`fixed z-[100] left-1/2 bottom-10 transform -translate-x-1/2 w-[90%] max-w-sm transition-all duration-300 ease-in-out ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
-      }`}
-    >
-      <div className="flex items-center bg-black rounded-full shadow-2xl h-12 px-6 w-full relative">
-        <div className="flex items-center justify-center w-full gap-3">
-          {type === 'error' && <InfoOutlinedIcon sx={{ color: '#fac510', fontSize: '1.2rem' }} />}
-          <p className="text-[0.80rem] font-medium text-white text-center font-[SofiaPro] leading-tight">{message}</p>
-        </div>
-      </div>
-    </div>
-  );
-};
+// Local NotifyToast removed in favor of shared component
 
 const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType }) => {
+  const isMobile = useMediaQuery('(max-width:768px)');
   const [showNotifyToast, setShowNotifyToast] = useState(false);
   const [notifyMsg, setNotifyMsg] = useState('');
   const [notifyType, setNotifyType] = useState<'success' | 'error'>('success');
   const dispatch = useDispatch();
   const sendDataToApi = useSendDataToApi();
   const notifiedItems = useSelector((state: any) => state.products.notifiedItems);
+
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
+  const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
 
   const item = featuredItem?.item;
   const info = featuredItem?.info;
@@ -259,6 +196,19 @@ const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType 
     uom: item.multiple_uoms
   };
 
+  const hasMultipleUOMs = item.multiple_uoms?.length > 1;
+  const hasRipenessOptions = item.multiple_uoms?.some((uom) => uom.ripeness_types && uom.ripeness_types.length > 0);
+  const requiresSelection = hasMultipleUOMs || hasRipenessOptions;
+
+  const totalOptionsCount = item.multiple_uoms?.reduce((acc, uom) => {
+    return acc + (uom.ripeness_types?.length || 1);
+  }, 0);
+
+  const handleMaxQuantityExceeded = (maxQty: number) => {
+    setToastMaxQuantity(maxQty);
+    setShowMaxQuantityToast(true);
+  };
+
   return (
     <div className="flex flex-col md:flex-row items-center gap-10 lg:gap-20 w-full">
       {/* Left Image Section */}
@@ -299,7 +249,7 @@ const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType 
           <div className="flex items-baseline gap-3">
             <span className="text-gray-500 text-xl font-medium">{defaultUom?.unit}</span>
             <span className="text-xl md:text-xl font-bold text-[#4B7C59]">₹{defaultUom?.price}</span>
-            {defaultUom?.market_price && defaultUom.market_price > defaultUom.price && (
+            {defaultUom?.market_price > 0 && defaultUom.market_price > defaultUom.price && (
               <span className="text-xl text-gray-300 line-through font-medium ml-2">₹{defaultUom.market_price}</span>
             )}
           </div>
@@ -314,41 +264,33 @@ const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType 
                   e.stopPropagation();
                   if (!isNotified) handleNotifyMe();
                 }}
-                className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-8 py-4 rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${
+                className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold h-[2.5vw] mob:h-[8.5vw] px-[1.5vw] mob:px-[3vw] rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${
                   isNotified ? 'cursor-default' : 'hover:bg-green-50'
                 }`}
               >
-                {!isNotified && <span className="text-xl">Notify Me</span>}
+                {!isNotified && <span className="text-[.97vw] mob:text-[3.2vw]">Notify Me</span>}
                 {isNotified ? (
-                  <NotificationsActiveIcon sx={{ fontSize: '1.8rem' }} />
+                  <NotificationsActiveIcon sx={{ fontSize: isMobile ? '4vw' : '1.2vw' }} />
                 ) : (
-                  <NotificationsIcon sx={{ fontSize: '1.8rem' }} />
+                  <NotificationsIcon sx={{ fontSize: isMobile ? '4vw' : '1.2vw' }} />
                 )}
               </button>
-            ) : item.multiple_uoms?.length > 1 ? (
-              <button className="bg-[#FBE363] hover:bg-[#f0d85a] text-gray-900 font-bold px-12 py-5 rounded-full flex items-center gap-4 transition-all text-xl shadow-sm">
-                {item.multiple_uoms.length} Options
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M7 15l5 5 5-5M7 9l5-5 5 5" />
-                </svg>
+            ) : requiresSelection ? (
+              <button
+                onClick={() => setIsPopupOpen(true)}
+                className="bg-primary text-black font-bold h-[2.5vw] mob:h-[8.5vw] px-[1.5vw] mob:px-[3vw] rounded-full flex items-center justify-center gap-1 transition-all text-[.97vw] mob:text-[3.2vw]"
+              >
+                Add
+                <KeyboardArrowDownIcon sx={{ fontSize: isMobile ? '4vw' : '1.2vw' }} />
               </button>
             ) : (
-              <div className="scale-110 origin-right rounded-full overflow-hidden w-[80px] my-4 mob:w-[80px]">
+              <div className="w-[80px] mob:w-auto flex justify-end">
                 <AddItemBtn
                   product={productForAddBtn}
                   varientId={defaultUom?.variant_id}
                   varientPrice={`₹${defaultUom?.price}`}
                   stepperQuantity={defaultUom?.stepper_quantity || 1}
-                  buttonType="yellowaddtocart"
+                  buttonType="white"
                 />
               </div>
             )}
@@ -361,6 +303,20 @@ const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType 
         onClose={() => setShowNotifyToast(false)}
         type={notifyType}
       />
+      <MaxQuantityToast
+        maxQuantity={toastMaxQuantity}
+        isVisible={showMaxQuantityToast}
+        onClose={() => setShowMaxQuantityToast(false)}
+        itemName={item.name}
+      />
+      {requiresSelection && (
+        <UOMPopup
+          product={item}
+          isOpen={isPopupOpen}
+          onClose={() => setIsPopupOpen(false)}
+          onSelectionMade={() => {}} // We don't need local selection state here like in ItemCard as AddItemBtn handles cart
+        />
+      )}
     </div>
   );
 };
