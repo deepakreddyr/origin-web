@@ -23,10 +23,10 @@ const TRANSLATE_MAP: Record<RevealDirection, string> = {
 
 const ScrollReveal: React.FC<ScrollRevealProps> = ({
   children,
-  direction = 'up',
+  direction = 'left',
   delay = 0,
   duration = 600,
-  threshold = 0.12,
+  threshold = 0.05,
   once = true,
   className = '',
   style = {}
