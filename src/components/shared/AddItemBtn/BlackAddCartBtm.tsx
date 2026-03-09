@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface YellowBtnProps {
   isItemPresent: boolean;
@@ -12,15 +12,7 @@ interface YellowBtnProps {
 }
 
 const YellowBtn = (props: YellowBtnProps) => {
-  const { 
-    isItemPresent, 
-    handleDecrease, 
-    quantity, 
-    maxQuantity,
-    handleIncrease, 
-    handleAddItem,
-    handleRemove
-  } = props;
+  const { isItemPresent, handleDecrease, quantity, maxQuantity, handleIncrease, handleAddItem, handleRemove } = props;
 
   const [showMaxMessage, setShowMaxMessage] = useState(false);
 
@@ -57,13 +49,13 @@ const YellowBtn = (props: YellowBtnProps) => {
   const onIncrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (isMax) {
       // Show the message when trying to exceed max quantity
       setShowMaxMessage(true);
       return;
     }
-    
+
     handleIncrease(e);
   };
 
@@ -87,7 +79,7 @@ const YellowBtn = (props: YellowBtnProps) => {
             <p className="text-black font-semibold text-[1.1vw] mob:text-[3.6vw]">{quantity}</p>
             <button
               className={`h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] rounded-full flex items-center justify-center text-[1.1vw] mob:text-[4vw] ${
-                isMax ? "bg-gray-400 cursor-not-allowed text-gray-600" : "bg-black text-white"
+                isMax ? 'bg-gray-400 cursor-not-allowed text-gray-600' : 'bg-black text-white'
               }`}
               onClick={onIncrease}
             >
@@ -96,7 +88,7 @@ const YellowBtn = (props: YellowBtnProps) => {
           </div>
 
           {/* Animated max quantity message */}
-          <AnimatePresence>
+          {/* <AnimatePresence>
             {showMaxMessage && (
               <motion.p
                 initial={{ opacity: 0, y: -4 }}
@@ -108,13 +100,10 @@ const YellowBtn = (props: YellowBtnProps) => {
                 Oops! Max quantity reached
               </motion.p>
             )}
-          </AnimatePresence>
+          </AnimatePresence> */}
         </>
       ) : (
-        <button
-          className="w-full bg-black text-white font-medium text-base md:text-lg py-3 md:py-3"
-          onClick={onAdd}
-        >
+        <button className="w-full bg-black text-white font-medium text-base md:text-lg py-3 md:py-3" onClick={onAdd}>
           Add to cart
         </button>
       )}
