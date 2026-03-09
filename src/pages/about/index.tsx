@@ -3,6 +3,7 @@ import FarmDetails from '@/components/about/FarmDetails';
 import Handpicked from '@/components/about/Handpicked';
 import OriginOfFresh from '@/components/about/OriginOfFresh';
 import Hero from '@/components/about/Hero';
+import ScrollReveal from '@/components/shared/ScrollReveal';
 import Layout from '@/components/Layout';
 import { GetServerSideProps } from 'next';
 import React, { useEffect, useState } from 'react';
@@ -57,9 +58,15 @@ const AboutUsPage = (props: any) => {
       />
       <div className="">
         <Hero />
-        <Commitment />
-        <Handpicked />
-        <OriginOfFresh />
+        <ScrollReveal direction="up" delay={0}>
+          <Commitment />
+        </ScrollReveal>
+        <ScrollReveal direction="up" delay={0}>
+          <Handpicked />
+        </ScrollReveal>
+        <ScrollReveal direction="up" delay={0}>
+          <OriginOfFresh />
+        </ScrollReveal>
         {/* <FarmDetails /> */}
         {/* <div className="px-[10vw] pb-[10vw] mob:px-[4vw] mob:pt-[8vw] ">{!loading && <CategorySection />}</div> */}
       </div>

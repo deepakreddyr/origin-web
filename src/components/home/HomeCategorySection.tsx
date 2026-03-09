@@ -105,21 +105,15 @@ const BlendsCategoryCard = ({ category, generateHref }: { category: any; generat
     <Link
       href={generateHref(category)}
       className="lg:col-span-2 col-span-2 relative rounded-[20px] mob:rounded-[15px] overflow-hidden group min-h-[17vw] mob:min-h-[44vw] flex flex-col items-center justify-end"
-      style={{
-        background: 'linear-gradient(180deg, #CBB270 0%, #F7E1BA 100%)'
-      }}
     >
       {/* Image Container - Now spans the full background */}
-      <div className="absolute inset-0 w-full h-full transition-transform duration-500 group-hover:scale-105">
+      <div className="absolute bg-[#F9F7F0] inset-0 w-full h-full transition-transform duration-500 group-hover:scale-105">
         <Image
           src={category.website_image || category.image || blends}
           alt={category.name}
           fill
           className="object-cover object-center"
         />
-
-        {/* Subtle Gradient Overlay to ensure text visibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
       </div>
 
       {/* Category Name - Styled to sit over the background */}
@@ -134,14 +128,6 @@ const BlendsCategoryCard = ({ category, generateHref }: { category: any; generat
 
 const CategoryCard = ({ category, generateHref }: { category: any; generateHref: (cat: any) => string }) => {
   return (
-    // <Link
-    //   href={generateHref(category)}
-    //   /* Changed aspect-square to aspect-[4/3] for a shorter card */
-    //   className="group relative rounded-[20px] mob:rounded-[15px] aspect-[1/1] flex flex-col items-center justify-end p-[1.5vw] mob:p-[4vw] overflow-visible"
-    //   style={{
-    //     background: 'linear-gradient(180deg, #CBB270 0%, #F7E1BA 100%)'
-    //   }}
-    // >
     <Link
       href={generateHref(category)}
       /* Changed aspect-square to aspect-[4/3] for a shorter card */

@@ -26,6 +26,7 @@ import HomeCategorySection from '@/components/home/HomeCategorySection';
 import PopularProduce from '@/components/ShopV2/PopularProduce';
 import PopularProduceMob from '@/components/ShopV2/PopularProduceMob';
 import ScrollUnderline from '@/components/shared/ScrollUnderline';
+import ScrollReveal from '@/components/shared/ScrollReveal';
 
 interface HomeProps {
   uspCardsData: UspCardsData;
@@ -107,120 +108,146 @@ const Home = ({
         />
         {/* <OriginHero /> */}
         <ShopHeroSingle bannerData={heroBannerData} />
-        <Container maxWidth={false} className="w-full px-[3vw] mob:px-[4vw] py-8 mob:py-4 mt-8 mob:mt-8">
-          <PrimaryFeature />
-        </Container>
+        <ScrollReveal direction="up" delay={0}>
+          <Container maxWidth={false} className="w-full px-[3vw] mob:px-[4vw] py-8 mob:py-4 mt-8 mob:mt-8">
+            <PrimaryFeature />
+          </Container>
+        </ScrollReveal>
 
-        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[4vw] pt-12 pb-4 mob:pb-2">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 w-full">
-            {uspCardsData?.map((card, index) => {
-              // Mapping icons as per your logic
-              let icon = card.icon;
-              if (index === 0) icon = '/assets/images/uspCard1.svg';
-              if (index === 1) icon = '/assets/images/uspCard2.svg';
-              if (index === 2) icon = '/assets/images/uspCard3.svg';
-              if (index === 3) icon = '/assets/images/uspCard4.svg';
-              return <UspCard cardData={{ ...card, icon }} key={index} />;
-            })}
-          </div>
-        </Container>
+        <ScrollReveal direction="up" delay={100}>
+          <Container maxWidth={false} className="w-full px-[10vw] mob:px-[4vw] pt-12 pb-4 mob:pb-2">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 w-full">
+              {uspCardsData?.map((card, index) => {
+                // Mapping icons as per your logic
+                let icon = card.icon;
+                if (index === 0) icon = '/assets/images/uspCard1.svg';
+                if (index === 1) icon = '/assets/images/uspCard2.svg';
+                if (index === 2) icon = '/assets/images/uspCard3.svg';
+                if (index === 3) icon = '/assets/images/uspCard4.svg';
+                return <UspCard cardData={{ ...card, icon }} key={index} />;
+              })}
+            </div>
+          </Container>
+        </ScrollReveal>
+
         {/* Homepage Category Section */}
-        <div className="w-full px-[3vw] mob:mt-[2vw]">
-          <HomeCategorySection categories={mainCategoryData} blendsCategory={blendsCategoryData} loading={loading} />
-        </div>
+        <ScrollReveal direction="up" delay={0}>
+          <div className="w-full px-[3vw] mob:mt-[2vw]">
+            <HomeCategorySection
+              categories={mainCategoryData}
+              blendsCategory={blendsCategoryData}
+              title="Shop By Category"
+              loading={loading}
+            />
+          </div>
+        </ScrollReveal>
 
-        <div className="w-full px-[3vw]">
-          {isMobile ? (
-            <PopularProduceMob categoryDetail={popularProduceData} />
-          ) : (
-            <PopularProduce categoryDetail={popularProduceData} />
-          )}
-          {/* <PopularProduce categoryDetail={popularProduceData} /> */}
-        </div>
+        <ScrollReveal direction="up" delay={0}>
+          <div className="w-full px-[3vw]">
+            {isMobile ? (
+              <PopularProduceMob categoryDetail={popularProduceData} />
+            ) : (
+              <PopularProduce categoryDetail={popularProduceData} />
+            )}
+            {/* <PopularProduce categoryDetail={popularProduceData} /> */}
+          </div>
+        </ScrollReveal>
+
         {/* <BeforeBox mdTopOffset={isMobile ? -90 : 50} mdBottomOffset={isMobile ? 20 : 80}> */}
-        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[2]">
-          <SideBySide
-            variant="normal"
-            imageSrc="/assets/images/about/home2.webp"
-            imageAlt="commitment"
-            imageWidth={424}
-            imageHeight={450}
-            imageClass="object-cover w-full h-auto md:h-[400px] lg:h-[450px] rounded-[24px] md:rounded-[46px]"
-            title={
-              <span className="text-black">
-                <span className="text-secondary">It’s Fresh.</span> <br />{' '}
-                <ScrollUnderline underlineColor="#E18D1F">Properly&nbsp;Fresh.</ScrollUnderline>
-              </span>
-            }
-            titleVariant={isMobile ? 'h4' : 'h2'}
-            description={`We partner directly with farms across the world and across India. <br/> No middlemen. No dark stores. <br/> Just produce that moves from the farm to you at peak&nbsp;flavour.`}
-            // buttonText="Know more"
-            buttonVariant="tertiary"
-            rootClass="bg-[#fff8d5] items-center !p-6 md:!p-8 lg:!p-12"
-            titleContainerClass="!py-0 md:!py-0"
-          />
-        </Container>
-        <div className="mt-[5vw]">
-          <StoryTestimonials />
-        </div>
-        <div className="bg-[#FAF7F0]">
-          <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[10] !overflow-visible">
+        <ScrollReveal direction="up" delay={0}>
+          <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[2]">
             <SideBySide
-              variant="parallax"
-              parallaxTopImageSrc="/assets/images/parallaxImages/top-2.webp"
-              parallaxMainImageSrc="/assets/images/parallaxImages/main-2.webp"
-              // parallaxBottomImageSrc="/assets/images/parallaxImages/bottom-1.png"
-              parallaxImageAlt=""
+              variant="normal"
+              imageSrc="/assets/images/about/home2.webp"
+              imageAlt="commitment"
+              imageWidth={424}
+              imageHeight={450}
+              imageClass="object-cover w-full h-auto md:h-[400px] lg:h-[450px] rounded-[24px] md:rounded-[46px]"
               title={
-                <a className="text-[4vw] mob:text-[10vw]">
-                  Grown For <br /> Those Who Never <br />
-                  <ScrollUnderline underlineColor="#E18D1F">
-                    <span className="text-[#619269]">Compromise </span>
-                  </ScrollUnderline>
-                </a>
+                <span className="text-black">
+                  <span className="text-secondary">It's Fresh.</span> <br />{' '}
+                  <ScrollUnderline underlineColor="#E18D1F">Properly&nbsp;Fresh.</ScrollUnderline>
+                </span>
               }
-              titleVariant={isMobile ? 'h4' : 'h1'}
-              titleClass="font-[Recoleta] !font-bold !leading-[1.1] "
-              description={`Everyone has a right to fresh, authentic <br/ className="mob:hidden"> flavours. But only a few fight for it. Origin Fresh <br/ className="mob:hidden"> is for those&nbsp;who&nbsp;do.`}
+              titleVariant={isMobile ? 'h4' : 'h2'}
+              description={`We partner directly with farms across the world and across India. <br/> No middlemen. No dark stores. <br/> Just produce that moves from the farm to you at peak&nbsp;flavour.`}
               // buttonText="Know more"
               buttonVariant="tertiary"
-              rootClass="bg-[#FAF7F0] z-1 px-[10vw] mob:px-[3vw] items-center !rounded-none pb-12 !overflow-visible"
-              reverse
-              parallaxImgContainerClass="relative py-5 lg:pt-9 lg:pb-20 !lg:w-[45%] !overflow-visible"
-              titleContainerClass="!pl-0 !lg:ps-0 !lg:pe-12 !pr-12"
-              parallaxTopImageWidth={600}
-              parallaxTopImageHeight={800}
-              parallaxMainImageHeight={800}
-              parallaxMainImageWidth={600}
-              parallaxBottomImageWidth={234}
-              parallaxBottomImageHeight={372}
-              parallaxTopImgClass="absolute w-[280px] sm:w-[350px] md:w-[450px] lg:h-auto rotate-[15deg] top-[0px] right-[5px] lg:right-[20px] z-0 scale-[1.5] mob:scale-[1.1]"
-              parallaxBottomImgClass="absolute w-[154px] sm:w-[234px] md:w-[234px] lg:h-auto rotate-[-15deg] right-[50px] sm:right-[100px] md:right-[200px] lg:right-[-0px] bottom-[-50px] sm:bottom-[-150px] blur-[3px]"
-              parallaxMainImgClass="z-[10] relative ml-auto mr-0 lg:mr-[-4vw] scale-[1.2] lg:scale-[1.5] mob:scale-[1.1]"
-              parallaxBottomImgContainerClass="z-[1]"
+              rootClass="bg-[#fff8d5] items-center !p-6 md:!p-8 lg:!p-12"
+              titleContainerClass="!py-0 md:!py-0"
             />
-            <Box className="h-8 md:h-0" />
           </Container>
+        </ScrollReveal>
+
+        <ScrollReveal direction="up" delay={0}>
+          <div className="mt-[5vw]">
+            <StoryTestimonials />
+          </div>
+        </ScrollReveal>
+
+        <div className="bg-[#FAF7F0]">
+          <ScrollReveal direction="up" delay={0}>
+            <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[10] !overflow-visible">
+              <SideBySide
+                variant="parallax"
+                parallaxTopImageSrc="/assets/images/parallaxImages/top-2.webp"
+                parallaxMainImageSrc="/assets/images/parallaxImages/main-2.webp"
+                // parallaxBottomImageSrc="/assets/images/parallaxImages/bottom-1.png"
+                parallaxImageAlt=""
+                title={
+                  <a className="text-[4vw] mob:text-[10vw]">
+                    Grown For <br /> Those Who Never <br />
+                    <ScrollUnderline underlineColor="#E18D1F">
+                      <span className="text-[#619269]">Compromise </span>
+                    </ScrollUnderline>
+                  </a>
+                }
+                titleVariant={isMobile ? 'h4' : 'h1'}
+                titleClass="font-[Recoleta] !font-bold !leading-[1.1] "
+                description={`Everyone has a right to fresh, authentic <br/ className="mob:hidden"> flavours. But only a few fight for it. Origin Fresh <br/ className="mob:hidden"> is for those&nbsp;who&nbsp;do.`}
+                // buttonText="Know more"
+                buttonVariant="tertiary"
+                rootClass="bg-[#FAF7F0] z-1 px-[10vw] mob:px-[3vw] items-center !rounded-none pb-12 !overflow-visible"
+                reverse
+                parallaxImgContainerClass="relative py-5 lg:pt-9 lg:pb-20 !lg:w-[45%] !overflow-visible"
+                titleContainerClass="!pl-0 !lg:ps-0 !lg:pe-12 !pr-12"
+                parallaxTopImageWidth={600}
+                parallaxTopImageHeight={800}
+                parallaxMainImageHeight={800}
+                parallaxMainImageWidth={600}
+                parallaxBottomImageWidth={234}
+                parallaxBottomImageHeight={372}
+                parallaxTopImgClass="absolute w-[280px] sm:w-[350px] md:w-[450px] lg:h-auto rotate-[15deg] top-[0px] right-[5px] lg:right-[20px] z-0 scale-[1.5] mob:scale-[1.1]"
+                parallaxBottomImgClass="absolute w-[154px] sm:w-[234px] md:w-[234px] lg:h-auto rotate-[-15deg] right-[50px] sm:right-[100px] md:right-[200px] lg:right-[-0px] bottom-[-50px] sm:bottom-[-150px] blur-[3px]"
+                parallaxMainImgClass="z-[10] relative ml-auto mr-0 lg:mr-[-4vw] scale-[1.2] lg:scale-[1.5] mob:scale-[1.1]"
+                parallaxBottomImgContainerClass="z-[1]"
+              />
+              <Box className="h-8 md:h-0" />
+            </Container>
+          </ScrollReveal>
         </div>
-        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[50] ">
-          {/* <SideBySide
-            title={`Join The Cult <br/> Of&nbsp;Fresh`}
-            titleVariant={isMobile ? 'h4' : 'h2'}
-            titleClass="text-black"
-            description={`Nature takes time. It refuses to be hurried. It carefully crafts every single fruit and vegetable that you find here. This patience is what we worship, and that’s what we share with the&nbsp;world.`}
-            buttonText="Know more"
-            buttonClick1={() => (window.location.href = '/about')}
-            variant="vertical"
-            imageSrc="/assets/images/about/home3.webp"
-            imageAlt="commitment"
-            imageWidth={1047}
-            imageHeight={400}
-            buttonVariant="tertiary"
-            rootClass="bg-primary"
-            imageClass="w-full md:max-h-[400px] max-h-[170px] object-fit"
-          /> */}
-          <JoinCultSection />
-        </Container>
+
+        <ScrollReveal direction="up" delay={0}>
+          <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[50] ">
+            {/* <SideBySide
+              title={`Join The Cult <br/> Of&nbsp;Fresh`}
+              titleVariant={isMobile ? 'h4' : 'h2'}
+              titleClass="text-black"
+              description={`Nature takes time. It refuses to be hurried. It carefully crafts every single fruit and vegetable that you find here. This patience is what we worship, and that's what we share with the&nbsp;world.`}
+              buttonText="Know more"
+              buttonClick1={() => (window.location.href = '/about')}
+              variant="vertical"
+              imageSrc="/assets/images/about/home3.webp"
+              imageAlt="commitment"
+              imageWidth={1047}
+              imageHeight={400}
+              buttonVariant="tertiary"
+              rootClass="bg-primary"
+              imageClass="w-full md:max-h-[400px] max-h-[170px] object-fit"
+            /> */}
+            <JoinCultSection />
+          </Container>
+        </ScrollReveal>
 
         {/* <Container maxWidth="lg">
             <SideBySide
@@ -242,42 +269,44 @@ const Home = ({
 
         {/* </BeforeBox> */}
         {/* <Box className="h-8 lg:h-[52px]" /> */}
-        <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] bg-[#FFFBEB]">
-          <SideBySide
-            variant="normal"
-            imageSrc="/assets/images/about/mobiledownload.webp"
-            imageAlt="Download app"
-            imageWidth={800}
-            imageHeight={1000}
-            quality={100}
-            priority
-            imageClass="object-contain md:!h-auto md:max-h-[400px] lg:!h-[500px] md:!ml-0 lg:!ml-[6vw]"
-            title={`Download <br/> the app on <br/> <span className="text-secondary">App Store</span> <span className="text-secondary">and</span> <br/> <span className="text-secondary">Play Store.</span>`}
-            titleVariant="h2"
-            titleClass="font-[Recoleta] text-black text-[4vw] md:text-[4vw] mob:text-[9vw] !font-bold !leading-[1.1] mb-8 mob:text-center"
-            imageContainerClass="flex justify-center items-center md:!pe-5"
-            titleContainerClass="flex flex-col justify-center items-center md:items-start md:!ps-12 lg:!ps-24 md:!pe-0"
-            buttonText="Download Origin Fresh"
-            buttonVariant="tertiary"
-            buttonClick1={() => {
-              const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
-              if (/android/i.test(userAgent)) {
-                window.open(
-                  'https://play.google.com/store/apps/details?id=com.originfresh.user&hl=en_IN&pli=1',
-                  '_blank'
-                );
-              } else if (/iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream) {
-                window.open('https://apps.apple.com/in/app/origin-fresh-fruits-veggies/id6505096700', '_blank');
-              } else {
-                window.open(
-                  'https://play.google.com/store/apps/details?id=com.originfresh.user&hl=en_IN&pli=1',
-                  '_blank'
-                );
-              }
-            }}
-            rootClass="bg-[#FFFBEB] items-center py-[5vw] mob:py-[10vw]"
-          />
-        </Container>
+        <ScrollReveal direction="up" delay={0}>
+          <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] bg-[#FFFBEB]">
+            <SideBySide
+              variant="normal"
+              imageSrc="/assets/images/about/mobiledownload.webp"
+              imageAlt="Download app"
+              imageWidth={800}
+              imageHeight={1000}
+              quality={100}
+              priority
+              imageClass="object-contain md:!h-auto md:max-h-[400px] lg:!h-[500px] md:!ml-0 lg:!ml-[6vw]"
+              title={`Download <br/> the app on <br/> <span className="text-secondary">App Store</span> <span className="text-secondary">and</span> <br/> <span className="text-secondary">Play Store.</span>`}
+              titleVariant="h2"
+              titleClass="font-[Recoleta] text-black text-[4vw] md:text-[4vw] mob:text-[9vw] !font-bold !leading-[1.1] mb-8 mob:text-center"
+              imageContainerClass="flex justify-center items-center md:!pe-5"
+              titleContainerClass="flex flex-col justify-center items-center md:items-start md:!ps-12 lg:!ps-24 md:!pe-0"
+              buttonText="Download Origin Fresh"
+              buttonVariant="tertiary"
+              buttonClick1={() => {
+                const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+                if (/android/i.test(userAgent)) {
+                  window.open(
+                    'https://play.google.com/store/apps/details?id=com.originfresh.user&hl=en_IN&pli=1',
+                    '_blank'
+                  );
+                } else if (/iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream) {
+                  window.open('https://apps.apple.com/in/app/origin-fresh-fruits-veggies/id6505096700', '_blank');
+                } else {
+                  window.open(
+                    'https://play.google.com/store/apps/details?id=com.originfresh.user&hl=en_IN&pli=1',
+                    '_blank'
+                  );
+                }
+              }}
+              rootClass="bg-[#FFFBEB] items-center py-[5vw] mob:py-[10vw]"
+            />
+          </Container>
+        </ScrollReveal>
       </Layout>
     </div>
   );
