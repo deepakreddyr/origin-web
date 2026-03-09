@@ -463,9 +463,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                 <Link
                   href="/shop"
                   className={`h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full text-[1.1vw] font-medium font-[SofiaPro] transition-colors ${
-                    router.pathname === '/' || router.pathname.startsWith('/shop')
-                      ? 'bg-primary text-black'
-                      : 'hover:bg-gray-100 text-black'
+                    router.pathname.startsWith('/shop') ? 'bg-primary text-black' : 'hover:bg-gray-100 text-black'
                   }`}
                 >
                   Shop All
