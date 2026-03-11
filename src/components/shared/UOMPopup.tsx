@@ -459,7 +459,7 @@ export const UOMPopup: FC<{
           `}
           >
             <p className="font-normal font-[SofiaPro] text-sm text-white">
-              Sub total
+              {/* Sub total */}
               <span className="block text-xs font-normal mt-0.5 font-[SofiaPro]">
                 {isSlashedSubtotalVisible && (
                   <span className="text-gray-400 line-through mr-1 text-xs font-normal">₹{totalMarketPrice}</span>

@@ -62,7 +62,7 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
         <div className={`relative w-full ${!isExpanded && hasMore ? 'pb-[4vw]' : ''}`}>
           <div
             className={`
-                    grid grid-cols-2 tabp:grid-cols-4 gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[12vw] pt-[3vw]
+                    grid grid-cols-2 tabp:grid-cols-4 gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[12vw]
                     transition-all duration-500 ease-in-out
                     ${!isExpanded && hasMore ? 'max-h-[125vw] tabp:max-h-[45vw] overflow-hidden' : 'max-h-[5000px]'}
                 `}
@@ -104,10 +104,10 @@ const BlendsCategoryCard = ({ category, generateHref }: { category: any; generat
   return (
     <Link
       href={generateHref(category)}
-      className="lg:col-span-2 col-span-2 relative rounded-[20px] mob:rounded-[15px] overflow-hidden group min-h-[17vw] mob:min-h-[44vw] flex flex-col items-center justify-end"
+      className="lg:col-span-2 col-span-2 relative rounded-[20px] mob:rounded-[15px] overflow-hidden group min-h-[17vw] mob:min-h-[44vw] flex flex-col items-center justify-end shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
     >
       {/* Image Container - Now spans the full background */}
-      <div className="absolute bg-[#F9F7F0] inset-0 w-full h-full transition-transform duration-500 group-hover:scale-105">
+      <div className="absolute bg-[#F9F7F0] inset-[-1px] w-[calc(100%+2px)] h-[calc(100%+2px)] transition-transform duration-500 group-hover:scale-105">
         <Image
           src={category.website_image || category.image || blends}
           alt={category.name}
@@ -130,26 +130,24 @@ const CategoryCard = ({ category, generateHref }: { category: any; generateHref:
   return (
     <Link
       href={generateHref(category)}
-      /* Changed aspect-square to aspect-[4/3] for a shorter card */
-      className="group relative rounded-[20px] mob:rounded-[15px] aspect-[1/1] flex flex-col items-center justify-end p-[1.5vw] mob:p-[4vw] overflow-visible bg-[#F9F7F0]"
+      className="group relative rounded-[20px] mob:rounded-[15px] aspect-[1/1] flex flex-col items-center justify-end overflow-hidden shadow-xl hover:-translate-y-0.5"
     >
-      {/* Image Container */}
-      <div className="absolute top-[-6vw] mob:top-[-16vw] left-0 right-0 h-[95%] flex items-start justify-center transition-transform duration-500 group-hover:scale-110 p-[2%]">
-        <div className="relative w-full h-full">
-          <Image
-            src={category.website_image || category.image || catimg}
-            alt={category.name}
-            fill
-            className="object-contain object-top"
-          />
-        </div>
+      {/* Image Container - Spans the full background */}
+      <div className="absolute inset-[-1px] w-[calc(100%+2px)] h-[calc(100%+2px)] transition-transform duration-500 group-hover:scale-105">
+        <Image
+          src={category.website_image || category.image || catimg}
+          alt={category.name}
+          fill
+          sizes="(max-width: 600px) 50vw, 25vw"
+          className="object-cover object-center"
+        />
       </div>
 
-      {/* Category Name */}
-      <div className="relative w-full mb-[0.5vw] mob:mb-[1vw]">
-        <p className="font-[Recoleta] font-semibold text-[1.25vw] mob:text-[4vw] text-[#231F20] text-center px-2">
+      {/* Category Name Overlay - Styled for readability over image */}
+      <div className="relative w-full p-[1.5vw] mob:p-[4vw]">
+        <h2 className="font-[Recoleta] font-semibold text-[1.25vw] mob:text-[4vw] text-[#231F20] text-center px-2">
           {category.name}
-        </p>
+        </h2>
       </div>
     </Link>
   );
@@ -162,7 +160,7 @@ const SkeletonLoader = ({ mobile }: { mobile: boolean }) => {
         <div className="w-full mb-[2.1vw] mob:pb-[5vw]">
           <div className="h-[3vw] mob:h-[8vw] bg-gray-100 animate-pulse rounded w-1/3"></div>
         </div>
-        <div className="grid grid-cols-2 tabp:grid-cols-4 gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[12vw] pt-[3vw] mob:pt-[8vw]">
+        <div className="grid grid-cols-2 tabp:grid-cols-4 gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[12vw] mob:pt-[8vw]">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
             <div key={i} className="bg-gray-100 animate-pulse rounded-[30px] aspect-square"></div>
           ))}

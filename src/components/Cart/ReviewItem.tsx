@@ -191,7 +191,7 @@ const ReviewItem = (props: {
           ) : (
             // Regular item: show quantity stepper and price
             <div className="flex gap-3 items-center">
-              <div className="w-[5.6vw] mob:w-[21vw]">
+              <div className="flex-shrink-0">
                 <AddItemBtn
                   product={product}
                   varientId={uom.variant_id}

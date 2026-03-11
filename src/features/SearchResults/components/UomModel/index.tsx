@@ -336,7 +336,7 @@ const UomModel = (props: Props) => {
       >
         <Box className={` total ${styles.total}`}>
           <Typography component="span" variant="body1" className={`total-text ${styles['total-text']}`}>
-            Sub Total
+            {/* Sub Total */}
           </Typography>
           <Typography component="span" variant="body1" className={`total-number ${styles['total-number']}`}>
             ₹{totalRupees}

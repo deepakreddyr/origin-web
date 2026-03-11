@@ -451,7 +451,7 @@ const UOMPopup: FC<{
           `}
           >
             <p className="font-normal font-[SofiaPro] text-sm text-white">
-              Sub total
+              {/* Sub total */}
               <span className="block text-xs font-normal mt-0.5 font-[SofiaPro]">
                 {isSlashedSubtotalVisible && (
                   <span className="text-gray-400 line-through mr-1 text-xs font-normal">₹{totalMarketPrice}</span>
@@ -485,72 +485,48 @@ const YellowBtn = (props: YellowBtnProps) => {
     props;
 
   const cartItems = useSelector((state: any) => state.cart.items);
-  const [showMaxMessage, setShowMaxMessage] = useState(false);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-
   const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
   const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [dir, setDir] = useState<1 | -1>(1);
 
   const isMax = quantity >= maxQuantity;
-
-  useEffect(() => {
-    if (isMax) {
-      setShowMaxMessage(true);
-    }
-  }, [isMax]);
-
-  useEffect(() => {
-    if (showMaxMessage) {
-      const timer = setTimeout(() => {
-        setShowMaxMessage(false);
-      }, 2000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [showMaxMessage]);
 
   const availableUOMs = product?.multiple_uoms?.filter((uom: any) => uom?.is_available) || [];
   const hasMultipleUOMs = availableUOMs.length > 1;
   const hasRipenessOptions = availableUOMs.some((uom: any) => uom?.ripeness_types?.length > 0);
   const requiresSelection = hasMultipleUOMs || hasRipenessOptions;
 
-  // Calculate total quantity across all variants for this product
   const getTotalCartQuantity = () => {
     if (!product) return 0;
-
     const cartProduct = cartItems.find((item: any) => item.id === product.id);
     if (!cartProduct) return 0;
-
     let total = 0;
-
     cartProduct.multiple_uoms?.forEach((uom: any) => {
       if (uom.cart_ripeness && uom.cart_ripeness.length > 0) {
-        // Sum all ripeness quantities for this UOM
         uom.cart_ripeness.forEach((r: any) => {
           total += Number(r.qty) || 0;
         });
       } else {
-        // Add regular cart quantity
         total += Number(uom.cart_quantity) || 0;
       }
     });
-
     return total;
   };
 
   const totalCartQuantity = getTotalCartQuantity();
   const hasItemsInCart = totalCartQuantity > 0;
+  const shouldShowStepper = (!requiresSelection && isItemPresent) || (requiresSelection && hasItemsInCart);
+  const displayQty = requiresSelection ? totalCartQuantity : quantity;
 
   const onDecrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-
-    // For multi-variant products, open the popup to let user choose which to decrease
+    setDir(-1);
     if (requiresSelection && product) {
       setIsPopupOpen(true);
       return;
     }
-
     if (quantity <= 1) {
       handleRemove?.(e);
     } else {
@@ -561,26 +537,22 @@ const YellowBtn = (props: YellowBtnProps) => {
   const onIncrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-
-    // For multi-variant products, open the popup to let user choose which to increase
     if (requiresSelection && product) {
       setIsPopupOpen(true);
       return;
     }
-
     if (isMax) {
       setToastMaxQuantity(maxQuantity);
       setShowMaxQuantityToast(true);
       return;
     }
-
+    setDir(1);
     handleIncrease(e);
   };
 
   const onAdd = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-
     if (requiresSelection && product) {
       setIsPopupOpen(true);
     } else {
@@ -588,13 +560,7 @@ const YellowBtn = (props: YellowBtnProps) => {
     }
   };
 
-  const handleSelectionMade = (uom: UOM, ripeness: string | null) => {
-    // If a selection is made in the popup, we can close it.
-    setIsPopupOpen(false);
-  };
-
-  // Show stepper if: (no selection required AND item present) OR (selection required AND has items in cart)
-  const shouldShowStepper = (!requiresSelection && isItemPresent) || (requiresSelection && hasItemsInCart);
+  const handleSelectionMade = () => setIsPopupOpen(false);
 
   return (
     <>
@@ -606,43 +572,88 @@ const YellowBtn = (props: YellowBtnProps) => {
       />
 
       <div className="w-full flex flex-col items-center">
-        {shouldShowStepper ? (
-          <>
-            <div
-              className={`flex h-[2.5vw] mob:h-[8.5vw] items-center justify-center border-[2px] border-primary-200 rounded-full bg-white w-full p-[.3vw] mob:px-[.7vw]`}
+        {/* Single morphing pill */}
+        <motion.div
+          layout
+          transition={{ type: 'spring', stiffness: 380, damping: 28 }}
+          onClick={!shouldShowStepper ? onAdd : undefined}
+          className={`flex items-center h-[2.5vw] mob:h-[8.5vw] rounded-full border-[2px] p-[.3vw] mob:px-[.5vw] w-full justify-center ${
+            shouldShowStepper
+              ? 'border-primary-200 bg-white cursor-default'
+              : 'border-transparent bg-[#fac510] cursor-pointer'
+          }`}
+        >
+          {/* Minus */}
+          {shouldShowStepper && (
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.15 }}
+              whileTap={{ scale: 0.82 }}
+              className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] flex-shrink-0 rounded-full bg-primary text-black text-[1.67vw] mob:text-[5.1vw] flex items-center justify-center border border-primary-200 mr-[.4vw] mob:mr-[2vw]"
+              onClick={onDecrease}
             >
-              <button
-                className={`h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.67vw] pb-[.3vw] flex items-center justify-center bg-primary rounded-full border border-primary-200`}
-                onClick={onDecrease}
-              >
-                -
-              </button>
-              <div className="w-[1.1vw] mx-auto mob:mx-auto flex items-center justify-center">
-                <p className="text-[1.1vw] mob:text-[4.1vw]">{requiresSelection ? totalCartQuantity : quantity}</p>
-              </div>
-              <button
-                className={`h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.4vw] pb-[.3vw] flex items-center justify-center bg-primary rounded-full border border-primary-200`}
-                onClick={onIncrease}
-              >
-                +
-              </button>
-            </div>
-          </>
-        ) : (
-          <button
-            className="w-full bg-[#fac510] text-black font-bold text-base md:text-sm py-3 md:py-3"
-            onClick={onAdd}
+              -
+            </motion.button>
+          )}
+
+          {/* Centre */}
+          <div className="flex items-center justify-center overflow-hidden">
+            <AnimatePresence mode="popLayout" initial={false}>
+              {shouldShowStepper ? (
+                <motion.p
+                  key={displayQty}
+                  initial={{ opacity: 0, y: dir * 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: dir * -8 }}
+                  transition={{ duration: 0.15, ease: 'easeOut' }}
+                  className="text-[1.1vw] mob:text-[4.1vw] font-semibold text-black select-none text-center"
+                >
+                  {displayQty}
+                </motion.p>
+              ) : (
+                <motion.span
+                  key="add-label"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.12 }}
+                  className="text-black font-bold text-base whitespace-nowrap mr-[.3vw]"
+                >
+                  Add
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Plus / Dropdown Icon */}
+          <motion.button
+            layout
+            whileTap={!isMax ? { scale: 0.82 } : {}}
+            transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+            className={`flex-shrink-0 flex items-center justify-center rounded-full bg-primary ${
+              shouldShowStepper
+                ? isMax
+                  ? 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] bg-gray-300 text-gray-500 text-[1.4vw] mob:text-[5.1vw] border border-primary-200 ml-[.4vw] mob:ml-[2vw] cursor-not-allowed'
+                  : 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] text-[1.4vw] mob:text-[5.1vw] border border-primary-200 ml-[.4vw] mob:ml-[2vw]'
+                : 'h-[1.4vw] w-[1.4vw] mob:h-[5vw] mob:w-[5vw] text-[1.1vw] mob:text-[4vw] bg-[#fac510]'
+            }`}
+            onClick={shouldShowStepper ? onIncrease : onAdd}
           >
-            {requiresSelection ? (
-              <div className="flex items-center justify-center gap-1">
-                <span>Add</span>
-                <KeyboardArrowDownIcon fontSize="small" />
-              </div>
+            {shouldShowStepper ? (
+              '+'
+            ) : requiresSelection ? (
+              <KeyboardArrowDownIcon
+                sx={{
+                  fontSize: { xs: '4vw', md: '1.2vw' },
+                  fontWeight: 'bold'
+                }}
+              />
             ) : (
-              'Add +'
+              '+'
             )}
-          </button>
-        )}
+          </motion.button>
+        </motion.div>
       </div>
 
       {product && requiresSelection && (

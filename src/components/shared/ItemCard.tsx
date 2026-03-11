@@ -42,6 +42,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
   const [selectedUOM, setSelectedUOM] = useState(defaultUOM);
   const [selectedRipeness, setSelectedRipeness] = useState<string | null>(initialRipeness);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [quantityDir, setQuantityDir] = useState<1 | -1>(1);
 
   const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
   const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
@@ -242,55 +243,82 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                   VIEW
                 </button>
               ) : requiresSelection ? (
-                totalQuantityAcrossProduct > 0 ? (
-                  <div className="flex h-[2.5vw]  mob:h-[8.5vw] items-center justify-center border-[2px] border-primary-200 rounded-full bg-white w-max p-[.3vw] mob:px-[.7vw]">
-                    <button
+                <motion.div
+                  layout
+                  transition={{ type: 'spring', stiffness: 380, damping: 28 }}
+                  className={`flex items-center h-[2.5vw] mob:h-[8.5vw] rounded-full border-[2px] p-[.3vw] mob:px-[.7vw] ${
+                    totalQuantityAcrossProduct > 0 ? 'border-primary-200 bg-white' : 'border-[#EDE6D4] bg-primary'
+                  }`}
+                >
+                  {/* Minus — mounts/unmounts; pill layout animation handles the width change */}
+                  {totalQuantityAcrossProduct > 0 && (
+                    <motion.button
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.15 }}
+                      whileTap={{ scale: 0.82 }}
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
+                        setQuantityDir(-1);
                         setIsPopupOpen(true);
                       }}
-                      className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.1vw] flex items-center justify-center bg-primary rounded-full border border-primary-200"
+                      className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.1vw] flex-shrink-0 flex items-center justify-center bg-primary rounded-full border border-primary-200 mr-[.5vw] mob:mr-[3vw]"
                     >
                       <span className="mb-1">–</span>
-                    </button>
-                    <div className="w-[1.1vw] mx-[.5vw]  mob:mx-[3vw] flex items-center justify-center">
-                      <p className="text-[1.1vw] mob:text-[4.1vw] font-semibold text-black">
-                        {totalQuantityAcrossProduct}
-                      </p>
-                    </div>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setIsPopupOpen(true);
-                      }}
-                      className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.1vw] flex items-center justify-center bg-primary rounded-full border border-primary-200"
-                    >
-                      <span className="mb-0.5">+</span>
-                    </button>
+                    </motion.button>
+                  )}
+
+                  {/* Centre — "N Options" label or ticking quantity */}
+                  <div className="flex items-center justify-center overflow-hidden">
+                    <AnimatePresence mode="popLayout" initial={false}>
+                      {totalQuantityAcrossProduct > 0 ? (
+                        <motion.p
+                          key={totalQuantityAcrossProduct}
+                          initial={{ opacity: 0, y: quantityDir * 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: quantityDir * -10 }}
+                          transition={{ duration: 0.15, ease: 'easeOut' }}
+                          className="text-[1.1vw] mob:text-[4.1vw] font-semibold text-black select-none min-w-[0.8vw] mob:min-w-[3vw] text-center"
+                        >
+                          {totalQuantityAcrossProduct}
+                        </motion.p>
+                      ) : (
+                        <motion.span
+                          key="options-label"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.12 }}
+                          className="font-[SofiaPro] text-[.97vw] font-bold mob:text-[2.8vw] text-black whitespace-nowrap px-[0.5vw]"
+                        >
+                          {totalOptionsCount} Options
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
                   </div>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleAddItemClick}
-                    className="flex items-center justify-between bg-primary text-black font-[SofiaPro] font-bold h-[2.5vw] mob:h-[8.5vw] px-[1.1vw] mob:px-[3vw] rounded-full hover:bg-yellow-400 transition-colors whitespace-nowrap gap-2 border border-[#EDE6D4]"
+
+                  {/* Plus — always present */}
+                  <motion.button
+                    layout
+                    whileTap={{ scale: 0.82 }}
+                    transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setQuantityDir(1);
+                      setIsPopupOpen(true);
+                    }}
+                    className={`flex-shrink-0 flex items-center justify-center rounded-full border border-primary-200 bg-primary ${
+                      totalQuantityAcrossProduct > 0
+                        ? 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.1vw] pb-[.3vw] ml-[.5vw] mob:ml-[3vw]'
+                        : 'h-[1.2vw] w-[1.2vw] mob:h-[5vw] mob:w-[5vw] text-[1vw] mob:text-[4.1vw]'
+                    }`}
                   >
-                    <span className="text-[.97vw] mob:text-[2.8vw]">{totalOptionsCount} Options</span>
-                    <svg
-                      viewBox="0 0 24 24"
-                      className="w-[1.2vw] h-[1.2vw] mob:w-[3.2vw] mob:h-[3.2vw]"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="7 15 12 20 17 15" />
-                      <polyline points="7 9 12 4 17 9" />
-                    </svg>
-                  </button>
-                )
+                    +
+                  </motion.button>
+                </motion.div>
               ) : (
                 <div className="w-[80px] mob:w-auto flex justify-end">
                   <AddItemBtn

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-interface YellowBtnProps {
+interface BlackAddCartBtmProps {
   isItemPresent: boolean;
   quantity: number;
   maxQuantity: number;
@@ -11,34 +11,16 @@ interface YellowBtnProps {
   handleRemove?: (e: any) => void;
 }
 
-const YellowBtn = (props: YellowBtnProps) => {
+const BlackAddCartBtm: React.FC<BlackAddCartBtmProps> = (props) => {
   const { isItemPresent, handleDecrease, quantity, maxQuantity, handleIncrease, handleAddItem, handleRemove } = props;
-
-  const [showMaxMessage, setShowMaxMessage] = useState(false);
+  const [dir, setDir] = useState<1 | -1>(1);
 
   const isMax = quantity >= maxQuantity;
-
-  // Show the message when quantity reaches max
-  useEffect(() => {
-    if (isMax) {
-      setShowMaxMessage(true);
-    }
-  }, [isMax]);
-
-  // Hide the message after 2 seconds
-  useEffect(() => {
-    if (showMaxMessage) {
-      const timer = setTimeout(() => {
-        setShowMaxMessage(false);
-      }, 2000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [showMaxMessage]);
 
   const onDecrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
+    setDir(-1);
     if (quantity <= 1) {
       handleRemove?.(e);
     } else {
@@ -49,66 +31,84 @@ const YellowBtn = (props: YellowBtnProps) => {
   const onIncrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-
-    if (isMax) {
-      // Show the message when trying to exceed max quantity
-      setShowMaxMessage(true);
-      return;
-    }
-
+    if (isMax) return;
+    setDir(1);
     handleIncrease(e);
-  };
-
-  const onAdd = (e: any) => {
-    e.preventDefault();
-    e.stopPropagation();
-    handleAddItem(e);
   };
 
   return (
     <div className="w-full flex flex-col items-center">
-      {isItemPresent ? (
-        <>
-          <div className="flex items-center justify-between px-[0.6vw] mob:px-[3vw] bg-white border-[2px] border-[#F3EEDF] rounded-full h-[2.8vw] mob:h-[9vw] w-full">
-            <button
-              className="h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] rounded-full bg-black text-white text-[1.1vw] mob:text-[4vw] flex items-center justify-center"
-              onClick={onDecrease}
-            >
-              –
-            </button>
-            <p className="text-black font-semibold text-[1.1vw] mob:text-[3.6vw]">{quantity}</p>
-            <button
-              className={`h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] rounded-full flex items-center justify-center text-[1.1vw] mob:text-[4vw] ${
-                isMax ? 'bg-gray-400 cursor-not-allowed text-gray-600' : 'bg-black text-white'
-              }`}
-              onClick={onIncrease}
-            >
-              +
-            </button>
-          </div>
+      {/* Single morphing pill — same layout-grow pattern as WhiteBtn */}
+      <motion.div
+        layout
+        transition={{ type: 'spring', stiffness: 380, damping: 28 }}
+        onClick={!isItemPresent ? handleAddItem : undefined}
+        className={`flex items-center h-[2.8vw] mob:h-[9vw] rounded-full border-[2px] p-[.3vw] mob:px-[.5vw] w-full justify-center ${
+          isItemPresent ? 'border-[#F3EEDF] bg-white cursor-default' : 'border-transparent bg-black cursor-pointer'
+        }`}
+      >
+        {/* Minus */}
+        {isItemPresent && (
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.15 }}
+            whileTap={{ scale: 0.82 }}
+            className="h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] flex-shrink-0 rounded-full bg-black text-white text-[1.1vw] mob:text-[4vw] flex items-center justify-center mr-[.4vw] mob:mr-[2vw]"
+            onClick={onDecrease}
+          >
+            –
+          </motion.button>
+        )}
 
-          {/* Animated max quantity message */}
-          {/* <AnimatePresence>
-            {showMaxMessage && (
+        {/* Centre */}
+        <div className="flex items-center justify-center overflow-hidden">
+          <AnimatePresence mode="popLayout" initial={false}>
+            {isItemPresent ? (
               <motion.p
-                initial={{ opacity: 0, y: -4 }}
+                key={quantity}
+                initial={{ opacity: 0, y: dir * 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.3 }}
-                className="text-red-500 font-medium text-[0.8vw] mob:text-[2.8vw] mt-[0.5vw] mob:mt-[1vw] text-center"
+                exit={{ opacity: 0, y: dir * -8 }}
+                transition={{ duration: 0.15, ease: 'easeOut' }}
+                className="text-black font-semibold text-[1.1vw] mob:text-[3.6vw] select-none min-w-[0.8vw] text-center"
               >
-                Oops! Max quantity reached
+                {quantity}
               </motion.p>
+            ) : (
+              <motion.span
+                key="add-label"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.12 }}
+                className="text-white font-medium text-base whitespace-nowrap mr-[.3vw]"
+              >
+                Add to cart
+              </motion.span>
             )}
-          </AnimatePresence> */}
-        </>
-      ) : (
-        <button className="w-full bg-black text-white font-medium text-base md:text-lg py-3 md:py-3" onClick={onAdd}>
-          Add to cart
-        </button>
-      )}
+          </AnimatePresence>
+        </div>
+
+        {/* Plus */}
+        <motion.button
+          layout
+          whileTap={!isMax ? { scale: 0.82 } : {}}
+          transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+          className={`flex-shrink-0 flex items-center justify-center rounded-full ${
+            isItemPresent
+              ? isMax
+                ? 'h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] bg-gray-400 text-gray-600 text-[1.1vw] mob:text-[4vw] ml-[.4vw] mob:ml-[2vw] cursor-not-allowed'
+                : 'h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] bg-black text-white text-[1.1vw] mob:text-[4vw] ml-[.4vw] mob:ml-[2vw]'
+              : 'h-[1.4vw] w-[1.4vw] mob:h-[5vw] mob:w-[5vw] bg-black text-white text-[1vw] mob:text-[3.5vw]'
+          }`}
+          onClick={isItemPresent ? onIncrease : handleAddItem}
+        >
+          +
+        </motion.button>
+      </motion.div>
     </div>
   );
 };
 
-export default YellowBtn;
+export default BlackAddCartBtm;

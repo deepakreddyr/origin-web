@@ -4,7 +4,7 @@ const featureList = [
   { text: '150+ Exotics', icon: '/assets/images/primaryFeature1.svg' },
   { text: '100+ Locally Grown Varieties', icon: '/assets/images/primaryFeature2.svg' },
   { text: 'Easy Refunds/Returns', icon: '/assets/images/primaryFeature3.svg' },
-  { text: 'No Dark Stores', icon: '/assets/images/primaryFeature3.svg' }
+  { text: 'No Dark Stores', icon: '/assets/images/primaryFeature4.svg' }
 ];
 
 const PrimaryFeature = () => {
