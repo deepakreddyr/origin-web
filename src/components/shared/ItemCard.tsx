@@ -245,9 +245,15 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
               ) : requiresSelection ? (
                 <motion.div
                   layout
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    setQuantityDir(1);
+                    setIsPopupOpen(true);
+                  }}
                   transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-                  className={`flex items-center h-[2.5vw] mob:h-[8.5vw] rounded-full border-[2px] p-[.3vw] mob:px-[.7vw] ${
-                    totalQuantityAcrossProduct > 0 ? 'border-primary-200 bg-white' : 'border-[#EDE6D4] bg-primary'
+                  className={`flex items-center h-[2.5vw] mob:h-[8.5vw] rounded-full p-[.3vw] mob:px-[.7vw] cursor-pointer ${
+                    totalQuantityAcrossProduct > 0 ? 'bg-white' : 'bg-primary'
                   }`}
                 >
                   {/* Minus — mounts/unmounts; pill layout animation handles the width change */}
@@ -310,7 +316,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                       setQuantityDir(1);
                       setIsPopupOpen(true);
                     }}
-                    className={`flex-shrink-0 flex items-center justify-center rounded-full border border-primary-200 bg-primary ${
+                    className={`flex-shrink-0 flex items-center justify-center rounded-full bg-primary ${
                       totalQuantityAcrossProduct > 0
                         ? 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.1vw] pb-[.3vw] ml-[.5vw] mob:ml-[3vw]'
                         : 'h-[1.2vw] w-[1.2vw] mob:h-[5vw] mob:w-[5vw] text-[1vw] mob:text-[4.1vw]'

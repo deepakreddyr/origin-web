@@ -633,13 +633,12 @@ const ProductDetailsWrapper = () => {
               </div>
 
               {/* Mobile About Card */}
-              <div className="bg-white rounded-[16px] border border-[#EDE6CC]/50 p-5">
-                <h3 className="font-[Recoleta] font-bold text-xl text-[#231F20] mb-3">About</h3>
-                <p className="text-sm text-gray-700 leading-relaxed font-[SofiaPro]">
-                  {productDescription ||
-                    'Grapefruit is a natural cross between pomelo and orange, known for its large fruit size, thick peel, and bitter tinges due to its high content of naringin, limonoids, and furanocoum...'}
-                </p>
-              </div>
+              {productDescription && (
+                <div className="bg-white rounded-[16px] border border-[#EDE6CC]/50 p-5">
+                  <h3 className="font-[Recoleta] font-bold text-xl text-[#231F20] mb-3">About</h3>
+                  <p className="text-sm text-gray-700 leading-relaxed font-[SofiaPro]">{productDescription}</p>
+                </div>
+              )}
 
               <div className="w-full text-start space-y-4">
                 <StorageInfo info={productDetails.info} />
@@ -756,13 +755,12 @@ const ProductDetailsWrapper = () => {
                   )}
 
                   {/* About Card */}
-                  <div className="bg-white rounded-[24px] border border-[#EDE6CC]/50 p-8 w-full">
-                    <h3 className="font-Stinger font-bold text-2xl text-[#231F20] mb-4">About</h3>
-                    <p className="text-base text-gray-700 leading-relaxed font-[SofiaPro]">
-                      {productDescription ||
-                        'Grapefruit is a natural cross between pomelo and orange, known for its large fruit size, thick peel, and bitter tinges due to its high content of naringin, limonoids, and furanocoum...'}
-                    </p>
-                  </div>
+                  {productDescription && (
+                    <div className="bg-white rounded-[24px] border border-[#EDE6CC]/50 p-8 w-full">
+                      <h3 className="font-Stinger font-bold text-2xl text-[#231F20] mb-4">About</h3>
+                      <p className="text-base text-gray-700 leading-relaxed font-[SofiaPro]">{productDescription}</p>
+                    </div>
+                  )}
 
                   {/* Combo & Pairing */}
                   <ComboContains productDetails={productDetails} />
