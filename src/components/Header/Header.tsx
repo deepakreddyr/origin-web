@@ -28,7 +28,7 @@ type Props = {
   mainMenuItems: MainMenuType[];
   isHeaderSticky: any;
   search?: boolean;
-  transparentColor?: 'white'; // NEW PROP
+  transparentColor?: 'black'; // NEW PROP
 };
 
 // HELPER FUNCTION: Calculate total cart line items from nested structure
@@ -109,54 +109,62 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
   const router = useRouter();
   const isMobile = useMediaQuery(600);
   const isShopPage = router.pathname === '/';
-  const isTransparentHeader = isShopPage && !isOpaque && isMobile;
+  // Transparent header only on mobile, when not opaque, and on shop page or if transparentColor is provided
+  const isTransparentHeader = isMobile && !isOpaque && (isShopPage || !!transparentColor);
+  const isBlackMode = !!transparentColor;
 
   // Helper function to get icon filter based on transparent color
   const getIconFilter = () => {
     if (!isTransparentHeader) return '';
-    return transparentColor === 'white' ? 'brightness-0' : 'brightness-0 invert';
+    return isBlackMode ? 'brightness-0' : 'brightness-0 invert';
   };
 
   // Helper function to get text color class
   const getTextColor = () => {
     if (!isTransparentHeader) return 'text-gray-900';
-    return transparentColor === 'white' ? 'text-black' : 'text-white';
+    return isBlackMode ? 'text-black' : 'text-white';
   };
 
   // Helper function to get location button styles
   const getLocationButtonStyles = () => {
     if (!isTransparentHeader) return 'bg-black/5 text-gray-900';
-    return transparentColor === 'white' ? 'bg-black/10 text-black' : 'bg-white/30 text-white';
+    return isBlackMode ? 'bg-black/10 text-black' : 'bg-white/30 text-white';
   };
 
   // Helper function to get location icon color
   const getLocationIconColor = () => {
     if (!isTransparentHeader) return 'text-gray-700';
-    return transparentColor === 'white' ? 'text-black' : 'text-white';
+    return isBlackMode ? 'text-black' : 'text-white';
   };
 
   // Helper function to get dropdown icon color
   const getDropdownIconColor = () => {
     if (!isTransparentHeader) return 'text-gray-500';
-    return transparentColor === 'white' ? 'text-black' : 'text-white';
+    return isBlackMode ? 'text-black' : 'text-white';
+  };
+
+  // Helper function to get separator color
+  const getSeparatorColor = () => {
+    if (!isTransparentHeader) return 'bg-gray-300';
+    return isBlackMode ? 'bg-black/20' : 'bg-white/30';
   };
 
   // Helper function to get search bar styles
   const getSearchBarStyles = () => {
     if (!isTransparentHeader) return 'bg-[#F8F4E9] border border-gray-200 text-black';
-    return transparentColor === 'white' ? 'bg-black/10 text-black border-none' : 'bg-white/30 text-white border-none';
+    return isBlackMode ? 'bg-black/10 text-black border-none' : 'bg-white/30 text-white border-none';
   };
 
   // Helper function to get search icon color
   const getSearchIconColor = () => {
     if (!isTransparentHeader) return 'text-gray-400';
-    return transparentColor === 'white' ? 'text-black' : 'text-white';
+    return isBlackMode ? 'text-black' : 'text-white';
   };
 
   // Helper function to get search placeholder color
   const getSearchPlaceholderColor = () => {
     if (!isTransparentHeader) return 'text-gray-400';
-    return transparentColor === 'white' ? 'text-black/70' : 'text-white/90';
+    return isBlackMode ? 'text-black/70' : 'text-white/90';
   };
 
   useEffect(() => {
@@ -330,7 +338,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
               ? 'bg-transparent px-[5vw] py-[2vw]'
               : // : 'bg-[#FFF9E5] px-[5vw] py-[2vw]'
                 'bg-white px-[5vw] py-[2vw] shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
-            : search
+            : search || isTransparentHeader
               ? 'bg-transparent w-full px-[2vw] mt-[1vw] max-w-[1920px]'
               : 'bg-white rounded-full shadow-md'
         } ${'mt-[1.1vw] mob:mt-0'} flex flex-col`}
@@ -421,15 +429,16 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                     onFocus={handleSearchFocus}
                     onBlur={handleSearchBlur}
                     placeholder={search ? 'Search here' : ''}
-                    className={`w-full ${search ? 'h-[3.5vw] bg-white border border-gray-200' : 'h-[3vw] bg-[#F2EADA] border-none'} pl-[1.5vw] pr-[3.5vw] 
+                    className={`w-full ${search ? 'h-[3.5vw] bg-white border border-gray-200' : `h-[3vw] ${getSearchBarStyles()}`} pl-[1.5vw] pr-[3.5vw] 
                                 rounded-full 
-                                placeholder:text-black/40 text-black
                                 text-[1.1vw] font-[SofiaPro] cursor-pointer 
                                 focus:outline-none focus:ring-0 transition-all duration-200`}
                   />
 
                   {!searchQuery && !search && (
-                    <div className="absolute left-[1.5vw] top-1/2 transform -translate-y-1/2 pointer-events-none text-[1.1vw] font-[SofiaPro] text-black/60 truncate max-w-[14vw]">
+                    <div
+                      className={`absolute left-[1.5vw] top-1/2 transform -translate-y-1/2 pointer-events-none text-[1.1vw] font-[SofiaPro] truncate max-w-[14vw] ${getSearchPlaceholderColor()}`}
+                    >
                       <AnimatedPlaceholder />
                     </div>
                   )}
@@ -440,7 +449,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                     className="absolute right-[1.5vw] top-1/2 transform -translate-y-1/2 bg-transparent w-[1.6vw] h-[1.6vw] flex items-center justify-center"
                   >
                     <svg
-                      className="w-[1.2vw] h-[1.2vw] text-gray-400"
+                      className={`w-[1.2vw] h-[1.2vw] ${getSearchIconColor()}`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -463,7 +472,9 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                 <Link
                   href="/shop"
                   className={`h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full text-[1.1vw] font-medium font-[SofiaPro] transition-colors ${
-                    router.pathname.startsWith('/shop') ? 'bg-primary text-black' : 'hover:bg-gray-100 text-black'
+                    router.pathname.startsWith('/shop')
+                      ? 'bg-primary text-black'
+                      : `hover:bg-gray-100 ${getTextColor()}`
                   }`}
                 >
                   Shop All
@@ -471,7 +482,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                 <Link
                   href="/about"
                   className={`h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full text-[1.1vw] font-medium font-[SofiaPro] transition-colors ${
-                    router.pathname === '/about' ? 'bg-primary text-black' : 'hover:bg-gray-100 text-black'
+                    router.pathname === '/about' ? 'bg-primary text-black' : `hover:bg-gray-100 ${getTextColor()}`
                   }`}
                 >
                   About Us
@@ -487,11 +498,11 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
               {!isMobile && !search && (
                 <button
                   onClick={handleSelectAddress}
-                  className="flex items-center gap-2 px-[1.5vw] py-[0.5vw] rounded-full bg-gray-100/50 hover:bg-gray-100 text-gray-900 transition-colors max-w-[200px]"
+                  className={`flex items-center gap-2 px-[1.5vw] py-[0.5vw] rounded-full transition-colors max-w-[200px] ${getLocationButtonStyles()}`}
                   aria-label="Select Delivery Address"
                 >
                   <svg
-                    className="w-[1vw] h-[1vw] flex-shrink-0 text-gray-700"
+                    className={`w-[1vw] h-[1vw] flex-shrink-0 ${getLocationIconColor()}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -511,7 +522,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                   </svg>
                   {address.defaultAddress?.address_name ? (
                     <div className="flex-1 overflow-hidden relative">
-                      <div className="animate-marquee whitespace-nowrap text-[1vw]">
+                      <div className={`animate-marquee whitespace-nowrap text-[1vw] ${getTextColor()}`}>
                         <span className="font-bold">{address.defaultAddress?.address_name}</span>
                         <span className="mx-[0.5vw]">•</span>
                         <span className="font-light">{address.defaultAddress.address}</span>
@@ -522,10 +533,10 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                       </div>
                     </div>
                   ) : (
-                    <span className="font-bold text-[1vw] whitespace-nowrap">Select Address</span>
+                    <span className={`font-bold text-[1vw] whitespace-nowrap ${getTextColor()}`}>Select Address</span>
                   )}
                   <svg
-                    className="w-[0.6vw] h-[0.6vw] text-gray-500 flex-shrink-0"
+                    className={`w-[0.6vw] h-[0.6vw] flex-shrink-0 ${getDropdownIconColor()}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -539,19 +550,19 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
               {loginDetails.isLogin ? (
                 <button onClick={openAccount}>
                   <div className="w-[1.5vw] h-[1.5vw] relative">
-                    <Image src={userIcon} alt="account icon" fill className="object-contain" />
+                    <Image src={userIcon} alt="account icon" fill className={`object-contain ${getIconFilter()}`} />
                   </div>
                 </button>
               ) : (
                 <button onClick={handleProfileMenuOpen}>
                   <div className="w-[1.5vw] h-[1.5vw] relative">
-                    <Image src={userIcon} alt="account icon" fill className="object-contain" />
+                    <Image src={userIcon} alt="account icon" fill className={`object-contain ${getIconFilter()}`} />
                   </div>
                 </button>
               )}
 
               {/* Separator */}
-              <div className="h-[1.5vw] w-[1px] bg-gray-300"></div>
+              <div className={`h-[1.5vw] w-[1px] ${getSeparatorColor()}`}></div>
 
               {/* Cart Icon */}
               <button onClick={handleCartOpen} className="relative">
@@ -561,7 +572,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
                   </div>
                 )}
                 <div className="relative w-[1.5vw] h-[1.5vw]">
-                  <Image src={cartIcon} alt="cart-icon" fill className="object-contain" />
+                  <Image src={cartIcon} alt="cart-icon" fill className={`object-contain ${getIconFilter()}`} />
                 </div>
               </button>
             </div>

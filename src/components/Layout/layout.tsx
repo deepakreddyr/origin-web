@@ -32,7 +32,8 @@ export default function Layout({
   isHeaderSticky,
   search = false,
   useTopPadding = false,
-  isHeader = true
+  isHeader = true,
+  transparentColor
 }: {
   children: React.ReactNode;
   mainMenuItems: MainMenuType[];
@@ -41,6 +42,7 @@ export default function Layout({
   search?: boolean;
   useTopPadding?: boolean;
   isHeader?: boolean;
+  transparentColor?: 'black';
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -121,7 +123,12 @@ export default function Layout({
     <CacheProvider value={clientSideEmotionCache}>
       <ThemeProvider theme={theme}>
         {isHeader && query.type !== 'app' && (
-          <Header isHeaderSticky={isHeaderSticky} mainMenuItems={mainMenuItems} search={search} />
+          <Header
+            isHeaderSticky={isHeaderSticky}
+            mainMenuItems={mainMenuItems}
+            search={search}
+            transparentColor={transparentColor}
+          />
         )}
         <SidebarScreen />
         <main className={`${useTopPadding ? 'pt-[22vw] mob:pt-[35vw] md:pt-[6vw]' : ''}`}>{children}</main>

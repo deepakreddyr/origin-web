@@ -9,8 +9,8 @@ import FreshlyArrivedBanner from '/public/assets/images/shop/FreshlyArrivedBanne
 import FruitsBanner from '/public/assets/images/shop/FruitsBanner.png';
 import HydroponicsBanner from '/public/assets/images/shop/HydroponicsBanner.png';
 import GourmetBanner from '/public/assets/images/shop/GourmetBanner.png';
-import banner from '/public/assets/images/shop/homepagebanner1.webp';
-import mobbanner from '/public/assets/images/shop/homepagebannermob1.webp';
+import banner from '/public/assets/images/shop/homepagebanner1.png';
+import mobbanner from '/public/assets/images/shop/homepagebannermob1.png';
 
 import vege from '/public/assets/images/shop/VeggiesBanner.png';
 // Map normalized keywords -> banner images
