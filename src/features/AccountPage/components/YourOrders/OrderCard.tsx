@@ -49,7 +49,11 @@ const OrderCard = (props: Props) => {
             <div className="bg-[#231F201A] px-[1.1vw] mob:px-[4.1vw] mob:py-[1.5vw] py-[.4vw] mob:rounded-[2vw] rounded-[.6vw]">
               <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold text-black">DELIVERED</p>
             </div>
-          ) : order.status === 'Not Delivered' || order.status === 'Rejected by admin' ? (
+          ) : order.status === 'Rejected by admin' ? (
+            <div className="bg-[#C700001A] px-[1.1vw] mob:px-[4.1vw] mob:py-[1.5vw] py-[.4vw] mob:rounded-[2vw] rounded-[.6vw]">
+              <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold text-danger">CANCELLED</p>
+            </div>
+          ) : order.status === 'Not Delivered' ? (
             <div className="bg-[#C700001A] px-[1.1vw] mob:px-[4.1vw] mob:py-[1.5vw] py-[.4vw] mob:rounded-[2vw] rounded-[.6vw]">
               <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold text-danger">NOT DELIVERED</p>
             </div>
