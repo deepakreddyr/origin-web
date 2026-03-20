@@ -21,6 +21,7 @@ import rawSvg from '/public/assets/svg/raw.svg';
 import infoicon1 from '/public/assets/svg/infoicon1.svg';
 import infoicon2 from '/public/assets/svg/infoicon2.svg';
 import itemRipenessSvg from '/public/assets/svg/itemRipeness.svg';
+import logo from '/public/logo.svg';
 
 import { UOMPopup, MaxQuantityToast, Product, UOM, NotifyToast } from './UOMPopup';
 
@@ -164,7 +165,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
               className={`relative w-[12.6vw] h-[12vw] mob:w-[38vw] mob:h-[38vw] transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
             >
               <Image
-                src={itemDetails.image || sampleimg}
+                src={itemDetails.image || logo}
                 alt={itemDetails.name ? itemDetails.name : 'product image'}
                 fill
                 sizes="(max-width: 768px) 50vw, 25vw"

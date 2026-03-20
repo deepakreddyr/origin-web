@@ -14,7 +14,7 @@ import LocationChangedPopup from './LocationChangedPopup';
 const AddressAndTimeSlot = (props: any) => {
   const cart = useSelector((state: any) => state.cart);
 
-  const { showAddressModal, setAddressModal, setShowLocationPopup } = props;
+  const { showAddressModal, setAddressModal, setShowLocationPopup, isSubscription = false, onShowToast } = props;
   const [timeSelectorOrListTab, setTimeSelectorOrListTab] = useState(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR);
   const [delayedModal, setDelayedModal] = useState(false);
   // const [checkoutDetails, setCheckoutDetails] = useState({});
@@ -43,7 +43,11 @@ const AddressAndTimeSlot = (props: any) => {
 
   const SCREEN_MAP: any = {
     [TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR]: (
-      <AdressAndTimeSelector setTimeSelectorOrListTab={setTimeSelectorOrListTab} />
+      <AdressAndTimeSelector
+        setTimeSelectorOrListTab={setTimeSelectorOrListTab}
+        isSubscription={isSubscription}
+        onShowToast={onShowToast}
+      />
     ),
     [TabTypeConstant.CART_ADDRESS_LIST]: (
       <CartAddressList setTimeSelectorOrListTab={setTimeSelectorOrListTab} onAddressChanged={handleAddressChanged} />

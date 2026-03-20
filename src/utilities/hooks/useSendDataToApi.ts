@@ -24,7 +24,7 @@ export const useSendDataToApi = () => {
     }
 
     const response = await axiosFetch(url, data, method, additionalHeadersToApi);
-    if (response.success || response) {
+    if (response && response.success !== false) {
       successHandler(response.data);
       return { status: response.status, bool: true, data: response };
     } else {
