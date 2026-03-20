@@ -34,6 +34,7 @@ import { useAtom } from 'jotai';
 // Import InfoOutlinedIcon to be used in the new MaxQuantityToast copy
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationChangedPopup from './AddressAndTimeSlot/LocationChangedPopup';
+import { clearSubscriptionCart } from '@/store/slice/SubscriptionCartSlice';
 
 // ==========================================================
 // MAX QUANTITY TOAST COMPONENT MOVED/COPIED HERE FOR GLOBAL RENDER
@@ -56,7 +57,7 @@ const InfoToast: React.FC<{
 
   return (
     <div
-      className={`absolute bottom-22 left-1/2 transform -translate-x-1/2 z-[9999] w-[90%] max-w-md transition-opacity duration-300 ease-in-out ${
+      className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-[9999] w-[90%] max-w-md transition-opacity duration-300 ease-in-out ${
         isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
     >
@@ -75,6 +76,12 @@ const InfoToast: React.FC<{
 
 const Cart = () => {
   const cart = useSelector((state: any) => state.cart);
+  const subscriptionCart = useSelector((state: any) => state.subscriptionCart);
+  const isSubscription = subscriptionCart.isSubscriptionActive;
+
+  // Use subscription cart data if active, otherwise normal cart
+  const currentCart = isSubscription ? subscriptionCart : cart;
+
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
   const [showAddressModal, setAddressModal] = useState(false);
   const [showCouponList, setShowCouponList] = useState(false);
@@ -125,13 +132,13 @@ const Cart = () => {
 
   // ✅ TRIGGER: AUTO-REMOVE FREE ITEMS IF MOV NOT MET
   useEffect(() => {
-    if (cart.freeItemsMov > 0 && cart.totalPrice < cart.freeItemsMov) {
+    if (!isSubscription && cart.freeItemsMov > 0 && cart.totalPrice < cart.freeItemsMov) {
       const freeItem = cart.items.find((item: any) => item.isFreeItem || item.free);
       if (freeItem) {
         dispatch(removeFreeItemFromCart(freeItem.item_code));
       }
     }
-  }, [cart.totalPrice, cart.freeItemsMov, cart.items, dispatch]);
+  }, [cart.totalPrice, cart.freeItemsMov, cart.items, dispatch, isSubscription]);
 
   const handleMaxQuantityExceededGlobal = (maxQty: number) => {
     handleShowToast(`Maximum quantity of ${maxQty} reached for this item.`);
@@ -205,12 +212,14 @@ const Cart = () => {
       };
 
       if (loginDetails.isSidebarOpen) {
+        if (isSubscription) return; // Skip normal cart sync in subscription mode
         sendDataToApi(apiUrl, cartItems, 'POST', successHandler, failureHandler, additionalHeaders);
       }
     }
   };
 
   useEffect(() => {
+    if (isSubscription) return; // Skip normal cart API calls in subscription mode
     const cartItemFromLs = localStorage.getItem('cart_items');
     if (cartItemFromLs) {
       const cartItemsParsed = JSON.parse(cartItemFromLs);
@@ -219,7 +228,7 @@ const Cart = () => {
     } else {
       fetchCartItemsFromApi();
     }
-  }, [loginDetails.isSidebarOpen]);
+  }, [loginDetails.isSidebarOpen, isSubscription]);
 
   useEffect(() => {
     if (!loginDetails.isSidebarOpen) {
@@ -228,8 +237,13 @@ const Cart = () => {
       dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
       dispatch(updateTimeSlotId(''));
       dispatch(setIsHeaderVisible(true));
+      // If subscription was active, clear it when sidebar closes?
+      // User said "only when clicking order now", maybe clear it on close to reset
+      if (isSubscription) {
+        dispatch(clearSubscriptionCart());
+      }
     }
-  }, [loginDetails.isSidebarOpen]);
+  }, [loginDetails.isSidebarOpen, isSubscription, dispatch]);
 
   // Ensure proceed button is enabled when returning to main cart view
   useEffect(() => {
@@ -287,35 +301,46 @@ const Cart = () => {
 
   useEffect(() => {
     const paymentFlow = localStorage.getItem('FLOW_TYPE');
-    if (cart.items.length === 0 && !paymentFlow) {
+    const isCartEmpty = isSubscription ? !subscriptionCart.item : cart.items.length === 0;
+
+    if (isCartEmpty && !paymentFlow) {
       dispatch(setCartTabType(TabTypeConstant.EMPTY_CART));
+    } else if (!isCartEmpty && (cart.cartTabType === TabTypeConstant.EMPTY_CART || cart.cartTabType === '')) {
+      dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
     }
-  }, [cart.items]);
+  }, [cart.items.length, subscriptionCart.item, isSubscription, cart.cartTabType, dispatch]);
 
   const cartMainContent = (
     <>
       {orderRestrictionData && <RestrictOrderInfo orderRestrictionData={orderRestrictionData} />}
-      <CouponSection setShowCouponList={setShowCouponList} onShowToast={handleShowToast} />
-      <FreeItemSection onShowToast={handleShowToast} />
+      {!isSubscription && <CouponSection setShowCouponList={setShowCouponList} onShowToast={handleShowToast} />}
+      {!isSubscription && <FreeItemSection onShowToast={handleShowToast} />}
       <ReviewList onShowMaxQuantityToast={handleMaxQuantityExceededGlobal} />
-      <DeliveryInstruction />
+      {!isSubscription && <DeliveryInstruction />}
       {showAddressModal && (
         <div className="w-[30vw] flex items-end relative justify-end">
           <AddressAndTimeSlot
             showAddressModal={showAddressModal}
             setAddressModal={setAddressModal}
             setShowLocationPopup={setShowLocationPopup}
+            isSubscription={isSubscription}
+            onShowToast={handleShowToast}
           />
         </div>
       )}
-      <BillDetailsWrapper billDetails={billDetails} orderRestrictionData={orderRestrictionData} />
+      <BillDetailsWrapper
+        billDetails={billDetails}
+        orderRestrictionData={orderRestrictionData}
+        isSubscription={isSubscription}
+      />
       {cart.cartTabType !== TabTypeConstant.CART_ADDRESS_LIST && (
         <ActionCtaWithItems
           btnName={loginDetails.user ? 'PROCEED' : 'LOGIN'}
           handler={proceedButtonHandler}
-          isDisabled={!cart.isProceedBtnEnabled}
+          isDisabled={isSubscription ? false : !cart.isProceedBtnEnabled}
           orderRestrictionData={orderRestrictionData}
           showAddressModal={showAddressModal}
+          isSubscription={isSubscription}
         />
       )}
     </>
@@ -336,7 +361,6 @@ const Cart = () => {
       <LocationChangedPopup
         isVisible={showLocationPopup}
         onClose={() => {
-          // Hard refresh so all API data is fetched fresh with the new location
           window.location.reload();
         }}
       />

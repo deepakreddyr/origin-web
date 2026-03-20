@@ -68,7 +68,7 @@ const initialState: CartState = {
   totalPrice: 0,
   totalOriginalPrice: 0,
   amountToPay: 0,
-  cartTabType: '',
+  cartTabType: 'CART_MAIN',
   isProceedBtnEnabled: false,
   couponDetails: couponDetailsInitialState,
   discountAmount: null,

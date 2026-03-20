@@ -1,0 +1,200 @@
+.heroSection {
+  background-color: #fce38d;
+  position: relative;
+  overflow: hidden;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.sunburst {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200%;
+  height: 200%;
+  background: repeating-conic-gradient(from 0deg,
+      #fce38d 0deg 15deg,
+      #fdbd4a 15deg 30deg);
+  z-index: 0;
+  opacity: 0.6;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+}
+
+.heroTitle {
+  font-family: 'Recoleta', sans-serif;
+  color: #e9522c;
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.heroSubtitle {
+  font-family: 'SofiaPro', sans-serif;
+  font-weight: 600;
+  color: #000;
+  font-size: 1.2rem;
+}
+
+.splitSection {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background-color: #fce38d;
+  /* Fallback */
+}
+
+@media (min-width: 900px) {
+  .splitSection {
+    flex-direction: row;
+    min-height: 500px;
+  }
+}
+
+.splitLeft {
+  background-color: #CE6B34;
+  color: #fff;
+  padding: 80px 40px;
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: relative;
+}
+
+.splitRight {
+  background-color: #f7e1a3;
+  /* Cream */
+  padding: 40px;
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.rightContent {
+  border: 12px solid #fff;
+  padding: 40px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.bananaContainer {
+  position: absolute;
+  bottom: 0;
+  left: 45%;
+  /* Sit at the seam between left and right */
+  transform: translateX(-50%);
+  z-index: 10;
+  width: 480px;
+  pointer-events: none;
+}
+
+@media (max-width: 899px) {
+  .bananaContainer {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    margin: -60px auto 20px;
+    width: 250px;
+  }
+
+  .splitLeft,
+  .splitRight {
+    padding: 60px 20px;
+  }
+}
+
+.fruitRevolutionText {
+  font-family: 'Recoleta', sans-serif;
+  color: #e9522c;
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-top: 10px;
+}
+
+.challengeSection {
+  background-color: #fff8d5;
+  padding: 60px 20px;
+}
+
+.challengeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 40px;
+}
+
+@media (min-width: 900px) {
+  .challengeGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.howItWorks {
+  background-color: #fff;
+  padding: 60px 20px;
+}
+
+.stepCard {
+  position: relative;
+  background-color: #fdbd4a;
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.stepNumber {
+  position: absolute;
+  right: 10px;
+  bottom: -20px;
+  font-family: 'Recoleta', sans-serif;
+  font-size: 10rem;
+  color: #fff;
+  opacity: 0.4;
+  line-height: 1;
+}
+
+.testimonialCard {
+  background-color: #fff8d5;
+  border-radius: 15px;
+  padding: 20px;
+  margin: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.ctaSection {
+  text-align: center;
+  padding: 80px 20px;
+  background-color: #fff;
+}
+
+.orderBtn {
+  background-color: #e9522c;
+  color: #fff;
+  padding: 15px 40px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1.2rem;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+  box-shadow: 0 4px 0 #8d2e14;
+}
+
+.orderBtn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #8d2e14;
+}

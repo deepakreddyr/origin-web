@@ -15,6 +15,7 @@ interface ActionCtaWithItemsProps {
   isDisabled: boolean;
   orderRestrictionData?: OrderRestrictionData | null;
   showAddressModal?: boolean;
+  isSubscription?: boolean;
 }
 
 const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
@@ -22,9 +23,11 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
   handler,
   isDisabled,
   orderRestrictionData,
-  showAddressModal = false
+  showAddressModal = false,
+  isSubscription = false
 }) => {
   const cart = useSelector((state: any) => state.cart);
+  const subscriptionCart = useSelector((state: any) => state.subscriptionCart);
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
 
@@ -70,8 +73,10 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
   }, [cart]);
 
   useEffect(() => {
-    recalcDisableState();
-  }, [cart, recalcDisableState]);
+    if (!isSubscription) {
+      recalcDisableState();
+    }
+  }, [cart, recalcDisableState, isSubscription]);
 
   // Listen to custom event triggered after removal
   useEffect(() => {
@@ -128,6 +133,8 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
 
   // Calculate total amount including instant delivery fee
   const getTotalAmount = () => {
+    if (isSubscription) return subscriptionCart.totalPrice.toFixed(2);
+
     let total = parseFloat(cart.amountToPay) || 0;
 
     // Add instant delivery fee if instant delivery is selected
@@ -169,7 +176,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
       >
         <div className="pl-[1vw] mob:pl-[2.1vw]">
           <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-black-op-60 font-medium">
-            {cart.totalQuantity} Items
+            {isSubscription ? subscriptionCart.totalQuantity : cart.totalQuantity} Items
           </p>
           <p className="font-[SofiaPro] font-semibold text-[1.1vw] mob:text-[4.1vw] text-black mob:pt-[.6vw]">
             ₹{getTotalAmount()}

@@ -13,8 +13,9 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { calculateCouponDiscount } from '@/utilities/utils';
 
 const BillDetailsWrapper = (props: any) => {
-  const { billDetails } = props;
+  const { billDetails, isSubscription = false } = props;
   const cart = useSelector((state: any) => state.cart);
+  const subscriptionCart = useSelector((state: any) => state.subscriptionCart);
   const { couponDetails } = cart;
   const dispatch = useDispatch();
 
@@ -82,6 +83,8 @@ const BillDetailsWrapper = (props: any) => {
   }, []);
 
   useEffect(() => {
+    if (isSubscription) return; // Skip updating normal cart state in subscription mode
+
     // Calculate dynamic delivery fee
     const deliveryFee = calculateDeliveryFee();
     dispatch(setDeliveryFee(deliveryFee));
@@ -95,10 +98,10 @@ const BillDetailsWrapper = (props: any) => {
     const roundedDiscount = Math.round(currentDiscount);
 
     // Calculate final amount to be paid
-    const amountTobePaid = cart.totalPrice - roundedDiscount + deliveryFee;
+    const calculatedTotalToPay = cart.totalPrice - roundedDiscount + deliveryFee;
 
-    dispatch(setIsProceedButtonEnabled(amountTobePaid > cart.cart_minimum));
-    dispatch(setAmountToPay(amountTobePaid));
+    dispatch(setIsProceedButtonEnabled(calculatedTotalToPay > cart.cart_minimum));
+    dispatch(setAmountToPay(calculatedTotalToPay));
 
     // Also sync the discount amount back to the state for other observers
     if (roundedDiscount !== cart.discountAmount) {
@@ -106,9 +109,9 @@ const BillDetailsWrapper = (props: any) => {
     }
 
     if (typeof window !== 'undefined') {
-      localStorage.setItem('total_to_pay', String(amountTobePaid));
+      localStorage.setItem('total_to_pay', String(calculatedTotalToPay));
     }
-  }, [cart.totalPrice, cart.discountAmount, billDetails, dispatch]);
+  }, [couponDetails, cart, billDetails, dispatch, isSubscription]);
 
   const remainingAmount = billDetails.cart_minimum ? Number(billDetails.cart_minimum) - cart.amountToPay : 0;
 
@@ -147,7 +150,9 @@ const BillDetailsWrapper = (props: any) => {
             <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw] flex items-center gap-[0.4vw]">
               Item total
             </p>
-            <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">₹{cart.totalOriginalPrice}</p>
+            <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
+              ₹{isSubscription ? subscriptionCart.totalPrice : cart.totalOriginalPrice}
+            </p>
           </div>
         </li>
 
@@ -249,7 +254,9 @@ const BillDetailsWrapper = (props: any) => {
         <li>
           <div className="flex items-center text-black justify-between">
             <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">To Pay</p>
-            <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">₹{cart.amountToPay}</p>
+            <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
+              ₹{isSubscription ? subscriptionCart.totalPrice : cart.amountToPay}
+            </p>
           </div>
         </li>
       </ul>

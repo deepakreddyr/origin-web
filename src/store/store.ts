@@ -6,6 +6,7 @@ import { productsSlice } from './slice/productsSlice';
 import { loginSlice } from './slice/loginSlice';
 import { placeOrderDetailsSlice } from './slice/placeOrderDetails';
 import { orderAndRefundSlice } from './slice/OrderAndRefundDetails';
+import { subscriptionCartSlice } from './slice/SubscriptionCartSlice';
 
 // Create the store
 const makeStore = () =>
@@ -16,7 +17,8 @@ const makeStore = () =>
       [productsSlice.name]: productsSlice.reducer,
       [loginSlice.name]: loginSlice.reducer,
       [placeOrderDetailsSlice.name]: placeOrderDetailsSlice.reducer,
-      [orderAndRefundSlice.name]: orderAndRefundSlice.reducer
+      [orderAndRefundSlice.name]: orderAndRefundSlice.reducer,
+      subscriptionCart: subscriptionCartSlice.reducer
     }
   });
 

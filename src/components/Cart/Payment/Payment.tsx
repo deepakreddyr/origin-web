@@ -19,6 +19,8 @@ const Payment = (props: any) => {
   const [paymentFLowScreen, setPaymentFlowScreen] = useState(TabTypeConstant.MAKE_PAYMENT);
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
   const cart = useSelector((state: any) => state.cart);
+  const subscriptionCart = useSelector((state: any) => state.subscriptionCart);
+  const isSubscription = subscriptionCart.isSubscriptionActive;
   const sendDataToApi = useSendDataToApi();
   const [paymentModalDetails, setPaymentModalDetails] = useState({
     cartValue: '',
@@ -223,28 +225,56 @@ const Payment = (props: any) => {
       isPlacingOrderRef.current = true;
 
       let storeId: any = localStorage.getItem('store-id');
-      const { items } = prepareCartItemsToApi(cart.items, true);
+      const { items } = isSubscription ? { items: [] } : prepareCartItemsToApi(cart.items, true);
+      const subscriptionItems =
+        isSubscription && subscriptionCart.item
+          ? [
+              {
+                item_code: subscriptionCart.item.item_code,
+                uom: [{ id: subscriptionCart.item.id, qty: subscriptionCart.totalQuantity }]
+              }
+            ]
+          : [];
       let apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + mainApiUrl['ordersActions'];
       const addressFromLs = getAddressAndStoreId();
 
       let additionalHeaders = {};
-      const apiData = {
-        items,
-        delivery_fee: cart.deliveryFee,
-        individual_package_enabled: false,
-        delivery_type: 'instant',
-        delivery_date: placeOrderDetails.checkoutDetails.formatted_delivery_date[0],
-        sub_total: cart.totalPrice,
-        tax: 0,
-        total: cart.amountToPay === 0 ? cart.totalPrice : cart.amountToPay,
-        time_slot_id: placeOrderDetails.time_slot_id,
-        store_id: JSON.parse(storeId),
-        is_rewards_used: false,
-        payment_method: orderType.name === 'Pay On delivery' ? 'cash' : 'razorpay',
-        coupon_id: cart.couponDetails?.id ? cart.couponDetails?.id : null,
-        sub_payment_method: orderType.sub_payment_method,
-        uuid: uuidv4()
-      };
+      const apiData = isSubscription
+        ? {
+            items: subscriptionItems,
+            delivery_fee: 0,
+            delivery_type: 'subscription',
+            individual_package_enabled: false,
+            delivery_date: placeOrderDetails.checkoutDetails.formatted_delivery_date[0],
+            sub_total: subscriptionCart.totalPrice,
+            tax: 0,
+            total: subscriptionCart.totalPrice,
+            time_slot_id: placeOrderDetails.time_slot_id,
+            store_id: JSON.parse(storeId),
+            is_rewards_used: false,
+            payment_method: orderType.name === 'Pay On delivery' ? 'cash' : 'razorpay',
+            coupon_id: null,
+            sub_payment_method: orderType.sub_payment_method,
+            uuid: uuidv4(),
+            max_qty: subscriptionCart.totalQuantity
+          }
+        : {
+            items,
+            delivery_fee: cart.deliveryFee,
+            individual_package_enabled: false,
+            delivery_type: 'instant',
+            delivery_date: placeOrderDetails.checkoutDetails.formatted_delivery_date[0],
+            sub_total: cart.totalPrice,
+            tax: 0,
+            total: cart.amountToPay === 0 ? cart.totalPrice : cart.amountToPay,
+            time_slot_id: placeOrderDetails.time_slot_id,
+            store_id: JSON.parse(storeId),
+            is_rewards_used: false,
+            payment_method: orderType.name === 'Pay On delivery' ? 'cash' : 'razorpay',
+            coupon_id: cart.couponDetails?.id ? cart.couponDetails?.id : null,
+            sub_payment_method: orderType.sub_payment_method,
+            uuid: uuidv4()
+          };
 
       if (addressFromLs) {
         additionalHeaders = {
@@ -256,7 +286,11 @@ const Payment = (props: any) => {
         if (response?.data) {
           localStorage.setItem('razorpay_response', JSON.stringify(response?.data));
           localStorage.setItem('order_type', JSON.stringify(orderType));
-          let totalAmount = cart.amountToPay === 0 ? cart.totalPrice : cart.amountToPay;
+          let totalAmount = isSubscription
+            ? subscriptionCart.totalPrice
+            : cart.amountToPay === 0
+              ? cart.totalPrice
+              : cart.amountToPay;
           localStorage.setItem('total_cart', JSON.stringify(totalAmount));
 
           if (orderType.name === 'Pay On delivery') {
