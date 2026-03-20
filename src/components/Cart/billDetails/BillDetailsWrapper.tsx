@@ -12,8 +12,9 @@ import { Tooltip, IconButton, useMediaQuery } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 const BillDetailsWrapper = (props: any) => {
-  const { billDetails } = props;
+  const { billDetails, isSubscription = false } = props;
   const cart = useSelector((state: any) => state.cart);
+  const subscriptionCart = useSelector((state: any) => state.subscriptionCart);
   const { couponDetails } = cart;
   const dispatch = useDispatch();
 
@@ -81,6 +82,8 @@ const BillDetailsWrapper = (props: any) => {
   }, []);
 
   useEffect(() => {
+    if (isSubscription) return; // Skip updating normal cart state in subscription mode
+
     let amountTobePaid;
     const { totalPrice, amountToPay, discountAmount } = cart;
 
@@ -111,7 +114,7 @@ const BillDetailsWrapper = (props: any) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('total_to_pay', cart.amountToPay);
     }
-  }, [couponDetails, cart, billDetails, dispatch]);
+  }, [couponDetails, cart, billDetails, dispatch, isSubscription]);
 
   const remainingAmount = billDetails.cart_minimum ? Number(billDetails.cart_minimum) - cart.amountToPay : 0;
 
@@ -150,7 +153,9 @@ const BillDetailsWrapper = (props: any) => {
             <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw] flex items-center gap-[0.4vw]">
               Item total
             </p>
-            <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">₹{cart.totalOriginalPrice}</p>
+            <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
+              ₹{isSubscription ? subscriptionCart.totalPrice : cart.totalOriginalPrice}
+            </p>
           </div>
         </li>
 
@@ -252,7 +257,9 @@ const BillDetailsWrapper = (props: any) => {
         <li>
           <div className="flex items-center text-black justify-between">
             <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">To Pay</p>
-            <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">₹{cart.amountToPay}</p>
+            <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
+              ₹{isSubscription ? subscriptionCart.totalPrice : cart.amountToPay}
+            </p>
           </div>
         </li>
       </ul>

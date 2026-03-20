@@ -2,7 +2,14 @@ import React, { useState } from 'react';
 import AddItemBtn from '../shared/AddItemBtn/AddItemBtn';
 import Image from 'next/image';
 import deleteIcon from '/public/assets/icons/deleteIcon.png';
-import { removeItemFromCart, removeFreeItemFromCart } from '@/store/slice/CartSlice';
+import {
+  removeItemFromCart,
+  removeFreeItemFromCart,
+  increaseQuantity,
+  decreaseQuantity
+} from '@/store/slice/CartSlice';
+import { clearSubscriptionCart, updateSubscriptionQuantity } from '@/store/slice/SubscriptionCartSlice';
+import { setIsSidebarOpen } from '@/store/slice/loginSlice';
 import { useDispatch } from 'react-redux';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
@@ -93,8 +100,9 @@ const ReviewItem = (props: {
   ripenessType: string | null;
   onShowMaxQuantityToast: (maxQty: number) => void;
   isFreeItem?: boolean;
+  isSubscription?: boolean;
 }) => {
-  const { product, uom, ripenessType, onShowMaxQuantityToast, isFreeItem = false } = props;
+  const { product, uom, ripenessType, onShowMaxQuantityToast, isFreeItem = false, isSubscription = false } = props;
   const dispatch = useDispatch();
 
   // --- REMOVED TOAST STATE ---
@@ -120,13 +128,29 @@ const ReviewItem = (props: {
     itemQuantity = uom.cart_quantity;
   }
 
-  // Prepare payload for removeItemFromCart
   const removeItemPayload = {
     varientId: uom.variant_id,
     selectedRipenessType: ripenessType
   };
 
   const hasRipeness = !!ripenessType;
+
+  const handleSubscriptionIncrease = () => {
+    if (uom.cart_quantity < uom.maximum_quantity) {
+      dispatch(updateSubscriptionQuantity(uom.cart_quantity + 1));
+    } else {
+      onShowMaxQuantityToast(uom.maximum_quantity);
+    }
+  };
+
+  const handleSubscriptionDecrease = () => {
+    if (uom.cart_quantity > 1) {
+      dispatch(updateSubscriptionQuantity(uom.cart_quantity - 1));
+    } else {
+      dispatch(clearSubscriptionCart());
+      dispatch(setIsSidebarOpen(false));
+    }
+  };
 
   return (
     // REMOVED MaxQuantityToast RENDER HERE
@@ -179,7 +203,7 @@ const ReviewItem = (props: {
           </div>
         </div>
 
-        {uom.is_available ? (
+        {uom.is_available || isSubscription ? (
           isFreeItem || product.free || product.isFree ? (
             // Free item: show REMOVE button
             <button
@@ -188,6 +212,32 @@ const ReviewItem = (props: {
             >
               REMOVE
             </button>
+          ) : isSubscription ? (
+            // Subscription item: simplified stepper or specialized look
+            <div className="flex gap-3 items-center">
+              <div className="flex-shrink-0">
+                <div className="flex items-center bg-black rounded-[.5vw] mob:rounded-[2vw] px-[.5vw] py-[.2vw] mob:px-[2vw] mob:py-[1vw] gap-[1vw] mob:gap-[3vw]">
+                  <button
+                    onClick={handleSubscriptionDecrease}
+                    className="text-white font-bold text-[1.2vw] mob:text-[5vw] px-[.5vw]"
+                  >
+                    -
+                  </button>
+                  <span className="text-white font-bold text-[1vw] mob:text-[4vw]">{uom.cart_quantity}</span>
+                  <button
+                    onClick={handleSubscriptionIncrease}
+                    className="text-white font-bold text-[1.2vw] mob:text-[5vw] px-[.5vw]"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <div className="review-cart-counter flex flex-col items-center w-[2vw] mob:w-[12vw]">
+                <span className="font-[sofiaPro] text-[.83vw] mob:text-[3.3vw]">
+                  ₹{calculateItemTotalPrice(uom.price, itemQuantity)}
+                </span>
+              </div>
+            </div>
           ) : (
             // Regular item: show quantity stepper and price
             <div className="flex gap-3 items-center">

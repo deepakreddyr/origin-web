@@ -1,25 +1,34 @@
 import { protectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
+import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { getAddressAndStoreId } from '@/utilities/utils';
 import React, { useEffect, useState } from 'react';
 import InstantDeliveryBtn from './InstantDeliveryBtn';
 import ScheduledDeliveryBtn from './ScheduledDeliveryBtn';
 import DeliveryTimings from './DeliveryTimings';
+import SubscriptionTimeslot from './SubscriptionTimeslot';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCheckoutDetails, updateDeliveryType } from '@/store/slice/placeOrderDetails';
 import { setIsProceedButtonEnabled } from '@/store/slice/CartSlice';
 
 type DeliveryType = 'TIME_SLOT' | 'INSTANT' | undefined;
 
-const DeliveryPrefencetype = () => {
+const DeliveryPrefencetype = ({
+  isSubscription = false,
+  onShowToast
+}: {
+  isSubscription?: boolean;
+  onShowToast?: (message: string) => void;
+}) => {
   const getDataFromApi = useGetDataFromApi();
+  const sendDataToApi = useSendDataToApi();
   const [loading, setLoading] = useState(true);
   const [activeDeliveryType, setActiveDeliveryType] = useState<DeliveryType>(undefined);
   const dispatch = useDispatch();
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
+  const subscriptionCart = useSelector((state: any) => state.subscriptionCart);
 
   const fetchCheckoutDetails = () => {
-    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['proceedToCheckout'];
     const addressFromLs = getAddressAndStoreId();
     const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
 
@@ -27,15 +36,27 @@ const DeliveryPrefencetype = () => {
       dispatch(setCheckoutDetails({ ...data }));
       setLoading(false);
     };
-    const failureHandler = () => {
+    const failureHandler = (data: any) => {
       setLoading(false);
+      if (data?.message && onShowToast) {
+        onShowToast(data.message);
+      }
     };
-    getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+
+    if (isSubscription) {
+      const apiUrl =
+        process.env.NEXT_PUBLIC_BACKEND_API_URL +
+        `/api/v5/user/web-subscription-checkout?max_qty=${subscriptionCart.totalQuantity}`;
+      getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+    } else {
+      const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['proceedToCheckout'];
+      getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+    }
   };
 
   useEffect(() => {
     fetchCheckoutDetails();
-  }, []);
+  }, [isSubscription]);
 
   // Auto-update activeDeliveryType based on Redux state changes
   useEffect(() => {
@@ -62,6 +83,12 @@ const DeliveryPrefencetype = () => {
 
   if (loading) return <>loading</>;
 
+  // ── SUBSCRIPTION FLOW: Show fixed timeslot card, no user selection needed ──
+  if (isSubscription) {
+    return <SubscriptionTimeslot />;
+  }
+
+  // ── NORMAL FLOW ──
   // Check if instant delivery is available
   const isInstantDeliveryAvailable =
     placeOrderDetails?.checkoutDetails?.dash_delivery?.immediate_delivery_available &&

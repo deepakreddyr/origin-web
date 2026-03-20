@@ -9,7 +9,7 @@ import DeliveryPrefencetype from '../deliveryPerference/DeliveryPrefencetype';
 import { ADDRESS_ICON_MAP } from '@/utilities/maps';
 
 const AdressAndTimeSelector = (props: any) => {
-  const { setTimeSelectorOrListTab } = props;
+  const { setTimeSelectorOrListTab, isSubscription = false, onShowToast } = props;
   const [address, setAddress] = useAtom(addressAtom);
   const cart = useSelector((state: any) => state.cart);
   const dispatch = useDispatch();
@@ -61,7 +61,7 @@ const AdressAndTimeSelector = (props: any) => {
         </div>
 
         <div className="mt-[1.389vw] mob:mt-[6vw]">
-          <DeliveryPrefencetype />
+          <DeliveryPrefencetype isSubscription={isSubscription} onShowToast={onShowToast} />
         </div>
       </div>
     </div>

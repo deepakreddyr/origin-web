@@ -21,7 +21,8 @@ export const unprotectedUrl: UrlMap = {
   getShopDetails: '/api/v5/public/skip-login/shop-all',
   searchForProduct: '/api/v5/public/skip-login/items',
   getCategories: '/api/v5/public/skip-login/categories',
-  getHomepage: '/api/v5/public/skip-login/homepage'
+  getHomepage: '/api/v5/public/skip-login/homepage',
+  getSubscriptionItems: '/api/v5/public/skip-login/subscription/items'
 };
 
 export const protectedUrl: UrlMap = {
@@ -42,6 +43,7 @@ export const protectedUrl: UrlMap = {
   updatePayment: '/api/v3/user/order/update/payment-method',
   getHomepage: '/api/v5/user/homepage',
   notifyMe: '/api/v5/user/items/notify-me',
-  requestItems: '/api/v3/user/request-items'
+  requestItems: '/api/v3/user/request-items',
+  getSubscriptionItems: '/api/v5/user/subscription/items'
 };
 // /api/5v / user / items;

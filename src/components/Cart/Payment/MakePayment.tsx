@@ -23,7 +23,8 @@ const MakePayment = (props: any) => {
   }, []);
 
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
-  const cart = useSelector((state: any) => state.cart);
+  const subscriptionCart = useSelector((state: any) => state.subscriptionCart);
+  const isSubscription = subscriptionCart.isSubscriptionActive;
   const sendDataToApi = useSendDataToApi();
 
   let deliveryType = placeOrderDetails.delivery_type === 'INSTANT' ? 'Delivered Today within' : 'Delivering Today';
@@ -32,8 +33,9 @@ const MakePayment = (props: any) => {
       ? '30 mins'
       : `${placeOrderDetails.deliverySlotDetails.from} - ${placeOrderDetails.deliverySlotDetails.to}`;
 
-  let isCodEnabled =
-    placeOrderDetails.delivery_type === 'INSTANT'
+  let isCodEnabled = isSubscription
+    ? true
+    : placeOrderDetails.delivery_type === 'INSTANT'
       ? placeOrderDetails.checkoutDetails.cod_for_immediate_delivery
       : placeOrderDetails.checkoutDetails.enable_cod;
 
@@ -99,7 +101,11 @@ const MakePayment = (props: any) => {
                   primeAudio?.();
 
                   // Prevent clicks if processing or if this specific payment method is disabled
-                  if (processing || isProcessingRef.current || (!pay.sub_payment_method && !isCodEnabled)) {
+                  if (
+                    processing ||
+                    isProcessingRef.current ||
+                    (!isSubscription && !pay.sub_payment_method && !isCodEnabled)
+                  ) {
                     return;
                   }
 

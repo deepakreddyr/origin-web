@@ -1,0 +1,185 @@
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { useDispatch } from 'react-redux';
+import { setSubscriptionItem, setIsSubscriptionActive } from '@/store/slice/SubscriptionCartSlice';
+import { setIsSidebarOpen, setTabType } from '@/store/slice/loginSlice';
+import { TabTypeConstant } from '../Login/constants/tabTypeContent';
+
+const bgColors = [
+  '#FCF2B7', // 1
+  '#F9E27D', // 2
+  '#F9883E', // 3
+  '#F9883E', // 4
+  '#F9E27D', // 5
+  '#FCF2B7', // 6
+  '#F9E27D' // 7
+];
+
+const getNextSaturday = () => {
+  const now = new Date();
+  const day = now.getDay(); // 0 = Sun, 6 = Sat
+  const daysUntil = day === 6 ? 7 : 6 - day;
+  const next = new Date(now);
+  next.setDate(now.getDate() + daysUntil);
+  next.setHours(0, 0, 0, 0);
+  return next;
+};
+
+const SubscriptionChallenge = ({ item, comboItems }: { item?: any; comboItems?: any[] }) => {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, min: 0, sec: 0 });
+  const dispatch = useDispatch();
+
+  const handleOrderNow = () => {
+    const cartItem = item
+      ? {
+          id: item.id,
+          item_code: item.item_code,
+          name: item.name,
+          image: item.image,
+          price: item.price_inclusive_of_all_taxes ?? 99,
+          price_inclusive_of_all_taxes: item.price_inclusive_of_all_taxes ?? 99,
+          quantity: 1,
+          max_qty: item.max_qty ?? 10,
+          combo_items: comboItems ?? []
+        }
+      : {
+          id: 1,
+          item_code: 'SUBSCRIPTION_PLAN',
+          name: 'Subscription Plan',
+          image: '/assets/images/neworiginlogo.png',
+          price: 500,
+          quantity: 1,
+          max_qty: 10
+        };
+
+    dispatch(setSubscriptionItem(cartItem));
+    dispatch(setIsSubscriptionActive(true));
+    dispatch(setTabType(TabTypeConstant.CART));
+    dispatch(setIsSidebarOpen(true));
+  };
+
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date();
+      const diff = getNextSaturday().getTime() - now.getTime();
+      if (diff <= 0) {
+        setTimeLeft({ days: 0, hours: 0, min: 0, sec: 0 });
+        return;
+      }
+      setTimeLeft({
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        min: Math.floor((diff / (1000 * 60)) % 60),
+        sec: Math.floor((diff / 1000) % 60)
+      });
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const pad = (n: number) => String(n).padStart(2, '0');
+
+  // Use combo items from API; create placeholder slots if fewer than 7 or none
+  const items = comboItems && comboItems.length > 0 ? comboItems : [];
+  const slots = items.length > 0 ? items : Array(7).fill(null);
+
+  return (
+    <section className="bg-[#FFDD7E] py-0">
+      <div className="grid grid-cols-2 md:grid-cols-4">
+        {/* Sidebar */}
+        <div className="bg-[#FFDD7E] flex flex-col justify-start md:justify-between gap-10 md:gap-0 p-4 md:p-6 min-h-[210px] md:min-h-[400px]">
+          {/* Title */}
+          <p
+            className="font-[600] text-center mt-[2vw] md:text-left text-[6vw] md:text-[3vw] md:pl-[1vw] leading-[1.05] text-black uppercase"
+            style={{ fontFamily: 'Recoleta' }}
+          >
+            WHAT'S
+            <br />
+            INSIDE THE
+            <br />
+            CHALLENGE?
+          </p>
+
+          {/* Timer + Button */}
+          <div className="flex flex-col items-center md:items-stretch mt-auto md:mt-0">
+            <div className="bg-white rounded-[6px] p-2 md:p-2.5 mb-10 shadow-sm w-full max-w-[180px] md:max-w-none">
+              <span className="text-[0.45rem] md:text-[0.5rem] font-[700] opacity-40 block mb-1 md:mb-2 uppercase tracking-widest text-center">
+                NEXT DELIVERY IN
+              </span>
+              <div className="flex justify-around gap-1 md:gap-0">
+                {[
+                  [pad(timeLeft.days), 'Days'],
+                  [pad(timeLeft.hours), 'Hours'],
+                  [pad(timeLeft.min), 'Min'],
+                  [pad(timeLeft.sec), 'Sec']
+                ].map(([val, label]) => (
+                  <div key={label} className="text-center">
+                    <div className="text-[0.9rem] md:text-[1rem] font-[800] leading-none tabular-nums">{val}</div>
+                    <div className="text-[0.45rem] md:text-[0.5rem] uppercase opacity-50 mt-0.5">{label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <button
+              className="w-full max-w-[140px] md:max-w-none bg-black text-white py-2 md:py-4 rounded-[6px] md:rounded-[6px] font-[800] text-[0.75rem] md:text-[0.9rem] tracking-[0.05em] hover:bg-[#222] transition-colors uppercase"
+              onClick={handleOrderNow}
+            >
+              ORDER NOW
+            </button>
+          </div>
+        </div>
+
+        {/* Combo Item Cards */}
+        {slots.map((comboItem: any, index: number) => (
+          <div
+            key={comboItem ? comboItem.item_name : `placeholder-${index}`}
+            className="relative flex flex-col justify-end overflow-hidden min-h-[280px] md:min-h-[400px]"
+            style={{ backgroundColor: bgColors[index % bgColors.length] }}
+          >
+            {/* Item image — centered */}
+            <div className="absolute inset-0 bottom-[100px] md:bottom-[80px] flex items-center justify-center">
+              <div className="relative w-[70%] md:w-[65%] h-full">
+                {comboItem ? (
+                  <Image
+                    src={comboItem.image}
+                    alt={comboItem.item_name}
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 768px) 40vw, 20vw"
+                    unoptimized
+                  />
+                ) : (
+                  <Image
+                    src="/assets/images/subdragon.png"
+                    alt="Coming Soon"
+                    fill
+                    className="object-contain opacity-30"
+                    sizes="(max-width: 768px) 40vw, 20vw"
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* Bottom info strip */}
+            <div className="relative z-10 flex flex-col md:flex-row items-center md:justify-between px-4 pb-5 pt-3 bg-transparent text-center md:text-left">
+              <div className="mb-3 md:mb-0">
+                <div
+                  className="font-[800] text-[0.85rem] md:text-[0.95rem] uppercase leading-tight tracking-wide"
+                  style={{ fontFamily: 'SofiaPro' }}
+                >
+                  {comboItem ? comboItem.item_name : '—'}
+                </div>
+                <div className="text-[0.65rem] font-[500] md:text-[0.7rem] mt-0.5">
+                  {comboItem ? `${comboItem.uom}` : ''}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+export default SubscriptionChallenge;
