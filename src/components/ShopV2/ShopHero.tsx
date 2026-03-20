@@ -11,6 +11,9 @@ import HydroponicsBanner from '/public/assets/images/shop/HydroponicsBanner.png'
 import GourmetBanner from '/public/assets/images/shop/GourmetBanner.png';
 
 import vege from '/public/assets/images/shop/VeggiesBanner.png';
+
+import homepagebanner1 from '/public/assets/images/shop/homepagebanner1.webp';
+import homepagebannermob1 from '/public/assets/images/shop/homepagebannermob1.webp';
 // Map normalized keywords -> banner images
 const bannerMap: Record<string, any> = {
   'freshly-arrived': FreshlyArrivedBanner,
@@ -74,8 +77,8 @@ export const ShopHeroSingle = ({ bannerData }: { bannerData?: any }) => {
       ? bannerData
       : [
           {
-            website_image: 'https://cdn.originfresh.in/website-images/homepagebanner1.png',
-            website_mobile_view_image: 'https://cdn.originfresh.in/website-images/homepagebannermob1.png',
+            website_image: homepagebanner1,
+            website_mobile_view_image: homepagebannermob1,
             navigation: { to: '/shop' }
           }
         ];
@@ -83,9 +86,7 @@ export const ShopHeroSingle = ({ bannerData }: { bannerData?: any }) => {
   const slides = safeBannerData.map((item: any, index: number) => {
     const desktopImage = item?.website_desktop_view_image || item?.website_image;
     const mobileImage = item?.website_mobile_view_image;
-    const bannerSrc = isMobile
-      ? mobileImage || 'https://cdn.originfresh.in/website-images/homepagebannermob1.png'
-      : desktopImage || 'https://cdn.originfresh.in/website-images/homepagebanner1.png';
+    const bannerSrc = isMobile ? mobileImage || homepagebannermob1 : desktopImage || homepagebanner1;
     const navigationTo = item?.navigation?.to || '/shop';
     const handleNavigation = () => {
       router.push(navigationTo);

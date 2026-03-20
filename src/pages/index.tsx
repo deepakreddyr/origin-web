@@ -101,7 +101,7 @@ const Home = ({
 
   return (
     <div className="overflow-x-hidden max-w-full relative">
-      <Layout isHeaderSticky={true} mainMenuItems={mainMenuItems} footerData={footerData} transparentColor="black">
+      <Layout isHeaderSticky={true} mainMenuItems={mainMenuItems} footerData={footerData} transparentColor="white">
         <CustomHead
           title="Origin Fresh | Fresh Produce Delivered to Your Doorstep"
           description="Shop for the freshest organic fruits, vegetables, and exotic produce at Origin Fresh. Quality guaranteed, delivered straight to your home."

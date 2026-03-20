@@ -42,7 +42,7 @@ export default function Layout({
   search?: boolean;
   useTopPadding?: boolean;
   isHeader?: boolean;
-  transparentColor?: 'black';
+  transparentColor?: 'white' | 'black';
 }) {
   const router = useRouter();
   const dispatch = useDispatch();

@@ -28,7 +28,7 @@ type Props = {
   mainMenuItems: MainMenuType[];
   isHeaderSticky: any;
   search?: boolean;
-  transparentColor?: 'black'; // NEW PROP
+  transparentColor?: 'white' | 'black';
 };
 
 // HELPER FUNCTION: Calculate total cart line items from nested structure
@@ -109,9 +109,9 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
   const router = useRouter();
   const isMobile = useMediaQuery(600);
   const isShopPage = router.pathname === '/';
-  // Transparent header only on mobile, when not opaque, and on shop page or if transparentColor is provided
+  // Transparent header on mobile or when transparentColor is provided, if not opaque
   const isTransparentHeader = isMobile && !isOpaque && (isShopPage || !!transparentColor);
-  const isBlackMode = !!transparentColor;
+  const isBlackMode = transparentColor === 'black';
 
   // Helper function to get icon filter based on transparent color
   const getIconFilter = () => {
