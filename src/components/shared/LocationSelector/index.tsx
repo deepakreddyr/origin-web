@@ -270,12 +270,29 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({ open, onLocationSel
             sx={{ flex: 1, ml: 1, fontFamily: 'SofiaPro', fontSize: '14px' }}
             placeholder={!isGMapLoaded ? 'Loading Maps...' : 'Search for your location'}
             value={value}
-            onChange={(e) => setValue(e.target.value)}
+            onChange={(e) => {
+              setValue(e.target.value);
+              if (error) setError(null);
+            }}
             disabled={!isGMapLoaded}
+            inputProps={{ maxLength: 255 }}
           />
-          {/* {(loading || (!ready && value && isGMapLoaded)) && (
+          {value && (
+            <IconButton
+              size="small"
+              onClick={() => {
+                setValue('');
+                setError(null);
+                clearSuggestions();
+              }}
+              sx={{ p: '5px', mr: 0.5 }}
+            >
+              <CloseIcon sx={{ fontSize: '18px', color: '#231F20' }} />
+            </IconButton>
+          )}
+          {(loading || (!ready && value && isGMapLoaded)) && (
             <CircularProgress size={20} sx={{ mr: 1, color: '#fac510' }} />
-          )} */}
+          )}
         </Paper>
 
         {status === 'OK' && (
@@ -365,7 +382,14 @@ const LocationSelector: React.FC<LocationSelectorProps> = ({ open, onLocationSel
           <Typography
             color="textSecondary"
             variant="caption"
-            sx={{ display: 'block', mb: 2, textAlign: 'center', fontFamily: 'SofiaPro' }}
+            sx={{
+              display: 'block',
+              mb: 2,
+              textAlign: 'center',
+              fontFamily: 'SofiaPro',
+              wordBreak: 'break-all',
+              px: 2
+            }}
           >
             No results found for "{value}".
           </Typography>
