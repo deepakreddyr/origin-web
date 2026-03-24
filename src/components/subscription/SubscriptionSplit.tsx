@@ -20,7 +20,7 @@ const SubscriptionSplit = ({ comboItems }: { comboItems?: any[] }) => {
       </div>
 
       {/* Left: Brown Section */}
-      <div className="bg-[#CE6B34] text-white pl-6 pr-10 pt-14 pb-20 md:px-10 md:py-20 w-full md:w-1/2 flex flex-col justify-start relative overflow-hidden min-h-[380px] md:min-h-0">
+      <div className="bg-[#CE6B34] text-white pl-6 pr-10 pt-14 pb-20 md:px-10 md:py-20 w-full md:w-1/2 flex flex-col justify-start relative overflow-hidden min-h-[380px] tabp:min-h-[650px] md:min-h-0">
         <p className="font-[Recoleta] font-semibold md:pl-[2vw] text-[6vw] md:text-[3vw] leading-[1.1] uppercase max-w-[300px] relative z-20">
           4 O'CLOCK <br /> HUNGER <br /> HITS HARD.
         </p>

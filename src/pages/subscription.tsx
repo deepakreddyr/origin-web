@@ -21,6 +21,7 @@ interface SubscriptionPageProps {
 const SubscriptionPage = ({ mainMenuItems, footerData }: SubscriptionPageProps) => {
   const [subscriptionItem, setSubscriptionItem] = useState<any>(null);
   const [comboItems, setComboItems] = useState<any[]>([]);
+  const [maxQty, setMaxQty] = useState<number>(10);
   const getDataFromApi = useGetDataFromApi();
 
   useEffect(() => {
@@ -34,6 +35,7 @@ const SubscriptionPage = ({ mainMenuItems, footerData }: SubscriptionPageProps) 
       (data: any) => {
         setSubscriptionItem(data?.data?.item || null);
         setComboItems(data?.data?.combo_items || []);
+        setMaxQty(data?.max_qty || 10);
       },
       (error: any) => {
         console.error('Failed to fetch subscription items:', error);
@@ -50,13 +52,13 @@ const SubscriptionPage = ({ mainMenuItems, footerData }: SubscriptionPageProps) 
       />
 
       <main className="bg-[#FAF7F0] min-h-screen pt-[64px] md:pt-[72px]">
-        <SubscriptionHeader item={subscriptionItem} />
+        <SubscriptionHeader item={subscriptionItem} maxQty={maxQty} />
         <SubscriptionHero />
         <SubscriptionSplit />
-        <SubscriptionChallenge item={subscriptionItem} comboItems={comboItems} />
+        <SubscriptionChallenge item={subscriptionItem} comboItems={comboItems} maxQty={maxQty} />
         <SubscriptionHowItWorks />
         <SubscriptionTestimonials />
-        <SubscriptionCta item={subscriptionItem} />
+        <SubscriptionCta item={subscriptionItem} maxQty={maxQty} />
       </main>
     </Layout>
   );

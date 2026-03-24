@@ -53,9 +53,18 @@ export const subscriptionCartSlice = createSlice({
     },
     updateSubscriptionQuantity: (state, action: PayloadAction<number>) => {
       if (state.item) {
-        state.item.quantity = action.payload;
-        state.totalQuantity = action.payload;
-        state.totalPrice = state.item.price * action.payload;
+        // Enforce max_qty if it exists
+        const newQuantity = action.payload;
+        if (state.item.max_qty && newQuantity > state.item.max_qty) {
+          // If exceeding max_qty, cap it at max_qty
+          state.item.quantity = state.item.max_qty;
+          state.totalQuantity = state.item.max_qty;
+          state.totalPrice = state.item.price * state.item.max_qty;
+        } else {
+          state.item.quantity = newQuantity;
+          state.totalQuantity = newQuantity;
+          state.totalPrice = state.item.price * newQuantity;
+        }
       }
     }
   }
