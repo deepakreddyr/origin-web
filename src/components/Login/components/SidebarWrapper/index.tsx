@@ -174,7 +174,7 @@ const SidebarWrapper = (props: Props) => {
 
             {/* Center Section: Title */}
             <div className="flex-grow flex justify-start">
-              <h1 className="text-[1.67vw] mob:text-[5vw] mt-[7px] font-bold text-center">{headerTitle}</h1>
+              <h1 className="text-[1.67vw] mob:text-[5vw] font-bold text-center">{headerTitle}</h1>
             </div>
 
             {/* Right Section: Close Button */}

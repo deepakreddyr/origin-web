@@ -25,7 +25,7 @@ const getNextSaturday = () => {
   return next;
 };
 
-const SubscriptionChallenge = ({ item, comboItems }: { item?: any; comboItems?: any[] }) => {
+const SubscriptionChallenge = ({ item, comboItems, maxQty }: { item?: any; comboItems?: any[]; maxQty: number }) => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, min: 0, sec: 0 });
   const dispatch = useDispatch();
 
@@ -39,7 +39,7 @@ const SubscriptionChallenge = ({ item, comboItems }: { item?: any; comboItems?: 
           price: item.price_inclusive_of_all_taxes ?? 99,
           price_inclusive_of_all_taxes: item.price_inclusive_of_all_taxes ?? 99,
           quantity: 1,
-          max_qty: item.max_qty ?? 10,
+          max_qty: item.max_qty ?? maxQty,
           combo_items: comboItems ?? []
         }
       : {

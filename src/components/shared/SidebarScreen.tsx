@@ -90,24 +90,24 @@ const SidebarScreen = () => {
       // case TabTypeConstant.ADDRESS_LIST:
       //   dispatch(setTabType(TabTypeConstant.ACCOUNT_MAIN));
 
-      case TabTypeConstant.CART:
-        if (cart.cartTabType === TabTypeConstant.COUPON_CODE_LIST) {
-          dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
-          dispatch(resetCouponDetails());
-          break;
-        }
-        if (
-          cart.cartTabType === TabTypeConstant.CART_ADDRESS_LIST ||
-          cart.cartTabType === TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR
-        ) {
-          dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
-          break;
-        }
-        break;
-
       case TabTypeConstant.PAYMENT:
         dispatch(setTabType(TabTypeConstant.CART));
         dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
+        break;
+
+      case TabTypeConstant.CART:
+        if (
+          cart.cartTabType === TabTypeConstant.COUPON_CODE_LIST ||
+          cart.cartTabType === TabTypeConstant.CART_ADDRESS_LIST ||
+          cart.cartTabType === TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR ||
+          cart.cartTabType === TabTypeConstant.PAYMENT
+        ) {
+          if (cart.cartTabType === TabTypeConstant.COUPON_CODE_LIST) {
+            dispatch(resetCouponDetails());
+          }
+          dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
+          break;
+        }
         break;
 
       case TabTypeConstant.REFUND_LIST:
@@ -128,10 +128,11 @@ const SidebarScreen = () => {
         return false;
 
       case TabTypeConstant.CART:
-        if (cart.cartTabType === TabTypeConstant.COUPON_CODE_LIST) return true;
         if (
+          cart.cartTabType === TabTypeConstant.COUPON_CODE_LIST ||
           cart.cartTabType === TabTypeConstant.CART_ADDRESS_LIST ||
-          cart.cartTabType === TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR
+          cart.cartTabType === TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR ||
+          cart.cartTabType === TabTypeConstant.PAYMENT
         )
           return true;
         if (cart.cartTabType === TabTypeConstant.CART_MAIN) return false;
