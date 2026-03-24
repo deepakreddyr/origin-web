@@ -35,23 +35,23 @@ const SubscriptionSplit = ({ comboItems }: { comboItems?: any[] }) => {
       <div className="bg-[#F9DB87] w-full md:w-1/2 flex flex-col justify-center relative">
         <div className="border-[22px] mob:border-[10px] border-white p-8 md:p-20 h-full flex flex-col justify-center items-center">
           <div className="max-w-[700px] relative z-20 ml-0 md:ml-[9vw] text-center md:text-left">
-            <p className="text-black mb-4 font-normal mob:font-medium text-[4.5vw] md:text-[1.67vw] leading-[1.4]">
+            <p className="text-black mb-4 font-[500] mob:font-medium text-[4.5vw] md:text-[1.67vw] leading-[1.4]">
               You reach for a pack of chips, <br />
               a samosa with your tea or <br />
               good ol' fashioned street treats.
             </p>
 
-            <p className="text-black mb-4 font-normal mob:font-medium text-[4.5vw] md:text-[1.67vw] leading-[1.4]">
+            <p className="text-black mb-4 font-[500] mob:font-medium text-[4.5vw] md:text-[1.67vw] leading-[1.4]">
               But that changes, <br />
               as soon as you accept this challenge.
             </p>
 
-            <p className="text-black mb-4 font-normal mob:font-medium text-[4.5vw] md:text-[1.67vw] leading-[1.4]">
+            <p className="text-black mb-4 font-[500] mob:font-medium text-[4.5vw] md:text-[1.67vw] leading-[1.4]">
               You get 7 fruits, one for <br />
               each day of the week.
             </p>
 
-            <p className="text-black mb-8 font-normal mob:font-medium text-[4.5vw] md:text-[1.67vw] leading-[1.4]">
+            <p className="text-black mb-8 font-[500] mob:font-medium text-[4.5vw] md:text-[1.67vw] leading-[1.4]">
               Can you make it through the week <br />
               without caving into cravings?
             </p>
