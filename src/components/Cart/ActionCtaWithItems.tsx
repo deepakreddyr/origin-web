@@ -41,42 +41,51 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
       cartItemsFromLS = lsData ? JSON.parse(lsData) : [];
     }
 
-    const disabled =
-      cartItemsFromLS.some((item: any) => {
-        if (item.is_uom_available === false) return true;
-        if (
-          item.multiple_uoms?.some(
-            (uom: any) =>
-              uom.is_uom_available === false ||
-              uom.is_available === false ||
-              (uom.maximum_quantity > 0 && uom.cart_quantity > uom.maximum_quantity)
+    let disabled = false;
+
+    if (isSubscription) {
+      if (subscriptionCart?.item) {
+        const item = subscriptionCart.item;
+        if (item.quantity > item.max_qty) {
+          disabled = true;
+        }
+      }
+    } else {
+      disabled =
+        cartItemsFromLS.some((item: any) => {
+          if (item.is_uom_available === false) return true;
+          if (
+            item.multiple_uoms?.some(
+              (uom: any) =>
+                uom.is_uom_available === false ||
+                uom.is_available === false ||
+                (uom.maximum_quantity > 0 && uom.cart_quantity > uom.maximum_quantity)
+            )
           )
-        )
-          return true;
-        return false;
-      }) ||
-      cart?.items?.some((item: any) => {
-        if (item.is_uom_available === false) return true;
-        if (
-          item.multiple_uoms?.some(
-            (uom: any) =>
-              uom.is_uom_available === false ||
-              uom.is_available === false ||
-              (uom.maximum_quantity > 0 && uom.cart_quantity > uom.maximum_quantity)
+            return true;
+          return false;
+        }) ||
+        cart?.items?.some((item: any) => {
+          if (item.is_uom_available === false) return true;
+          if (
+            item.multiple_uoms?.some(
+              (uom: any) =>
+                uom.is_uom_available === false ||
+                uom.is_available === false ||
+                (uom.maximum_quantity > 0 && uom.cart_quantity > uom.maximum_quantity)
+            )
           )
-        )
-          return true;
-        return false;
-      });
+            return true;
+          return false;
+        });
+    }
 
     setShouldDisable(disabled);
-  }, [cart]);
+  }, [cart, isSubscription, subscriptionCart]);
 
   useEffect(() => {
-    if (!isSubscription) {
-      recalcDisableState();
-    }
-  }, [cart, recalcDisableState, isSubscription]);
+    recalcDisableState();
+  }, [cart, subscriptionCart, recalcDisableState, isSubscription]);
 
   // Listen to custom event triggered after removal
   useEffect(() => {

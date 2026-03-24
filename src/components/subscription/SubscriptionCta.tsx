@@ -4,7 +4,7 @@ import { setSubscriptionItem, setIsSubscriptionActive } from '@/store/slice/Subs
 import { setIsSidebarOpen, setTabType } from '@/store/slice/loginSlice';
 import { TabTypeConstant } from '../Login/constants/tabTypeContent';
 
-const SubscriptionCta = ({ item }: { item?: any }) => {
+const SubscriptionCta = ({ item, maxQty }: { item?: any; maxQty: number }) => {
   const dispatch = useDispatch();
 
   const handleOrderNow = () => {
@@ -17,7 +17,7 @@ const SubscriptionCta = ({ item }: { item?: any }) => {
           price: item.price_inclusive_of_all_taxes ?? 99,
           price_inclusive_of_all_taxes: item.price_inclusive_of_all_taxes ?? 99,
           quantity: 1,
-          max_qty: item.max_qty ?? 10,
+          max_qty: item.max_qty ?? maxQty,
           combo_items: item.combo_items ?? []
         }
       : {

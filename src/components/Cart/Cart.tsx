@@ -337,7 +337,11 @@ const Cart = () => {
         <ActionCtaWithItems
           btnName={loginDetails.user ? 'PROCEED' : 'LOGIN'}
           handler={proceedButtonHandler}
-          isDisabled={isSubscription ? false : !cart.isProceedBtnEnabled}
+          isDisabled={
+            isSubscription
+              ? subscriptionCart.item?.quantity > subscriptionCart.item?.max_qty
+              : !cart.isProceedBtnEnabled
+          }
           orderRestrictionData={orderRestrictionData}
           showAddressModal={showAddressModal}
           isSubscription={isSubscription}
