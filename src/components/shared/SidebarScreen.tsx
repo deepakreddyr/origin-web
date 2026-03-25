@@ -50,7 +50,7 @@ const SidebarScreen = () => {
         dispatch(setTabType(TabTypeConstant.ACCOUNT_MAIN));
         break;
       case TabTypeConstant.REGISTER: {
-        dispatch(setTabType(TabTypeConstant.ENTER_OTP));
+        dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
         break;
       }
 
@@ -102,15 +102,16 @@ const SidebarScreen = () => {
         break;
 
       case TabTypeConstant.CART:
-        if (
-          cart.cartTabType === TabTypeConstant.COUPON_CODE_LIST ||
-          cart.cartTabType === TabTypeConstant.CART_ADDRESS_LIST ||
-          cart.cartTabType === TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR ||
-          cart.cartTabType === TabTypeConstant.PAYMENT
-        ) {
-          if (cart.cartTabType === TabTypeConstant.COUPON_CODE_LIST) {
-            dispatch(resetCouponDetails());
-          }
+        if (cart.cartTabType === TabTypeConstant.COUPON_CODE_LIST) {
+          dispatch(resetCouponDetails());
+          dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
+          break;
+        }
+        if (cart.cartTabType === TabTypeConstant.CART_ADDRESS_LIST || cart.cartTabType === TabTypeConstant.PAYMENT) {
+          dispatch(setCartTabType(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR));
+          break;
+        }
+        if (cart.cartTabType === TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR) {
           dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
           break;
         }
