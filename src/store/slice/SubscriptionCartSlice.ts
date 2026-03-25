@@ -9,13 +9,17 @@ interface ComboItem {
 
 interface SubscriptionItem {
   id: number;
+  variant_id: number | string;
+  uom_id: number | string;
   item_code: string;
   name: string;
   image: string;
   price: number;
   price_inclusive_of_all_taxes?: number;
   quantity: number;
+  minimum_quantity: number;
   max_qty: number;
+  stepper_quantity: number;
   combo_items?: ComboItem[];
 }
 

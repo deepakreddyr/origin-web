@@ -26,17 +26,25 @@ const PaymentFailure = (props: any) => {
     setPaymentFlow(localStorage.getItem('FLOW_TYPE'));
   }, []);
   // console.log(paymentFlow);
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     localStorage.removeItem('FLOW_TYPE');
-  //     dispatch(setTabType(TabTypeConstant.CART));
-  //     dispatch(setCartTabType(TabTypeConstant.PAYMENT));
-  //     dispatch(setIsSidebarOpen(false));
-  //   }, 4000);
+  const handleContinue = () => {
+    const orderId = paymentModalDetails?.orderResponse?.order_id;
+    if (orderId) {
+      router.push(`/orders/${orderId}`);
+    } else {
+      router.push('/orders');
+    }
+    dispatch(setIsSidebarOpen(false));
+    dispatch(resetOrderDetails());
+    dispatch(clearCart());
+  };
 
-  //   // Cleanup the timer in case the component unmounts before 4 seconds
-  //   return () => clearTimeout(timer);
-  // }, []);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      handleContinue();
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const payOnCodHandler = () => {
     let additionalHeaders = {};
@@ -91,10 +99,8 @@ const PaymentFailure = (props: any) => {
   const showFailedOrder = () => {
     return (
       <>
-        <div onClick={() => setActiveScreenIndex(2)} className="absolute top-[1.4vw] right-[1.4vw]">
-          <button className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-danger font-semibold ">
-            CANCEL ORDER
-          </button>
+        <div onClick={handleContinue} className="absolute top-[1.4vw] right-[1.4vw]">
+          <button className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-black font-semibold ">CONTINUE</button>
         </div>
         <div className="w-[10vw] mob:w-[30vw]">
           <Lottie animationData={failureAnimation} />

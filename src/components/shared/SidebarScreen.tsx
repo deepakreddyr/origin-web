@@ -59,12 +59,18 @@ const SidebarScreen = () => {
           activeScreen === TabTypeConstant.SERVICEABILITY ||
           activeScreen === TabTypeConstant.MANUAL_ADDRESS ||
           activeScreen === TabTypeConstant.COMPLETE_ADDRESS ||
-          activeScreen === TabTypeConstant.NO_DATA
+          activeScreen === TabTypeConstant.NO_DATA ||
+          activeScreen === TabTypeConstant.ADDRESS_LIST
         ) {
           if (address.address && address.address.length > 0) {
             setActiveScreen(TabTypeConstant.ADDRESS_LIST);
-            return;
+            // return;
           }
+        }
+
+        if (loginDetails.isFreshLogin) {
+          dispatch(setTabType(TabTypeConstant.REGISTER));
+          return;
         }
 
         if (parsedTabSource === TabTypeConstant.CART) {
@@ -124,8 +130,9 @@ const SidebarScreen = () => {
   const isBackButtonEnable = useMemo(() => {
     switch (loginDetails.tabType) {
       case TabTypeConstant.ENTER_MOBILE_NUMBER:
-      case TabTypeConstant.REGISTER:
         return false;
+      case TabTypeConstant.REGISTER:
+        return true;
 
       case TabTypeConstant.CART:
         if (

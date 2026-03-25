@@ -64,11 +64,10 @@ const SidebarWrapper = (props: Props) => {
 
   const handleCloseAttempt = () => {
     // Check if closing should be blocked
-    const isRegistering = loginDetails.tabType === TabTypeConstant.REGISTER;
-    const isManagingAddress = loginDetails.tabType === TabTypeConstant.MANAGE_ADDRESS;
-    const hasNoAddress = !address.address || address.address.length === 0;
+    const hasDefaultAddress = address.defaultAddress !== null;
+    const isMandatory = loginDetails.isFreshLogin && !hasDefaultAddress;
 
-    if (isRegistering || (isManagingAddress && hasNoAddress)) {
+    if (isMandatory) {
       setShowToast(true);
       return;
     }
@@ -86,40 +85,7 @@ const SidebarWrapper = (props: Props) => {
   };
 
   const handleBackAttempt = () => {
-    // Check if going back should be blocked (same logic usually, or if back takes them out of the mandatory flow)
-    // If back button just goes to previous sidebar state, we might allow it?
-    // But if back button closes sidebar (which it acts as in some contexts if no history), we should block.
-    // For now, let's block strict exit.
-    // BUT: The prop `onClickBackButton` is passed from parent. We can't easily intercept what it does unless we know what it does.
-    // However, `SidebarWrapper` title/header implies this back button often navigates WITHIN sidebar.
-    // Restriction: "Enter details to proceed". If they are on Register, they shouldn't go back to Login (OTP) if they already did OTP?
-    // Actually, if they are on Register, Back might take them to OTP (re-enter number). That seems okay?
-    // The request says "close the view". Back usually navigates back.
-    // If Back closes the sidebar, we block.
-    // Let's assume Back is navigation and might be safe, BUT the user said "close the tab with x or back button".
-    // If `onClickBackButton` closes, we must block.
-    // We can wrap it.
-
-    const isRegistering = loginDetails.tabType === TabTypeConstant.REGISTER;
-    const isManagingAddress = loginDetails.tabType === TabTypeConstant.MANAGE_ADDRESS;
-    const hasNoAddress = !address.address || address.address.length === 0;
-
-    // If strictly blocking exit:
-    if (isRegistering || (isManagingAddress && hasNoAddress)) {
-      // If back button is enabled, it usually means there is a previous screen.
-      // If we are enforcing "Must finish registration", maybe we shouldn't allow going back to OTP?
-      // Or if "Manage Address", going back might imply going to Account menu?
-      // The user wants to avoid "avoiding the address selection process".
-      // If Back takes them deeper into flow (e.g. Add Address -> Manage Address), it's fine.
-      // But if Back takes them OUT (e.g. Manage Address -> Sidebar Close / Account), we might care.
-      // Given the prompt: "close the tab with x or back button... avoiding address selection",
-      // it seems "Manage Address" is the root of this mandatory flow.
-      // If they are on "Manage Address" (root of this flow), Back might not even be enabled?
-      // If it IS enabled, we block it just in case.
-      setShowToast(true);
-      return;
-    }
-
+    // We allow the back button as requested, it only navigates within the sidebar/backwards
     onClickBackButton();
   };
 
@@ -179,14 +145,16 @@ const SidebarWrapper = (props: Props) => {
 
             {/* Right Section: Close Button */}
             <div className="flex-shrink-0 w-[3vw] mob:w-[10vw] flex justify-end">
-              <button
-                onClick={handleCloseAttempt}
-                className="w-[2.5vw] h-[2.5vw] mob:w-[8vw] mob:h-[8vw] rounded-full flex items-center justify-center hover:bg-gray-100 active:bg-gray-100 transition-colors duration-200"
-              >
-                <div className="w-[1.2vw] h-[1.2vw] mob:w-[6vw] mob:h-[6vw] relative">
-                  <Image src={Cross} alt="close" fill className="object-contain" />
-                </div>
-              </button>
+              {!(loginDetails.isFreshLogin && address.defaultAddress === null) && (
+                <button
+                  onClick={handleCloseAttempt}
+                  className="w-[2.5vw] h-[2.5vw] mob:w-[8vw] mob:h-[8vw] rounded-full flex items-center justify-center hover:bg-gray-100 active:bg-gray-100 transition-colors duration-200"
+                >
+                  <div className="w-[1.2vw] h-[1.2vw] mob:w-[6vw] mob:h-[6vw] relative">
+                    <Image src={Cross} alt="close" fill className="object-contain" />
+                  </div>
+                </button>
+              )}
             </div>
           </div>
         )}

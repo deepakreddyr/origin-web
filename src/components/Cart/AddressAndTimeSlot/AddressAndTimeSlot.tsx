@@ -77,12 +77,12 @@ const AddressAndTimeSlot = (props: any) => {
       className={`fixed bottom-0 h-full mob:left-0 left-[70vw] z-[2] inset-0 mob:w-screen w-[30vw] flex items-end justify-end bg-black bg-opacity-50`}
     >
       <div
-        className={`bg-white w-full min-h-[40vh] mob:min-h-[40vh] mob:max-h-[75vh] max-h-screen pb-[7vw] mob:pb-[20vw] mob:rounded-t-[8vw] rounded-t-[1.67vw] relative transform ${
+        className={`bg-white w-full min-h-[40vh] mob:min-h-[40vh] mob:max-h-[75vh] max-h-screen mob:rounded-t-[8vw] rounded-t-[1.67vw] relative transform ${
           delayedModal ? 'translate-y-0' : 'translate-y-full'
         } transition-all duration-500 ease-in-out flex flex-col`}
       >
         <ModalHeader setAddressModal={setAddressModal} setTimeSelectorOrListTab={setTimeSelectorOrListTab} />
-        <div className="flex-1 overflow-y-auto">{SCREEN_MAP[activeModalTab]}</div>
+        <div className="flex-1 overflow-hidden">{SCREEN_MAP[activeModalTab]}</div>
       </div>
     </div>
   );

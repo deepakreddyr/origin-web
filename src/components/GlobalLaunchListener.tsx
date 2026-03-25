@@ -6,35 +6,62 @@ import { mainApiUrl } from '@/url';
 import { handleLaunchResponse } from '@/utilities/launchHelper';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { profileAtom } from '@/features/AccountPage/context/atoms';
+import { setIsSubscriptionActive, setSubscriptionItem } from '@/store/slice/SubscriptionCartSlice';
+import { setIsSidebarOpen, setTabType } from '@/store/slice/loginSlice';
+import { setCartTabType } from '@/store/slice/CartSlice';
+import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 
 const GlobalLaunchListener = () => {
-    const dispatch = useDispatch();
-    const [, setAddress] = useAtom(addressAtom);
-    const [, setProfile] = useAtom(profileAtom);
+  const dispatch = useDispatch();
+  const [, setAddress] = useAtom(addressAtom);
+  const [, setProfile] = useAtom(profileAtom);
 
-    useEffect(() => {
-        const token = localStorage.getItem('user_token');
+  // Restore subscription state after login/reload
+  useEffect(() => {
+    const isSubscriptionPending = localStorage.getItem('SUBSCRIPTION_LOGIN_PENDING');
+    const pendingItem = localStorage.getItem('PENDING_SUBSCRIPTION_ITEM');
 
-        if (token) {
-            const fetchLaunch = async () => {
-                try {
-                    const authHeader = header();
-                    if (!authHeader) return; // Should match token check
+    if (isSubscriptionPending === 'true' && pendingItem) {
+      try {
+        const item = JSON.parse(pendingItem);
+        dispatch(setSubscriptionItem(item));
+        dispatch(setIsSubscriptionActive(true));
+        dispatch(setIsSidebarOpen(true));
+        dispatch(setTabType(TabTypeConstant.CART));
+        dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
 
-                    const response: any = await request(mainApiUrl.launch, {
-                        method: 'GET',
-                        headers: { Authorization: authHeader }
-                    });
-                    handleLaunchResponse(response, dispatch, setAddress, setProfile, token, false);
-                } catch (e) {
-                    console.error("Launch API failed", e);
-                }
-            }
-            fetchLaunch();
+        // Clean up
+        localStorage.removeItem('SUBSCRIPTION_LOGIN_PENDING');
+        localStorage.removeItem('PENDING_SUBSCRIPTION_ITEM');
+      } catch (error) {
+        console.error('Failed to restore subscription cart', error);
+      }
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('user_token');
+
+    if (token) {
+      const fetchLaunch = async () => {
+        try {
+          const authHeader = header();
+          if (!authHeader) return; // Should match token check
+
+          const response: any = await request(mainApiUrl.launch, {
+            method: 'GET',
+            headers: { Authorization: authHeader }
+          });
+          handleLaunchResponse(response, dispatch, setAddress, setProfile, token, false);
+        } catch (e) {
+          console.error('Launch API failed', e);
         }
-    }, []); // Run once on mount
+      };
+      fetchLaunch();
+    }
+  }, []); // Run once on mount
 
-    return null;
-}
+  return null;
+};
 
 export default GlobalLaunchListener;

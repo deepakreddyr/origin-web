@@ -31,10 +31,13 @@ const ReviewList = ({ onShowMaxQuantityToast }: { onShowMaxQuantityToast: (maxQt
               key={`${subscriptionCart.item.id}-subscription`}
               product={subscriptionCart.item}
               uom={{
-                variant_id: subscriptionCart.item.id,
+                variant_id: subscriptionCart.item.variant_id,
+                uom_id: subscriptionCart.item.uom_id,
                 cart_quantity: subscriptionCart.item.quantity,
                 price: subscriptionCart.item.price,
                 maximum_quantity: subscriptionCart.item.max_qty,
+                minimum_quantity: subscriptionCart.item.minimum_quantity,
+                stepper_quantity: subscriptionCart.item.stepper_quantity,
                 unit: 'Order'
               }}
               ripenessType={null}

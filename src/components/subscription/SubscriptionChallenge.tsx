@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { setSubscriptionItem, setIsSubscriptionActive } from '@/store/slice/SubscriptionCartSlice';
 import { setIsSidebarOpen, setTabType } from '@/store/slice/loginSlice';
 import { TabTypeConstant } from '../Login/constants/tabTypeContent';
+import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 
 const bgColors = [
   '#FCF2B7', // 1
@@ -14,6 +15,18 @@ const bgColors = [
   '#FCF2B7', // 6
   '#F9E27D' // 7
 ];
+
+const bgColorsMobile = [
+  '#FCF2B7', // Monday
+  '#F9883E', // Tuesday
+  '#F9E27D', // Wednesday
+  '#FCF2B7', // Thursday
+  '#F9883E', // Friday
+  '#F9E27D', // Saturday
+  '#FCF2B7' // Sunday
+];
+
+const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 const getNextSaturday = () => {
   const now = new Date();
@@ -28,28 +41,40 @@ const getNextSaturday = () => {
 const SubscriptionChallenge = ({ item, comboItems, maxQty }: { item?: any; comboItems?: any[]; maxQty: number }) => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, min: 0, sec: 0 });
   const dispatch = useDispatch();
+  const isMobile = useMediaQuery(768);
+
+  const colors = isMobile ? bgColorsMobile : bgColors;
 
   const handleOrderNow = () => {
+    const itemPrice = item?.price_inclusive_of_all_taxes ?? item?.multiple_uoms?.[0]?.price ?? 89;
     const cartItem = item
       ? {
           id: item.id,
           item_code: item.item_code,
+          variant_id: item?.multiple_uoms?.[0]?.variant_id || '',
+          uom_id: item?.multiple_uoms?.[0]?.uom_id || '',
           name: item.name,
           image: item.image,
-          price: item.price_inclusive_of_all_taxes ?? 99,
-          price_inclusive_of_all_taxes: item.price_inclusive_of_all_taxes ?? 99,
-          quantity: 1,
-          max_qty: item.max_qty ?? maxQty,
+          price: itemPrice,
+          price_inclusive_of_all_taxes: itemPrice,
+          quantity: item?.multiple_uoms?.[0]?.minimum_quantity || 1,
+          minimum_quantity: item?.multiple_uoms?.[0]?.minimum_quantity || 1,
+          max_qty: item?.multiple_uoms?.[0]?.maximum_quantity || item.max_qty || 10,
+          stepper_quantity: item?.multiple_uoms?.[0]?.stepper_quantity || 1,
           combo_items: comboItems ?? []
         }
       : {
           id: 1,
+          variant_id: 1,
+          uom_id: 1,
           item_code: 'SUBSCRIPTION_PLAN',
           name: 'Subscription Plan',
           image: '/assets/images/neworiginlogo.png',
-          price: 500,
+          price: 89,
           quantity: 1,
-          max_qty: 10
+          minimum_quantity: 1,
+          max_qty: 10,
+          stepper_quantity: 2
         };
 
     dispatch(setSubscriptionItem(cartItem));
@@ -122,7 +147,7 @@ const SubscriptionChallenge = ({ item, comboItems, maxQty }: { item?: any; combo
               </div>
             </div>
             <button
-              className="w-full max-w-[140px] md:max-w-none bg-black text-white py-2 md:py-4 rounded-[6px] md:rounded-[6px] font-[800] text-[0.75rem] md:text-[0.9rem] tracking-[0.05em] hover:bg-[#222] transition-colors uppercase"
+              className="w-full max-w-[140px] md:max-w-none bg-black text-[#FFDD7E] py-2 md:py-4 rounded-[6px] md:rounded-[6px] font-[800] text-[0.75rem] md:text-[0.9rem] tracking-[0.05em] hover:bg-[#222] transition-colors uppercase"
               onClick={handleOrderNow}
             >
               ORDER NOW
@@ -135,7 +160,7 @@ const SubscriptionChallenge = ({ item, comboItems, maxQty }: { item?: any; combo
           <div
             key={comboItem ? comboItem.item_name : `placeholder-${index}`}
             className="relative flex flex-col justify-end overflow-hidden min-h-[280px] md:min-h-[400px]"
-            style={{ backgroundColor: bgColors[index % bgColors.length] }}
+            style={{ backgroundColor: colors[index % colors.length] }}
           >
             {/* Item image — centered */}
             <div className="absolute inset-0 bottom-[100px] md:bottom-[80px] flex items-center justify-center">
@@ -162,7 +187,7 @@ const SubscriptionChallenge = ({ item, comboItems, maxQty }: { item?: any; combo
             </div>
 
             {/* Bottom info strip */}
-            <div className="relative z-10 flex flex-col md:flex-row items-center md:justify-between px-4 pb-5 pt-3 bg-transparent text-center md:text-left">
+            <div className="relative z-10 flex flex-col md:flex-row items-center md:justify-between px-4 pb-9 bg-transparent text-center md:text-left">
               <div className="mb-3 md:mb-0">
                 <div
                   className="font-[800] text-[0.85rem] md:text-[0.95rem] uppercase leading-tight tracking-wide"
@@ -173,6 +198,11 @@ const SubscriptionChallenge = ({ item, comboItems, maxQty }: { item?: any; combo
                 <div className="text-[0.65rem] font-[500] md:text-[0.7rem] mt-0.5">
                   {comboItem ? `${comboItem.uom}` : ''}
                 </div>
+              </div>
+
+              {/* Day Label Bubble */}
+              <div className="bg-black font-[SofiaPro] text-white px-6 py-1.5 md:px-5 md:py-1 rounded-[6px] text-[3vw] md:text-[0.75rem] font-[700] tracking-wider">
+                {DAYS[index]}
               </div>
             </div>
           </div>
