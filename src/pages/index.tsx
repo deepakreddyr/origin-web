@@ -174,7 +174,8 @@ const Home = ({
               // buttonText="Know more"
               buttonVariant="tertiary"
               rootClass="bg-[#fff8d5] items-center !p-6 md:!p-8 lg:!p-12"
-              titleContainerClass="!py-0 md:!py-0"
+              titleClass="!mb-8 md:!mb-10"
+              titleContainerClass="!pt-12 md:!py-10"
             />
           </Container>
         </ScrollReveal>

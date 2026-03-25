@@ -46,14 +46,15 @@ const JoinCultSection = () => {
     <section ref={sectionRef} className="w-full py-16 mob:py-10">
       <div className="w-[92vw] md:w-[80vw] mx-auto flex flex-col-reverse md:grid md:grid-cols-[minmax(0,38%)_1fr] lg:grid-cols-[minmax(0,45%)_minmax(0,55%)] gap-10 md:gap-8 lg:gap-12 items-stretch">
         {/* ── Left: text (Now bottom on mobile) ── */}
-        <div className="flex flex-col justify-center gap-6 mob:gap-5 min-w-0 overflow-hidden">
-          <h2 className="font-[Recoleta] font-bold leading-tight min-w-0">
-            <span className="text-[#619269] block mob:text-[11vw] text-3xl md:text-4xl lg:text-5xl">Join</span>
+        <div className="flex flex-col justify-center gap-6 mob:gap-5 min-w-0 overflow-hidden mob:pt-[10px]">
+          <h2 className="font-[Recoleta] font-bold leading-2 mob:leading-5 min-w-0">
+            <span className="text-[#619269] block mob:text-[11vw] text-3xl md:text-4xl lg:text-5xl mb-2">Join</span>
+
             <span className="text-black mob:text-[10vw] block text-3xl md:text-4xl lg:text-5xl">The Cult Of Fresh</span>
           </h2>
 
           <div className="flex flex-col gap-3 w-full">
-            <p className="text-black text-xl font-semibold leading-[1.3]">
+            <p className="text-black text-xl font-medium leading-[1.3] font-[SofiaPro]">
               Nature takes time. It refuses to be hurried. <br className="mob:hidden" /> It carefully crafts every
               single fruit and vegetable that you find here. This patience is what we worship, and that's what we share
               with the world.
