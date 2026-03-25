@@ -23,7 +23,7 @@ const AdressAndTimeSelector = (props: any) => {
   return (
     <div className="flex flex-col h-full">
       {/* Drag Handle for Mobile */}
-      <div className="p-[1.389vw] mob:p-[5vw]">
+      <div className="p-[1.389vw] mob:p-[5vw] pb-[8vw] mob:pb-[25vw] flex-1 overflow-y-auto">
         <div className="flex items-center justify-between px-[1vw] mob:px-[4vw] mob:py-[3.5vw] py-[.8vw] bg-[#F9F6EE] mob:rounded-[5vw] rounded-[1.2vw] overflow-hidden">
           {address && address.defaultAddress && (
             <div className="flex items-center gap-[1.1vw] mob:gap-[4vw] flex-1 min-w-0 mr-[1vw] mob:mr-[3vw]">

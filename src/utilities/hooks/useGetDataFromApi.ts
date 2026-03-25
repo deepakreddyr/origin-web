@@ -17,12 +17,11 @@ export const useGetDataFromApi = () => {
     failureHandler: any,
     additionalHeaders: any
   ) => {
-    let additionalHeadersToApi;
-
+    let additionalHeadersToApi = { ...additionalHeaders };
     if (token) {
       additionalHeadersToApi = {
-        Authorization: `Bearer ${token}`,
-        ...additionalHeaders
+        ...additionalHeadersToApi,
+        Authorization: `Bearer ${token}`
       };
     }
 

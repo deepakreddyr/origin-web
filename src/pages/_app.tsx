@@ -14,7 +14,7 @@ import Head from 'next/head';
 import GlobalLaunchListener from '@/components/GlobalLaunchListener';
 import * as gtag from '@/utilities/gtag';
 
-const APP_VERSION = '1.1.5';
+const APP_VERSION = '1.1.6';
 
 // --- Cache Clearing / Version Check ---
 const clearCacheAndReload = async () => {

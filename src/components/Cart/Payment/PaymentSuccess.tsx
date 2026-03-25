@@ -52,11 +52,19 @@ const PaymentSuccess = (props: any) => {
 
       return () => clearInterval(countdown); // Cleanup interval on component unmount
     } else {
+      const flowType = localStorage.getItem('FLOW_TYPE');
       localStorage.removeItem('FLOW_TYPE');
-      router.push(`/orders/${paymentModalDetails.orderResponse.order_id}`);
+      const targetUrl = `/orders/${paymentModalDetails.orderResponse.order_id}`;
+
       dispatch(setIsSidebarOpen(false));
       dispatch(resetOrderDetails());
       dispatch(clearCart());
+
+      if (flowType === 'retry_payment') {
+        window.location.href = targetUrl;
+      } else {
+        router.push(targetUrl);
+      }
     }
   }, [timer, dispatch, paymentModalDetails.orderResponse.order_id, router]);
 

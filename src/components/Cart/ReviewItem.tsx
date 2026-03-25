@@ -136,19 +136,28 @@ const ReviewItem = (props: {
   const hasRipeness = !!ripenessType;
 
   const handleSubscriptionIncrease = () => {
-    if (uom.cart_quantity < uom.maximum_quantity) {
-      dispatch(updateSubscriptionQuantity(uom.cart_quantity + 1));
+    const nextQty = uom.cart_quantity + (uom.stepper_quantity || 1);
+    if (nextQty <= uom.maximum_quantity) {
+      dispatch(updateSubscriptionQuantity(nextQty));
     } else {
       onShowMaxQuantityToast(uom.maximum_quantity);
     }
   };
 
   const handleSubscriptionDecrease = () => {
-    if (uom.cart_quantity > 1) {
-      dispatch(updateSubscriptionQuantity(uom.cart_quantity - 1));
+    const nextQty = uom.cart_quantity - (uom.stepper_quantity || 1);
+    if (nextQty >= (uom.minimum_quantity || 1)) {
+      dispatch(updateSubscriptionQuantity(nextQty));
     } else {
-      dispatch(clearSubscriptionCart());
-      dispatch(setIsSidebarOpen(false));
+      // If it would go below min, we allow clearing only if min is 1?
+      // Or maybe show a message. User said "minimum order quantity and stepper is not followed"
+      // Usually if they hit minus at min quantity, it should probably clear or show a message.
+      // But if there's a hard minimum, we should probably stick to it.
+      // However, typical cart behavior is to remove on last click.
+      if (uom.cart_quantity <= (uom.minimum_quantity || 1)) {
+        dispatch(setIsSidebarOpen(false));
+        dispatch(clearSubscriptionCart());
+      }
     }
   };
 
@@ -216,17 +225,19 @@ const ReviewItem = (props: {
             // Subscription item: simplified stepper or specialized look
             <div className="flex gap-3 items-center">
               <div className="flex-shrink-0">
-                <div className="flex items-center bg-black rounded-[.5vw] mob:rounded-[2vw] px-[.5vw] py-[.2vw] mob:px-[2vw] mob:py-[1vw] gap-[1vw] mob:gap-[3vw]">
+                <div className="flex items-center h-[2.2vw] mob:h-[8vw] rounded-full border-[2px] border-[#F3EEDF] bg-white p-[.3vw] mob:px-[.5vw] w-max justify-center">
                   <button
                     onClick={handleSubscriptionDecrease}
-                    className="text-white font-bold text-[1.2vw] mob:text-[5vw] px-[.5vw]"
+                    className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] flex-shrink-0 rounded-full bg-black text-white text-[1vw] mob:text-[3.5vw] flex items-center justify-center mr-[.4vw] mob:mr-[2.5vw]"
                   >
-                    -
+                    –
                   </button>
-                  <span className="text-white font-bold text-[1vw] mob:text-[4vw]">{uom.cart_quantity}</span>
+                  <span className="text-black font-semibold text-[1vw] mob:text-[3.5vw] select-none text-center">
+                    {uom.cart_quantity}
+                  </span>
                   <button
                     onClick={handleSubscriptionIncrease}
-                    className="text-white font-bold text-[1.2vw] mob:text-[5vw] px-[.5vw]"
+                    className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] flex-shrink-0 rounded-full bg-black text-white text-[1vw] mob:text-[3.5vw] flex items-center justify-center ml-[.4vw] mob:ml-[2.5vw]"
                   >
                     +
                   </button>

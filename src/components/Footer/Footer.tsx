@@ -85,7 +85,9 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
                   {/* WhatsApp */}
                   <Typography
                     component="a"
-                    href="tel:+918344621039"
+                    href="https://wa.me/919900507318"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-black text-base no-underline flex items-center gap-2"
                   >
                     <WhatsAppIcon fontSize="small" /> +91 9900507318
