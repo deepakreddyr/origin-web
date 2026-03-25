@@ -10,35 +10,21 @@ const SubscriptionHeader = ({ item, maxQty }: { item?: any; maxQty: number }) =>
 
   const handleOrderNow = () => {
     const itemPrice = item?.price_inclusive_of_all_taxes ?? item?.multiple_uoms?.[0]?.price ?? 89;
-    const cartItem = item
-      ? {
-          id: item.id,
-          item_code: item.item_code,
-          variant_id: item?.multiple_uoms?.[0]?.variant_id || '',
-          uom_id: item?.multiple_uoms?.[0]?.uom_id || '',
-          name: item.name,
-          image: item.image,
-          price: itemPrice,
-          price_inclusive_of_all_taxes: itemPrice,
-          quantity: item?.multiple_uoms?.[0]?.minimum_quantity || 1,
-          minimum_quantity: item?.multiple_uoms?.[0]?.minimum_quantity || 1,
-          max_qty: item?.multiple_uoms?.[0]?.maximum_quantity || item.max_qty || 10,
-          stepper_quantity: item?.multiple_uoms?.[0]?.stepper_quantity || 1,
-          combo_items: item.combo_items ?? []
-        }
-      : {
-          id: 1,
-          variant_id: 1,
-          uom_id: 1,
-          item_code: 'SUBSCRIPTION_PLAN',
-          name: 'Subscription Plan',
-          image: '/assets/images/neworiginlogo.png',
-          price: 89,
-          quantity: 1,
-          minimum_quantity: 1,
-          max_qty: 10,
-          stepper_quantity: 1
-        };
+    const cartItem = {
+      id: item.id,
+      item_code: item.item_code,
+      variant_id: item?.multiple_uoms?.[0]?.variant_id || '',
+      uom_id: item?.multiple_uoms?.[0]?.uom_id || '',
+      name: item.name,
+      image: item.image,
+      price: itemPrice,
+      price_inclusive_of_all_taxes: itemPrice,
+      quantity: item?.multiple_uoms?.[0]?.minimum_quantity || 1,
+      minimum_quantity: item?.multiple_uoms?.[0]?.minimum_quantity || 1,
+      max_qty: item?.multiple_uoms?.[0]?.maximum_quantity || item.max_qty || 10,
+      stepper_quantity: item?.multiple_uoms?.[0]?.stepper_quantity || 1,
+      combo_items: item.combo_items ?? []
+    };
 
     dispatch(setSubscriptionItem(cartItem));
     dispatch(setIsSubscriptionActive(true));

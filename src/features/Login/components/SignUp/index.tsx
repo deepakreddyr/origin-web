@@ -126,7 +126,7 @@ const SignUp: FC<Props> = ({ renderTermsAndCondition }) => {
       if (window) {
         setTimeout(() => {
           window.location.reload();
-        }, 3000);
+        }, 1000);
       }
     } catch (error: any) {
       if (error?.response?.status === 500) {

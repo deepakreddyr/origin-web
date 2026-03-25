@@ -103,7 +103,10 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
   const getButtonText = () => {
     if (!loginDetails?.user) return 'LOGIN';
 
-    if (cart.cartTabType === TabTypeConstant.CART_MAIN) {
+    if (
+      cart.cartTabType === TabTypeConstant.CART_MAIN ||
+      cart.cartTabType === TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR
+    ) {
       if (showAddressModal) {
         const hasSelectedDelivery = placeOrderDetails.delivery_type !== '';
         if (hasSelectedDelivery) {

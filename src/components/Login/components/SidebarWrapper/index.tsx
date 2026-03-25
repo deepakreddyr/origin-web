@@ -77,7 +77,7 @@ const SidebarWrapper = (props: Props) => {
     if (loginDetails.isFreshLogin) {
       setTimeout(() => {
         window.location.reload();
-      }, 3000);
+      }, 1000);
     }
     if (loginDetails.tabType === TabTypeConstant.SELECT_ADDRESS || loginDetails.tabType === TabTypeConstant.CART) {
       dispatch(setTabType(''));
