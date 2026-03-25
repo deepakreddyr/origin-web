@@ -125,10 +125,10 @@ const Login = () => {
           isLogin: true,
           user: response.access_token
         }));
-        // Hard refresh after 3 seconds to fetch all API data fresh with the new auth token
+        // Hard refresh after 1 seconds to fetch all API data fresh with the new auth token
         setTimeout(() => {
           window.location.reload();
-        }, 3000);
+        }, 1000);
       }
     } catch (error: any) {
       const e = await error.response.json();

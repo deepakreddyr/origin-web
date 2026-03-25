@@ -55,7 +55,7 @@ const AddressAndTimeSlot = (props: any) => {
   };
 
   useEffect(() => {
-    if (cart.cartTabType === 'ADDRESS_TIMESLOT_SELECTOR') {
+    if (cart.cartTabType === TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR) {
       if (placeOrderDetails.delivery_type === '') {
         dispatch(setIsProceedButtonEnabled(false));
       } else {
@@ -70,7 +70,7 @@ const AddressAndTimeSlot = (props: any) => {
         }
       }
     }
-  }, [placeOrderDetails.delivery_type, placeOrderDetails.time_slot_id]);
+  }, [placeOrderDetails.delivery_type, placeOrderDetails.time_slot_id, cart.cartTabType, dispatch]);
 
   return (
     <div

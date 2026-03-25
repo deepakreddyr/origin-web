@@ -65,7 +65,7 @@ export const handleLaunchResponse = (
     if (shouldReload) {
       setTimeout(() => {
         window.location.reload();
-      }, 3000);
+      }, 1000);
     }
   } else if (!profile?.name) {
     // Condition 2: No Name -> Register

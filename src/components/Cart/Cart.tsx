@@ -269,12 +269,17 @@ const Cart = () => {
       // If we're in the main cart view and no modal is open
       if (cart.cartTabType === TabTypeConstant.CART_MAIN && !showAddressModal) {
         setAddressModal(true);
+        dispatch(setCartTabType(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR));
         dispatch(setIsProceedButtonEnabled(false)); // Disable until timing is selected
         return;
       }
 
       // If modal is open, check if user has selected delivery timing
-      if (cart.cartTabType === TabTypeConstant.CART_MAIN && showAddressModal) {
+      if (
+        (cart.cartTabType === TabTypeConstant.CART_MAIN ||
+          cart.cartTabType === TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR) &&
+        showAddressModal
+      ) {
         // Check if user has selected a delivery type and timing
         const hasSelectedDelivery = placeOrderDetails.delivery_type !== '';
         const hasSelectedTiming =

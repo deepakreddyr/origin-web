@@ -108,7 +108,11 @@ const SignUp = () => {
         }
       }
 
-      // if (window) window.location.reload()
+      if (window) {
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
     } catch (error: any) {
       if (error?.response?.status === 500) {
         setErrors((prev) => ({
