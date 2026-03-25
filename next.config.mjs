@@ -48,6 +48,21 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'admin.webdev.wholesalemandi.com',
         pathname: '/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'customer-assets.emergentagent.com',
+        pathname: '/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.pexels.com',
+        pathname: '/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**'
       }
     ]
   },
