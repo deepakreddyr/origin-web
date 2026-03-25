@@ -12,14 +12,11 @@ export const useSendDataToApi = () => {
     data: any,
     method: string
   ) => {
-    let additionalHeadersToApi;
-
+    let additionalHeadersToApi = { ...additionalHeaders };
     if (token) {
-      // let storeId = localStorage.getItem()
       additionalHeadersToApi = {
-        Authorization: `Bearer ${token}`,
-        ...additionalHeaders
-        // 'store-id': address?.defaultAddress?.address_id,
+        ...additionalHeadersToApi,
+        Authorization: `Bearer ${token}`
       };
     }
 

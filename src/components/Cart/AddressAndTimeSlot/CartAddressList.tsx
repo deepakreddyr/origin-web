@@ -40,8 +40,8 @@ const CartAddressList = (props: any) => {
   };
 
   return (
-    <div className="p-[1.1vw] mob:p-[5vw] h-full flex flex-col grow relative">
-      <div className="flex flex-col h-[70vh] mob:h-[75vh] overflow-y-auto pb-[15vw] gap-[.97vw] mob:gap-[4vw]">
+    <div className="flex flex-col h-full">
+      <div className="flex-1 overflow-y-auto p-[1.1vw] mob:p-[5vw] flex flex-col gap-[.97vw] mob:gap-[4vw] pb-[20vw] mob:pb-[30vw]">
         {address?.address?.map((item: any) => (
           <button
             key={item.address_id}
@@ -69,10 +69,10 @@ const CartAddressList = (props: any) => {
           </button>
         ))}
       </div>
-      <div className="absolute bottom-[2vw] mob:bottom-[8vw] left-0 right-0 flex justify-center px-[1.1vw] mob:px-[5vw]">
+      <div className="p-[1.1vw] mob:p-[5vw] pb-[2vw] mob:pb-[8vw] flex justify-center mt-auto border-t border-[#F2EEE44D] bg-white">
         <button
           onClick={sendUserToAddAddress}
-          className="bg-primary w-[28vw] mob:w-full py-[.7vw] mob:py-[4vw] font-[SofiaPro] text-[.97vw] mob:text-[4.5vw] font-semibold rounded-full shadow-lg active:scale-[0.98] transition-all"
+          className="bg-primary w-full py-[.7vw] mob:py-[4vw] font-[SofiaPro] text-[.97vw] mob:text-[4.5vw] font-semibold rounded-full shadow-lg active:scale-[0.98] transition-all"
         >
           Add New Address +
         </button>

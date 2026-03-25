@@ -66,7 +66,8 @@ const Payment = (props: any) => {
     }
     if (addressFromLs) {
       additionalHeaders = {
-        'store-id': addressFromLs.store_id
+        'store-id': addressFromLs.store_id,
+        'delivery-type': isSubscription ? 'subscription' : 'instant'
       };
     }
 
@@ -151,7 +152,8 @@ const Payment = (props: any) => {
       const addressFromLs = getAddressAndStoreId();
       if (addressFromLs) {
         additionalHeaders = {
-          'store-id': addressFromLs.store_id
+          'store-id': addressFromLs.store_id,
+          'delivery-type': isSubscription ? 'subscription' : 'instant'
         };
       }
 
@@ -230,8 +232,15 @@ const Payment = (props: any) => {
         isSubscription && subscriptionCart.item
           ? [
               {
+                id: subscriptionCart.item.variant_id,
                 item_code: subscriptionCart.item.item_code,
-                uom: [{ id: subscriptionCart.item.id, qty: subscriptionCart.totalQuantity }]
+                uom: [
+                  {
+                    id: subscriptionCart.item.variant_id,
+                    uom_id: subscriptionCart.item.uom_id,
+                    qty: subscriptionCart.totalQuantity
+                  }
+                ]
               }
             ]
           : [];
@@ -275,12 +284,12 @@ const Payment = (props: any) => {
             sub_payment_method: orderType.sub_payment_method,
             uuid: uuidv4()
           };
-
-      if (addressFromLs) {
-        additionalHeaders = {
-          'store-id': addressFromLs.store_id
-        };
-      }
+      additionalHeaders = {
+        ...(addressFromLs && { 'store-id': addressFromLs.store_id }),
+        'delivery-type': isSubscription ? 'subscription' : 'instant',
+        'mm-build-version': '1.0.0',
+        'mm-device-type': 'web'
+      };
 
       const successHandler = (response: any) => {
         if (response?.data) {

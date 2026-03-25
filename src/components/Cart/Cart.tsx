@@ -293,6 +293,10 @@ const Cart = () => {
         }
       }
     } else {
+      if (isSubscription && subscriptionCart.item) {
+        localStorage.setItem('SUBSCRIPTION_LOGIN_PENDING', 'true');
+        localStorage.setItem('PENDING_SUBSCRIPTION_ITEM', JSON.stringify(subscriptionCart.item));
+      }
       setRouteSourceToLs(TabTypeConstant.CART);
       dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
       dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
