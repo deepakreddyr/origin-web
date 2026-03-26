@@ -13,6 +13,7 @@ type SideBySideProps = {
   titleVariant?: Variant;
   titleClass?: string;
   description?: string;
+  descriptionClass?: string;
   buttonClick1?: any;
   buttonClick2?: any;
   buttonText?: string;
@@ -88,7 +89,8 @@ const SideBySide: React.FC<SideBySideProps> = ({
   reverse = false,
   imageClass,
   quality,
-  priority
+  priority,
+  descriptionClass
 }) => {
   if (variant === 'parallax') {
     return (
@@ -129,7 +131,10 @@ const SideBySide: React.FC<SideBySideProps> = ({
           {description && (
             <Typography
               variant="body1"
-              className="lg:my-6 mt-4 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-[1.3]"
+              className={CA(
+                'lg:my-6 mt-4 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-[1.3]',
+                descriptionClass
+              )}
             >
               {HTMLReactParser(description)}
             </Typography>
@@ -176,7 +181,10 @@ const SideBySide: React.FC<SideBySideProps> = ({
           {description && (
             <Typography
               variant="body1"
-              className="lg:my-6 mt-0 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-[1.3]"
+              className={CA(
+                'lg:my-6 mt-0 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-[1.3]',
+                descriptionClass
+              )}
             >
               {HTMLReactParser(description)}
             </Typography>
@@ -217,7 +225,10 @@ const SideBySide: React.FC<SideBySideProps> = ({
             <Box className="w-full lg:w-[calc(50%-3rem)]">
               <Typography
                 variant="body1"
-                className="mt-0 mb-6 lg:mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-[1.3]"
+                className={CA(
+                  'mt-0 mb-6 lg:mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-[1.3]',
+                  descriptionClass
+                )}
               >
                 {description && HTMLReactParser(description)}
               </Typography>
@@ -264,7 +275,10 @@ const SideBySide: React.FC<SideBySideProps> = ({
 
           <Typography
             variant="body1"
-            className="lg:my-6 mt-0 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-[1.3]"
+            className={CA(
+              'lg:my-6 mt-0 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-[1.3]',
+              descriptionClass
+            )}
           >
             {description && HTMLReactParser(description)}
           </Typography>

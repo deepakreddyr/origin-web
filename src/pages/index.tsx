@@ -206,6 +206,7 @@ const Home = ({
                 titleVariant={isMobile ? 'h4' : 'h1'}
                 titleClass="font-[Recoleta] !font-bold !leading-[1.1] "
                 description={`Everyone has a right to fresh, authentic <br/ className="mob:hidden"> flavours. But only a few fight for it. Origin Fresh <br/ className="mob:hidden"> is for those&nbsp;who&nbsp;do.`}
+                descriptionClass="md:!text-[1.5vw]"
                 // buttonText="Know more"
                 buttonVariant="tertiary"
                 rootClass="bg-[#FAF7F0] z-1 px-[10vw] mob:px-[3vw] items-center !rounded-none pb-12 !overflow-visible"

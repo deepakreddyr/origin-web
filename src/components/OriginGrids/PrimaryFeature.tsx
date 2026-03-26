@@ -3,8 +3,8 @@ import Image from 'next/image';
 const featureList = [
   { text: '150+ Exotics', icon: '/assets/images/primaryFeature1.svg' },
   { text: '100+ Locally Grown Varieties', icon: '/assets/images/primaryFeature2.svg' },
-  { text: 'Easy Refunds/Returns', icon: '/assets/images/primaryFeature3.svg' },
-  { text: 'No Dark Stores', icon: '/assets/images/primaryFeature4.svg' }
+  { text: 'No Dark Stores', icon: '/assets/images/primaryFeature4.svg' },
+  { text: 'Easy Refunds/Returns', icon: '/assets/images/primaryFeature3.svg' }
 ];
 
 const PrimaryFeature = () => {
@@ -27,7 +27,7 @@ const PrimaryFeature = () => {
       {/* Desktop Static View */}
       <div className="flex mob:hidden items-center justify-center gap-4 w-full">
         {featureList.map((item, index) => (
-          <div key={index} className="flex items-center gap-3 px-10 py-4 bg-[#fcefae] rounded-full">
+          <div key={index} className="flex items-center gap-3 px-10 py-2 bg-[#fcefae] rounded-full">
             <div className="relative w-6 h-6">
               <Image src={item.icon} alt={item.text} fill className="object-contain scale-125" />
             </div>
