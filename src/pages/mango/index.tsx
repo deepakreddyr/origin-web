@@ -200,7 +200,7 @@ const testimonials: Testimonial[] = [
 const Navigation: React.FC = () => (
   <nav className="nav-header" data-testid="navigation">
     <Link href="/" data-testid="nav-logo-link">
-      <Image src={ASSETS.logo} alt="Origin Fresh" className="nav-logo" width={180} height={60} priority />
+      <Image src={ASSETS.logo} alt="Origin Fresh" className="nav-logo" width={160} height={60} priority />
     </Link>
     <div style={{ position: 'relative' }}>
       <div
