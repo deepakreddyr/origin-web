@@ -84,6 +84,7 @@ export interface Product {
     to: string;
   };
   tag_url: string | null;
+  description?: string;
 }
 
 export const MaxQuantityToast: FC<{
