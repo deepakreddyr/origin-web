@@ -43,19 +43,19 @@ const SubscriptionHeader = ({ item, maxQty }: { item?: any; maxQty: number }) =>
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 z-[100] w-full px-6 md:px-[56px] py-5 flex items-center justify-between bg-[#FCF2B7] shadow-sm">
+    <header className="fixed top-0 left-0 z-[100] w-full px-6 md:px-[80px] py-5 flex items-center justify-between bg-[#FCF2B7] shadow-sm">
       <div className="flex items-center">
         <Image
           src="/assets/images/neworiginlogo.png"
           alt="Origin Fresh"
           width={160}
           height={45}
-          className="h-8 md:h-10 w-auto object-contain"
+          className="h-8 md:h-14 w-auto object-contain"
         />
       </div>
 
       <button
-        className="bg-black text-[#FCF2B7] px-6 md:px-8 py-2 md:py-2.5 rounded-[10px] font-[800] text-[0.8rem] md:text-[0.95rem] uppercase tracking-[0.05em] hover:bg-gray-800 transition-colors"
+        className="bg-black text-[#FCF2B7] px-6 md:px-12 py-2 md:py-3 rounded-[10px] md:rounded-[15px] font-[800] text-[0.8rem] md:text-[1.5rem] uppercase tracking-[0.05em] hover:bg-gray-800 transition-colors"
         style={{ fontFamily: 'SofiaPro' }}
         onClick={handleOrderNow}
       >
