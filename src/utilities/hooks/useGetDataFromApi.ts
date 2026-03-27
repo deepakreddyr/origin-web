@@ -7,7 +7,7 @@ export const useGetDataFromApi = () => {
   // Function to handle logout
   const handleLogout = () => {
     localStorage.removeItem('user_token');
-    window.location.href = '/shop';
+    window.location.reload();
   };
 
   const fetchDataFromApi = async (
@@ -29,11 +29,14 @@ export const useGetDataFromApi = () => {
 
     const response = await axiosFetch(resolvedUrl, {}, 'GET', additionalHeadersToApi);
 
-    // Check for 401 status (Unauthorized/Token Expired)
-    if (response.status === 401) {
-      console.log('Token expired, logging out...');
+    // Check for 401 status (Unauthorized/Token Expired) or 522 (Individual users are restricted)
+    if (
+      response.status === 401 ||
+      (response.status === 522 && response.message === 'Individual users are restricted')
+    ) {
+      console.log(`Status ${response.status} received, logging out...`);
       handleLogout();
-      return { status: 401, bool: false, data: null };
+      return { status: response.status, bool: false, data: null };
     }
 
     if (response && response.success !== false) {

@@ -4,6 +4,12 @@ import { axiosFetch } from './useAxiosFetch';
 import { useAtom } from 'jotai';
 
 export const useSendDataToApi = () => {
+  // Log out the user and redirect on critical auth errors
+  const handleLogout = () => {
+    localStorage.removeItem('user_token');
+    window.location.reload();
+  };
+
   const fetchDataFromApi = async (
     token: any,
     url: any,
@@ -21,6 +27,17 @@ export const useSendDataToApi = () => {
     }
 
     const response = await axiosFetch(url, data, method, additionalHeadersToApi);
+
+    // Check for 401 (Unauthorized/Token Expired) or 522 (Individual users are restricted)
+    if (
+      response.status === 401 ||
+      (response.status === 522 && response.message === 'Individual users are restricted')
+    ) {
+      console.log(`Status ${response.status} received, logging out...`);
+      handleLogout();
+      return { status: response.status, bool: false, data: null };
+    }
+
     if (response && response.success !== false) {
       successHandler(response.data);
       return { status: response.status, bool: true, data: response };

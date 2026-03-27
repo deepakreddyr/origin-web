@@ -1,4 +1,10 @@
-import { addItemToCart, decreaseQuantity, increaseQuantity, removeItemFromCart } from '@/store/slice/CartSlice';
+import {
+  addItemToCart,
+  decreaseQuantity,
+  increaseQuantity,
+  removeItemFromCart,
+  setMaxQuantityError
+} from '@/store/slice/CartSlice';
 import React, { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import YellowBtn from './YellowBtn';
@@ -144,6 +150,7 @@ const AddItemBtn: FC<any> = (props) => {
     const totalQuantityInCart = getVariantTotalQuantity();
 
     if (totalQuantityInCart >= maxQuantity) {
+      dispatch(setMaxQuantityError(`Maximum quantity of ${maxQuantity} reached for this item.`));
       onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
       return;
     }
@@ -151,6 +158,7 @@ const AddItemBtn: FC<any> = (props) => {
     const newTotalQuantity = totalQuantityInCart + quantityToAdd;
 
     if (newTotalQuantity > maxQuantity) {
+      dispatch(setMaxQuantityError(`Maximum quantity of ${maxQuantity} reached for this item.`));
       onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
       return;
     }
@@ -212,6 +220,7 @@ const AddItemBtn: FC<any> = (props) => {
     const totalQuantityInCart = getVariantTotalQuantity();
 
     if (totalQuantityInCart >= maxQuantity) {
+      dispatch(setMaxQuantityError(`Maximum quantity of ${maxQuantity} reached for this item.`));
       onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
       return;
     }
@@ -220,6 +229,7 @@ const AddItemBtn: FC<any> = (props) => {
     const newTotalQuantity = totalQuantityInCart + finalStepQuantity;
 
     if (newTotalQuantity > maxQuantity) {
+      dispatch(setMaxQuantityError(`Maximum quantity of ${maxQuantity} reached for this item.`));
       onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
       return;
     }

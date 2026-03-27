@@ -20,59 +20,14 @@ interface Props {
 // (Integrated above)
 // -------------------
 
-// Toast Component
-const AlertToast: React.FC<{
-  message: string;
-  isVisible: boolean;
-  onClose: () => void;
-}> = ({ message, isVisible, onClose }) => {
-  useEffect(() => {
-    if (isVisible) {
-      const timer = setTimeout(() => {
-        onClose();
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [isVisible, onClose]);
-
-  if (!isVisible) return null;
-
-  return (
-    <div
-      className={`fixed top-10 left-1/2 transform -translate-x-1/2 z-[99999] w-[90%] max-w-md transition-opacity duration-300 ease-in-out ${
-        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-      }`}
-    >
-      <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full">
-        <div className="flex items-center justify-center w-full gap-2">
-          <InfoOutlinedIcon sx={{ color: 'yellow', fontSize: '1.2rem' }} />
-          <p className="text-[0.8rem] font-semibold text-white text-center leading-tight font-[SofiaPro]">{message}</p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
+// Sidebar Component
 const SidebarWrapper = (props: Props) => {
   const { children, onClickBackButton, isBackButtonEnable, headerTitle } = props;
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const dispatch = useDispatch();
 
-  // State for Toast
-  const [showToast, setShowToast] = useState(false);
-  const [address] = useAtom(addressAtom);
-
   const handleCloseAttempt = () => {
-    // Check if closing should be blocked
-    const hasDefaultAddress = address.defaultAddress !== null;
-    const isMandatory = loginDetails.isFreshLogin && !hasDefaultAddress;
-
-    if (isMandatory) {
-      setShowToast(true);
-      return;
-    }
-
-    // Allow close
+    // Allow close regardless of state
     dispatch(setIsSidebarOpen(false));
     if (loginDetails.isFreshLogin) {
       setTimeout(() => {
@@ -103,12 +58,6 @@ const SidebarWrapper = (props: Props) => {
 
   return (
     <div className="">
-      <AlertToast
-        message="Please enter the details to proceed"
-        isVisible={showToast}
-        onClose={() => setShowToast(false)}
-      />
-
       {loginDetails.isSidebarOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-[110]" onClick={handleCloseAttempt}></div>
       )}
@@ -145,16 +94,14 @@ const SidebarWrapper = (props: Props) => {
 
             {/* Right Section: Close Button */}
             <div className="flex-shrink-0 w-[3vw] mob:w-[10vw] flex justify-end">
-              {!(loginDetails.isFreshLogin && address.defaultAddress === null) && (
-                <button
-                  onClick={handleCloseAttempt}
-                  className="w-[2.5vw] h-[2.5vw] mob:w-[8vw] mob:h-[8vw] rounded-full flex items-center justify-center hover:bg-gray-100 active:bg-gray-100 transition-colors duration-200"
-                >
-                  <div className="w-[1.2vw] h-[1.2vw] mob:w-[6vw] mob:h-[6vw] relative">
-                    <Image src={Cross} alt="close" fill className="object-contain" />
-                  </div>
-                </button>
-              )}
+              <button
+                onClick={handleCloseAttempt}
+                className="w-[2.5vw] h-[2.5vw] mob:w-[8vw] mob:h-[8vw] rounded-full flex items-center justify-center hover:bg-gray-100 active:bg-gray-100 transition-colors duration-200"
+              >
+                <div className="w-[1.2vw] h-[1.2vw] mob:w-[6vw] mob:h-[6vw] relative">
+                  <Image src={Cross} alt="close" fill className="object-contain" />
+                </div>
+              </button>
             </div>
           </div>
         )}
