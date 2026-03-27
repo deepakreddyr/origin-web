@@ -99,10 +99,10 @@ const SubscriptionChallenge = ({ item, comboItems, maxQty }: { item?: any; combo
     <section className="bg-[#FFDD7E] py-0">
       <div className="grid grid-cols-2 md:grid-cols-4">
         {/* Sidebar */}
-        <div className="bg-[#FFDD7E] flex flex-col justify-start md:justify-between gap-10 md:gap-0 p-4 md:p-6 min-h-[210px] md:min-h-[400px]">
+        <div className="bg-[#FFDD7E] flex flex-col justify-start md:justify-between gap-5 md:gap-0 p-4 md:p-6 min-h-[210px] md:min-h-[400px]">
           {/* Title */}
           <p
-            className="font-[600] text-center mt-[2vw] md:text-left text-[6vw] md:text-[3vw] md:pl-[1vw] leading-[1.05] text-black uppercase"
+            className="font-[600] text-center mt-[2vw] md:text-left text-[6vw] md:text-[3vw] md:pl-[1vw] leading-[1.3] text-black uppercase"
             style={{ fontFamily: 'Recoleta' }}
           >
             WHAT'S
@@ -113,27 +113,34 @@ const SubscriptionChallenge = ({ item, comboItems, maxQty }: { item?: any; combo
           </p>
 
           {/* Timer + Button */}
-          <div className="flex flex-col items-center md:items-stretch mt-auto md:mt-0">
-            <div className="bg-white rounded-[6px] p-2 md:p-2.5 mb-10 shadow-sm w-full max-w-[180px] md:max-w-none">
-              <span className="text-[0.45rem] md:text-[0.5rem] font-[700] opacity-40 block mb-1 md:mb-2 uppercase tracking-widest text-center">
+          <div className="flex flex-col items-center md:items-stretch mt-auto md:mt-0 md:ml-[1vw]">
+            <div className="bg-white p-2.5 md:p-4 mb-5 md:mb-10 shadow-sm w-full max-w-[260px] md:max-w-[280px] rounded-[10px]">
+              <span className="text-[0.4rem] md:text-[0.55rem] font-[700] opacity-40 block mb-2 md:mb-3 uppercase tracking-widest text-center">
                 NEXT DELIVERY IN
               </span>
-              <div className="flex justify-around gap-1 md:gap-0">
+              <div className="flex justify-between gap-1 md:gap-2 font-[Recoleta]">
                 {[
                   [pad(timeLeft.days), 'Days'],
                   [pad(timeLeft.hours), 'Hours'],
                   [pad(timeLeft.min), 'Min'],
                   [pad(timeLeft.sec), 'Sec']
                 ].map(([val, label]) => (
-                  <div key={label} className="text-center">
-                    <div className="text-[0.9rem] md:text-[1rem] font-[800] leading-none tabular-nums">{val}</div>
-                    <div className="text-[0.45rem] md:text-[0.5rem] uppercase opacity-50 mt-0.5">{label}</div>
+                  <div
+                    key={label}
+                    className="flex-1 text-center bg-white shadow-[0_4px_12px_rgba(0,0,0,0.05)] p-1 md:p-3 rounded-lg md:rounded-xl min-w-0"
+                  >
+                    <div className="text-[0.85rem] md:text-[1.2rem] font-[800] leading-none tabular-nums text-black">
+                      {val}
+                    </div>
+                    <div className="text-[0.35rem] md:text-[0.45rem] uppercase opacity-50 mt-1 font-[SofiaPro]">
+                      {label}
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
             <button
-              className="w-full max-w-[140px] md:max-w-none bg-black text-[#FFDD7E] py-2 md:py-4 rounded-[6px] md:rounded-[6px] font-[800] text-[0.75rem] md:text-[0.9rem] tracking-[0.05em] hover:bg-[#222] transition-colors uppercase"
+              className="w-full max-w-[150px] md:max-w-[280px] bg-black text-[#FFDD7E] py-2.5 md:py-4 rounded-[10px] md:rounded-[15px] font-[800] text-[0.85rem] md:text-[1.1rem] tracking-[0.05em] hover:bg-[#222] transition-colors uppercase"
               onClick={handleOrderNow}
             >
               ORDER NOW
@@ -173,7 +180,7 @@ const SubscriptionChallenge = ({ item, comboItems, maxQty }: { item?: any; combo
             </div>
 
             {/* Bottom info strip */}
-            <div className="relative z-10 flex flex-col md:flex-row items-center md:justify-between px-4 pb-9 bg-transparent text-center md:text-left">
+            <div className="relative z-10 flex flex-col md:flex-row items-center md:justify-between px-4 mob:pb-5 md:pb-9 bg-transparent text-center md:text-left">
               <div className="mb-3 md:mb-0">
                 <div
                   className="font-[800] text-[0.85rem] md:text-[0.95rem] uppercase leading-tight tracking-wide"
@@ -187,7 +194,7 @@ const SubscriptionChallenge = ({ item, comboItems, maxQty }: { item?: any; combo
               </div>
 
               {/* Day Label Bubble */}
-              <div className="bg-black font-[SofiaPro] text-white px-6 py-1.5 md:px-5 md:py-1 rounded-[6px] text-[3vw] md:text-[0.75rem] font-[700] tracking-wider">
+              <div className="bg-black font-[SofiaPro] font-semibold text-white px-6 py-1.5 md:px-6 md:py-2 rounded-[6px] text-[3vw] md:text-[0.75rem] tracking-wider">
                 {DAYS[index]}
               </div>
             </div>
