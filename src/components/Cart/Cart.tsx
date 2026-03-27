@@ -16,7 +16,8 @@ import {
   setCartTabType,
   setIsProceedButtonEnabled,
   setFreeItems,
-  removeFreeItemFromCart
+  removeFreeItemFromCart,
+  setMaxQuantityError
 } from '@/store/slice/CartSlice';
 import { TabTypeConstant } from '../Login/constants/tabTypeContent';
 import { getAddressAndStoreId, prepareCartItemsToApi, setRouteSourceToLs } from '@/utilities/utils';
@@ -53,18 +54,18 @@ const InfoToast: React.FC<{
     }
   }, [isVisible, onClose]);
 
-  if (!isVisible || message === null) return null;
+  if (message === null) return null;
 
   return (
     <div
-      className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-[9999] w-[90%] max-w-md transition-opacity duration-300 ease-in-out ${
-        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      className={`w-full transition-all duration-300 ease-in-out overflow-hidden sticky top-0 z-[10] ${
+        isVisible ? 'max-h-[10vw] mob:max-h-[18vw] opacity-100 py-1.5 mob:py-2' : 'max-h-0 opacity-0 py-0'
       }`}
     >
-      <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full">
+      <div className="flex items-center bg-[#000] rounded-[2vw] mob:rounded-[8vw] shadow-md min-h-[3vw] mob:min-h-[12vw] px-4 w-full">
         <div className="flex items-center justify-center w-full gap-2">
           <InfoOutlinedIcon sx={{ color: 'yellow', fontSize: '1.2rem' }} />
-          <p className="text-[0.70rem] mob:text-[2.8vw] font-semibold text-white text-center leading-tight">
+          <p className="text-[0.70rem] mob:text-[3.2vw] font-semibold text-white text-center leading-tight">
             {message}
           </p>
         </div>
@@ -121,13 +122,11 @@ const Cart = () => {
   }, [dispatch]);
 
   // --- TOAST/POPUP STATE ---
-  const [infoToastMessage, setInfoToastMessage] = useState<string | null>(null);
-  const [showInfoToast, setShowInfoToast] = useState(false);
+  const maxQuantityError = useSelector((state: any) => state.cart.maxQuantityError);
   const [showLocationPopup, setShowLocationPopup] = useState(false);
 
   const handleShowToast = (message: string) => {
-    setInfoToastMessage(message);
-    setShowInfoToast(true);
+    dispatch(setMaxQuantityError(message));
   };
 
   // ✅ TRIGGER: AUTO-REMOVE FREE ITEMS IF MOV NOT MET
@@ -371,7 +370,11 @@ const Cart = () => {
 
   return (
     <div className="flex flex-col grow gap-[1.1vw] mob:gap-[4.1vw] pb-[6vw] mob:pb-[25vw]">
-      <InfoToast message={infoToastMessage} isVisible={showInfoToast} onClose={() => setShowInfoToast(false)} />
+      <InfoToast
+        message={maxQuantityError.message}
+        isVisible={maxQuantityError.isVisible}
+        onClose={() => dispatch(setMaxQuantityError(null))}
+      />
       <LocationChangedPopup
         isVisible={showLocationPopup}
         onClose={() => {
