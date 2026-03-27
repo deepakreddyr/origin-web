@@ -237,6 +237,7 @@ const Cart = () => {
       dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
       dispatch(updateTimeSlotId(''));
       dispatch(setIsHeaderVisible(true));
+      localStorage.removeItem('FLOW_TYPE');
       // If subscription was active, clear it when sidebar closes?
       // User said "only when clicking order now", maybe clear it on close to reset
       if (isSubscription) {
