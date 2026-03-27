@@ -65,8 +65,9 @@ const VerifyOTP = (props: Props) => {
       dispatch(setUser(response.access_token));
       localStorage.setItem('user_token', response.access_token);
 
-      const launchUrl = mainApiUrl.launch;
-      const launchResponse: any = await request(launchUrl, {
+      // Call profile API instead of launch API first to check registration status
+      const profileUrl = mainApiUrl.getProfileDetails;
+      const profileResponse: any = await request(profileUrl, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${response.access_token}`,
@@ -74,8 +75,33 @@ const VerifyOTP = (props: Props) => {
         }
       });
 
-      dispatch(setIsFreshLogin(true));
-      handleLaunchResponse(launchResponse, dispatch, setAddress, setProfileAtom, response.access_token, true);
+      const userProfile = profileResponse?.data;
+
+      if (userProfile?.name) {
+        // User is already registered, call launch API for full state
+        const launchUrl = mainApiUrl.launch;
+        const launchResponse: any = await request(launchUrl, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${response.access_token}`,
+            Accept: 'application/json'
+          }
+        });
+
+        dispatch(setIsFreshLogin(true));
+        handleLaunchResponse(launchResponse, dispatch, setAddress, setProfileAtom, response.access_token, true);
+      } else {
+        // New user or incomplete registration
+        dispatch(setIsFreshLogin(true));
+        dispatch(
+          setLoginDetails({
+            isSidebarOpen: true,
+            isLogin: true,
+            user: response.access_token,
+            tabType: TabTypeConstant.REGISTER
+          })
+        );
+      }
       setMobileNumber('');
     } catch (error: any) {
       if (error?.response?.status === 522) {

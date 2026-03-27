@@ -60,6 +60,7 @@ interface CartState {
   deliveryFee: number;
   freeItems: any[]; // Free items from API
   freeItemsMov: number; // Minimum order value for free items
+  maxQuantityError: { message: string | null; isVisible: boolean };
 }
 
 const initialState: CartState = {
@@ -75,7 +76,8 @@ const initialState: CartState = {
   cart_minimum: null,
   deliveryFee: 0,
   freeItems: [],
-  freeItemsMov: 0
+  freeItemsMov: 0,
+  maxQuantityError: { message: null, isVisible: false }
 };
 
 // --- UTILITY FUNCTIONS ---
@@ -746,8 +748,16 @@ export const cartSlice = createSlice({
       state.deliveryFee = 0;
       state.freeItems = [];
       state.freeItemsMov = 0;
+      state.maxQuantityError = { message: null, isVisible: false };
       localStorage.removeItem('cart_items');
       clearPersistentFreeItems();
+    },
+
+    setMaxQuantityError: (state, action: PayloadAction<string | null>) => {
+      state.maxQuantityError = {
+        message: action.payload,
+        isVisible: !!action.payload
+      };
     }
   }
 });
@@ -771,7 +781,8 @@ export const {
   validateAndCleanCart,
   setFreeItems,
   addFreeItemToCart,
-  removeFreeItemFromCart
+  removeFreeItemFromCart,
+  setMaxQuantityError
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

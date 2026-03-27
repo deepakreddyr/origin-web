@@ -68,6 +68,20 @@ export async function request(
     ...options,
     headers
   });
+
+  // Check for 522 (Individual users are restricted)
+  if (fetchResponse.status === 522) {
+    const data = await fetchResponse
+      .clone()
+      .json()
+      .catch(() => ({}));
+    if (data.message === 'Individual users are restricted' && typeof window !== 'undefined') {
+      console.log('Status 522 (Individual users are restricted) received, logging out...');
+      localStorage.removeItem('user_token');
+      window.location.reload();
+    }
+  }
+
   const response = checkStatus(fetchResponse);
   return parseJSON(response);
 }
