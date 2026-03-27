@@ -6,7 +6,18 @@ import Other from '/public/assets/icons/addressIcons/others.png';
 
 const DeliveryAddress = (props: any) => {
   const { orderDetailsData } = props;
-  const { address, address_name, payment_method } = orderDetailsData;
+  const { address, address_name, payment_method, payment_status } = orderDetailsData;
+
+  const getPaymentLabel = () => {
+    if (payment_method === 'Razorpay') {
+      if (payment_status === 'complete') return 'Paid Online';
+      if (payment_status === 'pending') return 'Payment Pending';
+      if (payment_status === 'failed') return 'Payment Failed';
+      if (payment_status === 'partially_completed') return 'Partially Paid';
+      return 'Paid Online';
+    }
+    return 'Cash on Delivery';
+  };
 
   return (
     <div className="border w-full h-max bg-[#F2EEE44D] border-[#F2EEE4] rounded-[1.1vw] mob:rounded-[4.1vw] mob:p-[4.1vw] p-[1.1vw] ">
@@ -40,9 +51,7 @@ const DeliveryAddress = (props: any) => {
           <div className="w-[2.9vw] h-[2.9vw] mob:w-[9vw] mob:h-[9vw] relative ">
             <Image src={paymentTypeIcon} alt="" />
           </div>
-          <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  ">
-            {payment_method === 'Razorpay' ? 'Paid Online' : 'Cash on Delivery'}
-          </p>
+          <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  ">{getPaymentLabel()}</p>
         </div>
       </div>
     </div>
