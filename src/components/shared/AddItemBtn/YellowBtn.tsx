@@ -23,7 +23,9 @@ const YellowBtn = (props: any) => {
         transition={{ type: 'spring', stiffness: 380, damping: 28 }}
         onClick={!isItemPresent ? handleAddItem : undefined}
         className={`flex items-center h-[2.8vw] mob:h-[9vw] rounded-full border-[2px] p-[.3vw] mob:px-[.5vw] w-full justify-center ${
-          isItemPresent ? 'border-[#EDE6D4] bg-white cursor-default' : 'border-transparent bg-[#FFD500] cursor-pointer'
+          isItemPresent
+            ? 'border-[#EDE6D4] bg-white cursor-default'
+            : 'border-transparent bg-[#FFD500] cursor-pointer px-[1vw] mob:px-[3vw]'
         }`}
       >
         {/* Minus */}
@@ -55,34 +57,33 @@ const YellowBtn = (props: any) => {
                 {quantity}
               </motion.p>
             ) : (
-              <motion.span
-                key="add-label"
+              <motion.div
+                key="add-label-container"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.12 }}
-                className="text-black font-semibold text-[1vw] mob:text-[3.6vw] whitespace-nowrap mr-[.3vw]"
+                className="flex items-center gap-[0.5vw] mob:gap-[2vw]"
               >
-                Add
-              </motion.span>
+                <span className="text-black font-semibold text-[1vw] mob:text-[3.6vw] whitespace-nowrap">Add</span>
+                <span className="text-black font-bold text-[1.10vw] mob:text-[4vw] mt-[0.1vw]">+</span>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        {/* Plus */}
-        <motion.button
-          layout
-          whileTap={{ scale: 0.82 }}
-          transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-          className={`flex-shrink-0 flex items-center justify-center rounded-full bg-[#FFD500] text-black ${
-            isItemPresent
-              ? 'h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] text-[1.1vw] mob:text-[4vw] ml-[.4vw] mob:ml-[2vw]'
-              : 'h-[1.4vw] w-[1.4vw] mob:h-[5vw] mob:w-[5vw] text-[1.1vw] mob:text-[4vw]'
-          }`}
-          onClick={isItemPresent ? onIncrease : handleAddItem}
-        >
-          +
-        </motion.button>
+        {/* Plus — only show as separate button when isItemPresent */}
+        {isItemPresent && (
+          <motion.button
+            layout
+            whileTap={{ scale: 0.82 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+            className="flex-shrink-0 flex items-center justify-center rounded-full bg-[#FFD500] text-black h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] text-[1.1vw] mob:text-[4vw] ml-[.4vw] mob:ml-[2vw]"
+            onClick={onIncrease}
+          >
+            +
+          </motion.button>
+        )}
       </motion.div>
     </div>
   );

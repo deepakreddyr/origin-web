@@ -209,7 +209,7 @@ const StoryViewer = ({ stories, startIndex, onClose }: StoryViewerProps) => {
               alt={story.userName}
               width={32}
               height={32}
-              className="object-cover w-full h-full"
+              className="object-cover w-full h-full scale-[1.3]"
             />
           </div>
           <div>
@@ -361,7 +361,7 @@ const StoryTestimonials = () => {
                           alt={story.userName}
                           width={220}
                           height={220}
-                          className="object-cover w-full h-full"
+                          className="object-cover w-full h-full scale-[1.3]"
                         />
                       </div>
                     </div>

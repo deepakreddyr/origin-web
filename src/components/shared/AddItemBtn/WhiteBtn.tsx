@@ -21,8 +21,10 @@ const WhiteBtn = (props: any) => {
       layout
       transition={{ type: 'spring', stiffness: 380, damping: 28 }}
       onClick={!isItemPresent ? handleAddItem : undefined}
-      className={`flex items-center h-[2.5vw] mob:h-[8.5vw] rounded-full border-[2px] p-[.3vw] mob:px-[.7vw] ${
-        isItemPresent ? 'border-primary-200 bg-white' : 'border-transparent bg-primary cursor-pointer'
+      className={`flex items-center h-[2.5vw] mob:h-[8.5vw] rounded-full border-[2px] p-[.3vw] mob:px-[.7vw] justify-center ${
+        isItemPresent
+          ? 'border-primary-200 bg-white'
+          : 'border-transparent bg-primary cursor-pointer px-[1vw] mob:px-[3vw]'
       }`}
     >
       {/* Minus — simply mounts/unmounts; layout on parent animates the pill width */}
@@ -55,34 +57,35 @@ const WhiteBtn = (props: any) => {
               {quantity}
             </motion.p>
           ) : (
-            <motion.span
-              key="add-label"
+            <motion.div
+              key="add-label-container"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.12 }}
-              className="font-[SofiaPro] text-[.97vw] font-bold mob:text-[3.6vw] text-black whitespace-nowrap mr-[.3vw]"
+              className="flex items-center gap-[0.5vw] mob:gap-[2vw]"
             >
-              Add
-            </motion.span>
+              <span className="font-[SofiaPro] text-[.97vw] font-bold mob:text-[3.6vw] text-black whitespace-nowrap">
+                Add
+              </span>
+              <span className="text-[1.1vw] mob:text-[4.1vw] font-bold text-black mt-[0.1vw]">+</span>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* Plus — always present; acts as both Add and Increase */}
-      <motion.button
-        layout
-        whileTap={{ scale: 0.82 }}
-        transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-        className={`flex-shrink-0 flex items-center justify-center rounded-full bg-primary ${
-          isItemPresent
-            ? 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.4vw] pb-[.3vw] ml-[.5vw] mob:ml-[3vw] border border-primary-200'
-            : 'h-[1.4vw] w-[1.4vw] mob:h-[5.5vw] mob:w-[5.5vw] text-[1.1vw] mob:text-[4.1vw]'
-        }`}
-        onClick={isItemPresent ? onIncrease : handleAddItem}
-      >
-        +
-      </motion.button>
+      {/* Plus — only show as separate button when isItemPresent */}
+      {isItemPresent && (
+        <motion.button
+          layout
+          whileTap={{ scale: 0.82 }}
+          transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+          className="flex-shrink-0 flex items-center justify-center rounded-full bg-primary h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.4vw] pb-[.3vw] ml-[.5vw] mob:ml-[3vw] border border-primary-200"
+          onClick={onIncrease}
+        >
+          +
+        </motion.button>
+      )}
     </motion.div>
   );
 };
