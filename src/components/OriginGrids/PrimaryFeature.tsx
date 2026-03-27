@@ -27,11 +27,11 @@ const PrimaryFeature = () => {
       {/* Desktop Static View */}
       <div className="flex mob:hidden items-center justify-center gap-4 w-full">
         {featureList.map((item, index) => (
-          <div key={index} className="flex items-center gap-3 px-10 py-2 bg-[#fcefae] rounded-full">
+          <div key={index} className="flex items-center gap-3 px-7 py-2 bg-[#fcefae] rounded-full">
             <div className="relative w-6 h-6">
               <Image src={item.icon} alt={item.text} fill className="object-contain scale-125" />
             </div>
-            <span className="text-[#1A202C] font-semibold text-sm lg:text-[1.2vw] whitespace-nowrap">{item.text}</span>
+            <span className="text-[#1A202C] font-semibold text-sm lg:text-[1.3vw] whitespace-nowrap">{item.text}</span>
           </div>
         ))}
       </div>

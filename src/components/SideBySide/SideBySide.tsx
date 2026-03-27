@@ -132,7 +132,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
             <Typography
               variant="body1"
               className={CA(
-                'lg:my-6 mt-4 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-[1.3]',
+                'lg:my-6 mt-6 mb-6 font-semibold md:text-[1.7vw] mob:text-[4vw] leading-[1.25] text-black',
                 descriptionClass
               )}
             >
@@ -182,7 +182,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
             <Typography
               variant="body1"
               className={CA(
-                'lg:my-6 mt-0 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-[1.3]',
+                'lg:my-6 mt-6 mb-6 font-semibold md:text-[1.7vw] mob:text-[4vw] leading-[1.25] text-black',
                 descriptionClass
               )}
             >
@@ -226,7 +226,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
               <Typography
                 variant="body1"
                 className={CA(
-                  'mt-0 mb-6 lg:mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-[1.3]',
+                  'mt-6 mb-6 lg:mb-6 font-semibold md:text-[1.7vw] mob:text-[4vw] leading-[1.25] text-black',
                   descriptionClass
                 )}
               >
@@ -276,7 +276,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
           <Typography
             variant="body1"
             className={CA(
-              'lg:my-6 mt-0 mb-6 font-medium text-xl md:text-[1.3vw] mob:text-[5vw] leading-[1.3]',
+              'lg:my-6 mt-6 mb-6 font-semibold md:text-[1.7vw] mob:text-[4vw] leading-[1.25] text-black',
               descriptionClass
             )}
           >

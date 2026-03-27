@@ -6,9 +6,9 @@ import { useMediaQuery, useTheme } from '@mui/material';
 
 const Commitment = () => {
   return (
-    <section className="w-full min-h-screen bg-[#FFFBEB] flex flex-col items-start pt-[2vh] pb-[10vh] mob:pt-[5vh] overflow-hidden">
+    <section className="w-full min-h-screen bg-[#fff8d5] flex flex-col items-start pt-[10vh] pb-[10vh] mob:pt-[5vh] overflow-hidden">
       {/* 1. Heading - Always First */}
-      <div className="z-[20] mb-[5vh] md:mb-[2vh] w-full px-[8vw]">
+      <div className="z-[20] mb-[2vh] md:mb-[2vh] w-full px-[8vw]">
         <h2 className="font-[Recoleta] font-bold text-[8.5vw] md:text-[3.7vw] leading-[1.15]">
           <span className="text-secondary">We empower women</span>
           <br />
@@ -21,7 +21,7 @@ const Commitment = () => {
       {/* 2. Content Row: Image and Stats */}
       <div className="flex flex-col md:flex-row items-center w-full h-full gap-4 md:gap-0">
         {/* Left/Center: Leaf Image - Sticks to left edge on desktop */}
-        <div className="relative w-full mt-[2vh] md:mt-[10vh] md:w-[50vw] h-[40vh] md:h-[70vh] flex items-center justify-center md:items-start md:justify-start">
+        <div className="relative w-full mt-[1vh] md:mt-[4vh] md:w-[50vw] h-[40vh] md:h-[70vh] flex items-center justify-center md:items-start md:justify-start">
           <div className="relative w-[85vw] md:w-[50vw] h-full scale-100 md:scale-125">
             <Image
               src={commitmentImg1}
@@ -44,7 +44,7 @@ const Commitment = () => {
               50%
             </span>
           </div>
-          <p className="font-[SofiaPro] font-medium text-[4vw] md:text-[1.38vw] leading-[1.25] text-black">
+          <p className="font-[SofiaPro] font-semibold text-[4vw] md:text-[1.7vw] leading-[1.25] text-black">
             of our farmer network is led by <br className="md:block hidden" />
             women. Through our digital <br className="md:block hidden" />
             farmer platform and dedicated <br className="md:block hidden" />

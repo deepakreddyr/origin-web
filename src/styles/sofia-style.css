@@ -126,3 +126,18 @@
   font-style: italic;
   font-display: swap;
 }
+@font-face {
+  font-family: "SofiaPro";
+  src: url("/assets/fonts/sofia-pro/SofiaPro-SemiBold.woff") format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SofiaPro";
+  src: url("/assets/fonts/sofia-pro/SofiaPro-SemiBoldItalic.woff") format("woff");
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}

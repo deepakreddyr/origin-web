@@ -278,8 +278,8 @@ const StoryTestimonials = () => {
       className="
             w-full bg-[#f2ae25] overflow-hidden
             flex flex-col
-            h-auto min-h-[450px]
-            lg:h-[85vh] lg:max-h-none
+            h-auto min-h-[600px]
+            lg:h-[90vh] lg:max-h-none
         "
     >
       <div className="mt-[5vw] mob:mt-10">
@@ -295,7 +295,7 @@ const StoryTestimonials = () => {
         </h2>
 
         {/* ── Avatar area ── */}
-        <div className="flex-1 flex items-start justify-center pt-[8vw] md:pt-[3vw] lg:pt-[3vw]">
+        <div className="flex-1 flex items-start justify-center pt-[8vw] md:pt-[4vw] lg:pt-[5vw]">
           <div className="relative flex items-center px-[8vw] md:px-[5.5vw] lg:px-[5vw] w-full max-w-[95vw] lg:max-w-[90vw]">
             {/* Left arrow — Hidden on mobile as we use native scroll */}
             <button
@@ -369,7 +369,7 @@ const StoryTestimonials = () => {
                     <div className="flex flex-col items-center">
                       <span
                         className="
-                                                text-black font-bold text-center leading-tight
+                                                text-black font-[900] text-center leading-tight
                                                 text-[3.5vw] md:text-[1.6vw] lg:text-[1.4vw]
                                                 max-w-[25vw] md:max-w-[10vw] lg:max-w-[13vw]
                                             "

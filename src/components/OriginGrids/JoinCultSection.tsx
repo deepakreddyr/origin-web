@@ -43,18 +43,20 @@ const JoinCultSection = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="w-full py-16 mob:py-10">
-      <div className="w-[92vw] md:w-[80vw] mx-auto flex flex-col-reverse md:grid md:grid-cols-[minmax(0,38%)_1fr] lg:grid-cols-[minmax(0,45%)_minmax(0,55%)] gap-10 md:gap-8 lg:gap-12 items-stretch">
+    <section ref={sectionRef} className="w-full py-20 mob:py-16">
+      <div className="w-[92vw] md:w-[80vw] mx-auto flex flex-col-reverse md:grid md:grid-cols-[1fr_1fr] lg:grid-cols-[1fr_1.4fr] gap-10 md:gap-8 lg:gap-14 items-stretch">
         {/* ── Left: text (Now bottom on mobile) ── */}
-        <div className="flex flex-col justify-center gap-6 mob:gap-5 min-w-0 overflow-hidden mob:pt-[10px]">
+        <div className="flex flex-col justify-center gap-12 mob:gap-5 min-w-0 overflow-hidden mob:pt-[10px]">
           <h2 className="font-[Recoleta] font-bold leading-2 mob:leading-5 min-w-0">
-            <span className="text-[#619269] block mob:text-[11vw] text-3xl md:text-4xl lg:text-5xl mb-2">Join</span>
+            <span className="text-[#619269] block mob:text-[11vw] text-3xl md:text-5xl lg:text-[3.8vw] mb-2">Join</span>
 
-            <span className="text-black mob:text-[10vw] block text-3xl md:text-4xl lg:text-5xl">The Cult Of Fresh</span>
+            <span className="text-black mob:text-[10vw] block text-3xl md:text-5xl lg:text-[3.8vw]">
+              The Cult Of Fresh
+            </span>
           </h2>
 
           <div className="flex flex-col gap-3 w-full">
-            <p className="text-black text-xl font-medium leading-[1.3] font-[SofiaPro]">
+            <p className="text-black mob:text-[4vw] md:text-[1.6vw] font-semibold leading-[1.25] font-[SofiaPro] md:mb-6">
               Nature takes time. It refuses to be hurried. <br className="mob:hidden" /> It carefully crafts every
               single fruit and vegetable that you find here. This patience is what we worship, and that's what we share
               with the world.
@@ -80,8 +82,8 @@ const JoinCultSection = () => {
                 <circle cx="12" cy="12" r="4" />
                 <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
               </svg>
-              <span className="font-bold text-[#231F20] text-sm md:text-base group-hover:text-white transition-colors">
-                Join our instagram community
+              <span className="font-bold text-[#000000] mob:text-[4vw] text-[1.6vw] group-hover:text-white transition-colors">
+                Join our Instagram community
               </span>
             </a>
 
@@ -102,7 +104,7 @@ const JoinCultSection = () => {
                     <path d="M10 15l5.19-3L10 9v6zm11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z" />
                   </svg>
                 </span>
-                <span className="font-bold text-[#231F20] text-sm group-hover:text-white transition-colors">
+                <span className="font-bold text-[#231F20] mob:text-[4vw] text-[1.6vw] group-hover:text-white transition-colors">
                   Youtube
                 </span>
               </a>
@@ -123,7 +125,7 @@ const JoinCultSection = () => {
                     <circle cx="4" cy="4" r="2" />
                   </svg>
                 </span>
-                <span className="font-bold text-[#231F20] text-sm group-hover:text-white transition-colors">
+                <span className="font-bold text-[#231F20] mob:text-[4vw] text-[1.6vw] group-hover:text-white transition-colors">
                   LinkedIn
                 </span>
               </a>
@@ -132,7 +134,7 @@ const JoinCultSection = () => {
         </div>
 
         {/* ── Right: image (Now top on mobile) ── */}
-        <div className="relative min-h-[350px] md:min-h-[0]">
+        <div className="relative min-h-[450px] md:min-h-[450px]">
           {/* Top-left corner */}
           <motion.span
             className="pointer-events-none absolute z-10 border-[#E8C84A]"
@@ -162,7 +164,7 @@ const JoinCultSection = () => {
           />
 
           {/* Image Container */}
-          <div className="relative w-full h-full min-h-[350px] md:min-h-full rounded-[28px] overflow-hidden">
+          <div className="relative w-full h-full min-h-[450px] md:min-h-[450px] rounded-[28px] overflow-hidden">
             {IMAGES.map((src, i) => (
               <Image
                 key={src}

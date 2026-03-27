@@ -116,14 +116,14 @@ const Home = ({
 
         <ScrollReveal direction="up" delay={100}>
           <Container maxWidth={false} className="w-full px-[10vw] mob:px-[4vw] pt-12 pb-4 mob:pb-2">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-14 w-full">
+            <div className="grid grid-cols-2 tabp:grid-cols-4 gap-4 md:gap-2 w-full">
               {uspCardsData?.map((card, index) => {
                 // Mapping icons as per your logic
                 let icon = card.icon;
-                if (index === 0) icon = '/assets/images/uspCard1.svg';
-                if (index === 1) icon = '/assets/images/uspCard2.svg';
-                if (index === 2) icon = '/assets/images/uspCard3.svg';
-                if (index === 3) icon = '/assets/images/uspCard4.svg';
+                if (index === 0) icon = '/assets/svg/website webp-27.svg';
+                if (index === 1) icon = '/assets/svg/website webp-28.svg';
+                if (index === 2) icon = '/assets/svg/website webp-29.svg';
+                if (index === 3) icon = '/assets/svg/website webp-30.svg';
                 return <UspCard cardData={{ ...card, icon }} key={index} />;
               })}
             </div>
@@ -170,7 +170,7 @@ const Home = ({
                 </span>
               }
               titleVariant={isMobile ? 'h4' : 'h2'}
-              description={`We partner directly with farms across the world and across India. <br/> No middlemen. No dark stores. <br/> Just produce that moves from the farm to you at peak&nbsp;flavour.`}
+              description={`We partner directly with farms across the world and across India. <div className="py-3"> No middlemen. No dark stores. </div> Just produce that moves from the farm to you at peak&nbsp;flavour.`}
               // buttonText="Know more"
               buttonVariant="tertiary"
               rootClass="bg-[#fff8d5] items-center !p-6 md:!p-8 lg:!p-12"
@@ -186,7 +186,7 @@ const Home = ({
           </div>
         </ScrollReveal>
 
-        <div className="bg-[#FAF7F0]">
+        <div className="bg-[#FEF5E3]">
           <ScrollReveal direction="up" delay={0}>
             <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[10] !overflow-visible">
               <SideBySide
@@ -205,14 +205,14 @@ const Home = ({
                 }
                 titleVariant={isMobile ? 'h4' : 'h1'}
                 titleClass="font-[Recoleta] !font-bold !leading-[1.1] "
-                description={`Everyone has a right to fresh, authentic <br/ className="mob:hidden"> flavours. But only a few fight for it. Origin Fresh <br/ className="mob:hidden"> is for those&nbsp;who&nbsp;do.`}
-                descriptionClass="md:!text-[1.5vw]"
+                description={`Everyone has a right to fresh, authentic <br/ className="mob:hidden"> flavours. But only a few fight for it. Origin&nbsp;Fresh is for those&nbsp;who&nbsp;do.`}
+                descriptionClass="md:!text-[1.614vw]"
                 // buttonText="Know more"
                 buttonVariant="tertiary"
-                rootClass="bg-[#FAF7F0] z-1 px-[10vw] mob:px-[3vw] items-center !rounded-none pb-12 !overflow-visible"
+                rootClass="bg-[#FEF5E3] z-1 px-[10vw] mob:px-[3vw] items-center !rounded-none pb-12 !overflow-visible"
                 reverse
-                parallaxImgContainerClass="relative py-5 lg:pt-9 lg:pb-20 !lg:w-[45%] !overflow-visible"
-                titleContainerClass="!pl-0 !lg:ps-0 !lg:pe-12 !pr-12"
+                parallaxImgContainerClass="relative py-5 lg:pt-9 lg:pb-20 !lg:w-[40%] !overflow-visible"
+                titleContainerClass="!pl-0 !lg:ps-0 !lg:pe-12 !pr-12 !lg:w-[55%]"
                 parallaxTopImageWidth={600}
                 parallaxTopImageHeight={800}
                 parallaxMainImageHeight={800}

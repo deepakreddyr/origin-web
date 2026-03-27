@@ -40,7 +40,7 @@ const Hero = () => {
 
           {/* Stat */}
           <p className="font-[SofiaPro] font-medium text-black text-[4vw] leading-[1.25]">We work closely with over</p>
-          <p className="font-[Recoleta] font-bold text-primary text-[10vw] leading-[1]">10,000+ farmers</p>
+          <p className="font-[Recoleta] font-bold text-primary text-[9vw] leading-[1]">10,000+ farmers</p>
 
           {/* Paragraph */}
           <p className="font-[SofiaPro] font-medium text-black text-[4vw] leading-[1.25]">
