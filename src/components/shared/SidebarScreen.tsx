@@ -108,6 +108,12 @@ const SidebarScreen = () => {
           break;
         }
         if (cart.cartTabType === TabTypeConstant.CART_ADDRESS_LIST || cart.cartTabType === TabTypeConstant.PAYMENT) {
+          const flowType = localStorage.getItem('FLOW_TYPE');
+          if (flowType === 'retry_payment' && cart.cartTabType === TabTypeConstant.PAYMENT) {
+            dispatch(setIsSidebarOpen(false));
+            localStorage.removeItem('FLOW_TYPE');
+            break;
+          }
           dispatch(setCartTabType(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR));
           break;
         }
