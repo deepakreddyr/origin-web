@@ -31,7 +31,7 @@ const Handpicked = () => {
             <span className="text-secondary text-[8vw] md:text-[4vw] font-bold font-[Recoleta]">exotic</span>
           </div>
 
-          <p className="font-[SofiaPro] font-semibold text-[4vw] md:text-[1.7vw] leading-[1.25] text-black">
+          <p className="font-[SofiaPro] font-semibold text-[4vw] md:text-[1.65vw] leading-[1.25] text-black">
             ingredients alongside carefully <br className="hidden md:block" />
             grown local produce, for people <br className="hidden md:block" />
             who care not just about taste, but <br className="hidden md:block" />

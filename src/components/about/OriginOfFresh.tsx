@@ -113,13 +113,13 @@ const OriginOfFresh = () => {
                 <h3 className="font-[Recoleta] font-bold text-[4.5vw] md:text-[1.6vw] mb-1 leading-tight text-black">
                   1. Sourced at the Peak
                 </h3>
-                <p className="font-[SofiaPro] font-medium text-[3.5vw] md:text-[1.1vw] leading-relaxed text-black mb-1">
+                <p className="font-[SofiaPro] font-semibold text-[3.5vw] md:text-[1.65vw] leading-relaxed text-black mb-1">
                   We work directly with
                 </p>
                 <p className="font-[Recoleta] font-bold text-secondary text-[8vw] md:text-[2.8vw] leading-none mb-1">
                   10,000+
                 </p>
-                <p className="font-[SofiaPro] font-medium text-[3.5vw] md:text-[1.1vw] leading-[1.25] text-black max-w-[30vw] mob:max-w-full">
+                <p className="font-[SofiaPro] font-semibold text-[3.5vw] md:text-[1.1vw] leading-[1.25] text-black max-w-[30vw] mob:max-w-full">
                   farmers, building long-term relationships focused on their growth and your access to
                   peak&nbsp;produce.
                 </p>
@@ -132,7 +132,7 @@ const OriginOfFresh = () => {
                 <h3 className="font-[Recoleta] font-bold text-[4.5vw] md:text-[1.6vw] mb-1 leading-tight text-black">
                   2. Five-Level Quality Check
                 </h3>
-                <p className="font-[SofiaPro] font-medium text-[3.5vw] md:text-[1.1vw] leading-[1.25] text-black max-w-[30vw] mob:max-w-full md:ml-auto">
+                <p className="font-[SofiaPro] font-semibold text-[3.5vw] md:text-[1.1vw] leading-[1.25] text-black max-w-[30vw] mob:max-w-full md:ml-auto">
                   Every fruit and vegetable passes through five stages of inspection for bruising, marks, condition,
                   and&nbsp;taste.
                 </p>
@@ -151,7 +151,7 @@ const OriginOfFresh = () => {
                 <h3 className="font-[Recoleta] font-bold text-[4.5vw] md:text-[1.6vw] mb-1 leading-tight text-black">
                   3. No Warehousing
                 </h3>
-                <p className="font-[SofiaPro] font-medium text-[3.5vw] md:text-[1.1vw] leading-[1.25] text-black max-w-[30vw] mob:max-w-full">
+                <p className="font-[SofiaPro] font-semibold text-[3.5vw] md:text-[1.1vw] leading-[1.25] text-black max-w-[30vw] mob:max-w-full">
                   Produce moves straight from farm to store and is stored under the right conditions. No
                   unnecessary&nbsp;stops.
                 </p>
@@ -164,7 +164,7 @@ const OriginOfFresh = () => {
                 <h3 className="font-[Recoleta] font-bold text-[4.5vw] md:text-[1.6vw] mb-1 leading-tight text-black">
                   4. Packed to Order
                 </h3>
-                <p className="font-[SofiaPro] font-medium text-[3.5vw] md:text-[1.1vw] leading-[1.25] text-black max-w-[30vw] mob:max-w-full md:ml-auto">
+                <p className="font-[SofiaPro] font-semibold text-[3.5vw] md:text-[1.1vw] leading-[1.25] text-black max-w-[30vw] mob:max-w-full md:ml-auto">
                   When your order comes in, it goes through a last-mile quality check, is stacked mindfully to minimise
                   damage, and dispatched&nbsp;quickly.
                 </p>
@@ -183,7 +183,7 @@ const OriginOfFresh = () => {
                 <h3 className="font-[Recoleta] font-bold text-[4.5vw] md:text-[1.6vw] mb-1 leading-tight text-black">
                   5. Delivered Fresh
                 </h3>
-                <p className="font-[SofiaPro] font-medium text-[3.5vw] md:text-[1.1vw] leading-[1.25] text-black max-w-[30vw] mob:max-w-full">
+                <p className="font-[SofiaPro] font-semibold text-[3.5vw] md:text-[1.1vw] leading-[1.25] text-black max-w-[30vw] mob:max-w-full">
                   Handled with care and delivered safely to your&nbsp;door.
                 </p>
               </div>
@@ -195,7 +195,7 @@ const OriginOfFresh = () => {
                 <h3 className="font-[Recoleta] font-bold text-[4.5vw] md:text-[1.6vw] mb-1 leading-tight text-black">
                   6. We&apos;re There for You
                 </h3>
-                <p className="font-[SofiaPro] font-medium text-[3.5vw] md:text-[1.1vw] leading-[1.25] text-black max-w-[30vw] mob:max-w-full">
+                <p className="font-[SofiaPro] font-semibold text-[3.5vw] md:text-[1.1vw] leading-[1.25] text-black max-w-[30vw] mob:max-w-full">
                   Need assistance?
                   <br />
                   Reach out to our customer support team

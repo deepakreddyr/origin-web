@@ -120,10 +120,10 @@ const Home = ({
               {uspCardsData?.map((card, index) => {
                 // Mapping icons as per your logic
                 let icon = card.icon;
-                if (index === 0) icon = '/assets/svg/website webp-27.svg';
-                if (index === 1) icon = '/assets/svg/website webp-28.svg';
-                if (index === 2) icon = '/assets/svg/website webp-29.svg';
-                if (index === 3) icon = '/assets/svg/website webp-30.svg';
+                if (index === 0) icon = '/assets/svg/Artboard 46.webp';
+                if (index === 1) icon = '/assets/svg/Artboard 47.webp';
+                if (index === 2) icon = '/assets/svg/Artboard 48.webp';
+                if (index === 3) icon = '/assets/svg/Artboard 49.webp';
                 return <UspCard cardData={{ ...card, icon }} key={index} />;
               })}
             </div>

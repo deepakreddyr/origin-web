@@ -344,11 +344,11 @@ const StoryTestimonials = () => {
                     className="flex flex-col items-center gap-[3vw] md:gap-[1.2vw] lg:gap-[1vw] group shrink-0"
                     aria-label={`View ${story.userName}'s story`}
                   >
-                    <div className="rounded-full p-[0.35vw] bg-[#E18D1F] shadow-lg group-hover:scale-105 transition-transform duration-200">
+                    <div className="rounded-full p-[0.6vw] md:p-[0.3vw] bg-[#E18D1F] shadow-lg group-hover:scale-105 transition-transform duration-200">
                       <div
                         className="
                                                 rounded-full overflow-hidden border-white bg-white
-                                                border-[1vw] md:border-[0.5vw]
+                                                border-[0.5vw] md:border-[0.2vw]
                                                 w-[25vw] h-[25vw]
                                                 md:w-[10vw] md:h-[10vw]
                                                 lg:w-[13vw] lg:h-[13vw]

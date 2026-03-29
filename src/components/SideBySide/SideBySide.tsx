@@ -131,6 +131,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
           {description && (
             <Typography
               variant="body1"
+              component="div"
               className={CA(
                 'lg:my-6 mt-6 mb-6 font-semibold md:text-[1.7vw] mob:text-[4vw] leading-[1.25] text-black',
                 descriptionClass
@@ -181,6 +182,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
           {description && (
             <Typography
               variant="body1"
+              component="div"
               className={CA(
                 'lg:my-6 mt-6 mb-6 font-semibold md:text-[1.7vw] mob:text-[4vw] leading-[1.25] text-black',
                 descriptionClass
@@ -225,6 +227,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
             <Box className="w-full lg:w-[calc(50%-3rem)]">
               <Typography
                 variant="body1"
+                component="div"
                 className={CA(
                   'mt-6 mb-6 lg:mb-6 font-semibold md:text-[1.7vw] mob:text-[4vw] leading-[1.25] text-black',
                   descriptionClass
@@ -275,6 +278,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
 
           <Typography
             variant="body1"
+            component="div"
             className={CA(
               'lg:my-6 mt-6 mb-6 font-semibold md:text-[1.7vw] mob:text-[4vw] leading-[1.25] text-black',
               descriptionClass

@@ -39,11 +39,13 @@ const Hero = () => {
           </h1>
 
           {/* Stat */}
-          <p className="font-[SofiaPro] font-medium text-black text-[4vw] leading-[1.25]">We work closely with over</p>
+          <p className="font-[SofiaPro] font-semibold text-black text-[4vw] leading-[1.25]">
+            We work closely with over
+          </p>
           <p className="font-[Recoleta] font-bold text-primary text-[9vw] leading-[1]">10,000+ farmers</p>
 
           {/* Paragraph */}
-          <p className="font-[SofiaPro] font-medium text-black text-[4vw] leading-[1.25]">
+          <p className="font-[SofiaPro] font-semibold text-black text-[4vw] leading-[1.25]">
             globally, building long-term partnerships rooted in transparency. By removing unnecessary intermediaries, we
             ensure a more traceable journey from farm to table. The result is consistent quality for you and fair value
             for the farmers.
