@@ -1,12 +1,13 @@
 import React from 'react';
 import handpickedImg1 from '/public/assets/images/about/about3.webp';
+import about5 from '/public/assets/images/about/about5.webp';
 import Image from 'next/image';
 
 const Handpicked = () => {
   return (
-    <section className="w-full bg-[#FEF5E3] relative flex flex-col justify-start overflow-hidden min-h-[75vw] md:min-h-[58vw]">
+    <section className="w-full bg-[#FEF5E3] relative flex flex-col justify-start overflow-hidden min-h-[75vw] md:min-h-[52vw]">
       {/* Upper Content Part */}
-      <div className="flex flex-col md:flex-row items-start justify-start w-full px-[8vw] md:pr-[11.5vw] pb-[50vw] md:pb-[8vw] z-10 relative">
+      <div className="flex flex-col md:flex-row items-start justify-start w-full px-[8vw] md:pr-[11.5vw] pb-[50vw] md:pb-[8vw] z-10 relative md:hidden">
         {/* Left: Heading */}
         <div className="w-full md:w-auto mt-[10vw] md:mt-[2vw] mb-[2vw] md:mb-0 text-left md:text-right">
           <h2 className="font-[Recoleta] font-bold text-[17vw] md:text-[7.6vw] leading-[1.1] md:leading-[1.05] tracking-tight">
@@ -41,15 +42,18 @@ const Handpicked = () => {
       </div>
 
       {/* Bottom Illustration - Absolute so it sits behind text, reducing gap */}
-      <div className="absolute bottom-0 left-0 w-full h-full">
+      <div className="absolute bottom-0 left-0 w-full h-full md:hidden">
         <Image
           src={handpickedImg1}
-          alt="farm illustration"
+          alt="farm illustration mobile"
           fill
           className="object-contain object-bottom"
           quality={100}
           priority
         />
+      </div>
+      <div className="absolute bottom-0 left-0 w-full h-full hidden md:block">
+        <Image src={about5} alt="farm illustration desktop" fill className="object-cover" quality={100} priority />
       </div>
     </section>
   );

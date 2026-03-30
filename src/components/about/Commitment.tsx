@@ -44,7 +44,7 @@ const Commitment = () => {
               50%
             </span>
           </div>
-          <p className="font-[SofiaPro] font-semibold text-[4vw] md:text-[1.7vw] leading-[1.25] text-black">
+          <p className="font-[SofiaPro] font-medium text-[4vw] md:text-[1.7vw] leading-[1.25] text-black">
             of our farmer network is led by <br className="md:block hidden" />
             women. Through our digital <br className="md:block hidden" />
             farmer platform and dedicated <br className="md:block hidden" />
