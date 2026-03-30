@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
@@ -7,6 +7,9 @@ import CustomHead from '@/components/shared/CustomHead';
 import { FooterDataType, MainMenuType } from '@/utilities/types';
 import MangoHeader from '@/components/Mango/MangoHeader';
 import MangoHero from '@/components/Mango/MangoHero';
+import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
+import { protectedUrl, unprotectedUrl } from '@/url';
+import { getAddressAndStoreId } from '@/utilities/utils';
 
 import MangoProductHighlight from '@/components/Mango/MangoProductHighlight';
 
@@ -57,6 +60,36 @@ const mangoProducts = [
 ];
 
 const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestimonials }: MangoLandingPageProps) => {
+  const [mangoHomepageData, setMangoHomepageData] = useState<any>(null);
+  const getDataFromApi = useGetDataFromApi();
+
+  useEffect(() => {
+    const token = localStorage.getItem('user_token');
+    const addressFromLs = getAddressAndStoreId();
+
+    let apiUrl: string;
+    let additionalHeaders: Record<string, string> = {};
+
+    if (token && addressFromLs) {
+      apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getMangoHomepage'];
+      additionalHeaders = { 'store-id': addressFromLs.store_id };
+    } else {
+      apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['getMangoHomepage'];
+    }
+
+    const successHandler = (data: any) => {
+      console.log('[MangoHomepage] API response:', data);
+      setMangoHomepageData(data?.data ?? data);
+    };
+
+    const failureHandler = (error: any) => {
+      console.error('[MangoHomepage] API error:', error);
+    };
+
+    getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Layout isHeader={false} mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={true}>
       <CustomHead
