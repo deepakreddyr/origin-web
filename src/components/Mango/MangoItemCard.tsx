@@ -19,7 +19,12 @@ import logo from '/public/logo.svg';
 
 import { UOMPopup, MaxQuantityToast, Product, UOM, NotifyToast } from '../shared/UOMPopup';
 
-const MangoItemCard = ({ itemDetails }: { itemDetails: Product }) => {
+interface MangoItemCardProps {
+  itemDetails: Product;
+  isCompact?: boolean;
+}
+
+const MangoItemCard = ({ itemDetails, isCompact = false }: MangoItemCardProps) => {
   const router = useRouter();
   const cartItems = useSelector((state: any) => state.cart.items);
 
@@ -88,7 +93,7 @@ const MangoItemCard = ({ itemDetails }: { itemDetails: Product }) => {
 
   const handleNavigation = () => {
     const slug = encodeURIComponent(itemDetails.name.replace(/ /g, '-').toLowerCase());
-    router.push(`/${slug}/${itemDetails.id}`);
+    router.push(`/mango/products/${slug}?id=${itemDetails.id}`);
   };
 
   const handleBasketViewClick = (e: React.MouseEvent) => {
@@ -126,16 +131,16 @@ const MangoItemCard = ({ itemDetails }: { itemDetails: Product }) => {
 
       {/* Mango Styled Container: White background, Border, Shadow, Padding */}
       <div
-        className="bg-white border border-[#EDE6D4] rounded-[24px] p-5 shadow-[0px_10px_30px_rgba(0,0,0,0.05)] hover:shadow-[0px_15px_40px_rgba(0,0,0,0.08)] transition-all flex flex-col h-full relative"
-        style={{ width: '304.47px' }}
+        className={`bg-white border border-[#EDE6D4] rounded-[24px] flex flex-col h-full relative transition-all ${isCompact ? 'p-3' : 'p-5'}`}
+        style={!isCompact ? { width: '304.47px' } : { width: '100%' }}
       >
         <div onClick={handleNavigation} className="cursor-pointer w-full text-start group flex flex-col h-full">
           {/* Image Container — adjusted to precise design specs */}
           <div
-            className="relative bg-[#F3F0E6] flex items-center justify-center overflow-hidden mb-4"
+            className={`relative bg-[#F3F0E6] flex items-center justify-center overflow-hidden ${isCompact ? 'mb-2' : 'mb-4'}`}
             style={{
-              width: '264.47px',
-              height: '240.67px',
+              width: isCompact ? '100%' : '264.47px',
+              height: isCompact ? '160px' : '240.67px',
               borderRadius: '21.16px'
             }}
           >
@@ -146,13 +151,14 @@ const MangoItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                 src={itemDetails.image || logo}
                 alt={itemDetails.name || 'product image'}
                 fill
+                unoptimized
                 sizes="(max-width: 768px) 50vw, 25vw"
                 style={{ objectFit: 'contain' }}
               />
             </div>
 
             {defaultUOM.conversion_text && (
-              <div className="absolute top-2 right-2 text-[#146321] text-[12px] font-bold px-2 py-0.5 rounded-full font-[SofiaPro] bg-white bg-opacity-80">
+              <div className="absolute top-2 right-2 text-[#146321] text-[12px] font-bold px-2 py-0.5 rounded-full font-[SofiaPro]">
                 {defaultUOM.conversion_text}
               </div>
             )}
@@ -170,29 +176,41 @@ const MangoItemCard = ({ itemDetails }: { itemDetails: Product }) => {
             )}
           </div>
 
-          {/* Name Area */}
-          <div className="mb-1">
-            <p className="font-[SofiaPro] font-semibold text-[18px] md:text-[20px] leading-tight text-[#1a1a1a]">
+          {/* Content — Name, Description & Price */}
+          <div className={`flex flex-col mb-1 ${isCompact ? 'px-1' : ''}`}>
+            {/* Title / Name */}
+            <span
+              className={`${isCompact ? 'text-[15px]' : 'text-[18px] md:text-[20px]'} font-bold text-[#1a1a1a] leading-[1.15] truncate`}
+              style={{ fontFamily: 'SofiaPro' }}
+            >
               {itemDetails.name}
+            </span>
+            {/* Description */}
+            <p
+              className={`${isCompact ? 'text-[13px]' : 'text-[13px]'} font-regular text-[#666666] leading-[1.3] line-clamp-2 min-h-[2.6em] mt-0.5 mb-0.5`}
+              style={{ fontFamily: 'SofiaPro' }}
+            >
+              {itemDetails.description || ''}
+            </p>
+            {/* Unit */}
+            <p className="text-[11px] text-gray-400 font-medium lowercase" style={{ fontFamily: 'SofiaPro' }}>
+              {selectedUOM.unit}
             </p>
           </div>
 
-          <p className="text-[13px] text-gray-500 mb-1" style={{ fontFamily: 'SofiaPro' }}>
-            {itemDetails.description || 'Premium farm fresh mangoes.'}
-          </p>
-
-          <p className="text-[13px] text-gray-400 font-medium" style={{ fontFamily: 'SofiaPro' }}>
-            {selectedUOM.unit}
-          </p>
-
           {/* Price and Action Area */}
-          <div className="flex items-center justify-between mt-auto pt-3">
+          <div className="flex items-center justify-between mt-auto pt-2">
             <div className="flex flex-col">
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-2">
                 {selectedUOM.market_price > 0 && selectedUOM.market_price > selectedUOM.price && (
-                  <p className="text-gray-400 line-through text-[12px] font-[SofiaPro]">₹{selectedUOM.market_price}</p>
+                  <p className="text-gray-400 line-through text-[11px] font-[SofiaPro]">₹{selectedUOM.market_price}</p>
                 )}
-                <p className="font-semibold text-[18px] text-[#1a1a1a]">₹{selectedUOM.price}</p>
+                <p
+                  className={`${isCompact ? 'text-[14px]' : 'text-[18px]'} font-bold text-[#1a1a1a]`}
+                  style={{ fontFamily: 'SofiaPro' }}
+                >
+                  ₹{selectedUOM.price}
+                </p>
               </div>
             </div>
 

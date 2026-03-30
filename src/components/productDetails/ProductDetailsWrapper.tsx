@@ -305,7 +305,56 @@ const ProductDetailsWrapper = () => {
 
   const getDataFromApi = useGetDataFromApi();
   const router = useRouter();
-  const { isReady, query } = router;
+  const { isReady, query, pathname } = router;
+
+  const renderBreadcrumbs = () => {
+    const isMangoPath = pathname.startsWith('/mango');
+    const productName = productDetails.item.name;
+    const categoryName = productDetails.item.category_name || 'Shop';
+    const categorySlug = productDetails.item.category_slug;
+
+    if (isMangoPath) {
+      if (pathname.includes('/products/')) {
+        return (
+          <>
+            <Link href="/mango" className="hover:underline">
+              Mango
+            </Link>
+            <span className="text-gray-300">/</span>
+            <Link href="/mango/products" className="hover:underline">
+              Products
+            </Link>
+            <span className="text-gray-300">/</span>
+            <span className="text-gray-900 line-clamp-1">{productName}</span>
+          </>
+        );
+      }
+      return (
+        <>
+          <Link href="/mango" className="hover:underline">
+            Mango
+          </Link>
+          <span className="text-gray-300">/</span>
+          <span className="text-gray-900 line-clamp-1">{productName}</span>
+        </>
+      );
+    }
+
+    // Default shop path
+    return (
+      <>
+        <Link href="/" className="hover:underline">
+          Home
+        </Link>
+        <span className="text-gray-300">/</span>
+        <Link href={categorySlug ? `/shop/${categorySlug}` : '/shop'} className="hover:underline">
+          {categoryName}
+        </Link>
+        <span className="text-gray-300">/</span>
+        <span className="text-gray-900 line-clamp-1">{productName}</span>
+      </>
+    );
+  };
 
   const notifiedItems = useSelector((state: any) => state.products.notifiedItems);
   const isNotified = productDetails.item ? notifiedItems.includes(productDetails.item.id) : false;
@@ -531,18 +580,7 @@ const ProductDetailsWrapper = () => {
           {/* Breadcrumbs for Mobile - APPEARS BEFORE IMAGE */}
           {mobile && (
             <div className="flex items-center gap-2 text-lg font-bold text-[#146321] mb-6 font-[SofiaPro]">
-              <Link href="/" className="hover:underline">
-                Home
-              </Link>
-              <span className="text-gray-300">/</span>
-              <Link
-                href={productDetails.item.category_slug ? `/shop/${productDetails.item.category_slug}` : '/shop'}
-                className="hover:underline"
-              >
-                {productDetails.item.category_name || 'Shop'}
-              </Link>
-              <span className="text-gray-300">/</span>
-              <span className="text-gray-900 line-clamp-1">{productDetails.item.name}</span>
+              {renderBreadcrumbs()}
             </div>
           )}
 
@@ -684,18 +722,7 @@ const ProductDetailsWrapper = () => {
                 <div className="flex flex-col space-y-8">
                   {/* Breadcrumbs */}
                   <div className="flex items-center gap-2 text-lg font-bold text-[#146321] font-[SofiaPro]">
-                    <Link href="/" className="hover:underline">
-                      Home
-                    </Link>
-                    <span className="text-gray-300">/</span>
-                    <Link
-                      href={productDetails.item.category_slug ? `/shop/${productDetails.item.category_slug}` : '/shop'}
-                      className="hover:underline"
-                    >
-                      {productDetails.item.category_name || 'Shop'}
-                    </Link>
-                    <span className="text-gray-300">/</span>
-                    <span className="text-gray-900 line-clamp-1">{productDetails.item.name}</span>
+                    {renderBreadcrumbs()}
                   </div>
 
                   {/* Title & Subtitle */}
