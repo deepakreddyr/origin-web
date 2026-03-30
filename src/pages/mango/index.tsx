@@ -60,7 +60,7 @@ const mangoProducts = [
 ];
 
 const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestimonials }: MangoLandingPageProps) => {
-  const [mangoHomepageData, setMangoHomepageData] = useState<any>(null);
+  const [mangoHomepageData, setMangoHomepageData] = useState<any[]>([]);
   const getDataFromApi = useGetDataFromApi();
 
   useEffect(() => {
@@ -79,7 +79,34 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
 
     const successHandler = (data: any) => {
       console.log('[MangoHomepage] API response:', data);
-      setMangoHomepageData(data?.data ?? data);
+      const resData = data?.data ?? [];
+      setMangoHomepageData(resData);
+
+      // Extract Mango category info from the section that has a "View All" navigation
+      const listingSection = resData.find((section: any) => section.navigation?.title === 'View All');
+      if (listingSection?.navigation?.to) {
+        const fullToPath = listingSection.navigation.to;
+        localStorage.setItem('mango_listing_api_path', fullToPath);
+
+        const parts = fullToPath.split('/');
+        const categoryId = parts[parts.length - 1];
+        if (categoryId) {
+          localStorage.setItem('mango_parent_category_id', categoryId);
+        }
+      } else {
+        // Fallback to second section if "View All" title is not found (per previous requirements)
+        const popularSection = resData[1];
+        if (popularSection?.navigation?.to) {
+          const fullToPath = popularSection.navigation.to;
+          localStorage.setItem('mango_listing_api_path', fullToPath);
+
+          const parts = fullToPath.split('/');
+          const categoryId = parts[parts.length - 1];
+          if (categoryId) {
+            localStorage.setItem('mango_parent_category_id', categoryId);
+          }
+        }
+      }
     };
 
     const failureHandler = (error: any) => {
@@ -89,6 +116,30 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Helper to deduplicate products by ID
+  const deduplicate = (items: any[]) => {
+    const seen = new Set();
+    return items.filter((item) => {
+      if (!item || seen.has(item.id)) return false;
+      seen.add(item.id);
+      return true;
+    });
+  };
+
+  // 1st featured-items section → first 2 items for MangoProductHighlight
+  const highlightSection = mangoHomepageData[0];
+  const highlightItems = (highlightSection?.data ?? [])
+    .map((entry: any) => entry.item)
+    .filter((item: any) => item && item.multiple_uoms && item.multiple_uoms.length > 0);
+  const highlightProducts = deduplicate(highlightItems).slice(0, 2);
+
+  // 2nd featured-items section → all items for PopularMangoes
+  const popularSection = mangoHomepageData[1];
+  const popularItems = (popularSection?.data ?? [])
+    .map((entry: any) => entry.item)
+    .filter((item: any) => item && item.multiple_uoms && item.multiple_uoms.length > 0);
+  const popularProducts = deduplicate(popularItems);
 
   return (
     <Layout isHeader={false} mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={true}>
@@ -120,7 +171,7 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
 
           <MangoHero />
 
-          <MangoProductHighlight />
+          <MangoProductHighlight products={highlightProducts} />
         </div>
 
         {/* ── USP Section (4-icon strip) ── */}
@@ -135,7 +186,7 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
         }}
       >
         {/* ── Popular Mangoes (Must-try) ── */}
-        <PopularMangoes />
+        <PopularMangoes products={popularProducts} />
 
         {/* ── Mango Pulp Banner ── */}
         <MangoPulpBanner />

@@ -23,7 +23,8 @@ export const unprotectedUrl: UrlMap = {
   getCategories: '/api/v5/public/skip-login/categories',
   getHomepage: '/api/v5/public/skip-login/homepage',
   getSubscriptionItems: '/api/v5/public/skip-login/subscription/items',
-  getMangoHomepage: '/api/v5/public/skip-login/mango-homepage'
+  getMangoHomepage: '/api/v5/public/skip-login/mango-homepage',
+  mangoSearch: '/api/v5/public/skip-login/search/items/parent-category'
 };
 
 export const protectedUrl: UrlMap = {
@@ -46,6 +47,7 @@ export const protectedUrl: UrlMap = {
   notifyMe: '/api/v5/user/items/notify-me',
   requestItems: '/api/v3/user/request-items',
   getSubscriptionItems: '/api/v5/user/subscription/items',
-  getMangoHomepage: '/api/v5/user/mango-homepage'
+  getMangoHomepage: '/api/v5/user/mango-homepage',
+  mangoSearch: '/api/v5/user/search/items/parent-category'
 };
 // /api/5v / user / items;
