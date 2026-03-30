@@ -28,13 +28,17 @@ const bgColorsMobile = [
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-const getNextSaturday = () => {
+const getNextSunday = () => {
   const now = new Date();
-  const day = now.getDay(); // 0 = Sun, 6 = Sat
-  const daysUntil = day === 6 ? 7 : 6 - day;
+  const day = now.getDay(); // 0 = Sun
+  const daysUntil = (7 - day) % 7;
   const next = new Date(now);
   next.setDate(now.getDate() + daysUntil);
-  next.setHours(0, 0, 0, 0);
+  next.setHours(7, 0, 0, 0); // Sunday Morning (7 AM)
+
+  if (now > next) {
+    next.setDate(next.getDate() + 7);
+  }
   return next;
 };
 
@@ -72,7 +76,7 @@ const SubscriptionChallenge = ({ item, comboItems, maxQty }: { item?: any; combo
   useEffect(() => {
     const tick = () => {
       const now = new Date();
-      const diff = getNextSaturday().getTime() - now.getTime();
+      const diff = getNextSunday().getTime() - now.getTime();
       if (diff <= 0) {
         setTimeLeft({ days: 0, hours: 0, min: 0, sec: 0 });
         return;
