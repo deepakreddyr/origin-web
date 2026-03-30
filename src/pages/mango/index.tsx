@@ -13,10 +13,27 @@ import MangoProductHighlight from '@/components/Mango/MangoProductHighlight';
 import MangoUSP from '@/components/Mango/MangoUSP';
 import PopularMangoes from '@/components/Mango/PopularMangoes';
 import MangoPulpBanner from '@/components/Mango/MangoPulpBanner';
+import MangoRecipeCard from '@/components/Mango/MangoRecipeCard';
+import MangoTestimonialCard from '@/components/Mango/MangoTestimonialCard';
 
 interface MangoLandingPageProps {
   mainMenuItems: MainMenuType[];
   footerData: FooterDataType;
+  mangoRecipes: {
+    slug: string;
+    name: string;
+    tag: string;
+    date: string;
+    imgSrc: string;
+  }[];
+  mangoTestimonials: {
+    id: number;
+    name: string;
+    location: string;
+    text: string;
+    stars: number;
+    avatar: string;
+  }[];
 }
 
 // Placeholder mango products data (will be replaced with API data)
@@ -39,29 +56,7 @@ const mangoProducts = [
   { slug: 'langra', name: 'Langra', description: 'Tangy-sweet with a greenish skin.', price: 220, weight: '1 Kg' }
 ];
 
-// Placeholder recipe data (will be replaced with API data)
-const mangoRecipes = [
-  {
-    slug: 'mango-chaat',
-    name: 'Spice Up Your Evening With This Delectable Mango Chaat!',
-    tag: 'By Mango',
-    date: '02 March, 2019'
-  },
-  {
-    slug: 'mango-popsicles',
-    name: 'Beat The Heat With Addictive Mango Popsicles',
-    tag: 'By Mango',
-    date: '10 April, 2019'
-  },
-  {
-    slug: 'mango-cucumber-salsa',
-    name: 'This Mango Cucumber Salsa Is The Next Crowd Favourite',
-    tag: 'By Mango',
-    date: '15 May, 2019'
-  }
-];
-
-const MangoLandingPage = ({ mainMenuItems, footerData }: MangoLandingPageProps) => {
+const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestimonials }: MangoLandingPageProps) => {
   return (
     <Layout isHeader={false} mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={true}>
       <CustomHead
@@ -72,7 +67,7 @@ const MangoLandingPage = ({ mainMenuItems, footerData }: MangoLandingPageProps) 
       <MangoHeader />
 
       <div
-        className="min-h-screen"
+        className=""
         style={{
           background: 'linear-gradient(180deg, #FFD74F 12.84%, #FEDD6D 43.51%, #FFE796 67.31%, #FFFFFF 100%)'
         }}
@@ -98,8 +93,9 @@ const MangoLandingPage = ({ mainMenuItems, footerData }: MangoLandingPageProps) 
         {/* ── USP Section (4-icon strip) ── */}
         <MangoUSP />
       </div>
+
       <div
-        className="min-h-screen"
+        className=""
         style={{
           background:
             'linear-gradient(180deg, #FFFFFF 0.48%, #FFD74F 20.19%, #FEDD6D 38.94%, #FFD854 55.29%, #FBCA38 63.22%, #FDD45C 71.27%, #FFEFC4 86.54%, #FFFFFF 100%)'
@@ -112,33 +108,69 @@ const MangoLandingPage = ({ mainMenuItems, footerData }: MangoLandingPageProps) 
         <MangoPulpBanner />
 
         {/* ── Mangolicious Recipes ── */}
-        <section className="py-12 px-6 md:px-16">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-[#1a1a1a]">Mangolicious Recipes</h2>
-              <p className="text-[#666] mt-2">Mango-based dishes that will revolutionise your love for mangoes.</p>
+        <section className="relative py-10 md:py-14 px-6 md:px-[7vw] overflow-hidden">
+          <div className="max-w-[1440px] mx-auto relative z-20">
+            <div className="text-center mb-8 md:mb-10">
+              <h2 className="text-3xl md:text-[47px] font-bold text-[#1a1a1a] mb-6" style={{ fontFamily: 'Recoleta' }}>
+                Mangolicious Recipes
+              </h2>
+              <p
+                className="text-base md:text-[23px] text-[#000000] opacity-50 font-semibold"
+                style={{ fontFamily: 'SofiaPro' }}
+              >
+                Mango-based dishes that will revolutionise your love for mangoes.
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {mangoRecipes.map((recipe) => (
-                <Link
-                  key={recipe.slug}
-                  href={`/mango/recipes/${recipe.slug}`}
-                  className="group block rounded-2xl overflow-hidden hover:shadow-lg transition-shadow"
-                >
-                  <div className="aspect-video flex items-center justify-center text-6xl group-hover:scale-105 transition-transform overflow-hidden">
-                    🥭
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-6">
+              {/* Large Card - 1st Recipe */}
+              <div className="md:col-span-7">
+                {mangoRecipes && mangoRecipes[0] && <MangoRecipeCard {...mangoRecipes[0]} isLarge={true} />}
+              </div>
+
+              {/* Smaller Cards - 2nd & 3rd Recipes */}
+              <div className="md:col-span-5 flex flex-col gap-5 md:gap-6">
+                {mangoRecipes && mangoRecipes[1] && <MangoRecipeCard {...mangoRecipes[1]} />}
+                {mangoRecipes && mangoRecipes[2] && <MangoRecipeCard {...mangoRecipes[2]} />}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Mango Talk (Testimonials) ── */}
+        <section className="relative py-16 md:py-24 px-6 md:px-16 overflow-hidden">
+          <div className="max-w-[1440px] mx-auto relative z-20">
+            <div className="text-center mb-12 md:mb-16">
+              <h2
+                className="text-4xl md:text-[47px] font-semibold text-[#1a1a1a] mb-6"
+                style={{ fontFamily: 'Recoleta' }}
+              >
+                Mango Talk
+              </h2>
+              <p
+                className="text-lg md:text-[23px] text-[#000000] opacity-50 font-semibold"
+                style={{ fontFamily: 'SofiaPro' }}
+              >
+                Our customers share what they love about our mangoes.
+              </p>
+            </div>
+
+            <style jsx>{`
+              .no-scrollbar::-webkit-scrollbar {
+                display: none;
+              }
+              .no-scrollbar {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+              }
+            `}</style>
+            <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 no-scrollbar md:grid md:grid-cols-3 md:pb-0 md:overflow-visible">
+              {mangoTestimonials &&
+                mangoTestimonials.map((testimonial) => (
+                  <div key={testimonial.id} className="snap-center">
+                    <MangoTestimonialCard {...testimonial} />
                   </div>
-                  <div className="p-4">
-                    <div className="flex gap-3 text-xs text-[#888] mb-2">
-                      <span>{recipe.tag}</span>
-                      <span>·</span>
-                      <span>{recipe.date}</span>
-                    </div>
-                    <h3 className="font-semibold text-[#1a1a1a] leading-snug group-hover:underline">{recipe.name}</h3>
-                  </div>
-                </Link>
-              ))}
+                ))}
             </div>
           </div>
         </section>
@@ -151,11 +183,19 @@ export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/originApi`);
     const originApiData = await response.json();
-    const { mainMenuItems, footerData } = originApiData;
-    return { props: { mainMenuItems: mainMenuItems || [], footerData: footerData || {} } };
+    const { mainMenuItems, footerData, mangoRecipes, mangoTestimonials } = originApiData;
+
+    return {
+      props: {
+        mainMenuItems: mainMenuItems || [],
+        footerData: footerData || {},
+        mangoRecipes: mangoRecipes || [],
+        mangoTestimonials: mangoTestimonials || []
+      }
+    };
   } catch (error) {
     console.error('Error fetching mango landing page data:', error);
-    return { props: { mainMenuItems: [], footerData: {} } };
+    return { props: { mainMenuItems: [], footerData: {}, mangoRecipes: [] } };
   }
 };
 
