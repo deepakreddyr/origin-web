@@ -11,7 +11,7 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 //     // '/assets/images/parallaxImages/main-2.webp',
 // ];
 
-const IMAGES = ['/assets/images/about/home3.webp'];
+const IMAGES = ['/assets/images/homejointhecult.webp'];
 
 const JoinCultSection = () => {
   const [currentImg, setCurrentImg] = useState(0);

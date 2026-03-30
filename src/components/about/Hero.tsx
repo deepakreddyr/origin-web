@@ -5,7 +5,7 @@ import heroImgNoText from '/public/assets/images/about/aboutNoText.webp';
 
 const Hero = () => {
   return (
-    <section className="w-full mob:mt-[25vw] flex flex-col">
+    <section className="w-full mt-[-8vw] mob:mt-[25vw] flex flex-col">
       {/* Desktop View: Show about1.webp (already has text) */}
       <div className="hidden md:block w-full">
         <Image

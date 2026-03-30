@@ -114,7 +114,7 @@ const Home = ({
           </Container>
         </ScrollReveal>
 
-        <ScrollReveal direction="up" delay={100}>
+        {/* <ScrollReveal direction="up" delay={100}>
           <Container maxWidth={false} className="w-full px-[10vw] mob:px-[4vw] pt-12 pb-4 mob:pb-2">
             <div className="grid grid-cols-2 tabp:grid-cols-4 gap-4 md:gap-2 w-full">
               {uspCardsData?.map((card, index) => {
@@ -128,7 +128,7 @@ const Home = ({
               })}
             </div>
           </Container>
-        </ScrollReveal>
+        </ScrollReveal> */}
 
         {/* Homepage Category Section */}
         <ScrollReveal direction="up" delay={0}>
