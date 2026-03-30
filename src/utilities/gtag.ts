@@ -12,11 +12,12 @@ export const pageview = (url: string) => {
 // https://developers.google.com/analytics/devguides/collection/gtagjs/events
 export const event = ({ action, category, label, value, ...params }: any) => {
   if (typeof window !== 'undefined' && (window as any).gtag) {
-    (window as any).gtag('event', action, {
-      event_category: category,
-      event_label: label,
+    const eventParams: any = {
       value: value,
       ...params
-    });
+    };
+    if (category) eventParams.event_category = category;
+    if (label) eventParams.event_label = label;
+    (window as any).gtag('event', action, eventParams);
   }
 };

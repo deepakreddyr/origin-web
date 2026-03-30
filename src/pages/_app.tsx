@@ -163,6 +163,7 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
         <Head>
           {/* Viewport in _app.tsx as a consistent baseline */}
           <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+          <meta name="facebook-domain-verification" content="q77s4fiszg62fum8j7jzvzfspb43r2" />
         </Head>
 
         <NextNProgress color="#000" />
@@ -191,6 +192,7 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
           gtag('js', new Date());
 
           gtag('config', 'G-NM914G6V0P');
+          gtag('config', 'AW-16677565060');
         `}
         </Script>
 

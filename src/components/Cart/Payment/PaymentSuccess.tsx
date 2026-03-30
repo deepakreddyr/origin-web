@@ -25,6 +25,13 @@ const PaymentSuccess = (props: any) => {
         value: Number(total_to_pay),
         items: [] // Ideally, we should pull items from storage or state here
       });
+      gtag.event({
+        action: 'conversion',
+        send_to: 'AW-16677565060/cK4RCIynlZIcEITlvZA-',
+        value: Number(total_to_pay) || '',
+        currency: 'INR',
+        order_id: paymentModalDetails.orderResponse.order_id
+      });
       localStorage.removeItem('total_to_pay');
     }
 
