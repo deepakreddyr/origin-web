@@ -30,6 +30,21 @@ type Data = {
   howItWorks: HowItWorksData;
   careers: CareersData;
   blogs: Blog[];
+  mangoRecipes: {
+    slug: string;
+    name: string;
+    tag: string;
+    date: string;
+    imgSrc: string;
+  }[];
+  mangoTestimonials: {
+    id: number;
+    name: string;
+    location: string;
+    text: string;
+    stars: number;
+    avatar: string;
+  }[];
 };
 
 const data: Data = {
@@ -1224,7 +1239,56 @@ const data: Data = {
         }
       ]
     }
-  }
+  },
+  mangoRecipes: [
+    {
+      slug: 'mango-chaat',
+      name: 'Spice Up Your Evening With This Delectable Mango Chaat!',
+      tag: 'By Memo',
+      date: '02 March, 2026',
+      imgSrc: '/assets/images/recipes/mango-chaat.jpg'
+    },
+    {
+      slug: 'mango-popsicles',
+      name: 'Beat The Heat With Addictive Mango Popsicles',
+      tag: 'By Memo',
+      date: '02 March, 2026',
+      imgSrc: '/assets/images/recipes/mango-popsicles.jpg'
+    },
+    {
+      slug: 'mango-cucumber-salsa',
+      name: 'This Mango Cucumber Salsa Is The Next Crowd Favourite',
+      tag: 'By Memo',
+      date: '02 March, 2026',
+      imgSrc: '/assets/images/recipes/mango-salsa.jpg'
+    }
+  ],
+  mangoTestimonials: [
+    {
+      id: 1,
+      name: 'Swathi M.',
+      location: 'Chennai, IND',
+      text: '“Good-sized mangoes, properly ripened, and consistently sweet. What stood out most was the freshness and the quality of the fruit on arrival.”',
+      stars: 5,
+      avatar: '/assets/images/testimonials/avatar1.jpg'
+    },
+    {
+      id: 2,
+      name: 'Esther John',
+      location: 'Mysore, IND',
+      text: '“These mangoes had a beautiful balance of sweetness and aroma, with clean, juicy flesh and no fibrous bite. The flavour was layered, not just sugary. Easily some of the better mangoes this season.”',
+      stars: 5,
+      avatar: '/assets/images/testimonials/avatar2.jpg'
+    },
+    {
+      id: 3,
+      name: 'Tahir S.',
+      location: 'Bangalore, IND',
+      text: '“Really clean and good flavour. Got it twice for my kids who were visiting home. My personal favourite was the Sindhura Mango. Quite good.”',
+      stars: 5,
+      avatar: '/assets/images/testimonials/avatar3.jpg'
+    }
+  ]
 };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
