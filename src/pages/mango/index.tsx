@@ -150,21 +150,29 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
 
       <MangoHeader />
 
-      <div
-        className=""
-        style={{
-          background: 'linear-gradient(180deg, #FFD74F 12.84%, #FEDD6D 43.51%, #FFE796 67.31%, #FFFFFF 100%)'
-        }}
-      >
+      <div className="relative">
+        <div
+          className="absolute inset-0 z-0 bg-[#FFD74F] md:bg-none"
+          style={{
+            background: 'linear-gradient(180deg, #FFD74F 12.84%, #FEDD6D 43.51%, #FFE796 67.31%, #FFFFFF 100%)'
+          }}
+        />
+        <style jsx>{`
+          @media (max-width: 767px) {
+            .absolute.inset-0 {
+              background: #ffd74f !important;
+            }
+          }
+        `}</style>
         {/* ── Hero + Products wrapper so image spans both ── */}
-        <div className="relative overflow-visible">
+        <div className="relative overflow-visible z-10">
           {/* Big mango hand — spans hero AND product section */}
-          <div className="absolute right-0 top-[8vw] w-[52vw] h-[1300px] pointer-events-none z-[10] hidden md:block">
+          <div className="absolute right-0 top-[110vw] md:top-[8vw] w-full md:w-[52vw] h-[400px] md:h-[1300px] pointer-events-none z-[10]">
             <Image
               src="/assets/images/mangohero.png"
               alt="Farm Fresh Mangoes"
               fill
-              className="object-contain object-right-top"
+              className="object-contain object-bottom md:object-right-top"
               priority
             />
           </div>

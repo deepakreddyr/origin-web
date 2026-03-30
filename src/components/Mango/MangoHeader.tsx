@@ -156,42 +156,53 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
 
   return (
     <header
-      className={`${isHeaderSticky ? 'fixed top-0' : 'absolute top-0'} left-0 w-full z-[100] bg-[#FFECA6] px-12 md:px-[7vw] py-3 flex items-center justify-between`}
+      className={`${isHeaderSticky ? 'fixed top-0' : 'absolute top-0'} left-0 w-full z-[100] bg-[#FFECA6] px-6 md:px-[7vw] py-3 flex items-center justify-between`}
     >
       <div className="flex items-center gap-1 flex-1">
-        {/* Logo */}
-        <Link href="/mango" className="relative w-40 h-12 md:w-60 md:h-16 flex-shrink-0 mt-[5px]">
+        {/* Logo - Hidden on mobile, logo moves to Hero */}
+        <Link href="/mango" className="hidden md:flex relative w-40 h-12 md:w-60 md:h-16 flex-shrink-0 mt-[5px]">
           <Image src={originLogo} alt="Origin Fresh" fill className="object-contain" priority />
         </Link>
 
-        {/* Separator */}
+        {/* Separator - Desktop only */}
         <div className="hidden md:block w-[1px] h-8 bg-black opacity-10 mx-2"></div>
 
-        {/* Location Selector */}
+        {/* Location Selector - Mobile stylized */}
         <button
           onClick={handleSelectAddress}
-          className="hidden md:flex items-center gap-2 group text-left max-w-[200px]"
+          className="flex items-center gap-2 group text-left max-w-[200px] md:max-w-[250px]"
         >
           <div className="flex flex-col overflow-hidden">
             <div className="flex items-center gap-1.5">
               <div className="relative w-3.5 h-3.5 flex-shrink-0">
-                <Image src={locationArrow} alt="Location" fill className="object-contain" />
+                <Image
+                  src={locationArrow}
+                  alt="Location"
+                  fill
+                  className="object-contain brightness-0 grayscale sepia hue-rotate-[90deg] saturate-[500%]"
+                />
               </div>
-              <span className="text-[13px] font-bold text-gray-900 leading-tight" style={{ fontFamily: 'SofiaPro' }}>
+              <span
+                className="text-[13px] md:text-[13px] font-bold text-gray-900 leading-tight"
+                style={{ fontFamily: 'SofiaPro' }}
+              >
                 {address.defaultAddress?.address_name || 'Select'}
               </span>
             </div>
-            <span className="text-[11px] text-gray-500 truncate mt-0.5" style={{ fontFamily: 'SofiaPro' }}>
+            <span
+              className="text-[11px] md:text-[11px] text-gray-500 truncate mt-0.5"
+              style={{ fontFamily: 'SofiaPro' }}
+            >
               {address.defaultAddress?.address || 'Set your delivery location'}
             </span>
           </div>
         </button>
       </div>
 
-      {/* Right side: Search */}
-      <div className="flex items-center gap-10">
-        {/* Search Bar */}
-        <div className="w-[320px] hidden md:block relative">
+      {/* Right side: Search, Account, Cart */}
+      <div className="flex items-center gap-2.5 md:gap-10">
+        {/* Search - Icon on mobile, Bar on desktop */}
+        <div className="w-auto md:w-[320px] relative">
           <form className="relative">
             <input
               type="text"
@@ -199,10 +210,26 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => searchQuery.trim() && setShowDropdown(true)}
               placeholder="Search products"
-              className="w-full bg-[#F8F4E9] rounded-[10px] px-5 py-2.5 text-[14px] outline-none shadow-none text-gray-700 placeholder:text-gray-400 border border-transparent transition-all"
+              className="hidden md:block w-full bg-[#F8F4E9] rounded-[10px] px-5 py-2.5 text-[14px] outline-none shadow-none text-gray-700 placeholder:text-gray-400 border border-transparent transition-all"
               style={{ fontFamily: 'SofiaPro' }}
             />
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+            {/* Mobile Search Icon */}
+            <button
+              type="button"
+              className="md:hidden w-9 h-9 flex items-center justify-center bg-[#FDE28A] rounded-full text-gray-700"
+              aria-label="Search"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </button>
+            {/* Desktop Search Icon inside bar */}
+            <div className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 items-center gap-2">
               {isSearchLoading && <CircularProgress size={16} sx={{ color: '#FFD74F' }} />}
               <button type="submit" className="text-gray-400 hover:text-gray-600">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -217,9 +244,9 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
             </div>
           </form>
 
-          {/* Search Dropdown */}
+          {/* Search Dropdown - Desktop only for now or visible if active */}
           {showDropdown && searchResults.length > 0 && (
-            <div className="absolute top-full left-0 w-full mt-2 bg-[#F8F4E9] rounded-[10px] shadow-xl overflow-hidden z-[101] border border-[#f0ecd8]">
+            <div className="absolute top-full right-0 md:left-0 w-[280px] md:w-full mt-2 bg-[#F8F4E9] rounded-[10px] shadow-xl overflow-hidden z-[101] border border-[#f0ecd8]">
               <div className="py-2">
                 {searchResults.slice(0, 4).map((item: any) => (
                   <Link
@@ -240,18 +267,7 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <p className="text-[14px] font-bold text-[#1B1B1B] truncate" style={{ fontFamily: 'SofiaPro' }}>
-                          {(() => {
-                            const parts = item.name.split(/(mango)/i);
-                            return parts.map((part: string, i: number) =>
-                              part.toLowerCase() === 'mango' ? (
-                                <span key={i} className="text-[#F9C410]">
-                                  {part}
-                                </span>
-                              ) : (
-                                part
-                              )
-                            );
-                          })()}
+                          {item.name}
                         </p>
                         <p className="text-[12px] font-bold text-[#1B1B1B] ml-2">
                           ₹ {item.multiple_uoms?.[0]?.price || 'N/A'}
@@ -264,25 +280,42 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
                   </Link>
                 ))}
               </div>
-              <div className="border-t border-[#f0ecd8] py-3 text-center bg-white">
-                <Link
-                  href="/mango/products"
-                  className="text-[14px] font-bold text-[#1B1B1B]"
-                  style={{ fontFamily: 'SofiaPro' }}
-                  onClick={() => setShowDropdown(false)}
-                >
-                  <span className="text-[#F9C410]">View all</span> results for{' '}
-                  <span className="text-[#F9C410]">'{searchQuery}'</span>
-                </Link>
-              </div>
             </div>
           )}
-          {/* Click away listener overlay */}
-          {showDropdown && <div className="fixed inset-0 z-[-1]" onClick={() => setShowDropdown(false)}></div>}
         </div>
 
-        {/* Account & Cart Unified Container */}
-        <div className="flex items-center bg-[#F9F7EF] rounded-[10px] border border-[#F0ECD8] px-5 py-2.5 gap-5 shadow-sm">
+        {/* Mobile Icons Container */}
+        <div className="flex md:hidden items-center gap-2">
+          {/* Account Icon */}
+          <button
+            onClick={loginDetails.isLogin ? openAccount : handleProfileMenuOpen}
+            className="w-9 h-9 relative bg-[#FDE28A] rounded-full flex items-center justify-center transition-opacity"
+            aria-label="Account"
+          >
+            <div className="w-5 h-5 relative opacity-70">
+              <Image src={userIcon} alt="Account" fill className="object-contain" />
+            </div>
+          </button>
+
+          {/* Cart Icon */}
+          <button
+            onClick={handleCartOpen}
+            className="w-9 h-9 relative bg-[#FDE28A] rounded-full flex items-center justify-center transition-colors"
+            aria-label="Cart"
+          >
+            <div className="w-5 h-5 relative opacity-70 brightness-0">
+              <Image src={cartIcon} alt="Cart" fill className="object-contain" />
+            </div>
+            {cartItemCount > 0 && (
+              <div className="absolute -top-1 -right-1 bg-[#26B45F] text-white text-[8px] font-bold w-[15px] h-[15px] rounded-full flex items-center justify-center border border-white shadow-sm">
+                {cartItemCount}
+              </div>
+            )}
+          </button>
+        </div>
+
+        {/* Desktop Unified Container */}
+        <div className="hidden md:flex items-center bg-[#F9F7EF] rounded-[10px] border border-[#F0ECD8] px-5 py-2.5 gap-5 shadow-sm">
           {/* Account Icon */}
           <button
             onClick={loginDetails.isLogin ? openAccount : handleProfileMenuOpen}
