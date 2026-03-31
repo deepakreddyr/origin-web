@@ -5,11 +5,11 @@ import originLogo from '/public/assets/images/neworiginlogo.png';
 
 const MangoHero = () => {
   return (
-    <section className="relative bg-transparent min-h-[600px] md:min-h-[600px] flex items-center px-6 md:px-[7vw] pt-[120px] md:pt-[100px]">
+    <section className="relative bg-transparent min-h-[600px] md:min-h-[600px] flex items-center px-4 md:px-[7vw] pt-[0px] md:pt-[100px]">
       {/* Left Content only — image is rendered in parent wrapper */}
       <div className="relative z-20 w-full">
         {/* Mobile Logo */}
-        <div className="md:hidden mb-12 flex justify-center -ml-4">
+        <div className="md:hidden mb-8 flex justify-center -ml-4">
           <Image
             src={originLogo}
             alt="Origin Fresh"
@@ -35,10 +35,10 @@ const MangoHero = () => {
         </div>
 
         <h1
-          className="text-[44px] leading-[1.1] md:text-[4.7vw] font-semibold text-[#000000] mb-6"
+          className="text-[38px] leading-[1.1] md:text-[4.7vw] font-semibold text-[#000000] mb-6"
           style={{ fontFamily: 'Recoleta' }}
         >
-          Farm fresh, <br className="hidden md:block" /> sun-ripened mangoes!
+          Farm fresh, <br className="" /> sun-ripened mangoes!
         </h1>
 
         <p
@@ -50,7 +50,7 @@ const MangoHero = () => {
 
         <Link
           href="/mango/products"
-          className="inline-block bg-[#000000] text-white font-semibold text-[18px] md:text-[24px] py-4 md:py-6 px-7 md:px-6 rounded-[12px] md:rounded-[20px]"
+          className="inline-block bg-[#000000] text-white font-semibold text-[18px] md:text-[24px] py-4 md:py-6 px-3 md:px-6 rounded-[12px] md:rounded-[20px]"
           style={{ fontFamily: 'Recoleta' }}
         >
           Explore now

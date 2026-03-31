@@ -36,11 +36,17 @@ const MangoProductsPage = ({ mainMenuItems, footerData }: MangoProductsPageProps
   const getDataFromApi = useGetDataFromApi();
 
   useEffect(() => {
-    const apiPath = localStorage.getItem('mango_listing_api_path');
+    let apiPath = localStorage.getItem('mango_listing_api_path');
     if (!apiPath) {
       console.warn('[MangoProducts] No listing API path found in LS.');
       // Optionally fallback or handle empty state
       return;
+    }
+
+    const token = localStorage.getItem('user_token');
+    // If user is not logged in, ensure we use the public skip-login endpoint
+    if (!token && apiPath.includes('/user/')) {
+      apiPath = apiPath.replace('/user/', '/public/skip-login/');
     }
 
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + apiPath;

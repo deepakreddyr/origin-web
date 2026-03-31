@@ -131,21 +131,19 @@ const MangoItemCard = ({ itemDetails, isCompact = false }: MangoItemCardProps) =
 
       {/* Mango Styled Container: White background, Border, Shadow, Padding */}
       <div
-        className={`bg-white border border-[#EDE6D4] rounded-[24px] flex flex-col h-full relative transition-all ${isCompact ? 'p-3' : 'p-5'}`}
-        style={!isCompact ? { width: '304.47px' } : { width: '100%' }}
+        className={`bg-white border border-[#EDE6D4] flex flex-col h-full relative transition-all w-full ${isCompact ? 'p-2 rounded-[8px]' : 'p-3 md:p-5 rounded-[24px]'} ${!isCompact ? 'md:w-[304.47px]' : ''}`}
       >
         <div onClick={handleNavigation} className="cursor-pointer w-full text-start group flex flex-col h-full">
           {/* Image Container — adjusted to precise design specs */}
           <div
-            className={`relative bg-[#F3F0E6] flex items-center justify-center overflow-hidden ${isCompact ? 'mb-2' : 'mb-4'}`}
+            className={`relative bg-[#F3F0E6] w-full flex items-center justify-center overflow-hidden ${isCompact ? 'mb-2' : 'mb-3 md:mb-4'}`}
             style={{
-              width: isCompact ? '100%' : '264.47px',
-              height: isCompact ? '160px' : '240.67px',
-              borderRadius: '21.16px'
+              height: isCompact ? '120px' : isMobile ? '160px' : '240.67px',
+              borderRadius: isCompact ? '7px' : '21.16px'
             }}
           >
             <div
-              className={`relative w-full h-full p-4 transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
+              className={`relative w-full h-full p-2 transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
             >
               <Image
                 src={itemDetails.image || logo}
@@ -158,52 +156,63 @@ const MangoItemCard = ({ itemDetails, isCompact = false }: MangoItemCardProps) =
             </div>
 
             {defaultUOM.conversion_text && (
-              <div className="absolute top-2 right-2 text-[#146321] text-[12px] font-bold px-2 py-0.5 rounded-full font-[SofiaPro]">
+              <div
+                className={`absolute top-2 right-2 text-[#146321] font-bold px-2 py-0.5 rounded-full font-[SofiaPro] ${isCompact ? 'text-[8px]' : 'text-[12px]'}`}
+              >
                 {defaultUOM.conversion_text}
               </div>
             )}
 
             {hasRipenessOptions && (
-              <div className="absolute bottom-2 right-2 p-1 bg-white rounded-full shadow-lg">
+              <div
+                className={`absolute bottom-2 right-2 p-1 bg-white rounded-full shadow-lg ${isCompact ? 'scale-75' : ''}`}
+              >
                 <Image src={itemRipenessSvg} alt="Multiple Ripeness Options" width={24} height={24} />
               </div>
             )}
 
             {!selectedUOM.is_available && (
-              <div className="bg-black-op-50 absolute top-0 w-full py-2 flex justify-center">
-                <p className="text-[12px] font-[SofiaPro] font-semibold text-white">OUT OF STOCK</p>
+              <div className="bg-black-op-50 absolute top-0 w-full py-1 flex justify-center">
+                <p
+                  className={`${isCompact ? 'text-[8px]' : 'text-[12px]'} font-[SofiaPro] font-semibold text-white uppercase`}
+                >
+                  OUT OF STOCK
+                </p>
               </div>
             )}
           </div>
 
           {/* Content — Name, Description & Price */}
-          <div className={`flex flex-col mb-1 ${isCompact ? 'px-1' : ''}`}>
+          <div className={`flex flex-col mb-1 ${isCompact ? 'px-0' : 'px-1'}`}>
             {/* Title / Name */}
             <span
-              className={`${isCompact ? 'text-[15px]' : 'text-[18px] md:text-[20px]'} font-bold text-[#1a1a1a] leading-[1.15] truncate`}
+              className={`${isCompact ? 'text-[14px]' : 'text-[18px] md:text-[20px]'} font-bold text-[#1a1a1a] leading-[1.15] truncate`}
               style={{ fontFamily: 'SofiaPro' }}
             >
               {itemDetails.name}
             </span>
             {/* Description */}
             <p
-              className={`${isCompact ? 'text-[13px]' : 'text-[13px]'} font-regular text-[#666666] leading-[1.3] line-clamp-2 min-h-[2.6em] mt-0.5 mb-0.5`}
+              className={`${isCompact ? 'text-[11px]' : 'text-[13px]'} font-regular text-[#666666] leading-[1.3] line-clamp-2 min-h-[2.6em] mt-0.5 mb-0.5`}
               style={{ fontFamily: 'SofiaPro' }}
             >
               {itemDetails.description || ''}
             </p>
             {/* Unit */}
-            <p className="text-[11px] text-gray-400 font-medium lowercase" style={{ fontFamily: 'SofiaPro' }}>
+            <p
+              className={`${isCompact ? 'text-[9px]' : 'text-[11px]'} text-gray-400 font-medium lowercase`}
+              style={{ fontFamily: 'SofiaPro' }}
+            >
               {selectedUOM.unit}
             </p>
           </div>
 
           {/* Price and Action Area */}
-          <div className="flex items-center justify-between mt-auto pt-2">
+          <div className="flex items-center justify-between mt-auto pt-1">
             <div className="flex flex-col">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 md:gap-2">
                 {selectedUOM.market_price > 0 && selectedUOM.market_price > selectedUOM.price && (
-                  <p className="text-gray-400 line-through text-[11px] font-[SofiaPro]">₹{selectedUOM.market_price}</p>
+                  <p className="text-gray-400 line-through text-[10px] font-[SofiaPro]">₹{selectedUOM.market_price}</p>
                 )}
                 <p
                   className={`${isCompact ? 'text-[14px]' : 'text-[18px]'} font-bold text-[#1a1a1a]`}

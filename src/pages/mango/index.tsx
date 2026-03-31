@@ -152,27 +152,20 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
 
       <div className="relative">
         <div
-          className="absolute inset-0 z-0 bg-[#FFD74F] md:bg-none"
+          className="absolute inset-0 z-0"
           style={{
             background: 'linear-gradient(180deg, #FFD74F 12.84%, #FEDD6D 43.51%, #FFE796 67.31%, #FFFFFF 100%)'
           }}
         />
-        <style jsx>{`
-          @media (max-width: 767px) {
-            .absolute.inset-0 {
-              background: #ffd74f !important;
-            }
-          }
-        `}</style>
         {/* ── Hero + Products wrapper so image spans both ── */}
         <div className="relative overflow-visible z-10">
           {/* Big mango hand — spans hero AND product section */}
-          <div className="absolute right-0 top-[110vw] md:top-[8vw] w-full md:w-[52vw] h-[400px] md:h-[1300px] pointer-events-none z-[10]">
+          <div className="absolute right-0 top-[90vw] md:top-[8vw] w-[85vw] md:w-[52vw] h-[600px] md:h-[1300px] pointer-events-none z-[10] overflow-hidden">
             <Image
               src="/assets/images/mangohero.png"
               alt="Farm Fresh Mangoes"
               fill
-              className="object-contain object-bottom md:object-right-top"
+              className="object-contain object-right-bottom md:object-right-top"
               priority
             />
           </div>
@@ -203,11 +196,14 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
         <section className="relative py-10 md:py-14 px-6 md:px-[7vw] overflow-hidden">
           <div className="max-w-[1440px] mx-auto relative z-20">
             <div className="text-center mb-8 md:mb-10">
-              <h2 className="text-3xl md:text-[47px] font-bold text-[#1a1a1a] mb-6" style={{ fontFamily: 'Recoleta' }}>
+              <h2
+                className="text-[22px] md:text-[47px] font-bold text-[#1a1a1a] mb-2 md:mb-6"
+                style={{ fontFamily: 'Recoleta' }}
+              >
                 Mangolicious Recipes
               </h2>
               <p
-                className="text-base md:text-[23px] text-[#000000] opacity-50 font-semibold"
+                className="text-[11px] md:text-[23px] text-[#000000] opacity-50 font-semibold"
                 style={{ fontFamily: 'SofiaPro' }}
               >
                 Mango-based dishes that will revolutionise your love for mangoes.
@@ -230,17 +226,17 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
         </section>
 
         {/* ── Mango Talk (Testimonials) ── */}
-        <section className="relative py-16 md:py-24 px-6 md:px-16 overflow-hidden">
+        <section className="relative py-4 md:py-24 px-6 md:px-16 overflow-hidden">
           <div className="max-w-[1440px] mx-auto relative z-20">
             <div className="text-center mb-12 md:mb-16">
               <h2
-                className="text-4xl md:text-[47px] font-semibold text-[#1a1a1a] mb-6"
+                className="text-[22px] md:text-[47px] font-semibold text-[#1a1a1a] mb-2 md:mb-6"
                 style={{ fontFamily: 'Recoleta' }}
               >
                 Mango Talk
               </h2>
               <p
-                className="text-lg md:text-[23px] text-[#000000] opacity-50 font-semibold"
+                className="text-[11px] md:text-[23px] text-[#000000] opacity-50 font-semibold"
                 style={{ fontFamily: 'SofiaPro' }}
               >
                 Our customers share what they love about our mangoes.
@@ -256,7 +252,7 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
                 scrollbar-width: none;
               }
             `}</style>
-            <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 no-scrollbar md:grid md:grid-cols-3 md:pb-0 md:overflow-visible">
+            <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 no-scrollbar md:grid md:grid-cols-3 md:pb-0 md:overflow-visible -mx-6 px-6 md:mx-0 md:px-0">
               {mangoTestimonials &&
                 mangoTestimonials.map((testimonial) => (
                   <div key={testimonial.id} className="snap-center">
