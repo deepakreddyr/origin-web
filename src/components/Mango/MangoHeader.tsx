@@ -175,12 +175,7 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
           <div className="flex flex-col overflow-hidden">
             <div className="flex items-center gap-1.5">
               <div className="relative w-3.5 h-3.5 flex-shrink-0">
-                <Image
-                  src={locationArrow}
-                  alt="Location"
-                  fill
-                  className="object-contain brightness-0 grayscale sepia hue-rotate-[90deg] saturate-[500%]"
-                />
+                <Image src={locationArrow} alt="Location" fill className="object-contain" />
               </div>
               <span
                 className="text-[13px] md:text-[13px] font-bold text-gray-900 leading-tight"
