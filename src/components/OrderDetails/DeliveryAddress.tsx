@@ -10,13 +10,13 @@ const DeliveryAddress = (props: any) => {
 
   const getPaymentLabel = () => {
     if (payment_method === 'Razorpay') {
-      if (payment_status === 'complete') return 'Paid Online';
-      if (payment_status === 'pending') return 'Payment Pending';
-      if (payment_status === 'failed') return 'Payment Failed';
-      if (payment_status === 'partially_completed') return 'Partially Paid';
+      // if (payment_status === 'complete') return 'Paid Online';
+      // if (payment_status === 'pending') return 'Payment Pending';
+      // if (payment_status === 'failed') return 'Payment Failed';
+      // if (payment_status === 'partially_completed') return 'Partially Paid';
       return 'Paid Online';
     }
-    return 'Cash on Delivery';
+    return 'Cash On Delivery';
   };
 
   return (
