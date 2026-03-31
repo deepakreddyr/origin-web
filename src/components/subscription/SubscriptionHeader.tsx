@@ -9,21 +9,22 @@ const SubscriptionHeader = ({ item, maxQty }: { item?: any; maxQty: number }) =>
   const dispatch = useDispatch();
 
   const handleOrderNow = () => {
+    if (!item) return;
     const itemPrice = item?.price_inclusive_of_all_taxes ?? item?.multiple_uoms?.[0]?.price ?? 89;
     const cartItem = {
-      id: item.id,
-      item_code: item.item_code,
+      id: item?.id,
+      item_code: item?.item_code,
       variant_id: item?.multiple_uoms?.[0]?.variant_id || '',
       uom_id: item?.multiple_uoms?.[0]?.uom_id || '',
-      name: item.name,
-      image: item.image,
+      name: item?.name,
+      image: item?.image,
       price: itemPrice,
       price_inclusive_of_all_taxes: itemPrice,
       quantity: item?.multiple_uoms?.[0]?.minimum_quantity || 1,
       minimum_quantity: item?.multiple_uoms?.[0]?.minimum_quantity || 1,
-      max_qty: item?.multiple_uoms?.[0]?.maximum_quantity || item.max_qty || 10,
+      max_qty: item?.multiple_uoms?.[0]?.maximum_quantity || item?.max_qty || 10,
       stepper_quantity: item?.multiple_uoms?.[0]?.stepper_quantity || 1,
-      combo_items: item.combo_items ?? []
+      combo_items: item?.combo_items ?? []
     };
 
     dispatch(setSubscriptionItem(cartItem));
