@@ -12,7 +12,7 @@ interface MangoTestimonialCardProps {
 const MangoTestimonialCard: React.FC<MangoTestimonialCardProps> = ({ name, location, text, stars, avatar }) => {
   return (
     <div
-      className="bg-white rounded-[16px] p-8 md:p-8 flex flex-col h-full min-w-[85vw] md:min-w-0 transition-all duration-300"
+      className="bg-white rounded-[16px] p-8 md:p-8 flex flex-col h-full min-w-[90vw] md:min-w-0 transition-all duration-300"
       style={{ boxShadow: '0px 4px 6px -4px rgba(0, 0, 0, 0.1), 0px 10px 15px -3px rgba(0, 0, 0, 0.1)' }}
     >
       <div className="flex justify-between items-start">
@@ -43,8 +43,8 @@ const MangoTestimonialCard: React.FC<MangoTestimonialCardProps> = ({ name, locat
         </p>
       </div>
 
-      <div className="flex items-center gap-5 border-t border-gray-50 md:border-none">
-        <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 shadow-sm">
+      <div className="flex items-center gap-5">
+        <div className="relative w-12 h-12 rounded-full overflow-x-visible flex-shrink-0 shadow-sm">
           <Image src={avatar} alt={name} fill className="object-cover" />
         </div>
         <div className="flex flex-col">
