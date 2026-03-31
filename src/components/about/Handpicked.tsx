@@ -10,7 +10,7 @@ const Handpicked = () => {
       <div className="flex flex-col md:flex-row items-start justify-start w-full px-[8vw] md:pr-[11.5vw] pb-[50vw] md:pb-[8vw] z-10 relative md:hidden">
         {/* Left: Heading */}
         <div className="w-full md:w-auto mt-[10vw] md:mt-[2vw] mb-[2vw] md:mb-0 text-left md:text-right">
-          <h2 className="font-[Recoleta] font-bold text-[17vw] md:text-[7.6vw] leading-[1.1] md:leading-[1.05] tracking-tight">
+          <h2 className="font-[Recoleta] font-bold text-[12vw] md:text-[7.6vw] leading-[1.1] md:leading-[1.05] tracking-tight">
             <span className="text-black md:pl-[10vw]">We have a</span> <br className="md:hidden" />
             <span className="text-[#f2ae25]">dream.</span>
           </h2>
@@ -26,7 +26,7 @@ const Handpicked = () => {
           </p>
 
           <div className="flex items-baseline gap-2">
-            <span className="text-secondary text-[25vw] md:text-[8vw] font-black leading-[0.85] font-[Recoleta]">
+            <span className="text-secondary text-[12vw] md:text-[8vw] font-black leading-[0.85] font-[Recoleta]">
               150
             </span>
             <span className="text-secondary text-[8vw] md:text-[4vw] font-bold font-[Recoleta]">exotic</span>

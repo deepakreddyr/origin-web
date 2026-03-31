@@ -107,7 +107,8 @@ const Home = ({
           description="Shop for the freshest organic fruits, vegetables, and exotic produce at Origin Fresh. Quality guaranteed, delivered straight to your home."
         />
         {/* <OriginHero /> */}
-        <ShopHeroSingle bannerData={heroBannerData} />
+        {/* <ShopHeroSingle bannerData={heroBannerData} /> */}
+        <ShopHeroSingle videoSrc="/assets/videos/herovideo.mp4" />
         <ScrollReveal direction="up" delay={0}>
           <Container maxWidth={false} className="w-full px-[3vw] mob:px-[4vw] py-8 mob:py-4 mt-8 mob:mt-8">
             <PrimaryFeature />

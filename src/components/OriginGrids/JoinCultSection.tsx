@@ -134,7 +134,7 @@ const JoinCultSection = () => {
         </div>
 
         {/* ── Right: image (Now top on mobile) ── */}
-        <div className="relative min-h-[450px] md:min-h-[450px]">
+        <div className="relative min-h-[250px] md:min-h-[450px]">
           {/* Top-left corner */}
           <motion.span
             className="pointer-events-none absolute z-10 border-[#E8C84A]"
@@ -163,23 +163,16 @@ const JoinCultSection = () => {
             }}
           />
 
-          {/* Image Container */}
-          <div className="relative w-full h-full min-h-[450px] md:min-h-[450px] rounded-[28px] overflow-hidden">
-            {IMAGES.map((src, i) => (
-              <Image
-                key={src}
-                src={src}
-                alt="Origin Fresh farm"
-                fill
-                className="object-cover"
-                style={{
-                  opacity: i === currentImg ? 1 : 0,
-                  transition: 'opacity 0.3s ease-in-out',
-                  position: 'absolute'
-                }}
-                priority={i === 0}
-              />
-            ))}
+          {/* Video Container */}
+          <div className="relative w-full h-full min-h-[200px] md:min-h-[450px] rounded-[28px] overflow-hidden">
+            <video
+              src="/assets/videos/jointhecult.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
       </div>

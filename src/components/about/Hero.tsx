@@ -32,7 +32,7 @@ const Hero = () => {
         {/* Mobile Description Section */}
         <div className="w-full px-[6vw] bg-[#FFFBEB] py-[10vw] flex flex-col items-start">
           {/* Headline */}
-          <h1 className="font-[Recoleta] font-bold text-[9vw] leading-[1.1] mb-[6vw]">
+          <h1 className="font-[Recoleta] font-bold text-[9vw] leading-[1.1] mb-[3vw]">
             <span className="text-primary">Good food begins</span>
             <br />
             <span className="text-black">at the source.</span>

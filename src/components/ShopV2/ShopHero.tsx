@@ -69,9 +69,18 @@ const ShopHero = () => {
 
 export default ShopHero;
 
-export const ShopHeroSingle = ({ bannerData }: { bannerData?: any }) => {
+export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; videoSrc?: string }) => {
   const isMobile = useMediaQuery('(max-width:768px)');
   const router = useRouter();
+
+  if (videoSrc) {
+    return (
+      <div className="w-full relative overflow-hidden h-[45vw] mob:h-[100vw] bg-[#f7f1dc]">
+        <video src={videoSrc} autoPlay muted loop playsInline className="w-full h-full object-cover" />
+      </div>
+    );
+  }
+
   const safeBannerData =
     bannerData && bannerData.length > 0
       ? bannerData
