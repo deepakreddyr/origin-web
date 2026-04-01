@@ -134,7 +134,7 @@ const JoinCultSection = () => {
         </div>
 
         {/* ── Right: image (Now top on mobile) ── */}
-        <div className="relative min-h-[250px] md:min-h-[450px]">
+        <div className="relative min-h-[200px] md:min-h-[450px]">
           {/* Top-left corner */}
           <motion.span
             className="pointer-events-none absolute z-10 border-[#E8C84A]"
