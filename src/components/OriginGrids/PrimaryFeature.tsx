@@ -14,11 +14,11 @@ const PrimaryFeature = () => {
       <div className="hidden mob:flex w-full">
         <div className="flex animate-infinite-scroll gap-4 items-center whitespace-nowrap">
           {[...featureList, ...featureList, ...featureList].map((item, index) => (
-            <div key={index} className="flex items-center gap-4 px-6 py-3 bg-[#fcefae] rounded-full shrink-0">
+            <div key={index} className="flex items-center gap-4 px-3 py-2 bg-[#fcefae] rounded-full shrink-0">
               <div className="relative w-6 h-6">
                 <Image src={item.icon} alt={item.text} fill className="object-contain scale-125" />
               </div>
-              <span className="text-[#1A202C] font-bold text-lg whitespace-nowrap">{item.text}</span>
+              <span className="text-[#1A202C] font-bold text-md whitespace-nowrap">{item.text}</span>
             </div>
           ))}
         </div>

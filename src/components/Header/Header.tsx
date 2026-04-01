@@ -125,22 +125,39 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
     return isBlackMode ? 'text-black' : 'text-white';
   };
 
-  // Helper function to get location button styles
+  // Helper function to get top-row button styles (Hamburger, Account)
+  const getTopRowButtonStyles = () => {
+    if (!isTransparentHeader) return '';
+    if (isBlackMode) return '';
+    return isMobile ? 'bg-white rounded-full shadow-sm p-[1.5vw]' : '';
+  };
+
+  // Helper function for top-row icon filter
+  const getTopRowIconFilter = () => {
+    if (!isTransparentHeader) return '';
+    if (isBlackMode) return 'brightness-0';
+    return isMobile ? 'brightness-0' : 'brightness-0 invert';
+  };
+
+  // Helper function for location button styles
   const getLocationButtonStyles = () => {
     if (!isTransparentHeader) return 'bg-black/5 text-gray-900';
-    return isBlackMode ? 'bg-black/10 text-black' : 'bg-white/30 text-white';
+    if (isBlackMode) return 'bg-black/10 text-black';
+    return isMobile ? 'bg-white text-black shadow-sm' : 'bg-white/30 text-white';
   };
 
   // Helper function to get location icon color
   const getLocationIconColor = () => {
     if (!isTransparentHeader) return 'text-gray-700';
-    return isBlackMode ? 'text-black' : 'text-white';
+    if (isBlackMode) return 'text-black';
+    return isMobile ? 'text-black' : 'text-white';
   };
 
   // Helper function to get dropdown icon color
   const getDropdownIconColor = () => {
     if (!isTransparentHeader) return 'text-gray-500';
-    return isBlackMode ? 'text-black' : 'text-white';
+    if (isBlackMode) return 'text-black';
+    return isMobile ? 'text-black' : 'text-white';
   };
 
   // Helper function to get separator color
@@ -152,19 +169,22 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
   // Helper function to get search bar styles
   const getSearchBarStyles = () => {
     if (!isTransparentHeader) return 'bg-[#F8F4E9] border border-gray-200 text-black';
-    return isBlackMode ? 'bg-black/10 text-black border-none' : 'bg-white/30 text-white border-none';
+    if (isBlackMode) return 'bg-black/10 text-black border-none';
+    return isMobile ? 'bg-white text-black border-none' : 'bg-white/30 text-white border-none';
   };
 
   // Helper function to get search icon color
   const getSearchIconColor = () => {
     if (!isTransparentHeader) return 'text-gray-400';
-    return isBlackMode ? 'text-black' : 'text-white';
+    if (isBlackMode) return 'text-black';
+    return isMobile ? 'text-gray-400' : 'text-white';
   };
 
   // Helper function to get search placeholder color
   const getSearchPlaceholderColor = () => {
     if (!isTransparentHeader) return 'text-gray-400';
-    return isBlackMode ? 'text-black/70' : 'text-white/90';
+    if (isBlackMode) return 'text-black/70';
+    return isMobile ? 'text-gray-400' : 'text-white/90';
   };
 
   useEffect(() => {
@@ -346,8 +366,13 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
         <div className="flex items-center justify-between w-full">
           <div className={`flex items-center gap-[2vw] mob:gap-[3vw] ${isMobile ? 'flex-1' : ''}`}>
             {isMobile && (
-              <button onClick={() => setDrawerOpen(!drawerOpen)} className="w-[6vw] h-[6vw] relative flex-shrink-0">
-                <Image src={hamburger} alt="Menu" fill className={`object-contain ${getIconFilter()}`} />
+              <button
+                onClick={() => setDrawerOpen(!drawerOpen)}
+                className={`w-[9vw] h-[9vw] relative flex-shrink-0 flex items-center justify-center ${getTopRowButtonStyles()}`}
+              >
+                <div className="w-[4vw] h-[4vw] relative">
+                  <Image src={hamburger} alt="Menu" fill className={`object-contain ${getTopRowIconFilter()}`} />
+                </div>
               </button>
             )}
 
@@ -367,11 +392,11 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
               <div className="flex items-center gap-[3vw]">
                 <button
                   onClick={handleSelectAddress}
-                  className={`flex items-center gap-[1vw] px-[2vw] py-[1.5vw] rounded-full ${getLocationButtonStyles()} text-[3vw] font-medium font-[SofiaPro] max-w-[25vw]`}
+                  className={`flex items-center gap-[1vw] px-[2.5vw] h-[9vw] rounded-full ${getLocationButtonStyles()} text-[3vw] font-medium font-[SofiaPro] max-w-[35vw]`}
                   aria-label="Select Delivery Address"
                 >
                   <svg
-                    className={`w-[4vw] h-[4vw] flex-shrink-0 ${getLocationIconColor()}`}
+                    className={`w-[4.5vw] h-[4.5vw] flex-shrink-0 ${getLocationIconColor()}`}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -402,11 +427,11 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
 
                 <button
                   onClick={isLoggedIn ? openAccount : handleProfileMenuOpen}
-                  className="relative p-[1vw]"
+                  className={`w-[9vw] h-[9vw] relative flex-shrink-0 flex items-center justify-center ${getTopRowButtonStyles()}`}
                   aria-label="Account"
                 >
-                  <div className="w-[6vw] h-[6vw] relative">
-                    <Image src={userIcon} alt="Account" fill className={`object-contain ${getIconFilter()}`} />
+                  <div className="w-[4vw] h-[4vw] relative">
+                    <Image src={userIcon} alt="Account" fill className={`object-contain ${getTopRowIconFilter()}`} />
                   </div>
                 </button>
               </div>
