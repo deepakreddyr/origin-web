@@ -253,8 +253,10 @@ const StoryViewer = ({ stories, startIndex, onClose }: StoryViewerProps) => {
 };
 
 const StoryTestimonials = () => {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openStories, setOpenStories] = useState<Story[] | null>(null);
   const [startIndex, setStartIndex] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
   const visibleCount = 5;
 
   const [isMounted, setIsMounted] = useState(false);
@@ -272,6 +274,25 @@ const StoryTestimonials = () => {
 
   // Determine slice count safely for hydration
   const sliceCount = isMounted && window.innerWidth < 768 ? uniqueUserStories.length : visibleCount;
+
+  const dotCount = Math.ceil(uniqueUserStories.length / 2);
+
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      const progress = scrollLeft / (scrollWidth - clientWidth);
+      const index = Math.round(progress * (dotCount - 1));
+      setActiveIndex(index);
+    }
+  };
+
+  const scrollToDot = (index: number) => {
+    if (scrollRef.current) {
+      const { scrollWidth, clientWidth } = scrollRef.current;
+      const scrollPos = (index / (dotCount - 1)) * (scrollWidth - clientWidth);
+      scrollRef.current.scrollTo({ left: scrollPos, behavior: 'smooth' });
+    }
+  };
 
   return (
     <section
@@ -326,27 +347,31 @@ const StoryTestimonials = () => {
                             Mobile: 2 rows, horizontal scroll, 2 columns visible via width
                             MD+: Single row (flex), no wrap
                         */}
-            <div
-              className="
-                            grid grid-rows-2 grid-flow-col auto-cols-[calc(50%-1.75vw)] 
-                            overflow-x-auto no-scrollbar
-                            md:flex md:items-start md:justify-center md:overflow-visible
-                            w-full gap-[3.5vw] md:gap-[3vw] lg:gap-[3vw]
-                            pb-10 md:pb-0
-                        "
-            >
-              {uniqueUserStories.slice(startIndex, startIndex + sliceCount).map((story) => {
-                const actualIndex = STORIES.findIndex((s) => s.id === story.id);
-                return (
-                  <button
-                    key={story.id}
-                    onClick={() => setOpenIndex(actualIndex)}
-                    className="flex flex-col items-center gap-[3vw] md:gap-[1.2vw] lg:gap-[1vw] group shrink-0"
-                    aria-label={`View ${story.userName}'s story`}
-                  >
-                    <div className="rounded-full p-[0.6vw] md:p-[0.3vw] bg-[#E18D1F] shadow-lg group-hover:scale-105 transition-transform duration-200">
-                      <div
-                        className="
+            <div className="flex flex-col w-full">
+              <div
+                ref={scrollRef}
+                onScroll={handleScroll}
+                className="
+                              grid grid-rows-2 grid-flow-col auto-cols-[calc(50%-1.75vw)] 
+                              overflow-x-auto no-scrollbar
+                              snap-x snap-mandatory
+                              md:flex md:items-start md:justify-center md:overflow-visible
+                              w-full gap-[3.5vw] md:gap-[3vw] lg:gap-[3vw]
+                              pb-10 md:pb-0
+                          "
+              >
+                {uniqueUserStories.slice(startIndex, startIndex + sliceCount).map((story) => {
+                  const userStories = STORIES.filter((s) => s.userHandle === story.userHandle);
+                  return (
+                    <button
+                      key={story.id}
+                      onClick={() => setOpenStories(userStories)}
+                      className="flex flex-col items-center gap-[3vw] md:gap-[1.2vw] lg:gap-[1vw] group shrink-0 snap-center"
+                      aria-label={`View ${story.userName}'s story`}
+                    >
+                      <div className="rounded-full p-[0.6vw] md:p-[0.3vw] bg-[#E18D1F] shadow-lg group-hover:scale-105 transition-transform duration-200">
+                        <div
+                          className="
                                                 rounded-full overflow-hidden border-white bg-white
                                                 border-[0.5vw] md:border-[0.2vw]
                                                 w-[25vw] h-[25vw]
@@ -355,41 +380,56 @@ const StoryTestimonials = () => {
                                                 min-w-[80px] min-h-[80px]
                                                 md:min-w-[56px] md:min-h-[56px]
                                             "
-                      >
-                        <Image
-                          src={story.avatarImage}
-                          alt={story.userName}
-                          width={220}
-                          height={220}
-                          className="object-cover w-full h-full scale-[1.3]"
-                        />
+                        >
+                          <Image
+                            src={story.avatarImage}
+                            alt={story.userName}
+                            width={220}
+                            height={220}
+                            className="object-cover w-full h-full scale-[1.3]"
+                          />
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="flex flex-col items-center">
-                      <span
-                        className="
+                      <div className="flex flex-col items-center">
+                        <span
+                          className="
                                                 text-black font-[900] text-center leading-tight
                                                 text-[3.5vw] md:text-[1.6vw] lg:text-[1.4vw]
                                                 max-w-[25vw] md:max-w-[10vw] lg:max-w-[13vw]
                                             "
-                      >
-                        {story.userName}
-                      </span>
-                      <span
-                        className="
+                        >
+                          {story.userName}
+                        </span>
+                        <span
+                          className="
                                                 text-black/70 text-center leading-tight
                                                 text-[2.8vw] md:text-[1.1vw] lg:text-[0.9vw]
                                                 max-w-[25vw] md:max-w-[10vw] lg:max-w-[13vw]
                                                 mt-[0.5vw] md:mt-[0.2vw]
                                             "
-                      >
-                        {story.userHandle}
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
+                        >
+                          {story.userHandle}
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Pagination Dots — Mobile only */}
+              <div className="flex md:hidden justify-center gap-2 mt-[-2vw]">
+                {Array.from({ length: dotCount }).map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => scrollToDot(i)}
+                    className={`
+                                      w-1.5 h-1.5 rounded-full transition-all duration-300
+                                      ${i === activeIndex ? 'bg-black w-4' : 'bg-black/30'}
+                                  `}
+                  />
+                ))}
+              </div>
             </div>
 
             {/* Right arrow — Hidden on mobile */}
@@ -420,8 +460,8 @@ const StoryTestimonials = () => {
         </div>
       </div>
 
-      {openIndex !== null && (
-        <StoryViewer stories={STORIES} startIndex={openIndex} onClose={() => setOpenIndex(null)} />
+      {openStories !== null && (
+        <StoryViewer stories={openStories} startIndex={0} onClose={() => setOpenStories(null)} />
       )}
     </section>
   );

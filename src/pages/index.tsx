@@ -110,7 +110,7 @@ const Home = ({
         {/* <ShopHeroSingle bannerData={heroBannerData} /> */}
         <ShopHeroSingle videoSrc="https://cdn.originfresh.in/website/herovideo2.mp4" />
         <ScrollReveal direction="up" delay={0}>
-          <Container maxWidth={false} className="w-full px-[3vw] mob:px-[4vw] py-8 mob:py-4 mt-10 mob:mt-8">
+          <Container maxWidth={false} className="w-full px-[3vw] mob:px-[2vw] py-8 mob:py-4 mt-10 mob:mt-4">
             <PrimaryFeature />
           </Container>
         </ScrollReveal>
@@ -207,7 +207,7 @@ const Home = ({
                 titleVariant={isMobile ? 'h4' : 'h1'}
                 titleClass="font-[Recoleta] !font-bold !leading-[1.1] "
                 description={`Everyone has a right to fresh, authentic <br/ className="mob:hidden"> flavours. But only a few fight for it. Origin&nbsp;Fresh is for those&nbsp;who&nbsp;do.`}
-                descriptionClass="md:!text-[1.614vw]"
+                descriptionClass="md:!text-[1.614vw] !leading-[1.25]"
                 // buttonText="Know more"
                 buttonVariant="tertiary"
                 rootClass="bg-[#FEF5E3] z-1 px-[10vw] mob:px-[3vw] items-center !rounded-none pb-12 !overflow-visible"

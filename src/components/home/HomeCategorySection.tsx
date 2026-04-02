@@ -239,7 +239,7 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
   const finalBlendsCategory = blendsCategory && blendsCategory.length > 0 ? blendsCategory[0] : blendsFromMain;
 
   return (
-    <div className="py-[4vw] mob:py-[8vw] relative">
+    <div className="py-[4vw] mob:py-[4vw] relative">
       <div className="w-[92vw] md:w-[80vw] mx-auto">
         {title && (
           <div className="w-full mb-[2.1vw] mob:pb-[2vw]">
