@@ -39,7 +39,7 @@ const PopularMangoes = ({ products = [] }: PopularMangoesProps) => {
           >
             {products.map((product) => (
               <div key={product.id} className="flex-shrink-0 w-[170px] md:w-[325px] relative z-[1]">
-                <MangoItemCard itemDetails={product} isCompact={isMobile} />
+                <MangoItemCard itemDetails={product} />
               </div>
             ))}
             {/* Large spacer at the end to allow for a "natural" stop point far to the right */}

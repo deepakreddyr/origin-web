@@ -18,7 +18,7 @@ const MangoProductHighlight = ({ products = [] }: MangoProductHighlightProps) =>
       {/* Align with max-w-2xl from Hero section */}
       <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-6">
         {displayProducts.map((product) => (
-          <MangoItemCard key={product.id} itemDetails={product} isCompact={isMobile} />
+          <MangoItemCard key={product.id} itemDetails={product} />
         ))}
       </div>
     </section>
