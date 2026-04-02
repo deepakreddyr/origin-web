@@ -13,6 +13,7 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { UOMPopup, NotifyToast, MaxQuantityToast, Product, UOM } from '../shared/UOMPopup';
+import itemRipenessSvg from '/public/assets/svg/itemRipeness.svg';
 
 interface FeaturedItemType {
   item: Product;
@@ -222,6 +223,16 @@ const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType 
             className="object-contain"
           />
         </div>
+        {hasRipenessOptions && (
+          <div className="absolute bottom-8 right-8 p-1.5 mob:p-1 bg-white rounded-full shadow-lg z-10">
+            <Image
+              src={itemRipenessSvg}
+              alt="Multiple Ripeness Options"
+              width={isMobile ? 45 : 45}
+              height={isMobile ? 45 : 45}
+            />
+          </div>
+        )}
         {defaultUom?.conversion_text && (
           <div className="absolute top-8 right-8 text-[#146321] text-lg font-bold px-2 py-0.5 rounded-full z-10 font-[SofiaPro]">
             {defaultUom.conversion_text}
@@ -278,7 +289,7 @@ const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType 
             ) : requiresSelection ? (
               <button
                 onClick={() => setIsPopupOpen(true)}
-                className="bg-primary text-black font-bold h-[2.5vw] mob:h-[8.5vw] px-[1.5vw] mob:px-[3vw] rounded-full flex items-center justify-center gap-1 transition-all text-[.97vw] mob:text-[3.2vw]"
+                className="bg-primary text-black font-bold h-[2.5vw] mob:h-[8.5vw] px-[1vw] mob:px-[3vw] rounded-full flex items-center justify-center gap-1 transition-all text-[.97vw] mob:text-[3.2vw]"
               >
                 Add
                 <KeyboardArrowDownIcon sx={{ fontSize: isMobile ? '4vw' : '1.2vw' }} />
