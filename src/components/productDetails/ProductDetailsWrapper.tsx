@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addNotifiedItem } from '@/store/slice/productsSlice';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import { motion, AnimatePresence } from 'framer-motion';
 import * as gtag from '@/utilities/gtag';
 
 // Type definitions
@@ -216,7 +217,7 @@ const StorageInfo: React.FC<{ info: ProductInfo }> = ({ info }) => {
 
   return (
     <div className="mt-4 w-[300px] mob:w-full bg-white rounded-[16px] border border-[#EDE6CC]/50 p-4 pb-[16px]">
-      <p className="font-[Recoleta] font-bold text-xl text-[#231F20] mb-6 text-start">Storing information</p>
+      <p className="font-[Recoleta] font-semibold text-xl text-[#231F20] mb-6 text-start">Storing information</p>
       <div className="flex flex-row overflow-x-auto gap-[12px] no-scrollbar">
         {storageSection.details.map((detail: any, index: number) => (
           <div
@@ -248,7 +249,7 @@ const NutritionBenefits: React.FC<{ info: ProductInfo }> = ({ info }) => {
 
   return (
     <div className="mt-4 w-[443px] mob:w-full bg-white rounded-[16px] border border-[#EDE6CC]/50 p-4 pb-[16px]">
-      <p className="font-[Recoleta] font-bold text-xl text-[#231F20] mb-6 text-start">Nutrition benefits</p>
+      <p className="font-[Recoleta] font-semibold text-xl text-[#231F20] mb-6 text-start">Nutrition benefits</p>
       <div className="flex flex-row overflow-x-auto gap-[12px] no-scrollbar">
         {nutritionSection.details.map((detail: any, index: number) => (
           <div
@@ -262,6 +263,94 @@ const NutritionBenefits: React.FC<{ info: ProductInfo }> = ({ info }) => {
           </div>
         ))}
       </div>
+    </div>
+  );
+};
+
+const ImageGallery: React.FC<{
+  mainImage: string;
+  multipleImages?: string[];
+  productName: string;
+  isAvailable: boolean;
+  conversionText?: string;
+  hasRipenessFeature: boolean;
+  isDesktop?: boolean;
+}> = ({ mainImage, multipleImages = [], productName, isAvailable, conversionText, hasRipenessFeature, isDesktop }) => {
+  const images = [mainImage, ...multipleImages].filter(Boolean);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleDragEnd = (_: any, info: any) => {
+    const threshold = 50;
+    if (info.offset.x < -threshold && currentIndex < images.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    } else if (info.offset.x > threshold && currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+
+  if (images.length === 0) return null;
+
+  return (
+    <div className="relative w-full h-full overflow-hidden group touch-none">
+      <motion.div
+        className="flex h-full w-full cursor-grab active:cursor-grabbing"
+        animate={{ x: `-${currentIndex * 100}%` }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        onDragEnd={handleDragEnd}
+      >
+        {images.map((img, i) => (
+          <div key={i} className="min-w-full h-full relative">
+            <Image
+              src={img}
+              fill
+              alt={`${productName} image ${i + 1}`}
+              style={{ objectFit: 'cover' }}
+              priority={i === 0}
+              unoptimized
+            />
+          </div>
+        ))}
+      </motion.div>
+
+      {/* Pagination Dots */}
+      {images.length > 1 && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30">
+          <div className="bg-white px-2.5 py-2 rounded-full flex gap-1.5 shadow-sm border border-gray-100/50 grayscale">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentIndex(i)}
+                className={`transition-all duration-300 rounded-full ${
+                  i === currentIndex ? 'bg-black w-4 h-1.5' : 'bg-black/20 w-1.5 h-1.5'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Overlays */}
+      {conversionText && (
+        <div
+          className={`absolute top-4 right-4 text-[#146321] font-bold px-3 py-1 rounded-full z-10 font-[SofiaPro] ${isDesktop ? 'text-sm' : 'text-[10px]'}`}
+        >
+          {conversionText}
+        </div>
+      )}
+      {hasRipenessFeature && (
+        <div className={`absolute bottom-4 right-4 z-10 p-1.5 bg-white rounded-full shadow-lg overflow-hidden`}>
+          <Image src={itemRipenessSvg} alt="Select ripeness" width={isDesktop ? 60 : 35} height={isDesktop ? 60 : 35} />
+        </div>
+      )}
+      {!isAvailable && (
+        <div className="bg-black-op-50 absolute top-0 w-full py-2 flex justify-center z-20">
+          <p className={`${isDesktop ? 'text-lg' : 'text-sm'} font-[SofiaPro] font-semibold text-white`}>
+            OUT OF STOCK
+          </p>
+        </div>
+      )}
     </div>
   );
 };
@@ -579,49 +668,34 @@ const ProductDetailsWrapper = () => {
         <div className="w-[92vw] md:w-[80vw] mx-auto py-7 mob:px-0 mob:py-6">
           {/* Breadcrumbs for Mobile - APPEARS BEFORE IMAGE */}
           {mobile && (
-            <div className="flex items-center gap-2 text-lg font-bold text-[#146321] mb-6 font-[SofiaPro]">
+            <div className="flex items-center gap-2 text-lg font-bold text-[#146321] mb-6 font-[SofiaPro] pt-[10vw]">
               {renderBreadcrumbs()}
             </div>
           )}
 
           {mobile ? (
             <div className="space-y-6">
-              <div className="flex flex-col items-center bg-white rounded-[24px] overflow-hidden pt-8 pb-8 border border-[#EDE6CC]/50">
-                <div className="relative w-[70vw] h-[70vw] max-w-[300px] max-h-[300px] bg-transparent mb-6">
-                  <Image
-                    src={productDetails.item.image}
-                    fill
-                    alt={productDetails.item.name || 'Product'}
-                    style={{ objectFit: 'contain' }}
-                    priority
+              <div className="flex flex-col items-center bg-white rounded-[24px] overflow-hidden border border-[#EDE6CC]/50">
+                <div className="relative w-full aspect-square bg-transparent">
+                  <ImageGallery
+                    mainImage={productDetails.item.image}
+                    multipleImages={productDetails.item.multiple_images}
+                    productName={productDetails.item.name}
+                    isAvailable={defaultUOM?.is_available && productDetails.item.is_available}
+                    conversionText={defaultUOM?.conversion_text}
+                    hasRipenessFeature={hasRipenessFeature}
                   />
-                  {defaultUOM?.conversion_text && (
-                    <div className="absolute top-2 right-2 text-[#146321] text-[10px] font-bold px-2 py-0.5 rounded-full z-10 font-[SofiaPro]">
-                      {defaultUOM.conversion_text}
-                    </div>
-                  )}
-                  {hasRipenessFeature && (
-                    <div className="absolute bottom-0 right-0 z-10">
-                      <Image src={itemRipenessSvg} alt="Select ripeness" width={50} height={50} />
-                    </div>
-                  )}
-                  {/* Out of Stock Overlay */}
-                  {(!defaultUOM?.is_available || !productDetails.item.is_available) && (
-                    <div className="bg-black-op-50 absolute top-0 w-full py-2 flex justify-center z-20">
-                      <p className="text-sm font-[SofiaPro] font-semibold text-white">OUT OF STOCK</p>
-                    </div>
-                  )}
                 </div>
 
-                <div className="w-full px-6 space-y-2 text-start">
-                  <h1 className="text-2xl font-Stinger font-bold text-[#231F20] leading-tight">
+                <div className="w-full px-6 pt-6 pb-2 space-y-2 text-start">
+                  <h1 className="text-2xl !font-[SofiaPro] font-bold text-[#231F20] leading-tight">
                     {productDetails.item.name}
                   </h1>
                 </div>
 
                 {/* Mobile Price Strip */}
                 {defaultUOM && (
-                  <div className="w-[calc(100%-3rem)] mt-6 bg-[#F8F4E9] rounded-xl p-3 flex items-center justify-between border border-[#F3EEDF]">
+                  <div className="w-[calc(100%-3rem)] mt-6 mb-8 bg-[#F8F4E9] rounded-xl p-3 flex items-center justify-between border border-[#F3EEDF]">
                     <div className="flex flex-col">
                       <span className="text-sm font-semibold text-gray-900">{defaultUOM.unit}</span>
                       <div className="flex items-center gap-2">
@@ -690,31 +764,17 @@ const ProductDetailsWrapper = () => {
               {/* Top Section Grid */}
               <div className="grid grid-cols-[1fr_1.2fr] gap-12 items-start">
                 {/* Left: Product Image Card */}
-                <div className="bg-white rounded-[32px] border border-[#EDE6CC]/50 p-12 flex items-center justify-center min-h-[500px] relative">
-                  <div className="relative w-96 h-96">
-                    <Image
-                      src={productDetails.item.image}
-                      fill
-                      alt={productDetails.item.name || 'Product'}
-                      style={{ objectFit: 'contain' }}
-                      className="drop-shadow-sm"
-                      priority
+                <div className="bg-white rounded-[32px] border border-[#EDE6CC]/50 flex items-center justify-center min-h-[500px] overflow-hidden relative">
+                  <div className="relative w-full h-full aspect-square">
+                    <ImageGallery
+                      mainImage={productDetails.item.image}
+                      multipleImages={productDetails.item.multiple_images}
+                      productName={productDetails.item.name}
+                      isAvailable={defaultUOM?.is_available && productDetails.item.is_available}
+                      conversionText={defaultUOM?.conversion_text}
+                      hasRipenessFeature={hasRipenessFeature}
+                      isDesktop
                     />
-                    {defaultUOM?.conversion_text && (
-                      <div className="absolute top-4 right-4 text-[#146321] text-sm font-bold px-3 py-1 rounded-full z-10 font-[SofiaPro]">
-                        {defaultUOM.conversion_text}
-                      </div>
-                    )}
-                    {hasRipenessFeature && (
-                      <div className="absolute bottom-0 right-0 z-10">
-                        <Image src={itemRipenessSvg} alt="Select ripeness" width={80} height={80} />
-                      </div>
-                    )}
-                    {(!defaultUOM?.is_available || !productDetails.item.is_available) && (
-                      <div className="bg-black-op-50 absolute top-0 w-full py-2 flex justify-center z-20">
-                        <p className="text-lg font-[SofiaPro] font-semibold text-white">OUT OF STOCK</p>
-                      </div>
-                    )}
                   </div>
                 </div>
 
