@@ -148,7 +148,7 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
             }}
           >
             <div
-              className={`relative w-full h-full p-2 transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
+              className={`relative w-full h-full transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
             >
               <Image
                 src={itemDetails.image || logo}
@@ -156,7 +156,7 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
                 fill
                 unoptimized
                 sizes="(max-width: 768px) 50vw, 25vw"
-                style={{ objectFit: 'contain' }}
+                style={{ objectFit: 'cover' }}
               />
             </div>
 
