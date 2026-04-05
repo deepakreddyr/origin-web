@@ -160,7 +160,7 @@ const DownloadAppWrapper: React.FC<DownloadAppWrapperProps> = ({ onClose }) => {
           {/* Mobile Layout (Hidden on Tablet and Desktop) */}
           <div className="sm:hidden">
             {/* Content */}
-            <div className="px-[6vw] pt-[6vw] mob:px-[5vw] mob:pt-[8vw]">
+            <div className="px-[6vw] pt-[12vw] mob:px-[5vw] mob:pt-[14vw]">
               <p className="font-[SofiaPro] text-[5.12vw] mob:text-[4.5vw] font-semibold text-black text-center leading-tight mb-4">
                 Change your idea of fresh! Download the Origin app
               </p>
