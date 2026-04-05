@@ -28,7 +28,6 @@ import {
 import CardsWrapper from '@/components/ShopV2/shopDetails/CardsWrapper';
 import { setIsProductListLoading, setProductList } from '@/store/slice/productsSlice';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
-import DownloadAppWrapper from '@/components/downloadApp/DownloadAppWrapper';
 import ShopHero from '@/components/ShopV2/ShopHero';
 import FeatureStrip from '@/components/ShopV2/FeatureStrip';
 import FeaturedProduct from '@/components/ShopV2/FeaturedProduct';

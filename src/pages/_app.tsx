@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import GlobalLaunchListener from '@/components/GlobalLaunchListener';
 import * as gtag from '@/utilities/gtag';
+import DownloadAppPopup from '@/components/downloadApp/DownloadAppPopup';
 
 const APP_VERSION = '1.1.5';
 
@@ -197,6 +198,7 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
         </Script>
 
         <Component {...pageProps} />
+        <DownloadAppPopup />
       </LocalizationProvider>
     </Provider>
   );

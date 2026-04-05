@@ -19,7 +19,6 @@ import { getAddressAndStoreId } from '@/utilities/utils';
 import MainCategorySkeleton from '@/components/skeletonLoaders/shop/MainCategorySkeleton';
 import PopularCarouselSkeleton from '@/components/skeletonLoaders/shop/PopularCarouselSkeleton';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
-import DownloadAppWrapper from '@/components/downloadApp/DownloadAppWrapper';
 import FeatureStrip from '@/components/ShopV2/FeatureStrip';
 import WhyOriginBanner from '@/components/ShopV2/WhyOriginBanner';
 import { ShopHeroSingle } from '@/components/ShopV2/ShopHero';
@@ -36,8 +35,6 @@ const ShopPage = (props: HomeProps) => {
   const { mainMenuItems, footerData } = props;
   const mobile = useMediaQuery(650);
   const [loading, setLoading] = useState(true);
-  const [showDownloadApp, setShowDownloadApp] = useState(false);
-  const [downloadAppReady, setDownloadAppReady] = useState(false);
   const [videosPreloaded, setVideosPreloaded] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -123,31 +120,6 @@ const ShopPage = (props: HomeProps) => {
       label: 'Shop All'
     });
   }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      try {
-        const userToken = localStorage.getItem('user_token');
-        const hasSeenBanner = localStorage.getItem('downloadAppBannerSeen');
-
-        if (!userToken && !hasSeenBanner) {
-          setShowDownloadApp(true);
-        }
-
-        setDownloadAppReady(true);
-      } catch (error) {
-        console.error('Error accessing localStorage:', error);
-        setDownloadAppReady(true);
-      }
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleCloseDownloadApp = () => {
-    setShowDownloadApp(false);
-    localStorage.setItem('downloadAppBannerSeen', 'true');
-  };
 
   const PageLoader = () => (
     <div className="flex flex-col gap-[6vw] pl-[10.6vw] mob:pl-[4.1vw] relative top-[12vw] mob:top-[32vw] overflow-hidden">
