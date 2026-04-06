@@ -168,14 +168,14 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
           {/* Image Container */}
           <div className="relative bg-primary-100 flex items-center justify-center w-[16.67vw] mob:w-[40vw] h-[14.5vw] mob:h-[38vw] rounded-[1.67vw] mob:rounded-[4.1vw] overflow-hidden">
             <div
-              className={`relative w-[12.6vw] h-[12vw] mob:w-[38vw] mob:h-[38vw] transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
+              className={`relative w-full h-full transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
             >
               <Image
                 src={itemDetails.image || logo}
                 alt={itemDetails.name ? itemDetails.name : 'product image'}
                 fill
                 sizes="(max-width: 768px) 50vw, 25vw"
-                style={{ objectFit: 'contain' }}
+                className="object-cover"
               />
             </div>
 
@@ -259,9 +259,9 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                     setIsPopupOpen(true);
                   }}
                   transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-                  className={`flex items-center h-[2.5vw] mob:h-[8.5vw] rounded-full p-[.3vw] mob:px-[.7vw] cursor-pointer ${
-                    totalQuantityAcrossProduct > 0 ? 'bg-white' : 'bg-primary'
-                  }`}
+                  className={`flex items-center h-[2.9vw] mob:h-[10vw] rounded-full p-[.3vw] ${
+                    totalQuantityAcrossProduct > 0 ? 'mob:px-[.7vw] bg-white' : 'px-[0.7vw] mob:px-[1.5vw] bg-primary'
+                  } cursor-pointer`}
                 >
                   {/* Minus — mounts/unmounts; pill layout animation handles the width change */}
                   {totalQuantityAcrossProduct > 0 && (
@@ -277,7 +277,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                         setQuantityDir(-1);
                         setIsPopupOpen(true);
                       }}
-                      className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.1vw] flex-shrink-0 flex items-center justify-center bg-primary rounded-full border border-primary-200 mr-[.5vw] mob:mr-[3vw]"
+                      className="h-[1.8vw] w-[1.8vw] mob:h-[7vw] mob:w-[7vw] mob:text-[5.5vw] text-[1.2vw] flex-shrink-0 flex items-center justify-center bg-primary rounded-full border border-primary-200 mr-[.5vw] mob:mr-[3vw]"
                     >
                       <span className="mb-1">–</span>
                     </motion.button>
@@ -304,7 +304,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
                           transition={{ duration: 0.12 }}
-                          className="font-[SofiaPro] text-[.97vw] font-bold mob:text-[2.8vw] text-black whitespace-nowrap px-[0.5vw]"
+                          className="font-[SofiaPro] text-[.97vw] font-bold mob:text-[3.2vw] text-black whitespace-nowrap mx-[0.4vw] mob:mx-[1.2vw]"
                         >
                           {totalOptionsCount} Options
                         </motion.span>
@@ -325,8 +325,8 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                     }}
                     className={`flex-shrink-0 flex items-center justify-center rounded-full bg-primary ${
                       totalQuantityAcrossProduct > 0
-                        ? 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.1vw] pb-[.3vw] ml-[.5vw] mob:ml-[3vw]'
-                        : 'h-[1.2vw] w-[1.2vw] mob:h-[5vw] mob:w-[5vw] text-[1vw] mob:text-[4.1vw]'
+                        ? 'h-[1.8vw] w-[1.8vw] mob:h-[7vw] mob:w-[7vw] mob:text-[5.5vw] text-[1.2vw] pb-[.3vw] ml-[.5vw] mob:ml-[3vw]'
+                        : 'h-[1.5vw] w-[1.5vw] mob:h-[6.5vw] mob:w-[6.5vw] text-[1.1vw] mob:text-[4.5vw]'
                     }`}
                   >
                     +

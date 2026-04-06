@@ -43,7 +43,9 @@ const BlackAddCartBtm: React.FC<BlackAddCartBtmProps> = (props) => {
         layout
         transition={{ type: 'spring', stiffness: 380, damping: 28 }}
         onClick={!isItemPresent ? handleAddItem : undefined}
-        className={`flex items-center h-[2.8vw] mob:h-[9vw] rounded-full border-[2px] p-[.3vw] mob:px-[.5vw] w-full justify-center ${
+        className={`flex items-center h-[2.8vw] mob:h-[9vw] rounded-full border-[2px] p-[.3vw] ${
+          isItemPresent ? 'mob:px-[.5vw]' : 'px-[1.5vw] mob:px-[3vw]'
+        } w-full justify-center ${
           isItemPresent ? 'border-[#F3EEDF] bg-white cursor-default' : 'border-transparent bg-black cursor-pointer'
         }`}
       >
@@ -82,7 +84,7 @@ const BlackAddCartBtm: React.FC<BlackAddCartBtmProps> = (props) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.12 }}
-                className="text-white font-medium text-base whitespace-nowrap mr-[.3vw]"
+                className="text-white font-medium text-base whitespace-nowrap mx-[0.8vw] mob:mx-[1.5vw]"
               >
                 Add to cart
               </motion.span>
