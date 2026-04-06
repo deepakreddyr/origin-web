@@ -130,7 +130,9 @@ const YellowBtn = (props: YellowBtnProps) => {
           layout
           transition={{ type: 'spring', stiffness: 380, damping: 28 }}
           onClick={!shouldShowStepper ? onAdd : undefined}
-          className={`flex items-center h-[2.5vw] mob:h-[8.5vw] rounded-full border-[2px] p-[.3vw] mob:px-[.4vw] w-full justify-center ${
+          className={`flex items-center h-[2.9vw] mob:h-[10vw] rounded-full border-[2px] p-[.3vw] ${
+            shouldShowStepper ? 'mob:px-[.4vw]' : 'px-[1.2vw] mob:px-[2.5vw]'
+          } w-full justify-center ${
             shouldShowStepper
               ? 'border-primary-200 bg-white cursor-default'
               : 'border-transparent bg-[#fac510] cursor-pointer'
@@ -143,7 +145,7 @@ const YellowBtn = (props: YellowBtnProps) => {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.15 }}
               whileTap={{ scale: 0.82 }}
-              className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] flex-shrink-0 rounded-full bg-primary text-black text-[1.3vw] mob:text-[5.5vw] font-semibold flex items-center justify-center border border-primary-200 mr-[.4vw] mob:mr-[2vw]"
+              className="h-[1.8vw] w-[1.8vw] mob:h-[7vw] mob:w-[7vw] flex-shrink-0 rounded-full bg-primary text-black text-[1.4vw] mob:text-[5.5vw] font-semibold flex items-center justify-center border border-primary-200 mr-[.4vw] mob:mr-[2vw]"
               onClick={onDecrease}
             >
               <span className="mob:mb-[3px] mb-[2px]">–</span>
@@ -171,7 +173,7 @@ const YellowBtn = (props: YellowBtnProps) => {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.12 }}
-                  className="text-black font-bold text-base whitespace-nowrap mr-[.3vw]"
+                  className="text-black font-bold text-base whitespace-nowrap mx-[0.6vw] mob:mx-[1.2vw]"
                 >
                   Add
                 </motion.span>
@@ -187,9 +189,9 @@ const YellowBtn = (props: YellowBtnProps) => {
             className={`flex-shrink-0 flex items-center justify-center rounded-full bg-primary font-semibold ${
               shouldShowStepper
                 ? isMax
-                  ? 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] bg-gray-300 text-gray-500 text-[1.3vw] mob:text-[5.5vw] border border-primary-200 ml-[.4vw] mob:ml-[2vw] cursor-not-allowed'
-                  : 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] text-[1.3vw] mob:text-[5.5vw] border border-primary-200 ml-[.4vw] mob:ml-[2vw]'
-                : 'h-[1.4vw] w-[1.4vw] mob:h-[5vw] mob:w-[5vw] text-[1.1vw] mob:text-[4vw] bg-[#fac510]'
+                  ? 'h-[1.8vw] w-[1.8vw] mob:h-[7vw] mob:w-[7vw] bg-gray-300 text-gray-500 text-[1.4vw] mob:text-[5.5vw] border border-primary-200 ml-[.4vw] mob:ml-[2vw] cursor-not-allowed'
+                  : 'h-[1.8vw] w-[1.8vw] mob:h-[7vw] mob:w-[7vw] text-[1.4vw] mob:text-[5.5vw] border border-primary-200 ml-[.4vw] mob:ml-[2vw]'
+                : 'h-[1.5vw] w-[1.5vw] mob:h-[6.5vw] mob:w-[6.5vw] text-[1.2vw] mob:text-[4.5vw] bg-[#fac510]'
             }`}
             onClick={shouldShowStepper ? onIncrease : onAdd}
           >
