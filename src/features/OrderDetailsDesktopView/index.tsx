@@ -1,22 +1,22 @@
-import { Box, CircularProgress, Grid } from "@mui/material";
-import { useAtom } from "jotai";
-import { useRouter } from "next/router";
-import React from "react";
+import { Box, CircularProgress, Grid } from '@mui/material';
+import { useAtom } from 'jotai';
+import { useRouter } from 'next/router';
+import React from 'react';
 
-import AddressDetails from "./components/AddressDetails";
-import BillDetails from "./components/BillDetails";
-import DeliveryPartner from "./components/DeliveryPartner";
+import AddressDetails from './components/AddressDetails';
+import BillDetails from './components/BillDetails';
+import DeliveryPartner from './components/DeliveryPartner';
 // import EditOrderCounter from './components/EditOrderCounter';
-import OrderStatusHeader from "./components/Header";
+import OrderStatusHeader from './components/Header';
 // import CancelOrderCounter from './components/CancelOrderCounter';
-import OrderDetails from "./components/OrderDetails";
-import OrderStatusImage from "./components/OrderStatusImage";
-import OrderStatusText from "./components/OrderStatusText";
-import PaymentPending from "./components/PaymentPending";
-import { orderDetailsAtom } from "./context/atoms";
-import { getOrderDetails } from "./services/getOrderDetails";
-import EditOrderCounter from "./components/EditOrderCounter";
-import RefundDetails from "./components/RefundDetails";
+import OrderDetails from './components/OrderDetails';
+import OrderStatusImage from './components/OrderStatusImage';
+import OrderStatusText from './components/OrderStatusText';
+import PaymentPending from './components/PaymentPending';
+import { orderDetailsAtom } from './context/atoms';
+import { getOrderDetails } from './services/getOrderDetails';
+import EditOrderCounter from './components/EditOrderCounter';
+import RefundDetails from './components/RefundDetails';
 
 const OrderDetailsDeskTopView = () => {
   const router = useRouter();
@@ -25,7 +25,7 @@ const OrderDetailsDeskTopView = () => {
     const { id } = router.query;
     if (id) {
       getOrderDetails(setOrderDetails, {
-        id: String(id),
+        id: String(id)
       });
     }
   }, [router.query]);
@@ -34,11 +34,11 @@ const OrderDetailsDeskTopView = () => {
     return (
       <Box
         sx={{
-          width: "100vw",
-          height: "80vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          width: '100vw',
+          height: '80vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
         }}
       >
         <CircularProgress />
@@ -49,26 +49,24 @@ const OrderDetailsDeskTopView = () => {
   return (
     <Box
       sx={{
-        margin: "0 4rem 0 4rem",
+        margin: '0 4rem 0 4rem'
       }}
     >
-      {order.data?.order_code && (
-        <OrderStatusHeader order_code={order.data.order_code} />
-      )}
+      {order.data?.order_code && <OrderStatusHeader order_code={order.data.order_code} />}
       <Grid
         container
         sx={{
-          background: "none",
+          background: 'none'
         }}
       >
         <Grid sm={4} xs={12}>
           <Box
             sx={{
-              margin: "1rem",
-              display: "flex",
-              flexDirection: "column",
-              background: "none",
-              width: "100%",
+              margin: '1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              background: 'none',
+              width: '100%'
             }}
           >
             <OrderStatusImage />
@@ -85,10 +83,10 @@ const OrderDetailsDeskTopView = () => {
         <Grid sm={8} xs={12}>
           <Box
             sx={{
-              margin: "1rem",
-              display: "flex",
-              flexDirection: "column",
-              gap: "1rem",
+              margin: '1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem'
             }}
           >
             {!!order.data?.driver && <DeliveryPartner />}
@@ -100,7 +98,7 @@ const OrderDetailsDeskTopView = () => {
               />
             )}
             {/* <DeliveryPartnerDetails /> */}
-            {order.data?.payment_status === "pending" && <PaymentPending />}
+            <PaymentPending />
             <OrderDetails />
           </Box>
         </Grid>

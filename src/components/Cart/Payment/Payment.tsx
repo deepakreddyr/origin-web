@@ -49,23 +49,11 @@ const Payment = (props: any) => {
     localStorage.removeItem('razorpay_response');
   };
 
-  const removeItemsFromBackend = () => {
-    const url = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['removeitemsFromCart'];
+  const clearBackendCart = () => {
+    const url = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['clearCartItems'];
     const addressFromLs = getAddressAndStoreId();
     let additionalHeaders = {};
-    let apiData;
-    let transformedData;
-    const lsKey = isMangoPage ? 'mango_cart_items' : 'cart_items';
-    const cartItemFromLs = localStorage.getItem(lsKey);
-    if (cartItemFromLs) {
-      apiData = prepareCartItemsToApi(JSON.parse(cartItemFromLs));
-      transformedData = {
-        items: apiData.items.map((item: any) => {
-          const { uom, ...rest } = item;
-          return rest;
-        })
-      };
-    }
+
     if (addressFromLs) {
       additionalHeaders = {
         'store-id': addressFromLs.store_id,
@@ -75,7 +63,8 @@ const Payment = (props: any) => {
 
     const successHandler = (data: any) => {};
     const failureHandler = (data: any) => {};
-    sendDataToApi(url, transformedData, 'POST', successHandler, failureHandler, additionalHeaders);
+    // Full clear doesn't need items payload
+    getDataFromApi(url, successHandler, failureHandler, additionalHeaders);
   };
 
   const onSuccess = (orderResponse: any, paymentMethod: any) => {
@@ -87,7 +76,7 @@ const Payment = (props: any) => {
     });
     setPaymentFlowScreen(TabTypeConstant.PAYMENT_SUCCESS);
     dispatch(setIsHeaderVisible(false));
-    removeItemsFromBackend();
+    clearBackendCart();
     dispatch(actions.clearCart());
     dispatch(actions.setCartTabType(TabTypeConstant.PAYMENT));
     clearPostPaymentItemsinLs();

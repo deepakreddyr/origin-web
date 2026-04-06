@@ -765,8 +765,8 @@ const TermsAndConditions = () => {
           </p>
           <p>
             <strong>16.1.2 </strong>
-            You may also write to Us at  <a href="support@Originfresh.in">support@Originfresh.in</a> and We will strive
-            to resolve Your order related grievance within the timelines prescribed under applicable laws.
+            You may also write to Us at  support@Originfresh.in and We will strive to resolve Your order related
+            grievance within the timelines prescribed under applicable laws.
           </p>
           <p>
             <strong>16.1.3 </strong>
