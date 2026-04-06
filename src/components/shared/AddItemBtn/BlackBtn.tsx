@@ -36,7 +36,9 @@ const BlackBtn: React.FC<BlackBtnProps> = (props) => {
         layout
         transition={{ type: 'spring', stiffness: 380, damping: 28 }}
         onClick={!isItemPresent ? handleAddItem : undefined}
-        className={`flex items-center h-[2.2vw] mob:h-[7vw] rounded-full border-[2px] p-[.3vw] mob:px-[.5vw] w-full justify-center ${
+        className={`flex items-center h-[2.2vw] mob:h-[7vw] rounded-full border-[2px] p-[.3vw] ${
+          isItemPresent ? 'mob:px-[.5vw]' : 'px-[1.2vw] mob:px-[2.5vw]'
+        } w-full justify-center ${
           isItemPresent ? 'border-[#F3EEDF] bg-white cursor-default' : 'border-transparent bg-black cursor-pointer'
         }`}
       >
@@ -75,7 +77,7 @@ const BlackBtn: React.FC<BlackBtnProps> = (props) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.12 }}
-                className="text-white font-semibold text-[1vw] mob:text-[3.2vw] whitespace-nowrap mr-[.3vw]"
+                className="text-white font-semibold text-[1vw] mob:text-[3.2vw] whitespace-nowrap mx-[0.8vw] mob:mx-[1.5vw]"
               >
                 Add
               </motion.span>

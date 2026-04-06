@@ -35,7 +35,9 @@ const UomModalBtn: React.FC<UomModalBtnProps> = (props) => {
         layout
         transition={{ type: 'spring', stiffness: 380, damping: 28 }}
         onClick={!isItemPresent ? handleAddItem : undefined}
-        className={`flex items-center h-[2.5vw] mob:h-[8.5vw] rounded-full border-[2px] p-[.3vw] mob:px-[.5vw] justify-center ${
+        className={`flex items-center h-[2.5vw] mob:h-[8.5vw] rounded-full border-[2px] p-[.3vw] ${
+          isItemPresent ? 'mob:px-[.5vw]' : 'px-[1.2vw] mob:px-[2.5vw]'
+        } justify-center ${
           isItemPresent ? 'border-primary-200 bg-white cursor-default' : 'border-[#EDE6D4] bg-white cursor-pointer'
         }`}
       >
@@ -74,7 +76,7 @@ const UomModalBtn: React.FC<UomModalBtnProps> = (props) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.12 }}
-                className="font-bold text-[1vw] mob:text-[3.2vw] text-black whitespace-nowrap mr-[.3vw]"
+                className="font-bold text-[1vw] mob:text-[3.2vw] text-black whitespace-nowrap mx-[0.8vw] mob:mx-[1.5vw]"
               >
                 Add
               </motion.span>
