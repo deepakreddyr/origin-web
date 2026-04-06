@@ -14,7 +14,7 @@ const DeliveryAddress = (props: any) => {
       // if (payment_status === 'pending') return 'Payment Pending';
       // if (payment_status === 'failed') return 'Payment Failed';
       // if (payment_status === 'partially_completed') return 'Partially Paid';
-      return 'Paid Online';
+      return 'Online';
     }
     return 'Cash On Delivery';
   };

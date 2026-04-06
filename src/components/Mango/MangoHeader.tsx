@@ -51,12 +51,15 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const getDataFromApi = useGetDataFromApi();
 
   useEffect(() => {
-    if (!searchQuery.trim()) {
+    if (searchQuery.trim().length <= 2) {
       setSearchResults([]);
-      setShowDropdown(false);
+      if (searchQuery.trim().length === 0) {
+        setShowDropdown(false);
+      }
       return;
     }
 
@@ -69,6 +72,7 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
 
   const fetchSearchResults = async () => {
     setIsSearchLoading(true);
+    setShowDropdown(true);
     const token = localStorage.getItem('user_token');
     const parentCategoryId = localStorage.getItem('mango_parent_category_id') || '33';
 
@@ -155,193 +159,414 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
   //   }
   // };
 
-  return (
-    <header
-      className={`${isHeaderSticky ? 'fixed top-0' : 'absolute top-0'} left-0 w-full z-[100] bg-[#FFECA6] px-6 md:px-[7vw] py-3 flex items-center justify-between`}
-    >
-      <div className="flex items-center gap-1 flex-1">
-        {/* Logo - Hidden on mobile, logo moves to Hero */}
-        <Link href="/mango" className="hidden md:flex relative w-40 h-12 md:w-60 md:h-16 flex-shrink-0 mt-[5px]">
-          <Image src={originLogo} alt="Origin Fresh" fill className="object-contain" priority />
-        </Link>
+  const highlightMango = (text: string) => {
+    if (!text) return text;
+    const parts = text.split(/(Mango)/gi);
+    return (
+      <>
+        {parts.map((part, i) =>
+          part.toLowerCase() === 'mango' ? (
+            <span key={i} className="text-[#fac510]">
+              {part}
+            </span>
+          ) : (
+            <span key={i}>{part}</span>
+          )
+        )}
+      </>
+    );
+  };
 
-        {/* Separator - Desktop only */}
-        <div className="hidden md:block w-[1px] h-8 bg-black opacity-10 mx-2"></div>
+  const renderViewAllResults = () => {
+    return (
+      <Link
+        href={`/mango/products`}
+        className="block w-full bg-white border-t border-[#f0ecd8] py-4 flex items-center justify-center text-[14px] font-bold font-[SofiaPro] hover:bg-gray-50 transition-colors"
+        onClick={() => {
+          setShowDropdown(false);
+          setIsMobileSearchOpen(false);
+        }}
+      >
+        <span className="text-[#fac510] mr-1">View all</span>
+        <span className="text-black">results for </span>
+        <span className="text-[#fac510] ml-1">&quot;{searchQuery}&quot;</span>
+      </Link>
+    );
+  };
 
-        {/* Location Selector - Mobile stylized */}
-        <button
-          onClick={handleSelectAddress}
-          className="flex items-center gap-2 group text-left max-w-[200px] md:max-w-[250px]"
+  const renderSearchSkeleton = () => {
+    return (
+      <div className="py-2">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="flex items-center gap-4 px-5 py-4 border-b border-[#f0ecd8] animate-pulse">
+            <div className="w-12 h-12 bg-gray-200 rounded-lg flex-shrink-0" />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between mb-2">
+                <div className="h-4 bg-gray-200 rounded w-1/2" />
+                <div className="h-4 bg-gray-200 rounded w-1/6" />
+              </div>
+              <div className="h-3 bg-gray-200 rounded w-3/4" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderNoResults = (isDesktop: boolean) => {
+    return (
+      <div className={`flex flex-col items-center justify-center p-6 ${isDesktop ? 'py-6' : 'mt-[20vw]'}`}>
+        <div className={`${isDesktop ? 'w-20 h-20' : 'w-[30vw] h-[30vw]'} relative mb-4`}>
+          <Image src="/assets/svg/mangonosearch.svg" alt="No results" fill className="object-contain opacity-80" />
+        </div>
+        <span
+          className={`${isDesktop ? 'text-[15px]' : 'text-[18px]'} font-bold text-black font-[SofiaPro] mb-2 text-center px-4`}
         >
-          <div className="flex flex-col overflow-hidden">
-            <div className="flex items-center gap-1.5">
-              <div className="relative w-3.5 h-3.5 flex-shrink-0">
-                <Image src={locationArrow} alt="Location" fill className="object-contain" />
+          No results found for <span className="text-[#fac510]">&quot;{searchQuery}&quot;</span>
+        </span>
+        <span className={`${isDesktop ? 'text-[12px]' : 'text-[14px]'} text-gray-500 font-[SofiaPro] text-center px-4`}>
+          We couldn&apos;t find any mangoes matching your search.
+        </span>
+      </div>
+    );
+  };
+
+  return (
+    <>
+      <header
+        className={`${isHeaderSticky ? 'fixed top-0' : 'absolute top-0'} left-0 w-full z-[100] bg-[#FFECA6] px-6 md:px-[7vw] py-3 flex items-center justify-between`}
+      >
+        <div className="flex items-center gap-1 flex-1">
+          {/* Logo - Hidden on mobile, logo moves to Hero */}
+          <Link href="/mango" className="hidden md:flex relative w-40 h-12 md:w-60 md:h-16 flex-shrink-0 mt-[5px]">
+            <Image src={originLogo} alt="Origin Fresh" fill className="object-contain" priority />
+          </Link>
+
+          {/* Separator - Desktop only */}
+          <div className="hidden md:block w-[1px] h-8 bg-black opacity-10 mx-2"></div>
+
+          {/* Location Selector - Mobile stylized */}
+          <button
+            onClick={handleSelectAddress}
+            className="flex items-center gap-2 group text-left max-w-[200px] md:max-w-[250px]"
+          >
+            <div className="flex flex-col overflow-hidden">
+              <div className="flex items-center gap-1.5">
+                <div className="relative w-3.5 h-3.5 flex-shrink-0">
+                  <Image src={locationArrow} alt="Location" fill className="object-contain" />
+                </div>
+                <span
+                  className="text-[13px] md:text-[13px] font-bold text-gray-900 leading-tight"
+                  style={{ fontFamily: 'SofiaPro' }}
+                >
+                  {address.defaultAddress?.address_name || 'Select'}
+                </span>
               </div>
               <span
-                className="text-[13px] md:text-[13px] font-bold text-gray-900 leading-tight"
+                className="text-[11px] md:text-[11px] text-gray-500 truncate mt-0.5"
                 style={{ fontFamily: 'SofiaPro' }}
               >
-                {address.defaultAddress?.address_name || 'Select'}
+                {address.defaultAddress?.address || 'Set your delivery location'}
               </span>
             </div>
-            <span
-              className="text-[11px] md:text-[11px] text-gray-500 truncate mt-0.5"
-              style={{ fontFamily: 'SofiaPro' }}
-            >
-              {address.defaultAddress?.address || 'Set your delivery location'}
-            </span>
-          </div>
-        </button>
-      </div>
+          </button>
+        </div>
 
-      {/* Right side: Search, Account, Cart */}
-      <div className="flex items-center gap-2.5 md:gap-10">
-        {/* Search - Icon on mobile, Bar on desktop */}
-        <div className="w-auto md:w-[320px] relative">
-          <form className="relative">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => searchQuery.trim() && setShowDropdown(true)}
-              placeholder="Search products"
-              className="hidden md:block w-full bg-[#F8F4E9] rounded-[10px] px-5 py-2.5 text-[14px] outline-none shadow-none text-gray-700 placeholder:text-gray-400 border border-transparent transition-all"
-              style={{ fontFamily: 'SofiaPro' }}
-            />
-            {/* Mobile Search Icon */}
-            <button
-              type="button"
-              className="md:hidden w-9 h-9 flex items-center justify-center bg-[#FDE28A] rounded-full text-gray-700"
-              aria-label="Search"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </button>
-            {/* Desktop Search Icon inside bar */}
-            <div className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 items-center gap-2">
-              {isSearchLoading && <CircularProgress size={16} sx={{ color: '#FFD74F' }} />}
-              <button type="submit" className="text-gray-400 hover:text-gray-600">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        {/* Right side: Search, Account, Cart */}
+        <div className="flex items-center gap-2.5 md:gap-10">
+          {/* Search - Icon on mobile, Bar on desktop */}
+          <div className="w-auto md:w-[320px] relative">
+            <form className="relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => searchQuery.trim() && setShowDropdown(true)}
+                placeholder="Search products"
+                className="hidden md:block w-full bg-[#F8F4E9] rounded-[10px] pl-5 pr-20 py-2.5 text-[14px] outline-none shadow-none text-gray-700 placeholder:text-gray-400 border border-transparent transition-all"
+                style={{ fontFamily: 'SofiaPro' }}
+              />
+              {/* Clear button (X) - Desktop */}
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="hidden md:flex absolute right-12 top-1/2 -translate-y-1/2 items-center justify-center p-1 text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+              {/* Mobile Search Icon */}
+              <button
+                type="button"
+                onClick={() => setIsMobileSearchOpen(true)}
+                className="md:hidden w-9 h-9 flex items-center justify-center bg-[#FDE28A] rounded-full text-gray-700"
+                aria-label="Search"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={1.5}
+                    strokeWidth={2}
                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                   />
                 </svg>
               </button>
-            </div>
-          </form>
+              {/* Desktop Search Icon inside bar */}
+              <div className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 items-center gap-2">
+                {isSearchLoading && <CircularProgress size={16} sx={{ color: '#FFD74F' }} />}
+                <button type="submit" className="text-gray-400 hover:text-gray-600">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </form>
 
-          {/* Search Dropdown - Desktop only for now or visible if active */}
-          {showDropdown && searchResults.length > 0 && (
-            <div className="absolute top-full right-0 md:left-0 w-[280px] md:w-full mt-2 bg-[#F8F4E9] rounded-[10px] shadow-xl overflow-hidden z-[110] border border-[#f0ecd8]">
+            {/* Search Dropdown - Desktop */}
+            {!isMobileSearchOpen && showDropdown && (
+              <div className="absolute top-full right-0 md:left-0 w-[280px] md:w-full mt-2 bg-[#F8F4E9] rounded-[10px] shadow-xl overflow-hidden z-[110] border border-[#f0ecd8]">
+                {searchResults.length > 0 ? (
+                  <div className="">
+                    {searchResults.slice(0, 6).map((item: any) => (
+                      <Link
+                        key={item.id}
+                        href={`/mango/products/${encodeURIComponent(item.name.replace(/ /g, '-').toLowerCase())}?id=${item.id}`}
+                        className="flex items-center gap-3 px-4 py-3 hover:bg-[#f3f0e0] transition-colors group"
+                        onClick={() => {
+                          setShowDropdown(false);
+                          setIsMobileSearchOpen(false);
+                        }}
+                      >
+                        <div className="relative w-12 h-12 rounded-lg bg-white overflow-hidden flex-shrink-0">
+                          <Image
+                            src={item.image || originLogo}
+                            alt={item.name}
+                            fill
+                            className="object-contain p-1"
+                            unoptimized
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <p
+                              className="text-[14px] font-bold text-[#1B1B1B] truncate"
+                              style={{ fontFamily: 'SofiaPro' }}
+                            >
+                              {highlightMango(item.name)}
+                            </p>
+                            <p className="text-[12px] font-bold text-[#1B1B1B] ml-2">
+                              ₹ {item.multiple_uoms?.[0]?.price || 'N/A'}
+                            </p>
+                          </div>
+                          <p className="text-[11px] text-gray-500 truncate" style={{ fontFamily: 'SofiaPro' }}>
+                            {item.description || 'Premium farm fresh fruit'}
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
+                    {renderViewAllResults()}
+                  </div>
+                ) : isSearchLoading ? (
+                  renderSearchSkeleton()
+                ) : (
+                  searchQuery.trim() && !isSearchLoading && renderNoResults(true)
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Icons Container */}
+          <div className="flex md:hidden items-center gap-2">
+            {/* Account Icon */}
+            <button
+              onClick={loginDetails.isLogin ? openAccount : handleProfileMenuOpen}
+              className="w-9 h-9 relative bg-[#FDE28A] rounded-full flex items-center justify-center transition-opacity"
+              aria-label="Account"
+            >
+              <div className="w-5 h-5 relative opacity-70">
+                <Image src={userIcon} alt="Account" fill className="object-contain" />
+              </div>
+            </button>
+
+            {/* Cart Icon */}
+            <button
+              onClick={handleCartOpen}
+              className="w-9 h-9 relative bg-[#FDE28A] rounded-full flex items-center justify-center transition-colors"
+              aria-label="Cart"
+            >
+              <div className="w-5 h-5 relative opacity-70 brightness-0">
+                <Image src={cartIcon} alt="Cart" fill className="object-contain" />
+              </div>
+              {cartItemCount > 0 && (
+                <div className="absolute -top-1 -right-1 bg-[#26B45F] text-white text-[8px] font-bold w-[15px] h-[15px] rounded-full flex items-center justify-center border border-white shadow-sm">
+                  {cartItemCount}
+                </div>
+              )}
+            </button>
+          </div>
+
+          {/* Desktop Unified Container */}
+          <div className="hidden md:flex items-center bg-[#F9F7EF] rounded-[10px] border border-[#F0ECD8] px-5 py-2.5 gap-5 shadow-sm">
+            {/* Account Icon */}
+            <button
+              onClick={loginDetails.isLogin ? openAccount : handleProfileMenuOpen}
+              className="w-6 h-6 relative opacity-60 hover:opacity-100 transition-opacity"
+              aria-label="Account"
+            >
+              <Image src={userIcon} alt="Account" fill className="object-contain" />
+            </button>
+
+            {/* Vertical Divider */}
+            <div className="w-[1px] h-6 bg-[#E0DBC5] opacity-50"></div>
+
+            {/* Cart Icon */}
+            <button
+              onClick={handleCartOpen}
+              className="relative w-6 h-6 flex items-center justify-center transition-colors group"
+              aria-label="Cart"
+            >
+              <div className="w-full h-full relative opacity-60 group-hover:opacity-100 transition-opacity brightness-0">
+                <Image src={cartIcon} alt="Cart" fill className="object-contain" />
+              </div>
+              {cartItemCount > 0 && (
+                <div className="absolute -top-2 -right-2 bg-[#26B45F] text-white text-[9px] font-bold w-[17px] h-[17px] rounded-full flex items-center justify-center border border-white shadow-sm">
+                  {cartItemCount}
+                </div>
+              )}
+            </button>
+          </div>
+        </div>
+      </header>
+      {/* Mobile Search Overlay */}
+      {isMobileSearchOpen && (
+        <div className="fixed inset-0 bg-[#F8F4E9] z-[200] flex flex-col md:hidden">
+          {/* Header with Search Input */}
+          <div className="p-5 flex items-center gap-3 border-b border-[#f0ecd8] bg-[#FFECA6]">
+            <button
+              onClick={() => {
+                setIsMobileSearchOpen(false);
+                setSearchQuery('');
+                setSearchResults([]);
+              }}
+              className="p-1"
+            >
+              <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <div className="flex-1 relative">
+              <input
+                autoFocus
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search for mangoes..."
+                className="w-full bg-white rounded-[10px] pl-10 pr-12 py-3 text-[16px] outline-none border border-[#e0dbc5] font-[SofiaPro]"
+              />
+              {/* Clear button (X) - Mobile */}
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-400"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+              <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+              {isSearchLoading && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <CircularProgress size={18} sx={{ color: '#FFD74F' }} />
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Search Results */}
+          <div className="flex-1 overflow-y-auto bg-[#F8F4E9]">
+            {searchResults.length > 0 ? (
               <div className="py-2">
-                {searchResults.slice(0, 4).map((item: any) => (
+                {searchResults.map((item: any) => (
                   <Link
                     key={item.id}
                     href={`/mango/products/${encodeURIComponent(item.name.replace(/ /g, '-').toLowerCase())}?id=${item.id}`}
-                    className="flex items-center gap-3 px-4 py-3 hover:bg-[#f3f0e0] transition-colors group"
-                    onClick={() => setShowDropdown(false)}
+                    className="flex items-center gap-4 px-5 py-4 border-b border-[#ece8d4] last:border-0"
+                    onClick={() => {
+                      setIsMobileSearchOpen(false);
+                      setShowDropdown(false);
+                    }}
                   >
-                    <div className="relative w-12 h-12 rounded-lg bg-white overflow-hidden flex-shrink-0">
+                    <div className="relative w-16 h-16 rounded-xl bg-white overflow-hidden shadow-sm flex-shrink-0">
                       <Image
                         src={item.image || originLogo}
                         alt={item.name}
                         fill
-                        className="object-contain p-1"
+                        className="object-contain p-1.5"
                         unoptimized
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <p className="text-[14px] font-bold text-[#1B1B1B] truncate" style={{ fontFamily: 'SofiaPro' }}>
-                          {item.name}
+                      <div className="flex items-center justify-between mb-0.5">
+                        <p className="text-[16px] font-bold text-[#1B1B1B] truncate font-[SofiaPro]">
+                          {highlightMango(item.name)}
                         </p>
-                        <p className="text-[12px] font-bold text-[#1B1B1B] ml-2">
-                          ₹ {item.multiple_uoms?.[0]?.price || 'N/A'}
+                        <p className="text-[14px] font-bold text-[#1B1B1B] ml-2">
+                          ₹{item.multiple_uoms?.[0]?.price || 'N/A'}
                         </p>
                       </div>
-                      <p className="text-[11px] text-gray-500 truncate" style={{ fontFamily: 'SofiaPro' }}>
+                      <p className="text-[12px] text-gray-500 truncate font-[SofiaPro]">
                         {item.description || 'Premium farm fresh fruit'}
                       </p>
                     </div>
                   </Link>
                 ))}
+                {renderViewAllResults()}
               </div>
-            </div>
-          )}
-        </div>
-
-        {/* Mobile Icons Container */}
-        <div className="flex md:hidden items-center gap-2">
-          {/* Account Icon */}
-          <button
-            onClick={loginDetails.isLogin ? openAccount : handleProfileMenuOpen}
-            className="w-9 h-9 relative bg-[#FDE28A] rounded-full flex items-center justify-center transition-opacity"
-            aria-label="Account"
-          >
-            <div className="w-5 h-5 relative opacity-70">
-              <Image src={userIcon} alt="Account" fill className="object-contain" />
-            </div>
-          </button>
-
-          {/* Cart Icon */}
-          <button
-            onClick={handleCartOpen}
-            className="w-9 h-9 relative bg-[#FDE28A] rounded-full flex items-center justify-center transition-colors"
-            aria-label="Cart"
-          >
-            <div className="w-5 h-5 relative opacity-70 brightness-0">
-              <Image src={cartIcon} alt="Cart" fill className="object-contain" />
-            </div>
-            {cartItemCount > 0 && (
-              <div className="absolute -top-1 -right-1 bg-[#26B45F] text-white text-[8px] font-bold w-[15px] h-[15px] rounded-full flex items-center justify-center border border-white shadow-sm">
-                {cartItemCount}
+            ) : isSearchLoading ? (
+              renderSearchSkeleton()
+            ) : searchQuery.trim() && !isSearchLoading ? (
+              renderNoResults(false)
+            ) : !searchQuery.trim() ? (
+              <div className="p-10 text-center opacity-40">
+                <svg
+                  className="w-16 h-16 mx-auto mb-4 text-gray-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+                <p className="text-gray-500 font-[SofiaPro]">Discover our sweet season</p>
               </div>
-            )}
-          </button>
+            ) : null}
+          </div>
         </div>
-
-        {/* Desktop Unified Container */}
-        <div className="hidden md:flex items-center bg-[#F9F7EF] rounded-[10px] border border-[#F0ECD8] px-5 py-2.5 gap-5 shadow-sm">
-          {/* Account Icon */}
-          <button
-            onClick={loginDetails.isLogin ? openAccount : handleProfileMenuOpen}
-            className="w-6 h-6 relative opacity-60 hover:opacity-100 transition-opacity"
-            aria-label="Account"
-          >
-            <Image src={userIcon} alt="Account" fill className="object-contain" />
-          </button>
-
-          {/* Vertical Divider */}
-          <div className="w-[1px] h-6 bg-[#E0DBC5] opacity-50"></div>
-
-          {/* Cart Icon */}
-          <button
-            onClick={handleCartOpen}
-            className="relative w-6 h-6 flex items-center justify-center transition-colors group"
-            aria-label="Cart"
-          >
-            <div className="w-full h-full relative opacity-60 group-hover:opacity-100 transition-opacity brightness-0">
-              <Image src={cartIcon} alt="Cart" fill className="object-contain" />
-            </div>
-            {cartItemCount > 0 && (
-              <div className="absolute -top-2 -right-2 bg-[#26B45F] text-white text-[9px] font-bold w-[17px] h-[17px] rounded-full flex items-center justify-center border border-white shadow-sm">
-                {cartItemCount}
-              </div>
-            )}
-          </button>
-        </div>
-      </div>
-    </header>
+      )}
+    </>
   );
 };
 

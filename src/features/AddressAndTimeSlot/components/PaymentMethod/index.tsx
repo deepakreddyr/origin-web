@@ -20,7 +20,7 @@ import { header, request } from '@/utilities/request';
 const PaymentMethod = () => {
   // const [checkout, setCheckout] = useAtom(checkoutAPI);
   const razKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY;
-  const [cartItemsAtom] = useAtom(cartItems);
+  const [cartItemsAtom, setLocalCartItems] = useAtom(cartItems);
   const [appliedCoupon] = useAtom(isCouponApplied);
   const [, setFailOrSuccess] = useAtom(failOrSuccess);
   const router = useRouter();
@@ -28,6 +28,16 @@ const PaymentMethod = () => {
   const [cart] = useAtom(cartAtom);
   const [checkoutExtraDetails] = useAtom(checkoutExtraDetailsAtom);
   const onSuccess = (orderId?: number) => {
+    request(`/api/v3/user/cart/clear`, {
+      method: 'GET',
+      headers: {
+        Authorization: header()
+      }
+    });
+
+    localStorage.removeItem('cart_items');
+    setLocalCartItems([]);
+
     setRazorPayObject(null);
     setFailOrSuccess(FailOrSuccess.SUCCESS);
     if (orderId) {

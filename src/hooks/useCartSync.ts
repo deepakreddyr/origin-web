@@ -74,13 +74,9 @@ export const useCartSync = () => {
       }
     };
 
-    if (isMangoPage) {
-      // Clear cart first for Mango page
-      const clearApiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['clearCartItems'];
-      getDataFromApi(clearApiUrl, syncLocalCartToBackend, syncLocalCartToBackend, additionalHeaders);
-    } else {
-      syncLocalCartToBackend();
-    }
+    // Clear cart first before syncing to ensure consistency
+    const clearApiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['clearCartItems'];
+    getDataFromApi(clearApiUrl, syncLocalCartToBackend, syncLocalCartToBackend, additionalHeaders);
   };
 
   return { sendItemsToApi, fetchCartItemsFromApi };

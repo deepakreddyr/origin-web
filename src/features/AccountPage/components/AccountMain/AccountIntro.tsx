@@ -77,20 +77,19 @@ const AccountIntro = () => {
         >
           <Typography
             variant="body2"
-            component="a"
+            component="span"
             sx={{
               color: 'rgba(0, 0, 0, 0.60)',
               fontWeight: '400',
               fontFamily: 'SofiaPro',
               fontSize: '12px'
             }}
-            href="tel: +919912399123"
           >
             {profile.data?.phone}
           </Typography>
           <Typography
             variant="body2"
-            component="a"
+            component="span"
             sx={{
               color: 'rgba(0, 0, 0, 0.60)',
               fontWeight: '400',
@@ -99,7 +98,6 @@ const AccountIntro = () => {
               fontFamily: 'SofiaPro',
               fontSize: '12px'
             }}
-            href="mailto: vivek_agr12@gmail.com"
           >
             {profile.data?.email}
           </Typography>

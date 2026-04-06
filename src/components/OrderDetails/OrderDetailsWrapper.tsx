@@ -22,12 +22,7 @@ const OrderDetailsWrapper = () => {
   const { isReady, query } = router;
   const dispatch = useDispatch();
 
-  const requestCount = useRef(0);
-
   const fetchOrderdetails = React.useCallback(() => {
-    if (requestCount.current >= 2) return;
-    requestCount.current += 1;
-
     const apiUrl =
       process.env.NEXT_PUBLIC_BACKEND_API_URL + mainApiUrl.ordersActions + `/${query.id}?showAllBills=true`;
 
@@ -106,10 +101,7 @@ const OrderDetailsWrapper = () => {
               orderAndRefundDetails.orderDetailsData.status?.toLowerCase() === 'rejected by admin' &&
               (orderAndRefundDetails.orderDetailsData.payment_method === 'COD' ||
                 orderAndRefundDetails.orderDetailsData.payment_method === 'Cash')
-            ) &&
-            orderAndRefundDetails.orderDetailsData.payment_status === 'pending' && (
-              <RetryOrPayonlineWrapper fetchOrderdetails={fetchOrderdetails} />
-            )}
+            ) && <RetryOrPayonlineWrapper fetchOrderdetails={fetchOrderdetails} />}
           <ItemsList orderDetailsData={orderAndRefundDetails.orderDetailsData} />
         </div>
       </div>

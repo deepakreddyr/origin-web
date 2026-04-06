@@ -79,7 +79,12 @@ const HelpFaq = () => {
                   marginLeft: '0.2rem'
                 }}
               >
-                {recentOrder?.data?.[0]?.support_phone}
+                <a
+                  href={`tel:${recentOrder?.data?.[0]?.support_phone}`}
+                  style={{ color: 'inherit', textDecoration: 'none' }}
+                >
+                  {recentOrder?.data?.[0]?.support_phone}
+                </a>
               </Typography>
             </Box>
             <Box
@@ -97,7 +102,12 @@ const HelpFaq = () => {
                   marginLeft: '0.2rem'
                 }}
               >
-                {recentOrder?.data?.[0]?.support_email}
+                <a
+                  href={`mailto:${recentOrder?.data?.[0]?.support_email}`}
+                  style={{ color: 'inherit', textDecoration: 'none' }}
+                >
+                  {recentOrder?.data?.[0]?.support_email}
+                </a>
               </Typography>
             </Box>
           </Box>
