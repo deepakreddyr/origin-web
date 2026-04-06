@@ -32,7 +32,11 @@ const PaymentFailure = (props: any) => {
   const handleContinue = () => {
     const orderId = paymentModalDetails?.orderResponse?.order_id;
     if (orderId) {
-      router.push(`/orders/${orderId}`);
+      if (window.location.pathname.includes(`/orders/${orderId}`)) {
+        window.location.reload();
+      } else {
+        router.push(`/orders/${orderId}`);
+      }
     } else {
       router.push('/orders');
     }
@@ -66,7 +70,12 @@ const PaymentFailure = (props: any) => {
       payment_method: 'cash'
     };
     const successHandler = (response: any) => {
-      router.push(`/orders/${paymentModalDetails.orderResponse.order_id}`);
+      const orderId = paymentModalDetails.orderResponse.order_id;
+      if (window.location.pathname.includes(`/orders/${orderId}`)) {
+        window.location.reload();
+      } else {
+        router.push(`/orders/${orderId}`);
+      }
       dispatch(setIsSidebarOpen(false));
       dispatch(resetOrderDetails());
       clearCart();

@@ -195,6 +195,55 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
         {/* ── Mango Pulp Banner ── */}
         <MangoPulpBanner />
 
+        {/* ── Mango Gallery Section ── */}
+        <section className="pt-16 pb-8 md:pt-24 md:pb-12 overflow-hidden bg-transparent">
+          <style jsx>{`
+            @keyframes marquee {
+              0% {
+                transform: translateX(0);
+              }
+              100% {
+                transform: translateX(-50%);
+              }
+            }
+            .animate-marquee {
+              animation: marquee 10s linear infinite;
+            }
+            .animate-marquee:hover {
+              animation-play-state: paused;
+            }
+            .no-scrollbar::-webkit-scrollbar {
+              display: none;
+            }
+            .no-scrollbar {
+              -ms-overflow-style: none;
+              scrollbar-width: none;
+            }
+          `}</style>
+          <div className="flex overflow-hidden relative">
+            <div className="flex animate-marquee gap-4 md:gap-8 min-w-full">
+              {/* Double the items to make them loopable */}
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="flex gap-4 md:gap-8">
+                  {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+                    <div
+                      key={num}
+                      className="relative flex-shrink-0 w-[109px] md:w-[219px] h-[156px] md:h-[313px] rounded-[8.41px] md:rounded-[12px] overflow-hidden shadow-sm group transition-transform duration-300 hover:scale-[1.02]"
+                    >
+                      <Image
+                        src={`/assets/images/recipes/mango${num}.png`}
+                        alt={`Mango ${num}`}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ── Mangolicious Recipes ── */}
         <section className="relative py-10 md:py-14 px-6 md:px-[7vw] overflow-hidden">
           <div className="max-w-[1440px] mx-auto relative">
