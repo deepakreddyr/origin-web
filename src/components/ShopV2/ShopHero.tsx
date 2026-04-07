@@ -77,6 +77,60 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
     return (
       <div className="w-full relative overflow-hidden h-[45vw] mob:h-[100vw] bg-[#f7f1dc]">
         <video src={videoSrc} autoPlay muted loop playsInline className="w-full h-full object-cover" />
+
+        {/* Hero Overlay Content */}
+        <div
+          className={`absolute inset-0 flex flex-col items-center ${isMobile ? 'justify-end pb-[12vw]' : 'justify-center'} text-center p-4`}
+        >
+          <div className="flex flex-col items-center justify-center gap-4 md:gap-8 max-w-[90vw] md:max-w-4xl">
+            <h1
+              style={{
+                fontFamily: 'Recoleta',
+                fontWeight: 700,
+                color: 'white',
+                lineHeight: 1.1
+              }}
+              className="text-[10vw] md:text-[6vw] lg:text-[5.5vw]"
+            >
+              The Cult Of Fresh
+            </h1>
+
+            <p
+              style={{
+                fontFamily: 'SofiaPro',
+                fontWeight: 500,
+                color: 'white'
+              }}
+              className="text-[4.5vw] md:text-[2vw] lg:text-[1.8vw] opacity-90 max-w-[80vw] md:max-w-2xl"
+            >
+              Plating up <span style={{ fontWeight: 700 }}>150+</span>
+              <br className="md:hidden" /> authentic exotic produce
+            </p>
+
+            <button
+              className="pointer-events-auto"
+              onClick={() => router.push('/shop')}
+              style={{
+                backgroundColor: '#fac510',
+                color: '#000',
+                padding: isMobile ? '12px 28px' : '16px 38px',
+                borderRadius: 50,
+                fontSize: isMobile ? 16 : 22,
+                fontWeight: 700,
+                fontFamily: 'SofiaPro',
+                border: 'none',
+                cursor: 'pointer',
+                marginTop: isMobile ? 12 : 24,
+                boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
+                transition: 'transform 0.2s ease'
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
+              onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+            >
+              Shop Now
+            </button>
+          </div>
+        </div>
       </div>
     );
   }

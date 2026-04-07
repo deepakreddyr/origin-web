@@ -33,26 +33,30 @@ const VideoBanner: React.FC<VideoBannerProps> = ({
   // Handle video play with multiple strategies
   const handleVideoPlay = async (videoElement: HTMLVideoElement) => {
     if (!videoElement || playAttempted) return;
-    
+
     setPlayAttempted(true);
-    
+
     try {
       // Ensure video is ready
       if (videoElement.readyState >= 2) {
         await videoElement.play();
       } else {
         // Wait for video to be ready
-        videoElement.addEventListener('loadeddata', async () => {
-          try {
-            await videoElement.play();
-          } catch (error) {
-            // console.log('Video autoplay failed after loadeddata:', error);
-          }
-        }, { once: true });
+        videoElement.addEventListener(
+          'loadeddata',
+          async () => {
+            try {
+              await videoElement.play();
+            } catch (error) {
+              // console.log('Video autoplay failed after loadeddata:', error);
+            }
+          },
+          { once: true }
+        );
       }
     } catch (error) {
       // console.log('Video autoplay failed:', error);
-      
+
       // Fallback: Try to play on user interaction
       const playOnInteraction = async () => {
         try {
@@ -63,7 +67,7 @@ const VideoBanner: React.FC<VideoBannerProps> = ({
           // console.log('Manual play also failed:', e);
         }
       };
-      
+
       document.addEventListener('touchstart', playOnInteraction, { once: true });
       document.addEventListener('click', playOnInteraction, { once: true });
     }
@@ -96,9 +100,7 @@ const VideoBanner: React.FC<VideoBannerProps> = ({
         {/* Mobile Video (9:16) */}
         <video
           ref={mobileVideoRef}
-          className={`w-full object-cover m-0 p-0 ${
-            isMobile ? 'block h-[75vh]' : 'hidden'
-          }`}
+          className={`w-full object-cover m-0 p-0 ${isMobile ? 'block h-[75vh]' : 'hidden'}`}
           src={mobileVideoSrc}
           poster={poster}
           autoPlay={autoPlay}
@@ -119,16 +121,14 @@ const VideoBanner: React.FC<VideoBannerProps> = ({
           }}
           style={{
             objectFit: 'cover',
-            objectPosition: 'center',
+            objectPosition: 'center'
           }}
         />
-        
+
         {/* Desktop Video (16:9) */}
         <video
           ref={desktopVideoRef}
-          className={`w-full object-cover m-0 p-0 ${
-            isMobile ? 'hidden' : 'block h-[80vh]'
-          }`}
+          className={`w-full object-cover m-0 p-0 ${isMobile ? 'hidden' : 'block h-[80vh]'}`}
           src={desktopVideoSrc}
           poster={poster}
           autoPlay={autoPlay}
@@ -145,18 +145,18 @@ const VideoBanner: React.FC<VideoBannerProps> = ({
           }}
           style={{
             objectFit: 'cover',
-            objectPosition: 'center',
+            objectPosition: 'center'
           }}
         />
       </div>
-      
+
       {/* Loading indicator */}
       {!isVideoLoaded && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
         </div>
       )}
-      
+
       {/* Optional overlay content */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         {/* You can add overlay content here if needed */}

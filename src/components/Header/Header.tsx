@@ -12,6 +12,7 @@ import cartIcon from '/public/assets/icons/cartIcon.png';
 import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { profileAtom } from '@/features/AccountPage/context/atoms';
+import { couponList as couponListAtom } from '@/features/CouponPage/context/atoms';
 import whiteDropdownIcon from '/public/assets/images/whiteDropdown.png';
 import { setRouteSourceToLs } from '@/utilities/utils';
 // --------------------------------------------------------
@@ -104,6 +105,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
   // --- NEW LOCATION HOOKS ---
   const [address] = useAtom(addressAtom);
   const [profile] = useAtom(profileAtom);
+  const [couponsState] = useAtom(couponListAtom);
   // --------------------------
 
   const router = useRouter();
@@ -625,7 +627,12 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
       {isMobile && cartItemCount > 0 && (
         <button
           onClick={handleCartOpen}
-          className="fixed bottom-[5vw] right-[5vw] z-[99] bg-white p-[4vw] rounded-full shadow-xl border border-gray-200"
+          className={`fixed ${
+            (!loginDetails.isLogin || (couponsState.coupons && couponsState.coupons.length > 0)) &&
+            !['/cart', '/checkout'].some((p) => router.pathname.startsWith(p))
+              ? 'bottom-[22vw]'
+              : 'bottom-[5vw]'
+          } right-[5vw] z-[99] bg-white p-[4vw] rounded-full shadow-xl border border-gray-200 transition-all duration-300`}
         >
           <div className="absolute top-[-2vw] left-[7vw] w-[6vw] h-[6vw] text-[3vw] rounded-full bg-secondary-300 z-[1] text-white flex items-center justify-center">
             {cartItemCount > 99 ? '99+' : cartItemCount}

@@ -137,7 +137,7 @@ const JoinCultSection = () => {
         <div className="relative min-h-[200px] md:min-h-[450px]">
           {/* Top-left corner */}
           <motion.span
-            className="pointer-events-none absolute z-10 border-[#E8C84A]"
+            className="pointer-events-none absolute border-[#E8C84A]"
             style={{
               top: '-12px',
               left: '-12px',
@@ -151,7 +151,7 @@ const JoinCultSection = () => {
 
           {/* Bottom-right corner */}
           <motion.span
-            className="pointer-events-none absolute z-10 border-primary"
+            className="pointer-events-none absolute border-primary"
             style={{
               bottom: '-12px',
               right: '-12px',

@@ -20,10 +20,13 @@ import { isAccountIsOpen, profileAtom } from '@/features/AccountPage/context/ato
 const clientSideEmotionCache = createEmotionCache();
 import { login as loginAtom } from '@/components/Login/context/atom';
 import SidebarScreen from '../shared/SidebarScreen';
+import CouponStatusBar from '../shared/CouponStatusBar';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { protectedUrl } from '@/url';
 import { clearPostPaymentItemsinLs, getAddressAndStoreId } from '@/utilities/utils';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
+import DownloadAppWrapper from '../downloadApp/DownloadAppWrapper';
+import { useState } from 'react';
 
 export default function Layout({
   children,
@@ -46,6 +49,7 @@ export default function Layout({
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
+  const [showDownloadApp, setShowDownloadApp] = useState(false);
   const { isReady, query } = router;
   const [address, setAddressAtom] = useAtom(addressAtom);
   const [, setCartDetails] = useAtom(cartItems);
@@ -72,7 +76,22 @@ export default function Layout({
       getProfile(setProfileAtom);
       clearPostPaymentItemsinLs();
     }
-  }, [setCartDetails, setAddressAtom, setLoginInfo, setProfileAtom]);
+
+    // --- Download App Popup Logic ---
+    if (isReady && query.type !== 'app') {
+      const timer = setTimeout(() => {
+        try {
+          const hasSeenInSession = sessionStorage.getItem('downloadAppPopupShown');
+          if (!hasSeenInSession) {
+            setShowDownloadApp(true);
+          }
+        } catch (error) {
+          console.error('Error accessing sessionStorage:', error);
+        }
+      }, 2000); // 2-second delay
+      return () => clearTimeout(timer);
+    }
+  }, [setCartDetails, setAddressAtom, setLoginInfo, setProfileAtom, isReady, query.type]);
 
   const fetchCartItemsFromApi = () => {
     let apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getCartItems'];
@@ -132,6 +151,15 @@ export default function Layout({
         )}
         <SidebarScreen />
         <main className={`${useTopPadding ? 'pt-[22vw] mob:pt-[35vw] md:pt-[6vw]' : ''}`}>{children}</main>
+        {/* {query.type !== 'app' && <CouponStatusBar />} */}
+        {showDownloadApp && (
+          <DownloadAppWrapper
+            onClose={() => {
+              setShowDownloadApp(false);
+              sessionStorage.setItem('downloadAppPopupShown', 'true');
+            }}
+          />
+        )}
         {query.type !== 'app' && <Footer footerData={footerData} />}
       </ThemeProvider>
     </CacheProvider>
