@@ -133,14 +133,27 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
   // 1st featured-items section → first 2 items for MangoProductHighlight
   const highlightSection = mangoHomepageData[0];
   const highlightItems = (highlightSection?.data ?? [])
-    .map((entry: any) => entry.item)
+    .map((entry: any) => {
+      const item = entry.item;
+      // Extract from info.info array where type matches what we want
+      const infoList = entry.info?.info || [];
+      const aboutProduct = infoList.find((i: any) => i.title === 'About the Product' || i.type === 'normal');
+      const description = aboutProduct?.details?.[0]?.description || '';
+      return { ...item, description };
+    })
     .filter((item: any) => item && item.multiple_uoms && item.multiple_uoms.length > 0);
   const highlightProducts = deduplicate(highlightItems).slice(0, 2);
 
   // 2nd featured-items section → all items for PopularMangoes
   const popularSection = mangoHomepageData[1];
   const popularItems = (popularSection?.data ?? [])
-    .map((entry: any) => entry.item)
+    .map((entry: any) => {
+      const item = entry.item;
+      const infoList = entry.info?.info || [];
+      const aboutProduct = infoList.find((i: any) => i.title === 'About the Product' || i.type === 'normal');
+      const description = aboutProduct?.details?.[0]?.description || '';
+      return { ...item, description };
+    })
     .filter((item: any) => item && item.multiple_uoms && item.multiple_uoms.length > 0);
   const popularProducts = deduplicate(popularItems);
 

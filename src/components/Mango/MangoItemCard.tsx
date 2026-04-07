@@ -136,7 +136,7 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
 
       {/* Mango Styled Container: White background, Border, Shadow, Padding */}
       <div
-        className={`bg-white border border-[#EDE6D4] flex flex-col h-full relative z-[1] transition-all w-full p-3 md:p-5 rounded-[12px] md:rounded-[24px]`}
+        className={`bg-white border border-[#EDE6D4] flex flex-col h-full relative z-[1] transition-all w-full p-3 md:p-3 rounded-[12px] md:rounded-[24px]`}
       >
         <div onClick={handleNavigation} className="cursor-pointer w-full text-start group flex flex-col h-full">
           {/* Image Container — adjusted to precise design specs */}
@@ -192,9 +192,18 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
             >
               {itemDetails.name}
             </span>
+            {/* Description */}
+            {itemDetails.description && (
+              <p
+                className="text-[10px] md:text-[12px] text-gray-500 line-clamp-2 mt-1.5 leading-[1.3] md:leading-[1.4] min-h-[2.6em] md:min-h-[2.8em]"
+                style={{ fontFamily: 'SofiaPro' }}
+              >
+                {itemDetails.description}
+              </p>
+            )}
             {/* Unit */}
             <p
-              className={`text-[10px] md:text-[11px] text-gray-400 font-medium lowercase`}
+              className={`text-[12px] md:text-[14px] mt-2 text-gray-400 font-medium lowercase`}
               style={{ fontFamily: 'SofiaPro' }}
             >
               {selectedUOM.unit}
@@ -203,7 +212,7 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
 
           {/* Price and Action Area */}
           <div className="flex items-center justify-between mt-auto pt-1">
-            <div className="flex flex-col">
+            <div className="flex flex-col pl-1">
               <div className="flex items-center gap-1 md:gap-2">
                 {selectedUOM.market_price > 0 && selectedUOM.market_price > selectedUOM.price && (
                   <p className="text-gray-400 line-through text-[10px] font-[SofiaPro]">₹{selectedUOM.market_price}</p>
