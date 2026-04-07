@@ -42,8 +42,18 @@ const getNextSaturday4PM = () => {
   return next;
 };
 
+const getNextSunday8AM = () => {
+  const cutoff = getNextSaturday4PM();
+  const next = new Date(cutoff);
+  next.setDate(cutoff.getDate() + 1);
+  next.setHours(8, 0, 0, 0);
+  return next;
+};
+
 const SubscriptionChallenge = ({ item, comboItems, maxQty }: { item?: any; comboItems?: any[]; maxQty: number }) => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, min: 0, sec: 0 });
+  const [deliveryDate, setDeliveryDate] = useState('');
+  const [isPastCutoff, setIsPastCutoff] = useState(false);
   const dispatch = useDispatch();
   const isMobile = useMediaQuery(768);
 
@@ -77,7 +87,24 @@ const SubscriptionChallenge = ({ item, comboItems, maxQty }: { item?: any; combo
   useEffect(() => {
     const tick = () => {
       const now = new Date();
-      const diff = getNextSaturday4PM().getTime() - now.getTime();
+      const target = getNextSunday8AM();
+      const diff = target.getTime() - now.getTime();
+
+      // Check if we are past this week's Saturday 4 PM cutoff
+      const day = now.getDay();
+      const thisSat = new Date(now);
+      thisSat.setDate(now.getDate() + (6 - day));
+      thisSat.setHours(16, 0, 0, 0);
+      setIsPastCutoff(now > thisSat);
+
+      setDeliveryDate(
+        target.toLocaleDateString('en-US', {
+          weekday: 'long',
+          month: 'short',
+          day: 'numeric'
+        })
+      );
+
       if (diff <= 0) {
         setTimeLeft({ days: 0, hours: 0, min: 0, sec: 0 });
         return;
@@ -123,7 +150,7 @@ const SubscriptionChallenge = ({ item, comboItems, maxQty }: { item?: any; combo
               <span className="text-[0.4rem] md:text-[0.55rem] font-[700] opacity-40 block mb-2 md:mb-3 uppercase tracking-widest text-center">
                 NEXT DELIVERY IN
               </span>
-              <div className="flex justify-between gap-1 md:gap-2 font-[Recoleta]">
+              <div className="flex justify-between gap-1.5 md:gap-2.5 font-[Recoleta]">
                 {[
                   [pad(timeLeft.days), 'Days'],
                   [pad(timeLeft.hours), 'Hours'],
@@ -132,17 +159,30 @@ const SubscriptionChallenge = ({ item, comboItems, maxQty }: { item?: any; combo
                 ].map(([val, label]) => (
                   <div
                     key={label}
-                    className="flex-1 text-center bg-white shadow-[0_4px_12px_rgba(0,0,0,0.05)] p-1 md:p-3 rounded-lg md:rounded-xl min-w-0"
+                    className="flex-1 text-center bg-[#F9F9F9] p-1.5 md:p-3.5 rounded-lg md:rounded-xl min-w-0"
                   >
-                    <div className="text-[0.85rem] md:text-[1.2rem] font-[800] leading-none tabular-nums text-black">
+                    <div className="text-[1rem] md:text-[1.4rem] font-[900] leading-none tabular-nums text-black">
                       {val}
                     </div>
-                    <div className="text-[0.35rem] md:text-[0.45rem] uppercase opacity-50 mt-1 font-[SofiaPro]">
+                    <div className="text-[0.35rem] md:text-[0.45rem] uppercase opacity-50 mt-1.5 md:mt-2 font-[SofiaPro] font-[700] tracking-wider">
                       {label}
                     </div>
                   </div>
                 ))}
               </div>
+
+              {/* Delivery Date Bagde */}
+              {/* <div className="mt-4 pt-3.5 border-t border-black/[0.05] flex flex-col items-center justify-center gap-1">
+                <span className="text-[0.4rem] md:text-[0.5rem] font-[800] uppercase opacity-30 tracking-[0.1em]">
+                  {isPastCutoff ? 'EXPRESS DELIVERY ON' : 'Expected Delivery'}
+                </span>
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#4ADE80] shadow-[0_0_8px_#4ADE80]" />
+                  <span className="text-[0.6rem] md:text-[0.75rem] font-[800] uppercase text-black">
+                    {deliveryDate}
+                  </span>
+                </div>
+              </div> */}
             </div>
             <button
               className="w-full max-w-[150px] md:max-w-[280px] bg-black text-[#FFDD7E] py-2.5 md:py-4 rounded-[10px] md:rounded-[15px] font-[800] text-[0.85rem] md:text-[1.1rem] tracking-[0.05em] hover:bg-[#222] transition-colors uppercase"
