@@ -39,7 +39,7 @@ const OriginOfFresh = () => {
   const clipPath = useTransform(scrollYProgress, [0, 1], ['inset(0% 0% 100% 0%)', 'inset(0% 0% 0% 0%)']);
 
   return (
-    <section ref={sectionRef} className="w-full bg-[#FAF7F0] relative mob:py-[8vh] overflow-hidden">
+    <section ref={sectionRef} className="w-full bg-[#FEF5E3] relative mob:py-[8vh] overflow-hidden">
       {/* Background Leaves */}
       <div className="relative z-10 w-full mob:px-[6vw]">
         {/* Heading */}
