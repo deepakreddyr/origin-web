@@ -115,13 +115,13 @@ const MangoRecipeDetailPage = ({ slug, mainMenuItems, footerData }: MangoRecipeD
         <div className="md:hidden h-[60px] bg-[#FFECA6]" />
 
         {/* Desktop Header Space */}
-        <div className="hidden md:block h-[100px]" />
+        <div className="hidden md:block h-[150px]" />
 
         <div className="max-w-[1440px] mx-auto px-6 md:px-[7.5vw]">
           {/* Top Section: Hero Image & Ingredients side-by-side */}
           <div className="flex flex-col lg:flex-row gap-8 xl:gap-12 items-stretch md:mb-5">
             {/* Feature Image Container */}
-            <div className="lg:w-[65%] w-full relative aspect-[4/5] md:aspect-auto md:min-h-full md:rounded-[32px] rounded-none overflow-hidden shadow-xl -mx-6 md:mx-0 w-[calc(100%+3rem)] md:w-full">
+            <div className="lg:w-[65%] w-screen md:w-full relative aspect-[4/5] md:aspect-auto md:min-h-full md:rounded-[32px] rounded-none overflow-hidden shadow-xl -ml-6 md:ml-0">
               <Image src={recipe.imgSrc} alt={recipe.title} fill className="object-cover" priority />
 
               {/* Desktop-only top badges */}

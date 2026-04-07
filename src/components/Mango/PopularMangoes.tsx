@@ -68,7 +68,7 @@ const PopularMangoes = ({ products = [], isLoading = false }: PopularMangoesProp
       {products.length > 0 && (
         <div className="w-full relative">
           <div
-            className="flex overflow-x-auto gap-4 md:gap-5 pb-10 md:pb-12 no-scrollbar scroll-smooth"
+            className="flex overflow-x-auto gap-4 md:gap-14 pb-10 md:pb-12 no-scrollbar scroll-smooth"
             style={{
               paddingLeft: isMobile ? '1.5rem' : 'max(3rem, calc((100vw - 1440px) / 2 + 7vw))'
             }}
