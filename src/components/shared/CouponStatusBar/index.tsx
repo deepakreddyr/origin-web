@@ -142,10 +142,10 @@ const CouponStatusBar: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           backgroundColor: '#006B4A',
-          borderRadius: 50,
-          padding: '8px 16px',
+          borderRadius: 100,
+          padding: '8px 8px 8px 12px',
           boxShadow: '0 8px 16px rgba(0,0,0,0.3)',
-          gap: 12,
+          gap: 10,
           overflow: 'hidden',
           position: 'relative'
         }}
@@ -166,7 +166,7 @@ const CouponStatusBar: React.FC = () => {
         </div>
 
         {/* Text Area - Swipable */}
-        <div style={{ flex: 1, minWidth: 0, position: 'relative', height: 36 }}>
+        <div style={{ flex: 1, minWidth: 0, position: 'relative', height: 36, overflow: 'hidden' }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={safeIndex}
@@ -229,12 +229,12 @@ const CouponStatusBar: React.FC = () => {
             style={{
               backgroundColor: '#ffff',
               color: '#000',
-              padding: isMobile ? '8px 20px' : '8px 30px',
-              borderRadius: 30,
-              fontSize: isMobile ? 14 : 18,
-              fontWeight: 600,
+              padding: isMobile ? '8px 20px' : '8px 24px',
+              borderRadius: 100,
+              fontSize: isMobile ? 14 : 16,
+              fontWeight: 700,
               fontFamily: 'SofiaPro',
-              marginLeft: '4px',
+              marginLeft: 0,
               flexShrink: 0,
               zIndex: 10
             }}
