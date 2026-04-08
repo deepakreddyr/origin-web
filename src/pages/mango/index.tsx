@@ -61,6 +61,7 @@ const mangoProducts = [
 
 const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestimonials }: MangoLandingPageProps) => {
   const [mangoHomepageData, setMangoHomepageData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const getDataFromApi = useGetDataFromApi();
 
   useEffect(() => {
@@ -81,6 +82,7 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
       console.log('[MangoHomepage] API response:', data);
       const resData = data?.data ?? [];
       setMangoHomepageData(resData);
+      setIsLoading(false);
 
       // Extract Mango category info from the section that has a "View All" navigation
       const listingSection = resData.find((section: any) => section.navigation?.title === 'View All');
@@ -111,6 +113,7 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
 
     const failureHandler = (error: any) => {
       console.error('[MangoHomepage] API error:', error);
+      setIsLoading(false);
     };
 
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
@@ -160,7 +163,7 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
         {/* ── Hero + Products wrapper so image spans both ── */}
         <div className="relative overflow-visible z-[10]">
           {/* Big mango hand — spans hero AND product section */}
-          <div className="absolute right-0 top-[90vw] md:top-[8vw] w-[85vw] md:w-[52vw] h-[600px] md:h-[1300px] pointer-events-none z-[0] overflow-hidden">
+          <div className="absolute right-0 top-[60vw] md:top-[8vw] w-[85vw] md:w-[52vw] h-[600px] md:h-[1300px] pointer-events-none z-[0] overflow-hidden">
             <Image
               src="/assets/images/mangohero.png"
               alt="Farm Fresh Mangoes"
@@ -172,7 +175,7 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
 
           <MangoHero />
 
-          <MangoProductHighlight products={highlightProducts} />
+          <MangoProductHighlight products={highlightProducts} isLoading={isLoading} />
         </div>
 
         {/* ── USP Section (4-icon strip) ── */}
@@ -187,7 +190,7 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
         }}
       >
         {/* ── Popular Mangoes (Must-try) ── */}
-        <PopularMangoes products={popularProducts} />
+        <PopularMangoes products={popularProducts} isLoading={isLoading} />
 
         {/* ── Mango Pulp Banner ── */}
         <MangoPulpBanner />

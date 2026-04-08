@@ -60,6 +60,12 @@ const DeliveryPrefencetype = ({
     fetchCheckoutDetails();
   }, [isSubscription]);
 
+  useEffect(() => {
+    if (loading) {
+      dispatch(setIsProceedButtonEnabled(false));
+    }
+  }, [loading, dispatch]);
+
   // Auto-update activeDeliveryType based on Redux state changes
   useEffect(() => {
     if (placeOrderDetails.delivery_type !== '') {

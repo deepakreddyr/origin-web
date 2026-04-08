@@ -35,7 +35,7 @@ const MangoHero = () => {
         </div>
 
         <h1
-          className="text-[38px] leading-[1.1] md:text-[4.7vw] font-semibold text-[#000000] mb-6"
+          className="text-[8.5vw] leading-[1.1] md:text-[4.7vw] font-semibold text-[#000000] mb-6"
           style={{ fontFamily: 'Recoleta' }}
         >
           Farm fresh, <br className="" /> sun-ripened mangoes!

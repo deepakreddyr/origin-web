@@ -75,7 +75,7 @@ const OrderDetailsWrapper = () => {
     >
       <DetailsHeader orderDetailsData={orderAndRefundDetails.orderDetailsData} />
       <div className="flex gap-[1.67vw] mob:gap-[4.1vw] mob:flex-col  ">
-        <div className="mob:w-screen flex flex-col gap-[1.1vw] mob:gap-0 ">
+        <div className="w-full md:w-[45%] flex flex-col gap-[1.1vw] mob:gap-0 ">
           <OrderStatusIllustration
             orderDetailsData={orderAndRefundDetails.orderDetailsData}
             fetchOrderdetails={fetchOrderdetails}

@@ -1270,7 +1270,7 @@ const data: Data = {
       location: 'Chennai, IND',
       text: '“Good-sized mangoes, properly ripened, and consistently sweet. What stood out most was the freshness and the quality of the fruit on arrival.”',
       stars: 5,
-      avatar: '/assets/images/testimonials/avatar1.jpg'
+      avatar: '/assets/images/recipes/mangotestimonial1.png'
     },
     {
       id: 2,
@@ -1278,7 +1278,7 @@ const data: Data = {
       location: 'Mysore, IND',
       text: '“These mangoes had a beautiful balance of sweetness and aroma, with clean, juicy flesh and no fibrous bite. The flavour was layered, not just sugary. Easily some of the better mangoes this season.”',
       stars: 5,
-      avatar: '/assets/images/testimonials/avatar2.jpg'
+      avatar: '/assets/images/recipes/mangotestimonial1.png'
     },
     {
       id: 3,
@@ -1286,7 +1286,7 @@ const data: Data = {
       location: 'Bangalore, IND',
       text: '“Really clean and good flavour. Got it twice for my kids who were visiting home. My personal favourite was the Sindhura Mango. Quite good.”',
       stars: 5,
-      avatar: '/assets/images/testimonials/avatar3.jpg'
+      avatar: '/assets/images/recipes/mangotestimonial3.png'
     }
   ]
 };
