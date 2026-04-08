@@ -12,9 +12,9 @@ const PopularMangoes = ({ products = [] }: PopularMangoesProps) => {
   const isMobile = useMediaQuery('(max-width:600px)');
 
   return (
-    <section className="relative overflow-visible pt-12 pb-4 z-20">
+    <section className="relative overflow-visible pt-12 pb-4">
       {/* Header Area - Constrained to site alignment */}
-      <div className="max-w-[1440px] mx-auto px-6 md:px-[7vw] relative z-10 mb-4 md:mb-14">
+      <div className="max-w-[1440px] mx-auto px-6 md:px-[7vw] relative mb-4 md:mb-14">
         <div className="flex items-center justify-between">
           <h2 className="text-[18px] md:text-[50px] font-semibold text-[#1B1B1B]" style={{ fontFamily: 'Recoleta' }}>
             Must-try Mangoes
@@ -30,7 +30,7 @@ const PopularMangoes = ({ products = [] }: PopularMangoesProps) => {
 
       {/* Horizontal Scroll Area - Full width with alignment padding */}
       {products.length > 0 && (
-        <div className="w-full relative z-10">
+        <div className="w-full relative">
           <div
             className="flex overflow-x-auto gap-4 md:gap-5 pb-10 md:pb-12 no-scrollbar scroll-smooth"
             style={{
@@ -38,7 +38,7 @@ const PopularMangoes = ({ products = [] }: PopularMangoesProps) => {
             }}
           >
             {products.map((product) => (
-              <div key={product.id} className="flex-shrink-0 w-[170px] md:w-[325px]">
+              <div key={product.id} className="flex-shrink-0 w-[170px] md:w-[325px] relative z-[1]">
                 <MangoItemCard itemDetails={product} isCompact={isMobile} />
               </div>
             ))}

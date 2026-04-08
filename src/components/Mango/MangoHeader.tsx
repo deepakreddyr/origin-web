@@ -242,7 +242,7 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
 
           {/* Search Dropdown - Desktop only for now or visible if active */}
           {showDropdown && searchResults.length > 0 && (
-            <div className="absolute top-full right-0 md:left-0 w-[280px] md:w-full mt-2 bg-[#F8F4E9] rounded-[10px] shadow-xl overflow-hidden z-[101] border border-[#f0ecd8]">
+            <div className="absolute top-full right-0 md:left-0 w-[280px] md:w-full mt-2 bg-[#F8F4E9] rounded-[10px] shadow-xl overflow-hidden z-[110] border border-[#f0ecd8]">
               <div className="py-2">
                 {searchResults.slice(0, 4).map((item: any) => (
                   <Link

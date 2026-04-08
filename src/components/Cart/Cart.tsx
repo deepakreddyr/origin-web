@@ -17,6 +17,7 @@ import { setIsHeaderVisible, setTabType } from '@/store/slice/loginSlice';
 import { protectedUrl } from '@/url';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
+import { useCartSync } from '@/hooks/useCartSync';
 import CouponFlowWrapper from './ApplyCoupon/CouponFlowWrapper';
 import BillDetailsWrapper from './billDetails/BillDetailsWrapper';
 import Payment from './Payment/Payment';
@@ -28,7 +29,6 @@ import { useAtom } from 'jotai';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationChangedPopup from './AddressAndTimeSlot/LocationChangedPopup';
 import { clearSubscriptionCart } from '@/store/slice/SubscriptionCartSlice';
-
 // ==========================================================
 // MAX QUANTITY TOAST COMPONENT MOVED/COPIED HERE FOR GLOBAL RENDER
 // ==========================================================
@@ -141,6 +141,8 @@ const Cart = () => {
     }
   }, [cart.totalPrice, cart.freeItemsMov, cart.items, dispatch, isSubscription]);
 
+  const { sendItemsToApi, fetchCartItemsFromApi: syncFetch } = useCartSync();
+
   const handleMaxQuantityExceededGlobal = (maxQty: number) => {
     handleShowToast(`Maximum quantity of ${maxQty} reached for this item.`);
   };
@@ -193,33 +195,6 @@ const Cart = () => {
     if (addressFromLs) getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
   };
 
-  const sendItemsToApi = () => {
-    const token = localStorage.getItem('user_token');
-    if (!token) return;
-
-    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['addToCart'];
-    const lsKey = isMangoPage ? 'mango_cart_items' : 'cart_items';
-    const cartItemFromLs = localStorage.getItem(lsKey);
-    const addressFromLs = getAddressAndStoreId();
-    const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
-
-    if (cartItemFromLs) {
-      const cartItems = prepareCartItemsToApi(JSON.parse(cartItemFromLs));
-      const successHandler = () => {
-        fetchCartItemsFromApi();
-      };
-
-      const failureHandler = () => {
-        fetchCartItemsFromApi();
-      };
-
-      if (loginDetails.isSidebarOpen) {
-        if (isSubscription) return; // Skip normal cart sync in subscription mode
-        sendDataToApi(apiUrl, cartItems, 'POST', successHandler, failureHandler, additionalHeaders);
-      }
-    }
-  };
-
   useEffect(() => {
     if (isSubscription) return; // Skip normal cart API calls in subscription mode
     const lsKey = isMangoPage ? 'mango_cart_items' : 'cart_items';
@@ -231,7 +206,7 @@ const Cart = () => {
     } else {
       fetchCartItemsFromApi();
     }
-  }, [loginDetails.isSidebarOpen, isSubscription]);
+  }, [loginDetails.isSidebarOpen, loginDetails.isLogin, isSubscription, isMangoPage]);
 
   useEffect(() => {
     if (!loginDetails.isSidebarOpen) {
@@ -358,6 +333,7 @@ const Cart = () => {
           orderRestrictionData={orderRestrictionData}
           showAddressModal={showAddressModal}
           isSubscription={isSubscription}
+          cartMinimum={Number(cart.cart_minimum)}
         />
       )}
     </>

@@ -10,7 +10,7 @@ const MangoUSP = () => {
   ];
 
   return (
-    <section className="px-6 md:px-0 pt-8 md:pb-24 relative z-10">
+    <section className="px-6 md:px-0 pt-8 md:pb-24 relative">
       <div className="mx-auto grid grid-cols-2 gap-y-12 md:flex md:flex-nowrap items-center justify-center md:justify-between md:max-w-[1019px] md:gap-[100px] py-3 md:py-[12px]">
         {uspItems.map((usp, index) => (
           <div key={index} className="flex flex-col items-center gap-2 md:gap-4">

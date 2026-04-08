@@ -16,6 +16,7 @@ interface ActionCtaWithItemsProps {
   orderRestrictionData?: OrderRestrictionData | null;
   showAddressModal?: boolean;
   isSubscription?: boolean;
+  cartMinimum?: number;
 }
 
 const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
@@ -24,7 +25,8 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
   isDisabled,
   orderRestrictionData,
   showAddressModal = false,
-  isSubscription = false
+  isSubscription = false,
+  cartMinimum = 0
 }) => {
   const { cart, subscriptionCart, isMangoPage } = useCartStore();
   const loginDetails = useSelector((state: any) => state.loginDetails);
@@ -178,8 +180,22 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
       ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
       : 'bg-black text-primary cursor-pointer hover:opacity-90 transition-opacity';
 
+  const remainingAmount = cartMinimum > 0 ? (cartMinimum - parseFloat(cart.amountToPay)).toFixed(2) : 0;
+  const showMinOrderBanner =
+    !isSubscription && cart.items.length > 0 && cartMinimum > 0 && parseFloat(cart.amountToPay) < cartMinimum;
+
   return (
     <div className="relative">
+      {showMinOrderBanner && (
+        <div className="fixed z-[131] mob:z-[10000] bottom-[6vw] mob:bottom-[21vw] right-[1.39vw] mob:right-[5vw] w-[calc(30vw-2.78vw)] mob:w-[calc(100vw-10vw)] mob:left-[5vw] animate-in slide-in-from-bottom-2 duration-300">
+          <div className="bg-[#E7F5E9] border border-[#C3E6CB] rounded-[1vw] mob:rounded-[4vw] p-[0.8vw] mob:p-[3vw] shadow-lg mb-2">
+            <p className="font-[SofiaPro] font-bold text-[#1B5E20] text-[.83vw] mob:text-[3.2vw] text-center">
+              Add <span className="font-bold text-[#1B5E20]">₹{remainingAmount}</span> more to reach the minimum order!
+            </p>
+          </div>
+        </div>
+      )}
+
       <div
         style={{ transform: 'translateZ(0)' }}
         className={`fixed flex items-center justify-between h-[4vw] mob:h-[15vw] ${

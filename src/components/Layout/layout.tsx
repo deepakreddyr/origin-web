@@ -8,13 +8,12 @@ import Footer from '../Footer';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCartItems } from '@/store/slice/CartSlice';
 import { getAddress } from '@/features/Address/services/getAddress';
 import { getProfile } from '@/features/AccountPage/services/getProfile';
 import { useAtom } from 'jotai';
 
 import { cartItems, isCartPageIsOpen } from '@/features/CartPage/context/atoms';
-import { setLoginDetails } from '@/store/slice/loginSlice';
+import { setIsHeaderVisible, setTabType, setLoginDetails } from '@/store/slice/loginSlice';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 import { isAccountIsOpen, profileAtom } from '@/features/AccountPage/context/atoms';
 const clientSideEmotionCache = createEmotionCache();
@@ -27,6 +26,8 @@ import { clearPostPaymentItemsinLs, getAddressAndStoreId } from '@/utilities/uti
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import DownloadAppWrapper from '../downloadApp/DownloadAppWrapper';
 import { useState } from 'react';
+import { useCartStore } from '@/hooks/useCartStore';
+import { useCartSync } from '@/hooks/useCartSync';
 
 export default function Layout({
   children,
@@ -57,9 +58,23 @@ export default function Layout({
   const [, setLoginInfo] = useAtom(loginAtom); // Jotai atom for login info
   const getDataFromApi = useGetDataFromApi();
 
+  const { isMangoPage, actions } = useCartStore();
+  const { sendItemsToApi, fetchCartItemsFromApi } = useCartSync();
+  const loginDetails = useSelector((state: any) => state.loginDetails);
+
   useEffect(() => {
-    const cart = localStorage.getItem('cartItem');
-    if (cart) setCartDetails(JSON.parse(cart));
+    const lsKey = isMangoPage ? 'mango_cart_items' : 'cart_items';
+    const cart = localStorage.getItem(lsKey);
+    if (cart) {
+      try {
+        const parsedCart = JSON.parse(cart);
+        if (Array.isArray(parsedCart) && parsedCart.length > 0) {
+          dispatch(actions.setCartItems(parsedCart));
+        }
+      } catch (e) {
+        console.error('Failed to parse cart from LS', e);
+      }
+    }
     const addressFromLs = getAddressAndStoreId();
 
     const userToken = localStorage.getItem('user_token');
@@ -93,50 +108,36 @@ export default function Layout({
     }
   }, [setCartDetails, setAddressAtom, setLoginInfo, setProfileAtom, isReady, query.type]);
 
-  const fetchCartItemsFromApi = () => {
-    let apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getCartItems'];
-
-    const addressFromLs = getAddressAndStoreId();
-    let additionalHeaders = {};
-
-    if (addressFromLs) {
-      additionalHeaders = {
-        'store-id': addressFromLs.store_id
-      };
-    }
-    const successHandler = (data?: any) => {
-      dispatch(setCartItems(data?.data));
-      localStorage.setItem('cart_items', JSON.stringify(data.data));
-    };
-    const failureHandler = (data: any) => {
-      // console.log(data);
-    };
-    getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
-  };
-
   useEffect(() => {
     if (isReady) {
-      const userToken = localStorage.getItem('user_token');
       const addressFromLs = getAddressAndStoreId();
 
       if (profileDetails?.data?.profile) {
         getAddress(setAddressAtom);
       }
+
+      const lsKey = isMangoPage ? 'mango_cart_items' : 'cart_items';
       try {
-        const storedItems = localStorage.getItem('cart_items');
-        const productItems: [] = storedItems ? JSON.parse(storedItems) : [];
+        const storedItems = localStorage.getItem(lsKey);
+        const productItems = storedItems ? JSON.parse(storedItems) : [];
 
         if (Array.isArray(productItems) && productItems.length > 0) {
-          dispatch(setCartItems(productItems));
-        } else if (userToken && profileDetails?.data?.profile && addressFromLs) {
+          dispatch(actions.setCartItems(productItems));
+        } else if (loginDetails.isLogin && profileDetails?.data?.profile && addressFromLs) {
           fetchCartItemsFromApi();
-          // getAddress(setAddressAtom);
         }
       } catch (error) {
         console.error('Failed to parse cart items from localStorage:', error);
       }
     }
-  }, [isReady, profileDetails?.data?.profile]);
+  }, [isReady, profileDetails?.data?.profile, isMangoPage, loginDetails.isLogin]);
+
+  // Global Sync on Login
+  useEffect(() => {
+    if (loginDetails.isLogin) {
+      sendItemsToApi();
+    }
+  }, [loginDetails.isLogin]);
 
   return (
     <CacheProvider value={clientSideEmotionCache}>
