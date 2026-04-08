@@ -82,7 +82,7 @@ const PaymentSuccess = (props: any) => {
 
       dispatch(setIsSidebarOpen(false));
       dispatch(resetOrderDetails());
-      clearCart();
+      dispatch(clearCart());
 
       if (flowType === 'retry_payment') {
         window.location.href = targetUrl;

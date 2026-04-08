@@ -54,10 +54,10 @@ const BlackAddCartBtm: React.FC<BlackAddCartBtmProps> = (props) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.15 }}
             whileTap={{ scale: 0.82 }}
-            className="h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] flex-shrink-0 rounded-full bg-black text-white text-[1.1vw] mob:text-[4vw] flex items-center justify-center mr-[.4vw] mob:mr-[2vw]"
+            className="h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] flex-shrink-0 rounded-full bg-black text-white text-[1.3vw] mob:text-[5.5vw] font-semibold flex items-center justify-center mr-[.4vw] mob:mr-[2vw]"
             onClick={onDecrease}
           >
-            –
+            <span className="mob:mb-[3px] mb-[2px]">–</span>
           </motion.button>
         )}
 
@@ -95,16 +95,16 @@ const BlackAddCartBtm: React.FC<BlackAddCartBtmProps> = (props) => {
           layout
           whileTap={!isMax ? { scale: 0.82 } : {}}
           transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-          className={`flex-shrink-0 flex items-center justify-center rounded-full ${
+          className={`flex-shrink-0 flex items-center justify-center rounded-full font-semibold ${
             isItemPresent
               ? isMax
-                ? 'h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] bg-gray-400 text-gray-600 text-[1.1vw] mob:text-[4vw] ml-[.4vw] mob:ml-[2vw] cursor-not-allowed'
-                : 'h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] bg-black text-white text-[1.1vw] mob:text-[4vw] ml-[.4vw] mob:ml-[2vw]'
-              : 'h-[1.4vw] w-[1.4vw] mob:h-[5vw] mob:w-[5vw] bg-black text-white text-[1vw] mob:text-[3.5vw]'
+                ? 'h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] bg-gray-400 text-gray-600 text-[1.3vw] mob:text-[5.5vw] ml-[.4vw] mob:ml-[2vw] cursor-not-allowed'
+                : 'h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] bg-black text-white text-[1.3vw] mob:text-[5.5vw] ml-[.4vw] mob:ml-[2vw]'
+              : 'h-[1.4vw] w-[1.4vw] mob:h-[5vw] mob:w-[5vw] bg-black text-white text-[1.3vw] mob:text-[5.5vw]'
           }`}
           onClick={isItemPresent ? onIncrease : handleAddItem}
         >
-          +
+          <span className="mob:mb-[3px] mb-[2px]">+</span>
         </motion.button>
       </motion.div>
     </div>
