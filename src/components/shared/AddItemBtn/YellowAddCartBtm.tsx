@@ -130,7 +130,7 @@ const YellowBtn = (props: YellowBtnProps) => {
           layout
           transition={{ type: 'spring', stiffness: 380, damping: 28 }}
           onClick={!shouldShowStepper ? onAdd : undefined}
-          className={`flex items-center h-[2.5vw] mob:h-[8.5vw] rounded-full border-[2px] p-[.3vw] mob:px-[.5vw] w-full justify-center ${
+          className={`flex items-center h-[2.5vw] mob:h-[8.5vw] rounded-full border-[2px] p-[.3vw] mob:px-[.4vw] w-full justify-center ${
             shouldShowStepper
               ? 'border-primary-200 bg-white cursor-default'
               : 'border-transparent bg-[#fac510] cursor-pointer'
@@ -143,15 +143,15 @@ const YellowBtn = (props: YellowBtnProps) => {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.15 }}
               whileTap={{ scale: 0.82 }}
-              className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] flex-shrink-0 rounded-full bg-primary text-black text-[1.67vw] mob:text-[5.1vw] flex items-center justify-center border border-primary-200 mr-[.4vw] mob:mr-[2vw]"
+              className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] flex-shrink-0 rounded-full bg-primary text-black text-[1.3vw] mob:text-[5.5vw] font-semibold flex items-center justify-center border border-primary-200 mr-[.4vw] mob:mr-[2vw]"
               onClick={onDecrease}
             >
-              -
+              <span className="mob:mb-[3px] mb-[2px]">–</span>
             </motion.button>
           )}
 
           {/* Centre */}
-          <div className="flex items-center justify-center overflow-hidden">
+          <div className="flex items-center justify-center">
             <AnimatePresence mode="popLayout" initial={false}>
               {shouldShowStepper ? (
                 <motion.p
@@ -160,7 +160,7 @@ const YellowBtn = (props: YellowBtnProps) => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: dir * -8 }}
                   transition={{ duration: 0.15, ease: 'easeOut' }}
-                  className="text-[1.1vw] mob:text-[4.1vw] font-semibold text-black select-none text-center"
+                  className="text-[1.1vw] mob:text-[4.1vw] font-semibold text-black select-none text-center min-w-[1.2vw] mob:min-w-[5vw]"
                 >
                   {displayQty}
                 </motion.p>
@@ -184,17 +184,17 @@ const YellowBtn = (props: YellowBtnProps) => {
             layout
             whileTap={!isMax ? { scale: 0.82 } : {}}
             transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-            className={`flex-shrink-0 flex items-center justify-center rounded-full bg-primary ${
+            className={`flex-shrink-0 flex items-center justify-center rounded-full bg-primary font-semibold ${
               shouldShowStepper
                 ? isMax
-                  ? 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] bg-gray-300 text-gray-500 text-[1.4vw] mob:text-[5.1vw] border border-primary-200 ml-[.4vw] mob:ml-[2vw] cursor-not-allowed'
-                  : 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] text-[1.4vw] mob:text-[5.1vw] border border-primary-200 ml-[.4vw] mob:ml-[2vw]'
+                  ? 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] bg-gray-300 text-gray-500 text-[1.3vw] mob:text-[5.5vw] border border-primary-200 ml-[.4vw] mob:ml-[2vw] cursor-not-allowed'
+                  : 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] text-[1.3vw] mob:text-[5.5vw] border border-primary-200 ml-[.4vw] mob:ml-[2vw]'
                 : 'h-[1.4vw] w-[1.4vw] mob:h-[5vw] mob:w-[5vw] text-[1.1vw] mob:text-[4vw] bg-[#fac510]'
             }`}
             onClick={shouldShowStepper ? onIncrease : onAdd}
           >
             {shouldShowStepper ? (
-              '+'
+              <span className="mob:mb-[3px] mb-[2px]">+</span>
             ) : requiresSelection ? (
               <KeyboardArrowDownIcon
                 sx={{
@@ -203,7 +203,7 @@ const YellowBtn = (props: YellowBtnProps) => {
                 }}
               />
             ) : (
-              '+'
+              <span className="mob:mb-[3px] mb-[2px]">+</span>
             )}
           </motion.button>
         </motion.div>

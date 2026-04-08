@@ -4,9 +4,11 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { setIsSidebarOpen } from '@/store/slice/loginSlice';
+import { useCartStore } from '@/hooks/useCartStore';
 
 const EmptyCart = () => {
   const router = useRouter();
+  const { isMangoPage } = useCartStore();
   const dispatch = useDispatch();
 
   return (
@@ -25,7 +27,8 @@ const EmptyCart = () => {
         {/* 🔘 Button */}
         <button
           onClick={() => {
-            router.push('/shop');
+            const targetUrl = isMangoPage ? '/mango' : '/shop';
+            router.push(targetUrl);
             dispatch(setIsSidebarOpen(false));
           }}
           className="mt-5 sm:mt-4 md:mt-[1.67vw] bg-primary text-black font-[SofiaPro] font-semibold 
