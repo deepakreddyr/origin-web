@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Box, useMediaQuery } from '@mui/material';
 import React, { useState, useEffect, useRef, FC } from 'react';
 import AddItemBtn from './AddItemBtn/AddItemBtn';
+import { useCartStore } from '@/hooks/useCartStore';
 import { useRouter } from 'next/router';
 import sampleimg from '/public/assets/images/shop/sampleimg2.png';
 import { useSelector } from 'react-redux';
@@ -34,7 +35,8 @@ import { UOMPopup, MaxQuantityToast, Product, UOM, NotifyToast } from './UOMPopu
 // --------------------------------------------------------
 const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
   const router = useRouter();
-  const cartItems = useSelector((state: any) => state.cart.items);
+  const { cart } = useCartStore();
+  const cartItems = cart.items;
 
   const defaultUOM = itemDetails?.multiple_uoms?.find((uom: any) => uom?.is_default) || itemDetails?.multiple_uoms?.[0];
 
@@ -128,7 +130,11 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
   };
 
   // Calculate total quantity across all UOMs/ripeness
-  const currentCartProduct = cartItems.find((item: any) => item.id === itemDetails.id);
+  const normalizedProductId = itemDetails.id || (itemDetails as any).product_id;
+  const currentCartProduct = cartItems.find((item: any) => {
+    const itemProductId = item.id || item.product_id;
+    return itemProductId === normalizedProductId;
+  });
 
   let totalQuantityAcrossProduct = 0;
 

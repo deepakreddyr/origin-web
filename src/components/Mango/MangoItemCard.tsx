@@ -2,14 +2,14 @@ import Image from 'next/image';
 import { useMediaQuery } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import AddItemBtn from '../shared/AddItemBtn/AddItemBtn';
+import { useCartStore } from '@/hooks/useCartStore';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { getAddressAndStoreId } from '@/utilities/utils';
 import { protectedUrl } from '@/url';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addNotifiedItem } from '@/store/slice/productsSlice';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -26,7 +26,8 @@ interface MangoItemCardProps {
 
 const MangoItemCard = ({ itemDetails, isCompact = false }: MangoItemCardProps) => {
   const router = useRouter();
-  const cartItems = useSelector((state: any) => state.cart.items);
+  const { cart } = useCartStore();
+  const cartItems = cart.items;
 
   const defaultUOM = itemDetails?.multiple_uoms?.find((uom: any) => uom?.is_default) || itemDetails?.multiple_uoms?.[0];
   const initialRipeness = defaultUOM ? defaultUOM.ripeness_types?.[0] || null : null;
@@ -101,7 +102,11 @@ const MangoItemCard = ({ itemDetails, isCompact = false }: MangoItemCardProps) =
     handleNavigation();
   };
 
-  const currentCartProduct = cartItems.find((item: any) => item.id === itemDetails.id);
+  const normalizedProductId = itemDetails.id || (itemDetails as any).product_id;
+  const currentCartProduct = cartItems.find((item: any) => {
+    const itemProductId = item.id || item.product_id;
+    return itemProductId === normalizedProductId;
+  });
   let totalQuantityAcrossProduct = 0;
 
   if (currentCartProduct && currentCartProduct.multiple_uoms) {
@@ -131,7 +136,7 @@ const MangoItemCard = ({ itemDetails, isCompact = false }: MangoItemCardProps) =
 
       {/* Mango Styled Container: White background, Border, Shadow, Padding */}
       <div
-        className={`bg-white border border-[#EDE6D4] flex flex-col h-full relative transition-all w-full ${isCompact ? 'p-2 rounded-[8px]' : 'p-3 md:p-5 rounded-[24px]'} ${!isCompact ? 'md:w-[304.47px]' : ''}`}
+        className={`bg-white border border-[#EDE6D4] flex flex-col h-full relative z-[1] transition-all w-full ${isCompact ? 'p-2 rounded-[8px]' : 'p-3 md:p-5 rounded-[24px]'} ${!isCompact ? 'md:w-[304.47px]' : ''}`}
       >
         <div onClick={handleNavigation} className="cursor-pointer w-full text-start group flex flex-col h-full">
           {/* Image Container — adjusted to precise design specs */}
@@ -192,12 +197,12 @@ const MangoItemCard = ({ itemDetails, isCompact = false }: MangoItemCardProps) =
               {itemDetails.name}
             </span>
             {/* Description */}
-            <p
+            {/* <p
               className={`${isCompact ? 'text-[11px]' : 'text-[13px]'} font-regular text-[#666666] leading-[1.3] line-clamp-2 min-h-[2.6em] mt-0.5 mb-0.5`}
               style={{ fontFamily: 'SofiaPro' }}
             >
               {itemDetails.description || ''}
-            </p>
+            </p> */}
             {/* Unit */}
             <p
               className={`${isCompact ? 'text-[9px]' : 'text-[11px]'} text-gray-400 font-medium lowercase`}

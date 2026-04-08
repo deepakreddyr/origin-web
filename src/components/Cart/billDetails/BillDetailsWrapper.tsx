@@ -103,7 +103,7 @@ const BillDetailsWrapper = (props: any) => {
         amountTobePaid = amountTobePaid - discountAmount;
       }
     }
-    dispatch(setIsProceedButtonEnabled(amountTobePaid > cart.cart_minimum));
+    dispatch(setIsProceedButtonEnabled(amountTobePaid >= (cart.cart_minimum || 0)));
     dispatch(setAmountToPay(amountTobePaid));
     if (typeof window !== 'undefined') {
       const lsTotalKey = isMangoPage ? 'mango_total_to_pay' : 'total_to_pay';
@@ -111,7 +111,7 @@ const BillDetailsWrapper = (props: any) => {
     }
   }, [couponDetails, cart, billDetails, dispatch, isSubscription]);
 
-  const remainingAmount = billDetails.cart_minimum ? Number(billDetails.cart_minimum) - cart.amountToPay : 0;
+  const remainingAmount = cart.cart_minimum ? Number(cart.cart_minimum) - cart.amountToPay : 0;
 
   const handleTooltipToggle = () => {
     if (isMobile) {
@@ -259,13 +259,13 @@ const BillDetailsWrapper = (props: any) => {
         </li>
       </ul>
 
-      {Number(billDetails.cart_minimum) > 0 && cart.amountToPay < Number(billDetails.cart_minimum) && (
+      {/* {Number(cart.cart_minimum) > 0 && cart.amountToPay < Number(cart.cart_minimum) && (
         <div className="font-[SofiaPro] font-bold bg-green-50 border border-green-200 rounded-md p-3 mt-3">
           <p className="font-[SofiaPro] font-bold text-green-700 text-sm mt-1">
             Add <span className="font-[SofiaPro] font-bold">₹{remainingAmount}</span> more to reach the minimum order!
           </p>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

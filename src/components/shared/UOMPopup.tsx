@@ -3,6 +3,7 @@ import { FC, useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import AddItemBtn from './AddItemBtn/AddItemBtn';
+import { useCartStore } from '@/hooks/useCartStore';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 export const NotifyToast: FC<{
@@ -24,7 +25,7 @@ export const NotifyToast: FC<{
 
   return (
     <div
-      className={`fixed z-[100] left-1/2 bottom-10 transform -translate-x-1/2 w-[90%] max-w-sm transition-all duration-300 ease-in-out ${
+      className={`fixed z-[10000] left-1/2 bottom-10 transform -translate-x-1/2 w-[90%] max-w-sm transition-all duration-300 ease-in-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
       }`}
     >
@@ -149,7 +150,8 @@ export const UOMPopup: FC<{
   onSelectionMade: (uom: UOM, ripeness: string | null) => void;
 }> = ({ product, isOpen, onClose, onSelectionMade }) => {
   const modalRef = useRef<HTMLDivElement>(null);
-  const cartItems = useSelector((state: any) => state.cart.items);
+  const { cart } = useCartStore();
+  const cartItems = cart.items;
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isRipenessInfoOpen, setIsRipenessInfoOpen] = useState(false);
 
@@ -188,12 +190,20 @@ export const UOMPopup: FC<{
   });
 
   const variantsWithCartInfo = allVariants.map((variant) => {
-    const cartProduct = cartItems.find((item: any) => (item.id || item.product_id) === product.id);
+    const normalizedProductId = product.id || (product as any).product_id;
+    const cartProduct = cartItems.find((item: any) => {
+      const itemProductId = item.id || item.product_id;
+      return itemProductId === normalizedProductId;
+    });
 
     let cart_quantity = 0;
 
     if (cartProduct) {
-      const cartUOM = cartProduct.multiple_uoms?.find((uom: any) => uom.variant_id === variant.variant_id);
+      const cartUOM = cartProduct.multiple_uoms?.find((uom: any) => {
+        const cartVariantId = uom.variant_id || uom.varientId;
+        const targetVariantId = variant.variant_id || (variant as any).varientId;
+        return cartVariantId === targetVariantId;
+      });
 
       if (cartUOM) {
         if (variant.selected_ripeness_type && cartUOM.cart_ripeness) {
@@ -277,7 +287,7 @@ export const UOMPopup: FC<{
 
   return (
     <div
-      className={`fixed inset-0 z-[1001] transition-opacity duration-300 ${isTransitioning ? 'bg-black bg-opacity-50' : 'bg-black bg-opacity-0 pointer-events-none'}`}
+      className={`fixed inset-0 z-[9999] transition-opacity duration-300 ${isTransitioning ? 'bg-black bg-opacity-50' : 'bg-black bg-opacity-0 pointer-events-none'}`}
       onClick={onClose}
     >
       <div

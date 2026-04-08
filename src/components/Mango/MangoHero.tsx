@@ -7,7 +7,7 @@ const MangoHero = () => {
   return (
     <section className="relative bg-transparent min-h-[600px] md:min-h-[600px] flex items-center px-4 md:px-[7vw] pt-[0px] md:pt-[100px]">
       {/* Left Content only — image is rendered in parent wrapper */}
-      <div className="relative z-20 w-full">
+      <div className="relative w-full">
         {/* Mobile Logo */}
         <div className="md:hidden mb-8 flex justify-center -ml-4">
           <Image

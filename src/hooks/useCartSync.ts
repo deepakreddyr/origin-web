@@ -1,0 +1,87 @@
+import { useCartStore } from './useCartStore';
+import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
+import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
+import { getAddressAndStoreId, prepareCartItemsToApi } from '@/utilities/utils';
+import { protectedUrl } from '@/url';
+import { useDispatch, useSelector } from 'react-redux';
+
+export const useCartSync = () => {
+  const dispatch = useDispatch();
+  const { cart, isMangoPage, actions, subscriptionCart } = useCartStore();
+  const { setCartItems, setCartMinimum, setFreeItems } = actions;
+
+  const isSubscription = subscriptionCart?.isSubscriptionActive;
+  const loginDetails = useSelector((state: any) => state.loginDetails);
+  const sendDataToApi = useSendDataToApi();
+  const getDataFromApi = useGetDataFromApi();
+
+  const fetchCartItemsFromApi = () => {
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getCartItems'];
+    const addressFromLs = getAddressAndStoreId();
+    const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
+
+    const successHandler = (data: any) => {
+      dispatch(setCartItems(data.data));
+      if (data.cart_minimum) {
+        dispatch(setCartMinimum(data.cart_minimum));
+      }
+
+      if (data.free_items && data.free_items.length > 0) {
+        dispatch(
+          setFreeItems({
+            freeItems: data.free_items,
+            freeItemsMov: Number(data.free_items_mov) || 0
+          })
+        );
+      } else {
+        dispatch(setFreeItems({ freeItems: [], freeItemsMov: 0 }));
+      }
+    };
+
+    if (addressFromLs) getDataFromApi(apiUrl, successHandler, () => {}, additionalHeaders);
+  };
+
+  const sendItemsToApi = (force: boolean = false) => {
+    const token = localStorage.getItem('user_token');
+    if (!token) return;
+    if (isSubscription) return;
+
+    const addressFromLs = getAddressAndStoreId();
+    const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
+
+    const syncLocalCartToBackend = () => {
+      const lsKey = isMangoPage ? 'mango_cart_items' : 'cart_items';
+      const cartItemFromLs = localStorage.getItem(lsKey);
+
+      if (cartItemFromLs) {
+        const cartItemsParsed = JSON.parse(cartItemFromLs);
+        if (cartItemsParsed.length === 0 && !force) return;
+
+        const cartItemsToApi = prepareCartItemsToApi(cartItemsParsed);
+        const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['addToCart'];
+
+        const successHandler = () => {
+          fetchCartItemsFromApi();
+        };
+
+        const failureHandler = () => {
+          fetchCartItemsFromApi();
+        };
+
+        sendDataToApi(apiUrl, cartItemsToApi, 'POST', successHandler, failureHandler, additionalHeaders);
+      } else {
+        fetchCartItemsFromApi();
+      }
+    };
+
+    if (isMangoPage) {
+      // Clear cart first for Mango page
+      const clearApiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['clearCartItems'];
+      getDataFromApi(clearApiUrl, syncLocalCartToBackend, syncLocalCartToBackend, additionalHeaders);
+    } else {
+      syncLocalCartToBackend();
+    }
+  };
+
+  return { sendItemsToApi, fetchCartItemsFromApi };
+};
