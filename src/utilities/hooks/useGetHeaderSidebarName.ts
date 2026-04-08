@@ -38,7 +38,7 @@ export const useGetHeaderSidebarName = () => {
         return 'Settings';
 
       case TabTypeConstant.HELP_FAQ:
-        return 'Faqs & Help';
+        return 'Help & FAQ';
 
       case TabTypeConstant.SELECT_ADDRESS:
         return 'Select Location';

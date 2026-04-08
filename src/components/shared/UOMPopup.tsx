@@ -94,6 +94,18 @@ export interface Product {
   };
   tag_url: string | null;
   description?: string;
+  public_extra_descriptions?: Array<{
+    title: string;
+    description: Array<{
+      type: string;
+      title: string;
+      details: Array<{
+        description: string;
+        image?: string;
+        title?: string;
+      }>;
+    }>;
+  }>;
 }
 
 export const MaxQuantityToast: FC<{
