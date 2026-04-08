@@ -151,7 +151,7 @@ export default function Layout({
         )}
         <SidebarScreen />
         <main className={`${useTopPadding ? 'pt-[22vw] mob:pt-[35vw] md:pt-[6vw]' : ''}`}>{children}</main>
-        {query.type !== 'app' && <CouponStatusBar />}
+        {/* {query.type !== 'app' && <CouponStatusBar />} */}
         {showDownloadApp && (
           <DownloadAppWrapper
             onClose={() => {
