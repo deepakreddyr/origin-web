@@ -263,6 +263,7 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
                     isItemPresent={totalQuantityAcrossProduct > 0}
                     quantity={totalQuantityAcrossProduct}
                     isMangoPage={isMangoPage}
+                    hasRipeness={hasRipenessOptions}
                     handleAddItem={(e: any) => {
                       e.stopPropagation();
                       e.preventDefault();

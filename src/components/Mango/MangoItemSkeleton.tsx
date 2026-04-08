@@ -6,7 +6,7 @@ const MangoItemSkeleton = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
 
   return (
-    <div className="bg-white border border-[#EDE6D4] flex flex-col h-full relative z-[1] w-full p-3 md:p-5 rounded-[12px] md:rounded-[24px]">
+    <div className="bg-white border border-[#EDE6D4] flex flex-col h-full relative z-[1] w-full p-3 md:p-3 rounded-[12px] md:rounded-[24px]">
       {/* Image Skeleton */}
       <div
         className="relative bg-[#F3F0E6] w-full mb-3 md:mb-4 overflow-hidden"
@@ -19,7 +19,7 @@ const MangoItemSkeleton = () => {
       </div>
 
       {/* Content Skeleton */}
-      <div className="flex flex-col mb-1 px-0 md:px-1 gap-2">
+      <div className="flex flex-col mb-1 px-0 md:px-1 gap-1">
         {/* Title */}
         <Skeleton variant="text" width="80%" height={24} sx={{ borderRadius: '4px' }} />
         {/* Unit */}
@@ -32,7 +32,7 @@ const MangoItemSkeleton = () => {
           <Skeleton variant="text" width={60} height={24} sx={{ borderRadius: '4px' }} />
         </div>
         <div className="flex items-center">
-          <Skeleton variant="circular" width={isMobile ? 80 : 100} height={40} sx={{ borderRadius: '20px' }} />
+          <Skeleton variant="circular" width={isMobile ? 70 : 100} height={40} sx={{ borderRadius: '20px' }} />
         </div>
       </div>
     </div>
