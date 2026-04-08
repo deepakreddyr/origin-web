@@ -3,15 +3,16 @@ import React from 'react';
 import { addressAtom } from '@/features/Address/context/atoms';
 import Image from 'next/image';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
-import { useDispatch, useSelector } from 'react-redux';
-import { setCartTabType } from '@/store/slice/CartSlice';
+import { useDispatch } from 'react-redux';
+import { useCartStore } from '@/hooks/useCartStore';
 import DeliveryPrefencetype from '../deliveryPerference/DeliveryPrefencetype';
 import { ADDRESS_ICON_MAP } from '@/utilities/maps';
 
 const AdressAndTimeSelector = (props: any) => {
   const { setTimeSelectorOrListTab, isSubscription = false, onShowToast } = props;
   const [address, setAddress] = useAtom(addressAtom);
-  const cart = useSelector((state: any) => state.cart);
+  const { cart, actions } = useCartStore();
+  const { setCartTabType } = actions;
   const dispatch = useDispatch();
 
   const handleAddressChangeClick = (e: React.MouseEvent) => {

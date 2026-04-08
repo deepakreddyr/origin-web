@@ -8,11 +8,13 @@ import { useRouter } from 'next/router';
 import { setTabType } from '@/store/slice/loginSlice';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 import { setRouteSourceToLs } from '@/utilities/utils';
-import { setCartTabType } from '@/store/slice/CartSlice';
+import { useCartStore } from '@/hooks/useCartStore';
 import { editAddress } from '@/features/AddressEditDetails/services/editAddress';
 import Address from '@/features/AccountPage/types/Address';
 
 const CartAddressList = (props: any) => {
+  const { actions } = useCartStore();
+  const { setCartTabType } = actions;
   const { setTimeSelectorOrListTab, onAddressChanged } = props;
   const [address, setAddress] = useAtom(addressAtom);
   const router = useRouter();

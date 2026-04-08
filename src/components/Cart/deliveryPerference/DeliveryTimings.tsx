@@ -1,11 +1,13 @@
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
-import { setCartTabType, setIsProceedButtonEnabled } from '@/store/slice/CartSlice';
 import { setDeliverylotDetails, updateTimeSlotId, updateDeliveryType } from '@/store/slice/placeOrderDetails';
 import { formatRelativeDate } from '@/utilities/utils';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useCartStore } from '@/hooks/useCartStore';
 
 const DeliveryTimings = (props: any) => {
+  const { actions } = useCartStore();
+  const { setCartTabType, setIsProceedButtonEnabled } = actions;
   const dispatch = useDispatch();
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
   const { checkoutDetails } = placeOrderDetails;

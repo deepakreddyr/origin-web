@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { validateAndCleanCart, removeFreeItemFromCart } from '@/store/slice/CartSlice';
+import { useCartStore } from '@/hooks/useCartStore';
 import ReviewItem from './ReviewItem';
 
 const ReviewList = ({ onShowMaxQuantityToast }: { onShowMaxQuantityToast: (maxQty: number) => void }) => {
-  const cart = useSelector((state: any) => state.cart);
-  const subscriptionCart = useSelector((state: any) => state.subscriptionCart);
+  const { cart, subscriptionCart, actions } = useCartStore();
+  const { validateAndCleanCart } = actions;
   const isSubscription = subscriptionCart.isSubscriptionActive;
   const dispatch = useDispatch();
 

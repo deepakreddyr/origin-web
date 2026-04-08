@@ -4,12 +4,13 @@ import Cross from '/public/assets/svg/xmark.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import backIcon from '/public/assets/icons/backIcon.png';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
-import { setCartTabType } from '@/store/slice/CartSlice';
+import { useCartStore } from '@/hooks/useCartStore';
 import { updateDeliveryType, updateTimeSlotId } from '@/store/slice/placeOrderDetails';
 
 const ModalHeader = (props: any) => {
   const { setAddressModal, setTimeSelectorOrListTab } = props;
-  const cart = useSelector((state: any) => state.cart);
+  const { cart, actions } = useCartStore();
+  const { setCartTabType } = actions;
   const dispatch = useDispatch();
 
   const onClickBackButton = () => {

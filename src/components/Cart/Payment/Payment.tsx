@@ -14,12 +14,13 @@ import { setIsHeaderVisible } from '@/store/slice/loginSlice';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 const razKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY;
 
+import { useCartStore } from '@/hooks/useCartStore';
+
 const Payment = (props: any) => {
   const [profile, setProfileAtom] = useAtom(profileAtom);
   const [paymentFLowScreen, setPaymentFlowScreen] = useState(TabTypeConstant.MAKE_PAYMENT);
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
-  const cart = useSelector((state: any) => state.cart);
-  const subscriptionCart = useSelector((state: any) => state.subscriptionCart);
+  const { cart, subscriptionCart, isMangoPage } = useCartStore();
   const isSubscription = subscriptionCart.isSubscriptionActive;
   const sendDataToApi = useSendDataToApi();
   const [paymentModalDetails, setPaymentModalDetails] = useState({
@@ -54,7 +55,8 @@ const Payment = (props: any) => {
     let additionalHeaders = {};
     let apiData;
     let transformedData;
-    const cartItemFromLs = localStorage.getItem('cart_items');
+    const lsKey = isMangoPage ? 'mango_cart_items' : 'cart_items';
+    const cartItemFromLs = localStorage.getItem(lsKey);
     if (cartItemFromLs) {
       apiData = prepareCartItemsToApi(JSON.parse(cartItemFromLs));
       transformedData = {

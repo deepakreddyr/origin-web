@@ -1,12 +1,11 @@
-import { COUPON_TABS } from '@/constants';
-import { setCouponDetails } from '@/store/slice/CartSlice';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useCartStore } from '@/hooks/useCartStore';
 
 const Coupon = (props: any) => {
   const { couponDetailsFromList, setCouponsTab, validateCoupon } = props;
+  const { cart } = useCartStore();
   const dispatch = useDispatch();
-  const cart = useSelector((state: any) => state.cart);
 
   const { min_cart_value, isValid } = couponDetailsFromList;
 

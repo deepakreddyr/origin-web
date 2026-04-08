@@ -9,7 +9,7 @@ import DeliveryTimings from './DeliveryTimings';
 import SubscriptionTimeslot from './SubscriptionTimeslot';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCheckoutDetails, updateDeliveryType } from '@/store/slice/placeOrderDetails';
-import { setIsProceedButtonEnabled } from '@/store/slice/CartSlice';
+import { useCartStore } from '@/hooks/useCartStore';
 
 type DeliveryType = 'TIME_SLOT' | 'INSTANT' | undefined;
 
@@ -20,13 +20,15 @@ const DeliveryPrefencetype = ({
   isSubscription?: boolean;
   onShowToast?: (message: string) => void;
 }) => {
+  const { cart, subscriptionCart, actions } = useCartStore();
+  const { setIsProceedButtonEnabled } = actions;
+
   const getDataFromApi = useGetDataFromApi();
   const sendDataToApi = useSendDataToApi();
   const [loading, setLoading] = useState(true);
   const [activeDeliveryType, setActiveDeliveryType] = useState<DeliveryType>(undefined);
   const dispatch = useDispatch();
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
-  const subscriptionCart = useSelector((state: any) => state.subscriptionCart);
 
   const fetchCheckoutDetails = () => {
     const addressFromLs = getAddressAndStoreId();

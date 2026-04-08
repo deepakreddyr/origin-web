@@ -1,13 +1,14 @@
 'use client';
 
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { addFreeItemToCart, removeFreeItemFromCart } from '@/store/slice/CartSlice';
+import { useDispatch } from 'react-redux';
 import LockIcon from '@mui/icons-material/Lock';
+import { useCartStore } from '@/hooks/useCartStore';
 
 const FreeItemSection = ({ onShowToast }: { onShowToast: (message: string) => void }) => {
+  const { cart, actions } = useCartStore();
+  const { addFreeItemToCart, removeFreeItemFromCart } = actions;
   const dispatch = useDispatch();
-  const cart = useSelector((state: any) => state.cart);
 
   const freeItems = cart.freeItems || [];
   const freeItemsMov = cart.freeItemsMov || 0;

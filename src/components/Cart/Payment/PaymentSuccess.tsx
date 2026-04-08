@@ -5,15 +5,20 @@ import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { setIsSidebarOpen } from '@/store/slice/loginSlice';
 import { resetOrderDetails } from '@/store/slice/placeOrderDetails';
-import { clearCart } from '@/store/slice/CartSlice';
 import * as gtag from '@/utilities/gtag';
+import { useCartStore } from '@/hooks/useCartStore';
+
 const PaymentSuccess = (props: any) => {
+  const { cart, actions, isMangoPage } = useCartStore();
+  const { clearCart } = actions;
   const { paymentModalDetails } = props;
   const [timer, setTimer] = useState(5);
   const router = useRouter();
   const dispatch = useDispatch();
   const hasPlayedAudio = useRef(false);
-  const total_to_pay = localStorage.getItem('total_to_pay');
+
+  const lsTotalKey = isMangoPage ? 'mango_total_to_pay' : 'total_to_pay';
+  const total_to_pay = localStorage.getItem(lsTotalKey);
   // localStorage.removeItem("total_to_pay"); // Moved inside useEffect or handle properly to avoid re-runs
 
   useEffect(() => {
@@ -32,7 +37,8 @@ const PaymentSuccess = (props: any) => {
         currency: 'INR',
         transaction_id: paymentModalDetails.orderResponse.order_id
       });
-      localStorage.removeItem('total_to_pay');
+      // localStorage.removeItem('total_to_pay');
+      localStorage.removeItem(lsTotalKey);
     }
 
     // Play success audio only once using the primed audio from props
@@ -58,7 +64,7 @@ const PaymentSuccess = (props: any) => {
 
       dispatch(setIsSidebarOpen(false));
       dispatch(resetOrderDetails());
-      dispatch(clearCart());
+      clearCart();
 
       if (flowType === 'retry_payment') {
         window.location.href = targetUrl;

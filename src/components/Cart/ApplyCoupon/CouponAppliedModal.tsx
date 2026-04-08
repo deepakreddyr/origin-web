@@ -2,13 +2,14 @@ import React from 'react';
 import percentageIcon from '/public/assets/icons/percentageIcon.png';
 import warningIcon from '/public/assets/icons/warningIcon.png';
 import Image from 'next/image';
-import { useDispatch, useSelector } from 'react-redux';
-import { setCartTabType } from '@/store/slice/CartSlice';
+import { useDispatch } from 'react-redux';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
+import { useCartStore } from '@/hooks/useCartStore';
 
 const CouponAppliedModal = (props: any) => {
   const { setShowCouponList, error, setError } = props;
-  const cart = useSelector((state: any) => state.cart);
+  const { cart, actions } = useCartStore();
+  const { setCartTabType } = actions;
   const { couponDetails } = cart;
   const dispatch = useDispatch();
 

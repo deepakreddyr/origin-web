@@ -1,22 +1,16 @@
 import { couponDetailsInitialState } from '@/constants';
-import {
-  setAmountToPay,
-  setCouponDetails,
-  setDiscountAmount,
-  setIsProceedButtonEnabled,
-  setDeliveryFee
-} from '@/store/slice/CartSlice';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tooltip, IconButton, useMediaQuery } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { useCartStore } from '@/hooks/useCartStore';
 
 const BillDetailsWrapper = (props: any) => {
   const { billDetails, isSubscription = false } = props;
-  const cart = useSelector((state: any) => state.cart);
-  const subscriptionCart = useSelector((state: any) => state.subscriptionCart);
+  const { cart, subscriptionCart, actions, isMangoPage } = useCartStore();
   const { couponDetails } = cart;
   const dispatch = useDispatch();
+  const { setAmountToPay, setCouponDetails, setDiscountAmount, setIsProceedButtonEnabled, setDeliveryFee } = actions;
 
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -112,7 +106,8 @@ const BillDetailsWrapper = (props: any) => {
     dispatch(setIsProceedButtonEnabled(amountTobePaid > cart.cart_minimum));
     dispatch(setAmountToPay(amountTobePaid));
     if (typeof window !== 'undefined') {
-      localStorage.setItem('total_to_pay', cart.amountToPay);
+      const lsTotalKey = isMangoPage ? 'mango_total_to_pay' : 'total_to_pay';
+      localStorage.setItem(lsTotalKey, cart.amountToPay);
     }
   }, [couponDetails, cart, billDetails, dispatch, isSubscription]);
 

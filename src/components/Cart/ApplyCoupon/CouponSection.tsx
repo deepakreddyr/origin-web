@@ -3,16 +3,17 @@ import percentageIcon from '/public/assets/icons/percentageIcon.png';
 import gotoIcon from '/public/assets/icons/gotoIcon.png';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCartTabType, setCouponDetails, setDiscountAmount } from '@/store/slice/CartSlice';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 import { setRouteSourceToLs } from '@/utilities/utils';
 import { setTabType } from '@/store/slice/loginSlice';
 import { couponDetailsInitialState } from '@/constants';
+import { useCartStore } from '@/hooks/useCartStore';
+
 const CouponSection = (props: any) => {
   const { setShowCouponList } = props;
-  const cart = useSelector((state: any) => state.cart);
+  const { cart, actions } = useCartStore();
   const { couponDetails } = cart;
-  console.log(couponDetails);
+  const { setCartTabType, setCouponDetails, setDiscountAmount } = actions;
   const dispatch = useDispatch();
   const loginDetails = useSelector((state: any) => state.loginDetails);
 
