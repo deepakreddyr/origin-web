@@ -73,7 +73,7 @@ const RemoveAccount = (props: Props) => {
                 fontSize: 14
               }}
             >
-              You about to loose all the data and rewards attached with this mobile number permanently!
+              You are about to loose all the data and rewards attached with this mobile number permanently!
             </Typography>
             <Typography
               component="small"

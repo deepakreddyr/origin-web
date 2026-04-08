@@ -14,7 +14,8 @@ export const mainApiUrl = {
   placeOrder: '/api/v3/user/orders', // to be removed
   ordersActions: '/api/v3/user/orders',
   getTestimonials: '/api/v1/public/testimonials',
-  launch: '/api/v5/user/launch'
+  launch: '/api/v5/user/launch',
+  deleteAccount: '/api/v3/user/deleteuser'
 };
 
 export const unprotectedUrl: UrlMap = {

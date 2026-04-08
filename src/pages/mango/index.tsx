@@ -135,11 +135,12 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
   const highlightItems = (highlightSection?.data ?? [])
     .map((entry: any) => {
       const item = entry.item;
-      // Extract from info.info array where type matches what we want
-      const infoList = entry.info?.info || [];
-      const aboutProduct = infoList.find((i: any) => i.title === 'About the Product' || i.type === 'normal');
-      const description = aboutProduct?.details?.[0]?.description || '';
-      return { ...item, description };
+      // Extract from public_extra_descriptions where title is 'info'
+      const publicExtra = entry.public_extra_descriptions || [];
+      const infoExtra = publicExtra.find((e: any) => e.title === 'info');
+      const normalDesc = infoExtra?.description?.find((d: any) => d.type === 'normal');
+      const description = normalDesc?.details?.[0]?.description || item.description || '';
+      return { ...item, description, public_extra_descriptions: entry.public_extra_descriptions };
     })
     .filter((item: any) => item && item.multiple_uoms && item.multiple_uoms.length > 0);
   const highlightProducts = deduplicate(highlightItems).slice(0, 2);
@@ -149,10 +150,11 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
   const popularItems = (popularSection?.data ?? [])
     .map((entry: any) => {
       const item = entry.item;
-      const infoList = entry.info?.info || [];
-      const aboutProduct = infoList.find((i: any) => i.title === 'About the Product' || i.type === 'normal');
-      const description = aboutProduct?.details?.[0]?.description || '';
-      return { ...item, description };
+      const publicExtra = entry.public_extra_descriptions || [];
+      const infoExtra = publicExtra.find((e: any) => e.title === 'info');
+      const normalDesc = infoExtra?.description?.find((d: any) => d.type === 'normal');
+      const description = normalDesc?.details?.[0]?.description || item.description || '';
+      return { ...item, description, public_extra_descriptions: entry.public_extra_descriptions };
     })
     .filter((item: any) => item && item.multiple_uoms && item.multiple_uoms.length > 0);
   const popularProducts = deduplicate(popularItems);
@@ -176,7 +178,7 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
         {/* ── Hero + Products wrapper so image spans both ── */}
         <div className="relative overflow-visible z-[10]">
           {/* Big mango hand — spans hero AND product section */}
-          <div className="absolute right-0 top-[60vw] md:top-[8vw] w-[85vw] md:w-[52vw] h-[600px] md:h-[1300px] pointer-events-none z-[0] overflow-hidden">
+          <div className="absolute right-0 top-[60vw] md:top-[8vw] w-[90vw] md:w-[52vw] h-[630px] md:h-[1300px] pointer-events-none z-[0] overflow-hidden">
             <Image
               src="/assets/images/mangohero.png"
               alt="Farm Fresh Mangoes"

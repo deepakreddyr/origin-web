@@ -130,11 +130,11 @@ const YellowBtn = (props: YellowBtnProps) => {
           layout
           transition={{ type: 'spring', stiffness: 380, damping: 28 }}
           onClick={!shouldShowStepper ? onAdd : undefined}
-          className={`flex items-center h-[2.9vw] mob:h-[10vw] rounded-full border-[2px] p-[.3vw] ${
-            shouldShowStepper ? 'mob:px-[.4vw]' : 'px-[1.2vw] mob:px-[2.5vw]'
-          } w-full justify-center ${
+          className={`flex items-center h-10 md:h-11 rounded-full border-[1.5px] p-1 ${
+            shouldShowStepper ? 'w-28 md:w-32 px-1' : 'w-24 md:w-28 px-4'
+          } ${shouldShowStepper ? 'justify-between' : 'justify-center gap-2'} transition-all duration-300 ${
             shouldShowStepper
-              ? 'border-primary-200 bg-white cursor-default'
+              ? 'border-[#EDE6D4] bg-white cursor-default'
               : 'border-transparent bg-[#fac510] cursor-pointer'
           }`}
         >
@@ -145,10 +145,10 @@ const YellowBtn = (props: YellowBtnProps) => {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.15 }}
               whileTap={{ scale: 0.82 }}
-              className="h-[1.8vw] w-[1.8vw] mob:h-[7vw] mob:w-[7vw] flex-shrink-0 rounded-full bg-primary text-black text-[1.4vw] mob:text-[5.5vw] font-semibold flex items-center justify-center border border-primary-200 mr-[.4vw] mob:mr-[2vw]"
+              className="h-8 w-8 md:h-9 md:w-9 flex-shrink-0 rounded-full bg-[#fac510] text-black text-xl font-bold flex items-center justify-center border-[#EDE6D4]"
               onClick={onDecrease}
             >
-              <span className="mob:mb-[3px] mb-[2px]">–</span>
+              <span className="mb-[2px]">–</span>
             </motion.button>
           )}
 
@@ -162,7 +162,7 @@ const YellowBtn = (props: YellowBtnProps) => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: dir * -8 }}
                   transition={{ duration: 0.15, ease: 'easeOut' }}
-                  className="text-[1.1vw] mob:text-[4.1vw] font-semibold text-black select-none text-center min-w-[1.2vw] mob:min-w-[5vw]"
+                  className="text-lg md:text-base font-bold text-black select-none text-center min-w-[20px]"
                 >
                   {displayQty}
                 </motion.p>
@@ -173,7 +173,7 @@ const YellowBtn = (props: YellowBtnProps) => {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.12 }}
-                  className="text-black font-bold text-base whitespace-nowrap mx-[0.6vw] mob:mx-[1.2vw]"
+                  className="text-black font-bold text-base whitespace-nowrap"
                 >
                   Add
                 </motion.span>
@@ -186,27 +186,16 @@ const YellowBtn = (props: YellowBtnProps) => {
             layout
             whileTap={!isMax ? { scale: 0.82 } : {}}
             transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-            className={`flex-shrink-0 flex items-center justify-center rounded-full bg-primary font-semibold ${
+            className={`flex-shrink-0 flex items-center justify-center rounded-full font-bold transition-all ${
               shouldShowStepper
                 ? isMax
-                  ? 'h-[1.8vw] w-[1.8vw] mob:h-[7vw] mob:w-[7vw] bg-gray-300 text-gray-500 text-[1.4vw] mob:text-[5.5vw] border border-primary-200 ml-[.4vw] mob:ml-[2vw] cursor-not-allowed'
-                  : 'h-[1.8vw] w-[1.8vw] mob:h-[7vw] mob:w-[7vw] text-[1.4vw] mob:text-[5.5vw] border border-primary-200 ml-[.4vw] mob:ml-[2vw]'
-                : 'h-[1.5vw] w-[1.5vw] mob:h-[6.5vw] mob:w-[6.5vw] text-[1.2vw] mob:text-[4.5vw] bg-[#fac510]'
+                  ? 'h-8 w-8 md:h-9 md:w-9 bg-gray-200 text-gray-400 text-xl cursor-not-allowed'
+                  : 'h-8 w-8 md:h-9 md:w-9 bg-[#fac510] text-black text-xl'
+                : 'text-lg text-black'
             }`}
             onClick={shouldShowStepper ? onIncrease : onAdd}
           >
-            {shouldShowStepper ? (
-              <span className="mob:mb-[3px] mb-[2px]">+</span>
-            ) : requiresSelection ? (
-              <KeyboardArrowDownIcon
-                sx={{
-                  fontSize: { xs: '4vw', md: '1.2vw' },
-                  fontWeight: 'bold'
-                }}
-              />
-            ) : (
-              <span className="mob:mb-[3px] mb-[2px]">+</span>
-            )}
+            {shouldShowStepper ? <span className="mb-[2px]">+</span> : <span className="mb-[2px]">+</span>}
           </motion.button>
         </motion.div>
       </div>

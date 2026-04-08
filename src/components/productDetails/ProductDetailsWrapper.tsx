@@ -22,6 +22,8 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as gtag from '@/utilities/gtag';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 // Type definitions
 interface UOM {
@@ -72,6 +74,11 @@ interface ProductItem {
   multiple_uoms: UOM[];
   category_name?: string;
   category_slug?: string;
+  public_extra_descriptions?: Array<{
+    title: string;
+    type: string;
+    description: string;
+  }>;
 }
 
 interface ProductInfo {
@@ -280,7 +287,7 @@ const ImageGallery: React.FC<{
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleDragEnd = (_: any, info: any) => {
-    const threshold = 50;
+    const threshold = 30;
     if (info.offset.x < -threshold && currentIndex < images.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else if (info.offset.x > threshold && currentIndex > 0) {
@@ -291,13 +298,15 @@ const ImageGallery: React.FC<{
   if (images.length === 0) return null;
 
   return (
-    <div className="relative w-full h-full overflow-hidden group touch-none">
+    <div className="relative w-full h-full overflow-hidden group">
       <motion.div
-        className="flex h-full w-full cursor-grab active:cursor-grabbing"
+        className="flex h-full w-full cursor-grab active:cursor-grabbing touch-pan-y select-none"
         animate={{ x: `-${currentIndex * 100}%` }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.7}
+        dragMomentum={false}
         onDragEnd={handleDragEnd}
       >
         {images.map((img, i) => (
@@ -350,6 +359,24 @@ const ImageGallery: React.FC<{
             OUT OF STOCK
           </p>
         </div>
+      )}
+
+      {/* Navigation Arrows for Desktop */}
+      {images.length > 1 && isDesktop && (
+        <>
+          <button
+            onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
+            className={`absolute left-4 top-1/2 -translate-y-1/2 z-30 p-2 bg-white rounded-full shadow-lg border border-gray-100 transition-all duration-300 ${currentIndex === 0 ? 'opacity-0 pointer-events-none' : 'opacity-0 group-hover:opacity-100'}`}
+          >
+            <ChevronLeftIcon sx={{ fontSize: '24px' }} />
+          </button>
+          <button
+            onClick={() => setCurrentIndex((prev) => Math.min(images.length - 1, prev + 1))}
+            className={`absolute right-4 top-1/2 -translate-y-1/2 z-30 p-2 bg-white rounded-full shadow-lg border border-gray-100 transition-all duration-300 ${currentIndex === images.length - 1 ? 'opacity-0 pointer-events-none' : 'opacity-0 group-hover:opacity-100'}`}
+          >
+            <ChevronRightIcon sx={{ fontSize: '24px' }} />
+          </button>
+        </>
       )}
     </div>
   );
@@ -549,10 +576,14 @@ const ProductDetailsWrapper = () => {
   const hasRipenessFeature = !!(defaultUOM?.ripeness_types && defaultUOM.ripeness_types.length > 0);
 
   // Get product description
+  const displayDescription = productDetails.item?.public_extra_descriptions?.find(
+    (desc: any) => desc.title === 'info' && desc.type === 'normal'
+  )?.description;
+
   const aboutSection = productDetails.info?.info?.find(
-    (section) => section.type === 'normal' && section.title === 'About the Product'
+    (section) => section.type === 'normal' && (section.title === 'About the Product' || section.title === 'info')
   );
-  const productDescription = aboutSection?.details?.[0]?.description || '';
+  const productDescription = displayDescription || aboutSection?.details?.[0]?.description || '';
 
   // SEO Logic
   const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || 'https://origin.com';
@@ -707,7 +738,7 @@ const ProductDetailsWrapper = () => {
                     </div>
                     {/* Action Button: Notify Me OR Add to Cart */}
                     <div
-                      className={`${!defaultUOM?.is_available || !productDetails.item.is_available ? 'w-auto' : 'w-24'} rounded-full overflow-hidden`}
+                      className={`${!defaultUOM?.is_available || !productDetails.item.is_available ? 'w-auto' : ''} rounded-full`}
                     >
                       {!defaultUOM?.is_available || !productDetails.item.is_available ? (
                         <button
@@ -805,7 +836,7 @@ const ProductDetailsWrapper = () => {
                         </div>
                       </div>
                       <div
-                        className={`${!defaultUOM?.is_available || !productDetails.item.is_available ? 'w-auto' : 'w-[80px]'} rounded-full overflow-hidden`}
+                        className={`${!defaultUOM?.is_available || !productDetails.item.is_available ? 'w-auto' : ''} rounded-full`}
                       >
                         {!defaultUOM?.is_available || !productDetails.item.is_available ? (
                           <button
