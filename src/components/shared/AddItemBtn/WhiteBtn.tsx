@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const WhiteBtn = (props: any) => {
-  const { isItemPresent, handleDecrease, quantity, handleIncrease, handleAddItem, isMangoPage } = props;
+  const { isItemPresent, handleDecrease, quantity, handleIncrease, handleAddItem, isMangoPage, hasRipeness } = props;
   const [dir, setDir] = useState<1 | -1>(1);
 
   const onIncrease = (e: any) => {
@@ -61,38 +62,55 @@ const WhiteBtn = (props: any) => {
               {quantity}
             </motion.p>
           ) : (
-            <motion.span
+            <motion.div
+              layout
               key="add-label"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.12 }}
-              className={`text-black font-bold ${
-                isMangoPage
-                  ? 'text-[0.9vw] mob:text-[2.8vw] mx-[0.3vw]'
-                  : 'text-[1.1vw] mob:text-[3.2vw] mx-[0.4vw] mob:mx-[0.8vw]'
-              } whitespace-nowrap`}
+              className="flex items-center justify-center"
             >
-              Add
-            </motion.span>
+              <span
+                className={`text-black font-bold ${
+                  isMangoPage
+                    ? 'text-[0.9vw] mob:text-[2.8vw] mx-[0.3vw]'
+                    : 'text-[1.1vw] mob:text-[3.2vw] mx-[0.4vw] mob:mx-[0.8vw]'
+                } whitespace-nowrap`}
+              >
+                Add
+              </span>
+              {hasRipeness && (
+                <KeyboardArrowDownIcon
+                  sx={{
+                    fontSize: isMangoPage ? '1.5vw' : '1.4vw',
+                    '@media (max-width: 600px)': {
+                      fontSize: isMangoPage ? '5vw' : '4.5vw'
+                    }
+                  }}
+                />
+              )}
+            </motion.div>
           )}
         </AnimatePresence>
       </div>
 
       {/* Plus */}
-      <motion.button
-        layout
-        whileTap={{ scale: 0.82 }}
-        transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-        className={`flex-shrink-0 flex items-center justify-center rounded-full bg-primary text-black font-semibold ${
-          isItemPresent
-            ? `${isMangoPage ? 'h-[1.6vw] w-[1.6vw] mob:h-[6vw] mob:w-[6vw]' : 'h-[1.8vw] w-[1.8vw] mob:h-[6.5vw] mob:w-[6.5vw]'} ml-[.4vw] mob:ml-[2vw]`
-            : `${isMangoPage ? 'h-[1.3vw] w-[1.3vw] mob:h-[5vw] mob:w-[5vw]' : 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw]'}`
-        } ${isMangoPage ? 'text-[1.3vw] mob:text-[5vw]' : 'text-[1.4vw] mob:text-[5.5vw]'}`}
-        onClick={isItemPresent ? onIncrease : handleAddItem}
-      >
-        <span className="mob:mb-[3px] mb-[2px]">+</span>
-      </motion.button>
+      {(!hasRipeness || isItemPresent) && (
+        <motion.button
+          layout
+          whileTap={{ scale: 0.82 }}
+          transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+          className={`flex-shrink-0 flex items-center justify-center rounded-full bg-primary text-black font-semibold ${
+            isItemPresent
+              ? `${isMangoPage ? 'h-[1.6vw] w-[1.6vw] mob:h-[6vw] mob:w-[6vw]' : 'h-[1.8vw] w-[1.8vw] mob:h-[6.5vw] mob:w-[6.5vw]'} ml-[.4vw] mob:ml-[2vw]`
+              : `${isMangoPage ? 'h-[1.3vw] w-[1.3vw] mob:h-[5vw] mob:w-[5vw]' : 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw]'}`
+          } ${isMangoPage ? 'text-[1.3vw] mob:text-[5vw]' : 'text-[1.4vw] mob:text-[5.5vw]'}`}
+          onClick={isItemPresent ? onIncrease : handleAddItem}
+        >
+          <span className="mob:mb-[3px] mb-[2px]">+</span>
+        </motion.button>
+      )}
     </motion.div>
   );
 };

@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { getAddressAndStoreId } from '@/utilities/utils';
 import { protectedUrl } from '@/url';
@@ -298,39 +299,51 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                           {totalQuantityAcrossProduct}
                         </motion.p>
                       ) : (
-                        <motion.span
+                        <motion.div
+                          layout
                           key="options-label"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
                           transition={{ duration: 0.12 }}
-                          className="font-[SofiaPro] text-[.97vw] font-bold mob:text-[3.2vw] text-black whitespace-nowrap mx-[0.4vw] mob:mx-[1.2vw]"
+                          className="flex items-center justify-center gap-0.5"
                         >
-                          {totalOptionsCount} Options
-                        </motion.span>
+                          <span className="font-[SofiaPro] text-[.97vw] font-bold mob:text-[3.2vw] text-black whitespace-nowrap mx-[0.4vw] mob:mx-[1.2vw]">
+                            {hasRipenessOptions ? 'Add' : `${totalOptionsCount} Options`}
+                          </span>
+                          {hasRipenessOptions && (
+                            <KeyboardArrowDownIcon
+                              sx={{
+                                fontSize: isMobile ? '4vw' : '1.2vw'
+                              }}
+                            />
+                          )}
+                        </motion.div>
                       )}
                     </AnimatePresence>
                   </div>
 
-                  {/* Plus — always present */}
-                  <motion.button
-                    layout
-                    whileTap={{ scale: 0.82 }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setQuantityDir(1);
-                      setIsPopupOpen(true);
-                    }}
-                    className={`flex-shrink-0 flex items-center justify-center rounded-full bg-primary ${
-                      totalQuantityAcrossProduct > 0
-                        ? 'h-[1.8vw] w-[1.8vw] mob:h-[7vw] mob:w-[7vw] mob:text-[5.5vw] text-[1.2vw] pb-[.3vw] ml-[.5vw] mob:ml-[3vw]'
-                        : 'h-[1.5vw] w-[1.5vw] mob:h-[6.5vw] mob:w-[6.5vw] text-[1.1vw] mob:text-[4.5vw]'
-                    }`}
-                  >
-                    +
-                  </motion.button>
+                  {/* Plus — hide if ripeness exists and not in cart */}
+                  {(!hasRipenessOptions || totalQuantityAcrossProduct > 0) && (
+                    <motion.button
+                      layout
+                      whileTap={{ scale: 0.82 }}
+                      transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setQuantityDir(1);
+                        setIsPopupOpen(true);
+                      }}
+                      className={`flex-shrink-0 flex items-center justify-center rounded-full bg-primary ${
+                        totalQuantityAcrossProduct > 0
+                          ? 'h-[1.8vw] w-[1.8vw] mob:h-[7vw] mob:w-[7vw] mob:text-[5.5vw] text-[1.2vw] pb-[.3vw] ml-[.5vw] mob:ml-[3vw]'
+                          : 'h-[1.5vw] w-[1.5vw] mob:h-[6.5vw] mob:w-[6.5vw] text-[1.1vw] mob:text-[4.5vw]'
+                      }`}
+                    >
+                      +
+                    </motion.button>
+                  )}
                 </motion.div>
               ) : (
                 <div className="w-[80px] mob:w-auto flex justify-end">

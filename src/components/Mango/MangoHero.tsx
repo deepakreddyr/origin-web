@@ -5,7 +5,7 @@ import originLogo from '/public/assets/images/neworiginlogo.png';
 
 const MangoHero = () => {
   return (
-    <section className="relative bg-transparent min-h-[600px] md:min-h-[600px] flex items-center px-4 md:px-[7vw] pt-[0px] md:pt-[100px]">
+    <section className="relative bg-transparent min-h-[580px] md:min-h-[600px] flex items-center px-4 md:px-[7vw] pt-[0px] md:pt-[100px]">
       {/* Left Content only — image is rendered in parent wrapper */}
       <div className="relative w-full">
         {/* Mobile Logo */}
@@ -13,8 +13,8 @@ const MangoHero = () => {
           <Image
             src={originLogo}
             alt="Origin Fresh"
-            width={220}
-            height={60}
+            width={160}
+            height={600}
             className="object-contain scale-125"
             priority
           />
