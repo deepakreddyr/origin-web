@@ -2,15 +2,10 @@ import React, { useState } from 'react';
 import AddItemBtn from '../shared/AddItemBtn/AddItemBtn';
 import Image from 'next/image';
 import deleteIcon from '/public/assets/icons/deleteIcon.png';
-import {
-  removeItemFromCart,
-  removeFreeItemFromCart,
-  increaseQuantity,
-  decreaseQuantity
-} from '@/store/slice/CartSlice';
+import { useDispatch } from 'react-redux';
+import { useCartStore } from '@/hooks/useCartStore';
 import { clearSubscriptionCart, updateSubscriptionQuantity } from '@/store/slice/SubscriptionCartSlice';
 import { setIsSidebarOpen } from '@/store/slice/loginSlice';
-import { useDispatch } from 'react-redux';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 // --- NEW IMPORTS for Ripeness Icons ---
@@ -103,6 +98,8 @@ const ReviewItem = (props: {
   isSubscription?: boolean;
 }) => {
   const { product, uom, ripenessType, onShowMaxQuantityToast, isFreeItem = false, isSubscription = false } = props;
+  const { actions } = useCartStore();
+  const { removeItemFromCart, removeFreeItemFromCart } = actions;
   const dispatch = useDispatch();
 
   // --- REMOVED TOAST STATE ---

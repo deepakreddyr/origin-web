@@ -85,6 +85,9 @@ const BillDetailsWrapper = (props: any) => {
   useEffect(() => {
     if (isSubscription) return; // Skip updating normal cart state in subscription mode
 
+    // let amountTobePaid;
+    const { totalPrice, amountToPay, discountAmount } = cart;
+
     // Calculate dynamic delivery fee
     const deliveryFee = calculateDeliveryFee();
     dispatch(setDeliveryFee(deliveryFee));
@@ -98,10 +101,10 @@ const BillDetailsWrapper = (props: any) => {
     const roundedDiscount = Math.round(currentDiscount);
 
     // Calculate final amount to be paid
-    const calculatedTotalToPay = cart.totalPrice - roundedDiscount + deliveryFee;
+    const amountTobePaid = cart.totalPrice - roundedDiscount + deliveryFee;
 
-    dispatch(setIsProceedButtonEnabled(calculatedTotalToPay > cart.cart_minimum));
-    dispatch(setAmountToPay(calculatedTotalToPay));
+    dispatch(setIsProceedButtonEnabled(amountTobePaid > cart.cart_minimum));
+    dispatch(setAmountToPay(amountTobePaid));
 
     // Also sync the discount amount back to the state for other observers
     if (roundedDiscount !== cart.discountAmount) {
@@ -109,8 +112,9 @@ const BillDetailsWrapper = (props: any) => {
     }
 
     if (typeof window !== 'undefined') {
-      localStorage.setItem('total_to_pay', String(calculatedTotalToPay));
+      localStorage.setItem('total_to_pay', String(amountTobePaid));
     }
+    // }, [cart.totalPrice, cart.discountAmount, billDetails, dispatch]);
   }, [couponDetails, cart, billDetails, dispatch, isSubscription]);
 
   const remainingAmount = billDetails.cart_minimum ? Number(billDetails.cart_minimum) - cart.amountToPay : 0;

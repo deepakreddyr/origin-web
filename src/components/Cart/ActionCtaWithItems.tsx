@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
-
+import { useCartStore } from '@/hooks/useCartStore';
 interface OrderRestrictionData {
   title: string;
   description: string;
@@ -26,8 +26,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
   showAddressModal = false,
   isSubscription = false
 }) => {
-  const cart = useSelector((state: any) => state.cart);
-  const subscriptionCart = useSelector((state: any) => state.subscriptionCart);
+  const { cart, subscriptionCart, isMangoPage } = useCartStore();
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
 
@@ -37,7 +36,8 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
   const recalcDisableState = useCallback(() => {
     let cartItemsFromLS: any[] = [];
     if (typeof window !== 'undefined') {
-      const lsData = localStorage.getItem('cart_items');
+      const lsKey = isMangoPage ? 'mango_cart_items' : 'cart_items';
+      const lsData = localStorage.getItem(lsKey);
       cartItemsFromLS = lsData ? JSON.parse(lsData) : [];
     }
 

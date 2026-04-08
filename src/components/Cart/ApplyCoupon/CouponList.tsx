@@ -3,17 +3,20 @@ import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { calculateCouponDiscount, getAddressAndStoreId, prepareCartItemsToApi } from '@/utilities/utils';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import ApplyCouponInput from './ApplyCouponInput';
-import Coupon from './Coupon';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { setAmountToPay, setCouponDetails, setDiscountAmount, setTotalPrice } from '@/store/slice/CartSlice';
+import { useCartStore } from '@/hooks/useCartStore';
 import { COUPON_TABS } from '@/constants';
 import { setCouponId } from '@/store/slice/placeOrderDetails';
 import CouponListSkeleton from '@/components/skeletonLoaders/cart/CouponListSkeleton';
+import ApplyCouponInput from './ApplyCouponInput';
+import Coupon from './Coupon';
 
 const CouponList = (props: any) => {
   const { setCouponsTab, error, setError } = props;
-  const cart = useSelector((state: any) => state.cart);
+  const { cart, actions } = useCartStore();
+  const { setAmountToPay, setCouponDetails, setDiscountAmount, setTotalPrice } = actions;
+
   const getDataFromApi = useGetDataFromApi();
   const [couponList, setCouponList] = useState([]);
   const [loading, setIsLoading] = useState(true);

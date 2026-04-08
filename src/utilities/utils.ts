@@ -14,8 +14,8 @@ export const getAddressAndStoreId = () => {
 
 // local Storage item
 
-export const updateCartItemsToLs = (cartItems: any) => {
-  localStorage.setItem('cart_items', JSON.stringify(cartItems));
+export const updateCartItemsToLs = (cartItems: any, key: string = 'cart_items') => {
+  localStorage.setItem(key, JSON.stringify(cartItems));
 };
 
 export const setRouteSourceToLs = (source: string) => {

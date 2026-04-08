@@ -1,12 +1,6 @@
-import {
-  addItemToCart,
-  decreaseQuantity,
-  increaseQuantity,
-  removeItemFromCart,
-  setMaxQuantityError
-} from '@/store/slice/CartSlice';
 import React, { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useCartStore } from '@/hooks/useCartStore';
 import YellowBtn from './YellowBtn';
 import WhiteBtn from './WhiteBtn';
 import BlackBtn from './BlackBtn';
@@ -23,16 +17,19 @@ const AddItemBtn: FC<any> = (props) => {
   const {
     product,
     varientId,
-    // Accept props from the parent (like UOMPopup)
     stepperQuantity: stepperQuantityProp,
-    minimumQuantity: minimumQuantityProp, // 🔑 NEW PROP
+    minimumQuantity: minimumQuantityProp,
     buttonType,
     selectedRipenessType = null,
     onMaxQuantityExceeded
   } = props;
 
   const dispatch = useDispatch();
-  const cartItems = useSelector((state: any) => state.cart.items);
+  const { cart, isMangoPage, actions } = useCartStore();
+  const cartItems = cart.items;
+
+  const { addItemToCart, increaseQuantity, decreaseQuantity, removeItemFromCart, setMaxQuantityError } = actions;
+
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const sendDataToApi = useSendDataToApi();
   const getDataFromApi = useGetDataFromApi();
@@ -45,14 +42,10 @@ const AddItemBtn: FC<any> = (props) => {
     return variantId === varientId;
   });
 
-  // 1. DETERMINE FINAL QUANTITIES
   const finalMinQuantity = minimumQuantityProp || selectedVariant?.minimum_quantity || 1;
-  // If stepperQuantity is passed as a prop (e.g., from YellowBtn), use it, otherwise use the variant's stepper.
   const finalStepQuantity = stepperQuantityProp || selectedVariant?.stepper_quantity || 1;
-
   const maxQuantity = selectedVariant?.maximum_quantity || Infinity;
 
-  // Find cart item and specific quantity
   let itemQuantity = 0;
   const cartProduct = cartItems.find((item: any) => {
     const itemProductId = item.id || item.product_id;
@@ -74,10 +67,8 @@ const AddItemBtn: FC<any> = (props) => {
     }
   }
 
-  // ===== FIX: Calculate total for this specific variant (all ripeness types) =====
   const getVariantTotalQuantity = () => {
     if (!cartUOM) return 0;
-
     if (cartUOM.cart_ripeness && Array.isArray(cartUOM.cart_ripeness)) {
       return cartUOM.cart_ripeness.reduce((sum: number, r: any) => sum + Number(r.qty), 0);
     } else {
@@ -103,7 +94,9 @@ const AddItemBtn: FC<any> = (props) => {
   const addItemsToApi = () => {
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['addToCart'];
     const token = localStorage.getItem('user_token');
-    const cartItemFromLs = localStorage.getItem('cart_items');
+    // Use the correct LS key based on the page
+    const lsKey = isMangoPage ? 'mango_cart_items' : 'cart_items';
+    const cartItemFromLs = localStorage.getItem(lsKey);
     const addressFromLs = getAddressAndStoreId();
 
     if (!token) return;
@@ -135,18 +128,12 @@ const AddItemBtn: FC<any> = (props) => {
     }
   };
 
-  // ==========================================================
-  // ADD ITEM LOGIC (Uses finalMinQuantity for initial add)
-  // ==========================================================
   const handleAddItem = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     if (!selectedVariant) return;
 
-    // Use finalMinQuantity for the initial addition
     const quantityToAdd = finalMinQuantity;
-
-    // Check if already at max before adding
     const totalQuantityInCart = getVariantTotalQuantity();
 
     if (totalQuantityInCart >= maxQuantity) {
@@ -156,7 +143,6 @@ const AddItemBtn: FC<any> = (props) => {
     }
 
     const newTotalQuantity = totalQuantityInCart + quantityToAdd;
-
     if (newTotalQuantity > maxQuantity) {
       dispatch(setMaxQuantityError(`Maximum quantity of ${maxQuantity} reached for this item.`));
       onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
@@ -182,7 +168,6 @@ const AddItemBtn: FC<any> = (props) => {
         product: normalizedProduct,
         selectedUOM: {
           ...selectedVariant,
-          // Pass the quantity to add, which is finalMinQuantity
           stepper_quantity: quantityToAdd
         },
         selectedRipenessType
@@ -193,7 +178,6 @@ const AddItemBtn: FC<any> = (props) => {
       addItemsToApi();
     }
 
-    // Track GA Event
     gtag.event({
       action: 'add_to_cart',
       category: 'Ecommerce',
@@ -209,25 +193,18 @@ const AddItemBtn: FC<any> = (props) => {
     });
   };
 
-  // ==========================================================
-  // INCREASE LOGIC (Uses finalStepQuantity for increments)
-  // ==========================================================
   const handleIncrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
 
-    // Check if already at max before increasing
     const totalQuantityInCart = getVariantTotalQuantity();
-
     if (totalQuantityInCart >= maxQuantity) {
       dispatch(setMaxQuantityError(`Maximum quantity of ${maxQuantity} reached for this item.`));
       onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
       return;
     }
 
-    // Use finalStepQuantity for incremental increases
     const newTotalQuantity = totalQuantityInCart + finalStepQuantity;
-
     if (newTotalQuantity > maxQuantity) {
       dispatch(setMaxQuantityError(`Maximum quantity of ${maxQuantity} reached for this item.`));
       onMaxQuantityExceeded && onMaxQuantityExceeded(maxQuantity);
@@ -240,7 +217,6 @@ const AddItemBtn: FC<any> = (props) => {
       addItemsToApi();
     }
 
-    // Track GA Event
     gtag.event({
       action: 'add_to_cart',
       category: 'Ecommerce',
@@ -256,21 +232,13 @@ const AddItemBtn: FC<any> = (props) => {
     });
   };
 
-  // ==========================================================
-  // DECREASE LOGIC (Critical Update for Min Quantity Reduction)
-  // ==========================================================
   const handleDecrease = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
 
     const itemToRemove = { varientId, selectedRipenessType };
-
-    // If the current quantity is equal to or less than the initial minimum quantity,
-    // remove the entire item/variant/ripeness selection.
     if (itemQuantity <= finalMinQuantity) {
       dispatch(removeItemFromCart(itemToRemove));
-
-      // Otherwise, decrease by the standard finalStepQuantity.
     } else {
       dispatch(decreaseQuantity({ varientId, stepperQuantity: finalStepQuantity, selectedRipenessType }));
     }
@@ -320,7 +288,6 @@ const AddItemBtn: FC<any> = (props) => {
         variantId={varientId}
       />
     ),
-    // ... other button types (YellowBtn, WhiteBtn, BlackBtn) are assumed to be similar
     yellow: (
       <YellowBtn
         isItemPresent={isVariantPresent}
@@ -330,7 +297,7 @@ const AddItemBtn: FC<any> = (props) => {
         handleIncrease={handleIncrease}
         handleDecrease={handleDecrease}
         handleRemove={handleRemoveUOM}
-        product={product} // ensure product is passed for complex buttons
+        product={product}
         varientId={varientId}
       />
     ),

@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateDeliveryType, updateTimeSlotId, setDeliverylotDetails } from '@/store/slice/placeOrderDetails';
-import { setIsProceedButtonEnabled } from '@/store/slice/CartSlice';
+import { useCartStore } from '@/hooks/useCartStore';
 
 const SubscriptionTimeslot = () => {
+  const { actions } = useCartStore();
+  const { setIsProceedButtonEnabled } = actions;
   const dispatch = useDispatch();
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
   const { checkoutDetails } = placeOrderDetails;
