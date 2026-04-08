@@ -1,9 +1,11 @@
-import { setIsProceedButtonEnabled } from '@/store/slice/CartSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateDeliveryType, updateTimeSlotId } from '@/store/slice/placeOrderDetails';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useCartStore } from '@/hooks/useCartStore';
 
 const InstantDeliveryBtn = (props: any) => {
+  const { cart, actions } = useCartStore();
+  const { setIsProceedButtonEnabled } = actions;
   const { activeDeliveryType, setActiveDeliveryType } = props;
   const dispatch = useDispatch();
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);

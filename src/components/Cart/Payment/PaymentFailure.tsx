@@ -8,9 +8,12 @@ import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { setIsSidebarOpen, setTabType } from '@/store/slice/loginSlice';
 import { resetOrderDetails } from '@/store/slice/placeOrderDetails';
-import { clearCart, setCartTabType } from '@/store/slice/CartSlice';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
+import { useCartStore } from '@/hooks/useCartStore';
+
 const PaymentFailure = (props: any) => {
+  const { actions } = useCartStore();
+  const { clearCart, setCartTabType } = actions;
   const { paymentModalDetails, placeOrderAgain, setPaymentFlowScreen } = props;
   // console.log(paymentModalDetails, "test");
   const sendDataToApi = useSendDataToApi();
@@ -35,7 +38,7 @@ const PaymentFailure = (props: any) => {
     }
     dispatch(setIsSidebarOpen(false));
     dispatch(resetOrderDetails());
-    dispatch(clearCart());
+    clearCart();
   };
 
   useEffect(() => {
@@ -66,7 +69,7 @@ const PaymentFailure = (props: any) => {
       router.push(`/orders/${paymentModalDetails.orderResponse.order_id}`);
       dispatch(setIsSidebarOpen(false));
       dispatch(resetOrderDetails());
-      dispatch(clearCart());
+      clearCart();
     };
     const failureHandler = (response: any) => {};
     sendDataToApi(apiUrl, apiData, 'POST', successHandler, failureHandler, additionalHeaders);
@@ -90,7 +93,7 @@ const PaymentFailure = (props: any) => {
       router.push(`/orders/${paymentModalDetails.orderResponse.order_id}`);
       dispatch(setIsSidebarOpen(false));
       dispatch(resetOrderDetails());
-      dispatch(clearCart());
+      clearCart();
     };
     const failureHandler = (response: any) => {};
     sendDataToApi(apiUrl, [], 'POST', successHandler, failureHandler, additionalHeaders);

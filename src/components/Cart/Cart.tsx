@@ -10,16 +10,8 @@ import CouponSection from './ApplyCoupon/CouponSection';
 import { useRouter } from 'next/router';
 import AddressAndTimeSlot from './AddressAndTimeSlot/AddressAndTimeSlot';
 import RestrictOrderInfo from './RestrictOrderInfo';
-import {
-  setCartItems,
-  setCartMinimum,
-  setCartTabType,
-  setIsProceedButtonEnabled,
-  setFreeItems,
-  removeFreeItemFromCart,
-  setMaxQuantityError
-} from '@/store/slice/CartSlice';
 import { TabTypeConstant } from '../Login/constants/tabTypeContent';
+import { useCartStore } from '@/hooks/useCartStore';
 import { getAddressAndStoreId, prepareCartItemsToApi, setRouteSourceToLs } from '@/utilities/utils';
 import { setIsHeaderVisible, setTabType } from '@/store/slice/loginSlice';
 import { protectedUrl } from '@/url';
@@ -76,11 +68,20 @@ const InfoToast: React.FC<{
 // ==========================================================
 
 const Cart = () => {
-  const cart = useSelector((state: any) => state.cart);
-  const subscriptionCart = useSelector((state: any) => state.subscriptionCart);
+  const { cart, subscriptionCart, isMangoPage, actions } = useCartStore();
+  const {
+    setCartItems,
+    setCartMinimum,
+    setCartTabType,
+    setIsProceedButtonEnabled,
+    setFreeItems,
+    removeFreeItemFromCart,
+    setMaxQuantityError
+  } = actions;
+
   const isSubscription = subscriptionCart.isSubscriptionActive;
 
-  // Use subscription cart data if active, otherwise normal cart
+  // Use subscription cart data if active, otherwise normal cart (which is now dynamically selected)
   const currentCart = isSubscription ? subscriptionCart : cart;
 
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
@@ -108,7 +109,8 @@ const Cart = () => {
 
   // ✅ HYDRATION: LOAD CART FROM LS ON MOUNT
   useEffect(() => {
-    const savedCart = localStorage.getItem('cart_items');
+    const lsKey = isMangoPage ? 'mango_cart_items' : 'cart_items';
+    const savedCart = localStorage.getItem(lsKey);
     if (savedCart) {
       try {
         const parsedCart = JSON.parse(savedCart);
@@ -122,7 +124,7 @@ const Cart = () => {
   }, [dispatch]);
 
   // --- TOAST/POPUP STATE ---
-  const maxQuantityError = useSelector((state: any) => state.cart.maxQuantityError);
+  const maxQuantityError = cart.maxQuantityError;
   const [showLocationPopup, setShowLocationPopup] = useState(false);
 
   const handleShowToast = (message: string) => {
@@ -196,7 +198,8 @@ const Cart = () => {
     if (!token) return;
 
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['addToCart'];
-    const cartItemFromLs = localStorage.getItem('cart_items');
+    const lsKey = isMangoPage ? 'mango_cart_items' : 'cart_items';
+    const cartItemFromLs = localStorage.getItem(lsKey);
     const addressFromLs = getAddressAndStoreId();
     const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
 
@@ -219,7 +222,8 @@ const Cart = () => {
 
   useEffect(() => {
     if (isSubscription) return; // Skip normal cart API calls in subscription mode
-    const cartItemFromLs = localStorage.getItem('cart_items');
+    const lsKey = isMangoPage ? 'mango_cart_items' : 'cart_items';
+    const cartItemFromLs = localStorage.getItem(lsKey);
     if (cartItemFromLs) {
       const cartItemsParsed = JSON.parse(cartItemFromLs);
       if (cartItemsParsed.length === 0) return;

@@ -8,11 +8,12 @@ import AdressAndTimeSelector from './AdressAndTimeSelector';
 import ModalHeader from './ModalHeader';
 import { useDispatch, useSelector } from 'react-redux';
 import Payment from '../Payment/Payment';
-import { setIsProceedButtonEnabled } from '@/store/slice/CartSlice';
+import { useCartStore } from '@/hooks/useCartStore';
 import LocationChangedPopup from './LocationChangedPopup';
 
 const AddressAndTimeSlot = (props: any) => {
-  const cart = useSelector((state: any) => state.cart);
+  const { cart, actions } = useCartStore();
+  const { setIsProceedButtonEnabled } = actions;
 
   const { showAddressModal, setAddressModal, setShowLocationPopup, isSubscription = false, onShowToast } = props;
   const [timeSelectorOrListTab, setTimeSelectorOrListTab] = useState(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR);

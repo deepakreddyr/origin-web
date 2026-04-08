@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { setIsSidebarOpen, setTabType, setLoginDetails } from '@/store/slice/loginSlice';
-import { setCartItems, setCartTabType } from '@/store/slice/CartSlice';
+import { useCartStore } from '@/hooks/useCartStore';
 import { TabTypeConstant } from '../Login/constants/tabTypeContent';
 import { setRouteSourceToLs } from '@/utilities/utils';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
@@ -42,7 +42,8 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [address] = useAtom(addressAtom);
-  const cart = useSelector((state: any) => state.cart);
+  const { cart, actions, isMangoPage } = useCartStore();
+  const { setCartItems, setCartTabType } = actions;
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const cartItemCount = getCartItemCount(cart?.items || []);
 
@@ -119,7 +120,7 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
     );
 
     if (cart?.items?.length === 0) {
-      const cartItemFromLs = localStorage.getItem('cart_items');
+      const cartItemFromLs = localStorage.getItem(isMangoPage ? 'mango_cart_items' : 'cart_items');
       const cartItemsParsed = cartItemFromLs ? JSON.parse(cartItemFromLs) : [];
       if (cartItemsParsed.length > 0) {
         dispatch(setCartItems(cartItemsParsed));
