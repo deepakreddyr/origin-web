@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 const MangoPulpBanner = () => {
   return (
-    <section className="relative w-full z-10 pointer-events-none -mt-[15vw] md:-mt-[12vw]">
+    <section className="relative w-full pointer-events-none -mt-[15vw] md:-mt-[12vw]">
       {/* Using the natural aspect ratio of the image (2880x1773) */}
       <div className="w-full">
         <Image

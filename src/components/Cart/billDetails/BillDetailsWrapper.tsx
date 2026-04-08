@@ -85,9 +85,6 @@ const BillDetailsWrapper = (props: any) => {
   useEffect(() => {
     if (isSubscription) return; // Skip updating normal cart state in subscription mode
 
-    // let amountTobePaid;
-    const { totalPrice, amountToPay, discountAmount } = cart;
-
     // Calculate dynamic delivery fee
     const deliveryFee = calculateDeliveryFee();
     dispatch(setDeliveryFee(deliveryFee));
@@ -100,24 +97,36 @@ const BillDetailsWrapper = (props: any) => {
 
     const roundedDiscount = Math.round(currentDiscount);
 
-    // Calculate final amount to be paid
-    const amountTobePaid = cart.totalPrice - roundedDiscount + deliveryFee;
+    // Initial calculation (Subtotal + Delivery - Discount)
+    let finalAmountToPay = cart.totalPrice - roundedDiscount + deliveryFee;
 
-    dispatch(setIsProceedButtonEnabled(amountTobePaid > cart.cart_minimum));
-    dispatch(setAmountToPay(amountTobePaid));
+    // Validate if the coupon minimum cart value is still met
+    if (couponDetails.code && couponDetails.isValid === 1) {
+      if (cart.totalPrice < (couponDetails.min_cart_value || 0)) {
+        // If below minimum, reset coupon and revert the discount
+        finalAmountToPay = cart.totalPrice + deliveryFee;
+        dispatch(setDiscountAmount(0));
+        dispatch(setCouponDetails(couponDetailsInitialState));
+        dispatch(setIsProceedButtonEnabled(finalAmountToPay >= (cart.cart_minimum || 0)));
+        dispatch(setAmountToPay(finalAmountToPay));
+        return;
+      }
+    }
 
-    // Also sync the discount amount back to the state for other observers
+    dispatch(setIsProceedButtonEnabled(finalAmountToPay >= (cart.cart_minimum || 0)));
+    dispatch(setAmountToPay(finalAmountToPay));
+
+    // Sync the discount amount back to the state
     if (roundedDiscount !== cart.discountAmount) {
       dispatch(setDiscountAmount(roundedDiscount));
     }
 
     if (typeof window !== 'undefined') {
-      localStorage.setItem('total_to_pay', String(amountTobePaid));
+      localStorage.setItem('total_to_pay', String(finalAmountToPay));
     }
-    // }, [cart.totalPrice, cart.discountAmount, billDetails, dispatch]);
   }, [couponDetails, cart, billDetails, dispatch, isSubscription]);
 
-  const remainingAmount = billDetails.cart_minimum ? Number(billDetails.cart_minimum) - cart.amountToPay : 0;
+  const remainingAmount = cart.cart_minimum ? Number(cart.cart_minimum) - cart.amountToPay : 0;
 
   const handleTooltipToggle = () => {
     if (isMobile) {
@@ -265,13 +274,13 @@ const BillDetailsWrapper = (props: any) => {
         </li>
       </ul>
 
-      {Number(billDetails.cart_minimum) > 0 && cart.amountToPay < Number(billDetails.cart_minimum) && (
+      {/* {Number(cart.cart_minimum) > 0 && cart.amountToPay < Number(cart.cart_minimum) && (
         <div className="font-[SofiaPro] font-bold bg-green-50 border border-green-200 rounded-md p-3 mt-3">
           <p className="font-[SofiaPro] font-bold text-green-700 text-sm mt-1">
             Add <span className="font-[SofiaPro] font-bold">₹{remainingAmount}</span> more to reach the minimum order!
           </p>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

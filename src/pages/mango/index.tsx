@@ -158,9 +158,9 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
           }}
         />
         {/* ── Hero + Products wrapper so image spans both ── */}
-        <div className="relative overflow-visible z-10">
+        <div className="relative overflow-visible z-[10]">
           {/* Big mango hand — spans hero AND product section */}
-          <div className="absolute right-0 top-[90vw] md:top-[8vw] w-[85vw] md:w-[52vw] h-[600px] md:h-[1300px] pointer-events-none z-[10] overflow-hidden">
+          <div className="absolute right-0 top-[90vw] md:top-[8vw] w-[85vw] md:w-[52vw] h-[600px] md:h-[1300px] pointer-events-none z-[0] overflow-hidden">
             <Image
               src="/assets/images/mangohero.png"
               alt="Farm Fresh Mangoes"
@@ -194,7 +194,7 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
 
         {/* ── Mangolicious Recipes ── */}
         <section className="relative py-10 md:py-14 px-6 md:px-[7vw] overflow-hidden">
-          <div className="max-w-[1440px] mx-auto relative z-20">
+          <div className="max-w-[1440px] mx-auto relative">
             <div className="text-center mb-8 md:mb-10">
               <h2
                 className="text-[22px] md:text-[47px] font-bold text-[#1a1a1a] mb-2 md:mb-6"
@@ -227,7 +227,7 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
 
         {/* ── Mango Talk (Testimonials) ── */}
         <section className="relative py-4 md:py-24 px-6 md:px-16 overflow-hidden">
-          <div className="max-w-[1440px] mx-auto relative z-20">
+          <div className="max-w-[1440px] mx-auto relative">
             <div className="text-center mb-12 md:mb-16">
               <h2
                 className="text-[22px] md:text-[47px] font-semibold text-[#1a1a1a] mb-2 md:mb-6"
