@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { useMediaQuery } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import AddItemBtn from '../shared/AddItemBtn/AddItemBtn';
+import WhiteBtn from '../shared/AddItemBtn/WhiteBtn';
 import { useCartStore } from '@/hooks/useCartStore';
 import { useRouter } from 'next/router';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -25,7 +26,7 @@ interface MangoItemCardProps {
 
 const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
   const router = useRouter();
-  const { cart } = useCartStore();
+  const { cart, isMangoPage } = useCartStore();
   const cartItems = cart.items;
 
   const defaultUOM = itemDetails?.multiple_uoms?.find((uom: any) => uom?.is_default) || itemDetails?.multiple_uoms?.[0];
@@ -142,7 +143,7 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
           <div
             className={`relative bg-[#F3F0E6] w-full flex items-center justify-center overflow-hidden mb-3 md:mb-4`}
             style={{
-              height: isMobile ? '160px' : '240.67px',
+              height: isMobile ? '150px' : '230px',
               borderRadius: isMobile ? '12px' : '21.16px'
             }}
           >
@@ -169,7 +170,7 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
 
             {hasRipenessOptions && (
               <div className={`absolute bottom-2 right-2 p-1 bg-white rounded-full shadow-lg scale-90 md:scale-100`}>
-                <Image src={itemRipenessSvg} alt="Multiple Ripeness Options" width={24} height={24} />
+                <Image src={itemRipenessSvg} alt="Multiple Ripeness Options" width={40} height={40} />
               </div>
             )}
 
@@ -186,7 +187,7 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
           <div className={`flex flex-col mb-1 px-0 md:px-1`}>
             {/* Title / Name */}
             <span
-              className={`text-[15px] md:text-[20px] font-bold text-[#1a1a1a] leading-[1.15] truncate`}
+              className={`text-[15px] md:text-[20px] font-semibold text-[#1a1a1a] leading-[1.15] truncate`}
               style={{ fontFamily: 'SofiaPro' }}
             >
               {itemDetails.name}
@@ -242,53 +243,31 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
                   VIEW
                 </button>
               ) : requiresSelection ? (
-                <motion.div
-                  layout
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    setQuantityDir(1);
-                    setIsPopupOpen(true);
-                  }}
-                  transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-                  className={`flex items-center h-10 rounded-full px-4 py-1 cursor-pointer border shadow-sm transition-all ${
-                    totalQuantityAcrossProduct > 0
-                      ? 'bg-white border-[#EDE6D4]'
-                      : 'bg-white border-[#EDE6D4] hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center justify-center overflow-hidden">
-                    <AnimatePresence mode="popLayout" initial={false}>
-                      {totalQuantityAcrossProduct > 0 ? (
-                        <div className="flex items-center gap-3">
-                          <button className="text-gray-400 hover:text-black">–</button>
-                          <motion.p
-                            key={totalQuantityAcrossProduct}
-                            initial={{ opacity: 0, y: quantityDir * 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: quantityDir * -10 }}
-                            transition={{ duration: 0.15, ease: 'easeOut' }}
-                            className="text-[15px] font-bold text-black select-none text-center"
-                          >
-                            {totalQuantityAcrossProduct}
-                          </motion.p>
-                          <button className="text-gray-400 hover:text-black">+</button>
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-3">
-                          <span className="font-[SofiaPro] text-[15px] font-bold text-black whitespace-nowrap">
-                            Add
-                          </span>
-                          <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                            <svg className="w-3 h-3 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
-                            </svg>
-                          </div>
-                        </div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </motion.div>
+                <div className="w-full flex justify-center">
+                  <WhiteBtn
+                    isItemPresent={totalQuantityAcrossProduct > 0}
+                    quantity={totalQuantityAcrossProduct}
+                    isMangoPage={isMangoPage}
+                    handleAddItem={(e: any) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      setQuantityDir(1);
+                      setIsPopupOpen(true);
+                    }}
+                    handleIncrease={(e: any) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      setQuantityDir(1);
+                      setIsPopupOpen(true);
+                    }}
+                    handleDecrease={(e: any) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      setQuantityDir(-1);
+                      setIsPopupOpen(true);
+                    }}
+                  />
+                </div>
               ) : (
                 <div className="flex justify-end">
                   <AddItemBtn
