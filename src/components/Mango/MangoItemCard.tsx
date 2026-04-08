@@ -125,6 +125,12 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
     return acc + (uom.ripeness_types?.length || 1);
   }, 0);
 
+  const publicDescription = itemDetails.public_extra_descriptions
+    ?.find((extra) => extra.title === 'info')
+    ?.description?.find((desc) => desc.type === 'normal')?.details?.[0]?.description;
+
+  const displayDescription = publicDescription || itemDetails.description;
+
   return (
     <>
       <MaxQuantityToast
@@ -193,12 +199,12 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
               {itemDetails.name}
             </span>
             {/* Description */}
-            {itemDetails.description && (
+            {displayDescription && (
               <p
                 className="text-[10px] md:text-[12px] text-gray-500 line-clamp-2 mt-1.5 leading-[1.3] md:leading-[1.4] min-h-[2.6em] md:min-h-[2.8em]"
                 style={{ fontFamily: 'SofiaPro' }}
               >
-                {itemDetails.description}
+                {displayDescription}
               </p>
             )}
             {/* Unit */}

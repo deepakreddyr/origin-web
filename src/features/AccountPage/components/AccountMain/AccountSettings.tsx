@@ -75,7 +75,7 @@ const AccountSettings = () => {
   const list = [
     {
       title: 'My Orders',
-      desc: 'Order history & Statues',
+      desc: 'Order history & Status',
       onClick: () => {
         setRouteSourceToLs(TabTypeConstant.ACCOUNT_MAIN);
         dispatch(setTabType(TabTypeConstant.YOUR_ORDERS));
@@ -83,7 +83,7 @@ const AccountSettings = () => {
     },
     {
       title: 'Addresses',
-      desc: 'Manage & add new address',
+      desc: 'Add & manage address',
       onClick: () => {
         setRouteSourceToLs(TabTypeConstant.ACCOUNT_MAIN);
         dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
@@ -91,7 +91,7 @@ const AccountSettings = () => {
     },
     {
       title: 'Settings',
-      desc: 'Notifications & Account informations',
+      desc: 'Account related settings and info',
       onClick: () => {
         setRouteSourceToLs(TabTypeConstant.ACCOUNT_MAIN);
         dispatch(setTabType(TabTypeConstant.SETTING));

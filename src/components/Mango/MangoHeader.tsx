@@ -245,31 +245,41 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
           {/* Separator - Desktop only */}
           <div className="hidden md:block w-[1px] h-8 bg-black opacity-10 mx-2"></div>
 
-          {/* Location Selector - Mobile stylized */}
-          <button
-            onClick={handleSelectAddress}
-            className="flex items-center gap-2 group text-left max-w-[200px] md:max-w-[250px]"
-          >
-            <div className="flex flex-col overflow-hidden">
-              <div className="flex items-center gap-1.5">
-                <div className="relative w-3.5 h-3.5 flex-shrink-0">
-                  <Image src={locationArrow} alt="Location" fill className="object-contain" />
+          {/* Login or Address UI */}
+          {!loginDetails?.isLogin ? (
+            <button
+              onClick={handleProfileMenuOpen}
+              className="flex items-center gap-2 px-5 py-2.5 bg-[#F8F4E9] text-black border border-[#F0ECD8] rounded-full text-[18px] font-medium transition-all hover:bg-[#F3F0E0] active:scale-95 shadow-sm"
+              style={{ fontFamily: 'SofiaPro' }}
+            >
+              Login
+            </button>
+          ) : (
+            <button
+              onClick={handleSelectAddress}
+              className="flex items-center gap-2 group text-left max-w-[200px] md:max-w-[250px]"
+            >
+              <div className="flex flex-col overflow-hidden">
+                <div className="flex items-center gap-1.5">
+                  <div className="relative w-3.5 h-3.5 flex-shrink-0">
+                    <Image src={locationArrow} alt="Location" fill className="object-contain" />
+                  </div>
+                  <span
+                    className="text-[13px] md:text-[13px] font-bold text-gray-900 leading-tight"
+                    style={{ fontFamily: 'SofiaPro' }}
+                  >
+                    {address.defaultAddress?.address_name || 'Select'}
+                  </span>
                 </div>
                 <span
-                  className="text-[13px] md:text-[13px] font-bold text-gray-900 leading-tight"
+                  className="text-[11px] md:text-[11px] text-gray-500 truncate mt-0.5"
                   style={{ fontFamily: 'SofiaPro' }}
                 >
-                  {address.defaultAddress?.address_name || 'Select'}
+                  {address.defaultAddress?.address || 'Set your delivery location'}
                 </span>
               </div>
-              <span
-                className="text-[11px] md:text-[11px] text-gray-500 truncate mt-0.5"
-                style={{ fontFamily: 'SofiaPro' }}
-              >
-                {address.defaultAddress?.address || 'Set your delivery location'}
-              </span>
-            </div>
-          </button>
+            </button>
+          )}
         </div>
 
         {/* Right side: Search, Account, Cart */}
@@ -283,7 +293,7 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => searchQuery.trim() && setShowDropdown(true)}
                 placeholder="Search products"
-                className="hidden md:block w-full bg-[#F8F4E9] rounded-[10px] pl-5 pr-20 py-2.5 text-[14px] outline-none shadow-none text-gray-700 placeholder:text-gray-400 border border-transparent transition-all"
+                className="hidden md:block w-full bg-[#F8F4E9] rounded-[10px] pl-5 pr-20 py-2.5 text-[14px] outline-none shadow-none text-gray-700 placeholder:text-gray-400 border border-[#F0ECD8] transition-all"
                 style={{ fontFamily: 'SofiaPro' }}
               />
               {/* Clear button (X) - Desktop */}
@@ -414,7 +424,7 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
           </div>
 
           {/* Desktop Unified Container */}
-          <div className="hidden md:flex items-center bg-[#F9F7EF] rounded-[10px] border border-[#F0ECD8] px-5 py-2.5 gap-5 shadow-sm">
+          <div className="hidden md:flex items-center bg-[#F8F4E9] rounded-[10px] border border-[#F0ECD8] px-5 py-2.5 gap-5 shadow-sm">
             {/* Account Icon */}
             <button
               onClick={loginDetails.isLogin ? openAccount : handleProfileMenuOpen}
