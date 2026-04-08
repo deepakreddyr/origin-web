@@ -131,7 +131,10 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
     if (isOrderRestricted) return true;
     if (shouldDisable) return true;
 
-    if (showAddressModal && cart.cartTabType === TabTypeConstant.CART_MAIN) {
+    if (
+      showAddressModal &&
+      (cart.cartTabType === TabTypeConstant.CART_MAIN || cart.cartTabType === TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR)
+    ) {
       const hasSelectedDelivery = placeOrderDetails.delivery_type !== '';
       if (!hasSelectedDelivery) return true;
 

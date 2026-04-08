@@ -134,10 +134,10 @@ export default function Layout({
 
   // Global Sync on Login
   useEffect(() => {
-    if (loginDetails.isLogin) {
+    if (loginDetails.isLogin && loginDetails.tabType !== TabTypeConstant.REGISTER) {
       sendItemsToApi();
     }
-  }, [loginDetails.isLogin]);
+  }, [loginDetails.isLogin, loginDetails.tabType]);
 
   return (
     <CacheProvider value={clientSideEmotionCache}>

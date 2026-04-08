@@ -2,14 +2,50 @@ import React from 'react';
 import Link from 'next/link';
 import MangoItemCard from './MangoItemCard';
 import { Product } from '../shared/UOMPopup';
-import { useMediaQuery } from '@mui/material';
+import { useMediaQuery, Skeleton } from '@mui/material';
+import MangoItemSkeleton from './MangoItemSkeleton';
 
 interface PopularMangoesProps {
   products?: Product[];
+  isLoading?: boolean;
 }
 
-const PopularMangoes = ({ products = [] }: PopularMangoesProps) => {
+const PopularMangoes = ({ products = [], isLoading = false }: PopularMangoesProps) => {
   const isMobile = useMediaQuery('(max-width:600px)');
+
+  if (isLoading) {
+    return (
+      <section className="relative overflow-visible pt-12 pb-4">
+        {/* Header Area */}
+        <div className="max-w-[1440px] mx-auto px-6 md:px-[7vw] relative mb-4 md:mb-14">
+          <div className="flex items-center justify-between">
+            <h2 className="text-[18px] md:text-[50px] font-semibold text-[#1B1B1B]" style={{ fontFamily: 'Recoleta' }}>
+              Must-try Mangoes
+            </h2>
+            <div className="w-[100px] md:w-[150px] h-8 md:h-12">
+              <Skeleton variant="rectangular" width="100%" height="100%" sx={{ borderRadius: '9999px' }} />
+            </div>
+          </div>
+        </div>
+
+        {/* Horizontal Scroll Area */}
+        <div className="w-full relative">
+          <div
+            className="flex overflow-x-auto gap-4 md:gap-5 pb-10 md:pb-12 no-scrollbar scroll-smooth"
+            style={{
+              paddingLeft: isMobile ? '1.5rem' : 'max(3rem, calc((100vw - 1440px) / 2 + 7vw))'
+            }}
+          >
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="flex-shrink-0 w-[190px] md:w-[300px]">
+                <MangoItemSkeleton />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="relative overflow-visible pt-12 pb-4">
@@ -38,7 +74,7 @@ const PopularMangoes = ({ products = [] }: PopularMangoesProps) => {
             }}
           >
             {products.map((product) => (
-              <div key={product.id} className="flex-shrink-0 w-[170px] md:w-[325px] relative z-[1]">
+              <div key={product.id} className="flex-shrink-0 w-[190px] md:w-[300px] relative z-[1]">
                 <MangoItemCard itemDetails={product} />
               </div>
             ))}

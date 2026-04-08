@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const YellowBtn = (props: any) => {
-  const { isItemPresent, handleDecrease, quantity, handleIncrease, handleAddItem } = props;
+  const { isItemPresent, handleDecrease, quantity, handleIncrease, handleAddItem, isMangoPage } = props;
   const [dir, setDir] = useState<1 | -1>(1);
 
   const onDecrease = (e: any) => {
@@ -17,15 +17,14 @@ const YellowBtn = (props: any) => {
 
   return (
     <div className="w-full">
-      {/* Single morphing pill */}
       <motion.div
         layout
         transition={{ type: 'spring', stiffness: 380, damping: 28 }}
         onClick={!isItemPresent ? handleAddItem : undefined}
-        className={`flex items-center h-[2.8vw] mob:h-[9vw] rounded-full border-[2px] p-[.3vw] mob:px-[.5vw] w-full justify-center ${
-          isItemPresent
-            ? 'border-[#EDE6D4] bg-white cursor-default'
-            : 'border-transparent bg-[#FFD500] cursor-pointer px-[1vw] mob:px-[3vw]'
+        className={`flex items-center ${isMangoPage ? 'h-[2.5vw] mob:h-[9vw]' : 'h-[2.9vw] mob:h-[10vw]'} rounded-full border-[2px] p-[.3vw] ${
+          isItemPresent ? 'mob:px-[.5vw]' : 'px-[0.7vw] mob:px-[1.5vw]'
+        } w-full justify-center ${
+          isItemPresent ? 'border-[#EDE6D4] bg-white cursor-default' : 'border-transparent bg-[#FFD500] cursor-pointer'
         }`}
       >
         {/* Minus */}
@@ -35,10 +34,14 @@ const YellowBtn = (props: any) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.15 }}
             whileTap={{ scale: 0.82 }}
-            className="h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] flex-shrink-0 rounded-full bg-[#FFD500] text-black text-[1.1vw] mob:text-[4vw] flex items-center justify-center mr-[.4vw] mob:mr-[2vw]"
+            className={`${
+              isMangoPage
+                ? 'h-[1.7vw] w-[1.7vw] mob:h-[6.5vw] mob:w-[6.5vw] text-[1.4vw] mob:text-[5vw]'
+                : 'h-[1.9vw] w-[1.9vw] mob:h-[7.5vw] mob:w-[7.5vw] text-[1.5vw] mob:text-[5.5vw]'
+            } flex-shrink-0 rounded-full bg-[#FFD500] text-black font-semibold flex items-center justify-center mr-[.4vw] mob:mr-[2vw]`}
             onClick={onDecrease}
           >
-            –
+            <span className="mob:mb-[3px] mb-[2px]">–</span>
           </motion.button>
         )}
 
@@ -52,38 +55,45 @@ const YellowBtn = (props: any) => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: dir * -8 }}
                 transition={{ duration: 0.15, ease: 'easeOut' }}
-                className="text-black font-semibold text-[1.1vw] mob:text-[3.6vw] select-none min-w-[0.8vw] text-center"
+                className={`text-black font-semibold ${
+                  isMangoPage ? 'text-[0.9vw] mob:text-[3.2vw]' : 'text-[1vw] mob:text-[3.2vw]'
+                } select-none min-w-[0.8vw] text-center`}
               >
                 {quantity}
               </motion.p>
             ) : (
-              <motion.div
-                key="add-label-container"
+              <motion.span
+                key="add-label"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.12 }}
-                className="flex items-center gap-[0.5vw] mob:gap-[2vw]"
+                className={`text-black font-bold ${
+                  isMangoPage
+                    ? 'text-[0.9vw] mob:text-[2.8vw] mx-[0.3vw]'
+                    : 'text-[1.1vw] mob:text-[3.5vw] mx-[0.4vw] mob:mx-[0.8vw]'
+                } whitespace-nowrap`}
               >
-                <span className="text-black font-semibold text-[1vw] mob:text-[3.6vw] whitespace-nowrap">Add</span>
-                <span className="text-black font-bold text-[1.10vw] mob:text-[4vw] mt-[0.1vw]">+</span>
-              </motion.div>
+                Add
+              </motion.span>
             )}
           </AnimatePresence>
         </div>
 
-        {/* Plus — only show as separate button when isItemPresent */}
-        {isItemPresent && (
-          <motion.button
-            layout
-            whileTap={{ scale: 0.82 }}
-            transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-            className="flex-shrink-0 flex items-center justify-center rounded-full bg-[#FFD500] text-black h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] text-[1.1vw] mob:text-[4vw] ml-[.4vw] mob:ml-[2vw]"
-            onClick={onIncrease}
-          >
-            +
-          </motion.button>
-        )}
+        {/* Plus */}
+        <motion.button
+          layout
+          whileTap={{ scale: 0.82 }}
+          transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+          className={`flex-shrink-0 flex items-center justify-center rounded-full bg-[#FFD500] text-black font-semibold ${
+            isItemPresent
+              ? `${isMangoPage ? 'h-[1.7vw] w-[1.7vw] mob:h-[6.5vw] mob:w-[6.5vw]' : 'h-[1.9vw] w-[1.9vw] mob:h-[7.5vw] mob:w-[7.5vw]'} ml-[.4vw] mob:ml-[2vw]`
+              : `${isMangoPage ? 'h-[1.4vw] w-[1.4vw] mob:h-[6vw] mob:w-[6vw]' : 'h-[1.7vw] w-[1.7vw] mob:h-[6.5vw] mob:w-[6.5vw]'}`
+          } ${isMangoPage ? 'text-[1.3vw] mob:text-[5vw]' : 'text-[1.5vw] mob:text-[5.5vw]'}`}
+          onClick={isItemPresent ? onIncrease : handleAddItem}
+        >
+          <span className="mob:mb-[3px] mb-[2px]">+</span>
+        </motion.button>
       </motion.div>
     </div>
   );

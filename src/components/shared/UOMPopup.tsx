@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { FC, useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
 import AddItemBtn from './AddItemBtn/AddItemBtn';
@@ -12,6 +13,12 @@ export const NotifyToast: FC<{
   onClose: () => void;
   type: 'success' | 'error';
 }> = ({ message, isVisible, onClose, type }) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     if (isVisible) {
       const timer = setTimeout(() => {
@@ -21,9 +28,9 @@ export const NotifyToast: FC<{
     }
   }, [isVisible, onClose]);
 
-  if (!isVisible) return null;
+  if (!isVisible || !mounted) return null;
 
-  return (
+  return createPortal(
     <div
       className={`fixed z-[10000] left-1/2 bottom-10 transform -translate-x-1/2 w-[90%] max-w-sm transition-all duration-300 ease-in-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
@@ -35,7 +42,8 @@ export const NotifyToast: FC<{
           <p className="text-[0.80rem] font-medium text-white text-center leading-tight font-[SofiaPro]">{message}</p>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
@@ -154,6 +162,11 @@ export const UOMPopup: FC<{
   const cartItems = cart.items;
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isRipenessInfoOpen, setIsRipenessInfoOpen] = useState(false);
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
   const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
@@ -285,7 +298,9 @@ export const UOMPopup: FC<{
   const isSlashedSubtotalVisible =
     cartVariants.length > 0 && cartVariants.every((variant) => variant.market_price > variant.price);
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <div
       className={`fixed inset-0 z-[9999] transition-opacity duration-300 ${isTransitioning ? 'bg-black bg-opacity-50' : 'bg-black bg-opacity-0 pointer-events-none'}`}
       onClick={onClose}
@@ -492,6 +507,7 @@ export const UOMPopup: FC<{
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

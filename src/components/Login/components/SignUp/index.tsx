@@ -108,11 +108,7 @@ const SignUp = () => {
         }
       }
 
-      if (window) {
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      }
+      // No reload needed for smooth flow
     } catch (error: any) {
       if (error?.response?.status === 500) {
         setErrors((prev) => ({

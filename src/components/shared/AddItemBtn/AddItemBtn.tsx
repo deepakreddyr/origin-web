@@ -299,6 +299,7 @@ const AddItemBtn: FC<any> = (props) => {
         handleRemove={handleRemoveUOM}
         product={product}
         varientId={varientId}
+        isMangoPage={isMangoPage}
       />
     ),
     white: (
@@ -310,6 +311,7 @@ const AddItemBtn: FC<any> = (props) => {
         handleIncrease={handleIncrease}
         handleDecrease={handleDecrease}
         handleRemove={handleRemoveUOM}
+        isMangoPage={isMangoPage}
       />
     ),
     black: (
