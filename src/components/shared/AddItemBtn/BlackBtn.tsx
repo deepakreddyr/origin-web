@@ -47,10 +47,10 @@ const BlackBtn: React.FC<BlackBtnProps> = (props) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.15 }}
             whileTap={{ scale: 0.82 }}
-            className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] flex-shrink-0 rounded-full bg-black text-white text-[1vw] mob:text-[3.5vw] flex items-center justify-center mr-[.4vw] mob:mr-[2vw]"
+            className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] flex-shrink-0 rounded-full bg-black text-white text-[1.2vw] mob:text-[4.5vw] font-medium flex items-center justify-center mr-[.4vw] mob:mr-[2vw]"
             onClick={onDecrease}
           >
-            –
+            <span className="mob:mb-[3px] mb-[2px]">–</span>
           </motion.button>
         )}
 
@@ -88,14 +88,14 @@ const BlackBtn: React.FC<BlackBtnProps> = (props) => {
           layout
           whileTap={{ scale: 0.82 }}
           transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-          className={`flex-shrink-0 flex items-center justify-center rounded-full ${
+          className={`flex-shrink-0 flex items-center justify-center rounded-full font-medium ${
             isItemPresent
-              ? 'h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] bg-black text-white text-[1vw] mob:text-[3.5vw] ml-[.4vw] mob:ml-[2vw]'
-              : 'h-[1.2vw] w-[1.2vw] mob:h-[4vw] mob:w-[4vw] bg-black text-white text-[1vw] mob:text-[3.5vw]'
+              ? 'h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] bg-black text-white text-[1.2vw] mob:text-[4.5vw] ml-[.4vw] mob:ml-[2vw]'
+              : 'h-[1.2vw] w-[1.2vw] mob:h-[4vw] mob:w-[4vw] bg-black text-white text-[1.2vw] mob:text-[4.5vw]'
           }`}
           onClick={isItemPresent ? onIncrease : handleAddItem}
         >
-          +
+          <span className="mob:mb-[3px] mb-[2px]">+</span>
         </motion.button>
       </motion.div>
     </div>

@@ -291,7 +291,7 @@ const Cart = () => {
     const paymentFlow = localStorage.getItem('FLOW_TYPE');
     const isCartEmpty = isSubscription ? !subscriptionCart.item : cart.items.length === 0;
 
-    if (isCartEmpty && !paymentFlow) {
+    if (isCartEmpty && !paymentFlow && cart.cartTabType !== TabTypeConstant.PAYMENT) {
       dispatch(setCartTabType(TabTypeConstant.EMPTY_CART));
     } else if (!isCartEmpty && (cart.cartTabType === TabTypeConstant.EMPTY_CART || cart.cartTabType === '')) {
       dispatch(setCartTabType(TabTypeConstant.CART_MAIN));

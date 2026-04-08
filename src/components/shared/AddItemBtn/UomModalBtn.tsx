@@ -31,12 +31,11 @@ const UomModalBtn: React.FC<UomModalBtnProps> = (props) => {
 
   return (
     <div className="w-full flex justify-end">
-      {/* Single morphing pill — same pattern as WhiteBtn */}
       <motion.div
         layout
         transition={{ type: 'spring', stiffness: 380, damping: 28 }}
         onClick={!isItemPresent ? handleAddItem : undefined}
-        className={`flex items-center h-[2.5vw] mob:h-[8.5vw] rounded-full border-[2px] p-[.3vw] mob:px-[.7vw] ${
+        className={`flex items-center h-[2.5vw] mob:h-[8.5vw] rounded-full border-[2px] p-[.3vw] mob:px-[.5vw] justify-center ${
           isItemPresent ? 'border-primary-200 bg-white cursor-default' : 'border-[#EDE6D4] bg-white cursor-pointer'
         }`}
       >
@@ -47,10 +46,10 @@ const UomModalBtn: React.FC<UomModalBtnProps> = (props) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.15 }}
             whileTap={{ scale: 0.82 }}
-            className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.1vw] flex-shrink-0 flex items-center justify-center bg-primary rounded-full border border-primary-200 mr-[.5vw] mob:mr-[3vw]"
+            className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] flex-shrink-0 flex items-center justify-center bg-primary rounded-full border border-primary-200 mr-[.5vw] mob:mr-[2vw] text-[1.3vw] mob:text-[5.5vw] font-semibold"
             onClick={onDecrease}
           >
-            <span className="mb-1">–</span>
+            <span className="mob:mb-[3px] mb-[2px]">–</span>
           </motion.button>
         )}
 
@@ -75,7 +74,7 @@ const UomModalBtn: React.FC<UomModalBtnProps> = (props) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.12 }}
-                className="font-[SofiaPro] font-extrabold text-xs text-black whitespace-nowrap mr-[.3vw]"
+                className="font-bold text-[1vw] mob:text-[3.2vw] text-black whitespace-nowrap mr-[.3vw]"
               >
                 Add
               </motion.span>
@@ -88,14 +87,14 @@ const UomModalBtn: React.FC<UomModalBtnProps> = (props) => {
           layout
           whileTap={{ scale: 0.82 }}
           transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-          className={`flex-shrink-0 flex items-center justify-center rounded-full bg-primary ${
+          className={`flex-shrink-0 flex items-center justify-center rounded-full bg-primary text-black font-semibold ${
             isItemPresent
-              ? 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.1vw] border border-primary-200 ml-[.5vw] mob:ml-[3vw]'
-              : 'h-[1.2vw] w-[1.2vw] mob:h-[4.5vw] mob:w-[4.5vw] text-sm font-bold text-black'
+              ? 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] ml-[.5vw] mob:ml-[2vw] border border-primary-200 text-[1.3vw] mob:text-[5.5vw]'
+              : 'h-[1.2vw] w-[1.2vw] mob:h-[4.5vw] mob:w-[4.5vw] text-sm'
           }`}
           onClick={isItemPresent ? onIncrease : handleAddItem}
         >
-          +
+          <span className="mob:mb-[3px] mb-[2px]">+</span>
         </motion.button>
       </motion.div>
     </div>

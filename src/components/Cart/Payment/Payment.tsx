@@ -20,7 +20,7 @@ const Payment = (props: any) => {
   const [profile, setProfileAtom] = useAtom(profileAtom);
   const [paymentFLowScreen, setPaymentFlowScreen] = useState(TabTypeConstant.MAKE_PAYMENT);
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
-  const { cart, subscriptionCart, isMangoPage } = useCartStore();
+  const { cart, subscriptionCart, isMangoPage, actions } = useCartStore();
   const isSubscription = subscriptionCart.isSubscriptionActive;
   const sendDataToApi = useSendDataToApi();
   const [paymentModalDetails, setPaymentModalDetails] = useState({
@@ -85,9 +85,11 @@ const Payment = (props: any) => {
       orderResponse: orderResponse,
       paymentType: paymentMethod
     });
-    removeItemsFromBackend();
     setPaymentFlowScreen(TabTypeConstant.PAYMENT_SUCCESS);
     dispatch(setIsHeaderVisible(false));
+    removeItemsFromBackend();
+    dispatch(actions.clearCart());
+    dispatch(actions.setCartTabType(TabTypeConstant.PAYMENT));
     clearPostPaymentItemsinLs();
   };
 

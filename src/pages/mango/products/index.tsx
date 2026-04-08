@@ -102,7 +102,7 @@ const MangoProductsPage = ({ mainMenuItems, footerData }: MangoProductsPageProps
 
       <MangoHeader />
 
-      <main className="min-h-screen pt-5 md:pt-[60px] bg-[#FFFFFF]">
+      <main className="min-h-screen pt-12 md:pt-[80px] bg-[#FFFFFF]">
         {/* ── Products Grid ── */}
         <section className="px-4 mob:px-[4vw] md:px-[8vw] py-10 mob:py-5">
           <div className="max-w-7xl mx-auto flex items-center justify-between pb-6 mob:pb-4 pt-2">
