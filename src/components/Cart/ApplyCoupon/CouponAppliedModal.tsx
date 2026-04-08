@@ -16,15 +16,15 @@ const CouponAppliedModal = (props: any) => {
     <div className="flex flex-col grow items-center justify-center h-[80vh]">
       {error ? (
         <>
-          <div className="flex items-center gap-[.4vw]">
-            <div className="relative w-[1.67vw] h-[1.67vw]   ">
-              <Image src={error ? warningIcon : percentageIcon} alt="percentage icon" fill />{' '}
+          <div className="flex items-center gap-2 md:gap-[.4vw]">
+            <div className="relative w-8 h-8 md:w-[1.67vw] md:h-[1.67vw]">
+              <Image src={warningIcon} alt="warning icon" fill />
             </div>
-            <p className="font-[SofiaPro] font-semibold mt-[.4vw] text-[1.25vw] text-black ">
+            <p className="font-[SofiaPro] font-semibold mt-1 md:mt-[.4vw] text-xl md:text-[1.25vw] text-black">
               Oops! Coupon does not exist!
             </p>
           </div>
-          <p className="font-[SofiaPro] py-[1.1vw] text-center px-[3vw] font-medium text-[.97vw] text-[#231F20] ">
+          <p className="font-[SofiaPro] py-4 md:py-[1.1vw] text-center px-6 md:px-[3vw] font-medium text-base md:text-[.97vw] text-[#231F20]">
             Please verify the code and try applying again! or use available coupons from the list!
           </p>
           <button
@@ -32,31 +32,32 @@ const CouponAppliedModal = (props: any) => {
               setShowCouponList(false);
               dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
             }}
-            className="border text-secondary font-[SofiaPro] text-[.97vw] py-[.87vw] px-[4vw] font-semibold border-secondary rounded-full"
+            className="border text-secondary font-[SofiaPro] text-base md:text-[.97vw] py-3 md:py-[.87vw] px-10 md:px-[4vw] font-semibold border-secondary rounded-full"
           >
             Got it!
           </button>
         </>
       ) : (
         <>
-          <div className="flex items-center gap-[.4vw]">
-            <div className="relative w-[1.67vw] h-[1.67vw]   ">
-              <Image src={percentageIcon} alt="percentage icon" fill />{' '}
+          <div className="flex items-center gap-2 md:gap-[.4vw]">
+            <div className="relative w-8 h-8 md:w-[1.67vw] md:h-[1.67vw]">
+              <Image src={percentageIcon} alt="percentage icon" fill />
             </div>
-            <p className="font-[SofiaPro] font-semibold mt-[.4vw] text-[1.25vw] text-black ">
+            <p className="font-[SofiaPro] font-semibold mt-1 md:mt-[.4vw] text-xl md:text-[1.25vw] text-black">
               Coupon applied successfully!
             </p>
           </div>
-          <p className="font-[SofiaPro] py-[1.1vw] font-medium text-[.97vw] text-[#231F20] ">
-            Coupon used <span className="font-bold">'{couponDetails.code}'.</span> You saved ₹{cart.discountAmount} on
-            this order.
+          <p className="font-[SofiaPro] py-4 md:py-[1.1vw] font-medium text-base md:text-[.97vw] text-[#231F20] text-center">
+            Coupon used <span className="font-bold">'{couponDetails?.code}'.</span>
+            <br />
+            You saved ₹{cart.discountAmount} on this order.
           </p>
           <button
             onClick={() => {
               setShowCouponList(false);
               dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
             }}
-            className="border text-secondary font-[SofiaPro] text-[.97vw] py-[.87vw] px-[4vw] font-semibold border-secondary rounded-full"
+            className="border text-secondary font-[SofiaPro] text-base md:text-[.97vw] py-3 md:py-[.87vw] px-10 md:px-[4vw] font-semibold border-secondary rounded-full mt-4"
           >
             Whoohoo! Thanks
           </button>

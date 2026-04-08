@@ -52,7 +52,7 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
     <div className="py-[4vw] mob:py-[8vw] relative">
       <div className="w-[92vw] md:w-[80vw] mx-auto">
         {title && (
-          <div className="w-full mb-[2.1vw] mob:pb-[5vw]">
+          <div className="w-full mb-[2.1vw]">
             <h1 className="font-Stinger text-start font-semibold text-[2.5vw] mob:text-[7vw] text-[#231F20] ">
               {title}
             </h1>
@@ -62,7 +62,7 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
         <div className={`relative w-full ${!isExpanded && hasMore ? 'pb-[4vw]' : ''}`}>
           <div
             className={`
-                    grid grid-cols-2 tabp:grid-cols-4 gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[12vw] pt-[3vw] mob:pt-[8vw]
+                    grid grid-cols-2 tabp:grid-cols-4 gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[12vw] pt-[3vw]
                     transition-all duration-500 ease-in-out
                     ${!isExpanded && hasMore ? 'max-h-[125vw] tabp:max-h-[45vw] overflow-hidden' : 'max-h-[5000px]'}
                 `}
@@ -88,7 +88,7 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
             >
               <button
                 onClick={() => setIsExpanded(true)}
-                className="mb-[2vw] mob:mb-[4vw] bg-[#fac510] text-black font-[SofiaPro] font-bold py-[1vw] px-[3vw] mob:py-[3vw] mob:px-[8vw] rounded-full text-[1.1vw] mob:text-[3.5vw] transition-colors pointer-events-auto shadow-sm hover:bg-[#f2d200]"
+                className="mb-[2vw] bg-[#fac510] text-black font-[SofiaPro] font-bold py-[1vw] px-[3vw] mob:py-[3vw] mob:px-[8vw] rounded-full text-[1.1vw] mob:text-[3.5vw] transition-colors pointer-events-auto shadow-sm hover:bg-[#f2d200]"
               >
                 Show more ({otherCategories.length})
               </button>
@@ -173,10 +173,10 @@ const SkeletonLoader = ({ mobile }: { mobile: boolean }) => {
   return (
     <div className="py-[4vw] mob:py-[8vw]">
       <div className="w-[92vw] md:w-[80vw] mx-auto">
-        <div className="w-full mb-[2.1vw] mob:pb-[5vw]">
+        <div className="w-full mb-[2.1vw]">
           <div className="h-[3vw] mob:h-[8vw] bg-gray-100 animate-pulse rounded w-1/3"></div>
         </div>
-        <div className="grid grid-cols-2 tabp:grid-cols-4 gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[12vw] pt-[3vw] mob:pt-[8vw]">
+        <div className="grid grid-cols-2 tabp:grid-cols-4 gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[12vw] pt-[3vw]">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
             <div key={i} className="bg-gray-100 animate-pulse rounded-[30px] aspect-square"></div>
           ))}
