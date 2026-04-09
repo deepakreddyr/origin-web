@@ -340,9 +340,11 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
               ? 'bg-gradient-to-b from-black/70 via-black/30 to-transparent px-[5vw] py-[2vw]'
               : // : 'bg-[#FFF9E5] px-[5vw] py-[2vw]'
                 'bg-white px-[5vw] py-[2vw] shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
-            : search || isTransparentHeader
+            : !search && isTransparentHeader
               ? 'bg-gradient-to-b from-black/70 via-black/40 to-transparent w-full px-[2vw] mt-[1vw] max-w-[1920px]'
-              : 'bg-white rounded-full shadow-md'
+              : search
+                ? 'bg-transparent w-full px-[2vw] mt-[1vw] max-w-[1920px]'
+                : 'bg-white rounded-full shadow-md'
         } ${'mt-[1.1vw] mob:mt-0'} flex flex-col`}
       >
         <div className="flex items-center justify-between w-full">

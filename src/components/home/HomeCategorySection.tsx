@@ -52,7 +52,7 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
     <div className="py-[4vw] mob:py-[8vw] relative">
       <div className="w-[92vw] md:w-[80vw] mx-auto">
         {title && (
-          <div className="w-full mb-[2.1vw]">
+          <div className="w-full mb-[2.1vw] mob:mb-[2vw]">
             <h1 className="font-Stinger text-start font-semibold text-[2.5vw] mob:text-[7vw] text-[#231F20] ">
               {title}
             </h1>
@@ -62,7 +62,7 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
         <div className={`relative w-full ${!isExpanded && hasMore ? 'pb-[4vw]' : ''}`}>
           <div
             className={`
-                    grid grid-cols-2 tabp:grid-cols-4 gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[12vw] pt-[3vw]
+                    grid grid-cols-2 tabp:grid-cols-4 gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[12vw] pt-[10vw] mob:pt-[8vw]
                     transition-all duration-500 ease-in-out
                     ${!isExpanded && hasMore ? 'max-h-[125vw] tabp:max-h-[45vw] overflow-hidden' : 'max-h-[5000px]'}
                 `}
