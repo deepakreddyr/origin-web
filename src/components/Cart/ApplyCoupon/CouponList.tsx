@@ -1,21 +1,12 @@
 import { protectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
-import {
-  calculateCouponDiscount,
-  getAddressAndStoreId,
-  prepareCartItemsToApi,
-} from '@/utilities/utils';
+import { calculateCouponDiscount, getAddressAndStoreId, prepareCartItemsToApi } from '@/utilities/utils';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ApplyCouponInput from './ApplyCouponInput';
 import Coupon from './Coupon';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
-import {
-  setAmountToPay,
-  setCouponDetails,
-  setDiscountAmount,
-  setTotalPrice,
-} from '@/store/slice/CartSlice';
+import { setAmountToPay, setCouponDetails, setDiscountAmount, setTotalPrice } from '@/store/slice/CartSlice';
 import { COUPON_TABS } from '@/constants';
 import { setCouponId } from '@/store/slice/placeOrderDetails';
 import CouponListSkeleton from '@/components/skeletonLoaders/cart/CouponListSkeleton';
@@ -32,14 +23,10 @@ const CouponList = (props: any) => {
 
   useEffect(() => {
     const apiUrl =
-      process.env.NEXT_PUBLIC_BACKEND_API_URL +
-      protectedUrl['getCoupons'] +
-      `?sub_total=${cart.totalPrice}`;
+      process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getCoupons'] + `?sub_total=${cart.totalPrice}`;
 
     const addressFromLs = getAddressAndStoreId();
-    const additionalHeaders = addressFromLs
-      ? { 'store-id': addressFromLs.store_id }
-      : {};
+    const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
 
     const successHandler = (data: any) => {
       setCouponList(data.data);
@@ -54,13 +41,16 @@ const CouponList = (props: any) => {
   }, []);
 
   const validateCoupon = (couponCode: string) => {
-    const apiUrl =
-      process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['validateCoupon'];
+    const hasFreeItem = cart.items.some((item: any) => item.isFreeItem);
+    if (hasFreeItem) {
+      props.onShowToast?.('Please remove free items to apply coupon');
+      return;
+    }
+
+    const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['validateCoupon'];
 
     const addressFromLs = getAddressAndStoreId();
-    const additionalHeaders = addressFromLs
-      ? { 'store-id': addressFromLs.store_id }
-      : {};
+    const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
 
     const successHandler = (response: any) => {
       const couponData = response?.data[0];
@@ -72,10 +62,7 @@ const CouponList = (props: any) => {
         dispatch(setCouponDetails({ ...couponData }));
         dispatch(setCouponId(couponData.id));
 
-        const disountedAmount = calculateCouponDiscount(
-          cart.totalPrice,
-          couponData
-        );
+        const disountedAmount = calculateCouponDiscount(cart.totalPrice, couponData);
         const finalCartAmount = cart.totalPrice - disountedAmount;
 
         dispatch(setDiscountAmount(Math.round(disountedAmount)));
@@ -95,7 +82,7 @@ const CouponList = (props: any) => {
     const cartItems = prepareCartItemsToApi(cart.items);
     const apiData = {
       items: cartItems?.items || [],
-      code: couponCode,
+      code: couponCode
     };
 
     sendDataToApi(apiUrl, apiData, 'POST', successHandler, failureHandler, additionalHeaders);

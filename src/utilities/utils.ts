@@ -132,31 +132,22 @@ export function formatRelativeDate(timestamp: number): string {
   }
 }
 
-export const calculateCouponDiscount = (totalPrice: any, couponDetails: any) => {
-  const { min_cart_value, max_cart_value, discount_type, discount } = couponDetails;
+export const calculateCouponDiscount = (totalPrice: number, couponDetails: any) => {
+  const { max_cart_value, discount_type, discount } = couponDetails;
+
+  let discountedAmount = 0;
   if (discount_type === 'percentage') {
-    if (discount && totalPrice) {
-      let discountedAmount = totalPrice * (discount / 100);
-      if (!max_cart_value) {
-        return discountedAmount;
-      }
-      if (discountedAmount >= max_cart_value) {
-        return max_cart_value;
-      } else {
-        return discountedAmount;
-      }
-    }
+    discountedAmount = totalPrice * (discount / 100);
   } else if (discount_type === 'fixed') {
-    let discountedAmount = discount;
-    if (!max_cart_value) {
-      return discountedAmount;
-    }
-    if (discountedAmount >= max_cart_value) {
-      return max_cart_value;
-    } else {
-      return discountedAmount;
-    }
+    discountedAmount = discount;
   }
+
+  // If max_cart_value is provided (and not null/0), cap the discount
+  if (max_cart_value && max_cart_value > 0) {
+    return Math.min(discountedAmount, max_cart_value);
+  }
+
+  return discountedAmount;
 };
 
 export const formatTimestamp = (unixTimestamp: any) => {

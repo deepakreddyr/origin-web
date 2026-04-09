@@ -12,6 +12,12 @@ import type CouponI from '@/features/CouponPage/types/CouponI';
 import { setLoginDetails } from '@/store/slice/loginSlice';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
+import { isCartPageIsOpen, cartItems } from '@/features/CartPage/context/atoms';
+import { setTabType, setIsSidebarOpen } from '@/store/slice/loginSlice';
+import { setCartTabType, setCouponDetails, setDiscountAmount } from '@/store/slice/CartSlice';
+import { calculateCouponDiscount } from '@/utilities/utils';
+import { validateCoupon } from '@/features/CouponPage/services/validateCoupon';
+import { isCouponApplied } from '@/features/CouponPage/context/atoms';
 
 const HIDDEN_PATHS = [
   '/cart',
@@ -33,6 +39,8 @@ const CouponStatusBar: React.FC = () => {
   const getDataFromApi = useGetDataFromApi();
   const [, setIsCouponOpen] = useAtom(isCouponPageIsOpen);
   const [couponsState, setCouponsState] = useAtom(couponListAtom);
+  const [, setIsCartOpen] = useAtom(isCartPageIsOpen);
+  const [, setAppliedCoupon] = useAtom(isCouponApplied);
   const isMobile = useMediaQuery(600);
 
   const couponList = couponsState.coupons || [];
@@ -138,14 +146,55 @@ const CouponStatusBar: React.FC = () => {
       </>
     ) : (
       <>
-        Add produce worth <span style={{ fontWeight: 700, color: '#fff' }}>₹{Math.ceil(gap)}</span> more
+        Add produce worth <span style={{ fontWeight: 700, color: '#fff' }}>₹{Math.round(gap)}</span> more
       </>
     );
   }
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (isLogin) {
-      setIsCouponOpen(true);
+      // Find the best valid coupon to auto-apply
+      const validCoupons = (couponsState.coupons || []).filter((c: any) => subTotal >= (c.min_cart_value || 0));
+
+      const hasFreeItem = cart.items?.some((item: any) => item.isFreeItem);
+
+      let bestCoupon = null;
+      if (validCoupons.length > 0 && !hasFreeItem) {
+        bestCoupon = validCoupons.reduce((best: any, current: any) => {
+          const currentDiscount = calculateCouponDiscount(subTotal, current) || 0;
+          const bestDiscount = calculateCouponDiscount(subTotal, best) || 0;
+          return currentDiscount > bestDiscount ? current : best;
+        }, validCoupons[0]);
+      }
+
+      if (bestCoupon) {
+        // Auto-apply the best coupon
+        const payload = {
+          code: bestCoupon.code,
+          items: cart.items
+            .map((item: any) => ({
+              item_code: item.item_code,
+              uom: item.multiple_uoms
+                .filter((uom: any) => !uom.is_not_discounted)
+                .map((uom: any) => ({
+                  variant_id: uom.variant_id,
+                  qty: uom.cart_quantity
+                }))
+            }))
+            .filter((item: any) => item.uom.length > 0)
+        };
+
+        const success = await validateCoupon(payload, setAppliedCoupon);
+        if (success) {
+          dispatch(setCouponDetails({ ...bestCoupon }));
+          dispatch(setDiscountAmount(Math.round(calculateCouponDiscount(subTotal, bestCoupon) || 0)));
+        }
+      }
+
+      dispatch(setTabType(TabTypeConstant.CART));
+      dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
+      dispatch(setIsSidebarOpen(true));
+      setIsCartOpen(true);
     } else {
       dispatch(
         setLoginDetails({

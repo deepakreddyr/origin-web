@@ -10,6 +10,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tooltip, IconButton, useMediaQuery } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { calculateCouponDiscount } from '@/utilities/utils';
 
 const BillDetailsWrapper = (props: any) => {
   const { billDetails } = props;
@@ -81,37 +82,33 @@ const BillDetailsWrapper = (props: any) => {
   }, []);
 
   useEffect(() => {
-    let amountTobePaid;
-    const { totalPrice, amountToPay, discountAmount } = cart;
-
     // Calculate dynamic delivery fee
     const deliveryFee = calculateDeliveryFee();
-
-    // Dispatch delivery fee to cart state
     dispatch(setDeliveryFee(deliveryFee));
 
-    if (deliveryFee > 0) {
-      amountTobePaid = totalPrice + deliveryFee;
-    } else {
-      amountTobePaid = totalPrice;
-    }
+    // Calculate current live discount based on subtotal
+    const currentDiscount =
+      couponDetails.code && couponDetails.isValid === 1
+        ? calculateCouponDiscount(cart.totalPrice, couponDetails) || 0
+        : 0;
 
-    if (couponDetails.code && couponDetails.isValid === 1) {
-      if (amountToPay < couponDetails.min_cart_value) {
-        amountTobePaid = amountTobePaid + discountAmount;
-        dispatch(setDiscountAmount(0));
-        dispatch(setCouponDetails(couponDetailsInitialState));
-        return;
-      } else {
-        amountTobePaid = amountTobePaid - discountAmount;
-      }
-    }
+    const roundedDiscount = Math.round(currentDiscount);
+
+    // Calculate final amount to be paid
+    const amountTobePaid = cart.totalPrice - roundedDiscount + deliveryFee;
+
     dispatch(setIsProceedButtonEnabled(amountTobePaid > cart.cart_minimum));
     dispatch(setAmountToPay(amountTobePaid));
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('total_to_pay', cart.amountToPay);
+
+    // Also sync the discount amount back to the state for other observers
+    if (roundedDiscount !== cart.discountAmount) {
+      dispatch(setDiscountAmount(roundedDiscount));
     }
-  }, [couponDetails, cart, billDetails, dispatch]);
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('total_to_pay', String(amountTobePaid));
+    }
+  }, [cart.totalPrice, cart.discountAmount, billDetails, dispatch]);
 
   const remainingAmount = billDetails.cart_minimum ? Number(billDetails.cart_minimum) - cart.amountToPay : 0;
 

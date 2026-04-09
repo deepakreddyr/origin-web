@@ -25,8 +25,10 @@ const Coupon = (props: any) => {
           <p
             className={`font-[SofiaPro] font-medium text-[.83vw] mob:text-[3vw] mob:pt-[1.4vw] pt-[.4vw] ${!isMinvalueConditionValid ? 'text-error' : 'text-black'}  `}
           >
-            {isCouponValid && isMinvalueConditionValid && isCouponValid
-              ? couponDetailsFromList.description
+            {isCouponValid && isMinvalueConditionValid
+              ? couponDetailsFromList.discount_type === 'percentage'
+                ? `${couponDetailsFromList.discount}% off up to ₹${couponDetailsFromList.max_cart_value || 0}`
+                : couponDetailsFromList.description
               : `Add ₹${balanceToBeAdded} more to use this coupon.`}
           </p>
         </div>

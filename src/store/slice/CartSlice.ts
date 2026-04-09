@@ -1,5 +1,5 @@
 import { couponDetailsInitialState } from '@/constants';
-import { updateCartItemsToLs } from '@/utilities/utils';
+import { updateCartItemsToLs, calculateCouponDiscount } from '@/utilities/utils';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // --- INTERFACES ---
@@ -119,8 +119,25 @@ const updateCartTotals = (state: CartState) => {
     });
   });
 
-  // Calculate final amount to pay
-  state.amountToPay = state.totalPrice;
+  // Calculate final amount to pay and recalculate coupon discount if needed
+  if (state.couponDetails && state.couponDetails.code && state.couponDetails.code !== '') {
+    // Check if subtotal meets minimum requirement
+    const minVal = state.couponDetails.min_cart_value || 0;
+    if (state.totalPrice >= minVal) {
+      const newDiscount = calculateCouponDiscount(state.totalPrice, state.couponDetails) || 0;
+      state.discountAmount = Math.round(newDiscount);
+      state.amountToPay = Math.max(0, state.totalPrice - state.discountAmount);
+    } else {
+      // Subtotal dropped below minimum, reset discount
+      state.discountAmount = 0;
+      state.amountToPay = state.totalPrice;
+      // Optional: We could even reset the coupon here if we want it to be removed
+      // state.couponDetails = couponDetailsInitialState;
+    }
+  } else {
+    state.discountAmount = 0;
+    state.amountToPay = state.totalPrice;
+  }
 };
 
 const isProceedBtnEnabled = (state: CartState): boolean => {
