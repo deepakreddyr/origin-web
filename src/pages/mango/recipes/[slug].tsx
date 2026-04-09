@@ -247,12 +247,12 @@ const MangoRecipeDetailPage = ({ slug, mainMenuItems, footerData }: MangoRecipeD
                 </h2>
                 <div className="space-y-10 relative z-10">
                   {recipe.method.map((step, i) => (
-                    <div key={i} className="flex gap-6 items-start">
+                    <div key={i} className="flex gap-6 items-center">
                       <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#FFE381] text-[#1a1a1a] flex items-center justify-center text-[18px] font-semibold">
                         {i + 1}
                       </div>
                       <p
-                        className="text-[18px] md:text-[15px] text-[#000000] opacity-80 leading-[1.6]"
+                        className="text-[18px] md:text-[17px] text-[#000000] opacity-80 leading-[1.6]"
                         style={{ fontFamily: 'SofiaPro' }}
                       >
                         {step}
@@ -272,7 +272,7 @@ const MangoRecipeDetailPage = ({ slug, mainMenuItems, footerData }: MangoRecipeD
                 <div className="flex flex-col gap-8">
                   {otherRecipes.map((other) => (
                     <Link key={other.slug} href={`/mango/recipes/${other.slug}`} className="group block">
-                      <div className="flex flex-col bg-white rounded-[24px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500">
+                      <div className="flex flex-col bg-white rounded-[24px] overflow-hidden transition-all duration-500">
                         <div className="relative aspect-[16/9] overflow-hidden">
                           <Image
                             src={other.imgSrc}

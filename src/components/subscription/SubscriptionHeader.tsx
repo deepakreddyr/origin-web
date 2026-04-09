@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setSubscriptionItem, setIsSubscriptionActive } from '@/store/slice/SubscriptionCartSlice';
 import { setIsSidebarOpen, setTabType } from '@/store/slice/loginSlice';
 import { TabTypeConstant } from '../Login/constants/tabTypeContent';
+// import { User } from 'lucide-react';
+import userIcon from '/public/assets/images/userIcon.png';
 
 const SubscriptionHeader = ({ item, maxQty }: { item?: any; maxQty: number }) => {
   const dispatch = useDispatch();
+  const loginDetails = useSelector((state: any) => state.loginDetails);
 
   const handleOrderNow = () => {
     if (!item) return;
@@ -33,6 +36,15 @@ const SubscriptionHeader = ({ item, maxQty }: { item?: any; maxQty: number }) =>
     dispatch(setIsSidebarOpen(true));
   };
 
+  const handleAccountClick = () => {
+    if (loginDetails.isLogin) {
+      dispatch(setTabType(TabTypeConstant.ACCOUNT_MAIN));
+    } else {
+      dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
+    }
+    dispatch(setIsSidebarOpen(true));
+  };
+
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -45,7 +57,7 @@ const SubscriptionHeader = ({ item, maxQty }: { item?: any; maxQty: number }) =>
 
   return (
     <header className="fixed top-0 left-0 z-[100] w-full px-6 md:px-[80px] py-5 flex items-center justify-between bg-[#FCF2B7] shadow-sm">
-      <div className="flex items-center">
+      <div className="flex items-center mt-2">
         <Image
           src="/assets/images/neworiginlogo.png"
           alt="Origin Fresh"
@@ -55,13 +67,23 @@ const SubscriptionHeader = ({ item, maxQty }: { item?: any; maxQty: number }) =>
         />
       </div>
 
-      <button
-        className="bg-black text-[#FCF2B7] px-6 md:px-12 py-2 md:py-3 rounded-[10px] md:rounded-[15px] font-[800] text-[0.8rem] md:text-[1.5rem] uppercase tracking-[0.05em] hover:bg-gray-800 transition-colors"
-        style={{ fontFamily: 'SofiaPro' }}
-        onClick={handleOrderNow}
-      >
-        ORDER NOW
-      </button>
+      <div className="flex items-center gap-3 md:gap-6">
+        <button
+          className="bg-black text-[#FCF2B7] px-6 md:px-12 py-2 md:py-3 rounded-[10px] md:rounded-[15px] font-[800] text-[0.8rem] md:text-[1.5rem] uppercase tracking-[0.05em] hover:bg-gray-800 transition-colors"
+          style={{ fontFamily: 'SofiaPro' }}
+          onClick={handleOrderNow}
+        >
+          ORDER NOW
+        </button>
+
+        <button
+          className="bg-[#EBDD8D] hover:bg-[#DBCB7D] transition-colors rounded-full w-10 md:w-14 h-10 md:h-14 flex items-center justify-center p-2 md:p-3"
+          onClick={handleAccountClick}
+          aria-label="Account"
+        >
+          <Image src={userIcon} alt="User" width={30} height={30} />
+        </button>
+      </div>
     </header>
   );
 };

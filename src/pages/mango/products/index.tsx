@@ -105,7 +105,7 @@ const MangoProductsPage = ({ mainMenuItems, footerData }: MangoProductsPageProps
       <main className="min-h-screen pt-12 md:pt-[80px] bg-[#FFFFFF]">
         {/* ── Products Grid ── */}
         <section className="px-4 mob:px-[4vw] md:px-[8vw] py-10 mob:py-5">
-          <div className="max-w-7xl mx-auto flex items-center justify-between pb-6 mob:pb-4 pt-2">
+          <div className="max-w-7xl mx-auto flex items-center justify-between mob:pb-8 md:pb-10 pt-10">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mt-1">Fresh Arrivals</h1>
             </div>
