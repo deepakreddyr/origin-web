@@ -51,7 +51,7 @@ const SubscriptionPage = ({ mainMenuItems, footerData }: SubscriptionPageProps) 
         description="Join the fruit revolution. 7 days, 7 fruits, zero junk. Accept the challenge today!"
       />
 
-      <main className="bg-[#FAF7F0] min-h-screen pt-[64px] md:pt-[72px]">
+      <main className="bg-[#FAF7F0] min-h-screen pt-[64px] md:pt-[100px]">
         <SubscriptionHeader item={subscriptionItem} maxQty={maxQty} />
         <SubscriptionHero />
         <SubscriptionSplit />
