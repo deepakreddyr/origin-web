@@ -36,23 +36,20 @@ const OrderStatusIllustration = (props: any) => {
 
   const renderIllustration = () => {
     const lastStatus = status_list && status_list.length > 0 ? status_list[status_list.length - 1] : null;
-    if (!lastStatus) {
-      return (
-        <Lottie
-          animationData={DeliveryStatusDetails['confirmed'].illustration}
-          loop={true}
-          autoplay={true}
-          style={{ width: '100%', height: '100%' }}
-        />
-      );
-    }
-    const currentStatus = lastStatus.status_message?.toLowerCase() || 'out for delivery';
+    const currentStatus = lastStatus?.status_message?.toLowerCase() || 'out for delivery';
+
+    const LottieContainer = ({ children }: { children: React.ReactNode }) => (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="w-full h-full flex-shrink-0">{children}</div>
+      </div>
+    );
+
     if (currentStatus === 'on the way') {
       return (
-        <div className="relative">
+        <div className="relative w-full h-full">
           {mapDetails.driverLocation.lat !== 0 && mapDetails.driverLocation.lng !== 0 && (
             <button
-              className="absolute top-[.6vw] mob:top-[2vw] px-[1.1vw] mob:px-[6.1vw] mob:pl-[3vw] mob:py-[2vw] pl-[.6vw] py-[.3vw] mob:rounded-[1.5vw] rounded-[.5vw] left-[.6vw] mob:left-[2vw] z-[1] flex items-center bg-[white]"
+              className="absolute top-[.6vw] mob:top-[2vw] px-[1.1vw] mob:px-[6.1vw] mob:pl-[3vw] mob:py-[2vw] pl-[.6vw] py-[.3vw] mob:rounded-[1.5vw] rounded-[.5vw] left-[.6vw] mob:left-[2vw] z-[10] flex items-center bg-[white]"
               onClick={toggleMapView}
             >
               {mapToggle ? (
@@ -75,46 +72,46 @@ const OrderStatusIllustration = (props: any) => {
             </button>
           )}
           {mapDetails.isMapDetailsExist &&
-            mapDetails.driverLocation.lat !== 0 &&
-            mapDetails.driverLocation.lng !== 0 ? (
+          mapDetails.driverLocation.lat !== 0 &&
+          mapDetails.driverLocation.lng !== 0 ? (
             <MapContainer
               driverLocation={mapDetails.driverLocation}
               customerLocation={mapDetails.customerLocation}
               fetchOrderdetails={fetchOrderdetails}
             />
           ) : (
-            <Lottie
-              animationData={DeliveryStatusDetails['out for delivery'].illustration}
-              loop={true}
-              autoplay={true}
-              style={{ width: '100%', height: '100%' }}
-            />
+            <LottieContainer>
+              <Lottie
+                animationData={DeliveryStatusDetails['out for delivery'].illustration}
+                loop={true}
+                autoplay={true}
+              />
+            </LottieContainer>
           )}
         </div>
       );
     } else if (currentStatus === 'arrived at location') {
       return (
-        <div className="">
-          <Image src={arrivedAtLocation} alt="" />
+        <div className="w-full h-full flex items-center justify-center">
+          <Image src={arrivedAtLocation} alt="" className="object-cover w-full h-full" />
         </div>
       );
     }
+
+    const animationData =
+      DeliveryStatusDetails[currentStatus]?.illustration || DeliveryStatusDetails['confirmed'].illustration;
+
     return (
-      <Lottie
-        animationData={DeliveryStatusDetails[currentStatus]?.illustration}
-        loop={true}
-        autoplay={true}
-        style={{ width: '100%', height: '100%' }}
-      />
+      <LottieContainer>
+        <Lottie animationData={animationData} loop={true} autoplay={true} />
+      </LottieContainer>
     );
   };
 
   return (
     <div className="relative">
       <div className="relative z-[1]">
-        <div className="w-[30vw] mob:h-[90vw]  mob:w-screen h-[25vw] relative rounded-[1.1vw] overflow-hidden">
-          {renderIllustration()}
-        </div>
+        <div className="w-full mob:h-[90vw] h-full relative overflow-hidden">{renderIllustration()}</div>
         {!mapToggle && (
           <div className="absolute bottom-[1vw] mob:bottom-[3vw] flex items-center justify-between w-full pr-[1.1vw] mob:px-[3vw] ">
             <div className="px-[1.1vw]">
