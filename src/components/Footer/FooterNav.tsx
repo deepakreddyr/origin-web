@@ -14,9 +14,10 @@ type LinksProps = {
   md?: number;
   lg?: number;
   xl?: number;
+  isDark?: boolean;
 };
 
-const FooterNav = ({ links, xs, sm, md, lg, xl }: LinksProps) => {
+const FooterNav = ({ links, xs, sm, md, lg, xl, isDark }: LinksProps) => {
   return (
     <>
       {links?.map((link, index) => (
@@ -24,7 +25,7 @@ const FooterNav = ({ links, xs, sm, md, lg, xl }: LinksProps) => {
           <Link
             href={`/${link.href}`}
             rel="noopener noreferrer"
-            className="text-black font-[SofiaPro] text-[1rem] hover:underline"
+            className={`${isDark ? 'text-white' : 'text-black'} font-[SofiaPro] text-[1rem] hover:underline`}
           >
             {link.text}
           </Link>
