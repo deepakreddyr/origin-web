@@ -9,7 +9,7 @@ import LinkedInIcon from '/public/assets/icons/linkedinicon.svg';
 
 const SocialLinks = () => {
   return (
-    <Grid item xs={12} className="flex gap-5 pl-[30px] sm:gap-6 mt-10 sm:mt-12">
+    <Grid item xs={12} className="flex gap-5 sm:gap-6">
       <a
         href="https://www.instagram.com/originfresh.in?igsh=ZXYxNnFvYXR4cWd5"
         target="_blank"

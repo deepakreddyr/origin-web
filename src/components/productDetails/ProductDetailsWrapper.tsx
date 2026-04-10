@@ -600,7 +600,7 @@ const ProductDetailsWrapper = () => {
       productDescription ||
       `Buy ${productDetails.item.name} online. Fresh and high-quality products delivered to your doorstep.`
     ).substring(0, 155),
-    image: productDetails.item.image || `${frontendUrl}/assets/images/neworiginlogo.png`,
+    image: productDetails.item.image || `${frontendUrl}/assets/logo.svg`,
     price: defaultUOM?.price || 0,
     currency: 'INR',
     availability: productDetails.item.is_available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
