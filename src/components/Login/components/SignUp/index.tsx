@@ -43,7 +43,7 @@ const SignUp = () => {
     const newErrors = { name: '', gender: '', email: '' };
 
     // Name validation
-    if (!name) {
+    if (!name.trim()) {
       newErrors.name = 'Name is required.';
       valid = false;
     } else if (name.length < 3) {
@@ -53,14 +53,23 @@ const SignUp = () => {
       newErrors.name = 'Name cannot contain special characters or numbers.';
       valid = false;
     } else if (name.length > 26) {
-      newErrors.name = 'Name cannot be more than 50 characters.';
+      newErrors.name = 'Name cannot be more than 26 characters.';
       valid = false;
     }
 
-    // Gender validation
+    // Gender validation - This ensures the error is set if gender is empty
     if (!gender) {
-      newErrors.gender = 'Gender is required.';
+      newErrors.gender = 'Please select your gender.';
       valid = false;
+    }
+
+    // Email validation (RegEx check)
+    if (email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        newErrors.email = 'Please enter a valid email address.';
+        valid = false;
+      }
     }
 
     setErrors(newErrors);
@@ -121,6 +130,12 @@ const SignUp = () => {
 
   const handleValueChange = (name: string, value: any) => {
     setGender(value);
+    if (errors.gender) {
+      setErrors((prev) => ({
+        ...prev,
+        gender: ''
+      }));
+    }
   };
 
   return (

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
@@ -18,6 +19,8 @@ import PopularMangoes from '@/components/Mango/PopularMangoes';
 import MangoPulpBanner from '@/components/Mango/MangoPulpBanner';
 import MangoRecipeCard from '@/components/Mango/MangoRecipeCard';
 import MangoTestimonialCard from '@/components/Mango/MangoTestimonialCard';
+import { useAtom } from 'jotai';
+import { addressAtom } from '@/features/Address/context/atoms';
 
 interface MangoLandingPageProps {
   mainMenuItems: MainMenuType[];
@@ -63,6 +66,8 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
   const [mangoHomepageData, setMangoHomepageData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const getDataFromApi = useGetDataFromApi();
+  const [address] = useAtom(addressAtom);
+  const loginDetails = useSelector((state: any) => state.loginDetails);
 
   useEffect(() => {
     const token = localStorage.getItem('user_token');
@@ -118,7 +123,7 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
 
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loginDetails.isLogin, address.defaultAddress?.store_id]);
 
   // Helper to deduplicate products by ID
   const deduplicate = (items: any[]) => {

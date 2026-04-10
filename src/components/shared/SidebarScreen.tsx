@@ -57,16 +57,18 @@ const SidebarScreen = () => {
       }
 
       case TabTypeConstant.MANAGE_ADDRESS:
-        if (
-          activeScreen === TabTypeConstant.SERVICEABILITY ||
-          activeScreen === TabTypeConstant.MANUAL_ADDRESS ||
-          activeScreen === TabTypeConstant.COMPLETE_ADDRESS ||
-          activeScreen === TabTypeConstant.NO_DATA ||
-          activeScreen === TabTypeConstant.ADDRESS_LIST
-        ) {
-          if (address.address && address.address.length > 0) {
+        if (activeScreen === TabTypeConstant.MANUAL_ADDRESS) {
+          setActiveScreen(TabTypeConstant.SERVICEABILITY);
+          return;
+        }
+        if (activeScreen === TabTypeConstant.COMPLETE_ADDRESS) {
+          setActiveScreen(TabTypeConstant.MANUAL_ADDRESS);
+          return;
+        }
+        if (address.address && address.address.length > 0) {
+          if (activeScreen !== TabTypeConstant.ADDRESS_LIST) {
             setActiveScreen(TabTypeConstant.ADDRESS_LIST);
-            // return;
+            return;
           }
         }
 
@@ -172,6 +174,14 @@ const SidebarScreen = () => {
       case TabTypeConstant.COMPLETE_ADDRESS:
       case TabTypeConstant.MANUAL_ADDRESS:
       case TabTypeConstant.NO_DATA:
+        if (
+          loginDetails.tabType === TabTypeConstant.MANAGE_ADDRESS &&
+          loginDetails.isFreshLogin &&
+          activeScreen === TabTypeConstant.SERVICEABILITY
+        ) {
+          return false;
+        }
+        return true;
       case TabTypeConstant.YOUR_ORDERS:
       case TabTypeConstant.HELP_FAQ:
       case TabTypeConstant.SETTING:
@@ -182,7 +192,7 @@ const SidebarScreen = () => {
         return false;
       }
     }
-  }, [loginDetails, cart.cartTabType]);
+  }, [loginDetails, cart.cartTabType, activeScreen]);
 
   const SCREEN_MAP: any = {
     [TabTypeConstant.CART]: <Cart />,

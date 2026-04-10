@@ -23,7 +23,6 @@ import { setCartItems, setCartTabType } from '@/store/slice/CartSlice';
 import { setIsSidebarOpen, setLoginDetails, setTabType } from '@/store/slice/loginSlice';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import { TabTypeConstant } from '../Login/constants/tabTypeContent';
-import { useCartStore } from '@/hooks/useCartStore';
 import { MainMenuType } from '@/utilities/types';
 
 type Props = {
@@ -98,8 +97,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
 
   const dispatch = useDispatch();
   const loginDetails = useSelector((state: any) => state.loginDetails);
-  const { cart, actions, isMangoPage } = useCartStore();
-  const { setCartItems, setCartTabType } = actions;
+  const cart = useSelector((state: any) => state.cart);
 
   // Calculate cart item count from nested structure
   const cartItemCount = getCartItemCount(cart?.items || []);
@@ -218,7 +216,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
     );
 
     if (cart?.items?.length === 0) {
-      const cartItemFromLs = localStorage.getItem(isMangoPage ? 'mango_cart_items' : 'cart_items');
+      const cartItemFromLs = localStorage.getItem('cart_items');
       const cartItemsParsed = cartItemFromLs ? JSON.parse(cartItemFromLs) : [];
       if (cartItemsParsed.length > 0) {
         dispatch(setCartItems(cartItemsParsed));

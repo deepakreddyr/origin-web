@@ -50,56 +50,78 @@ export const handleLaunchResponse = (
   });
 
   // Navigation Logic
+  const tabSource = typeof window !== 'undefined' ? localStorage.getItem('tab_source') : null;
+  const parsedTabSource = tabSource ? JSON.parse(tabSource) : null;
+
   if (defaultAddress) {
     // Condition 1: Default Address Exists -> Allow browse
-    // Close sidebar, ensure login state is set
-    dispatch(
-      setLoginDetails({
-        isSidebarOpen: false,
-        isLogin: true,
-        user: userToken,
-        tabType: '' // Clear tab or keep it neutral
-      })
-    );
-    dispatch(setIsSidebarOpen(false));
     if (shouldReload) {
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      if (parsedTabSource === TabTypeConstant.CART) {
+        dispatch(
+          setLoginDetails({
+            isSidebarOpen: true,
+            isLogin: true,
+            user: userToken,
+            tabType: TabTypeConstant.CART
+          })
+        );
+        // Clear the source after returning to the cart on login
+        localStorage.removeItem('tab_source');
+      } else {
+        dispatch(
+          setLoginDetails({
+            isSidebarOpen: false,
+            isLogin: true,
+            user: userToken,
+            tabType: ''
+          })
+        );
+        dispatch(setIsSidebarOpen(false));
+      }
+    } else {
+      // BACKGROUND REFRESH: Only update login status and user ID, don't touch UI visibility
+      dispatch(
+        setLoginDetails({
+          isLogin: true,
+          user: userToken
+        })
+      );
     }
   } else if (!profile?.name) {
-    // Condition 2: No Name -> Register
-    dispatch(
-      setLoginDetails({
-        isSidebarOpen: true,
-        isLogin: true, // They are technically logged in (have token) but need profile
-        user: userToken,
-        tabType: TabTypeConstant.REGISTER
-      })
-    );
+    // Condition 2: No Name -> Register (Only if fresh login or explicitly requested)
+    if (shouldReload) {
+      dispatch(
+        setLoginDetails({
+          isSidebarOpen: true,
+          isLogin: true,
+          user: userToken,
+          tabType: TabTypeConstant.REGISTER
+        })
+      );
+    }
   } else if (!addresses || addresses.length === 0) {
     // Condition 3: Name exists but No Address -> Manage Address
-    dispatch(
-      setLoginDetails({
-        isSidebarOpen: true,
-        isLogin: true,
-        user: userToken,
-        tabType: TabTypeConstant.MANAGE_ADDRESS
-      })
-    );
+    if (shouldReload) {
+      dispatch(
+        setLoginDetails({
+          isSidebarOpen: true,
+          isLogin: true,
+          user: userToken,
+          tabType: TabTypeConstant.MANAGE_ADDRESS
+        })
+      );
+    }
   } else {
     // Fallback: Has name, has addresses, but NO default.
-    // Prompt said "if user has name no address in the address array navigate to manage address".
-    // It didn't explicitly cover "has addresses but no default".
-    // But "do not allow them to browse the site unless..." implies strictness.
-    // We'll send them to manage address to pick a default.
-    dispatch(
-      setLoginDetails({
-        isSidebarOpen: true,
-        isLogin: true,
-        user: userToken,
-        tabType: TabTypeConstant.MANAGE_ADDRESS
-      })
-    );
+    if (shouldReload) {
+      dispatch(
+        setLoginDetails({
+          isSidebarOpen: true,
+          isLogin: true,
+          user: userToken,
+          tabType: TabTypeConstant.MANAGE_ADDRESS
+        })
+      );
+    }
   }
 };

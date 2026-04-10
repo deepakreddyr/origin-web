@@ -32,7 +32,7 @@ import { saveAddress } from '../../services/saveAddress';
 import styles from './style.module.css';
 import { manageAddressScreens } from '@/features/AccountPage/enums/ActiveSidebar';
 import { addressAtom } from '@/features/Address/context/atoms';
-import { setTabType } from '@/store/slice/loginSlice';
+import { setIsFreshLogin, setIsSidebarOpen, setTabType } from '@/store/slice/loginSlice';
 import { useDispatch } from 'react-redux';
 import { removeRouteSourceFromLs } from '@/utilities/utils';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
@@ -65,8 +65,35 @@ export default function CompleteAddress(props: Props) {
   const [address, setAddress] = useAtom(addressAtom);
   const dispatch = useDispatch();
   const [showLocationPopup, setShowLocationPopup] = React.useState(false);
+  const [errors, setErrors] = React.useState({
+    door_no: '',
+    locality: '',
+    address_name: ''
+  });
+
+  const validate = () => {
+    let newErrors = { door_no: '', locality: '', address_name: '' };
+    let isValid = true;
+
+    if (!addressDetails.door_no || addressDetails.door_no.trim() === '') {
+      newErrors.door_no = 'Door number/House name is required';
+      isValid = false;
+    }
+    if (!addressDetails.locality || addressDetails.locality.trim() === '') {
+      newErrors.locality = 'Street / Locality is required';
+      isValid = false;
+    }
+    if (!addressDetails.address_name || addressDetails.address_name.trim() === '') {
+      newErrors.address_name = 'Please tag this location';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
 
   const onSubmit = async () => {
+    if (!validate()) return;
     try {
       if (editingDetails.isActive)
         await editAddress(
@@ -104,16 +131,13 @@ export default function CompleteAddress(props: Props) {
         isSaved: true
       }));
 
-      // Show location changed popup; on Alright → hard refresh
-      setShowLocationPopup(true);
+      // Mark fresh login as complete; data will refresh reactively via page hooks
+      dispatch(setIsFreshLogin(false));
+      dispatch(setIsSidebarOpen(false));
     } catch (e) {
       // console.log(e, 'error while submitting new address');
     }
   };
-
-  const isButtonDisabled = React.useMemo(() => {
-    return !addressDetails.address_name || !addressDetails.door_no || !addressDetails.locality;
-  }, [addressDetails]);
 
   const onChange = (event: any) => {
     const { value, name } = event.target;
@@ -121,6 +145,9 @@ export default function CompleteAddress(props: Props) {
       ...prevState,
       [name]: value
     }));
+    if (errors[name as keyof typeof errors]) {
+      setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
   };
 
   const CustomRadio = ({ checked, ...props }: any) => {
@@ -244,6 +271,21 @@ export default function CompleteAddress(props: Props) {
             />
           ))}
         </RadioGroup>
+        {errors.address_name && (
+          <Typography
+            variant="body2"
+            sx={{
+              color: '#C70000',
+              fontWeight: 'normal',
+              display: 'block',
+              fontFamily: 'SofiaPro',
+              marginTop: '8px',
+              paddingLeft: '0.8rem'
+            }}
+          >
+            {errors.address_name}
+          </Typography>
+        )}
       </FormControl>
     );
   };
@@ -271,6 +313,20 @@ export default function CompleteAddress(props: Props) {
                 onChange={onChange}
                 placeholder="Enter door level details"
               />
+              {errors.door_no && (
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: '#C70000',
+                    fontWeight: 'normal',
+                    display: 'block',
+                    fontFamily: 'SofiaPro',
+                    marginTop: '4px'
+                  }}
+                >
+                  {errors.door_no}
+                </Typography>
+              )}
             </Box>
 
             <Box className={styles['form-group']}>
@@ -292,6 +348,20 @@ export default function CompleteAddress(props: Props) {
                 placeholder="Enter street level details"
                 required={false}
               />
+              {errors.locality && (
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: '#C70000',
+                    fontWeight: 'normal',
+                    display: 'block',
+                    fontFamily: 'SofiaPro',
+                    marginTop: '4px'
+                  }}
+                >
+                  {errors.locality}
+                </Typography>
+              )}
             </Box>
 
             <Box className={styles['form-group']}>
@@ -327,7 +397,7 @@ export default function CompleteAddress(props: Props) {
       <LocationChangedPopup
         isVisible={showLocationPopup}
         onClose={() => {
-          window.location.reload();
+          setShowLocationPopup(false);
         }}
       />
       <Box
@@ -380,7 +450,6 @@ export default function CompleteAddress(props: Props) {
           }
         }}
         onClick={onSubmit}
-        disabled={isButtonDisabled}
       >
         Confirm
       </Button>
