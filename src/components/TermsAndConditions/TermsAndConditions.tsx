@@ -107,7 +107,7 @@ const TermsAndConditions = () => {
             <section>
               <h2>A. Introduction</h2>
               <p>
-                This mobile application ‘Origin’ (App) and website{' '}
+                This mobile application ‘Origin Fresh’ (App) and website{' '}
                 <a href="https://originfresh.in/">https://originfresh.in/</a> (Website) (Website and App collectively
                 referred to as the “Platform”) is operated and managed by Tech7 Phyll Private Limited, an Indian Company
                 incorporated under the Companies Act, 2013. The term <strong>Company</strong> shall collectively and
@@ -143,9 +143,9 @@ const TermsAndConditions = () => {
               <h2>B. Terms of Use</h2>
               <p>
                 These terms of use (“Terms”) govern Your use of the Platform, and for the purpose of these Terms the
-                Company may, wherever context so require, also be referred to as &quot;Origin&quot;, &quot;We&quot;,
-                &quot;Us&quot;, or &quot;Our&quot;, and the terms &quot;You&quot;, &quot;Your&quot; or &quot;User&quot;
-                refer to the user of the Platform.
+                Company may, wherever context so require, also be referred to as &quot;Origin Fresh&quot;,
+                &quot;We&quot;, &quot;Us&quot;, or &quot;Our&quot;, and the terms &quot;You&quot;, &quot;Your&quot; or
+                &quot;User&quot; refer to the user of the Platform.
               </p>
             </section>
 
@@ -154,25 +154,25 @@ const TermsAndConditions = () => {
               <p>
                 Please read these Terms carefully before You use the Platform. If You do not agree to these Terms, You
                 may not use the Products and Services (defined hereinafter) on the Platform, and We request You to
-                uninstall the App. By merely using/accessing the Platform, You shall be contracting with Origin and You
-                signify Your acceptance to these Terms and other Origin policies (including but not limited to the
-                cancellation & refund policy of the Company and published privacy policy (‘Privacy Policy’)) as posted
-                on the Platform and amended from time to time, which takes effect on the date on which You use the
-                Platform, and thereby create a legally binding arrangement to abide by the same. Further, by furnishing
-                Your personal information, You consent to Origin accessing Your personal information for the purpose of
-                supplies. You also agree that You are interested in availing the supplies through the Platform in
-                accordance with these Terms.
+                uninstall the App. By merely using/accessing the Platform, You shall be contracting with Origin Fresh
+                and You signify Your acceptance to these Terms and other Origin Fresh policies (including but not
+                limited to the cancellation & refund policy of the Company and published privacy policy (‘Privacy
+                Policy’)) as posted on the Platform and amended from time to time, which takes effect on the date on
+                which You use the Platform, and thereby create a legally binding arrangement to abide by the same.
+                Further, by furnishing Your personal information, You consent to Origin Fresh accessing Your personal
+                information for the purpose of supplies. You also agree that You are interested in availing the supplies
+                through the Platform in accordance with these Terms.
               </p>
             </section>
 
             <section>
               <h2>D. Modification of Terms</h2>
               <p>
-                Origin retains an unconditional right to modify or amend these Terms. You can determine when these Terms
-                were last modified by referring to the “Last Updated” legend above. You can access the latest version of
-                these Terms at any given time on the Platform. You should regularly review the Terms on the Platform.
-                Your continued use of and access to the Platform shall be Your consent to such changes. In the event the
-                modified Terms are not acceptable to You, You should discontinue accessing the Platform.
+                Origin Fresh retains an unconditional right to modify or amend these Terms. You can determine when these
+                Terms were last modified by referring to the “Last Updated” legend above. You can access the latest
+                version of these Terms at any given time on the Platform. You should regularly review the Terms on the
+                Platform. Your continued use of and access to the Platform shall be Your consent to such changes. In the
+                event the modified Terms are not acceptable to You, You should discontinue accessing the Platform.
               </p>
             </section>
           </div>
@@ -236,12 +236,12 @@ const TermsAndConditions = () => {
             Contract Act, 1872 including minors, un-discharged insolvents etc. are not eligible to use the Platform.
             Only individuals who are 18 years of age or older may use the Platform and avail the Services. If you are
             under 18 years of age and you wish to download, install, access or use the Platform, your parents or legal
-            guardian must acknowledge and agree to the Terms of Use and Origin Policies. Should your parents or legal
-            guardian fail to agree or acknowledge the Terms of Use and Origin Policies, you shall immediately
-            discontinue its use. Origin reserves the right to terminate your Membership and/or deny access to the
-            Platform if it is brought to Origin&quot;s notice that you are under the age of 18 years. You agree to use
-            the Services only in compliance with these Terms of Use and applicable law, and in a manner that does not
-            violate our legal rights or those of any third party(ies).
+            guardian must acknowledge and agree to the Terms of Use and Origin Fresh Policies. Should your parents or
+            legal guardian fail to agree or acknowledge the Terms of Use and Origin Fresh Policies, you shall
+            immediately discontinue its use. Origin Fresh reserves the right to terminate your Membership and/or deny
+            access to the Platform if it is brought to Origin Fresh&quot;s notice that you are under the age of 18
+            years. You agree to use the Services only in compliance with these Terms of Use and applicable law, and in a
+            manner that does not violate our legal rights or those of any third party(ies).
           </p>
 
           <p style={{ marginTop: '0.5rem' }}>
@@ -270,21 +270,21 @@ const TermsAndConditions = () => {
             confirm that the Account information and all information provided by You is complete, accurate and
             up-to-date. If there is any change in the Account information, or if any information is found to be
             incomplete or incorrect, You shall promptly update Your Account information on the Platform or request
-            Origin for information revision or update. If the information provided by You is untrue, inaccurate,
+            Origin Fresh for information revision or update. If the information provided by You is untrue, inaccurate,
             unauthorised, not current, or incomplete (or becomes untrue, inaccurate, not current, or incomplete), or
-            Origin reserves the right to refuse any and all the supplies, if Origin has reasonable grounds to suspect
-            that such information is untrue, inaccurate, not current, or incomplete, Origin reserves the express right
-            to refuse access to the Platform at any time without notice for Your failure to abide by the Terms as set
-            forth herein or to comply with applicable laws including with respect to accessing alcoholic beverages
-            and/or tobacco products through the Platform.
+            Origin Fresh reserves the right to refuse any and all the supplies, if Origin Fresh has reasonable grounds
+            to suspect that such information is untrue, inaccurate, not current, or incomplete, Origin Fresh reserves
+            the express right to refuse access to the Platform at any time without notice for Your failure to abide by
+            the Terms as set forth herein or to comply with applicable laws including with respect to accessing
+            alcoholic beverages and/or tobacco products through the Platform.
           </p>
 
           <p>
             <strong>3.3</strong> You will be responsible for the confidentiality of the Account information provided and
             fully responsible for all activities that take place on Your Account. You agree to immediately notify Origin
-            of any unauthorised access of Your Account. You may be held liable to pay damages for losses caused due to
-            unauthorised use of Your Account as a result of Your failure to keep Your Account information secure and
-            confidential.
+            Fresh of any unauthorised access of Your Account. You may be held liable to pay damages for losses caused
+            due to unauthorised use of Your Account as a result of Your failure to keep Your Account information secure
+            and confidential.
           </p>
         </section>
       </Box>
@@ -494,14 +494,14 @@ const TermsAndConditions = () => {
             <a href="  https://cybercrime.gov.in/."> https://cybercrime.gov.in/.</a>
           </p>
           <p>
-            <strong>8.3.2.</strong> For assistance on a Origin order or refund related issues, click on the ‘Get Help’
-            section on the App.
+            <strong>8.3.2.</strong> For assistance on a Origin Fresh order or refund related issues, click on the ‘Get
+            Help’ section on the App.
           </p>
           <p>
-            <strong>8.3.3.</strong> Please exercise caution to verify the portals/website links claiming to be Origin or
-            a lookalike or a payment link shared over social media or a social messaging apps claiming to be Origin
-            discounts or offers and proactive calls from unauthorized numbers requesting for personal/financial
-            information.
+            <strong>8.3.3.</strong> Please exercise caution to verify the portals/website links claiming to be Origin
+            Fresh or a lookalike or a payment link shared over social media or a social messaging apps claiming to be
+            Origin Fresh discounts or offers and proactive calls from unauthorized numbers requesting for
+            personal/financial information.
           </p>
         </section>
       </Box>
@@ -677,17 +677,17 @@ const TermsAndConditions = () => {
         <section>
           <h2>12. Indemnification and Limitation of Liability</h2>
           <p>
-            <strong>12.1.</strong> You agree to indemnify, defend and hold harmless Origin and its affiliates including
-            but not limited to its (and its affiliates’) officers, directors, consultants, agents, representatives and
-            employees; and its third party partners (“Indemnitees”) from and against any and all losses, liabilities,
-            claims, damages, demands, costs and expenses (including reasonable legal fees) asserted against or incurred
-            by the Indemnitees that arise out of, result from, or may be payable by virtue of, any breach or
-            non-performance of any representation, warranty, covenant or agreement made or obligation to be performed by
-            You pursuant to these Terms and/or the Privacy Policy. Further, You agree to hold the Indemnitees harmless
-            against any claims made by any third party due to, or arising out of, or in connection with, Your use of the
-            Platform, any misrepresentation with respect to the data or information provided by You, Your violation of
-            the Terms and/or the Privacy Policy, Your violation of applicable laws, or Your violation of any rights of
-            another, including any intellectual property rights.
+            <strong>12.1.</strong> You agree to indemnify, defend and hold harmless Origin Fresh and its affiliates
+            including but not limited to its (and its affiliates’) officers, directors, consultants, agents,
+            representatives and employees; and its third party partners (“Indemnitees”) from and against any and all
+            losses, liabilities, claims, damages, demands, costs and expenses (including reasonable legal fees) asserted
+            against or incurred by the Indemnitees that arise out of, result from, or may be payable by virtue of, any
+            breach or non-performance of any representation, warranty, covenant or agreement made or obligation to be
+            performed by You pursuant to these Terms and/or the Privacy Policy. Further, You agree to hold the
+            Indemnitees harmless against any claims made by any third party due to, or arising out of, or in connection
+            with, Your use of the Platform, any misrepresentation with respect to the data or information provided by
+            You, Your violation of the Terms and/or the Privacy Policy, Your violation of applicable laws, or Your
+            violation of any rights of another, including any intellectual property rights.
           </p>
           <p>
             <strong>12.2.</strong>In no event shall the Company and its directors, officers, partners, consultants,
