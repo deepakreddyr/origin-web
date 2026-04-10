@@ -81,11 +81,11 @@ const DownloadAppWrapper: React.FC<DownloadAppWrapperProps> = ({ onClose }) => {
           <div className="hidden sm:flex sm:min-h-[550px] xl:min-h-[650px] 2xl:min-h-[700px]">
             {/* Left Side - Content */}
             <div className="flex-1 px-12 xl:px-16 py-12 xl:py-16 flex flex-col justify-center">
-              <h2 className="font-[SofiaPro] text-3xl xl:text-4xl font-semibold text-black leading-tight mb-8 xl:mb-12">
+              <span className="font-[SofiaPro] text-[28px] xl:text-4xl font-semibold text-black leading-tight mb-8 xl:mb-12">
                 Join the cult of fresh!
                 <br />
-                Download the Origin app
-              </h2>
+                Download the Origin Fresh app
+              </span>
 
               <div className="flex items-center gap-6 mb-8 xl:mb-12">
                 <div className="w-[12vw] h-16 xl:w-20 xl:h-20 relative">
@@ -162,7 +162,7 @@ const DownloadAppWrapper: React.FC<DownloadAppWrapperProps> = ({ onClose }) => {
             {/* Content */}
             <div className="px-[8vw] pt-[8vw] mob:px-[6vw] mob:pt-[10vw]">
               <p className="font-[SofiaPro] text-[5.12vw] mob:text-[4.5vw] font-semibold text-black text-center leading-tight mb-4 mt-5">
-                Join the cult of fresh! <br /> Download the Origin app
+                Join the cult of fresh! <br /> Download the Origin Fresh app
               </p>
 
               <div className="flex items-center justify-center gap-[3vw] py-[6vw] mob:py-[4vw] mob:pb-[6vw]">
