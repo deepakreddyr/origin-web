@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useAtom } from 'jotai';
+import { addressAtom } from '@/features/Address/context/atoms';
 import Layout from '@/components/Layout';
 import { GetServerSideProps } from 'next';
 import { FooterDataType, MainMenuType } from '@/utilities/types';
@@ -23,6 +26,8 @@ const SubscriptionPage = ({ mainMenuItems, footerData }: SubscriptionPageProps) 
   const [comboItems, setComboItems] = useState<any[]>([]);
   const [maxQty, setMaxQty] = useState<number>(10);
   const getDataFromApi = useGetDataFromApi();
+  const loginDetails = useSelector((state: any) => state.loginDetails);
+  const [address] = useAtom(addressAtom);
 
   useEffect(() => {
     const userToken = localStorage.getItem('user_token');
@@ -42,7 +47,7 @@ const SubscriptionPage = ({ mainMenuItems, footerData }: SubscriptionPageProps) 
       },
       {}
     );
-  }, []);
+  }, [loginDetails.isLogin, address.defaultAddress?.store_id]);
 
   return (
     <Layout isHeader={false} isHeaderSticky={true} mainMenuItems={mainMenuItems} footerData={footerData}>

@@ -8,6 +8,7 @@ import { TabTypeConstant } from '../../constants/tabTypeContent';
 import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { OriginCloseIcon } from '../../../../Icons/OriginIcons';
 
 interface Props {
   children: React.ReactNode;
@@ -58,9 +59,7 @@ const SidebarWrapper = (props: Props) => {
 
   return (
     <div className="">
-      {loginDetails.isSidebarOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-[110]" onClick={handleCloseAttempt}></div>
-      )}
+      {loginDetails.isSidebarOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-[110]"></div>}
       <div
         className={`fixed top-0 ${
           loginDetails.isSidebarOpen ? 'right-0' : '-right-full'
@@ -73,8 +72,8 @@ const SidebarWrapper = (props: Props) => {
                 border-b border-[#F2EEE4] bg-white shadow-md relative"
           >
             {/* Left Section: Back Button */}
-            <div className="flex-shrink-0 w-[3vw] mob:w-[10vw]">
-              {isBackButtonEnable && (
+            {isBackButtonEnable && (
+              <div className="flex-shrink-0 w-[3vw] mob:w-[10vw]">
                 <button
                   onClick={handleBackAttempt}
                   className="relative w-[2.5vw] mob:w-[8vw] mob:h-[8vw] h-[2.5vw] cursor-pointer bg-transparent border-none rounded-full flex items-center justify-center
@@ -84,22 +83,23 @@ const SidebarWrapper = (props: Props) => {
                     <Image src={backIcon} alt="back" fill className="object-contain" />
                   </div>
                 </button>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Center Section: Title */}
             <div className="flex-grow flex justify-start">
-              <h1 className="text-[1.67vw] mob:text-[5vw] font-bold text-center">{headerTitle}</h1>
+              <h1 className="text-[1.67vw] mob:text-[5vw] font-bold">{headerTitle}</h1>
             </div>
 
             {/* Right Section: Close Button */}
             <div className="flex-shrink-0 w-[3vw] mob:w-[10vw] flex justify-end">
               <button
                 onClick={handleCloseAttempt}
-                className="w-[2.5vw] h-[2.5vw] mob:w-[8vw] mob:h-[8vw] rounded-full flex items-center justify-center hover:bg-gray-100 active:bg-gray-100 transition-colors duration-200"
+                className="w-[2.5vw] h-[2.5vw] mob:w-[8vw] mob:h-[8vw] rounded-full flex items-center justify-center hover:bg-gray-100 active:bg-gray-100 transition-colors duration-200 text-black"
+                aria-label="close"
               >
-                <div className="w-[1.2vw] h-[1.2vw] mob:w-[6vw] mob:h-[6vw] relative">
-                  <Image src={Cross} alt="close" fill className="object-contain" />
+                <div className="w-[1vw] h-[1vw] mob:w-[4vw] mob:h-[4vw] flex items-center justify-center">
+                  <OriginCloseIcon sx={{ fontSize: '0.6vw', '@media (max-width: 600px)': { fontSize: '2.5vw' } }} />
                 </div>
               </button>
             </div>

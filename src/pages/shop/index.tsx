@@ -34,7 +34,7 @@ interface HomeProps {
 
 const ShopPage = (props: HomeProps) => {
   const { mainMenuItems, footerData } = props;
-  const mobile = useMediaQuery(650);
+  const isMobile = useMediaQuery(650);
   const [loading, setLoading] = useState(true);
   const [showDownloadApp, setShowDownloadApp] = useState(false);
   const [downloadAppReady, setDownloadAppReady] = useState(false);
@@ -43,9 +43,9 @@ const ShopPage = (props: HomeProps) => {
   const router = useRouter();
   const getDataFromApi = useGetDataFromApi();
   const [address] = useAtom(addressAtom);
-  const isMobile = useMediaQuery(768);
   const isTablet = useMediaQuery(1024);
   const filteredCategories = useSelector((state: any) => state.shopCategories);
+  const loginDetails = useSelector((state: any) => state.loginDetails);
 
   // console.log(filteredCategories,"Category");
   const { categories } = filteredCategories;
@@ -122,7 +122,7 @@ const ShopPage = (props: HomeProps) => {
       category: 'Navigation',
       label: 'Shop All'
     });
-  }, []);
+  }, [loginDetails.isLogin, address.defaultAddress?.store_id]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

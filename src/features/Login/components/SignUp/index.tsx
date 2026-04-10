@@ -123,11 +123,7 @@ const SignUp: FC<Props> = ({ renderTermsAndCondition }) => {
         isLogin: true
       }));
 
-      if (window) {
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      }
+      // Data will refresh reactively via page hooks
     } catch (error: any) {
       if (error?.response?.status === 500) {
         setErrors((prev) => ({

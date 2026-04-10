@@ -6,6 +6,8 @@ import Image from 'next/image';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
+import { useAtom } from 'jotai';
+import { addressAtom } from '@/features/Address/context/atoms';
 import ItemCard from '../shared/ItemCard';
 import AddItemBtn from '../shared/AddItemBtn/AddItemBtn';
 import AboutTheProduct from './AboutTheProduct';
@@ -413,6 +415,8 @@ const ProductDetailsWrapper = () => {
   const [notifyMsg, setNotifyMsg] = useState('');
   const [notifyType, setNotifyType] = useState<'success' | 'error'>('success');
   const dispatch = useDispatch();
+  const loginDetails = useSelector((state: any) => state.loginDetails);
+  const [address] = useAtom(addressAtom);
 
   const handleMaxQuantityExceeded = (maxQty: number) => {
     setToastMaxQuantity(maxQty);
@@ -565,7 +569,7 @@ const ProductDetailsWrapper = () => {
       getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isReady, query.id]);
+  }, [isReady, query.id, loginDetails.isLogin, address.defaultAddress?.store_id]);
 
   // Find default UOM
   const defaultUOM: UOM | undefined =

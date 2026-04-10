@@ -7,18 +7,19 @@ import { setIsSidebarOpen } from '@/store/slice/loginSlice';
 import { resetOrderDetails } from '@/store/slice/placeOrderDetails';
 import * as gtag from '@/utilities/gtag';
 import { useCartStore } from '@/hooks/useCartStore';
+import { clearCart } from '@/store/slice/CartSlice';
+import { clearMangoCart } from '@/store/slice/MangoCartSlice';
 
 const PaymentSuccess = (props: any) => {
-  const { cart, actions, isMangoPage } = useCartStore();
-  const { clearCart } = actions;
-  const { paymentModalDetails } = props;
+  const { isMangoPage } = useCartStore();
+  const { paymentModalDetails, cart } = props;
   const [timer, setTimer] = useState(5);
   const router = useRouter();
   const dispatch = useDispatch();
   const hasPlayedAudio = useRef(false);
 
-  const lsTotalKey = isMangoPage ? 'mango_total_to_pay' : 'total_to_pay';
-  const total_to_pay = localStorage.getItem(lsTotalKey);
+  const total_to_pay = localStorage.getItem(isMangoPage ? 'mango_total_to_pay' : 'total_to_pay');
+  // localStorage.removeItem("total_to_pay"); // Moved inside useEffect or handle properly to avoid re-runs
 
   useEffect(() => {
     const orderId = paymentModalDetails?.orderResponse?.order_id || 'N/A';
@@ -55,8 +56,12 @@ const PaymentSuccess = (props: any) => {
         content_type: 'product',
         num_items: cart?.totalQuantity || 0
       });
-      // localStorage.removeItem('total_to_pay');
-      localStorage.removeItem(lsTotalKey);
+      localStorage.removeItem('total_to_pay');
+      localStorage.removeItem('mango_total_to_pay');
+      localStorage.removeItem('cart_items');
+      localStorage.removeItem('mango_cart_items');
+      localStorage.removeItem('added_free_items');
+      localStorage.removeItem('mango_added_free_items');
     }
 
     // Play success audio only once using the primed audio from props
@@ -83,6 +88,7 @@ const PaymentSuccess = (props: any) => {
       dispatch(setIsSidebarOpen(false));
       dispatch(resetOrderDetails());
       dispatch(clearCart());
+      dispatch(clearMangoCart());
 
       if (flowType === 'retry_payment') {
         window.location.href = targetUrl;
@@ -104,7 +110,7 @@ const PaymentSuccess = (props: any) => {
 
         <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] text-[#231F2099] font-regular pt-[.97vw] mob:pt-[3.6vw] ">
           Paid
-          <span className="font-semibold text-[.97vw] mob:text-[3.6vw]"></span>using{' '}
+          <span className="font-semibold text-[.97vw] mob:text-[3.6vw]"></span> using{' '}
           <span className="font-semibold text-[.97vw] mob:text-[3.6vw]">{paymentModalDetails.paymentType}</span>
         </p>
         <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] mob:pt-[4.1vw] pt-[1.1vw] text-[#231F2099]">

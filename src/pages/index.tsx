@@ -18,6 +18,9 @@ import { UspCard } from '@/components/Cards';
 import CustomHead from '@/components/shared/CustomHead';
 import { ShopHeroSingle } from '@/components/ShopV2/ShopHero';
 import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useAtom } from 'jotai';
+import { addressAtom } from '@/features/Address/context/atoms';
 import * as gtag from '@/utilities/gtag';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
@@ -55,6 +58,8 @@ const Home = ({
   const [homepageData, setHomepageData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const getDataFromApi = useGetDataFromApi();
+  const loginDetails = useSelector((state: any) => state.loginDetails);
+  const [address] = useAtom(addressAtom);
 
   // Fetch homepage data
   useEffect(() => {
@@ -89,7 +94,7 @@ const Home = ({
       category: 'Navigation',
       label: 'Home'
     });
-  }, [initialHomepageData]);
+  }, [loginDetails.isLogin, address.defaultAddress?.store_id]);
 
   const mainCategoryData = homepageData?.find((item: any) => item.type === 'main-category')?.data || categories || [];
   const blendsCategoryData = homepageData?.find((item: any) => item.type === 'blends-category')?.data;

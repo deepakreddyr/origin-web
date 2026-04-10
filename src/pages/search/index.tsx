@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useAtom } from 'jotai';
+import { addressAtom } from '@/features/Address/context/atoms';
 import * as gtag from '@/utilities/gtag';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
@@ -222,7 +224,8 @@ const SearchResults = (props: HomeProps) => {
   const [noResults, setNoResults] = useState(false);
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
-
+  const loginDetails = useSelector((state: any) => state.loginDetails);
+  const [address] = useAtom(addressAtom);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -294,7 +297,7 @@ const SearchResults = (props: HomeProps) => {
       setCurrentSearchQuery(searchQuery);
       handleNewSearch(searchQuery);
     }
-  }, [searchQuery]);
+  }, [searchQuery, loginDetails.isLogin, address.defaultAddress?.store_id]);
 
   // Cleanup debounce timeout
   useEffect(() => {

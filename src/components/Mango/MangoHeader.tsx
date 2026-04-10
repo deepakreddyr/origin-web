@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
@@ -52,14 +52,31 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const getDataFromApi = useGetDataFromApi();
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+        setSearchQuery('');
+        setSearchResults([]);
+      }
+    };
+
+    if (showDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDropdown]);
 
   useEffect(() => {
     if (searchQuery.trim().length <= 2) {
       setSearchResults([]);
-      if (searchQuery.trim().length === 0) {
-        setShowDropdown(false);
-      }
+      setShowDropdown(false);
       return;
     }
 
@@ -243,18 +260,10 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
           </Link>
 
           {/* Separator - Desktop only */}
-          <div className="hidden md:block w-[1px] h-8 bg-black opacity-10 mx-2"></div>
+          {loginDetails?.isLogin && <div className="hidden md:block w-[1px] h-8 bg-black opacity-10 mx-2"></div>}
 
           {/* Login or Address UI */}
-          {!loginDetails?.isLogin ? (
-            <button
-              onClick={handleProfileMenuOpen}
-              className="flex items-center gap-2 px-5 py-2.5 bg-[#F8F4E9] text-black border border-[#F0ECD8] rounded-full text-[18px] font-medium transition-all hover:bg-[#F3F0E0] active:scale-95 shadow-sm"
-              style={{ fontFamily: 'SofiaPro' }}
-            >
-              Login
-            </button>
-          ) : (
+          {loginDetails?.isLogin && (
             <button
               onClick={handleSelectAddress}
               className="flex items-center gap-2 group text-left max-w-[200px] md:max-w-[250px]"
@@ -285,13 +294,13 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
         {/* Right side: Search, Account, Cart */}
         <div className="flex items-center gap-2.5 md:gap-10">
           {/* Search - Icon on mobile, Bar on desktop */}
-          <div className="w-auto md:w-[320px] relative">
+          <div className="w-auto md:w-[320px] relative" ref={dropdownRef}>
             <form className="relative">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onFocus={() => searchQuery.trim() && setShowDropdown(true)}
+                onFocus={() => searchQuery.trim().length > 2 && setShowDropdown(true)}
                 placeholder="Search products"
                 className="hidden md:block w-full bg-[#F8F4E9] rounded-[10px] pl-5 pr-20 py-2.5 text-[14px] outline-none shadow-none text-gray-700 placeholder:text-gray-400 border border-[#F0ECD8] transition-all"
                 style={{ fontFamily: 'SofiaPro' }}
@@ -387,7 +396,7 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
                 ) : isSearchLoading ? (
                   renderSearchSkeleton()
                 ) : (
-                  searchQuery.trim() && !isSearchLoading && renderNoResults(true)
+                  searchQuery.trim().length > 2 && !isSearchLoading && renderNoResults(true)
                 )}
               </div>
             )}
@@ -553,7 +562,7 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
               </div>
             ) : isSearchLoading ? (
               renderSearchSkeleton()
-            ) : searchQuery.trim() && !isSearchLoading ? (
+            ) : searchQuery.trim().length > 2 && !isSearchLoading ? (
               renderNoResults(false)
             ) : !searchQuery.trim() ? (
               <div className="p-10 text-center opacity-40">

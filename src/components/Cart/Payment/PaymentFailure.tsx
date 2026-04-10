@@ -45,13 +45,7 @@ const PaymentFailure = (props: any) => {
     clearCart();
   };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      handleContinue();
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  // Auto-continue timer removed as requested by user
 
   const payOnCodHandler = () => {
     let additionalHeaders = {};
@@ -126,13 +120,12 @@ const PaymentFailure = (props: any) => {
             But the refund&apos;s ripening soon. Let&apos;s pick another payment and get that fresh start.
           </p>
         </div>
-        {!paymentFlow && (
-          <div className="absolute bottom-[-5vw]  w-full mx-[-1.1vw] mob:mx-[-4.1vw] mob:pt-[4.1vw] mob: pt-[1.1vw] ">
-            <p className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw]  text-center font-semibold pb-[1.1vw] mob:pb-[4.1vw]">
-              You can also proceed with options below
-            </p>
-            <div className="flex items-center gap-[1.67vw] mob:gap-[5vw] justify-center">
-              {/* <button
+        <div className="w-full mt-[2vw] mob:mt-[8vw]">
+          <p className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw]  text-center font-semibold pb-[1.1vw] mob:pb-[4.1vw]">
+            You can also proceed with options below
+          </p>
+          <div className="flex items-center gap-[1.67vw] mob:gap-[5vw] justify-center">
+            {/* <button
                 onClick={() => {
                   // this will open the checkout again with the same order keu and order dertails
 
@@ -148,15 +141,20 @@ const PaymentFailure = (props: any) => {
               >
                 Retry Payment
               </button> */}
-              <button
-                onClick={() => payOnCodHandler()}
-                className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold px-[1.1vw] mob:px-[4.1vw] py-[.5vw] mob:py-[1.5vw] rounded-full bg-white border border-black"
-              >
-                Pay on Delivery
-              </button>
-            </div>
+            <button
+              onClick={() => payOnCodHandler()}
+              className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold px-[1.1vw] mob:px-[4.1vw] py-[.5vw] mob:py-[1.5vw] rounded-full bg-white border border-black"
+            >
+              Pay on Delivery
+            </button>
+            <button
+              onClick={() => setActiveScreenIndex(2)}
+              className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold px-[1.1vw] mob:px-[4.1vw] py-[.5vw] mob:py-[1.5vw] rounded-full bg-white border border-red-500 text-red-500"
+            >
+              Cancel Order
+            </button>
           </div>
-        )}
+        </div>
       </>
     );
   };

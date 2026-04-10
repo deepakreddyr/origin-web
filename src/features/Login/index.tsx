@@ -125,10 +125,7 @@ const Login = () => {
           isLogin: true,
           user: response.access_token
         }));
-        // Hard refresh after 1 seconds to fetch all API data fresh with the new auth token
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        // Data will now refresh reactively via page hooks when isLogin changes
       }
     } catch (error: any) {
       const e = await error.response.json();
