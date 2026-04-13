@@ -254,8 +254,11 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
         className={`${isHeaderSticky ? 'fixed top-0' : 'absolute top-0'} left-0 w-full z-[100] bg-[#FFECA6] px-6 md:px-[7vw] py-3 flex items-center justify-between`}
       >
         <div className="flex items-center gap-1 flex-1">
-          {/* Logo - Hidden on mobile, logo moves to Hero */}
-          <Link href="/mango" className="hidden md:flex relative w-40 h-12 md:w-60 md:h-16 flex-shrink-0 mt-[5px]">
+          {/* Logo - Visible on mobile Only if skip-login */}
+          <Link
+            href="/mango"
+            className={`${loginDetails?.isLogin ? 'hidden md:flex' : 'flex'} relative w-32 h-8 md:w-60 md:h-16 flex-shrink-0 mt-[2px] md:mt-[5px]`}
+          >
             <Image src={originLogo} alt="Origin Fresh" fill className="object-contain" priority />
           </Link>
 
