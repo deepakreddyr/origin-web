@@ -36,12 +36,17 @@ const YellowBtn = (props: any) => {
             whileTap={{ scale: 0.82 }}
             className={`${
               isMangoPage
-                ? 'h-[1.7vw] w-[1.7vw] mob:h-[6.5vw] mob:w-[6.5vw] text-[1.4vw] mob:text-[5vw]'
-                : 'h-[1.9vw] w-[1.9vw] mob:h-[7.5vw] mob:w-[7.5vw] text-[1.5vw] mob:text-[5.5vw]'
+                ? 'h-[1.7vw] w-[1.7vw] mob:h-[6.5vw] mob:w-[6.5vw]'
+                : 'h-[1.9vw] w-[1.9vw] mob:h-[7.5vw] mob:w-[7.5vw]'
             } flex-shrink-0 rounded-full bg-[#FFD500] text-black font-semibold flex items-center justify-center mr-[.4vw] mob:mr-[2vw]`}
             onClick={onDecrease}
           >
-            <span className="mob:mb-[3px] mb-[2px]">–</span>
+            <span
+              className={isMangoPage ? 'text-[1.4vw] mob:text-[5vw]' : 'text-[1.5vw] mob:text-[5.5vw]'}
+              style={{ lineHeight: 1, marginTop: '-0.1em', display: 'block' }}
+            >
+              –
+            </span>
           </motion.button>
         )}
 
@@ -89,10 +94,15 @@ const YellowBtn = (props: any) => {
             isItemPresent
               ? `${isMangoPage ? 'h-[1.7vw] w-[1.7vw] mob:h-[6.5vw] mob:w-[6.5vw]' : 'h-[1.9vw] w-[1.9vw] mob:h-[7.5vw] mob:w-[7.5vw]'} ml-[.4vw] mob:ml-[2vw]`
               : `${isMangoPage ? 'h-[1.4vw] w-[1.4vw] mob:h-[6vw] mob:w-[6vw]' : 'h-[1.7vw] w-[1.7vw] mob:h-[6.5vw] mob:w-[6.5vw]'}`
-          } ${isMangoPage ? 'text-[1.3vw] mob:text-[5vw]' : 'text-[1.5vw] mob:text-[5.5vw]'}`}
+          }`}
           onClick={isItemPresent ? onIncrease : handleAddItem}
         >
-          <span className="mob:mb-[3px] mb-[2px]">+</span>
+          <span
+            className={isMangoPage ? 'text-[1.3vw] mob:text-[5vw]' : 'text-[1.5vw] mob:text-[5.5vw]'}
+            style={{ lineHeight: 1, marginTop: '-0.1em', display: 'block' }}
+          >
+            +
+          </span>
         </motion.button>
       </motion.div>
     </div>

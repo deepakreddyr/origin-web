@@ -6,7 +6,7 @@ import PopularProduce from '@/components/ShopV2/PopularProduce';
 import PopularProduceMob from '@/components/ShopV2/PopularProduceMob';
 import FeatureProduct from '@/components/ShopV2/FeaturedProduct';
 import VideoBanner from '@/components/ShopV2/VideoBanner';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as gtag from '@/utilities/gtag';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
@@ -43,6 +43,7 @@ const ShopPage = (props: HomeProps) => {
   const router = useRouter();
   const getDataFromApi = useGetDataFromApi();
   const [address] = useAtom(addressAtom);
+  const lastFetchedRef = useRef({ url: '', storeId: '' });
   const isTablet = useMediaQuery(1024);
   const filteredCategories = useSelector((state: any) => state.shopCategories);
   const loginDetails = useSelector((state: any) => state.loginDetails);
@@ -100,6 +101,16 @@ const ShopPage = (props: HomeProps) => {
     } else {
       apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['getShopDetails'];
     }
+
+    const currentStoreId = addressFromLs?.store_id || '';
+
+    // Prevent redundant calls if parameters haven't changed
+    if (apiUrl === lastFetchedRef.current.url && String(currentStoreId) === String(lastFetchedRef.current.storeId)) {
+      console.log('Skipping redundant shop-all call');
+      return;
+    }
+
+    lastFetchedRef.current = { url: apiUrl, storeId: String(currentStoreId) };
 
     const successHandler = (data: any) => {
       console.log(data, 'DATA');

@@ -142,7 +142,7 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
 
       {/* Mango Styled Container: White background, Border, Shadow, Padding */}
       <div
-        className={`bg-white border border-[#EDE6D4] flex flex-col h-full relative z-[1] transition-all w-full p-3 md:p-3 rounded-[12px] md:rounded-[24px]`}
+        className={`bg-white border border-[#EDE6D4] flex flex-col h-full relative z-[1] transition-all w-full p-2 md:p-3 rounded-[12px] md:rounded-[24px]`}
       >
         <div onClick={handleNavigation} className="cursor-pointer w-full text-start group flex flex-col h-full">
           {/* Image Container — adjusted to precise design specs */}
@@ -217,13 +217,15 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
           </div>
 
           {/* Price and Action Area */}
-          <div className="flex items-center justify-between mt-auto pt-1">
-            <div className="flex flex-col pl-1">
+          <div className="flex items-center justify-between mt-auto pt-1 gap-1">
+            <div className="flex flex-col pl-0 md:pl-1">
               <div className="flex items-center gap-1 md:gap-2">
                 {selectedUOM.market_price > 0 && selectedUOM.market_price > selectedUOM.price && (
-                  <p className="text-gray-400 line-through text-[10px] font-[SofiaPro]">₹{selectedUOM.market_price}</p>
+                  <p className="text-gray-400 line-through text-[9px] md:text-[10px] font-[SofiaPro]">
+                    ₹{selectedUOM.market_price}
+                  </p>
                 )}
-                <p className={`text-[15px] md:text-[18px] font-bold text-[#1a1a1a]`} style={{ fontFamily: 'SofiaPro' }}>
+                <p className={`text-[14px] md:text-[18px] font-bold text-[#1a1a1a]`} style={{ fontFamily: 'SofiaPro' }}>
                   ₹{selectedUOM.price}
                 </p>
               </div>
@@ -238,15 +240,15 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
                     e.stopPropagation();
                     if (!isNotified) handleNotifyMe();
                   }}
-                  className={`flex items-center justify-center border font-[SofiaPro] font-bold h-10 px-4 rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${
-                    isNotified ? 'cursor-default' : 'hover:bg-green-50 text-[13px]'
+                  className={`flex items-center justify-center border font-[SofiaPro] font-bold h-8 mob:h-7 px-4 mob:px-1.5 rounded-full transition-all whitespace-nowrap gap-2 mob:gap-1 border-[#146321] text-[#146321] ${
+                    isNotified ? 'cursor-default' : 'hover:bg-green-50 text-[13px] mob:text-[10px]'
                   }`}
                 >
                   {!isNotified && <span>Notify</span>}
                   {isNotified ? (
-                    <NotificationsActiveIcon sx={{ fontSize: '1.2rem' }} />
+                    <NotificationsActiveIcon sx={{ fontSize: isMobile ? '0.9rem' : '1.2rem' }} />
                   ) : (
-                    <NotificationsIcon sx={{ fontSize: '1.2rem' }} />
+                    <NotificationsIcon sx={{ fontSize: isMobile ? '0.9rem' : '1.2rem' }} />
                   )}
                 </button>
               ) : isBasketItem ? (

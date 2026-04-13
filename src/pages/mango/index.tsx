@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import { GetServerSideProps } from 'next';
@@ -68,6 +68,7 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
   const getDataFromApi = useGetDataFromApi();
   const [address] = useAtom(addressAtom);
   const loginDetails = useSelector((state: any) => state.loginDetails);
+  const lastFetchedRef = useRef({ url: '', storeId: '' });
 
   useEffect(() => {
     const token = localStorage.getItem('user_token');
@@ -82,6 +83,15 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
     } else {
       apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['getMangoHomepage'];
     }
+
+    const currentStoreId = addressFromLs?.store_id || '';
+
+    if (apiUrl === lastFetchedRef.current.url && String(currentStoreId) === String(lastFetchedRef.current.storeId)) {
+      console.log('Skipping redundant mango homepage call');
+      return;
+    }
+
+    lastFetchedRef.current = { url: apiUrl, storeId: String(currentStoreId) };
 
     const successHandler = (data: any) => {
       console.log('[MangoHomepage] API response:', data);

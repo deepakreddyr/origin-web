@@ -106,6 +106,7 @@ const Cart = () => {
     distance_from_warehouse: null
   });
   const [address, setAddress] = useAtom(addressAtom);
+  const [hasLocationChanged, setHasLocationChanged] = useState(false);
 
   // ✅ HYDRATION: LOAD CART FROM LS ON MOUNT
   useEffect(() => {
@@ -206,7 +207,13 @@ const Cart = () => {
     } else {
       fetchCartItemsFromApi();
     }
-  }, [loginDetails.isSidebarOpen, loginDetails.isLogin, isSubscription, isMangoPage]);
+  }, [
+    loginDetails.isSidebarOpen,
+    loginDetails.isLogin,
+    isSubscription,
+    isMangoPage,
+    address?.defaultAddress?.store_id
+  ]);
 
   useEffect(() => {
     if (!loginDetails.isSidebarOpen) {
@@ -221,8 +228,13 @@ const Cart = () => {
       if (isSubscription) {
         dispatch(clearSubscriptionCart());
       }
+
+      // If address was changed during the session, reload page on close to sync underlying page content
+      if (hasLocationChanged) {
+        window.location.reload();
+      }
     }
-  }, [loginDetails.isSidebarOpen, isSubscription, dispatch]);
+  }, [loginDetails.isSidebarOpen, isSubscription, dispatch, hasLocationChanged]);
 
   // Ensure proceed button is enabled when returning to main cart view
   useEffect(() => {
@@ -358,7 +370,14 @@ const Cart = () => {
       <LocationChangedPopup
         isVisible={showLocationPopup}
         onClose={() => {
-          window.location.reload();
+          setShowLocationPopup(false);
+          setHasLocationChanged(true);
+          // Manually trigger fetch to update cart items for new location immediately
+          fetchCartItemsFromApi();
+
+          // After address change, return to the main cart view to allow review
+          setAddressModal(false);
+          dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
         }}
       />
       {SCREEN_MAP[cart.cartTabType]}
