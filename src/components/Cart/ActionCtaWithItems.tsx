@@ -144,7 +144,14 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
   const finalIsDisabled = getDisabledState();
 
   const handleClick = () => {
-    if (!finalIsDisabled && handler) handler();
+    if (!finalIsDisabled && handler) {
+      if (getButtonText() === 'PROCEED') {
+        if (typeof window !== 'undefined' && (window as any).fbq) {
+          (window as any).fbq('track', 'InitiateCheckout');
+        }
+      }
+      handler();
+    }
   };
 
   const getButtonStyling = () =>

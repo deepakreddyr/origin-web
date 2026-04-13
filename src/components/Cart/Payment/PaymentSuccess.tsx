@@ -7,31 +7,53 @@ import { setIsSidebarOpen } from '@/store/slice/loginSlice';
 import { resetOrderDetails } from '@/store/slice/placeOrderDetails';
 import { clearCart } from '@/store/slice/CartSlice';
 import * as gtag from '@/utilities/gtag';
+
 const PaymentSuccess = (props: any) => {
-  const { paymentModalDetails } = props;
+  const { paymentModalDetails, cart } = props;
   const [timer, setTimer] = useState(5);
   const router = useRouter();
   const dispatch = useDispatch();
   const hasPlayedAudio = useRef(false);
   const total_to_pay = localStorage.getItem('total_to_pay');
-  // localStorage.removeItem("total_to_pay"); // Moved inside useEffect or handle properly to avoid re-runs
 
   useEffect(() => {
-    if (paymentModalDetails?.orderResponse?.order_id) {
-      gtag.event({
-        action: 'purchase',
-        category: 'Ecommerce',
-        transaction_id: paymentModalDetails.orderResponse.order_id,
-        value: Number(total_to_pay),
-        items: [] // Ideally, we should pull items from storage or state here
-      });
-      gtag.event({
-        action: 'conversion',
-        send_to: 'AW-16677565060/cK4RCIynlZIcEITlvZA-',
-        value: Number(total_to_pay) || '',
+    const orderId = paymentModalDetails?.orderResponse?.order_id || 'N/A';
+    const value = Number(total_to_pay) || 0;
+
+    // Google Event
+    gtag.event({
+      action: 'purchase',
+      category: 'Ecommerce',
+      transaction_id: orderId,
+      value: value,
+      items:
+        cart?.items?.map((item: any) => ({
+          item_id: item.id,
+          item_name: item.name,
+          quantity: item.multiple_uoms?.reduce((sum: number, uom: any) => sum + (uom.cart_quantity || 0), 0)
+        })) || []
+    });
+
+    gtag.event({
+      action: 'conversion',
+      send_to: 'AW-16677565060/cK4RCIynlZIcEITlvZA-',
+      value: value || '',
+      currency: 'INR',
+      transaction_id: orderId
+    });
+
+    // Meta Purchase Event (Facebook)
+    if (typeof window !== 'undefined' && (window as any).fbq) {
+      (window as any).fbq('track', 'Purchase', {
+        value: value,
         currency: 'INR',
-        transaction_id: paymentModalDetails.orderResponse.order_id
+        content_ids: cart?.items?.map((item: any) => item.id) || [orderId],
+        content_type: 'product',
+        num_items: cart?.totalQuantity || 0
       });
+    }
+
+    if (paymentModalDetails?.orderResponse?.order_id) {
       localStorage.removeItem('total_to_pay');
     }
 
@@ -42,7 +64,7 @@ const PaymentSuccess = (props: any) => {
       });
       hasPlayedAudio.current = true;
     }
-  }, [paymentModalDetails, total_to_pay, props.successAudio]);
+  }, [paymentModalDetails, total_to_pay, props.successAudio, cart]);
 
   useEffect(() => {
     if (timer > 0) {
@@ -50,7 +72,7 @@ const PaymentSuccess = (props: any) => {
         setTimer((prevTimer) => prevTimer - 1);
       }, 1000);
 
-      return () => clearInterval(countdown); // Cleanup interval on component unmount
+      return () => clearInterval(countdown);
     } else {
       localStorage.removeItem('FLOW_TYPE');
       router.push(`/orders/${paymentModalDetails.orderResponse.order_id}`);
@@ -61,7 +83,7 @@ const PaymentSuccess = (props: any) => {
   }, [timer, dispatch, paymentModalDetails.orderResponse.order_id, router]);
 
   return (
-    <div className="flex flex-col items-center justify-center  grow">
+    <div className="flex flex-col items-center justify-center grow">
       <div className="w-[10vw] mob:w-[45vw]">
         <Lottie animationData={successAnimation} />
       </div>

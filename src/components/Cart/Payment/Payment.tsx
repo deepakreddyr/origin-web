@@ -305,7 +305,9 @@ const Payment = (props: any) => {
 
   const PAYMENT_SCREEN_MAP: any = {
     MAKE_PAYMENT: <MakePayment placeOrderHandler={placeOrderHandler} primeAudio={primeAudio} />,
-    PAYMENT_SUCCESS: <PaymentSuccess paymentModalDetails={paymentModalDetails} successAudio={successAudio} />,
+    PAYMENT_SUCCESS: (
+      <PaymentSuccess paymentModalDetails={paymentModalDetails} successAudio={successAudio} cart={cart} />
+    ),
     PAYMENT_FAILED: (
       <PaymentFailure
         paymentModalDetails={paymentModalDetails}
