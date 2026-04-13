@@ -31,7 +31,6 @@ const BlackBtn: React.FC<BlackBtnProps> = (props) => {
 
   return (
     <div className="w-full flex flex-col items-center">
-      {/* Single morphing pill */}
       <motion.div
         layout
         transition={{ type: 'spring', stiffness: 380, damping: 28 }}
@@ -49,10 +48,15 @@ const BlackBtn: React.FC<BlackBtnProps> = (props) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.15 }}
             whileTap={{ scale: 0.82 }}
-            className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] flex-shrink-0 rounded-full bg-black text-white text-[1.2vw] mob:text-[4.5vw] font-medium flex items-center justify-center mr-[.4vw] mob:mr-[2vw]"
+            className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] flex-shrink-0 rounded-full bg-black text-white font-medium flex items-center justify-center mr-[.4vw] mob:mr-[2vw]"
             onClick={onDecrease}
           >
-            <span className="mob:mb-[3px] mb-[2px]">–</span>
+            <span
+              className="text-[1.2vw] mob:text-[4.5vw]"
+              style={{ lineHeight: 1, marginTop: '-0.1em', display: 'block' }}
+            >
+              –
+            </span>
           </motion.button>
         )}
 
@@ -92,12 +96,17 @@ const BlackBtn: React.FC<BlackBtnProps> = (props) => {
           transition={{ type: 'spring', stiffness: 500, damping: 20 }}
           className={`flex-shrink-0 flex items-center justify-center rounded-full font-medium ${
             isItemPresent
-              ? 'h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] bg-black text-white text-[1.2vw] mob:text-[4.5vw] ml-[.4vw] mob:ml-[2vw]'
-              : 'h-[1.2vw] w-[1.2vw] mob:h-[4vw] mob:w-[4vw] bg-black text-white text-[1.2vw] mob:text-[4.5vw]'
+              ? 'h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] bg-black text-white ml-[.4vw] mob:ml-[2vw]'
+              : 'h-[1.2vw] w-[1.2vw] mob:h-[4vw] mob:w-[4vw] bg-black text-white'
           }`}
           onClick={isItemPresent ? onIncrease : handleAddItem}
         >
-          <span className="mob:mb-[3px] mb-[2px]">+</span>
+          <span
+            className="text-[1.2vw] mob:text-[4.5vw]"
+            style={{ lineHeight: 1, marginTop: '-0.1em', display: 'block' }}
+          >
+            +
+          </span>
         </motion.button>
       </motion.div>
     </div>

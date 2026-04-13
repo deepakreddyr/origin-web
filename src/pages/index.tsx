@@ -17,7 +17,7 @@ import PrimaryFeature from '@/components/OriginGrids/PrimaryFeature';
 import { UspCard } from '@/components/Cards';
 import CustomHead from '@/components/shared/CustomHead';
 import { ShopHeroSingle } from '@/components/ShopV2/ShopHero';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
@@ -60,6 +60,7 @@ const Home = ({
   const getDataFromApi = useGetDataFromApi();
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const [address] = useAtom(addressAtom);
+  const lastFetchedRef = useRef({ url: '', storeId: '' });
 
   // Fetch homepage data
   useEffect(() => {
@@ -74,6 +75,16 @@ const Home = ({
     } else {
       apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['getHomepage'];
     }
+
+    const currentStoreId = addressFromLs?.store_id || '';
+
+    // Prevent redundant calls if parameters haven't changed
+    if (apiUrl === lastFetchedRef.current.url && String(currentStoreId) === String(lastFetchedRef.current.storeId)) {
+      console.log('Skipping redundant homepage call');
+      return;
+    }
+
+    lastFetchedRef.current = { url: apiUrl, storeId: String(currentStoreId) };
 
     const successHandler = (data: any) => {
       console.log(data);
