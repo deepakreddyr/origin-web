@@ -37,9 +37,7 @@ const WhiteBtn = (props: any) => {
           transition={{ duration: 0.15 }}
           whileTap={{ scale: 0.82 }}
           className={`${
-            isMangoPage
-              ? 'h-[1.6vw] w-[1.6vw] mob:h-[6vw] mob:w-[6vw]'
-              : 'h-[1.8vw] w-[1.8vw] mob:h-[6.5vw] mob:w-[6.5vw]'
+            isMangoPage ? 'h-[1.6vw] w-[1.6vw] mob:h-[4vw] mob:w-[4vw]' : 'h-[1.8vw] w-[1.8vw] mob:h-[4vw] mob:w-[4vw]'
           } flex-shrink-0 rounded-full bg-primary text-black font-semibold flex items-center justify-center mr-[.4vw] mob:mr-[2vw]`}
           onClick={onDecrease}
         >
@@ -113,7 +111,7 @@ const WhiteBtn = (props: any) => {
           className={`flex-shrink-0 flex items-center justify-center rounded-full bg-primary text-black font-semibold ${
             isItemPresent
               ? `${isMangoPage ? 'h-[1.6vw] w-[1.6vw] mob:h-[6vw] mob:w-[6vw]' : 'h-[1.8vw] w-[1.8vw] mob:h-[6.5vw] mob:w-[6.5vw]'} ml-[.4vw] mob:ml-[2vw]`
-              : `${isMangoPage ? 'h-[1.3vw] w-[1.3vw] mob:h-[5vw] mob:w-[5vw]' : 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw]'}`
+              : `${isMangoPage ? 'h-[1.3vw] w-[1.3vw] mob:h-[4vw] mob:w-[4vw]' : 'h-[1.5vw] w-[1.5vw] mob:h-[4vw] mob:w-[4vw]'}`
           }`}
           onClick={isItemPresent ? onIncrease : handleAddItem}
         >
