@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AddItemBtn from './AddItemBtn/AddItemBtn';
 import { useCartStore } from '@/hooks/useCartStore';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { cleanImageUrl } from '@/utilities/utils';
 
 export const NotifyToast: FC<{
   message: string;
@@ -83,6 +84,7 @@ export interface Product {
   item_code: string;
   name: string;
   image: string;
+  website_image?: string;
   multiple_images?: string[];
   multiple_uoms: UOM[];
   bg_color: string;
@@ -345,7 +347,7 @@ export const UOMPopup: FC<{
           <div className="flex items-center gap-4 pr-10">
             <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#FAF7EF] flex-shrink-0 flex items-center justify-center border border-gray-100 p-2">
               <Image
-                src={product.image || sampleimg}
+                src={cleanImageUrl(product.website_image) || product.image || sampleimg}
                 alt={product.name}
                 width={60}
                 height={60}
@@ -451,7 +453,7 @@ export const UOMPopup: FC<{
                     </div>
                   )}
                   <p className="font-semibold text-gray-900 text-sm font-[SofiaPro] capitalize truncate">
-                    {ripenessLabel || 'Standard'}
+                    {ripenessLabel || ''}
                   </p>
                 </div>
 

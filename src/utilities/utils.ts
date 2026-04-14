@@ -179,3 +179,8 @@ export const formatTimestamp = (unixTimestamp: any) => {
 
   return `${dayName}, ${monthName} ${day} ${year} ${hours}:${minutes} ${ampm}`;
 };
+
+export const cleanImageUrl = (url: string | null | undefined): string => {
+  if (!url) return '';
+  return url.replace(/([^:])\/\/+/g, '$1/');
+};

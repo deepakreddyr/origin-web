@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
-import { getAddressAndStoreId } from '@/utilities/utils';
+import { getAddressAndStoreId, cleanImageUrl } from '@/utilities/utils';
 import { protectedUrl } from '@/url';
 import { useDispatch, useSelector } from 'react-redux';
 import { addNotifiedItem } from '@/store/slice/productsSlice';
@@ -157,7 +157,7 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
               className={`relative w-full h-full transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
             >
               <Image
-                src={itemDetails.image || logo}
+                src={cleanImageUrl(itemDetails.website_image) || itemDetails.image || logo}
                 alt={itemDetails.name || 'product image'}
                 fill
                 unoptimized
@@ -266,6 +266,7 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
                     quantity={totalQuantityAcrossProduct}
                     isMangoPage={isMangoPage}
                     hasRipeness={hasRipenessOptions}
+                    hasOptions={requiresSelection}
                     handleAddItem={(e: any) => {
                       e.stopPropagation();
                       e.preventDefault();

@@ -57,6 +57,9 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      // If mobile search is open, don't trigger handleClickOutside clearing
+      if (isMobileSearchOpen) return;
+
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setShowDropdown(false);
         setSearchQuery('');
@@ -71,7 +74,7 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [showDropdown]);
+  }, [showDropdown, isMobileSearchOpen]);
 
   useEffect(() => {
     if (searchQuery.trim().length <= 2) {
@@ -195,19 +198,25 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
   };
 
   const renderViewAllResults = () => {
+    const handleViewAll = (e: React.MouseEvent) => {
+      e.preventDefault();
+      router.push(`/mango/products?q=${encodeURIComponent(searchQuery)}`);
+      setShowDropdown(false);
+      setIsMobileSearchOpen(false);
+    };
+
     return (
-      <Link
-        href={`/mango/products`}
-        className="block w-full bg-white border-t border-[#f0ecd8] py-4 flex items-center justify-center text-[14px] font-bold font-[SofiaPro] hover:bg-gray-50 transition-colors"
-        onClick={() => {
-          setShowDropdown(false);
-          setIsMobileSearchOpen(false);
-        }}
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={handleViewAll}
+        onKeyDown={(e) => e.key === 'Enter' && handleViewAll(e as any)}
+        className="cursor-pointer block w-full bg-white border-t border-[#f0ecd8] py-4 flex items-center justify-center text-[14px] font-bold font-[SofiaPro] hover:bg-gray-50 transition-colors"
       >
         <span className="text-[#fac510] mr-1">View all</span>
         <span className="text-black">results for </span>
         <span className="text-[#fac510] ml-1">&quot;{searchQuery}&quot;</span>
-      </Link>
+      </div>
     );
   };
 

@@ -199,6 +199,8 @@ const YellowBtn = (props: YellowBtnProps) => {
           >
             {shouldShowStepper ? (
               <AddIcon sx={{ fontSize: '1.2rem', stroke: 'currentColor', strokeWidth: 1.5 }} />
+            ) : requiresSelection ? (
+              <KeyboardArrowDownIcon sx={{ fontSize: '1.5rem', stroke: 'currentColor', strokeWidth: 1 }} />
             ) : (
               <AddIcon sx={{ fontSize: '1.2rem', stroke: 'currentColor', strokeWidth: 1.5 }} />
             )}
