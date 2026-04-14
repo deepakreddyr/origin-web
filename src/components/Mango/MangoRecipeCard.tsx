@@ -77,12 +77,12 @@ const MangoRecipeCard: React.FC<MangoRecipeCardProps> = ({ slug, name, tag, date
           </p>
 
           {/* Mobile Metadata (Text only) */}
-          <div className="flex md:hidden items-center gap-1 mb-1.5">
-            <span className="text-[12px] font-regular text-[#1a1a1a] opacity-50" style={{ fontFamily: 'SofiaPro' }}>
+          <div className="flex md:hidden items-center mb-1.5">
+            {/* <span className="text-[12px] font-regular text-[#1a1a1a] opacity-50" style={{ fontFamily: 'SofiaPro' }}>
               {mobileCopyMapping[slug]?.date || date}
-            </span>
+            </span> */}
             <span className="text-[#1a1a1a] opacity-50">•</span>
-            <span className="text-[12px] font-regular text-[#1a1a1a] opacity-50" style={{ fontFamily: 'SofiaPro' }}>
+            <span className="text-[15px] font-regular text-[#1a1a1a] opacity-50" style={{ fontFamily: 'SofiaPro' }}>
               {mobileCopyMapping[slug]?.tag || tag}
             </span>
           </div>

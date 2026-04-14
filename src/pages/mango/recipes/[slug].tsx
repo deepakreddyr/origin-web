@@ -26,10 +26,12 @@ const recipeMap: Record<
     ingredients: string[];
     method: string[];
     imgSrc: string;
+    mobileTitle?: string;
   }
 > = {
   'mango-chaat': {
     title: 'Spice up your evening with this delectable Mango Chaat!',
+    mobileTitle: 'Zesty Mango Chaat',
     tag: 'By Memo',
     date: '02 March, 2026',
     time: '10 MINS',
@@ -38,61 +40,61 @@ const recipeMap: Record<
       'A quintessential summer snack that balances the sweetness of ripe mangoes with the sharp punch of Indian spices. Perfect for sun-drenched terrace evenings.',
     ingredients: [
       '1 cup firm mango cubes',
-      '1/4 teaspoon red chilli powder',
-      '1/4 teaspoon roasted cumin powder',
+      '¼ tsp red chilli powder',
+      '¼ tsp roasted cumin powder',
       'Salt to taste',
       'A squeeze of lime',
       'Fresh coriander (optional)'
     ],
     method: [
-      'Toss firm mango cubes with chilli powder, roasted cumin powder, and salt in a large ceramic mixing bowl.',
-      'Add fresh lime juice and mix gently to ensure the spices coat each cube without mashing the fruit.',
-      'Garnish with a handful of fresh coriander and serve immediately while the mangoes are chilled.'
+      'Toss mango cubes with chilli powder, cumin, and salt.',
+      'Add lime juice and mix gently.',
+      'Garnish with coriander and serve immediately.'
     ],
     imgSrc: '/assets/images/recipes/mango-chaat.jpg'
   },
   'mango-popsicles': {
-    title: 'Beat The Heat With Addictive Mango Popsicles',
+    title: 'Beat the heat with addictive Mango Popsicles',
+    mobileTitle: 'Mango Popsicles',
     tag: 'By Memo',
     date: '02 March, 2026',
-    time: '4 HOURS',
-    difficulty: 'MODERATE',
+    time: '8 HOURS',
+    difficulty: 'EASY',
     description:
       'Cool down this summer with creamy, naturally-sweet mango popsicles. Made with just three ingredients, they are the perfect guilt-free treat.',
     ingredients: [
-      '2 cups ripe Alphonso mango pulp',
-      '2 tablespoons honey or jaggery',
-      '1/2 cup coconut milk',
-      'A pinch of cardamom (optional)'
+      '1 cup mango pulp',
+      '2 tbsp yogurt or coconut milk',
+      'Honey (optional)',
+      'Pinch of cardamom or a teaspoon of vanilla extract'
     ],
-    method: [
-      'Blend mango pulp, honey, and coconut milk until silky smooth.',
-      'Pour mixture into popsicle moulds and insert sticks.',
-      'Freeze for at least 6 hours or overnight. Run warm water over mould to release.'
-    ],
+    method: ['Blend everything.', 'Pour into molds.', 'Freeze 6–8 hours.'],
     imgSrc: '/assets/images/recipes/mango-popsicles.jpg'
   },
   'mango-cucumber-salsa': {
-    title: 'This Mango Cucumber Salsa Is The Next Crowd Favourite',
+    title: 'This Mango cucumber salsa is your next crowd favourite',
+    mobileTitle: 'Cucumber Salsa',
     tag: 'By Memo',
     date: '02 March, 2026',
     time: '15 MINS',
     difficulty: 'EASY',
     description:
-      'A vibrant, refreshing salsa that pairs the tropical sweetness of ripe mangoes with cool cucumber and a hint of jalapeño heat.',
+      'A vibrant, refreshing salsa that pairs the tropical sweetness of ripe mangoes with cool cucumber and a hint of crunch.',
     ingredients: [
-      '1 ripe mango, diced',
-      '1 cucumber, diced',
-      '1 small red onion, finely chopped',
-      '1 jalapeño, seeded and minced',
-      'Juice of 1 lime',
-      'Fresh coriander, chopped',
+      '1 cup mango cubes',
+      '1 cup cucumber slices',
+      '1 tbsp roasted peanuts',
+      '1 tbsp chopped mint',
+      '--- For dressing ---',
+      '1 tsp lime juice',
+      '1 tsp honey',
+      'Pinch chilli flakes',
       'Salt to taste'
     ],
     method: [
-      'Combine diced mango, cucumber, red onion, and jalapeño in a bowl.',
-      'Squeeze fresh lime juice over the mixture and toss to coat.',
-      'Add fresh coriander and a pinch of salt. Serve chilled with nachos or grilled fish.'
+      'Combine mango, cucumber, peanuts, and mint.',
+      'Whisk dressing ingredients together.',
+      'Toss gently before serving.'
     ],
     imgSrc: '/assets/images/recipes/mango-salsa.jpg'
   }
@@ -121,11 +123,11 @@ const MangoRecipeDetailPage = ({ slug, mainMenuItems, footerData }: MangoRecipeD
           {/* Top Section: Hero Image & Ingredients side-by-side */}
           <div className="flex flex-col lg:flex-row gap-8 xl:gap-12 items-stretch md:mb-5">
             {/* Feature Image Container */}
-            <div className="lg:w-[65%] w-screen md:w-full relative aspect-[4/5] md:aspect-auto md:min-h-full md:rounded-[32px] rounded-none overflow-hidden shadow-xl -ml-6 md:ml-0">
+            <div className="lg:w-[65%] w-screen md:w-full relative aspect-[4/5] md:aspect-auto md:min-h-full md:rounded-[32px] rounded-none overflow-hidden -ml-6 md:ml-0">
               <Image src={recipe.imgSrc} alt={recipe.title} fill className="object-cover" priority />
 
               {/* Desktop-only top badges */}
-              <div className="hidden md:flex absolute top-6 left-6 gap-3">
+              {/* <div className="hidden md:flex absolute top-6 left-6 gap-3">
                 <div className="flex items-center gap-2 bg-[#FFF9E5] text-[#1a1a1a] px-4 py-2 rounded-full text-[12px] font-semibold tracking-widest border border-[#F2BB00]/20">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <circle cx="12" cy="12" r="10" />
@@ -139,7 +141,7 @@ const MangoRecipeDetailPage = ({ slug, mainMenuItems, footerData }: MangoRecipeD
                   </svg>
                   {recipe.difficulty}
                 </div>
-              </div>
+              </div> */}
 
               {/* Mobile-only overlay title and badge */}
               <div className="md:hidden absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end gap-3">
@@ -151,7 +153,7 @@ const MangoRecipeDetailPage = ({ slug, mainMenuItems, footerData }: MangoRecipeD
                   {recipe.time}
                 </div>
                 <h1 className="text-white text-[42px] leading-[1.1] font-medium" style={{ fontFamily: 'Recoleta' }}>
-                  {recipe.title.includes('!') ? recipe.title.split('!')[0] : 'Mango Chaat'}
+                  {recipe.mobileTitle || recipe.title}
                 </h1>
               </div>
             </div>
@@ -166,15 +168,19 @@ const MangoRecipeDetailPage = ({ slug, mainMenuItems, footerData }: MangoRecipeD
               </span>
               <ul className="space-y-6 flex-grow">
                 {recipe.ingredients.map((ing, i) => (
-                  <li key={i} className="flex items-center gap-5">
-                    <div className="w-[18px] h-[18px] rounded-full border border-[#1a1a1a]/40 flex items-center justify-center flex-shrink-0">
-                      <div className="w-[6px] h-[6px] rounded-full bg-[#1a1a1a]/60" />
-                    </div>
+                  <li key={i} className="flex items-start gap-5">
+                    {!ing.startsWith('---') && (
+                      <div className="w-[18px] h-[18px] rounded-full border border-[#1a1a1a]/40 flex items-center justify-center flex-shrink-0 mt-1">
+                        <div className="w-[6px] h-[6px] rounded-full bg-[#1a1a1a]/60" />
+                      </div>
+                    )}
                     <span
-                      className="text-[16px] md:text-[18px] text-[#1a1a1a] opacity-80"
+                      className={`text-[16px] md:text-[18px] text-[#1a1a1a] ${
+                        ing.startsWith('---') ? 'font-bold mt-4 opacity-100' : 'opacity-80'
+                      }`}
                       style={{ fontFamily: 'SofiaPro' }}
                     >
-                      {ing}
+                      {ing.startsWith('---') ? ing.replace(/---/g, '').trim() : ing}
                     </span>
                   </li>
                 ))}
@@ -222,15 +228,19 @@ const MangoRecipeDetailPage = ({ slug, mainMenuItems, footerData }: MangoRecipeD
                 </h2>
                 <ul className="space-y-6">
                   {recipe.ingredients.map((ing, i) => (
-                    <li key={i} className="flex items-center gap-4">
-                      <div className="w-[18px] h-[18px] rounded-full border border-[#1a1a1a]/40 flex items-center justify-center flex-shrink-0">
-                        <div className="w-[6px] h-[6px] rounded-full bg-[#1a1a1a]/60" />
-                      </div>
+                    <li key={i} className="flex items-start gap-4">
+                      {!ing.startsWith('---') && (
+                        <div className="w-[18px] h-[18px] rounded-full border border-[#1a1a1a]/40 flex items-center justify-center flex-shrink-0 mt-1">
+                          <div className="w-[6px] h-[6px] rounded-full bg-[#1a1a1a]/60" />
+                        </div>
+                      )}
                       <span
-                        className="text-[18px] text-[#000000] font-medium opacity-80"
+                        className={`text-[18px] text-[#000000] ${
+                          ing.startsWith('---') ? 'font-bold mt-4 opacity-100' : 'font-medium opacity-80'
+                        }`}
                         style={{ fontFamily: 'SofiaPro' }}
                       >
-                        {ing}
+                        {ing.startsWith('---') ? ing.replace(/---/g, '').trim() : ing}
                       </span>
                     </li>
                   ))}
