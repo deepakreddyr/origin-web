@@ -453,7 +453,7 @@ export const UOMPopup: FC<{
                     </div>
                   )}
                   <p className="font-semibold text-gray-900 text-sm font-[SofiaPro] capitalize truncate">
-                    {ripenessLabel || ''}
+                    {ripenessLabel || product.name}
                   </p>
                 </div>
 
