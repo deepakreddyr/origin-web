@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 interface BlackAddCartBtmProps {
   isItemPresent: boolean;
@@ -56,10 +58,17 @@ const BlackAddCartBtm: React.FC<BlackAddCartBtmProps> = (props) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.15 }}
             whileTap={{ scale: 0.82 }}
-            className="h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] flex-shrink-0 rounded-full bg-black text-white text-[1.3vw] mob:text-[5.5vw] font-semibold flex items-center justify-center mr-[.4vw] mob:mr-[2vw]"
+            className="h-[1.8vw] w-[1.8vw] mob:h-[5.5vw] mob:w-[5.5vw] flex-shrink-0 rounded-full bg-black text-white flex items-center justify-center mr-[.4vw] mob:mr-[2vw]"
             onClick={onDecrease}
           >
-            <span className="mob:mb-[3px] mb-[2px]">–</span>
+            <RemoveIcon
+              sx={{
+                fontSize: '1.3vw',
+                '@media (max-width: 600px)': {
+                  fontSize: '5.5vw'
+                }
+              }}
+            />
           </motion.button>
         )}
 
@@ -106,7 +115,14 @@ const BlackAddCartBtm: React.FC<BlackAddCartBtmProps> = (props) => {
           }`}
           onClick={isItemPresent ? onIncrease : handleAddItem}
         >
-          <span className="mob:mb-[3px] mb-[2px]">+</span>
+          <AddIcon
+            sx={{
+              fontSize: isItemPresent ? '1.3vw' : '1.3vw',
+              '@media (max-width: 600px)': {
+                fontSize: isItemPresent ? '5.5vw' : '5.5vw'
+              }
+            }}
+          />
         </motion.button>
       </motion.div>
     </div>
