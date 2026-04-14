@@ -63,9 +63,11 @@ const BlackAddCartBtm: React.FC<BlackAddCartBtmProps> = (props) => {
           >
             <RemoveIcon
               sx={{
-                fontSize: '1.3vw',
+                fontSize: '1vw',
+                stroke: 'currentColor',
+                strokeWidth: 1,
                 '@media (max-width: 600px)': {
-                  fontSize: '5.5vw'
+                  fontSize: '4vw'
                 }
               }}
             />
@@ -117,9 +119,11 @@ const BlackAddCartBtm: React.FC<BlackAddCartBtmProps> = (props) => {
         >
           <AddIcon
             sx={{
-              fontSize: isItemPresent ? '1.3vw' : '1.3vw',
+              fontSize: isItemPresent ? '1.2vw' : '1.2vw',
+              stroke: 'currentColor',
+              strokeWidth: 1,
               '@media (max-width: 600px)': {
-                fontSize: isItemPresent ? '5.5vw' : '5.5vw'
+                fontSize: isItemPresent ? '4.5vw' : '4.5vw'
               }
             }}
           />

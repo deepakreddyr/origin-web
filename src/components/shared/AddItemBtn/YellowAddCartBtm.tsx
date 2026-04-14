@@ -150,7 +150,7 @@ const YellowBtn = (props: YellowBtnProps) => {
               className="h-8 w-8 md:h-9 md:w-9 flex-shrink-0 rounded-full bg-[#fac510] text-black flex items-center justify-center border-[#EDE6D4]"
               onClick={onDecrease}
             >
-              <RemoveIcon sx={{ fontSize: '1.2rem' }} />
+              <RemoveIcon sx={{ fontSize: '1.2rem', stroke: 'currentColor', strokeWidth: 1.5 }} />
             </motion.button>
           )}
 
@@ -197,7 +197,11 @@ const YellowBtn = (props: YellowBtnProps) => {
             }`}
             onClick={shouldShowStepper ? onIncrease : onAdd}
           >
-            {shouldShowStepper ? <AddIcon sx={{ fontSize: '1.2rem' }} /> : <AddIcon sx={{ fontSize: '1.2rem' }} />}
+            {shouldShowStepper ? (
+              <AddIcon sx={{ fontSize: '1.2rem', stroke: 'currentColor', strokeWidth: 1.5 }} />
+            ) : (
+              <AddIcon sx={{ fontSize: '1.2rem', stroke: 'currentColor', strokeWidth: 1.5 }} />
+            )}
           </motion.button>
         </motion.div>
       </div>

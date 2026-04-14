@@ -45,9 +45,11 @@ const YellowBtn = (props: any) => {
           >
             <RemoveIcon
               sx={{
-                fontSize: isMangoPage ? '1.4vw' : '1.5vw',
+                fontSize: isMangoPage ? '1.2vw' : '1.3vw',
+                stroke: 'currentColor',
+                strokeWidth: 1.5,
                 '@media (max-width: 600px)': {
-                  fontSize: isMangoPage ? '5vw' : '5.5vw'
+                  fontSize: isMangoPage ? '4vw' : '4.5vw'
                 }
               }}
             />
@@ -103,9 +105,11 @@ const YellowBtn = (props: any) => {
         >
           <AddIcon
             sx={{
-              fontSize: isMangoPage ? '1.3vw' : '1.5vw',
+              fontSize: isMangoPage ? '1.1vw' : '1.3vw',
+              stroke: 'currentColor',
+              strokeWidth: 1.5,
               '@media (max-width: 600px)': {
-                fontSize: isMangoPage ? '5vw' : '5.5vw'
+                fontSize: isMangoPage ? '4vw' : '4.5vw'
               }
             }}
           />

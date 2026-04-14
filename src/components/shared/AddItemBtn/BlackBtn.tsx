@@ -55,9 +55,11 @@ const BlackBtn: React.FC<BlackBtnProps> = (props) => {
           >
             <RemoveIcon
               sx={{
-                fontSize: '1.2vw',
+                fontSize: '1.1vw',
+                stroke: 'currentColor',
+                strokeWidth: 1,
                 '@media (max-width: 600px)': {
-                  fontSize: '4.5vw'
+                  fontSize: '3.5vw'
                 }
               }}
             />
@@ -107,9 +109,11 @@ const BlackBtn: React.FC<BlackBtnProps> = (props) => {
         >
           <AddIcon
             sx={{
-              fontSize: '1.2vw',
+              fontSize: '1.1vw',
+              stroke: 'currentColor',
+              strokeWidth: 1,
               '@media (max-width: 600px)': {
-                fontSize: '4.5vw'
+                fontSize: '3.5vw'
               }
             }}
           />

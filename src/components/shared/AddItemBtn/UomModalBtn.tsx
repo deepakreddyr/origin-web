@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 interface UomModalBtnProps {
   isItemPresent: boolean;
@@ -48,10 +50,19 @@ const UomModalBtn: React.FC<UomModalBtnProps> = (props) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.15 }}
             whileTap={{ scale: 0.82 }}
-            className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] flex-shrink-0 flex items-center justify-center bg-primary rounded-full border border-primary-200 mr-[.5vw] mob:mr-[2vw] text-[1.3vw] mob:text-[5.5vw] font-semibold"
+            className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] flex-shrink-0 flex items-center justify-center bg-primary rounded-full border border-primary-200 mr-[.5vw] mob:mr-[2vw]"
             onClick={onDecrease}
           >
-            <span className="mob:mb-[3px] mb-[2px]">–</span>
+            <RemoveIcon
+              sx={{
+                fontSize: '1.2vw',
+                stroke: 'currentColor',
+                strokeWidth: 1.5,
+                '@media (max-width: 600px)': {
+                  fontSize: '3.5vw'
+                }
+              }}
+            />
           </motion.button>
         )}
 
@@ -96,7 +107,16 @@ const UomModalBtn: React.FC<UomModalBtnProps> = (props) => {
           }`}
           onClick={isItemPresent ? onIncrease : handleAddItem}
         >
-          <span className="mob:mb-[3px] mb-[2px]">+</span>
+          <AddIcon
+            sx={{
+              fontSize: isItemPresent ? '1.2vw' : '1.2vw',
+              stroke: 'currentColor',
+              strokeWidth: 1.5,
+              '@media (max-width: 600px)': {
+                fontSize: isItemPresent ? '3.5vw' : '3.5vw'
+              }
+            }}
+          />
         </motion.button>
       </motion.div>
     </div>
