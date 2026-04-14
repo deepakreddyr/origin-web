@@ -365,7 +365,9 @@ export const UOMPopup: FC<{
             <div className="flex justify-center">
               <button
                 onClick={() => setIsRipenessInfoOpen(!isRipenessInfoOpen)}
-                className="flex items-center justify-center gap-1.5 px-4 py-1.5 mb-1 rounded-full bg-[#F8F4E9]"
+                className={`flex items-center justify-center gap-1.5 px-4 py-1.5 mb-1 rounded-full bg-[#F8F4E9] border transition-colors ${
+                  isRipenessInfoOpen ? 'border-[#0A8B5B]' : 'border-[#EDE6CC]/60'
+                }`}
               >
                 <Image
                   src={itemRipenessSvg}

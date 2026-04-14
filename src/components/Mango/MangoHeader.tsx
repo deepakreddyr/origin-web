@@ -200,7 +200,7 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
   const renderViewAllResults = () => {
     const handleViewAll = (e: React.MouseEvent) => {
       e.preventDefault();
-      router.push(`/mango/products?q=${encodeURIComponent(searchQuery)}`);
+      router.push('/mango/products');
       setShowDropdown(false);
       setIsMobileSearchOpen(false);
     };

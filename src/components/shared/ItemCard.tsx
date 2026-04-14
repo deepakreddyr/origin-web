@@ -22,6 +22,8 @@ import rawSvg from '/public/assets/svg/raw.svg';
 import infoicon1 from '/public/assets/svg/infoicon1.svg';
 import infoicon2 from '/public/assets/svg/infoicon2.svg';
 import itemRipenessSvg from '/public/assets/svg/itemRipeness.svg';
+import { useCartStore } from '@/hooks/useCartStore';
+import WhiteBtn from './AddItemBtn/WhiteBtn';
 
 import { UOMPopup, MaxQuantityToast, Product, UOM, NotifyToast } from './UOMPopup';
 
@@ -34,7 +36,8 @@ import { UOMPopup, MaxQuantityToast, Product, UOM, NotifyToast } from './UOMPopu
 // --------------------------------------------------------
 const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
   const router = useRouter();
-  const cartItems = useSelector((state: any) => state.cart.items);
+  const { cart, isMangoPage } = useCartStore();
+  const cartItems = cart.items;
 
   const defaultUOM = itemDetails?.multiple_uoms?.find((uom: any) => uom?.is_default) || itemDetails?.multiple_uoms?.[0];
 
@@ -180,7 +183,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
             )}
 
             {hasRipenessOptions && (
-              <div className="absolute bottom-2 right-2 p-1 bg-white rounded-full shadow-lg">
+              <div className="absolute bottom-2 right-2 p-1 bg-white rounded-full shadow-lg border border-[#EDE6CC]/80">
                 <Image src={itemRipenessSvg} alt="Multiple Ripeness Options" width={35} height={35} />
               </div>
             )}
@@ -244,109 +247,33 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                   VIEW
                 </button>
               ) : requiresSelection ? (
-                <motion.div
-                  layout
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    setQuantityDir(1);
-                    setIsPopupOpen(true);
-                  }}
-                  transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-                  className={`flex items-center h-[2.5vw] mob:h-[8.5vw] rounded-full p-[.3vw] mob:px-[.7vw] cursor-pointer ${
-                    totalQuantityAcrossProduct > 0 ? 'bg-white' : 'bg-primary'
-                  }`}
-                >
-                  {/* Minus — mounts/unmounts; pill layout animation handles the width change */}
-                  {totalQuantityAcrossProduct > 0 && (
-                    <motion.button
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.15 }}
-                      whileTap={{ scale: 0.82 }}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setQuantityDir(-1);
-                        setIsPopupOpen(true);
-                      }}
-                      className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.1vw] flex-shrink-0 flex items-center justify-center bg-primary rounded-full border border-primary-200 mr-[.5vw] mob:mr-[3vw]"
-                    >
-                      <span className="mb-1">–</span>
-                    </motion.button>
-                  )}
-
-                  {/* Centre — "N Options" label or ticking quantity */}
-                  <div className="flex items-center justify-center overflow-hidden">
-                    <AnimatePresence mode="popLayout" initial={false}>
-                      {totalQuantityAcrossProduct > 0 ? (
-                        <motion.p
-                          key={totalQuantityAcrossProduct}
-                          initial={{ opacity: 0, y: quantityDir * 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: quantityDir * -10 }}
-                          transition={{ duration: 0.15, ease: 'easeOut' }}
-                          className="text-[1.1vw] mob:text-[4.1vw] font-semibold text-black select-none min-w-[0.8vw] mob:min-w-[3vw] text-center"
-                        >
-                          {totalQuantityAcrossProduct}
-                        </motion.p>
-                      ) : (
-                        <motion.div
-                          key="options-label"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 0.12 }}
-                          className="flex items-center gap-1 px-[0.5vw]"
-                        >
-                          <span className="font-[SofiaPro] text-[.97vw] font-bold mob:text-[3vw] text-black whitespace-nowrap">
-                            Add
-                          </span>
-                          <KeyboardArrowDownIcon
-                            sx={{
-                              fontSize: '1.4vw',
-                              '@media (max-width: 600px)': {
-                                fontSize: '4.5vw'
-                              }
-                            }}
-                          />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-
-                  {/* Plus — always present */}
-                  <motion.button
-                    layout
-                    whileTap={{ scale: 0.82 }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-                    onClick={(e) => {
-                      e.preventDefault();
+                <div className="w-full flex justify-center">
+                  <WhiteBtn
+                    isItemPresent={totalQuantityAcrossProduct > 0}
+                    quantity={totalQuantityAcrossProduct}
+                    isMangoPage={isMangoPage}
+                    hasRipeness={hasRipenessOptions}
+                    hasOptions={requiresSelection}
+                    handleAddItem={(e: any) => {
                       e.stopPropagation();
+                      e.preventDefault();
                       setQuantityDir(1);
                       setIsPopupOpen(true);
                     }}
-                    className={`flex-shrink-0 flex items-center justify-center rounded-full bg-primary ${
-                      totalQuantityAcrossProduct > 0
-                        ? 'h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] mob:text-[5.1vw] text-[1.1vw] pb-[.3vw] ml-[.5vw] mob:ml-[3vw]'
-                        : 'h-[1.2vw] w-[1.2vw] mob:h-[5vw] mob:w-[5vw] text-[1vw] mob:text-[4.1vw]'
-                    }`}
-                  >
-                    {totalQuantityAcrossProduct > 0 ? (
-                      '+'
-                    ) : (
-                      <KeyboardArrowDownIcon
-                        sx={{
-                          fontSize: '1vw',
-                          '@media (max-width: 600px)': {
-                            fontSize: '4.1vw'
-                          }
-                        }}
-                      />
-                    )}
-                  </motion.button>
-                </motion.div>
+                    handleIncrease={(e: any) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      setQuantityDir(1);
+                      setIsPopupOpen(true);
+                    }}
+                    handleDecrease={(e: any) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      setQuantityDir(-1);
+                      setIsPopupOpen(true);
+                    }}
+                  />
+                </div>
               ) : (
                 <div className="w-[80px] mob:w-auto flex justify-end">
                   <AddItemBtn
