@@ -138,10 +138,32 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
                 <Typography className="text-white text-[16px] font-semibold uppercase tracking-wider mb-6">
                   Contact us
                 </Typography>
-                <Box className="flex flex-col gap-4 text-[#A0A0A0] text-[13px]">
-                  <p>+91 99005 08216</p>
-                  <p>support@originfresh.in</p>
-                  <p>+91 99005 08216</p>
+                <Box className="flex flex-col gap-5 text-[#A0A0A0] text-[13px] mb-8">
+                  <Typography
+                    component="a"
+                    href="tel:+919900508216"
+                    className="text-[#A0A0A0] no-underline flex items-center gap-2"
+                  >
+                    <PhoneIcon sx={{ fontSize: '16px' }} /> +91 9900508216
+                  </Typography>
+
+                  <Typography
+                    component="a"
+                    href="mailto:support@originfresh.in"
+                    className="text-[#A0A0A0] no-underline flex items-center gap-2"
+                  >
+                    <Mail sx={{ fontSize: '16px' }} /> support@originfresh.in
+                  </Typography>
+
+                  <Typography
+                    component="a"
+                    href="https://wa.me/919900507318"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#A0A0A0] no-underline flex items-center gap-2"
+                  >
+                    <WhatsAppIcon sx={{ fontSize: '16px' }} /> +91 9900507318
+                  </Typography>
                 </Box>
               </Grid>
             </Grid>

@@ -710,7 +710,7 @@ const ProductDetailsWrapper = () => {
 
           {mobile ? (
             <div className="space-y-6">
-              <div className="flex flex-col items-center bg-white rounded-[24px] overflow-hidden border border-[#EDE6CC]/50">
+              <div className="flex flex-col items-center bg-primary-100 rounded-[24px] overflow-hidden border border-[#EDE6CC]/50">
                 <div className="relative w-full aspect-square bg-transparent">
                   <ImageGallery
                     mainImage={productDetails.item.image}

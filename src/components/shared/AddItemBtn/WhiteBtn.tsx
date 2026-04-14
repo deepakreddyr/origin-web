@@ -89,7 +89,7 @@ const WhiteBtn = (props: any) => {
               >
                 Add
               </span>
-              {hasRipeness && (
+              {(hasRipeness || props.hasOptions) && (
                 <KeyboardArrowDownIcon
                   sx={{
                     fontSize: isMangoPage ? '1.5vw' : '1.4vw',
@@ -105,7 +105,7 @@ const WhiteBtn = (props: any) => {
       </div>
 
       {/* Plus */}
-      {(!hasRipeness || isItemPresent) && (
+      {((!hasRipeness && !props.hasOptions) || isItemPresent) && (
         <motion.button
           layout
           whileTap={{ scale: 0.82 }}
