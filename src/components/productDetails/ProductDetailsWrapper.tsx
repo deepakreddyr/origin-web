@@ -799,7 +799,7 @@ const ProductDetailsWrapper = () => {
               {/* Top Section Grid */}
               <div className="grid grid-cols-[1fr_1.2fr] gap-12 items-start">
                 {/* Left: Product Image Card */}
-                <div className="bg-white rounded-[32px] border border-[#EDE6CC]/50 flex items-center justify-center min-h-[500px] overflow-hidden relative">
+                <div className="bg-primary-100 rounded-[32px] border border-[#EDE6CC]/50 flex items-center justify-center min-h-[500px] overflow-hidden relative">
                   <div className="relative w-full h-full aspect-square">
                     <ImageGallery
                       mainImage={productDetails.item.image}

@@ -16,7 +16,7 @@ const DeliveryAddress = (props: any) => {
       // if (payment_status === 'partially_completed') return 'Partially Paid';
       return 'Online';
     }
-    return 'Cash On Delivery';
+    return 'Pay On Delivery';
   };
 
   return (

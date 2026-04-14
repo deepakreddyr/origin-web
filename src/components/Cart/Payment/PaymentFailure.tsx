@@ -106,7 +106,7 @@ const PaymentFailure = (props: any) => {
     return (
       <>
         <div onClick={handleContinue} className="absolute top-[1.4vw] right-[1.4vw]">
-          <button className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-black font-semibold ">CONTINUE</button>
+          {/* <button className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-black font-semibold ">CONTINUE</button> */}
         </div>
         <div className="w-[10vw] mob:w-[30vw]">
           <Lottie animationData={failureAnimation} />
