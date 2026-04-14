@@ -10,7 +10,7 @@ import ProductCardLoader from '@/components/skeletonLoaders/shop/ProductCardLoad
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsProductListLoading, setProductList } from '@/store/slice/productsSlice';
 import { Product } from '@/components/shared/UOMPopup';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { getAddressAndStoreId } from '@/utilities/utils';
 
@@ -21,6 +21,7 @@ interface MangoProductsPageProps {
 
 const ProductsList = () => {
   const products = useSelector((state: any) => state.products);
+  console.log('products', products);
 
   if (products.isProductListLoading) return <ProductCardLoader />;
 
@@ -34,6 +35,7 @@ const ProductsList = () => {
 const MangoProductsPage = ({ mainMenuItems, footerData }: MangoProductsPageProps) => {
   const dispatch = useDispatch();
   const getDataFromApi = useGetDataFromApi();
+  const [categoryName, setCategoryName] = useState<string | null>(null);
 
   useEffect(() => {
     let apiPath = localStorage.getItem('mango_listing_api_path');
@@ -70,6 +72,11 @@ const MangoProductsPage = ({ mainMenuItems, footerData }: MangoProductsPageProps
           return acc;
         }, []);
 
+        // If it's a category-based response, set the first category's name
+        if (resData.length > 0 && resData[0].name) {
+          setCategoryName(resData[0].name);
+        }
+
         // If still empty, maybe the array itself contains the products
         if (prodList.length === 0) {
           prodList = resData;
@@ -77,6 +84,9 @@ const MangoProductsPage = ({ mainMenuItems, footerData }: MangoProductsPageProps
       } else if (resData.items) {
         // Handle single object in data.data
         prodList = resData.items;
+        if (resData.name) {
+          setCategoryName(resData.name);
+        }
       } else {
         prodList = resData;
       }
@@ -105,9 +115,11 @@ const MangoProductsPage = ({ mainMenuItems, footerData }: MangoProductsPageProps
       <main className="min-h-screen pt-12 md:pt-[80px] bg-[#FFFFFF]">
         {/* ── Products Grid ── */}
         <section className="px-4 mob:px-[4vw] md:px-[8vw] py-10 mob:py-5">
-          <div className="max-w-7xl mx-auto flex items-center justify-between mob:pb-8 md:pb-10 pt-10">
+          <div className="max-w-7xl mx-auto flex items-center justify-between mob:pb-5 md:pb-10 pt-5">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-[#1a1a1a] mt-1">Fresh Arrivals</h1>
+              <h1 className="text-2xl md:text-4xl font-semibold text-[#1a1a1a] mt-1">
+                {categoryName ? `${categoryName}` : 'Fresh Arrivals'}
+              </h1>
             </div>
           </div>
           <div className="max-w-7xl mx-auto">

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 interface BlackBtnProps {
   isItemPresent: boolean;
@@ -51,12 +53,14 @@ const BlackBtn: React.FC<BlackBtnProps> = (props) => {
             className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] flex-shrink-0 rounded-full bg-black text-white font-medium flex items-center justify-center mr-[.4vw] mob:mr-[2vw]"
             onClick={onDecrease}
           >
-            <span
-              className="text-[1.2vw] mob:text-[4.5vw]"
-              style={{ lineHeight: 1, marginTop: '-0.1em', display: 'block' }}
-            >
-              –
-            </span>
+            <RemoveIcon
+              sx={{
+                fontSize: '1.2vw',
+                '@media (max-width: 600px)': {
+                  fontSize: '4.5vw'
+                }
+              }}
+            />
           </motion.button>
         )}
 
@@ -101,12 +105,14 @@ const BlackBtn: React.FC<BlackBtnProps> = (props) => {
           }`}
           onClick={isItemPresent ? onIncrease : handleAddItem}
         >
-          <span
-            className="text-[1.2vw] mob:text-[4.5vw]"
-            style={{ lineHeight: 1, marginTop: '-0.1em', display: 'block' }}
-          >
-            +
-          </span>
+          <AddIcon
+            sx={{
+              fontSize: '1.2vw',
+              '@media (max-width: 600px)': {
+                fontSize: '4.5vw'
+              }
+            }}
+          />
         </motion.button>
       </motion.div>
     </div>

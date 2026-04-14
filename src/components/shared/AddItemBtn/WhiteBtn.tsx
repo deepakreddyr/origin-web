@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 const WhiteBtn = (props: any) => {
   const { isItemPresent, handleDecrease, quantity, handleIncrease, handleAddItem, isMangoPage, hasRipeness } = props;
@@ -41,12 +43,14 @@ const WhiteBtn = (props: any) => {
           } flex-shrink-0 rounded-full bg-primary text-black font-semibold flex items-center justify-center mr-[.4vw] mob:mr-[2vw]`}
           onClick={onDecrease}
         >
-          <span
-            className={`${isMangoPage ? 'text-[1.3vw] mob:text-[5vw]' : 'text-[1.4vw] mob:text-[5.5vw]'}`}
-            style={{ lineHeight: 1, marginTop: '-0.1em', display: 'block' }}
-          >
-            –
-          </span>
+          <RemoveIcon
+            sx={{
+              fontSize: isMangoPage ? '1.3vw' : '1.4vw',
+              '@media (max-width: 600px)': {
+                fontSize: isMangoPage ? '5vw' : '5.5vw'
+              }
+            }}
+          />
         </motion.button>
       )}
 
@@ -113,12 +117,14 @@ const WhiteBtn = (props: any) => {
           }`}
           onClick={isItemPresent ? onIncrease : handleAddItem}
         >
-          <span
-            className={`${isMangoPage ? 'text-[1.3vw] mob:text-[5vw]' : 'text-[1.4vw] mob:text-[5.5vw]'}`}
-            style={{ lineHeight: 1, marginTop: '-0.1em', display: 'block' }}
-          >
-            +
-          </span>
+          <AddIcon
+            sx={{
+              fontSize: isMangoPage ? '1.3vw' : '1.4vw',
+              '@media (max-width: 600px)': {
+                fontSize: isMangoPage ? '5vw' : '5.5vw'
+              }
+            }}
+          />
         </motion.button>
       )}
     </motion.div>

@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 // Assuming this is your central button component that takes the new minimumQuantity prop
 import AddItemBtn from './AddItemBtn';
 import { useCartStore } from '@/hooks/useCartStore';
@@ -145,10 +147,10 @@ const YellowBtn = (props: YellowBtnProps) => {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.15 }}
               whileTap={{ scale: 0.82 }}
-              className="h-8 w-8 md:h-9 md:w-9 flex-shrink-0 rounded-full bg-[#fac510] text-black text-xl font-bold flex items-center justify-center border-[#EDE6D4]"
+              className="h-8 w-8 md:h-9 md:w-9 flex-shrink-0 rounded-full bg-[#fac510] text-black flex items-center justify-center border-[#EDE6D4]"
               onClick={onDecrease}
             >
-              <span className="mb-[2px]">–</span>
+              <RemoveIcon sx={{ fontSize: '1.2rem' }} />
             </motion.button>
           )}
 
@@ -195,7 +197,7 @@ const YellowBtn = (props: YellowBtnProps) => {
             }`}
             onClick={shouldShowStepper ? onIncrease : onAdd}
           >
-            {shouldShowStepper ? <span className="mb-[2px]">+</span> : <span className="mb-[2px]">+</span>}
+            {shouldShowStepper ? <AddIcon sx={{ fontSize: '1.2rem' }} /> : <AddIcon sx={{ fontSize: '1.2rem' }} />}
           </motion.button>
         </motion.div>
       </div>

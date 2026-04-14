@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 const YellowBtn = (props: any) => {
   const { isItemPresent, handleDecrease, quantity, handleIncrease, handleAddItem, isMangoPage } = props;
@@ -41,12 +43,14 @@ const YellowBtn = (props: any) => {
             } flex-shrink-0 rounded-full bg-[#FFD500] text-black font-semibold flex items-center justify-center mr-[.4vw] mob:mr-[2vw]`}
             onClick={onDecrease}
           >
-            <span
-              className={isMangoPage ? 'text-[1.4vw] mob:text-[5vw]' : 'text-[1.5vw] mob:text-[5.5vw]'}
-              style={{ lineHeight: 1, marginTop: '-0.1em', display: 'block' }}
-            >
-              –
-            </span>
+            <RemoveIcon
+              sx={{
+                fontSize: isMangoPage ? '1.4vw' : '1.5vw',
+                '@media (max-width: 600px)': {
+                  fontSize: isMangoPage ? '5vw' : '5.5vw'
+                }
+              }}
+            />
           </motion.button>
         )}
 
@@ -97,12 +101,14 @@ const YellowBtn = (props: any) => {
           }`}
           onClick={isItemPresent ? onIncrease : handleAddItem}
         >
-          <span
-            className={isMangoPage ? 'text-[1.3vw] mob:text-[5vw]' : 'text-[1.5vw] mob:text-[5.5vw]'}
-            style={{ lineHeight: 1, marginTop: '-0.1em', display: 'block' }}
-          >
-            +
-          </span>
+          <AddIcon
+            sx={{
+              fontSize: isMangoPage ? '1.3vw' : '1.5vw',
+              '@media (max-width: 600px)': {
+                fontSize: isMangoPage ? '5vw' : '5.5vw'
+              }
+            }}
+          />
         </motion.button>
       </motion.div>
     </div>
