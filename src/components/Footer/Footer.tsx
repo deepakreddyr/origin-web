@@ -47,7 +47,7 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
             <Grid container spacing={4}>
               {/* Logo & Social Links */}
               <Grid item xs={12} md={3.5}>
-                <Box className="flex flex-col gap-6 items-start">
+                <Box className="flex flex-col gap-3 items-start">
                   <Box className="w-[180px] h-[50px] relative overflow-visible">
                     <Image
                       src={originLogo}
@@ -111,7 +111,7 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
 
               {/* Terms/Policy Links */}
               <Grid item xs={12} md={2.5}>
-                <Box className="mt-12">
+                <Box className="flex flex-col items-start space-y-4 mt-6 md:mt-10">
                   <FooterNav xs={12} links={footerLinksSecondary} isDark={true} />
                 </Box>
               </Grid>
