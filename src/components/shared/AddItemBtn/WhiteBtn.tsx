@@ -93,6 +93,8 @@ const WhiteBtn = (props: any) => {
                 <KeyboardArrowDownIcon
                   sx={{
                     fontSize: isMangoPage ? '1.5vw' : '1.4vw',
+                    stroke: 'currentColor',
+                    strokeWidth: 1,
                     '@media (max-width: 600px)': {
                       fontSize: isMangoPage ? '5vw' : '4.5vw'
                     }

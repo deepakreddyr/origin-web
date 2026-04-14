@@ -1278,7 +1278,7 @@ const data: Data = {
       location: 'Mysore, IND',
       text: '“These mangoes had a beautiful balance of sweetness and aroma, with clean, juicy flesh and no fibrous bite. The flavour was layered, not just sugary. Easily some of the better mangoes this season.”',
       stars: 5,
-      avatar: '/assets/images/recipes/mangotestimonial1.png'
+      avatar: '/assets/images/recipes/mangotestimonial2.jpg'
     },
     {
       id: 3,

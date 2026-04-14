@@ -23,7 +23,7 @@ const MangoTestimonialCard: React.FC<MangoTestimonialCardProps> = ({ name, locat
             </svg>
           ))}
         </div>
-        <div className="relative w-16 h-12">
+        <div className="relative w-16 h-12 rounded-full">
           <Image src="/assets/images/recipes/testimonialicon.svg" alt="Quote" fill className="object-contain" />
         </div>
       </div>
@@ -44,7 +44,7 @@ const MangoTestimonialCard: React.FC<MangoTestimonialCardProps> = ({ name, locat
       </div>
 
       <div className="flex items-center gap-5">
-        <div className="relative w-12 h-12 rounded-full overflow-x-visible flex-shrink-0 shadow-sm">
+        <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 shadow-sm">
           <Image src={avatar} alt={name} fill className="object-cover" />
         </div>
         <div className="flex flex-col">
