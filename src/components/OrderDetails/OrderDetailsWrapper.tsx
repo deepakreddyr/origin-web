@@ -84,7 +84,7 @@ const OrderDetailsWrapper = () => {
               ) && <RetryOrPayonlineWrapper fetchOrderdetails={fetchOrderdetails} />}
             <ItemsList orderDetailsData={orderAndRefundDetails.orderDetailsData} />
           </div>
-          <div className="mob:px-[4.1vw] flex flex-col gap-[1.671vw] mob:gap-[4.1vw] ">
+          <div className="mob:px-[4.1vw] flex flex-col gap-[1.671vw] mob:mt-[4.1vw] mob:gap-[4.1vw] ">
             {orderAndRefundDetails.refundList.length > 0 && (
               <RefundWrapper
                 orderDetailsData={orderAndRefundDetails.orderDetailsData}

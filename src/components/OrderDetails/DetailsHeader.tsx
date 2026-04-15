@@ -41,7 +41,7 @@ const DetailsHeader = (props: any) => {
       </div>
 
       {/* Contact Support */}
-      <div className="flex flex-col items-end justify-center">
+      {/* <div className="flex flex-col items-end justify-center">
         <div className="flex items-center gap-[0.5vw] mob:gap-[1.5vw]">
           <SupportAgentIcon
             className="text-[#231F20]"
@@ -57,7 +57,7 @@ const DetailsHeader = (props: any) => {
         >
           +91 9900508216
         </a>
-      </div>
+      </div> */}
     </div>
   );
 };
