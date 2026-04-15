@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React from 'react';
+import React, { useState } from 'react';
 
 // Imported SVGs to be used for ripeness display
 import ripeSvg from '/public/assets/svg/ripe.svg';
@@ -41,6 +41,119 @@ const SeparatorDot = () => (
   <span className="font-[SofiaPro] font-extrabold text-[.83vw] mob:text-[3vw] text-black-op-60 mx-[.15vw]">•</span>
 );
 
+const UomItem = ({ item, uom }: { item: any; uom: any }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const isUnavailable = uom.shortage_qty >= 1;
+  const hasRipeness = !!uom.ripeness;
+
+  return (
+    <div className={`flex flex-col relative`}>
+      <div className={`flex gap-[.9vw] mob:gap-[2vw] items-start`}>
+        <div
+          className={`bg-[#F2EEE4] w-[4vw] mob:w-[15vw] mob:h-[14vw] h-[4vw] rounded-[.83vw] mob:rounded-[2vw] ${isUnavailable ? 'opacity-40' : ''} flex items-center justify-center flex-shrink-0`}
+        >
+          <div className="w-[3vw] mob:w-[10.5vw] mob:h-[9vw] h-[2.7vw] relative rounded-[.83vw] ">
+            <Image src={item.image} alt={item.name} fill className="object-contain" />
+          </div>
+        </div>
+        <div className={`flex justify-between w-full items-start ${isUnavailable ? 'opacity-40' : ''} `}>
+          <div>
+            <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold text-black ">{item.name}</p>
+            {/* COMBINED LINE: Ripeness (Icon+Text) + Dot + UOM/Quantity */}
+            <div className="flex items-center pt-[.4vw] mob:pt-[1vw]">
+              {/* Ripeness Icon and Text (Renders only if ripeness exists) */}
+              {hasRipeness && <RipenessIndicator uom={uom} />}
+
+              {/* Separator Dot (Renders only if ripeness exists) */}
+              {hasRipeness && <SeparatorDot />}
+
+              {/* UOM and Quantity */}
+              <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] font-medium text-black-op-60 capitalize">
+                {uom.unit} x {uom.cart_quantity}
+              </p>
+            </div>
+
+            {/* Clickable Toggle for Combo Items */}
+            {uom.combo_items && uom.combo_items.length > 0 && (
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="flex items-center gap-[0.4vw] mob:gap-[1.5vw] mt-[0.6vw] mob:mt-[2vw] group transition-colors"
+                aria-expanded={isExpanded}
+              >
+                <p className="font-[SofiaPro] text-[0.75vw] mob:text-[2.8vw] font-bold text-black-op-40 group-hover:text-black uppercase tracking-wider">
+                  {isExpanded ? 'Hide Items' : 'View Items'}
+                </p>
+                <div
+                  className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''} text-black-op-40 group-hover:text-black`}
+                >
+                  <svg
+                    className="w-[0.8vw] h-[0.8vw] mob:w-[3vw] mob:h-[3vw]"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </button>
+            )}
+          </div>
+          <div className="text-right">
+            {/* Check if this is a free item (price is 0, null, or 1) */}
+            {uom.price === 0 || uom.price === null || uom.price < 0 ? (
+              <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold text-[#25874D]">Free Item</p>
+            ) : (
+              <>
+                {uom.market_price_sub_total && uom.market_price_sub_total > uom.subtotal && (
+                  <p className="font-[SofiaPro] text-[.82vw] mob:text-[2.8vw] font-medium line-through text-black-op-60 ">
+                    ₹{uom.market_price_sub_total}
+                  </p>
+                )}
+                <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-medium ">₹{uom.subtotal}</p>
+              </>
+            )}
+          </div>
+        </div>
+        {isUnavailable && (
+          <p className="font-[SofiaPro] font-semibold text-[#C70000] text-[.83vw] mob:text-[3vw] absolute right-[5vw] top-0 ">
+            UNAVAILABLE
+          </p>
+        )}
+      </div>
+
+      {/* Dropdown Section for Combo Items */}
+      <div
+        className={`transition-all duration-300 ease-in-out overflow-hidden ${
+          isExpanded ? 'max-h-[1000px] opacity-100 mt-[0.8vw] mob:mt-[3vw]' : 'max-h-0 opacity-0'
+        }`}
+      >
+        {uom.combo_items && uom.combo_items.length > 0 && (
+          <div className="flex flex-col gap-[.6vw] mob:gap-[2.5vw] border-l-2 border-[#F2EEE4] ml-[2vw] mob:ml-[7.5vw] pl-[1vw] mob:pl-[3.5vw] mb-[0.5vw]">
+            <p className="font-[SofiaPro] text-[.7vw] mob:text-[2.6vw] font-semibold text-black-op-40 uppercase tracking-wide">
+              Bundle Includes:
+            </p>
+            <div className="flex flex-col gap-[.5vw] mob:gap-[2vw]">
+              {uom.combo_items.map((combo: any, idx: number) => (
+                <div key={idx} className="flex items-center gap-[.5vw] mob:gap-[2vw]">
+                  <div className="w-[1.8vw] h-[1.8vw] mob:w-[7vw] mob:h-[7vw] relative rounded-[.4vw] mob:rounded-[1vw] overflow-hidden bg-[#F2EEE4] flex-shrink-0">
+                    <Image src={combo.image} alt={combo.item_name} fill className="object-contain p-[0.2vw]" />
+                  </div>
+                  <p className="font-[SofiaPro] text-[.8vw] mob:text-[3vw] font-medium text-black-op-70 leading-tight">
+                    {combo.item_name} ({combo.uom}) x {combo.qty}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const ItemsList = (props: any) => {
   const { orderDetailsData } = props;
   const { order_code, items } = orderDetailsData;
@@ -70,69 +183,9 @@ const ItemsList = (props: any) => {
       <div className="flex flex-col gap-[1.25vw] mob:gap-[5.1vw] ">
         {items.map((item: any) =>
           // Map through each ordered_uom for this product
-          item.ordered_uoms?.map((uom: any, uomIndex: number) => {
-            const isUnavailable = uom.shortage_qty >= 1;
-
-            // Check for ripeness existence
-            const hasRipeness = !!uom.ripeness;
-
-            return (
-              <div
-                key={`${item.id}-${uom.variant_id}-${uom.ripeness || 'none'}`}
-                className={`flex gap-[.9vw] mob:gap-[2vw] relative items-center`}
-              >
-                <div
-                  className={`bg-[#F2EEE4] w-[4vw] mob:w-[15vw] mob:h-[14vw] h-[4vw] rounded-[.83vw] mob:rounded-[2vw] ${isUnavailable ? 'opacity-40' : ''} flex items-center justify-center`}
-                >
-                  <div className="w-[3vw] mob:w-[10.5vw] mob:h-[9vw] h-[2.7vw] relative rounded-[.83vw] ">
-                    <Image src={item.image} alt={item.name} fill className="object-contain" />
-                  </div>
-                </div>
-                <div className={`flex justify-between w-full items-center ${isUnavailable ? 'opacity-40' : ''} `}>
-                  <div>
-                    <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold text-black ">
-                      {item.name}
-                    </p>
-                    {/* COMBINED LINE: Ripeness (Icon+Text) + Dot + UOM/Quantity */}
-                    <div className="flex items-center pt-[.4vw] mob:pt-[1vw]">
-                      {/* Ripeness Icon and Text (Renders only if ripeness exists) */}
-                      {hasRipeness && <RipenessIndicator uom={uom} />}
-
-                      {/* Separator Dot (Renders only if ripeness exists) */}
-                      {hasRipeness && <SeparatorDot />}
-
-                      {/* UOM and Quantity */}
-                      <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] font-medium text-black-op-60 capitalize">
-                        {uom.unit} x {uom.cart_quantity}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    {/* Check if this is a free item (price is 0, null, or 1) */}
-                    {uom.price === 0 || uom.price === null || uom.price < 0 ? (
-                      <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold text-[#25874D]">
-                        Free Item
-                      </p>
-                    ) : (
-                      <>
-                        {uom.market_price_sub_total && uom.market_price_sub_total > uom.subtotal && (
-                          <p className="font-[SofiaPro] text-[.82vw] mob:text-[2.8vw] font-medium line-through text-black-op-60 ">
-                            ₹{uom.market_price_sub_total}
-                          </p>
-                        )}
-                        <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-medium ">₹{uom.subtotal}</p>
-                      </>
-                    )}
-                  </div>
-                </div>
-                {isUnavailable && (
-                  <p className="font-[SofiaPro] font-semibold text-[#C70000] text-[.83vw] mob:text-[3vw] absolute right-[5vw] ">
-                    UNAVAILABLE
-                  </p>
-                )}
-              </div>
-            );
-          })
+          item.ordered_uoms?.map((uom: any, uomIndex: number) => (
+            <UomItem key={`${item.id}-${uom.variant_id}-${uom.ripeness || 'none'}`} item={item} uom={uom} />
+          ))
         )}
       </div>
     </div>
