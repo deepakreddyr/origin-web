@@ -378,10 +378,10 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
                       >
                         <div className="relative w-12 h-12 rounded-lg bg-white overflow-hidden flex-shrink-0">
                           <Image
-                            src={item.image || originLogo}
+                            src={item.website_image || originLogo}
                             alt={item.name}
                             fill
-                            className="object-contain p-1"
+                            className="object-contain"
                             unoptimized
                           />
                         </div>
