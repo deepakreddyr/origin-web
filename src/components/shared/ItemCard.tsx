@@ -168,7 +168,8 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
               className={`relative w-[12.6vw] h-[12vw] mob:w-[38vw] mob:h-[38vw] transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
             >
               <Image
-                src={cleanImageUrl(itemDetails.website_image) || itemDetails.image || sampleimg}
+                // src={cleanImageUrl(itemDetails.website_image) || itemDetails.image || sampleimg}
+                src={cleanImageUrl(itemDetails.image) || sampleimg}
                 alt={itemDetails.name ? itemDetails.name : 'product image'}
                 fill
                 sizes="(max-width: 768px) 50vw, 25vw"
