@@ -117,6 +117,8 @@ const RemoveAccount = (props: Props) => {
           <Button
             variant="contained"
             color="warning"
+            component="a"
+            href="tel:+919900508216"
             sx={{
               backgroundColor: '#fac510',
               color: 'black',
@@ -128,10 +130,12 @@ const RemoveAccount = (props: Props) => {
               height: '48px',
               paddingLeft: '20px',
               paddingRight: '20px',
+              textDecoration: 'none',
               ':hover': {
                 backgroundColor: '#fac510',
                 color: 'black',
-                boxShadow: 'none'
+                boxShadow: 'none',
+                textDecoration: 'none'
               }
             }}
           >

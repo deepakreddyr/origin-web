@@ -69,7 +69,7 @@ const SubscriptionHeader = ({ item, maxQty }: { item?: any; maxQty: number }) =>
 
       <div className="flex items-center gap-3 md:gap-6">
         <button
-          className="bg-black text-[#FCF2B7] px-6 md:px-12 py-2 md:py-3 rounded-[10px] md:rounded-[15px] font-[800] text-[0.8rem] md:text-[1.5rem] uppercase tracking-[0.05em] hover:bg-gray-800 transition-colors"
+          className="bg-black text-[#FCF2B7] px-2 md:px-4 py-2 md:py-3 rounded-[10px] md:rounded-[15px] font-[800] text-[0.8rem] md:text-[1.5rem] uppercase tracking-[0.05em] hover:bg-gray-800 transition-colors"
           style={{ fontFamily: 'SofiaPro' }}
           onClick={handleOrderNow}
         >

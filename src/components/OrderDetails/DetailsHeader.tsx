@@ -32,7 +32,7 @@ const DetailsHeader = (props: any) => {
         </div>
         <div>
           <p className="font-[Recoleta] text-[1.389vw] mob:text-[5.12vw] font-bold">Order Details</p>
-          <p className="font-[SofiaPro] font-medium text-[.97vw] mob:text-[3.6vw] text-[#231F2080]">
+          <p className="font-[SofiaPro] font-medium text-[.97vw] mob:text-[3.2vw] text-[#231F2080]">
             Order #{order_code}
             <span> | </span>
             {formatTimestamp(order_created_at)}
@@ -41,23 +41,22 @@ const DetailsHeader = (props: any) => {
       </div>
 
       {/* Contact Support */}
-      {/* <div className="flex flex-col items-end justify-center">
-        <div className="flex items-center gap-[0.5vw] mob:gap-[1.5vw]">
+      <div className="flex flex-col items-end justify-center">
+        <a href="tel:+919900508216" className="flex items-center gap-[0.5vw] mob:gap-[1.5vw]">
           <SupportAgentIcon
             className="text-[#231F20]"
             sx={{
-              fontSize: { xs: '5vw', md: '1.5vw' }
+              fontSize: { xs: '7vw', md: '2vw' }
             }}
           />
-          <p className="font-[SofiaPro] font-semibold text-[0.9vw] mob:text-[3.8vw] text-[#231F20]">Contact Support</p>
-        </div>
-        <a
+        </a>
+        {/* <a
           href="tel:+919876543210"
           className="font-[SofiaPro] text-[0.85vw] mob:text-[3.5vw] text-[#CC4C85] font-medium underline"
         >
           +91 9900508216
-        </a>
-      </div> */}
+        </a> */}
+      </div>
     </div>
   );
 };
