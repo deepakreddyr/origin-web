@@ -207,7 +207,8 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
       >
         <div className="pl-[1vw] mob:pl-[2.1vw]">
           <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-black-op-60 font-medium">
-            {isSubscription ? subscriptionCart.totalQuantity : cart.totalQuantity} Items
+            {isSubscription ? (subscriptionCart.item ? 1 : 0) : cart.totalQuantity}{' '}
+            {isSubscription ? (subscriptionCart.item ? 'Item' : 'Items') : cart.totalQuantity === 1 ? 'Item' : 'Items'}
           </p>
           <p className="font-[SofiaPro] font-semibold text-[1.1vw] mob:text-[4.1vw] text-black mob:pt-[.6vw]">
             ₹{getTotalAmount()}

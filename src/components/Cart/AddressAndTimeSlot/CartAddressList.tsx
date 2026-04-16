@@ -42,29 +42,29 @@ const CartAddressList = (props: any) => {
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto p-[1.1vw] mob:p-[5vw] flex flex-col gap-[.97vw] mob:gap-[4vw] pb-[20vw] mob:pb-[30vw]">
+    <div className="flex flex-col h-full overflow-hidden">
+      <div className="flex-1 overflow-y-auto p-[1.1vw] mob:p-[5vw] flex flex-col gap-[.97vw] mob:gap-[4vw] pb-[5vw] mob:pb-[10vw]">
         {address?.address?.map((item: any) => (
           <button
             key={item.address_id}
             onClick={() => handleSetAddress(item)}
             className="border text-start flex items-center gap-[.78vw] mob:gap-[3vw] border-[#F2EEE4] bg-[#F2EEE44D] rounded-[1.1vw] mob:rounded-[4vw] p-[.83vw] mob:p-[4vw] hover:bg-[#F2EEE488] transition-colors"
           >
-            <div className="w-[3vw] h-[3vw] mob:w-[12vw] mob:h-[12vw] rounded-[.6vw] mob:rounded-[2.5vw] relative bg-[#F2EEE4] flex items-center justify-center  ">
-              <div className="p-[.3vw] w-[1.25vw] h-[1.25vw] mob:w-[6vw] mob:h-[6vw] relative ">
-                <Image src={ADDRESS_ICON_MAP[item.address_name]} fill alt="home-icon" />
+            <div className="w-[3vw] h-[3vw] mob:w-[12vw] mob:h-[12vw] flex-shrink-0 rounded-[.6vw] mob:rounded-[2.5vw] relative bg-[#F2EEE4] flex items-center justify-center">
+              <div className="w-[1.25vw] h-[1.25vw] mob:w-[6vw] mob:h-[6vw] relative">
+                <Image src={ADDRESS_ICON_MAP[item.address_name]} fill className="object-contain" alt="home-icon" />
               </div>
             </div>
-            <div className="mob:flex-1">
+            <div className="flex-1">
               <div className="flex items-center gap-2">
-                <p className="font-[SofiaPro] text-[.83vw] mob:text-[4vw] font-semibold ">{item.address_name}</p>
+                <p className="font-[SofiaPro] text-[.83vw] mob:text-[4vw] font-semibold">{item.address_name}</p>
                 {item.address_id === address.defaultAddress?.address_id && (
                   <span className="bg-[#E7F6EC] text-[#039855] text-[.6vw] mob:text-[2.5vw] px-[.5vw] mob:px-[2vw] py-[.1vw] mob:py-[.3vw] rounded-full font-bold">
                     Selected Location
                   </span>
                 )}
               </div>
-              <p className="font-[SofiaPro] text-[.83vw] mob:text-[3.5vw] font-medium text-[#231F20CC]">
+              <p className="font-[SofiaPro] text-[.83vw] mob:text-[3.5vw] font-medium text-[#231F2080] leading-tight mt-1">
                 {item.address}
               </p>
             </div>
