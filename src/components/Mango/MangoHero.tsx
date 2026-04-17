@@ -50,7 +50,7 @@ const MangoHero = () => {
         </h1>
 
         <p
-          className="text-[18px] md:text-[28.4px] leading-relaxed text-black mb-10 md:w-[50%]"
+          className="text-[18px] md:text-[28.4px] leading-[1.3] text-black mb-10 md:w-[50%]"
           style={{ fontFamily: 'SofiaPro' }}
         >
           100% carbide-free mangoes, sourced straight from the farmers.

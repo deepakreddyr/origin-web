@@ -145,13 +145,13 @@ const MangoRecipeDetailPage = ({ slug, mainMenuItems, footerData }: MangoRecipeD
 
               {/* Mobile-only overlay title and badge */}
               <div className="md:hidden absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end gap-3">
-                <div className="flex items-center gap-1.5 bg-[#90D68F] text-[#146321] px-3 py-1 rounded-full w-fit text-[12px] font-semibold border border-white/20">
+                {/* <div className="flex items-center gap-1.5 bg-[#90D68F] text-[#146321] px-3 py-1 rounded-full w-fit text-[12px] font-semibold border border-white/20">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <circle cx="12" cy="12" r="10" />
                     <polyline points="12 6 12 12 16 14" />
                   </svg>
                   {recipe.time}
-                </div>
+                </div> */}
                 <h1 className="text-white text-[42px] leading-[1.1] font-medium" style={{ fontFamily: 'Recoleta' }}>
                   {recipe.mobileTitle || recipe.title}
                 </h1>
@@ -160,12 +160,12 @@ const MangoRecipeDetailPage = ({ slug, mainMenuItems, footerData }: MangoRecipeD
 
             {/* Desktop Ingredients Box */}
             <div className="hidden lg:flex lg:w-[35%] bg-[#EFEEE3] rounded-[40px] p-10 md:p-7 flex-col">
-              <span
+              <h1
                 className="text-3xl md:text-[36px] font-medium text-[#1a1a1a] mb-8"
                 style={{ fontFamily: 'fraunces, serif' }}
               >
                 Ingredients
-              </span>
+              </h1>
               <ul className="space-y-6 flex-grow">
                 {recipe.ingredients.map((ing, i) => (
                   <li key={i} className="flex items-start gap-5">
@@ -207,7 +207,7 @@ const MangoRecipeDetailPage = ({ slug, mainMenuItems, footerData }: MangoRecipeD
                 </span>
 
                 <p
-                  className="text-[18px] text-[#000000] opacity-70 leading-relaxed mb-14 max-w-3xl"
+                  className="text-[18px] text-[#4D4635] opacity-70 leading-relaxed mb-14 max-w-3xl"
                   style={{ fontFamily: 'SofiaPro' }}
                 >
                   {recipe.description}
@@ -276,9 +276,9 @@ const MangoRecipeDetailPage = ({ slug, mainMenuItems, footerData }: MangoRecipeD
             {/* Sidebar (Fresh Picks) */}
             <div className="lg:w-[35%] flex flex-col p md:pt-0">
               <div className="flex flex-col gap-8">
-                <span className="text-[28px] font-medium text-[#000000]" style={{ fontFamily: 'Recoleta' }}>
+                <h1 className="text-[28px] font-medium text-[#000000]" style={{ fontFamily: 'Recoleta' }}>
                   Fresh Picks For You
-                </span>
+                </h1>
                 <div className="flex flex-col gap-8">
                   {otherRecipes.map((other) => (
                     <Link key={other.slug} href={`/mango/recipes/${other.slug}`} className="group block">

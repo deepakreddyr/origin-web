@@ -172,7 +172,7 @@ export const UOMPopup: FC<{
   onSelectionMade: (uom: UOM, ripeness: string | null) => void;
 }> = ({ product, isOpen, onClose, onSelectionMade }) => {
   const modalRef = useRef<HTMLDivElement>(null);
-  const { cart } = useCartStore();
+  const { cart, isMangoPage } = useCartStore();
   const cartItems = cart.items;
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isRipenessInfoOpen, setIsRipenessInfoOpen] = useState(false);
@@ -345,14 +345,26 @@ export const UOMPopup: FC<{
           </button>
 
           <div className="flex items-center gap-4 pr-10">
-            <div className="w-16 h-16 rounded-xl overflow-hidden bg-[#FAF7EF] flex-shrink-0 flex items-center justify-center border border-gray-100 p-2">
-              <Image
-                src={cleanImageUrl(product.website_image) || product.image || sampleimg}
-                alt={product.name}
-                width={60}
-                height={60}
-                className="w-full h-full object-contain"
-              />
+            <div
+              className={`w-16 h-16 rounded-xl overflow-hidden bg-[#FAF7EF] flex-shrink-0 flex items-center justify-center border border-gray-100 ${isMangoPage ? 'relative' : 'p-2'}`}
+            >
+              {isMangoPage ? (
+                <Image
+                  src={cleanImageUrl(product.website_image) || product.image || sampleimg}
+                  alt={product.name}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
+              ) : (
+                <Image
+                  src={product.image || sampleimg}
+                  alt={product.name}
+                  width={60}
+                  height={60}
+                  className="w-full h-full object-cover"
+                />
+              )}
             </div>
             <div className="flex-1">
               <p className="font-[SofiaPro] font-bold text-lg text-[#146321] leading-tight">{product.name}</p>

@@ -32,6 +32,7 @@ interface CartProduct {
   item_code: string;
   name: string;
   image: string;
+  website_image?: string;
   bg_color: string;
   is_available: boolean;
   is_greyed: boolean;
@@ -411,6 +412,7 @@ export const cartSlice = createSlice({
             item_code: product.item_code,
             name: product.name || product.item_name,
             image: product.image,
+            website_image: product.website_image,
             bg_color: product.bg_color,
             is_available: product.is_available,
             is_greyed: product.is_greyed,
@@ -638,6 +640,7 @@ export const cartSlice = createSlice({
               item_code: freeItemDef.item_code,
               name: freeItemDef.name || freeItemDef.item_name,
               image: freeItemDef.image || freeItemDef.logo,
+              website_image: freeItemDef.website_image,
               bg_color: freeItemDef.bg_color || '',
               is_available: true,
               is_greyed: false,
@@ -706,6 +709,7 @@ export const cartSlice = createSlice({
         item_code: freeItem.item_code,
         name: freeItem.name || freeItem.item_name,
         image: freeItem.image || freeItem.logo,
+        website_image: freeItem.website_image,
         bg_color: freeItem.bg_color || '',
         is_available: true,
         is_greyed: false,
