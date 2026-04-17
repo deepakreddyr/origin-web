@@ -154,6 +154,7 @@ const AddItemBtn: FC<any> = (props) => {
       item_code: product.item_code,
       name: product.name || product.item_name,
       image: product.image,
+      website_image: product.website_image,
       bg_color: product.bg_color,
       is_available: product.is_available,
       is_greyed: product.is_greyed,

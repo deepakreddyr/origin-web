@@ -7,6 +7,7 @@ import { useCartStore } from '@/hooks/useCartStore';
 import { clearSubscriptionCart, updateSubscriptionQuantity } from '@/store/slice/SubscriptionCartSlice';
 import { setIsSidebarOpen } from '@/store/slice/loginSlice';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { cleanImageUrl } from '@/utilities/utils';
 
 // --- NEW IMPORTS for Ripeness Icons ---
 import ripeSvg from '/public/assets/svg/ripe.svg';
@@ -98,10 +99,10 @@ const ReviewItem = (props: {
   isSubscription?: boolean;
 }) => {
   const { product, uom, ripenessType, onShowMaxQuantityToast, isFreeItem = false, isSubscription = false } = props;
-  const { actions } = useCartStore();
+  const { actions, isMangoPage } = useCartStore();
   const { removeItemFromCart, removeFreeItemFromCart } = actions;
   const dispatch = useDispatch();
-
+  console.log(product);
   // --- REMOVED TOAST STATE ---
   // const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
   // const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
@@ -171,14 +172,20 @@ const ReviewItem = (props: {
     >
       <div className="flex items-center gap-[.78vw] grow mob:gap-[3vw] justify-between">
         <div className="review-cart-info flex gap-3 items-center mob:w-[60vw] grow">
-          <figure className="w-[4vw] h-[4vw] mob:w-[15vw] mob:h-[15vw] rounded-lg bg-[#F2EEE4] flex-shrink-0 m-0 p-1 overflow-hidden relative">
+          <figure
+            className={`w-[4vw] h-[4vw] mob:w-[15vw] mob:h-[15vw] rounded-lg bg-[#F2EEE4] flex-shrink-0 m-0 overflow-hidden relative ${isMangoPage ? '' : 'p-1'}`}
+          >
             <img
-              src={product.image || '/public/assets/images/shop/sampleimg2.png'}
+              src={
+                isMangoPage
+                  ? cleanImageUrl(product.website_image) ||
+                    cleanImageUrl(product.image) ||
+                    '/assets/images/shop/sampleimg2.png'
+                  : cleanImageUrl(product.image) || '/logo.svg'
+              }
               alt="product image"
-              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+              style={{ width: '100%', height: '100%', objectFit: isMangoPage ? 'cover' : 'contain' }}
             />
-            {/* Free Badge */}
-            {/* Free Badge Removed */}
           </figure>
           <div className="review-cart-information flex flex-col">
             <p className="font-[sofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold">{product?.name}</p>

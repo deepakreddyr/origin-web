@@ -14,6 +14,7 @@ interface SubscriptionItem {
   item_code: string;
   name: string;
   image: string;
+  website_image?: string;
   price: number;
   price_inclusive_of_all_taxes?: number;
   quantity: number;
