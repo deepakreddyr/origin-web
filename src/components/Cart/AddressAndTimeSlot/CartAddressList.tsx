@@ -42,8 +42,8 @@ const CartAddressList = (props: any) => {
   };
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
-      <div className="flex-1 overflow-y-auto p-[1.1vw] mob:p-[5vw] flex flex-col gap-[.97vw] mob:gap-[4vw] pb-[5vw] mob:pb-[10vw]">
+    <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+      <div className="flex-1 min-h-0 overflow-y-auto p-[1.1vw] mob:p-[5vw] flex flex-col gap-[.97vw] mob:gap-[4vw] pb-[5vw] mob:pb-[10vw]">
         {address?.address?.map((item: any) => (
           <button
             key={item.address_id}
