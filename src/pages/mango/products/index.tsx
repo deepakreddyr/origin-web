@@ -19,11 +19,29 @@ interface MangoProductsPageProps {
   footerData: FooterDataType;
 }
 
-const ProductsList = () => {
+const ProductsList = ({ hasError }: { hasError: boolean }) => {
   const products = useSelector((state: any) => state.products);
   console.log('products', products);
 
   if (products.isProductListLoading) return <ProductCardLoader />;
+
+  if (
+    hasError ||
+    (!products.isProductListLoading && (!products.productsList || products.productsList.length === 0) && hasError)
+  ) {
+    return (
+      <div className="fixed inset-0 flex flex-col items-center justify-center px-4 z-10 bg-white">
+        <img
+          src="/assets/svg/somethingwentwrong.svg"
+          alt="Something went wrong"
+          className="w-[260px] mob:w-[200px] mb-6"
+        />
+        <p className="text-center text-gray-500 font-[SofiaPro] text-base mob:text-sm">
+          Oops! Something went wrong. Please try again later.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-2 mob:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-[3.5vw] mob:gap-[5vw] md:gap-x-6 md:gap-y-10 w-full justify-items-center">
@@ -36,12 +54,14 @@ const MangoProductsPage = ({ mainMenuItems, footerData }: MangoProductsPageProps
   const dispatch = useDispatch();
   const getDataFromApi = useGetDataFromApi();
   const [categoryName, setCategoryName] = useState<string | null>(null);
+  const [fetchError, setFetchError] = useState(false);
 
   useEffect(() => {
     let apiPath = localStorage.getItem('mango_listing_api_path');
     if (!apiPath) {
       console.warn('[MangoProducts] No listing API path found in LS.');
-      // Optionally fallback or handle empty state
+      setFetchError(true);
+      dispatch(setIsProductListLoading(false));
       return;
     }
 
@@ -98,6 +118,7 @@ const MangoProductsPage = ({ mainMenuItems, footerData }: MangoProductsPageProps
     const failureHandler = (error: any) => {
       console.error('[MangoListing] error:', error);
       dispatch(setIsProductListLoading(false));
+      setFetchError(true);
     };
 
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
@@ -123,7 +144,7 @@ const MangoProductsPage = ({ mainMenuItems, footerData }: MangoProductsPageProps
             </div>
           </div>
           <div className="max-w-7xl mx-auto">
-            <ProductsList />
+            <ProductsList hasError={fetchError} />
           </div>
         </section>
       </main>

@@ -57,6 +57,7 @@ const Home = ({
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
   const [homepageData, setHomepageData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
   const getDataFromApi = useGetDataFromApi();
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const [address] = useAtom(addressAtom);
@@ -95,6 +96,7 @@ const Home = ({
     const failureHandler = () => {
       setHomepageData(null);
       setLoading(false);
+      setFetchError(true);
     };
 
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
@@ -148,27 +150,42 @@ const Home = ({
         </ScrollReveal> */}
 
         {/* Homepage Category Section */}
-        <ScrollReveal direction="up" delay={0}>
-          <div className="w-full px-[3vw] mob:mt-[2vw]">
-            <HomeCategorySection
-              categories={mainCategoryData}
-              blendsCategory={blendsCategoryData}
-              title="Shop By Category"
-              loading={loading}
+        {fetchError ? (
+          <div className="flex flex-col items-center justify-center py-16 px-4">
+            <img
+              src="/assets/svg/somethingwentwrong.svg"
+              alt="Something went wrong"
+              className="w-[280px] mob:w-[220px] mb-6"
             />
+            <p className="text-center text-gray-500 font-[SofiaPro] text-base mob:text-sm">
+              Oops! Something went wrong. Please try again later.
+            </p>
           </div>
-        </ScrollReveal>
+        ) : (
+          <>
+            <ScrollReveal direction="up" delay={0}>
+              <div className="w-full px-[3vw] mob:mt-[2vw]">
+                <HomeCategorySection
+                  categories={mainCategoryData}
+                  blendsCategory={blendsCategoryData}
+                  title="Shop By Category"
+                  loading={loading}
+                />
+              </div>
+            </ScrollReveal>
 
-        <ScrollReveal direction="up" delay={0}>
-          <div className="w-full px-[3vw]">
-            {isMobile ? (
-              <PopularProduceMob categoryDetail={popularProduceData} />
-            ) : (
-              <PopularProduce categoryDetail={popularProduceData} />
-            )}
-            {/* <PopularProduce categoryDetail={popularProduceData} /> */}
-          </div>
-        </ScrollReveal>
+            <ScrollReveal direction="up" delay={0}>
+              <div className="w-full px-[3vw]">
+                {isMobile ? (
+                  <PopularProduceMob categoryDetail={popularProduceData} />
+                ) : (
+                  <PopularProduce categoryDetail={popularProduceData} />
+                )}
+                {/* <PopularProduce categoryDetail={popularProduceData} /> */}
+              </div>
+            </ScrollReveal>
+          </>
+        )}
 
         {/* <BeforeBox mdTopOffset={isMobile ? -90 : 50} mdBottomOffset={isMobile ? 20 : 80}> */}
         <ScrollReveal direction="up" delay={0}>
