@@ -83,7 +83,7 @@ const AddressAndTimeSlot = (props: any) => {
         } transition-all duration-500 ease-in-out flex flex-col`}
       >
         <ModalHeader setAddressModal={setAddressModal} setTimeSelectorOrListTab={setTimeSelectorOrListTab} />
-        <div className="flex-1 overflow-hidden">{SCREEN_MAP[activeModalTab]}</div>
+        <div className="flex-1 overflow-hidden min-h-0 flex flex-col">{SCREEN_MAP[activeModalTab]}</div>
       </div>
     </div>
   );
