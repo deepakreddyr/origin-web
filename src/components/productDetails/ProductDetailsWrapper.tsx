@@ -414,6 +414,7 @@ const ProductDetailsWrapper = () => {
   const [showNotifyToast, setShowNotifyToast] = useState(false);
   const [notifyMsg, setNotifyMsg] = useState('');
   const [notifyType, setNotifyType] = useState<'success' | 'error'>('success');
+  const [fetchError, setFetchError] = useState(false);
   const dispatch = useDispatch();
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const [address] = useAtom(addressAtom);
@@ -564,6 +565,7 @@ const ProductDetailsWrapper = () => {
 
       const failureHandler = (data: any) => {
         setProductDetails((prev) => ({ ...prev, isLoading: false }));
+        setFetchError(true);
       };
 
       getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
@@ -661,6 +663,21 @@ const ProductDetailsWrapper = () => {
   };
 
   if (productDetails.isLoading) return <ProductDetailsPageLoader />;
+
+  if (fetchError) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] py-16 px-4">
+        <img
+          src="/assets/svg/somethingwentwrong.svg"
+          alt="Something went wrong"
+          className="w-[300px] mob:w-[220px] mb-6"
+        />
+        <p className="text-center text-gray-500 font-[SofiaPro] text-base mob:text-sm">
+          Oops! Something went wrong. Please try again later.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <>
