@@ -346,7 +346,7 @@ const ImageGallery: React.FC<{
       {/* Overlays */}
       {conversionText && (
         <div
-          className={`absolute top-4 right-4 text-[#146321] font-bold px-3 py-1 rounded-full z-10 font-[SofiaPro] ${isDesktop ? 'text-sm' : 'text-[10px]'}`}
+          className={`absolute top-4 right-4 text-white font-bold px-3 py-1 rounded-full z-10 font-[SofiaPro] ${isDesktop ? 'text-sm' : 'text-[10px]'}`}
         >
           {conversionText}
         </div>
