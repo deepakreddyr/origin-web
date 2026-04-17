@@ -168,7 +168,7 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
 
             {defaultUOM.conversion_text && (
               <div
-                className={`absolute top-2 right-2 text-[#146321] font-bold px-2 py-0.5 rounded-full font-[SofiaPro] text-[9px] md:text-[12px]`}
+                className={`absolute top-2 right-2 text-white font-bold  px-2 py-0.5 rounded-full font-[SofiaPro] text-[10px] md:text-[12px]`}
               >
                 {defaultUOM.conversion_text}
               </div>

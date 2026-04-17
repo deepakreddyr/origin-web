@@ -393,7 +393,7 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
                             >
                               {highlightMango(item.name)}
                             </p>
-                            <p className="text-[12px] font-bold text-[#1B1B1B] ml-2">
+                            <p className="text-[12px] font-bold text-[#1B1B1B] ml-2 whitespace-nowrap flex-shrink-0">
                               ₹ {item.multiple_uoms?.[0]?.price || 'N/A'}
                             </p>
                           </div>
@@ -560,7 +560,7 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
                         <p className="text-[16px] font-bold text-[#1B1B1B] truncate font-[SofiaPro]">
                           {highlightMango(item.name)}
                         </p>
-                        <p className="text-[14px] font-bold text-[#1B1B1B] ml-2">
+                        <p className="text-[14px] font-bold text-[#1B1B1B] ml-2 whitespace-nowrap flex-shrink-0">
                           ₹{item.multiple_uoms?.[0]?.price || 'N/A'}
                         </p>
                       </div>
