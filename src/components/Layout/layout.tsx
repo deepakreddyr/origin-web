@@ -93,7 +93,9 @@ export default function Layout({
     }
 
     // --- Download App Popup Logic ---
-    if (isReady && query.type !== 'app') {
+    const isMangoRoute = router.pathname.startsWith('/mango');
+    const isSubscriptionRoute = router.pathname.startsWith('/subscription');
+    if (isReady && query.type !== 'app' && !isMangoRoute && !isSubscriptionRoute) {
       const timer = setTimeout(() => {
         try {
           const hasSeenInSession = sessionStorage.getItem('downloadAppPopupShown');

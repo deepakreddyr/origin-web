@@ -64,6 +64,7 @@ interface ProductItem {
   item_code: string;
   name: string;
   image: string;
+  website_image?: string;
   multiple_images?: string[];
   tag_url: string | null;
   bg_color: string;
@@ -427,6 +428,7 @@ const ProductDetailsWrapper = () => {
   const getDataFromApi = useGetDataFromApi();
   const router = useRouter();
   const { isReady, query, pathname } = router;
+  const isMangoPage = pathname.startsWith('/mango');
 
   const renderBreadcrumbs = () => {
     const isMangoPath = pathname.startsWith('/mango');
@@ -602,7 +604,10 @@ const ProductDetailsWrapper = () => {
       productDescription ||
       `Buy ${productDetails.item.name} online. Fresh and high-quality products delivered to your doorstep.`
     ).substring(0, 155),
-    image: productDetails.item.image || `${frontendUrl}/assets/logo.svg`,
+    image:
+      (isMangoPage ? productDetails.item.website_image : null) ||
+      productDetails.item.image ||
+      `${frontendUrl}/assets/logo.svg`,
     price: defaultUOM?.price || 0,
     currency: 'INR',
     availability: productDetails.item.is_available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
@@ -730,7 +735,7 @@ const ProductDetailsWrapper = () => {
               <div className="flex flex-col items-center bg-primary-100 rounded-[24px] overflow-hidden border border-[#EDE6CC]/50">
                 <div className="relative w-full aspect-square bg-transparent">
                   <ImageGallery
-                    mainImage={productDetails.item.image}
+                    mainImage={(isMangoPage ? productDetails.item.website_image : null) || productDetails.item.image}
                     multipleImages={productDetails.item.multiple_images}
                     productName={productDetails.item.name}
                     isAvailable={defaultUOM?.is_available && productDetails.item.is_available}
@@ -819,7 +824,7 @@ const ProductDetailsWrapper = () => {
                 <div className="bg-primary-100 rounded-[32px] border border-[#EDE6CC]/50 flex items-center justify-center min-h-[500px] overflow-hidden relative">
                   <div className="relative w-full h-full aspect-square">
                     <ImageGallery
-                      mainImage={productDetails.item.image}
+                      mainImage={(isMangoPage ? productDetails.item.website_image : null) || productDetails.item.image}
                       multipleImages={productDetails.item.multiple_images}
                       productName={productDetails.item.name}
                       isAvailable={defaultUOM?.is_available && productDetails.item.is_available}
