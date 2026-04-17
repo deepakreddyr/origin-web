@@ -285,7 +285,17 @@ const ImageGallery: React.FC<{
   conversionText?: string;
   hasRipenessFeature: boolean;
   isDesktop?: boolean;
-}> = ({ mainImage, multipleImages = [], productName, isAvailable, conversionText, hasRipenessFeature, isDesktop }) => {
+  isMangoPage?: boolean;
+}> = ({
+  mainImage,
+  multipleImages = [],
+  productName,
+  isAvailable,
+  conversionText,
+  hasRipenessFeature,
+  isDesktop,
+  isMangoPage = false
+}) => {
   const images = [mainImage, ...multipleImages].filter(Boolean);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -346,7 +356,7 @@ const ImageGallery: React.FC<{
       {/* Overlays */}
       {conversionText && (
         <div
-          className={`absolute top-4 right-4 text-white font-bold px-3 py-1 rounded-full z-10 font-[SofiaPro] ${isDesktop ? 'text-sm' : 'text-[10px]'}`}
+          className={`absolute top-4 right-4 ${isMangoPage ? 'text-white' : 'text-[#146321]'} font-bold px-3 py-1 rounded-full z-10 font-[SofiaPro] ${isDesktop ? 'text-sm' : 'text-[10px]'}`}
         >
           {conversionText}
         </div>
@@ -741,6 +751,7 @@ const ProductDetailsWrapper = () => {
                     isAvailable={defaultUOM?.is_available && productDetails.item.is_available}
                     conversionText={defaultUOM?.conversion_text}
                     hasRipenessFeature={hasRipenessFeature}
+                    isMangoPage={isMangoPage}
                   />
                 </div>
 
@@ -831,6 +842,7 @@ const ProductDetailsWrapper = () => {
                       conversionText={defaultUOM?.conversion_text}
                       hasRipenessFeature={hasRipenessFeature}
                       isDesktop
+                      isMangoPage={isMangoPage}
                     />
                   </div>
                 </div>
