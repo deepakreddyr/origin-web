@@ -103,7 +103,8 @@ const BillDetailsWrapper = (props: any) => {
         amountTobePaid = amountTobePaid - discountAmount;
       }
     }
-    dispatch(setIsProceedButtonEnabled(amountTobePaid >= (cart.cart_minimum || 0)));
+    // Validates against original item total before discount
+    dispatch(setIsProceedButtonEnabled(totalPrice >= (cart.cart_minimum || 0)));
     dispatch(setAmountToPay(amountTobePaid));
     if (typeof window !== 'undefined') {
       const lsTotalKey = isMangoPage ? 'mango_total_to_pay' : 'total_to_pay';

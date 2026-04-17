@@ -183,9 +183,9 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
       ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
       : 'bg-black text-primary cursor-pointer hover:opacity-90 transition-opacity';
 
-  const remainingAmount = cartMinimum > 0 ? (cartMinimum - parseFloat(cart.amountToPay)).toFixed(2) : 0;
+  const remainingAmount = cartMinimum > 0 ? (cartMinimum - parseFloat(cart.totalPrice)).toFixed(2) : 0;
   const showMinOrderBanner =
-    !isSubscription && cart.items.length > 0 && cartMinimum > 0 && parseFloat(cart.amountToPay) < cartMinimum;
+    !isSubscription && cart.items.length > 0 && cartMinimum > 0 && parseFloat(cart.totalPrice) < cartMinimum;
 
   return (
     <div className="relative">
