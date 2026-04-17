@@ -736,7 +736,7 @@ const ProductDetailsWrapper = () => {
                 <div className="relative w-full aspect-square bg-transparent">
                   <ImageGallery
                     mainImage={(isMangoPage ? productDetails.item.website_image : null) || productDetails.item.image}
-                    multipleImages={productDetails.item.multiple_images}
+                    // multipleImages={productDetails.item.multiple_images}
                     productName={productDetails.item.name}
                     isAvailable={defaultUOM?.is_available && productDetails.item.is_available}
                     conversionText={defaultUOM?.conversion_text}
@@ -825,7 +825,7 @@ const ProductDetailsWrapper = () => {
                   <div className="relative w-full h-full aspect-square">
                     <ImageGallery
                       mainImage={(isMangoPage ? productDetails.item.website_image : null) || productDetails.item.image}
-                      multipleImages={productDetails.item.multiple_images}
+                      // multipleImages={productDetails.item.multiple_images}
                       productName={productDetails.item.name}
                       isAvailable={defaultUOM?.is_available && productDetails.item.is_available}
                       conversionText={defaultUOM?.conversion_text}

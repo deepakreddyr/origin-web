@@ -32,7 +32,7 @@ const recipeMap: Record<
   'mango-chaat': {
     title: 'Spice up your evening with this delectable Mango Chaat!',
     mobileTitle: 'Zesty Mango Chaat',
-    tag: 'By Memo',
+    tag: 'By Naveen Prasath',
     date: '02 March, 2026',
     time: '10 MINS',
     difficulty: 'EASY',
@@ -56,7 +56,7 @@ const recipeMap: Record<
   'mango-popsicles': {
     title: 'Beat the heat with addictive Mango Popsicles',
     mobileTitle: 'Mango Popsicles',
-    tag: 'By Memo',
+    tag: 'By Prakash',
     date: '02 March, 2026',
     time: '8 HOURS',
     difficulty: 'EASY',
@@ -74,7 +74,7 @@ const recipeMap: Record<
   'mango-cucumber-salsa': {
     title: 'This Mango cucumber salsa is your next crowd favourite',
     mobileTitle: 'Cucumber Salsa',
-    tag: 'By Memo',
+    tag: 'By Deepak',
     date: '02 March, 2026',
     time: '15 MINS',
     difficulty: 'EASY',

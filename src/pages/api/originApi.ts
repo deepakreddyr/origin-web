@@ -1244,21 +1244,21 @@ const data: Data = {
     {
       slug: 'mango-chaat',
       name: 'Spice Up Your Evening With This Delectable Mango Chaat!',
-      tag: 'By Memo',
+      tag: 'By Naveen Prasath',
       date: '02 March, 2026',
       imgSrc: '/assets/images/recipes/mango-chaat.jpg'
     },
     {
       slug: 'mango-popsicles',
       name: 'Beat The Heat With Addictive Mango Popsicles',
-      tag: 'By Memo',
+      tag: 'By Prakash',
       date: '02 March, 2026',
       imgSrc: '/assets/images/recipes/mango-popsicles.jpg'
     },
     {
       slug: 'mango-cucumber-salsa',
       name: 'This Mango Cucumber Salsa Is The Next Crowd Favourite',
-      tag: 'By Memo',
+      tag: 'By Deepak',
       date: '02 March, 2026',
       imgSrc: '/assets/images/recipes/mango-salsa.jpg'
     }
