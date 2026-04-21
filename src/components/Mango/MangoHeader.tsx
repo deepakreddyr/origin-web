@@ -96,14 +96,20 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
     const token = localStorage.getItem('user_token');
     const parentCategoryId = localStorage.getItem('mango_parent_category_id') || '33';
 
-    const apiUrl =
+    const storeId = localStorage.getItem('store-id');
+
+    let apiUrl =
       process.env.NEXT_PUBLIC_BACKEND_API_URL +
       (token ? protectedUrl['mangoSearch'] : unprotectedUrl['mangoSearch']) +
       `?query=${encodeURIComponent(searchQuery)}&parent_category_id=${parentCategoryId}`;
 
-    const additionalHeaders = {
+    const additionalHeaders: any = {
       'parent-category-id': parentCategoryId
     };
+
+    if (token && storeId && storeId !== 'null') {
+      additionalHeaders['store-id'] = storeId;
+    }
 
     const successHandler = (data: any) => {
       console.log('[MangoSearch] response:', data);
