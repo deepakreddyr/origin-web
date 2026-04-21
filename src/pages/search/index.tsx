@@ -247,6 +247,11 @@ const SearchResults = (props: HomeProps) => {
         headers['Authorization'] = `Bearer ${userToken}`;
         headers['MM-Device-Type'] = 'web';
         headers['MM-Build-Version'] = '1.0.1';
+
+        const storeId = localStorage.getItem('store-id');
+        if (storeId && storeId !== 'null') {
+          headers['store-id'] = storeId;
+        }
       }
 
       const response = await fetch(apiUrl, {

@@ -17,7 +17,12 @@ export const getSearchedProductResponse = async (set: any) => {
       headers: {
         Authorization: header(),
         Accept: 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...(typeof window !== 'undefined' &&
+        localStorage.getItem('store-id') &&
+        localStorage.getItem('store-id') !== 'null'
+          ? { 'store-id': localStorage.getItem('store-id') as string }
+          : {})
       }
     });
 
