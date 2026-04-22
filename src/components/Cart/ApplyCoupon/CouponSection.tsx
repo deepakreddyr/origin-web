@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 import { setRouteSourceToLs } from '@/utilities/utils';
 import { setTabType } from '@/store/slice/loginSlice';
+import { setCouponDetails, setDiscountAmount } from '@/store/slice/CartSlice';
+import { setMangoCouponDetails, setMangoDiscountAmount } from '@/store/slice/MangoCartSlice';
 import { couponDetailsInitialState } from '@/constants';
 import { useAtom } from 'jotai';
 import { couponList } from '@/features/CouponPage/context/atoms';
@@ -53,8 +55,12 @@ const CouponSection = (props: any) => {
   };
 
   const resetCouponHandler = () => {
+    // Sync both Normal and Mango carts
     dispatch(setCouponDetails({ ...couponDetailsInitialState }));
     dispatch(setDiscountAmount(0));
+    dispatch(setMangoCouponDetails({ ...couponDetailsInitialState }));
+    dispatch(setMangoDiscountAmount(0));
+
     setAppliedCoupon((prev: any) => ({ ...prev, isApplied: false, coupon: null }));
   };
 
@@ -97,9 +103,15 @@ const CouponSection = (props: any) => {
 
     const success = await validateCoupon(payload, setAppliedCoupon);
     if (success) {
-      // Keep the original coupon object so recalculation works (especially for percentage type)
+      // Sync both Normal and Mango carts
       dispatch(setCouponDetails({ ...coupon }));
-      dispatch(setDiscountAmount(Math.round(calculateCouponDiscount(cart.totalPrice, coupon) || 0)));
+      dispatch(setMangoCouponDetails({ ...coupon }));
+
+      // Each slice will recalculate its own discountAmount via updateCartTotals when setCouponDetails is called
+      // but we explicitly set it here for immediate UI update consistency if needed
+      const discount = Math.round(calculateCouponDiscount(cart.totalPrice, coupon) || 0);
+      dispatch(setDiscountAmount(discount));
+      dispatch(setMangoDiscountAmount(discount));
     }
   };
 
@@ -123,10 +135,11 @@ const CouponSection = (props: any) => {
                     Save ₹{Math.round(calculateCouponDiscount(cart.totalPrice, bestCoupon) || 0)} on this order
                   </p>
                   <p className="font-[SofiaPro] text-[.8vw] mob:text-[3vw] font-medium text-black">
-                    {bestCoupon.code} •{' '}
-                    {bestCoupon.discount_type === 'percentage'
-                      ? `${bestCoupon.discount}% off up to ₹${bestCoupon.max_cart_value || 0}`
-                      : bestCoupon.description}
+                    {bestCoupon.code}
+                    {/* •{' '} */}
+                    {bestCoupon.discount_type === 'percentage' &&
+                      `${bestCoupon.discount}% off up to ₹${bestCoupon.max_cart_value || 0}`}
+                    {/* : bestCoupon.description} */}
                   </p>
                 </div>
               </div>

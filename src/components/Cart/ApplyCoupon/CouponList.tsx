@@ -5,8 +5,14 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { setAmountToPay, setCouponDetails, setDiscountAmount, setTotalPrice } from '@/store/slice/CartSlice';
+import {
+  setMangoAmountToPay,
+  setMangoCouponDetails,
+  setMangoDiscountAmount,
+  setMangoTotalPrice
+} from '@/store/slice/MangoCartSlice';
 import { useCartStore } from '@/hooks/useCartStore';
-import { COUPON_TABS } from '@/constants';
+import { COUPON_TABS, couponDetailsInitialState } from '@/constants';
 import { setCouponId } from '@/store/slice/placeOrderDetails';
 import CouponListSkeleton from '@/components/skeletonLoaders/cart/CouponListSkeleton';
 import ApplyCouponInput from './ApplyCouponInput';
@@ -60,16 +66,23 @@ const CouponList = (props: any) => {
       const isValid = couponData?.isValid === 1;
 
       if (isValid) {
-        setError(false); // ✅ Clear error if coupon is valid
-
+        // Apply success results to both carts to keep them in sync
         dispatch(setCouponDetails({ ...couponData }));
+        dispatch(setMangoCouponDetails({ ...couponData }));
+
+        // Recalculate discount based on current cart
+        const discountValue = Math.round(calculateCouponDiscount(cart.totalPrice, couponData) || 0);
+        dispatch(setDiscountAmount(discountValue));
+        dispatch(setMangoDiscountAmount(discountValue));
+
+        // Re-calculate to pay
+        const finalAmount = Math.max(0, cart.totalPrice - discountValue);
+        dispatch(setAmountToPay(finalAmount));
+        dispatch(setMangoAmountToPay(finalAmount)); // Note: Mango slice will recalc itself anyway, but good for immediate UI
+
+        props.onCouponApplied?.(couponCode);
+        setError(false); // ✅ Clear error if coupon is valid
         dispatch(setCouponId(couponData.id));
-
-        const disountedAmount = calculateCouponDiscount(cart.totalPrice, couponData);
-        const finalCartAmount = cart.totalPrice - disountedAmount;
-
-        dispatch(setDiscountAmount(Math.round(disountedAmount)));
-        dispatch(setAmountToPay(finalCartAmount));
       } else {
         setError(true); // ❌ Coupon invalid
       }

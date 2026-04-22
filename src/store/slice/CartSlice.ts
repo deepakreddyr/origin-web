@@ -592,10 +592,12 @@ export const cartSlice = createSlice({
 
     setCouponDetails: (state, action: PayloadAction<any>) => {
       state.couponDetails = action.payload;
+      saveCart(state);
     },
 
     resetCouponDetails: (state) => {
       state.couponDetails = couponDetailsInitialState;
+      saveCart(state);
     },
 
     setTotalPrice: (state, action: PayloadAction<number>) => {

@@ -1,5 +1,5 @@
 import { couponDetailsInitialState } from '@/constants';
-import { updateCartItemsToLs } from '@/utilities/utils';
+import { updateCartItemsToLs, calculateCouponDiscount } from '@/utilities/utils';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // --- INTERFACES (Reused from CartSlice) ---
@@ -118,8 +118,21 @@ const updateCartTotals = (state: CartState) => {
       }
     });
   });
-
-  state.amountToPay = state.totalPrice;
+  // Calculate final amount to pay and recalculate coupon discount if needed
+  if (state.couponDetails && state.couponDetails.code && state.couponDetails.code !== '') {
+    const minVal = state.couponDetails.min_cart_value || 0;
+    if (state.totalPrice >= minVal) {
+      const newDiscount = calculateCouponDiscount(state.totalPrice, state.couponDetails) || 0;
+      state.discountAmount = Math.round(newDiscount);
+      state.amountToPay = Math.max(0, state.totalPrice - state.discountAmount);
+    } else {
+      state.discountAmount = 0;
+      state.amountToPay = state.totalPrice;
+    }
+  } else {
+    state.discountAmount = 0;
+    state.amountToPay = state.totalPrice;
+  }
 };
 
 const isProceedBtnEnabled = (state: CartState): boolean => {
@@ -499,10 +512,12 @@ export const mangoCartSlice = createSlice({
 
     setCouponDetails: (state, action: PayloadAction<any>) => {
       state.couponDetails = action.payload;
+      saveCart(state);
     },
 
     resetCouponDetails: (state) => {
       state.couponDetails = couponDetailsInitialState;
+      saveCart(state);
     },
 
     setTotalPrice: (state, action: PayloadAction<number>) => {

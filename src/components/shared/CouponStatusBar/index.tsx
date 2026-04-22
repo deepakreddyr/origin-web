@@ -14,10 +14,12 @@ import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import { isCartPageIsOpen, cartItems } from '@/features/CartPage/context/atoms';
 import { setTabType, setIsSidebarOpen } from '@/store/slice/loginSlice';
-import { setCartTabType, setCouponDetails, setDiscountAmount } from '@/store/slice/CartSlice';
+import * as cartActions from '@/store/slice/CartSlice';
 import { calculateCouponDiscount } from '@/utilities/utils';
 import { validateCoupon } from '@/features/CouponPage/services/validateCoupon';
 import { isCouponApplied } from '@/features/CouponPage/context/atoms';
+import { useCartStore } from '@/hooks/useCartStore';
+import { setMangoCouponDetails, setMangoDiscountAmount, setMangoAmountToPay } from '@/store/slice/MangoCartSlice';
 
 const HIDDEN_PATHS = [
   '/cart',
@@ -27,13 +29,15 @@ const HIDDEN_PATHS = [
   '/privacy-policy',
   '/refund-policy',
   '/delete-account',
-  '/invoice'
+  '/invoice',
+  '/subscription'
 ];
 
 const CouponStatusBar: React.FC = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const cart = useSelector((state: any) => state.cart);
+  const { cart, isMangoPage } = useCartStore();
+  const { setCartTabType, setCouponDetails, setDiscountAmount } = cartActions;
   const isLogin = useSelector((state: any) => state.loginDetails.isLogin);
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const getDataFromApi = useGetDataFromApi();
@@ -186,8 +190,13 @@ const CouponStatusBar: React.FC = () => {
 
         const success = await validateCoupon(payload, setAppliedCoupon);
         if (success) {
-          dispatch(setCouponDetails({ ...bestCoupon }));
-          dispatch(setDiscountAmount(Math.round(calculateCouponDiscount(subTotal, bestCoupon) || 0)));
+          // Sync both Normal and Mango carts
+          dispatch(cartActions.setCouponDetails({ ...bestCoupon }));
+          dispatch(setMangoCouponDetails({ ...bestCoupon }));
+
+          const discount = Math.round(calculateCouponDiscount(subTotal, bestCoupon) || 0);
+          dispatch(cartActions.setDiscountAmount(discount));
+          dispatch(setMangoDiscountAmount(discount));
         }
       }
 

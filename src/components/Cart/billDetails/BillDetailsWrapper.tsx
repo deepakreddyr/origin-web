@@ -11,11 +11,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Tooltip, IconButton, useMediaQuery } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { calculateCouponDiscount } from '@/utilities/utils';
+import { useCartStore } from '@/hooks/useCartStore';
 
 const BillDetailsWrapper = (props: any) => {
   const { billDetails, isSubscription = false } = props;
-  const cart = useSelector((state: any) => state.cart);
-  const subscriptionCart = useSelector((state: any) => state.subscriptionCart);
+  const { cart, subscriptionCart, actions, isMangoPage } = useCartStore();
+  const { setAmountToPay, setCouponDetails, setDiscountAmount, setIsProceedButtonEnabled, setDeliveryFee } = actions;
   const { couponDetails } = cart;
   const dispatch = useDispatch();
 
@@ -122,7 +123,8 @@ const BillDetailsWrapper = (props: any) => {
     }
 
     if (typeof window !== 'undefined') {
-      localStorage.setItem('total_to_pay', String(finalAmountToPay));
+      const lsTotalKey = isMangoPage ? 'mango_total_to_pay' : 'total_to_pay';
+      localStorage.setItem(lsTotalKey, String(finalAmountToPay));
     }
   }, [couponDetails, cart, billDetails, dispatch, isSubscription]);
 
