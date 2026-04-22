@@ -1,11 +1,4 @@
 import { couponDetailsInitialState } from '@/constants';
-import {
-  setAmountToPay,
-  setCouponDetails,
-  setDiscountAmount,
-  setIsProceedButtonEnabled,
-  setDeliveryFee
-} from '@/store/slice/CartSlice';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Tooltip, IconButton, useMediaQuery } from '@mui/material';
@@ -85,6 +78,9 @@ const BillDetailsWrapper = (props: any) => {
 
   useEffect(() => {
     if (isSubscription) return; // Skip updating normal cart state in subscription mode
+
+    let amountTobePaid;
+    const { totalPrice, amountToPay, discountAmount } = cart;
 
     // Calculate dynamic delivery fee
     const deliveryFee = calculateDeliveryFee();

@@ -83,6 +83,12 @@ const CouponList = (props: any) => {
         props.onCouponApplied?.(couponCode);
         setError(false); // ✅ Clear error if coupon is valid
         dispatch(setCouponId(couponData.id));
+
+        const disountedAmount = calculateCouponDiscount(cart.totalPrice, couponData);
+        const finalCartAmount = cart.totalPrice - disountedAmount;
+
+        dispatch(setDiscountAmount(Math.round(disountedAmount)));
+        dispatch(setAmountToPay(finalCartAmount));
       } else {
         setError(true); // ❌ Coupon invalid
       }
