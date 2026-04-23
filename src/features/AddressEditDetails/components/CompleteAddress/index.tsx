@@ -296,7 +296,7 @@ export default function CompleteAddress(props: Props) {
         <FormControl variant="standard" className={styles.form}>
           <Box className={styles['form-input']}>
             <Box className={styles['form-group']}>
-              <InputLabel required htmlFor="name" className={styles.input}>
+              <InputLabel htmlFor="name" className={styles.input}>
                 <Typography
                   sx={{
                     fontSize: 14,

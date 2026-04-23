@@ -140,7 +140,7 @@ const SignUp = () => {
 
   return (
     <>
-      <Typography
+      {/* <Typography
         sx={{
           color: '#231F20CC',
           fontSize: '14px',
@@ -150,7 +150,7 @@ const SignUp = () => {
         }}
       >
         Complete registration to unlock exclusive discounts and coupons{' '}
-      </Typography>
+      </Typography> */}
 
       <Box>
         <FormControl
@@ -184,9 +184,12 @@ const SignUp = () => {
                 Name
               </Typography>
 
-              <div className="bg-primary-100 min-h-[48px] px-[3.6vw] md:px-[1.67vw] flex items-center gap-[5px] rounded-full">
+              <label
+                htmlFor="name"
+                className="bg-primary-100 min-h-[48px] px-[3.6vw] md:px-[1.67vw] flex items-center gap-[5px] rounded-full cursor-text"
+              >
                 <input
-                  className="border-none outline-none bg-primary-100 placeholder:text-[#231F2099] placeholder:text-[14px] md:placeholder:text-[.97vw] font-[SofiaPro] text-[14px]"
+                  className="border-none outline-none bg-primary-100 placeholder:text-[#231F2099] placeholder:text-[14px] md:placeholder:text-[.97vw] w-full font-[SofiaPro] text-[14px]"
                   placeholder="Enter Your Name"
                   required={true}
                   type="text"
@@ -202,7 +205,7 @@ const SignUp = () => {
                     }
                   }}
                 />
-              </div>
+              </label>
               {errors.name && (
                 <Typography
                   variant="body2"
@@ -239,7 +242,10 @@ const SignUp = () => {
                 Email (Optional)
               </Typography>
 
-              <div className="bg-primary-100 min-h-[48px]  px-[3.6vw] md:px-[1.67vw] flex items-center gap-[5px] rounded-full">
+              <label
+                htmlFor="email"
+                className="bg-primary-100 min-h-[48px]  px-[3.6vw] md:px-[1.67vw] flex items-center gap-[5px] rounded-full cursor-text"
+              >
                 <input
                   className="border-none outline-none bg-primary-100 placeholder:text-[#231F2099] placeholder:text-[14px] md:placeholder:text-[.97vw] w-full font-[SofiaPro] text-[14px]"
                   value={email}
@@ -256,7 +262,7 @@ const SignUp = () => {
                   id="email"
                   required={false}
                 />
-              </div>
+              </label>
               {errors.email && (
                 <Typography
                   variant="body2"
