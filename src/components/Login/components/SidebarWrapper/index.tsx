@@ -28,6 +28,16 @@ const SidebarWrapper = (props: Props) => {
   const dispatch = useDispatch();
 
   const handleCloseAttempt = () => {
+    // Prevent close if in registration map flow
+    if (
+      loginDetails.isFreshLogin &&
+      (loginDetails.tabType === TabTypeConstant.SERVICEABILITY ||
+        loginDetails.tabType === TabTypeConstant.MANUAL_ADDRESS ||
+        loginDetails.tabType === TabTypeConstant.COMPLETE_ADDRESS)
+    ) {
+      return;
+    }
+
     // Allow close regardless of state
     dispatch(setIsSidebarOpen(false));
     if (loginDetails.isFreshLogin) {

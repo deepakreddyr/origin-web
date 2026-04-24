@@ -1,5 +1,5 @@
-import { mainApiUrl } from "@/url";
-import { request } from "@/utilities/request";
+import { mainApiUrl } from '@/url';
+import { request } from '@/utilities/request';
 
 export const checkServiceability = async (
   set: any,
@@ -11,35 +11,39 @@ export const checkServiceability = async (
       loading: true,
       error: false,
       success: false,
-      isDeliverable: false,
+      isDeliverable: false
     }));
 
     const response: any = await request(mainApiUrl.fetchForAddressDeliverable, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         latitude: postData.latitude,
-        longitude: postData.longitude,
-      }),
+        longitude: postData.longitude
+      })
     });
 
-    localStorage.setItem("address", JSON.stringify(postData));
+    localStorage.setItem('address', JSON.stringify(postData));
+
+    if (response.deliverable && response.store_id) {
+      localStorage.setItem('store-id', JSON.stringify(response.store_id));
+    }
 
     set((prevState: any) => ({
       ...prevState,
       loading: false,
       success: true,
-      isDeliverable: response.deliverable,
+      isDeliverable: response.deliverable
     }));
   } catch (error) {
     set((prevState: any) => ({
       ...prevState,
       error: true,
       success: false,
-      loading: false,
+      loading: false
     }));
   }
 };

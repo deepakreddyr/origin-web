@@ -26,9 +26,7 @@ export const getAddress = async (set: any) => {
 
     if (response.data && response.data.length > 0) {
       // Prefer deliverable default address
-      let defaultAddress = response.data.find(
-        (item: any) => item.is_default && item.deliverable
-      );
+      let defaultAddress = response.data.find((item: any) => item.is_default && item.deliverable);
 
       // If default is not deliverable, pick any deliverable address
       if (!defaultAddress) {
@@ -56,9 +54,6 @@ export const getAddress = async (set: any) => {
       }));
     } else {
       // No addresses returned
-      localStorage.removeItem('store-id');
-      localStorage.removeItem('selected_address');
-
       set((prevState: AddressAtomI) => ({
         ...prevState,
         loading: false,
@@ -71,9 +66,6 @@ export const getAddress = async (set: any) => {
     }
   } catch (error) {
     // Error handling
-    localStorage.removeItem('store-id');
-    localStorage.removeItem('selected_address');
-
     set((prevState: AddressAtomI) => ({
       ...prevState,
       loading: false,

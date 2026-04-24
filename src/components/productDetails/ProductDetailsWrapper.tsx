@@ -530,6 +530,7 @@ const ProductDetailsWrapper = () => {
       }
       fetchedIdRef.current = currentId;
 
+      const loginState = loginDetails.isLogin;
       const token = localStorage.getItem('user_token');
       const addressFromLs = getAddressAndStoreId();
       const storeId = addressFromLs?.store_id;

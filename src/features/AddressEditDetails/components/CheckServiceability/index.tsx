@@ -14,6 +14,8 @@ import AddressMapContainer from '../AddressMapContainer';
 import styles from './styles.module.css';
 import { manageAddressScreens } from '@/features/AccountPage/enums/ActiveSidebar';
 import SearchIcon from '@mui/icons-material/Search';
+import { useDispatch } from 'react-redux';
+import { setLoginDetails } from '@/store/slice/loginSlice';
 
 interface Props {
   setActiveScreen: any;
@@ -38,6 +40,7 @@ export default function CheckServiceability(props: Props) {
   const [addressDetails, setAddressDetails] = useAtom(addressDetailsAtom);
   const [isDeliverableChecked, setIsDeliverableChecked] = useState(false);
   const [, setIsAddressOpen] = useAtom(isAddressListIsOpen);
+  const dispatch = useDispatch();
 
   const address: ServiceabilityPayload | null = JSON?.parse(localStorage.getItem('address') || '{}');
 
@@ -86,14 +89,22 @@ export default function CheckServiceability(props: Props) {
             longitude: Number(longitude),
             formatted_address: address,
             address: address,
-            deliverable: res
+            deliverable: res?.deliverable,
+            store_id: res?.store_id
           }));
         }
 
-        return;
+        if (res?.deliverable && res?.store_id) {
+          dispatch(
+            setLoginDetails({
+              isLogin: true,
+              isLoginSidebarOpen: true,
+              user: localStorage.getItem('user_token') || 'guest'
+            })
+          );
+        }
       } catch (error) {
         console.error('Error fetching current location:', error);
-        return;
       }
     } else {
       let addressFormatToCheck = {
@@ -104,8 +115,19 @@ export default function CheckServiceability(props: Props) {
       const res = await checkServiceabilityAddress(addressFormatToCheck);
       setAddressDetails((prevState) => ({
         ...prevState,
-        deliverable: res
+        deliverable: res?.deliverable,
+        store_id: res?.store_id
       }));
+
+      if (res?.deliverable && res?.store_id) {
+        dispatch(
+          setLoginDetails({
+            isLogin: true,
+            isLoginSidebarOpen: true,
+            user: localStorage.getItem('user_token') || 'guest'
+          })
+        );
+      }
     }
   };
 
@@ -167,9 +189,21 @@ export default function CheckServiceability(props: Props) {
         address_name: addressDetails.address_name,
         formatted_address: addressDetails.formatted_address,
         latitude: Number(addressDetails.latitude),
-        longitude: Number(addressDetails.longitude)
+        longitude: Number(addressDetails.longitude),
+        deliverable: res?.deliverable,
+        store_id: res?.store_id
       }));
-      setDeliverable(!!res);
+
+      if (res?.deliverable && res?.store_id) {
+        dispatch(
+          setLoginDetails({
+            isLogin: true,
+            isLoginSidebarOpen: true,
+            user: localStorage.getItem('user_token') || 'guest'
+          })
+        );
+      }
+
       setIsDeliverableChecked(true);
     } else if (addressDetails.deliverable) {
       // setSidebarDetails((prevProps) => ({

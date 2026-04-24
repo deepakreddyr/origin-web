@@ -2,13 +2,29 @@ import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 import { Product } from './shop/types';
 
 export const getAddressAndStoreId = () => {
+  if (typeof window === 'undefined') return null;
+
   const addressFromLs = localStorage.getItem('selected_address');
   let parsedAddress = null;
+
   try {
     parsedAddress = addressFromLs ? JSON.parse(addressFromLs) : null;
   } catch (error) {
     console.error('Error parsing selected_address from localStorage:', error);
   }
+
+  // Fallback to standalone store-id if selected_address is not yet present (e.g. during registration)
+  if (!parsedAddress || !parsedAddress.store_id) {
+    const storeId = localStorage.getItem('store-id');
+    if (storeId && storeId !== 'null') {
+      try {
+        return { store_id: JSON.parse(storeId) };
+      } catch (e) {
+        return { store_id: storeId };
+      }
+    }
+  }
+
   return parsedAddress;
 };
 
