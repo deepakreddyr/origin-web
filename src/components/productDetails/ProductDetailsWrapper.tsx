@@ -26,6 +26,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import * as gtag from '@/utilities/gtag';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { setLoginDetails } from '@/store/slice/loginSlice';
+import { TabTypeConstant } from '../Login/constants/tabTypeContent';
 
 // Type definitions
 interface UOM {
@@ -530,18 +532,33 @@ const ProductDetailsWrapper = () => {
 
       const token = localStorage.getItem('user_token');
       const addressFromLs = getAddressAndStoreId();
-      let additionalHeaders: Record<string, string> = {};
+      const storeId = addressFromLs?.store_id;
 
+      // Check for inconsistent session state: must have both or neither
+      if ((token && !storeId) || (!token && storeId)) {
+        console.warn('Inconsistent session state detected on PDP. Clearing session.');
+        localStorage.clear();
+        sessionStorage.clear();
+        dispatch(
+          setLoginDetails({
+            isLogin: false,
+            user: null,
+            tabType: TabTypeConstant.ENTER_MOBILE_NUMBER,
+            isSidebarOpen: false
+          })
+        );
+        // The state change will trigger a re-run of this effect with cleared tokens
+        return;
+      }
+
+      let additionalHeaders: Record<string, string> = {};
       let apiUrl: string;
 
       if (token) {
         apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['searchForProduct'] + `/${query.id}`;
-
-        if (addressFromLs) {
-          additionalHeaders = {
-            'store-id': addressFromLs.store_id
-          };
-        }
+        additionalHeaders = {
+          'store-id': String(storeId)
+        };
       } else {
         apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['searchForProduct'] + `/${query.id}`;
         // if (addressFromLs) {

@@ -156,55 +156,55 @@ const CouponStatusBar: React.FC = () => {
   }
 
   const handleClick = async () => {
-    if (isLogin) {
+    if (!isLogin) {
       // Find the best valid coupon to auto-apply
-      const validCoupons = (couponsState.coupons || []).filter((c: any) => subTotal >= (c.min_cart_value || 0));
+      //   const validCoupons = (couponsState.coupons || []).filter((c: any) => subTotal >= (c.min_cart_value || 0));
 
-      const hasFreeItem = cart.items?.some((item: any) => item.isFreeItem);
+      //   const hasFreeItem = cart.items?.some((item: any) => item.isFreeItem);
 
-      let bestCoupon = null;
-      if (validCoupons.length > 0 && !hasFreeItem) {
-        bestCoupon = validCoupons.reduce((best: any, current: any) => {
-          const currentDiscount = calculateCouponDiscount(subTotal, current) || 0;
-          const bestDiscount = calculateCouponDiscount(subTotal, best) || 0;
-          return currentDiscount > bestDiscount ? current : best;
-        }, validCoupons[0]);
-      }
+      //   let bestCoupon = null;
+      //   if (validCoupons.length > 0 && !hasFreeItem) {
+      //     bestCoupon = validCoupons.reduce((best: any, current: any) => {
+      //       const currentDiscount = calculateCouponDiscount(subTotal, current) || 0;
+      //       const bestDiscount = calculateCouponDiscount(subTotal, best) || 0;
+      //       return currentDiscount > bestDiscount ? current : best;
+      //     }, validCoupons[0]);
+      //   }
 
-      if (bestCoupon) {
-        // Auto-apply the best coupon
-        const payload = {
-          code: bestCoupon.code,
-          items: cart.items
-            .map((item: any) => ({
-              item_code: item.item_code,
-              uom: item.multiple_uoms
-                .filter((uom: any) => !uom.is_not_discounted)
-                .map((uom: any) => ({
-                  variant_id: uom.variant_id,
-                  qty: uom.cart_quantity
-                }))
-            }))
-            .filter((item: any) => item.uom.length > 0)
-        };
+      //   if (bestCoupon) {
+      //     // Auto-apply the best coupon
+      //     const payload = {
+      //       code: bestCoupon.code,
+      //       items: cart.items
+      //         .map((item: any) => ({
+      //           item_code: item.item_code,
+      //           uom: item.multiple_uoms
+      //             .filter((uom: any) => !uom.is_not_discounted)
+      //             .map((uom: any) => ({
+      //               variant_id: uom.variant_id,
+      //               qty: uom.cart_quantity
+      //             }))
+      //         }))
+      //         .filter((item: any) => item.uom.length > 0)
+      //     };
 
-        const success = await validateCoupon(payload, setAppliedCoupon);
-        if (success) {
-          // Sync both Normal and Mango carts
-          dispatch(cartActions.setCouponDetails({ ...bestCoupon }));
-          dispatch(setMangoCouponDetails({ ...bestCoupon }));
+      //     const success = await validateCoupon(payload, setAppliedCoupon);
+      //     if (success) {
+      //       // Sync both Normal and Mango carts
+      //       dispatch(cartActions.setCouponDetails({ ...bestCoupon }));
+      //       dispatch(setMangoCouponDetails({ ...bestCoupon }));
 
-          const discount = Math.round(calculateCouponDiscount(subTotal, bestCoupon) || 0);
-          dispatch(cartActions.setDiscountAmount(discount));
-          dispatch(setMangoDiscountAmount(discount));
-        }
-      }
+      //       const discount = Math.round(calculateCouponDiscount(subTotal, bestCoupon) || 0);
+      //       dispatch(cartActions.setDiscountAmount(discount));
+      //       dispatch(setMangoDiscountAmount(discount));
+      //     }
+      //   }
 
-      dispatch(setTabType(TabTypeConstant.CART));
-      dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
-      dispatch(setIsSidebarOpen(true));
-      setIsCartOpen(true);
-    } else {
+      //   dispatch(setTabType(TabTypeConstant.CART));
+      //   dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
+      //   dispatch(setIsSidebarOpen(true));
+      //   setIsCartOpen(true);
+      // } else {
       dispatch(
         setLoginDetails({
           ...loginDetails,
