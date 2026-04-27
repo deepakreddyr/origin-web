@@ -150,7 +150,7 @@ const CouponStatusBar: React.FC = () => {
       </>
     ) : (
       <>
-        Add produce worth <span style={{ fontWeight: 700, color: '#fff' }}>₹{Math.round(gap)}</span> more
+        Add produce worth <span style={{ fontWeight: 700, color: '#fff' }}>₹{Math.ceil(gap)}</span> more
       </>
     );
   }

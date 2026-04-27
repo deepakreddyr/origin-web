@@ -227,28 +227,44 @@ const StorageInfo: React.FC<{ info: ProductInfo }> = ({ info }) => {
   const storageSection = info?.info?.find((section) => section.type === 'storage');
   if (!storageSection || !storageSection.details || storageSection.details.length === 0) return null;
 
+  // Check if any detail has meaningful content (non-empty title, description, or image)
+  const hasContent = storageSection.details.some(
+    (detail: any) =>
+      (detail.title && detail.title.trim()) ||
+      (detail.description && detail.description.trim()) ||
+      (detail.image && detail.image.trim())
+  );
+  if (!hasContent) return null;
+
   return (
     <div className="mt-4 w-[300px] mob:w-full bg-white rounded-[16px] border border-[#EDE6CC]/50 p-4 pb-[16px]">
       <p className="font-[Recoleta] font-semibold text-xl text-[#231F20] mb-6 text-start">Storing information</p>
       <div className="flex flex-row overflow-x-auto gap-[12px] no-scrollbar">
-        {storageSection.details.map((detail: any, index: number) => (
-          <div
-            key={index}
-            className="flex-shrink-0 w-[184px] h-[60px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex items-center gap-[10px] border border-[#EDE6CC]/20 overflow-hidden"
-          >
-            <div className="w-6 h-6 relative flex-shrink-0 bg-white rounded-full p-1">
-              <Image src={detail.image} alt={detail.title} fill className="object-contain p-1" />
+        {storageSection.details
+          .filter(
+            (detail: any) =>
+              (detail.title && detail.title.trim()) ||
+              (detail.description && detail.description.trim()) ||
+              (detail.image && detail.image.trim())
+          )
+          .map((detail: any, index: number) => (
+            <div
+              key={index}
+              className="flex-shrink-0 w-[184px] h-[60px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex items-center gap-[10px] border border-[#EDE6CC]/20 overflow-hidden"
+            >
+              <div className="w-6 h-6 relative flex-shrink-0 bg-white rounded-full p-1">
+                <Image src={detail.image} alt={detail.title} fill className="object-contain p-1" />
+              </div>
+              <div className="min-w-0">
+                <p className="font-[SofiaPro] font-bold text-[13px] text-[#231F20] leading-tight truncate">
+                  {detail.title}
+                </p>
+                <p className="font-[SofiaPro] text-[10px] text-[#231F20]/70 leading-tight truncate">
+                  {detail.description}
+                </p>
+              </div>
             </div>
-            <div className="min-w-0">
-              <p className="font-[SofiaPro] font-bold text-[13px] text-[#231F20] leading-tight truncate">
-                {detail.title}
-              </p>
-              <p className="font-[SofiaPro] text-[10px] text-[#231F20]/70 leading-tight truncate">
-                {detail.description}
-              </p>
-            </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );
@@ -259,21 +275,33 @@ const NutritionBenefits: React.FC<{ info: ProductInfo }> = ({ info }) => {
   const nutritionSection = info?.info?.find((section) => section.type === 'nutrition');
   if (!nutritionSection || !nutritionSection.details || nutritionSection.details.length === 0) return null;
 
+  // Check if any detail has meaningful content (non-empty title or description)
+  const hasContent = nutritionSection.details.some(
+    (detail: any) => (detail.title && detail.title.trim()) || (detail.description && detail.description.trim())
+  );
+  if (!hasContent) return null;
+
   return (
     <div className="mt-4 w-[443px] mob:w-full bg-white rounded-[16px] border border-[#EDE6CC]/50 p-4 pb-[16px]">
       <p className="font-[Recoleta] font-semibold text-xl text-[#231F20] mb-6 text-start">Nutrition benefits</p>
       <div className="flex flex-row overflow-x-auto gap-[12px] no-scrollbar">
-        {nutritionSection.details.map((detail: any, index: number) => (
-          <div
-            key={index}
-            className="flex-shrink-0 w-[184px] h-[60px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex flex-col justify-center border border-[#EDE6CC]/20 overflow-hidden"
-          >
-            <p className="font-[SofiaPro] font-bold text-base text-[#231F20] leading-tight truncate">{detail.title}</p>
-            <p className="font-[SofiaPro] text-[9px] text-[#231F20]/70 uppercase tracking-wide truncate">
-              {detail.description}
-            </p>
-          </div>
-        ))}
+        {nutritionSection.details
+          .filter(
+            (detail: any) => (detail.title && detail.title.trim()) || (detail.description && detail.description.trim())
+          )
+          .map((detail: any, index: number) => (
+            <div
+              key={index}
+              className="flex-shrink-0 w-[184px] h-[60px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex flex-col justify-center border border-[#EDE6CC]/20 overflow-hidden"
+            >
+              <p className="font-[SofiaPro] font-bold text-base text-[#231F20] leading-tight truncate">
+                {detail.title}
+              </p>
+              <p className="font-[SofiaPro] text-[9px] text-[#231F20]/70 uppercase tracking-wide truncate">
+                {detail.description}
+              </p>
+            </div>
+          ))}
       </div>
     </div>
   );
@@ -619,7 +647,9 @@ const ProductDetailsWrapper = () => {
   const aboutSection = productDetails.info?.info?.find(
     (section) => section.type === 'normal' && (section.title === 'About the Product' || section.title === 'info')
   );
-  const productDescription = displayDescription || aboutSection?.details?.[0]?.description || '';
+  const rawDescription = displayDescription || aboutSection?.details?.[0]?.description || '';
+  // Treat whitespace-only descriptions as empty
+  const productDescription = rawDescription.trim() ? rawDescription : '';
 
   // SEO Logic
   const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || 'https://origin.com';

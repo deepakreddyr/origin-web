@@ -43,10 +43,13 @@ const GlobalLaunchListener = () => {
     const token = localStorage.getItem('user_token');
 
     if (token) {
+      // Signal that address data is being loaded so UI can show disabled/loading state
+      setAddress((prev: any) => ({ ...prev, loading: true }));
+
       const fetchLaunch = async () => {
         try {
           const authHeader = header();
-          if (!authHeader) return; // Should match token check
+          if (!authHeader) return;
 
           const response: any = await request(mainApiUrl.launch, {
             method: 'GET',

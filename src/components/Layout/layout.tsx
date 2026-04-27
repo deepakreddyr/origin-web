@@ -8,8 +8,8 @@ import Footer from '../Footer';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAddress } from '@/features/Address/services/getAddress';
-import { getProfile } from '@/features/AccountPage/services/getProfile';
+// getAddress and getProfile are handled by GlobalLaunchListener via the launch API
+// Do NOT call them separately here to avoid duplicate API calls and race conditions
 import { useAtom } from 'jotai';
 
 import { cartItems, isCartPageIsOpen } from '@/features/CartPage/context/atoms';
@@ -88,7 +88,7 @@ export default function Layout({
         })
       );
 
-      getProfile(setProfileAtom);
+      // Profile is fetched by GlobalLaunchListener via launch API — no separate call needed
       clearPostPaymentItemsinLs();
     }
 
@@ -114,9 +114,7 @@ export default function Layout({
     if (isReady) {
       const addressFromLs = getAddressAndStoreId();
 
-      if (profileDetails?.data?.profile) {
-        getAddress(setAddressAtom);
-      }
+      // Address is fetched by GlobalLaunchListener via launch API — no separate call needed
 
       const lsKey = isMangoPage ? 'mango_cart_items' : 'cart_items';
       try {

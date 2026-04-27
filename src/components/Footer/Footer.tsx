@@ -135,36 +135,31 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
                 </Box>
               </Grid>
               <Grid item xs={6}>
-                <Typography className="text-white text-[16px] font-semibold uppercase tracking-wider mb-6">
+                <p className="text-white text-[16px] font-semibold uppercase tracking-wider mb-6 font-[SofiaPro]">
                   Contact us
-                </Typography>
-                <Box className="flex flex-col gap-5 text-[#A0A0A0] text-[13px] mb-8">
-                  <Typography
-                    component="a"
+                </p>
+                <div className="flex flex-col gap-4 mb-8">
+                  <a
                     href="tel:+919900508216"
-                    className="text-[#A0A0A0] no-underline flex items-center gap-2"
+                    className="text-[#A0A0A0] no-underline flex items-center gap-2 text-[12.5px] font-[SofiaPro]"
                   >
-                    <PhoneIcon sx={{ fontSize: '16px' }} /> +91 9900508216
-                  </Typography>
-
-                  <Typography
-                    component="a"
+                    <PhoneIcon style={{ fontSize: '14px' }} /> +91 9900508216
+                  </a>
+                  <a
                     href="mailto:support@originfresh.in"
-                    className="text-[#A0A0A0] no-underline flex items-center gap-2"
+                    className="text-[#A0A0A0] no-underline flex items-center gap-2 text-[12.5px] font-[SofiaPro]"
                   >
-                    <Mail sx={{ fontSize: '16px' }} /> support@originfresh.in
-                  </Typography>
-
-                  <Typography
-                    component="a"
+                    <Mail style={{ fontSize: '14px' }} /> support@originfresh.in
+                  </a>
+                  <a
                     href="https://wa.me/919900507318"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#A0A0A0] no-underline flex items-center gap-2"
+                    className="text-[#A0A0A0] no-underline flex items-center gap-2 text-[12.5px] font-[SofiaPro]"
                   >
-                    <WhatsAppIcon sx={{ fontSize: '16px' }} /> +91 9900507318
-                  </Typography>
-                </Box>
+                    <WhatsAppIcon style={{ fontSize: '14px' }} /> +91 9900507318
+                  </a>
+                </div>
               </Grid>
             </Grid>
 
@@ -279,7 +274,7 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
               <Image src={originLogo} alt="Origin Logo" width={400} height={75} className="object-contain" />
             </Box>
 
-            <Grid container spacing={4} className="mb-12">
+            <Grid container spacing={4} className="">
               <Grid item xs={6}>
                 <Typography className="text-black text-[16px] font-semibold uppercase tracking-wider mb-6">
                   Navigation
@@ -289,36 +284,31 @@ const Footer: React.FC<FooterProps> = ({ footerData }) => {
                 </Box>
               </Grid>
               <Grid item xs={6}>
-                <Typography className="text-black text-[16px] font-semibold uppercase tracking-wider mb-6">
+                <p className="text-black text-[16px] font-semibold uppercase tracking-wider mb-6 font-[SofiaPro]">
                   Contact us
-                </Typography>
-                <Box className="flex flex-col gap-5 text-black opacity-70 text-[13px] mb-8">
-                  <Typography
-                    component="a"
+                </p>
+                <div className="flex flex-col gap-4 mb-8 opacity-70">
+                  <a
                     href="tel:+919900508216"
-                    className="text-inherit no-underline flex items-center gap-2"
+                    className="text-black no-underline flex items-center gap-2 text-[13px] font-[SofiaPro]"
                   >
-                    <PhoneIcon sx={{ fontSize: '16px' }} /> +91 9900508216
-                  </Typography>
-
-                  <Typography
-                    component="a"
+                    <PhoneIcon style={{ fontSize: '14px' }} /> +91 9900508216
+                  </a>
+                  <a
                     href="mailto:support@originfresh.in"
-                    className="text-inherit no-underline flex items-center gap-2"
+                    className="text-black no-underline flex items-center gap-2 text-[12.4px] font-[SofiaPro]"
                   >
-                    <Mail sx={{ fontSize: '16px' }} /> support@originfresh.in
-                  </Typography>
-
-                  <Typography
-                    component="a"
+                    <Mail style={{ fontSize: '14px' }} /> support@originfresh.in
+                  </a>
+                  <a
                     href="https://wa.me/919900507318"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-inherit no-underline flex items-center gap-2"
+                    className="text-black no-underline flex items-center gap-2 text-[13px] font-[SofiaPro]"
                   >
-                    <WhatsAppIcon sx={{ fontSize: '16px' }} /> +91 9900507318
-                  </Typography>
-                </Box>
+                    <WhatsAppIcon style={{ fontSize: '14px' }} /> +91 9900507318
+                  </a>
+                </div>
               </Grid>
             </Grid>
 

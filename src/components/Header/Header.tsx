@@ -239,7 +239,9 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
 
     setRouteSourceToLs(TabTypeConstant.ACCOUNT_MAIN);
 
-    if (address?.address && address.address.length > 0) {
+    // If addresses are still loading from launch API, default to SELECT_ADDRESS
+    // so the sidebar shows a loading state rather than "no addresses found"
+    if (address.loading || (address?.address && address.address.length > 0)) {
       dispatch(setTabType(TabTypeConstant.SELECT_ADDRESS));
     } else {
       dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
@@ -371,7 +373,8 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
               <div className="flex items-center gap-[3vw]">
                 <button
                   onClick={handleSelectAddress}
-                  className={`flex items-center gap-[1vw] px-[2vw] py-[1.5vw] rounded-full ${getLocationButtonStyles()} text-[3vw] font-medium font-[SofiaPro] max-w-[25vw]`}
+                  disabled={address.loading}
+                  className={`flex items-center gap-[1vw] px-[2vw] py-[1.5vw] rounded-full ${getLocationButtonStyles()} text-[3vw] font-medium font-[SofiaPro] max-w-[25vw] ${address.loading ? 'opacity-50 pointer-events-none' : ''}`}
                   aria-label="Select Delivery Address"
                 >
                   <svg
@@ -502,7 +505,8 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
               {!isMobile && !search && (
                 <button
                   onClick={handleSelectAddress}
-                  className={`flex items-center gap-2 px-[1.5vw] py-[0.5vw] rounded-full transition-colors max-w-[200px] ${getLocationButtonStyles()}`}
+                  disabled={address.loading}
+                  className={`flex items-center gap-2 px-[1.5vw] py-[0.5vw] rounded-full transition-colors max-w-[200px] ${getLocationButtonStyles()} ${address.loading ? 'opacity-50 pointer-events-none' : ''}`}
                   aria-label="Select Delivery Address"
                 >
                   <svg

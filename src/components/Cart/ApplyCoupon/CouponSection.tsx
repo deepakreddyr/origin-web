@@ -68,7 +68,9 @@ const CouponSection = (props: any) => {
     if (!couponsState.coupons || couponsState.coupons.length === 0) return null;
 
     // Filter only those that satisfy min_cart_value
-    const validCoupons = couponsState.coupons.filter((c: any) => cart.totalPrice >= (c.min_cart_value || 0));
+    const validCoupons = couponsState.coupons.filter(
+      (c: any) => c.isValid === 1 || cart.totalPrice >= (c.min_cart_value || 0)
+    );
 
     if (validCoupons.length === 0) return null;
 
@@ -124,40 +126,39 @@ const CouponSection = (props: any) => {
 
       {couponDetails.name === '' || !couponDetails.name ? (
         bestCoupon ? (
-          <div className="flex flex-col gap-[1vw] mob:gap-[4vw]">
-            <div className="flex items-center justify-between border border-[#F2EEE4] bg-white p-[1vw] rounded-[1.2vw] mob:p-[4vw] mob:rounded-[4vw]">
+          <div className="flex flex-col gap-[1vw] mob:gap-[1vw] border border-[#F2EEE4] rounded-[1.1vw] mob:rounded-[3.6vw]">
+            <div className="flex items-center justify-between p-[1vw] rounded-[1.2vw] mob:p-[4vw] mob:rounded-[4vw]">
               <div className="flex gap-[.798vw] mob:gap-[3vw] items-center">
                 <div className="relative w-[2.5vw] h-[2.5vw] mob:w-[10vw] mob:h-[10vw] flex-shrink-0">
                   <Image src={percentageIcon} alt="percentage icon" fill />
                 </div>
                 <div className="flex flex-col">
                   <p className="font-[SofiaPro] text-[1vw] mob:text-[3.5vw] font-semibold text-black">
-                    Save ₹{Math.round(calculateCouponDiscount(cart.totalPrice, bestCoupon) || 0)} on this order
+                    Coupon '{bestCoupon.code}'
                   </p>
                   <p className="font-[SofiaPro] text-[.8vw] mob:text-[3vw] font-medium text-black">
-                    {bestCoupon.code}
-                    {/* •{' '} */}
-                    {bestCoupon.discount_type === 'percentage' &&
-                      `${bestCoupon.discount}% off up to ₹${bestCoupon.max_cart_value || 0}`}
-                    {/* : bestCoupon.description} */}
+                    {bestCoupon.discount_type === 'percentage'
+                      ? `Avail ${bestCoupon.discount}% off up to ₹${bestCoupon.max_cart_value || 0}`
+                      : `Apply to save ₹${Math.round(calculateCouponDiscount(cart.totalPrice, bestCoupon) || 0)} on this order`}
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => handleApplyBestCoupon(bestCoupon)}
-                className="bg-secondary rounded-full text-white py-[.5vw] mob:py-[1.4vw] mob:px-[4.5vw] px-[1.3vw] font-[SofiaPro] font-bold mob:text-[3vw] text-[.83vw]"
+                className="bg-secondary rounded-full text-white py-[.5vw] mob:py-[1.4vw] mob:px-[4vw] px-[1vw] font-[SofiaPro] font-bold mob:text-[3vw] text-[.83vw]"
               >
                 APPLY
               </button>
             </div>
-
-            <button onClick={() => handleAddCoupon()} className="flex items-center justify-center gap-2 py-1">
-              <p className="font-[SofiaPro] text-[.9vw] mob:text-[3.5vw] font-bold text-black border-b border-black">
-                View all coupons
-              </p>
-              <div className="relative w-[1vw] h-[1vw] mob:w-[4vw] mob:h-[4vw]">
-                <Image src={gotoIcon} alt="go to" fill className="opacity-60" />
-              </div>
+            <div className="border-t border-[#F2EEE4] mx-[1vw] mob:mx-[4vw]" />
+            <button
+              onClick={() => handleAddCoupon()}
+              className="flex items-center justify-center gap-2 pb-[0.8vw] mob:py-[2vw]"
+            >
+              <p className="font-[SofiaPro] text-[.9vw] mob:text-[3.5vw] font-semibold text-black">View all coupons</p>
+              {/* <div className="relative w-[1vw] h-[1vw] mob:w-[4vw] mob:h-[4vw]">
+                  <Image src={gotoIcon} alt="go to" fill className="opacity-60" />
+                </div> */}
             </button>
           </div>
         ) : (

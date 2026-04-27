@@ -14,21 +14,14 @@ import YourOrders from './components/YourOrders';
 import YourRewards from './components/YourRewards';
 import { activeAccountsPageAtom, profileAtom } from './context/atoms';
 import ActiveSidebar from './enums/ActiveSidebar';
-import { getProfile } from './services/getProfile';
 import { useSelector } from 'react-redux';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 
 const Account = () => {
-  const [, setProfileAtom] = useAtom(profileAtom);
   const [activeAccountsPage] = useAtom(activeAccountsPageAtom);
   const loginDetails = useSelector((state: any) => state.loginDetails);
 
-  React.useEffect(() => {
-    const token = localStorage.getItem('user_token');
-    if (token) {
-      getProfile(setProfileAtom);
-    }
-  }, []);
+  // Profile is fetched by GlobalLaunchListener via launch API — no separate call needed
   const renderAccountSidebars = () => {
     switch (loginDetails.tabType) {
       case TabTypeConstant.ACCOUNT_MAIN: {

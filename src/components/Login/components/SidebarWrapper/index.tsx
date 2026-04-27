@@ -9,6 +9,7 @@ import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { OriginCloseIcon } from '../../../../Icons/OriginIcons';
+import { useCartStore } from '@/hooks/useCartStore';
 
 interface Props {
   children: React.ReactNode;
@@ -25,6 +26,7 @@ interface Props {
 const SidebarWrapper = (props: Props) => {
   const { children, onClickBackButton, isBackButtonEnable, headerTitle } = props;
   const loginDetails = useSelector((state: any) => state.loginDetails);
+  const { cart } = useCartStore();
   const dispatch = useDispatch();
 
   const handleCloseAttempt = () => {
@@ -40,6 +42,8 @@ const SidebarWrapper = (props: Props) => {
 
     // Allow close regardless of state
     dispatch(setIsSidebarOpen(false));
+    // Clear stale tab_source so the next sidebar open doesn't inherit old navigation context
+    localStorage.removeItem('tab_source');
     if (loginDetails.isFreshLogin) {
       setTimeout(() => {
         window.location.reload();
@@ -97,8 +101,11 @@ const SidebarWrapper = (props: Props) => {
             )}
 
             {/* Center Section: Title */}
-            <div className="flex-grow flex justify-start">
-              <h1 className="text-[1.67vw] mob:text-[5vw] font-bold">{headerTitle}</h1>
+            <div className="flex-grow flex flex-col justify-center">
+              <h1 className="text-[1.67vw] mob:text-[5vw] font-bold leading-tight">{headerTitle}</h1>
+              {headerTitle === 'Apply Coupon' && (
+                <p className="text-[.83vw] pt-[5px] mob:text-[3vw] font-medium text-[#747474]">₹{cart.totalPrice}</p>
+              )}
             </div>
 
             {/* Right Section: Close Button */}
