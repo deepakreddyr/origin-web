@@ -24,6 +24,8 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as gtag from '@/utilities/gtag';
+// import { trackMixpanelEvent } from '@/utilities/mixpanel';
+// import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { setLoginDetails } from '@/store/slice/loginSlice';
@@ -250,16 +252,16 @@ const StorageInfo: React.FC<{ info: ProductInfo }> = ({ info }) => {
           .map((detail: any, index: number) => (
             <div
               key={index}
-              className="flex-shrink-0 w-[184px] h-[60px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex items-center gap-[10px] border border-[#EDE6CC]/20 overflow-hidden"
+              className="flex-shrink-0 w-max h-[60px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex items-center gap-[10px] border border-[#EDE6CC]/20 overflow-hidden"
             >
               <div className="w-6 h-6 relative flex-shrink-0 bg-white rounded-full p-1">
                 <Image src={detail.image} alt={detail.title} fill className="object-contain p-1" />
               </div>
-              <div className="min-w-0">
-                <p className="font-[SofiaPro] font-bold text-[13px] text-[#231F20] leading-tight truncate">
+              <div className="flex flex-col justify-center">
+                <p className="font-[SofiaPro] font-bold text-[13px] text-[#231F20] leading-tight whitespace-nowrap">
                   {detail.title}
                 </p>
-                <p className="font-[SofiaPro] text-[10px] text-[#231F20]/70 leading-tight truncate">
+                <p className="font-[SofiaPro] text-[10px] text-[#231F20]/70 leading-tight whitespace-nowrap mt-0.5">
                   {detail.description}
                 </p>
               </div>
@@ -292,12 +294,12 @@ const NutritionBenefits: React.FC<{ info: ProductInfo }> = ({ info }) => {
           .map((detail: any, index: number) => (
             <div
               key={index}
-              className="flex-shrink-0 w-[184px] h-[60px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex flex-col justify-center border border-[#EDE6CC]/20 overflow-hidden"
+              className="flex-shrink-0 w-max h-[60px] bg-[#FAF8F1] rounded-[12px] pt-[12px] pr-[32px] pb-[12px] pl-[12px] flex flex-col justify-center border border-[#EDE6CC]/20 overflow-hidden"
             >
-              <p className="font-[SofiaPro] font-bold text-base text-[#231F20] leading-tight truncate">
+              <p className="font-[SofiaPro] font-bold text-base text-[#231F20] leading-tight whitespace-nowrap">
                 {detail.title}
               </p>
-              <p className="font-[SofiaPro] text-[9px] text-[#231F20]/70 uppercase tracking-wide truncate">
+              <p className="font-[SofiaPro] text-[9px] text-[#231F20]/70 uppercase tracking-wide whitespace-nowrap mt-0.5">
                 {detail.description}
               </p>
             </div>
@@ -618,6 +620,18 @@ const ProductDetailsWrapper = () => {
               }
             ]
           });
+
+          // trackMixpanelEvent(AnalyticsEvents.PRODUCT_VIEW, {
+          //   prid: String(item?.id || ''),
+          //   uom: defaultUOM?.unit || '',
+          //   image: item?.website_image || item?.image || '',
+          //   prqt: defaultUOM?.stepper_quantity || 1,
+          //   product_name: item?.name || '',
+          //   category: item?.category_name || '',
+          //   selling_price: defaultUOM?.market_price || defaultUOM?.price || 0,
+          //   final_price: defaultUOM?.price || 0,
+          //   in_stock: defaultUOM?.is_available ? 'Yes' : 'No'
+          // });
         }
       };
 
@@ -783,7 +797,9 @@ const ProductDetailsWrapper = () => {
         <div className="w-[92vw] md:w-[80vw] mx-auto py-7 mob:px-0 mob:py-6">
           {/* Breadcrumbs for Mobile - APPEARS BEFORE IMAGE */}
           {mobile && (
-            <div className="flex items-center gap-2 text-lg font-bold text-[#146321] mb-6 font-[SofiaPro] pt-[10vw]">
+            <div
+              className={`flex items-center gap-2 text-lg font-bold text-[#146321] mb-6 font-[SofiaPro] ${isMangoPage ? 'pt-[10vw]' : ''}`}
+            >
               {renderBreadcrumbs()}
             </div>
           )}
@@ -997,14 +1013,16 @@ const ProductDetailsWrapper = () => {
                 {/* We reuse the structure by mocking the categoryDetail expected by PopularProduce */}
                 <PopularProduce
                   categoryDetail={{
-                    title: '', // Title handled above
-                    data: productDetails.upsell_items.map((item) => ({
-                      ...item,
-                      multiple_uoms: item.multiple_uoms.map((uom) => ({
-                        ...uom,
-                        formatted_price: `₹${uom.price}`
+                    title: 'Forgot to add?', // Title handled above
+                    data: productDetails.upsell_items
+                      .filter((item) => item.multiple_uoms && item.multiple_uoms.length > 0)
+                      .map((item) => ({
+                        ...item,
+                        multiple_uoms: item.multiple_uoms.map((uom) => ({
+                          ...uom,
+                          formatted_price: `₹${uom.price}`
+                        }))
                       }))
-                    }))
                   }}
                 />
               </div>
