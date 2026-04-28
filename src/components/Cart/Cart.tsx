@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import EmptyCart from './EmptyCart';
 import ReviewList from './ReviewList';
@@ -31,8 +31,6 @@ import LocationChangedPopup from './AddressAndTimeSlot/LocationChangedPopup';
 import { clearSubscriptionCart } from '@/store/slice/SubscriptionCartSlice';
 import { trackEvent } from '@/utilities/analytics';
 import { AnalyticsEvents } from '@/utilities/analyticsEvents';
-import { trackMixpanelEvent } from '@/utilities/mixpanel';
-import { AnalyticsEvents as MixpanelEvents } from '@/utilities/mixpanelEvents';
 // ==========================================================
 // MAX QUANTITY TOAST COMPONENT MOVED/COPIED HERE FOR GLOBAL RENDER
 // ==========================================================
@@ -54,8 +52,9 @@ const InfoToast: React.FC<{
 
   return (
     <div
-      className={`w-full transition-all duration-300 ease-in-out overflow-hidden sticky top-0 z-[10] ${isVisible ? 'max-h-[10vw] mob:max-h-[18vw] opacity-100 py-1.5 mob:py-2' : 'max-h-0 opacity-0 py-0'
-        }`}
+      className={`w-full transition-all duration-300 ease-in-out overflow-hidden sticky top-0 z-[10] ${
+        isVisible ? 'max-h-[10vw] mob:max-h-[18vw] opacity-100 py-1.5 mob:py-2' : 'max-h-0 opacity-0 py-0'
+      }`}
     >
       <div className="flex items-center bg-[#000] rounded-[2vw] mob:rounded-[8vw] shadow-md min-h-[3vw] mob:min-h-[12vw] px-4 w-full">
         <div className="flex items-center justify-center w-full gap-2">
@@ -125,7 +124,7 @@ const Cart = () => {
         console.error('Failed to parse cart from LS:', err);
       }
     }
-  }, [dispatch, isMangoPage, setCartItems]);
+  }, [dispatch]);
 
   // --- TOAST/POPUP STATE ---
   const maxQuantityError = cart.maxQuantityError;
@@ -143,7 +142,7 @@ const Cart = () => {
         dispatch(removeFreeItemFromCart(freeItem.item_code));
       }
     }
-  }, [cart.totalPrice, cart.freeItemsMov, cart.items, dispatch, isSubscription, removeFreeItemFromCart]);
+  }, [cart.totalPrice, cart.freeItemsMov, cart.items, dispatch, isSubscription]);
 
   const { sendItemsToApi, fetchCartItemsFromApi: syncFetch } = useCartSync();
 
@@ -152,7 +151,7 @@ const Cart = () => {
   };
   // ----------------------------
 
-  const fetchCartItemsFromApi = useCallback(() => {
+  const fetchCartItemsFromApi = () => {
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getCartItems'];
     const addressFromLs = getAddressAndStoreId();
     const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
@@ -197,7 +196,7 @@ const Cart = () => {
     };
 
     if (addressFromLs) getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
-  }, [dispatch, setCartItems, setCartMinimum, setFreeItems, getDataFromApi, setBillDetails, setOrderRestrictionData]);
+  };
 
   useEffect(() => {
     if (isSubscription) return; // Skip normal cart API calls in subscription mode
@@ -228,7 +227,7 @@ const Cart = () => {
           cart_sub_total: cartSubTotal,
           min_cart_total: cart.cart_minimum ? Number(cart.cart_minimum) : 0
         });
-      } catch (e) { }
+      } catch (e) {}
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loginDetails.isSidebarOpen]);
@@ -237,7 +236,6 @@ const Cart = () => {
     if (!loginDetails.isSidebarOpen) {
       setAddressModal(false);
       setShowCouponList(false);
-
       dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
       dispatch(updateTimeSlotId(''));
       dispatch(setIsHeaderVisible(true));
@@ -252,13 +250,8 @@ const Cart = () => {
       if (hasLocationChanged) {
         window.location.reload();
       }
-    } else {
-      // Sidebar opened: check if it's the main cart and track it
-      if (cart.cartTabType === TabTypeConstant.CART_MAIN || cart.cartTabType === '') {
-        trackMixpanelEvent(MixpanelEvents.CART);
-      }
     }
-  }, [loginDetails.isSidebarOpen, isSubscription, dispatch, hasLocationChanged, cart.cartTabType, setCartTabType]);
+  }, [loginDetails.isSidebarOpen, isSubscription, dispatch, hasLocationChanged]);
 
   // Ensure proceed button is enabled when returning to main cart view
   useEffect(() => {
@@ -272,7 +265,7 @@ const Cart = () => {
     ) {
       setAddressModal(true);
     }
-  }, [dispatch, cart.cartTabType, setIsProceedButtonEnabled]);
+  }, [dispatch, cart.cartTabType]);
 
   const proceedButtonHandler = () => {
     if (loginDetails.user) {
@@ -332,7 +325,7 @@ const Cart = () => {
     } else if (!isCartEmpty && (cart.cartTabType === TabTypeConstant.EMPTY_CART || cart.cartTabType === '')) {
       dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
     }
-  }, [cart.items.length, subscriptionCart.item, isSubscription, cart.cartTabType, dispatch, setCartTabType]);
+  }, [cart.items.length, subscriptionCart.item, isSubscription, cart.cartTabType, dispatch]);
 
   const cartMainContent = (
     <>

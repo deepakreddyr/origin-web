@@ -25,9 +25,7 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as gtag from '@/utilities/gtag';
 import { trackEvent } from '@/utilities/analytics';
-// import { AnalyticsEvents } from '@/utilities/analyticsEvents';
-import { trackMixpanelEvent } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { setLoginDetails } from '@/store/slice/loginSlice';
@@ -121,8 +119,9 @@ const MaxQuantityToast: React.FC<{
 
   return (
     <div
-      className={`fixed top-20 left-1/2 -translate-x-1/2 z-40 transition-opacity duration-300 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+      className={`fixed top-20 left-1/2 -translate-x-1/2 z-40 transition-opacity duration-300 ease-in-out ${
+        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}
     >
       <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full relative">
         <div className="flex items-center justify-center w-full gap-2">
@@ -158,8 +157,9 @@ const NotifyToast: React.FC<{
 
   return (
     <div
-      className={`fixed z-[100] left-1/2 bottom-10 transform -translate-x-1/2 w-[90%] max-w-sm transition-all duration-300 ease-in-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
-        }`}
+      className={`fixed z-[100] left-1/2 bottom-10 transform -translate-x-1/2 w-[90%] max-w-sm transition-all duration-300 ease-in-out ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+      }`}
     >
       <div className="flex items-center bg-black rounded-full shadow-2xl h-12 px-6 w-full relative">
         <div className="flex items-center justify-center w-full gap-3">
@@ -328,106 +328,108 @@ const ImageGallery: React.FC<{
   isDesktop,
   isMangoPage = false
 }) => {
-    const images = [mainImage, ...multipleImages].filter(Boolean);
-    const [currentIndex, setCurrentIndex] = useState(0);
+  const images = [mainImage, ...multipleImages].filter(Boolean);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-    const handleDragEnd = (_: any, info: any) => {
-      const threshold = 30;
-      if (info.offset.x < -threshold && currentIndex < images.length - 1) {
-        setCurrentIndex(currentIndex + 1);
-      } else if (info.offset.x > threshold && currentIndex > 0) {
-        setCurrentIndex(currentIndex - 1);
-      }
-    };
+  const handleDragEnd = (_: any, info: any) => {
+    const threshold = 30;
+    if (info.offset.x < -threshold && currentIndex < images.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    } else if (info.offset.x > threshold && currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
 
-    if (images.length === 0) return null;
+  if (images.length === 0) return null;
 
-    return (
-      <div className="relative w-full h-full overflow-hidden group">
-        <motion.div
-          className="flex h-full w-full cursor-grab active:cursor-grabbing touch-pan-y select-none"
-          animate={{ x: `-${currentIndex * 100}%` }}
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          drag="x"
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.7}
-          dragMomentum={false}
-          onDragEnd={handleDragEnd}
-        >
-          {images.map((img, i) => (
-            <div key={i} className="min-w-full h-full relative">
-              <Image
-                src={img}
-                fill
-                alt={`${productName} image ${i + 1}`}
-                style={{ objectFit: 'cover' }}
-                priority={i === 0}
-                unoptimized
-              />
-            </div>
-          ))}
-        </motion.div>
-
-        {/* Pagination Dots */}
-        {images.length > 1 && (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30">
-            <div className="bg-white px-2.5 py-2 rounded-full flex gap-1.5 shadow-sm border border-gray-100/50 grayscale">
-              {images.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentIndex(i)}
-                  className={`transition-all duration-300 rounded-full ${i === currentIndex ? 'bg-black w-4 h-1.5' : 'bg-black/20 w-1.5 h-1.5'
-                    }`}
-                />
-              ))}
-            </div>
+  return (
+    <div className="relative w-full h-full overflow-hidden group">
+      <motion.div
+        className="flex h-full w-full cursor-grab active:cursor-grabbing touch-pan-y select-none"
+        animate={{ x: `-${currentIndex * 100}%` }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.7}
+        dragMomentum={false}
+        onDragEnd={handleDragEnd}
+      >
+        {images.map((img, i) => (
+          <div key={i} className="min-w-full h-full relative">
+            <Image
+              src={img}
+              fill
+              alt={`${productName} image ${i + 1}`}
+              style={{ objectFit: 'cover' }}
+              priority={i === 0}
+              unoptimized
+            />
           </div>
-        )}
+        ))}
+      </motion.div>
 
-        {/* Overlays */}
-        {conversionText && (
-          <div
-            className={`absolute top-4 right-4 font-bold px-3 py-1 z-10 font-[SofiaPro] ${isDesktop ? 'text-sm' : 'text-[10px]'} ${isMangoPage
+      {/* Pagination Dots */}
+      {images.length > 1 && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30">
+          <div className="bg-white px-2.5 py-2 rounded-full flex gap-1.5 shadow-sm border border-gray-100/50 grayscale">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentIndex(i)}
+                className={`transition-all duration-300 rounded-full ${
+                  i === currentIndex ? 'bg-black w-4 h-1.5' : 'bg-black/20 w-1.5 h-1.5'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Overlays */}
+      {conversionText && (
+        <div
+          className={`absolute top-4 right-4 font-bold px-3 py-1 z-10 font-[SofiaPro] ${isDesktop ? 'text-sm' : 'text-[10px]'} ${
+            isMangoPage
               ? 'text-white rounded-full'
               : 'bg-[#008145] flex items-center justify-center text-white text-center rounded-md'
-              }`}
-          >
-            {conversionText}
-          </div>
-        )}
-        {hasRipenessFeature && (
-          <div className={`absolute bottom-4 right-4 z-10 p-1.5 bg-white rounded-full shadow-lg overflow-hidden`}>
-            <Image src={itemRipenessSvg} alt="Select ripeness" width={isDesktop ? 60 : 35} height={isDesktop ? 60 : 35} />
-          </div>
-        )}
-        {!isAvailable && (
-          <div className="bg-black-op-50 absolute top-0 w-full py-2 flex justify-center z-20">
-            <p className={`${isDesktop ? 'text-lg' : 'text-sm'} font-[SofiaPro] font-semibold text-white`}>
-              OUT OF STOCK
-            </p>
-          </div>
-        )}
+          }`}
+        >
+          {conversionText}
+        </div>
+      )}
+      {hasRipenessFeature && (
+        <div className={`absolute bottom-4 right-4 z-10 p-1.5 bg-white rounded-full shadow-lg overflow-hidden`}>
+          <Image src={itemRipenessSvg} alt="Select ripeness" width={isDesktop ? 60 : 35} height={isDesktop ? 60 : 35} />
+        </div>
+      )}
+      {!isAvailable && (
+        <div className="bg-black-op-50 absolute top-0 w-full py-2 flex justify-center z-20">
+          <p className={`${isDesktop ? 'text-lg' : 'text-sm'} font-[SofiaPro] font-semibold text-white`}>
+            OUT OF STOCK
+          </p>
+        </div>
+      )}
 
-        {/* Navigation Arrows for Desktop */}
-        {images.length > 1 && isDesktop && (
-          <>
-            <button
-              onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
-              className={`absolute left-4 top-1/2 -translate-y-1/2 z-30 p-2 bg-white rounded-full shadow-lg border border-gray-100 transition-all duration-300 ${currentIndex === 0 ? 'opacity-0 pointer-events-none' : 'opacity-0 group-hover:opacity-100'}`}
-            >
-              <ChevronLeftIcon sx={{ fontSize: '24px' }} />
-            </button>
-            <button
-              onClick={() => setCurrentIndex((prev) => Math.min(images.length - 1, prev + 1))}
-              className={`absolute right-4 top-1/2 -translate-y-1/2 z-30 p-2 bg-white rounded-full shadow-lg border border-gray-100 transition-all duration-300 ${currentIndex === images.length - 1 ? 'opacity-0 pointer-events-none' : 'opacity-0 group-hover:opacity-100'}`}
-            >
-              <ChevronRightIcon sx={{ fontSize: '24px' }} />
-            </button>
-          </>
-        )}
-      </div>
-    );
-  };
+      {/* Navigation Arrows for Desktop */}
+      {images.length > 1 && isDesktop && (
+        <>
+          <button
+            onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
+            className={`absolute left-4 top-1/2 -translate-y-1/2 z-30 p-2 bg-white rounded-full shadow-lg border border-gray-100 transition-all duration-300 ${currentIndex === 0 ? 'opacity-0 pointer-events-none' : 'opacity-0 group-hover:opacity-100'}`}
+          >
+            <ChevronLeftIcon sx={{ fontSize: '24px' }} />
+          </button>
+          <button
+            onClick={() => setCurrentIndex((prev) => Math.min(images.length - 1, prev + 1))}
+            className={`absolute right-4 top-1/2 -translate-y-1/2 z-30 p-2 bg-white rounded-full shadow-lg border border-gray-100 transition-all duration-300 ${currentIndex === images.length - 1 ? 'opacity-0 pointer-events-none' : 'opacity-0 group-hover:opacity-100'}`}
+          >
+            <ChevronRightIcon sx={{ fontSize: '24px' }} />
+          </button>
+        </>
+      )}
+    </div>
+  );
+};
 
 const ProductDetailsWrapper = () => {
   const mobile = useMediaQuery(768);
@@ -567,8 +569,8 @@ const ProductDetailsWrapper = () => {
       const addressFromLs = getAddressAndStoreId();
       const storeId = addressFromLs?.store_id;
 
-      // Check for inconsistent session state: logged in users MUST have a storeId
-      if (token && !storeId) {
+      // Check for inconsistent session state: must have both or neither
+      if ((token && !storeId) || (!token && storeId)) {
         console.warn('Inconsistent session state detected on PDP. Clearing session.');
         localStorage.clear();
         sessionStorage.clear();
@@ -587,20 +589,18 @@ const ProductDetailsWrapper = () => {
       let additionalHeaders: Record<string, string> = {};
       let apiUrl: string;
 
-      if (token && loginDetails.isLogin) {
+      if (token) {
         apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['searchForProduct'] + `/${query.id}`;
         additionalHeaders = {
           'store-id': String(storeId)
         };
       } else {
         apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['searchForProduct'] + `/${query.id}`;
-      }
-
-      const finalStoreId = storeId || localStorage.getItem('store-id');
-      if (finalStoreId && finalStoreId !== 'null') {
-        additionalHeaders = {
-          'store-id': String(finalStoreId)
-        };
+        // if (addressFromLs) {
+        //   additionalHeaders = {
+        //     'store-id': addressFromLs.store_id
+        //   };
+        // }
       }
 
       const successHandler = (data: any) => {
@@ -626,8 +626,7 @@ const ProductDetailsWrapper = () => {
           });
 
           // CleverTap: product_view
-          // trackEvent(AnalyticsEvents.PRODUCT_VIEW, {
-          trackMixpanelEvent(AnalyticsEvents.PRODUCT_VIEW, {
+          trackEvent(AnalyticsEvents.PRODUCT_VIEW, {
             prid: String(item?.id || ''),
             uom: defaultUOM?.unit || '',
             image: item?.website_image || item?.image || '',
@@ -750,17 +749,16 @@ const ProductDetailsWrapper = () => {
   if (fetchError) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] py-16 px-4">
-        <Image
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src="/assets/svg/somethingwentwrong.svg"
           alt="Something went wrong"
-          width={300}
-          height={300}
-          className="w-[300px] mob:w-[220px] mb-6 object-contain"
+          className="w-[300px] mob:w-[220px] mb-6"
         />
         <p className="text-center text-gray-500 font-[SofiaPro] text-base mob:text-sm">
           Oops! Something went wrong. Please try again later.
         </p>
-      </div >
+      </div>
     );
   }
 
@@ -857,8 +855,9 @@ const ProductDetailsWrapper = () => {
                             e.stopPropagation();
                             if (!isNotified) handleNotifyMe();
                           }}
-                          className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${isNotified ? 'cursor-default' : 'hover:bg-green-50'
-                            }`}
+                          className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${
+                            isNotified ? 'cursor-default' : 'hover:bg-green-50'
+                          }`}
                         >
                           {!isNotified && <span className="text-sm">Notify</span>}
                           {isNotified ? (
@@ -955,8 +954,9 @@ const ProductDetailsWrapper = () => {
                               e.stopPropagation();
                               if (!isNotified) handleNotifyMe();
                             }}
-                            className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${isNotified ? 'cursor-default' : 'hover:bg-green-50'
-                              }`}
+                            className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${
+                              isNotified ? 'cursor-default' : 'hover:bg-green-50'
+                            }`}
                           >
                             {!isNotified && <span className="text-sm">Notify</span>}
                             {isNotified ? (

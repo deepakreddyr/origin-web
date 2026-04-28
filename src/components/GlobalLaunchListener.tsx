@@ -10,34 +10,11 @@ import { setIsSubscriptionActive, setSubscriptionItem } from '@/store/slice/Subs
 import { setIsSidebarOpen, setTabType } from '@/store/slice/loginSlice';
 import { setCartTabType } from '@/store/slice/CartSlice';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
-import { trackMixpanelEvent } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
-import { useCartStore } from '@/hooks/useCartStore';
 
 const GlobalLaunchListener = () => {
   const dispatch = useDispatch();
   const [, setAddress] = useAtom(addressAtom);
   const [, setProfile] = useAtom(profileAtom);
-  const { cart } = useCartStore();
-
-  // Handle Global cart abandonment tracking
-  useEffect(() => {
-    const handleAbandonment = () => {
-      console.log('🚨 [Global Abandonment Check] Cart items length:', cart.items?.length);
-      if (cart.items && cart.items.length > 0) {
-        console.log('✅ Firing ABANDON_CHECKOUT to Mixpanel from Global Listener...');
-        trackMixpanelEvent(AnalyticsEvents.ABANDON_CHECKOUT);
-      } else {
-        console.log('❌ Cart is empty, skipping abandoned cart track.');
-      }
-    };
-
-    window.addEventListener('beforeunload', handleAbandonment);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleAbandonment);
-    };
-  }, [cart.items]);
 
   const loginDetails = useSelector((state: any) => state.loginDetails);
 

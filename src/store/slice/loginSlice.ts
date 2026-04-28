@@ -6,7 +6,8 @@ const initialState = {
   tabType: '',
   user: null,
   isHeaderVisible: true,
-  isFreshLogin: false
+  isFreshLogin: false,
+  mobileNumber: ''
 };
 
 export const loginSlice = createSlice({
@@ -31,17 +32,29 @@ export const loginSlice = createSlice({
     setIsFreshLogin: (state, action) => {
       state.isFreshLogin = action.payload;
     },
+    setMobileNumber: (state, action) => {
+      state.mobileNumber = action.payload;
+    },
     setLoginDetails: (state, action) => {
       // Ensure the action payload contains the correct keys to prevent unintended state changes
-      const { isSidebarOpen, isLogin, tabType, user } = action.payload;
+      const { isSidebarOpen, isLogin, tabType, user, mobileNumber } = action.payload;
       if (isSidebarOpen !== undefined) state.isSidebarOpen = isSidebarOpen;
       if (isLogin !== undefined) state.isLogin = isLogin;
       if (tabType !== undefined) state.tabType = tabType;
       if (user !== undefined) state.user = user;
+      if (mobileNumber !== undefined) state.mobileNumber = mobileNumber;
     }
   }
 });
 
-export const { setIsSidebarOpen, setIsLogin, setTabType, setUser, setLoginDetails, setIsHeaderVisible, setIsFreshLogin } =
-  loginSlice.actions;
+export const {
+  setIsSidebarOpen,
+  setIsLogin,
+  setTabType,
+  setUser,
+  setLoginDetails,
+  setIsHeaderVisible,
+  setIsFreshLogin,
+  setMobileNumber
+} = loginSlice.actions;
 export default loginSlice.reducer;

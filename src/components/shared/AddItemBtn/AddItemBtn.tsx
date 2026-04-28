@@ -13,9 +13,7 @@ import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import * as gtag from '@/utilities/gtag';
 import { trackEvent } from '@/utilities/analytics';
-// import { AnalyticsEvents } from '@/utilities/analyticsEvents';
-import { trackMixpanelEvent } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 const AddItemBtn: FC<any> = (props) => {
   const {
@@ -89,8 +87,8 @@ const AddItemBtn: FC<any> = (props) => {
     }
     getDataFromApi(
       apiUrl,
-      () => { },
-      () => { },
+      () => {},
+      () => {},
       additionalHeaders
     );
   };
@@ -124,8 +122,8 @@ const AddItemBtn: FC<any> = (props) => {
           apiUrl,
           cartItemsToApi,
           'POST',
-          () => { },
-          () => { },
+          () => {},
+          () => {},
           additionalHeaders
         );
       }
@@ -197,20 +195,18 @@ const AddItemBtn: FC<any> = (props) => {
       ]
     });
 
-    // trackEvent(AnalyticsEvents.ADD_TO_CART, {
-    //   item_code: product.item_code,
-    //   item_name: product.name || product.item_name,
-    //   prid: normalizedProductId,
-    //   category: product.category || '',
-    //   uom: selectedVariant?.unit || '',
-    //   image: product.image || '',
-    //   prqt: quantityToAdd,
-    //   selling_price: selectedVariant?.market_price || selectedVariant?.price || 0,
-    //   final_price: selectedVariant?.price || 0,
-    //   product_price: selectedVariant?.price || 0,
-    //   from_cart: false
-    trackMixpanelEvent(AnalyticsEvents.ADD_TO_CART, {
-      product_price: selectedVariant?.price || 0
+    trackEvent(AnalyticsEvents.ADD_TO_CART, {
+      item_code: product.item_code,
+      item_name: product.name || product.item_name,
+      prid: normalizedProductId,
+      category: product.category || '',
+      uom: selectedVariant?.unit || '',
+      image: product.image || '',
+      prqt: quantityToAdd,
+      selling_price: selectedVariant?.market_price || selectedVariant?.price || 0,
+      final_price: selectedVariant?.price || 0,
+      product_price: selectedVariant?.price || 0,
+      from_cart: false
     });
   };
 
@@ -252,20 +248,18 @@ const AddItemBtn: FC<any> = (props) => {
       ]
     });
 
-    // trackEvent(AnalyticsEvents.ADD_TO_CART, {
-    //   item_code: product.item_code,
-    //   item_name: product.name || product.item_name,
-    //   prid: normalizedProductId,
-    //   category: product.category || '',
-    //   uom: selectedVariant?.unit || '',
-    //   image: product.image || '',
-    //   prqt: finalStepQuantity,
-    //   selling_price: selectedVariant?.market_price || selectedVariant?.price || 0,
-    //   final_price: selectedVariant?.price || 0,
-    //   product_price: selectedVariant?.price || 0,
-    //   from_cart: false
-    trackMixpanelEvent(AnalyticsEvents.ADD_TO_CART, {
-      product_price: selectedVariant?.price || 0
+    trackEvent(AnalyticsEvents.ADD_TO_CART, {
+      item_code: product.item_code,
+      item_name: product.name || product.item_name,
+      prid: normalizedProductId,
+      category: product.category || '',
+      uom: selectedVariant?.unit || '',
+      image: product.image || '',
+      prqt: finalStepQuantity,
+      selling_price: selectedVariant?.market_price || selectedVariant?.price || 0,
+      final_price: selectedVariant?.price || 0,
+      product_price: selectedVariant?.price || 0,
+      from_cart: false
     });
   };
 
@@ -276,7 +270,6 @@ const AddItemBtn: FC<any> = (props) => {
     const itemToRemove = { varientId, selectedRipenessType };
     if (itemQuantity <= finalMinQuantity) {
       dispatch(removeItemFromCart(itemToRemove));
-      trackMixpanelEvent(AnalyticsEvents.REMOVE_FROM_CART);
     } else {
       dispatch(decreaseQuantity({ varientId, stepperQuantity: finalStepQuantity, selectedRipenessType }));
     }
@@ -322,7 +315,6 @@ const AddItemBtn: FC<any> = (props) => {
 
     const itemToRemove = { varientId, selectedRipenessType };
     dispatch(removeItemFromCart(itemToRemove));
-    trackMixpanelEvent(AnalyticsEvents.REMOVE_FROM_CART);
 
     if (loginDetails.user) {
       addItemsToApi();

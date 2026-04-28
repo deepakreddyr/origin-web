@@ -19,8 +19,6 @@ import { setIsLogin, setLoginDetails, setTabType, setUser } from '@/store/slice/
 import { TabTypeConstant } from '../../constants/tabTypeContent';
 import { profileAtom } from '@/features/AccountPage/context/atoms';
 import ProfileAtom from '@/features/AccountPage/types/ProfileAtom';
-import { trackMixpanelEvent, identifyUser } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
 
 const SignUp = () => {
   // const setLoginDetails = useSetAtom(login)
@@ -157,16 +155,6 @@ const SignUp = () => {
         if (!profile.address) {
           dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
         }
-
-        // Identify the user in mixpanel on successful sign-up based on their phone or email.
-        const identifier = profile?.phone || profile?.email || email || name;
-        if (identifier) identifyUser(String(identifier));
-        trackMixpanelEvent(AnalyticsEvents.USER_SIGNUP, {
-          mobile_number: profile?.phone || '',
-          user_name: name || profile?.name || '',
-          gender: gender || profile?.gender || '',
-          email_id: email || profile?.email || ''
-        });
       }
 
       // No reload needed for smooth flow

@@ -118,7 +118,6 @@ const MangoHeader = ({ isHeaderSticky = true, disableSkipLogin = false }: MangoH
     }
 
     const successHandler = (data: any) => {
-      console.log('[MangoSearch] response:', data);
       setSearchResults(data?.data || []);
       setShowDropdown(true);
       setIsSearchLoading(false);

@@ -40,7 +40,7 @@ export const useCartSync = () => {
       }
     };
 
-    if (addressFromLs) getDataFromApi(apiUrl, successHandler, () => {}, additionalHeaders);
+    if (addressFromLs) getDataFromApi(apiUrl, successHandler, () => { }, additionalHeaders);
   };
 
   const sendItemsToApi = (force: boolean = false) => {

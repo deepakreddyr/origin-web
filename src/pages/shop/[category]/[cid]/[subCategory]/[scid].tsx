@@ -14,9 +14,7 @@ import { useEffect, useState } from 'react';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import * as gtag from '@/utilities/gtag';
 import { trackEvent } from '@/utilities/analytics';
-// import { AnalyticsEvents } from '@/utilities/analyticsEvents';
-import { trackMixpanelEvent } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
@@ -137,19 +135,17 @@ const ShopDetails = (props: HomeProps) => {
           protectedUrl['getCategories'] +
           `/${query.cid}` +
           `/sub-categories/${query.scid}`;
+
+        if (addressFromLs)
+          additionalHeaders = {
+            'store-id': addressFromLs.store_id
+          };
       } else {
         apiUrl =
           process.env.NEXT_PUBLIC_BACKEND_API_URL +
           unprotectedUrl['getCategories'] +
           `/${query.cid}` +
           `/sub-categories/${query.scid}`;
-      }
-
-      const storeId = localStorage.getItem('store-id');
-      if (storeId && storeId !== 'null') {
-        additionalHeaders = {
-          'store-id': storeId
-        };
       }
       const { category, cid, subCategory, scid } = query;
       setFilters({
@@ -183,25 +179,14 @@ const ShopDetails = (props: HomeProps) => {
       });
 
       // CleverTap events
-      // trackEvent(AnalyticsEvents.CATEGORY_VIEWED, {
-      //   category_name: String(query.category || '')
-      // });
-      // trackEvent(AnalyticsEvents.SUB_CATEGORY_VIEWED, {
-      //   sub_category_name: String(query.subCategory || '')
-      // });
-      if (query.category) {
-        trackMixpanelEvent(AnalyticsEvents.CATEGORY_VIEWED, {
-          category_name: String(query.category)
-        });
-      }
-
-      if (query.subCategory && query.subCategory !== 'all-items' && query.subCategory !== 'All-Items') {
-        trackMixpanelEvent(AnalyticsEvents.SUB_CATEGORY_VIEWED, {
-          sub_category_name: String(query.subCategory)
-        });
-      }
+      trackEvent(AnalyticsEvents.CATEGORY_VIEWED, {
+        category_name: String(query.category || '')
+      });
+      trackEvent(AnalyticsEvents.SUB_CATEGORY_VIEWED, {
+        sub_category_name: String(query.subCategory || '')
+      });
     }
-  }, [isReady, query, dispatch, filters, getDataFromApi]);
+  }, [isReady, query]);
 
   useEffect(() => {
     if (!shopCategories.isCategoriesFetched) {
@@ -211,15 +196,12 @@ const ShopDetails = (props: HomeProps) => {
       let additionalHeaders = {};
       if (token && addressFromLs) {
         apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getShopDetails'];
+
+        additionalHeaders = {
+          'store-id': addressFromLs.store_id
+        };
       } else {
         apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['getShopDetails'];
-      }
-
-      const storeId = localStorage.getItem('store-id');
-      if (storeId && storeId !== 'null') {
-        additionalHeaders = {
-          'store-id': storeId
-        };
       }
       const successHandler = (data: any) => {
         // console.log(data,"data")
@@ -233,7 +215,7 @@ const ShopDetails = (props: HomeProps) => {
 
       getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
     }
-  }, [dispatch, getDataFromApi, shopCategories.isCategoriesFetched]);
+  }, []);
 
   return (
     <Layout mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={true}>

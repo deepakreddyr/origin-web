@@ -76,6 +76,13 @@ export const AnalyticsEvents = {
 
 export type AnalyticsEventName = (typeof AnalyticsEvents)[keyof typeof AnalyticsEvents];
 
+export type AnalyticsItem = {
+  id: string | number;
+  name: string;
+  price: number;
+  quantity: number;
+};
+
 // --- Strong Typing for Properties ---
 
 export type BaseItemProperties = {
@@ -169,18 +176,18 @@ export type EventProperties = {
     instructions?: string;
     payment_mode: string;
     order_id: string;
-    items: any[];
+    items: AnalyticsItem[];
   };
   [AnalyticsEvents.PRODUCT_PURCHASE]: {
     order_id: string;
     amount: number;
-    items: any[];
+    items: AnalyticsItem[];
   };
   [AnalyticsEvents.PLACED_ORDER]: {
     order_id: string;
     amount: number;
     payment_method: string;
-    items: any[];
+    items: AnalyticsItem[];
   };
   [AnalyticsEvents.PAYMENT_SUCCESS]: {
     order_id: string;

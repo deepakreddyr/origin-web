@@ -87,7 +87,6 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
     const currentStoreId = addressFromLs?.store_id || '';
 
     if (apiUrl === lastFetchedRef.current.url && String(currentStoreId) === String(lastFetchedRef.current.storeId)) {
-      console.log('Skipping redundant mango homepage call');
       return;
     }
 

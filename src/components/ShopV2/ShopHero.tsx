@@ -4,9 +4,7 @@ import { useMediaQuery, Skeleton } from '@mui/material';
 import { useRouter } from 'next/router';
 import OriginCarousel from '../OriginCarousel';
 import { trackEvent } from '@/utilities/analytics';
-// import { AnalyticsEvents } from '@/utilities/analyticsEvents';
-import { trackMixpanelEvent } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 // Import your banners
 import FreshlyArrivedBanner from '/public/assets/images/shop/FreshlyArrivedBanner.png';
@@ -191,12 +189,12 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
     bannerData && bannerData.length > 0
       ? bannerData
       : [
-        {
-          website_image: homepagebanner1,
-          website_mobile_view_image: homepagebannermob1,
-          navigation: { to: '/shop' }
-        }
-      ];
+          {
+            website_image: homepagebanner1,
+            website_mobile_view_image: homepagebannermob1,
+            navigation: { to: '/shop' }
+          }
+        ];
 
   const slides = safeBannerData.map((item: any, index: number) => {
     const desktopImage = item?.website_desktop_view_image || item?.website_image;
@@ -204,11 +202,10 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
     const bannerSrc = isMobile ? mobileImage || homepagebannermob1 : desktopImage || homepagebanner1;
     const navigationTo = item?.navigation?.to || '/shop';
     const handleNavigation = () => {
-      // trackEvent(AnalyticsEvents.BANNER_CLICKS, {
-      //   banner_url: navigationTo,
-      //   banner_index: index
-      // });
-      trackMixpanelEvent(AnalyticsEvents.HOME_HEROBANNER);
+      trackEvent(AnalyticsEvents.BANNER_CLICKS, {
+        banner_url: navigationTo,
+        banner_index: index
+      });
       router.push(navigationTo);
     };
 
