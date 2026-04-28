@@ -67,19 +67,41 @@ const CouponSection = (props: any) => {
   const bestCoupon = React.useMemo(() => {
     if (!couponsState.coupons || couponsState.coupons.length === 0) return null;
 
-    // Filter only those that satisfy min_cart_value
+    // 1. First, try to find the best VALID coupon
     const validCoupons = couponsState.coupons.filter(
       (c: any) => c.isValid === 1 || cart.totalPrice >= (c.min_cart_value || 0)
     );
 
-    if (validCoupons.length === 0) return null;
+    if (validCoupons.length > 0) {
+      return validCoupons.reduce((best: any, current: any) => {
+        const currentDiscount = calculateCouponDiscount(cart.totalPrice, current) || 0;
+        const bestDiscount = calculateCouponDiscount(cart.totalPrice, best) || 0;
+        return currentDiscount > bestDiscount ? current : best;
+      }, validCoupons[0]);
+    }
 
-    return validCoupons.reduce((best: any, current: any) => {
-      const currentDiscount = calculateCouponDiscount(cart.totalPrice, current) || 0;
-      const bestDiscount = calculateCouponDiscount(cart.totalPrice, best) || 0;
-      return currentDiscount > bestDiscount ? current : best;
-    }, validCoupons[0]);
+    // 2. If no valid coupons, find the one with the smallest gap to unlock
+    const invalidCoupons = couponsState.coupons.filter((c: any) => (c.min_cart_value || 0) > cart.totalPrice);
+
+    if (invalidCoupons.length > 0) {
+      return invalidCoupons.reduce((closest: any, current: any) => {
+        const currentGap = (current.min_cart_value || 0) - cart.totalPrice;
+        const closestGap = (closest.min_cart_value || 0) - cart.totalPrice;
+        return currentGap < closestGap ? current : closest;
+      }, invalidCoupons[0]);
+    }
+
+    return null;
   }, [couponsState.coupons, cart.totalPrice]);
+
+  const { gap, isUnlocked } = React.useMemo(() => {
+    if (!bestCoupon) return { gap: 0, isUnlocked: false };
+    const g = (bestCoupon.min_cart_value || 0) - (cart.totalPrice || 0);
+    return {
+      gap: g,
+      isUnlocked: g <= 0
+    };
+  }, [bestCoupon, cart.totalPrice]);
 
   const handleApplyBestCoupon = async (coupon: any) => {
     const hasFreeItem = cart.items.some((item: any) => item.isFreeItem);
@@ -137,15 +159,20 @@ const CouponSection = (props: any) => {
                     Coupon '{bestCoupon.code}'
                   </p>
                   <p className="font-[SofiaPro] text-[.8vw] mob:text-[3vw] font-medium text-black">
-                    {bestCoupon.discount_type === 'percentage'
-                      ? `Avail ${bestCoupon.discount}% off up to ₹${bestCoupon.max_cart_value || 0}`
-                      : `Apply to save ₹${Math.round(calculateCouponDiscount(cart.totalPrice, bestCoupon) || 0)} on this order`}
+                    {!isUnlocked ? (
+                      <>Add ₹{Math.ceil(gap)} more to unlock this coupon</>
+                    ) : bestCoupon.discount_type === 'percentage' ? (
+                      `Avail ${bestCoupon.discount}% off up to ₹${bestCoupon.max_cart_value || 0}`
+                    ) : (
+                      `Apply to save ₹${Math.round(calculateCouponDiscount(cart.totalPrice, bestCoupon) || 0)} on this order`
+                    )}
                   </p>
                 </div>
               </div>
               <button
+                disabled={!isUnlocked}
                 onClick={() => handleApplyBestCoupon(bestCoupon)}
-                className="bg-secondary rounded-full text-white py-[.5vw] mob:py-[1.4vw] mob:px-[4vw] px-[1vw] font-[SofiaPro] font-bold mob:text-[3vw] text-[.83vw]"
+                className={`${isUnlocked ? 'bg-secondary' : 'bg-[#25874D4D] cursor-not-allowed'} rounded-full text-white py-[.5vw] mob:py-[1.4vw] mob:px-[4vw] px-[1vw] font-[SofiaPro] font-bold mob:text-[3vw] text-[.83vw]`}
               >
                 APPLY
               </button>

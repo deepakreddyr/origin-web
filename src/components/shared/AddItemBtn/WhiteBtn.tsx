@@ -20,8 +20,6 @@ const WhiteBtn = (props: any) => {
 
   return (
     <motion.div
-      layout
-      transition={{ type: 'spring', stiffness: 380, damping: 28 }}
       onClick={!isItemPresent ? handleAddItem : undefined}
       className={`flex items-center ${isMangoPage ? 'h-[2.3vw] mob:h-[8.5vw]' : 'h-[2.6vw] mob:h-[9.5vw]'} rounded-full border-[2px] p-[.3vw] ${
         isItemPresent ? 'mob:px-[.5vw]' : 'px-[0.7vw] mob:px-[1.5vw]'
@@ -72,7 +70,6 @@ const WhiteBtn = (props: any) => {
             </motion.p>
           ) : (
             <motion.div
-              layout
               key="add-label"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -109,9 +106,7 @@ const WhiteBtn = (props: any) => {
       {/* Plus */}
       {((!hasRipeness && !props.hasOptions) || isItemPresent) && (
         <motion.button
-          layout
           whileTap={{ scale: 0.82 }}
-          transition={{ type: 'spring', stiffness: 500, damping: 20 }}
           className={`flex-shrink-0 flex items-center justify-center rounded-full bg-primary text-black font-semibold ${
             isItemPresent
               ? `${isMangoPage ? 'h-[1.6vw] w-[1.6vw] mob:h-[6vw] mob:w-[6vw]' : 'h-[1.8vw] w-[1.8vw] mob:h-[6vw] mob:w-[6vw]'} ml-[.4vw] mob:ml-[2vw]`

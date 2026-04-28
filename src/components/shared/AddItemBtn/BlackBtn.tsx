@@ -34,8 +34,6 @@ const BlackBtn: React.FC<BlackBtnProps> = (props) => {
   return (
     <div className="w-full flex flex-col items-center">
       <motion.div
-        layout
-        transition={{ type: 'spring', stiffness: 380, damping: 28 }}
         onClick={!isItemPresent ? handleAddItem : undefined}
         className={`flex items-center h-[2.2vw] mob:h-[7vw] rounded-full border-[2px] p-[.3vw] ${
           isItemPresent ? 'mob:px-[.5vw]' : 'px-[1.2vw] mob:px-[2.5vw]'
@@ -97,9 +95,7 @@ const BlackBtn: React.FC<BlackBtnProps> = (props) => {
 
         {/* Plus */}
         <motion.button
-          layout
           whileTap={{ scale: 0.82 }}
-          transition={{ type: 'spring', stiffness: 500, damping: 20 }}
           className={`flex-shrink-0 flex items-center justify-center rounded-full font-medium ${
             isItemPresent
               ? 'h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] bg-black text-white ml-[.4vw] mob:ml-[2vw]'

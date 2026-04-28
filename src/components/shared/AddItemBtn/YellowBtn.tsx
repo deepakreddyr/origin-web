@@ -20,8 +20,6 @@ const YellowBtn = (props: any) => {
   return (
     <div className="w-full">
       <motion.div
-        layout
-        transition={{ type: 'spring', stiffness: 380, damping: 28 }}
         onClick={!isItemPresent ? handleAddItem : undefined}
         className={`flex items-center ${isMangoPage ? 'h-[2.5vw] mob:h-[9vw]' : 'h-[2.9vw] mob:h-[10vw]'} rounded-full border-[2px] p-[.3vw] ${
           isItemPresent ? 'mob:px-[.5vw]' : 'px-[0.7vw] mob:px-[1.5vw]'
@@ -93,9 +91,7 @@ const YellowBtn = (props: any) => {
 
         {/* Plus */}
         <motion.button
-          layout
           whileTap={{ scale: 0.82 }}
-          transition={{ type: 'spring', stiffness: 500, damping: 20 }}
           className={`flex-shrink-0 flex items-center justify-center rounded-full bg-[#FFD500] text-black font-semibold ${
             isItemPresent
               ? `${isMangoPage ? 'h-[1.7vw] w-[1.7vw] mob:h-[6.5vw] mob:w-[6.5vw]' : 'h-[1.9vw] w-[1.9vw] mob:h-[7.5vw] mob:w-[7.5vw]'} ml-[.4vw] mob:ml-[2vw]`
