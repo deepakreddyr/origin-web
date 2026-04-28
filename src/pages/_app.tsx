@@ -14,7 +14,9 @@ import Head from 'next/head';
 import GlobalLaunchListener from '@/components/GlobalLaunchListener';
 import * as gtag from '@/utilities/gtag';
 import { initAnalytics, trackEvent } from '@/utilities/analytics';
-import { AnalyticsEvents } from '@/utilities/analyticsEvents';
+// import { AnalyticsEvents } from '@/utilities/analyticsEvents';
+import { initMixpanel, trackMixpanelEvent, registerSuperProperties } from '@/utilities/mixpanel';
+import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
 const APP_VERSION = '1.1.6';
 
 // --- Cache Clearing / Version Check ---
@@ -123,6 +125,19 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
   const router = useRouter();
 
   useEffect(() => {
+    // Initialize mixpanel
+    initMixpanel();
+
+    // Register store_id super property if already present (returning user)
+    if (typeof window !== 'undefined') {
+      const storeId = localStorage.getItem('store-id');
+      if (storeId) {
+        try {
+          registerSuperProperties({ store_id: String(JSON.parse(storeId)) });
+        } catch { }
+      }
+    }
+
     // Clear cache if app version changed
     clearCacheAndReload();
 
@@ -131,24 +146,50 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
 
     // Track first open if no previous session
     if (!sessionStorage.getItem('first_open_tracked')) {
-      trackEvent(AnalyticsEvents.FIRST_OPEN);
+      // trackEvent(AnalyticsEvents.FIRST_OPEN);
       sessionStorage.setItem('first_open_tracked', 'true');
     }
 
     // Handle invoice deep links
     const timeoutId = setTimeout(() => handleInvoiceDeepLink(router), 100);
 
+    // Resolve a human-readable page name from a URL path
+    const resolvePageName = (url: string): string => {
+      const path = url.split('?')[0];
+      if (path === '/') return 'home';
+      if (path === '/shop') return 'shop_all';
+      if (path.startsWith('/shop/')) return 'category_page';
+      if (path === '/about') return 'about_us';
+      if (path.startsWith('/mango')) return 'mango_page';
+      if (path === '/delete-account') return 'delete_account_page';
+      if (path.startsWith('/invoice/')) return 'invoice_page';
+      if (path.startsWith('/search')) return 'search_page';
+      // Dynamic PDP route: /[itemName]/[id]
+      const segments = path.split('/').filter(Boolean);
+      if (segments.length === 2 && !['shop', 'mango', 'about', 'orders'].includes(segments[0])) return 'pdp';
+      if (path.startsWith('/orders/')) return 'odp';
+      return path.replace(/^\//, '').replace(/\//g, '_') || 'unknown';
+    };
+
     // Track page views
     const handleRouteChange = (url: string) => {
       gtag.pageview(url);
-      trackEvent(AnalyticsEvents.PAGE_VIEW, { page_path: url });
+      // trackEvent(AnalyticsEvents.PAGE_VIEW, { page_path: url });
+      trackMixpanelEvent(AnalyticsEvents.PAGE_VIEW, {
+        page_name: resolvePageName(url)
+      });
     };
+
+    // Track initial page load
+    trackMixpanelEvent(AnalyticsEvents.PAGE_VIEW, {
+      page_name: resolvePageName(router.asPath)
+    });
 
     router.events.on('routeChangeComplete', handleRouteChange);
 
     // Track no_internet event
-    const handleOffline = () => trackEvent(AnalyticsEvents.NO_INTERNET);
-    window.addEventListener('offline', handleOffline);
+    // const handleOffline = () => trackEvent(AnalyticsEvents.NO_INTERNET);
+    // window.addEventListener('offline', handleOffline);
 
     // Track abandoned_cart when user leaves the page with items in cart
     const handleVisibilityChange = () => {
@@ -162,13 +203,13 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
                 const uom = item.multiple_uoms?.find((u: any) => u.cart_quantity > 0);
                 return sum + (uom?.price || 0) * (uom?.cart_quantity || 0);
               }, 0);
-              trackEvent(AnalyticsEvents.ABANDONED_CART, {
-                cart_items: cartItems,
-                cart_value: cartValue,
-                count_of_item: cartItems.length
-              });
+              // trackEvent(AnalyticsEvents.ABANDONED_CART, {
+              //   cart_items: cartItems,
+              //   cart_value: cartValue,
+              //   count_of_item: cartItems.length
+              // });
             }
-          } catch (e) {}
+          } catch (e) { }
         }
       }
     };
@@ -177,7 +218,7 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
     return () => {
       clearTimeout(timeoutId);
       router.events.off('routeChangeComplete', handleRouteChange);
-      window.removeEventListener('offline', handleOffline);
+      // window.removeEventListener('offline', handleOffline);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [router]);
@@ -220,7 +261,7 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
         <Script
           src="https://checkout.razorpay.com/v1/checkout.js"
           strategy="lazyOnload"
-          // onLoad={() => console.log('Razorpay script loaded')}
+        // onLoad={() => console.log('Razorpay script loaded')}
         />
 
         {/* Google Analytics Script */}

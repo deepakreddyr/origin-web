@@ -15,7 +15,9 @@ import React, { useState } from 'react';
 
 import AccountDelContent from '../AccountDelContent';
 import { trackEvent } from '@/utilities/analytics';
-import { AnalyticsEvents } from '@/utilities/analyticsEvents';
+// import { AnalyticsEvents } from '@/utilities/analyticsEvents';
+import { trackMixpanelEvent } from '@/utilities/mixpanel';
+import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
   'label + &': {
@@ -51,7 +53,11 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 
 const AccountDel = () => {
   const [contactNumber, setContactNumber] = useState('');
+<<<<<<< HEAD
   // eslint-disable-next-line
+=======
+  // eslint-disable-next-line no-unused-vars
+>>>>>>> b7f4a45 (updated the mixpanel events)
   const [isAccountDeleted, setIsAccountDeleted] = useState(false);
   const [showAdditionalInputs, setShowAdditionalInputs] = useState(false);
   const [otp, setOtp] = useState('');
@@ -146,7 +152,11 @@ const AccountDel = () => {
       });
 
       if (response.ok) {
+<<<<<<< HEAD
         trackEvent(AnalyticsEvents.DELETE_ACCOUNT);
+=======
+        trackMixpanelEvent(AnalyticsEvents.DELETE_ACCOUNT);
+>>>>>>> b7f4a45 (updated the mixpanel events)
         setSuccessDialogOpen(true);
       } else if (response.status === 422 || response.status === 522) {
         // Show the dialog for "Delete request available already"

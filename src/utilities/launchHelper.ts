@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 import { setLoginDetails, setTabType, setIsSidebarOpen } from '@/store/slice/loginSlice';
+import { registerSuperProperties } from '@/utilities/mixpanel';
 
 export const handleLaunchResponse = (
   response: any,
@@ -31,6 +32,8 @@ export const handleLaunchResponse = (
     // We will set it to local storage to ensure the app picks it up.
     if (defaultAddress.store_id) {
       localStorage.setItem('store-id', JSON.stringify(defaultAddress.store_id));
+      // Attach store_id as a Mixpanel super property so it's sent with every event
+      registerSuperProperties({ store_id: String(defaultAddress.store_id) });
     }
     localStorage.setItem('selected_address', JSON.stringify(defaultAddress));
   } else {

@@ -14,7 +14,9 @@ import { useEffect, useState } from 'react';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import * as gtag from '@/utilities/gtag';
 import { trackEvent } from '@/utilities/analytics';
-import { AnalyticsEvents } from '@/utilities/analyticsEvents';
+// import { AnalyticsEvents } from '@/utilities/analyticsEvents';
+import { trackMixpanelEvent } from '@/utilities/mixpanel';
+import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
@@ -181,14 +183,25 @@ const ShopDetails = (props: HomeProps) => {
       });
 
       // CleverTap events
-      trackEvent(AnalyticsEvents.CATEGORY_VIEWED, {
-        category_name: String(query.category || '')
-      });
-      trackEvent(AnalyticsEvents.SUB_CATEGORY_VIEWED, {
-        sub_category_name: String(query.subCategory || '')
-      });
+      // trackEvent(AnalyticsEvents.CATEGORY_VIEWED, {
+      //   category_name: String(query.category || '')
+      // });
+      // trackEvent(AnalyticsEvents.SUB_CATEGORY_VIEWED, {
+      //   sub_category_name: String(query.subCategory || '')
+      // });
+      if (query.category) {
+        trackMixpanelEvent(AnalyticsEvents.CATEGORY_VIEWED, {
+          category_name: String(query.category)
+        });
+      }
+
+      if (query.subCategory && query.subCategory !== 'all-items' && query.subCategory !== 'All-Items') {
+        trackMixpanelEvent(AnalyticsEvents.SUB_CATEGORY_VIEWED, {
+          sub_category_name: String(query.subCategory)
+        });
+      }
     }
-  }, [isReady, query]);
+  }, [isReady, query, dispatch, filters, getDataFromApi]);
 
   useEffect(() => {
     if (!shopCategories.isCategoriesFetched) {
@@ -220,7 +233,7 @@ const ShopDetails = (props: HomeProps) => {
 
       getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
     }
-  }, []);
+  }, [dispatch, getDataFromApi, shopCategories.isCategoriesFetched]);
 
   return (
     <Layout mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={true}>

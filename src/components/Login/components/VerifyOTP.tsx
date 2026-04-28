@@ -5,8 +5,8 @@ import ResendOTP from './ResendButton';
 import TermsAndConditions from '../TermsAndConditions';
 import PrimaryRoundedCta from '@/components/shared/PrimaryRoundedCta';
 import { mainApiUrl } from '@/url';
-import { identifyUser, setUserProperties, trackEvent, stopTrackTime } from '@/utilities/analytics';
-import { AnalyticsEvents } from '@/utilities/analyticsEvents';
+// import { identifyUser, setUserProperties, trackEvent, stopTrackTime } from '@/utilities/analytics';
+// import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 import { request, header } from '@/utilities/request';
 import { TabTypeConstant } from '../constants/tabTypeContent';
 import type { LoginAtom } from '../types/LoginAtom';
@@ -18,6 +18,8 @@ import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { removeRouteSourceFromLs } from '@/utilities/utils';
 import { handleLaunchResponse } from '@/utilities/launchHelper';
+import { trackMixpanelEvent, identifyUser } from '@/utilities/mixpanel';
+import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
 import { access } from 'fs';
 
 interface Props {
@@ -38,9 +40,9 @@ const VerifyOTP = (props: Props) => {
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    trackEvent(AnalyticsEvents.OTP);
-  }, []);
+  // useEffect(() => {
+  //   trackEvent(AnalyticsEvents.OTP);
+  // }, []);
 
   const onSubmitOTP = async () => {
     if (!otp) {
@@ -103,18 +105,23 @@ const VerifyOTP = (props: Props) => {
         identifyUser(rawPhone);
 
         // CleverTap: onUserLogin profile push
-        setUserProperties({
-          Identity: rawPhone,
-          Phone: phoneWithCountryCode,
-          Name: userProfile?.name || '',
-          Email: userProfile?.email || ''
-        });
+        // setUserProperties({
+        //   Identity: rawPhone,
+        //   Phone: phoneWithCountryCode,
+        //   Name: userProfile?.name || '',
+        //   Email: userProfile?.email || ''
+        // });
 
-        trackEvent(AnalyticsEvents.LOGGED_IN, {
-          'user-id': rawPhone
+        // trackEvent(AnalyticsEvents.LOGGED_IN, {
+        //   'user-id': rawPhone
+        // });
+        // trackEvent(AnalyticsEvents.USER_LOGIN);
+        // stopTrackTime(AnalyticsEvents.TRACK_OTP);
+        // Mixpanel identify and login tracking when user exists
+        identifyUser(String(mobileNumber));
+        trackMixpanelEvent(AnalyticsEvents.LOGGED_IN, {
+          user_id: String(mobileNumber)
         });
-        trackEvent(AnalyticsEvents.USER_LOGIN);
-        stopTrackTime(AnalyticsEvents.TRACK_OTP);
       } else {
         // New user or incomplete registration
         // IMPORTANT: Keep isLogin: false until registration is complete to prevent background API errors

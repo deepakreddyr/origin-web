@@ -1,4 +1,5 @@
 import { Box, Container, Typography, useMediaQuery, useTheme } from '@mui/material';
+import Image from 'next/image';
 import Layout from '@/components/Layout';
 import { GetServerSideProps } from 'next';
 import { Blog, Categories, FooterDataType, MainMenuType, Products, Testimonial, UspCardsData } from '@/utilities/types';
@@ -23,7 +24,9 @@ import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
 import * as gtag from '@/utilities/gtag';
 import { trackEvent } from '@/utilities/analytics';
-import { AnalyticsEvents } from '@/utilities/analyticsEvents';
+// import { AnalyticsEvents } from '@/utilities/analyticsEvents';
+import { trackMixpanelEvent } from '@/utilities/mixpanel';
+import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { getAddressAndStoreId } from '@/utilities/utils';
@@ -109,8 +112,12 @@ const Home = ({
       category: 'Navigation',
       label: 'Home'
     });
-    trackEvent(AnalyticsEvents.HOME);
-  }, [loginDetails.isLogin, address.defaultAddress?.store_id]);
+    //   trackEvent(AnalyticsEvents.HOME);
+    // }, [loginDetails.isLogin, address.defaultAddress?.store_id]);
+
+    // Mixpanel event
+    trackMixpanelEvent(AnalyticsEvents.HOME);
+  }, [loginDetails.isLogin, address.defaultAddress?.store_id, getDataFromApi]);
 
   const mainCategoryData = homepageData?.find((item: any) => item.type === 'main-category')?.data || categories || [];
   const blendsCategoryData = homepageData?.find((item: any) => item.type === 'blends-category')?.data;
@@ -155,16 +162,17 @@ const Home = ({
         {/* Homepage Category Section */}
         {fetchError ? (
           <div className="flex flex-col items-center justify-center py-16 px-4">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src="/assets/svg/somethingwentwrong.svg"
               alt="Something went wrong"
-              className="w-[280px] mob:w-[220px] mb-6"
+              width={280}
+              height={280}
+              className="w-[280px] mob:w-[220px] mb-6 object-contain"
             />
             <p className="text-center text-gray-500 font-[SofiaPro] text-base mob:text-sm">
               Oops! Something went wrong. Please try again later.
             </p>
-          </div>
+          </div >
         ) : (
           <>
             <ScrollReveal direction="up" delay={0}>
@@ -347,8 +355,8 @@ const Home = ({
             />
           </Container>
         </ScrollReveal>
-      </Layout>
-    </div>
+      </Layout >
+    </div >
   );
 };
 

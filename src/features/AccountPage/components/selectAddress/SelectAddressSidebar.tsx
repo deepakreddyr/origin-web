@@ -11,6 +11,8 @@ import Other from '/public/assets/icons/addressIcons/others.png';
 import { Button, Typography } from '@mui/material';
 import { CircularProgress, Box } from '@mui/material';
 import LocationChangedPopup from '@/components/Cart/AddressAndTimeSlot/LocationChangedPopup';
+import { trackMixpanelEvent } from '@/utilities/mixpanel';
+import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
 
 // Import the required atoms and enums for new address functionality
 import { addressDetailsAtom, isEditingAddress } from '@/features/AddressEditDetails/context/atoms';
@@ -36,6 +38,15 @@ const SelectAddressSidebar = () => {
 
     const apiData = { ...addr, is_default: true };
     await editAddress(apiData as Address, setAddress);
+
+    // Mixpanel event
+    trackMixpanelEvent(AnalyticsEvents.USER_SELECTED_ADDRESS, {
+      latitude: addr.latitude || '',
+      longitude: addr.longitude || '',
+      adress_id: String(addr.address_id || ''),
+      store_id: String(addr.store_id || '')
+    });
+
     // Show location changed popup; on Alright → hard refresh
     setShowLocationPopup(true);
   };
@@ -55,6 +66,10 @@ const SelectAddressSidebar = () => {
       earliest_timeslot: '',
       store_id: '',
       is_default: ''
+    });
+
+    trackMixpanelEvent(AnalyticsEvents.ADD_LOCATION, {
+      home_address: 'new_address_flow' // Generic since we just enter the flow
     });
 
     setIsEditingAddress({
