@@ -12,8 +12,8 @@ import { getAddressAndStoreId } from '@/utilities/utils';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import * as gtag from '@/utilities/gtag';
-import { trackMixpanelEvent } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 const AddItemBtn: FC<any> = (props) => {
   const {
@@ -195,8 +195,11 @@ const AddItemBtn: FC<any> = (props) => {
       ]
     });
 
-    trackMixpanelEvent(AnalyticsEvents.ADD_TO_CART, {
-      product_price: selectedVariant?.price || 0
+    trackEvent(AnalyticsEvents.ADD_TO_CART, {
+      product_id: normalizedProductId,
+      product_name: product.name || product.item_name,
+      product_price: Number(selectedVariant?.price) || 0,
+      quantity: quantityToAdd
     });
   };
 
@@ -238,8 +241,11 @@ const AddItemBtn: FC<any> = (props) => {
       ]
     });
 
-    trackMixpanelEvent(AnalyticsEvents.ADD_TO_CART, {
-      product_price: selectedVariant?.price || 0
+    trackEvent(AnalyticsEvents.ADD_TO_CART, {
+      product_id: normalizedProductId,
+      product_name: product.name || product.item_name,
+      product_price: Number(selectedVariant?.price) || 0,
+      quantity: finalStepQuantity
     });
   };
 
@@ -250,7 +256,10 @@ const AddItemBtn: FC<any> = (props) => {
     const itemToRemove = { varientId, selectedRipenessType };
     if (itemQuantity <= finalMinQuantity) {
       dispatch(removeItemFromCart(itemToRemove));
-      trackMixpanelEvent(AnalyticsEvents.REMOVE_FROM_CART);
+      trackEvent(AnalyticsEvents.REMOVE_FROM_CART, {
+        product_id: normalizedProductId,
+        product_name: product.name || product.item_name
+      });
     } else {
       dispatch(decreaseQuantity({ varientId, stepperQuantity: finalStepQuantity, selectedRipenessType }));
     }
@@ -266,7 +275,10 @@ const AddItemBtn: FC<any> = (props) => {
 
     const itemToRemove = { varientId, selectedRipenessType };
     dispatch(removeItemFromCart(itemToRemove));
-    trackMixpanelEvent(AnalyticsEvents.REMOVE_FROM_CART);
+    trackEvent(AnalyticsEvents.REMOVE_FROM_CART, {
+      product_id: normalizedProductId,
+      product_name: product.name || product.item_name
+    });
 
     if (loginDetails.user) {
       addItemsToApi();

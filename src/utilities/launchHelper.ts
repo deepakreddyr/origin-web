@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 import { setLoginDetails, setTabType, setIsSidebarOpen } from '@/store/slice/loginSlice';
-import { registerSuperProperties } from '@/utilities/mixpanel';
+import { registerSuperProperties, identifyUser, setUserProperties } from '@/utilities/analytics';
 
 export const handleLaunchResponse = (
   response: any,
@@ -19,6 +19,16 @@ export const handleLaunchResponse = (
       ...prev,
       data: profile
     }));
+    // Pass phno as distinct_id if it exists
+    if (profile.phone) {
+      identifyUser(String(profile.phone));
+      // Also update people properties for richness
+      setUserProperties({
+        $name: profile.name,
+        $email: profile.email,
+        $phone: profile.phone
+      });
+    }
   }
 
   // Logic 1: Check for default address
@@ -32,7 +42,7 @@ export const handleLaunchResponse = (
     // We will set it to local storage to ensure the app picks it up.
     if (defaultAddress.store_id) {
       localStorage.setItem('store-id', JSON.stringify(defaultAddress.store_id));
-      // Attach store_id as a Mixpanel super property so it's sent with every event
+      // Attach store_id as a Analytics super property so it's sent with every event
       registerSuperProperties({ store_id: String(defaultAddress.store_id) });
     }
     localStorage.setItem('selected_address', JSON.stringify(defaultAddress));

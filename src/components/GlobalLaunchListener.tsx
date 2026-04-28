@@ -10,25 +10,35 @@ import { setIsSubscriptionActive, setSubscriptionItem } from '@/store/slice/Subs
 import { setIsSidebarOpen, setTabType } from '@/store/slice/loginSlice';
 import { setCartTabType } from '@/store/slice/CartSlice';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
-import { trackMixpanelEvent } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
+import { trackEvent, identifyUser } from '@/utilities/analytics';
+import { AnalyticsEvents, AnalyticsItem } from '@/utilities/analyticsEvents';
 import { useCartStore } from '@/hooks/useCartStore';
 
 const GlobalLaunchListener = () => {
   const dispatch = useDispatch();
   const [, setAddress] = useAtom(addressAtom);
-  const [, setProfile] = useAtom(profileAtom);
+  const [profile, setProfile] = useAtom(profileAtom);
   const { cart } = useCartStore();
 
   // Handle Global cart abandonment tracking
   useEffect(() => {
     const handleAbandonment = () => {
-      console.log('🚨 [Global Abandonment Check] Cart items length:', cart.items?.length);
+      // console.log('🚨 [Global Abandonment Check] Cart items length:', cart.items?.length);
       if (cart.items && cart.items.length > 0) {
-        console.log('✅ Firing ABANDON_CHECKOUT to Mixpanel from Global Listener...');
-        trackMixpanelEvent(AnalyticsEvents.ABANDON_CHECKOUT);
+        // console.log('✅ Firing ABANDON_CHECKOUT to Analytics from Global Listener...');
+        const analyticsItems: AnalyticsItem[] = cart.items.map((item: any) => ({
+          id: item.id || item.product_id,
+          name: item.name,
+          price: Number(item.price || 0),
+          quantity: Number(item.quantity || 0)
+        }));
+
+        trackEvent(AnalyticsEvents.ABANDON_CHECKOUT, {
+          items: analyticsItems,
+          total_price: cart.totalPrice
+        });
       } else {
-        console.log('❌ Cart is empty, skipping abandoned cart track.');
+        // console.log('❌ Cart is empty, skipping abandoned cart track.');
       }
     };
 

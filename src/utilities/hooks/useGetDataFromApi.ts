@@ -31,7 +31,7 @@ const fetchDataFromApi = async (
 
   // Check for 401 status (Unauthorized/Token Expired) or 522 (Individual users are restricted)
   if (response.status === 401 || (response.status === 522 && response.message === 'Individual users are restricted')) {
-    console.log(`Status ${response.status} received, logging out...`);
+    // console.log(`Status ${response.status} received, logging out...`);
     handleLogout();
     return { status: response.status, bool: false, data: null };
   }

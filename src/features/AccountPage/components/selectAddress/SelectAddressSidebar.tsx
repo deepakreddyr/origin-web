@@ -11,8 +11,8 @@ import Other from '/public/assets/icons/addressIcons/others.png';
 import { Button, Typography } from '@mui/material';
 import { CircularProgress, Box } from '@mui/material';
 import LocationChangedPopup from '@/components/Cart/AddressAndTimeSlot/LocationChangedPopup';
-import { trackMixpanelEvent } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 // Import the required atoms and enums for new address functionality
 import { addressDetailsAtom, isEditingAddress } from '@/features/AddressEditDetails/context/atoms';
@@ -39,8 +39,8 @@ const SelectAddressSidebar = () => {
     const apiData = { ...addr, is_default: true };
     await editAddress(apiData as Address, setAddress);
 
-    // Mixpanel event
-    trackMixpanelEvent(AnalyticsEvents.USER_SELECTED_ADDRESS, {
+    // Analytics event
+    trackEvent(AnalyticsEvents.USER_SELECTED_ADDRESS, {
       latitude: addr.latitude || '',
       longitude: addr.longitude || '',
       adress_id: String(addr.address_id || ''),
@@ -68,7 +68,7 @@ const SelectAddressSidebar = () => {
       is_default: ''
     });
 
-    trackMixpanelEvent(AnalyticsEvents.ADD_LOCATION, {
+    trackEvent(AnalyticsEvents.ADD_LOCATION, {
       home_address: 'new_address_flow' // Generic since we just enter the flow
     });
 

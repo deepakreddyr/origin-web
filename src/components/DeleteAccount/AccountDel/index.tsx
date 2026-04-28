@@ -14,8 +14,8 @@ import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
 
 import AccountDelContent from '../AccountDelContent';
-import { trackMixpanelEvent } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
   'label + &': {
@@ -146,7 +146,7 @@ const AccountDel = () => {
       });
 
       if (response.ok) {
-        trackMixpanelEvent(AnalyticsEvents.DELETE_ACCOUNT);
+        trackEvent(AnalyticsEvents.DELETE_ACCOUNT);
         setSuccessDialogOpen(true);
       } else if (response.status === 422 || response.status === 522) {
         // Show the dialog for "Delete request available already"

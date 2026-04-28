@@ -13,8 +13,8 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import GlobalLaunchListener from '@/components/GlobalLaunchListener';
 import * as gtag from '@/utilities/gtag';
-import { initMixpanel, trackMixpanelEvent, registerSuperProperties } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
+import { initAnalytics, trackEvent, registerSuperProperties } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 const APP_VERSION = '1.1.6';
 
 // --- Cache Clearing / Version Check ---
@@ -123,8 +123,8 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
   const router = useRouter();
 
   useEffect(() => {
-    // Initialize mixpanel
-    initMixpanel();
+    // Initialize analytics
+    initAnalytics();
 
     // Register store_id super property if already present (returning user)
     if (typeof window !== 'undefined') {
@@ -163,13 +163,13 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
     // Track page views
     const handleRouteChange = (url: string) => {
       gtag.pageview(url);
-      trackMixpanelEvent(AnalyticsEvents.PAGE_VIEW, {
+      trackEvent(AnalyticsEvents.PAGE_VIEW, {
         page_name: resolvePageName(url)
       });
     };
 
     // Track initial page load
-    trackMixpanelEvent(AnalyticsEvents.PAGE_VIEW, {
+    trackEvent(AnalyticsEvents.PAGE_VIEW, {
       page_name: resolvePageName(router.asPath)
     });
 

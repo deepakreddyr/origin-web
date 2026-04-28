@@ -25,8 +25,8 @@ import { getAddress } from '../../services/getAddress';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { clearCart } from '@/store/slice/CartSlice';
 import { setRouteSourceToLs } from '@/utilities/utils';
-import { trackMixpanelEvent } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 const AccountSettings = () => {
   const [, setIsOpen] = useAtom(isAccountIsOpen);
@@ -38,7 +38,7 @@ const AccountSettings = () => {
 
   const handleLogout = () => {
     // Track logout event before clearing session
-    trackMixpanelEvent(AnalyticsEvents.LOGOUT);
+    trackEvent(AnalyticsEvents.LOGOUT);
 
     dispatch(
       setLoginDetails({

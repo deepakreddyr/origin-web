@@ -15,8 +15,8 @@ import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 const razKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY;
 
 import { useCartStore } from '@/hooks/useCartStore';
-import { trackMixpanelEvent } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents, AnalyticsItem } from '@/utilities/analyticsEvents';
 
 const Payment = (props: any) => {
   const [profile, setProfileAtom] = useAtom(profileAtom);
@@ -83,7 +83,19 @@ const Payment = (props: any) => {
     dispatch(actions.setCartTabType(TabTypeConstant.PAYMENT));
     clearPostPaymentItemsinLs();
 
-    trackMixpanelEvent(AnalyticsEvents.PRODUCT_PURCHASE);
+    // Track successful purchase in Analytics
+    const purchaseItems: AnalyticsItem[] = (cart.items || []).map((item: any) => ({
+      id: item.id || item.product_id,
+      name: item.name,
+      price: Number(item.price || 0),
+      quantity: Number(item.quantity || 0)
+    }));
+
+    trackEvent(AnalyticsEvents.PRODUCT_PURCHASE, {
+      order_id: String(orderResponse?.order_id || ''),
+      amount: Number(orderResponse?.sub_total || cart.totalPrice || 0),
+      items: purchaseItems
+    });
   };
 
   const onFailure = (totalAmount: any, orderDetails: any, paymentMethod: any, orderResponse: any) => {
@@ -299,7 +311,15 @@ const Payment = (props: any) => {
               : cart.amountToPay;
           localStorage.setItem('total_cart', JSON.stringify(totalAmount));
 
-          trackMixpanelEvent(AnalyticsEvents.CHECKOUT, {
+          // Prepare items for Analytics
+          const analyticsItems: AnalyticsItem[] = (apiData.items || []).map((item: any) => ({
+            id: item.id || item.item_code,
+            name: item.name || item.item_name,
+            price: Number(item.price || item.selling_price || 0),
+            quantity: Number(item.qty || item.quantity || 1)
+          }));
+
+          trackEvent(AnalyticsEvents.CHECKOUT, {
             selling_amount: apiData.sub_total || 0,
             discount_amt: cart.discountAmount || 0,
             amount: apiData.total || 0,
@@ -307,7 +327,7 @@ const Payment = (props: any) => {
             instructions: placeOrderDetails.delivery_instruction || '',
             payment_mode: apiData.payment_method || '',
             order_id: String(response?.data?.order_id || ''),
-            items: JSON.stringify(apiData.items || [])
+            items: analyticsItems
           });
 
           if (orderType.name === 'Pay On delivery') {

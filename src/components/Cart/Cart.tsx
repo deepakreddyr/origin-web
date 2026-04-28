@@ -29,8 +29,8 @@ import { useAtom } from 'jotai';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationChangedPopup from './AddressAndTimeSlot/LocationChangedPopup';
 import { clearSubscriptionCart } from '@/store/slice/SubscriptionCartSlice';
-import { trackMixpanelEvent } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents, AnalyticsItem } from '@/utilities/analyticsEvents';
 // ==========================================================
 // MAX QUANTITY TOAST COMPONENT MOVED/COPIED HERE FOR GLOBAL RENDER
 // ==========================================================
@@ -193,7 +193,6 @@ const Cart = () => {
     const failureHandler = (err: any) => {
       // handle error
     };
-
     if (addressFromLs) getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
   }, [dispatch, setCartItems, setCartMinimum, setFreeItems, getDataFromApi, setBillDetails, setOrderRestrictionData]);
 
@@ -235,7 +234,18 @@ const Cart = () => {
     } else {
       // Sidebar opened: check if it's the main cart and track it
       if (cart.cartTabType === TabTypeConstant.CART_MAIN || cart.cartTabType === '') {
-        trackMixpanelEvent(AnalyticsEvents.CART);
+        const analyticsItems: AnalyticsItem[] = cart.items.map((item: any) => ({
+          id: item.id || item.product_id,
+          name: item.name,
+          price: Number(item.price || 0),
+          quantity: Number(item.quantity || 0)
+        }));
+
+        trackEvent(AnalyticsEvents.CART, {
+          items: analyticsItems,
+          total_price: cart.totalPrice,
+          total_quantity: cart.totalQuantity
+        });
       }
     }
   }, [loginDetails.isSidebarOpen, isSubscription, dispatch, hasLocationChanged, cart.cartTabType, setCartTabType]);

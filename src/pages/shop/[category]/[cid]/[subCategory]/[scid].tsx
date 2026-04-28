@@ -13,8 +13,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import * as gtag from '@/utilities/gtag';
-import { trackMixpanelEvent } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
@@ -150,13 +150,13 @@ const ShopDetails = (props: HomeProps) => {
         };
       }
       const { category, cid, subCategory, scid } = query;
-      setFilters({
-        ...filters,
+      setFilters((prev: any) => ({
+        ...prev,
         category,
         cid,
         scid,
         subCategory
-      });
+      }));
       dispatch(setProductList([]));
       dispatch(setIsProductListLoading(true));
       const successHandler = (data: any) => {
@@ -181,18 +181,18 @@ const ShopDetails = (props: HomeProps) => {
       });
 
       if (query.category) {
-        trackMixpanelEvent(AnalyticsEvents.CATEGORY_VIEWED, {
+        trackEvent(AnalyticsEvents.CATEGORY_VIEWED, {
           category_name: String(query.category)
         });
       }
 
       if (query.subCategory && query.subCategory !== 'all-items' && query.subCategory !== 'All-Items') {
-        trackMixpanelEvent(AnalyticsEvents.SUB_CATEGORY_VIEWED, {
+        trackEvent(AnalyticsEvents.SUB_CATEGORY_VIEWED, {
           sub_category_name: String(query.subCategory)
         });
       }
     }
-  }, [isReady, query, dispatch, filters, getDataFromApi]);
+  }, [isReady, query, dispatch, getDataFromApi]);
 
   useEffect(() => {
     if (!shopCategories.isCategoriesFetched) {

@@ -11,13 +11,13 @@ import type { LoginAtom } from '../types/LoginAtom';
 import { useAtom } from 'jotai';
 import { profileAtom } from '@/features/AccountPage/context/atoms';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoginDetails, setTabType, setUser, setIsFreshLogin } from '@/store/slice/loginSlice';
+import { setLoginDetails, setTabType, setUser, setIsFreshLogin, setMobileNumber } from '@/store/slice/loginSlice';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { removeRouteSourceFromLs } from '@/utilities/utils';
 import { handleLaunchResponse } from '@/utilities/launchHelper';
-import { trackMixpanelEvent, identifyUser } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
+import { trackEvent, identifyUser } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 import { access } from 'fs';
 
 interface Props {
@@ -93,15 +93,19 @@ const VerifyOTP = (props: Props) => {
         dispatch(setIsFreshLogin(true));
         handleLaunchResponse(launchResponse, dispatch, setAddress, setProfileAtom, response.access_token, true);
 
-        // Mixpanel identify and login tracking when user exists
-        identifyUser(String(mobileNumber));
-        trackMixpanelEvent(AnalyticsEvents.LOGGED_IN, {
-          user_id: String(mobileNumber)
+        // Analytics identify and login tracking when user exists
+        const formattedPhone = `+91${mobileNumber}`;
+        identifyUser(formattedPhone);
+        trackEvent(AnalyticsEvents.LOGGED_IN, {
+          user_id: formattedPhone
         });
       } else {
         // New user or incomplete registration
         // IMPORTANT: Keep isLogin: false until registration is complete to prevent background API errors
         dispatch(setIsFreshLogin(true));
+        const formattedPhone = `+91${mobileNumber}`;
+        dispatch(setMobileNumber(formattedPhone));
+        identifyUser(formattedPhone);
         dispatch(
           setLoginDetails({
             isSidebarOpen: true,

@@ -19,6 +19,8 @@ import ApplyCouponInput from './ApplyCouponInput';
 import { useAtom } from 'jotai';
 import { couponList } from '@/features/CouponPage/context/atoms';
 import Coupon from './Coupon';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 const CouponList = (props: any) => {
   const { setCouponsTab, error, setError } = props;
@@ -94,8 +96,19 @@ const CouponList = (props: any) => {
 
         dispatch(setDiscountAmount(Math.round(disountedAmount)));
         dispatch(setAmountToPay(finalCartAmount));
+
+        trackEvent(AnalyticsEvents.APPLY_COUPON, {
+          coupon_code: couponCode,
+          discount_amount: Math.round(disountedAmount),
+          is_success: true
+        });
       } else {
         setError(true); // ❌ Coupon invalid
+        trackEvent(AnalyticsEvents.APPLY_COUPON, {
+          coupon_code: couponCode,
+          discount_amount: 0,
+          is_success: false
+        });
       }
 
       setCouponsTab(COUPON_TABS.COUPON_APPLIED);

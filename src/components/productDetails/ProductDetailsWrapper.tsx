@@ -24,8 +24,8 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as gtag from '@/utilities/gtag';
-import { trackMixpanelEvent } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { setLoginDetails } from '@/store/slice/loginSlice';
@@ -623,7 +623,7 @@ const ProductDetailsWrapper = () => {
             ]
           });
 
-          trackMixpanelEvent(AnalyticsEvents.PRODUCT_VIEW, {
+          trackEvent(AnalyticsEvents.PRODUCT_VIEW, {
             prid: String(item?.id || ''),
             uom: defaultUOM?.unit || '',
             image: item?.website_image || item?.image || '',

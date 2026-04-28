@@ -106,7 +106,7 @@ const ShopPage = (props: HomeProps) => {
 
     // Prevent redundant calls if parameters haven't changed
     if (apiUrl === lastFetchedRef.current.url && String(currentStoreId) === String(lastFetchedRef.current.storeId)) {
-      console.log('Skipping redundant shop-all call');
+      // console.log('Skipping redundant shop-all call');
       return;
     }
 

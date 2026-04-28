@@ -23,8 +23,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
 import * as gtag from '@/utilities/gtag';
-import { trackMixpanelEvent } from '@/utilities/mixpanel';
-import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { getAddressAndStoreId } from '@/utilities/utils';
@@ -84,7 +84,6 @@ const Home = ({
 
     // Prevent redundant calls if parameters haven't changed
     if (apiUrl === lastFetchedRef.current.url && String(currentStoreId) === String(lastFetchedRef.current.storeId)) {
-      console.log('Skipping redundant homepage call');
       return;
     }
 
@@ -111,8 +110,8 @@ const Home = ({
       label: 'Home'
     });
 
-    // Mixpanel event
-    trackMixpanelEvent(AnalyticsEvents.HOME);
+    // Analytics event
+    trackEvent(AnalyticsEvents.HOME);
   }, [loginDetails.isLogin, address.defaultAddress?.store_id, getDataFromApi]);
 
   const mainCategoryData = homepageData?.find((item: any) => item.type === 'main-category')?.data || categories || [];

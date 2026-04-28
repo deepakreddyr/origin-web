@@ -15,6 +15,7 @@ export const AnalyticsEvents = {
   CHECKOUT: 'checkout',
   PRODUCT_PURCHASE: 'product_purchase',
   ABANDON_CHECKOUT: 'abandon_checkout',
+  APPLY_COUPON: 'apply_coupon',
 
   // Category
   CATEGORY_VIEWED: 'category_viewed',
@@ -32,11 +33,18 @@ export const AnalyticsEvents = {
 
 export type AnalyticsEventName = (typeof AnalyticsEvents)[keyof typeof AnalyticsEvents];
 
+export type AnalyticsItem = {
+  id: string | number;
+  name: string;
+  price: number;
+  quantity: number;
+};
+
 export type EventProperties = {
   [AnalyticsEvents.USER_SELECTED_ADDRESS]: {
     latitude: string | number;
     longitude: string | number;
-    adress_id: string; // Deliberately matching "adress_id" per your schema
+    adress_id: string; // Matching "adress_id" per previous schema
     store_id: string;
   };
   [AnalyticsEvents.ADD_LOCATION]: {
@@ -51,23 +59,49 @@ export type EventProperties = {
   };
 
   // Cart / Checkout
-  [AnalyticsEvents.CART]: Record<string, never>;
-  [AnalyticsEvents.ADD_TO_CART]: {
-    product_price: number | string;
+  [AnalyticsEvents.CART]: {
+    store_id?: string;
+    items?: AnalyticsItem[];
+    total_price?: number;
+    total_quantity?: number;
   };
-  [AnalyticsEvents.REMOVE_FROM_CART]: Record<string, never>;
+  [AnalyticsEvents.ADD_TO_CART]: {
+    product_id: string | number;
+    product_name: string;
+    product_price: number;
+    quantity: number;
+    store_id?: string;
+  };
+  [AnalyticsEvents.REMOVE_FROM_CART]: {
+    product_id: string | number;
+    product_name: string;
+  };
   [AnalyticsEvents.CHECKOUT]: {
     selling_amount: number | string;
     discount_amt: number | string;
     amount: number | string;
     shipping: number | string;
-    instructions: string;
-    payment_mode: string;
-    order_id: string;
-    items: string;
+    instructions?: string;
+    payment_mode?: string;
+    order_id?: string;
+    items: AnalyticsItem[];
+    store_id?: string;
   };
-  [AnalyticsEvents.PRODUCT_PURCHASE]: Record<string, never>;
-  [AnalyticsEvents.ABANDON_CHECKOUT]: Record<string, never>;
+  [AnalyticsEvents.PRODUCT_PURCHASE]: {
+    order_id: string;
+    amount: number;
+    items: AnalyticsItem[];
+  };
+  [AnalyticsEvents.ABANDON_CHECKOUT]: {
+    items: AnalyticsItem[];
+    total_price: number;
+    store_id?: string;
+  };
+  [AnalyticsEvents.APPLY_COUPON]: {
+    coupon_code: string;
+    discount_amount: number;
+    is_success: boolean;
+  };
 
   // Category
   [AnalyticsEvents.CATEGORY_VIEWED]: {
