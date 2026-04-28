@@ -15,6 +15,8 @@ import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 const razKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY;
 
 import { useCartStore } from '@/hooks/useCartStore';
+import { trackMixpanelEvent } from '@/utilities/mixpanel';
+import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
 
 const Payment = (props: any) => {
   const [profile, setProfileAtom] = useAtom(profileAtom);
@@ -80,6 +82,8 @@ const Payment = (props: any) => {
     dispatch(actions.clearCart());
     dispatch(actions.setCartTabType(TabTypeConstant.PAYMENT));
     clearPostPaymentItemsinLs();
+
+    trackMixpanelEvent(AnalyticsEvents.PRODUCT_PURCHASE);
   };
 
   const onFailure = (totalAmount: any, orderDetails: any, paymentMethod: any, orderResponse: any) => {
@@ -294,6 +298,17 @@ const Payment = (props: any) => {
               ? cart.totalPrice
               : cart.amountToPay;
           localStorage.setItem('total_cart', JSON.stringify(totalAmount));
+
+          trackMixpanelEvent(AnalyticsEvents.CHECKOUT, {
+            selling_amount: apiData.sub_total || 0,
+            discount_amt: cart.discountAmount || 0,
+            amount: apiData.total || 0,
+            shipping: apiData.delivery_fee || 0,
+            instructions: placeOrderDetails.delivery_instruction || '',
+            payment_mode: apiData.payment_method || '',
+            order_id: String(response?.data?.order_id || ''),
+            items: JSON.stringify(apiData.items || [])
+          });
 
           if (orderType.name === 'Pay On delivery') {
             let orderResponse = {

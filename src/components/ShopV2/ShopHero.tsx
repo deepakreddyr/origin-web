@@ -3,6 +3,8 @@ import Image from 'next/image';
 import { useMediaQuery } from '@mui/material';
 import { useRouter } from 'next/router';
 import OriginCarousel from '../OriginCarousel';
+import { trackMixpanelEvent } from '@/utilities/mixpanel';
+import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
 
 // Import your banners
 import FreshlyArrivedBanner from '/public/assets/images/shop/FreshlyArrivedBanner.png';
@@ -109,7 +111,10 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
 
             <button
               className="pointer-events-auto"
-              onClick={() => router.push('/shop')}
+              onClick={() => {
+                trackMixpanelEvent(AnalyticsEvents.HOME_HEROBANNER);
+                router.push('/shop');
+              }}
               style={{
                 backgroundColor: '#fac510',
                 color: '#000',
@@ -152,6 +157,7 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
     const bannerSrc = isMobile ? mobileImage || homepagebannermob1 : desktopImage || homepagebanner1;
     const navigationTo = item?.navigation?.to || '/shop';
     const handleNavigation = () => {
+      trackMixpanelEvent(AnalyticsEvents.HOME_HEROBANNER);
       router.push(navigationTo);
     };
 

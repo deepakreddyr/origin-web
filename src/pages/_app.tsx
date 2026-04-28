@@ -13,7 +13,8 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import GlobalLaunchListener from '@/components/GlobalLaunchListener';
 import * as gtag from '@/utilities/gtag';
-
+import { initMixpanel, trackMixpanelEvent, registerSuperProperties } from '@/utilities/mixpanel';
+import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
 const APP_VERSION = '1.1.6';
 
 // --- Cache Clearing / Version Check ---
@@ -122,16 +123,55 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
   const router = useRouter();
 
   useEffect(() => {
+    // Initialize mixpanel
+    initMixpanel();
+
+    // Register store_id super property if already present (returning user)
+    if (typeof window !== 'undefined') {
+      const storeId = localStorage.getItem('store-id');
+      if (storeId) {
+        try {
+          registerSuperProperties({ store_id: String(JSON.parse(storeId)) });
+        } catch {}
+      }
+    }
+
     // Clear cache if app version changed
     clearCacheAndReload();
 
     // Handle invoice deep links
     const timeoutId = setTimeout(() => handleInvoiceDeepLink(router), 100);
 
+    // Resolve a human-readable page name from a URL path
+    const resolvePageName = (url: string): string => {
+      const path = url.split('?')[0];
+      if (path === '/') return 'home';
+      if (path === '/shop') return 'shop_all';
+      if (path.startsWith('/shop/')) return 'category_page';
+      if (path === '/about') return 'about_us';
+      if (path.startsWith('/mango')) return 'mango_page';
+      if (path === '/delete-account') return 'delete_account_page';
+      if (path.startsWith('/invoice/')) return 'invoice_page';
+      if (path.startsWith('/search')) return 'search_page';
+      // Dynamic PDP route: /[itemName]/[id]
+      const segments = path.split('/').filter(Boolean);
+      if (segments.length === 2 && !['shop', 'mango', 'about', 'orders'].includes(segments[0])) return 'pdp';
+      if (path.startsWith('/orders/')) return 'odp';
+      return path.replace(/^\//, '').replace(/\//g, '_') || 'unknown';
+    };
+
     // Track page views
     const handleRouteChange = (url: string) => {
       gtag.pageview(url);
+      trackMixpanelEvent(AnalyticsEvents.PAGE_VIEW, {
+        page_name: resolvePageName(url)
+      });
     };
+
+    // Track initial page load
+    trackMixpanelEvent(AnalyticsEvents.PAGE_VIEW, {
+      page_name: resolvePageName(router.asPath)
+    });
 
     router.events.on('routeChangeComplete', handleRouteChange);
 

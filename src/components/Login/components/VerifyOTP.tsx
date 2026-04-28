@@ -16,6 +16,8 @@ import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { removeRouteSourceFromLs } from '@/utilities/utils';
 import { handleLaunchResponse } from '@/utilities/launchHelper';
+import { trackMixpanelEvent, identifyUser } from '@/utilities/mixpanel';
+import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
 import { access } from 'fs';
 
 interface Props {
@@ -90,6 +92,12 @@ const VerifyOTP = (props: Props) => {
 
         dispatch(setIsFreshLogin(true));
         handleLaunchResponse(launchResponse, dispatch, setAddress, setProfileAtom, response.access_token, true);
+
+        // Mixpanel identify and login tracking when user exists
+        identifyUser(String(mobileNumber));
+        trackMixpanelEvent(AnalyticsEvents.LOGGED_IN, {
+          user_id: String(mobileNumber)
+        });
       } else {
         // New user or incomplete registration
         // IMPORTANT: Keep isLogin: false until registration is complete to prevent background API errors

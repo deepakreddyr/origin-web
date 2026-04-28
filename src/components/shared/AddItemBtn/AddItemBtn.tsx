@@ -12,6 +12,8 @@ import { getAddressAndStoreId } from '@/utilities/utils';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import * as gtag from '@/utilities/gtag';
+import { trackMixpanelEvent } from '@/utilities/mixpanel';
+import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
 
 const AddItemBtn: FC<any> = (props) => {
   const {
@@ -192,6 +194,10 @@ const AddItemBtn: FC<any> = (props) => {
         }
       ]
     });
+
+    trackMixpanelEvent(AnalyticsEvents.ADD_TO_CART, {
+      product_price: selectedVariant?.price || 0
+    });
   };
 
   const handleIncrease = (e: any) => {
@@ -231,6 +237,10 @@ const AddItemBtn: FC<any> = (props) => {
         }
       ]
     });
+
+    trackMixpanelEvent(AnalyticsEvents.ADD_TO_CART, {
+      product_price: selectedVariant?.price || 0
+    });
   };
 
   const handleDecrease = (e: any) => {
@@ -240,6 +250,7 @@ const AddItemBtn: FC<any> = (props) => {
     const itemToRemove = { varientId, selectedRipenessType };
     if (itemQuantity <= finalMinQuantity) {
       dispatch(removeItemFromCart(itemToRemove));
+      trackMixpanelEvent(AnalyticsEvents.REMOVE_FROM_CART);
     } else {
       dispatch(decreaseQuantity({ varientId, stepperQuantity: finalStepQuantity, selectedRipenessType }));
     }
@@ -255,6 +266,7 @@ const AddItemBtn: FC<any> = (props) => {
 
     const itemToRemove = { varientId, selectedRipenessType };
     dispatch(removeItemFromCart(itemToRemove));
+    trackMixpanelEvent(AnalyticsEvents.REMOVE_FROM_CART);
 
     if (loginDetails.user) {
       addItemsToApi();

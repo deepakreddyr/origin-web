@@ -14,10 +14,12 @@ import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
 
 import AccountDelContent from '../AccountDelContent';
+import { trackMixpanelEvent } from '@/utilities/mixpanel';
+import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
   'label + &': {
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(4)
   },
   '& .MuiInputBase-input': {
     borderRadius: 4,
@@ -27,11 +29,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     fontSize: 16,
     width: '100%',
     padding: '12px',
-    transition: theme.transitions.create([
-      'border-color',
-      'background-color',
-      'box-shadow',
-    ]),
+    transition: theme.transitions.create(['border-color', 'background-color', 'box-shadow']),
     fontFamily: [
       '-apple-system',
       'BlinkMacSystemFont',
@@ -42,18 +40,18 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
       'sans-serif',
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
+      '"Segoe UI Symbol"'
     ].join(','),
     '&:focus': {
       boxShadow: '0 7px 17px rgb(0 0 0 / 10%), 0 1px 3px rgb(0 0 0 / 10%)',
-      borderColor: theme.palette.primary.main,
-    },
-  },
+      borderColor: theme.palette.primary.main
+    }
+  }
 }));
 
 const AccountDel = () => {
   const [contactNumber, setContactNumber] = useState('');
-  // eslint-disable-next-line unused-imports/no-unused-vars
+  // eslint-disable-next-line no-unused-vars
   const [isAccountDeleted, setIsAccountDeleted] = useState(false);
   const [showAdditionalInputs, setShowAdditionalInputs] = useState(false);
   const [otp, setOtp] = useState('');
@@ -70,14 +68,14 @@ const AccountDel = () => {
         method: 'POST',
         headers: {
           Accept: 'application/json',
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           phone: contactNumber,
           scope: 'client',
           client_id: process.env.NEXT_PUBLIC_CLIENT_ID || '',
-          client_secret: process.env.NEXT_PUBLIC_CLIENT_SECRET || '',
-        }),
+          client_secret: process.env.NEXT_PUBLIC_CLIENT_SECRET || ''
+        })
       });
 
       if (response.status === 419 || response.status === 522) {
@@ -87,7 +85,6 @@ const AccountDel = () => {
         setShowAdditionalInputs(true);
       }
     } catch (err) {
-      
       setContactNumberError('An error occurred');
     }
   };
@@ -98,7 +95,7 @@ const AccountDel = () => {
       const authResponse = await fetch(authURL, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           username: `+91${contactNumber}`,
@@ -106,8 +103,8 @@ const AccountDel = () => {
           scope: '*',
           grant_type: 'password',
           client_id: process.env.NEXT_PUBLIC_CLIENT_ID || '',
-          client_secret: process.env.NEXT_PUBLIC_CLIENT_SECRET || '',
-        }),
+          client_secret: process.env.NEXT_PUBLIC_CLIENT_SECRET || ''
+        })
       });
 
       if (authResponse.ok) {
@@ -141,14 +138,15 @@ const AccountDel = () => {
           Authorization: `Bearer ${accessToken}`,
           'MM-Device-Type': 'web',
           'MM-Build-Version': '1.0.1',
-          'Delivery-Type': 'app',
+          'Delivery-Type': 'app'
         },
         body: JSON.stringify({
-          otp,
-        }),
+          otp
+        })
       });
 
       if (response.ok) {
+        trackMixpanelEvent(AnalyticsEvents.DELETE_ACCOUNT);
         setSuccessDialogOpen(true);
       } else if (response.status === 422 || response.status === 522) {
         // Show the dialog for "Delete request available already"
@@ -203,8 +201,8 @@ const AccountDel = () => {
             sm: 4,
             md: 6,
             lg: 8,
-            xl: 10,
-          },
+            xl: 10
+          }
         }}
       >
         {/* <Typography variant="h4" component="h4" sx={{ fontWeight: '400' }}>
@@ -216,15 +214,11 @@ const AccountDel = () => {
           sx={{
             width: '400px',
             display: 'flex',
-            flexDirection: 'column',
+            flexDirection: 'column'
           }}
         >
           <FormControl sx={{ mt: 0 }} variant="standard">
-            <InputLabel
-              sx={{ width: '400px', fontWeight: '500', fontSize: '18px' }}
-              shrink
-              htmlFor="contactNo"
-            >
+            <InputLabel sx={{ width: '400px', fontWeight: '500', fontSize: '18px' }} shrink htmlFor="contactNo">
               Contact Number <Box component="small">*</Box>
             </InputLabel>
             <BootstrapInput
@@ -246,7 +240,7 @@ const AccountDel = () => {
                 variant="caption"
                 sx={{
                   color: '#C83532',
-                  mt: 1,
+                  mt: 1
                 }}
               >
                 {contactNumberError}
@@ -257,11 +251,7 @@ const AccountDel = () => {
           {showAdditionalInputs && (
             <>
               <FormControl sx={{ mt: 3 }} variant="standard">
-                <InputLabel
-                  sx={{ width: '400px', fontWeight: '500', fontSize: '18px' }}
-                  shrink
-                  htmlFor="otp"
-                >
+                <InputLabel sx={{ width: '400px', fontWeight: '500', fontSize: '18px' }} shrink htmlFor="otp">
                   OTP <Box component="small">*</Box>
                 </InputLabel>
                 <BootstrapInput
@@ -271,10 +261,7 @@ const AccountDel = () => {
                   onChange={(e) => {
                     const enteredValue = e.target.value;
 
-                    if (
-                      /^\d*$/.test(enteredValue) &&
-                      enteredValue.length <= 4
-                    ) {
+                    if (/^\d*$/.test(enteredValue) && enteredValue.length <= 4) {
                       setOtp(enteredValue);
                       setOtpNumberError('');
                     } else {
@@ -288,7 +275,7 @@ const AccountDel = () => {
                     variant="caption"
                     sx={{
                       color: '#C83532',
-                      mt: 1,
+                      mt: 1
                     }}
                   >
                     {otpNumberError}
@@ -306,8 +293,8 @@ const AccountDel = () => {
                     sm: 3,
                     md: 4,
                     lg: 5,
-                    xl: 6,
-                  },
+                    xl: 6
+                  }
                 }}
                 variant="contained"
                 className="lets-talk"
@@ -330,8 +317,8 @@ const AccountDel = () => {
                   sm: 3,
                   md: 4,
                   lg: 5,
-                  xl: 6,
-                },
+                  xl: 6
+                }
               }}
               variant="contained"
               className="lets-talk"
@@ -354,7 +341,7 @@ const AccountDel = () => {
         onClose={handleSuccessDialogClose}
         BackdropComponent={Backdrop}
         BackdropProps={{
-          invisible: true,
+          invisible: true
         }}
         aria-labelledby="success-dialog-title"
         aria-describedby="success-dialog-description"
@@ -362,8 +349,7 @@ const AccountDel = () => {
         <DialogTitle id="success-dialog-title">Success</DialogTitle>
         <DialogContent>
           <DialogContentText id="success-dialog-description">
-            Your account deletion request has been submitted successfully. You
-            can check after some time.
+            Your account deletion request has been submitted successfully. You can check after some time.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -379,7 +365,7 @@ const AccountDel = () => {
         onClose={handleDeleteRequestDialogClose}
         BackdropComponent={Backdrop}
         BackdropProps={{
-          invisible: true,
+          invisible: true
         }}
         aria-labelledby="delete-request-dialog-title"
         aria-describedby="delete-request-dialog-description"

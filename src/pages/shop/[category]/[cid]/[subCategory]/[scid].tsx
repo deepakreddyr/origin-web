@@ -13,6 +13,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import * as gtag from '@/utilities/gtag';
+import { trackMixpanelEvent } from '@/utilities/mixpanel';
+import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
@@ -177,8 +179,20 @@ const ShopDetails = (props: HomeProps) => {
         label: `${query.category} - ${query.subCategory}`,
         items: [] // Optionally pass items once fetched
       });
+
+      if (query.category) {
+        trackMixpanelEvent(AnalyticsEvents.CATEGORY_VIEWED, {
+          category_name: String(query.category)
+        });
+      }
+
+      if (query.subCategory && query.subCategory !== 'all-items' && query.subCategory !== 'All-Items') {
+        trackMixpanelEvent(AnalyticsEvents.SUB_CATEGORY_VIEWED, {
+          sub_category_name: String(query.subCategory)
+        });
+      }
     }
-  }, [isReady, query]);
+  }, [isReady, query, dispatch, filters, getDataFromApi]);
 
   useEffect(() => {
     if (!shopCategories.isCategoriesFetched) {
@@ -210,7 +224,7 @@ const ShopDetails = (props: HomeProps) => {
 
       getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
     }
-  }, []);
+  }, [dispatch, getDataFromApi, shopCategories.isCategoriesFetched]);
 
   return (
     <Layout mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={true}>
