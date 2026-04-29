@@ -94,7 +94,7 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
     lastFetchedRef.current = { url: apiUrl, storeId: String(currentStoreId) };
 
     const successHandler = (data: any) => {
-      console.log('[MangoHomepage] API response:', data);
+      // console.log('[MangoHomepage] API response:', data);
       const resData = data?.data ?? [];
       setMangoHomepageData(resData);
       setIsLoading(false);

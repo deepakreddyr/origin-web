@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useAtom } from 'jotai';
 
 import { cartItems, isCartPageIsOpen } from '@/features/CartPage/context/atoms';
-import { setIsHeaderVisible, setTabType, setLoginDetails } from '@/store/slice/loginSlice';
+import { setIsHeaderVisible, setTabType, setLoginDetails, setIsFreshLogin } from '@/store/slice/loginSlice';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 import { isAccountIsOpen, profileAtom } from '@/features/AccountPage/context/atoms';
 const clientSideEmotionCache = createEmotionCache();
@@ -134,10 +134,11 @@ export default function Layout({
 
   // Global Sync on Login
   useEffect(() => {
-    if (loginDetails.isLogin && loginDetails.tabType !== TabTypeConstant.REGISTER) {
+    if (loginDetails.isLogin && loginDetails.isFreshLogin) {
       sendItemsToApi();
+      dispatch(setIsFreshLogin(false));
     }
-  }, [loginDetails.isLogin, loginDetails.tabType]);
+  }, [loginDetails.isLogin, loginDetails.isFreshLogin]);
 
   return (
     <CacheProvider value={clientSideEmotionCache}>

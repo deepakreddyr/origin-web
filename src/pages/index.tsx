@@ -88,7 +88,7 @@ const Home = ({
     lastFetchedRef.current = { url: apiUrl, storeId: String(currentStoreId) };
 
     const successHandler = (data: any) => {
-      console.log(data);
+      // console.log(data);
       setHomepageData(data?.data);
       setLoading(false);
     };

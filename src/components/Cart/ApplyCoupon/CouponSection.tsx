@@ -24,7 +24,6 @@ const CouponSection = (props: any) => {
   const [couponsState] = useAtom(couponList);
   const [, setAppliedCoupon] = useAtom(isCouponApplied);
   const [cartItemsList] = useAtom(cartItems);
-  console.log(couponDetails);
   const { setCartTabType, setCouponDetails, setDiscountAmount } = actions;
   const dispatch = useDispatch();
   const loginDetails = useSelector((state: any) => state.loginDetails);

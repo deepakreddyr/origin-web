@@ -102,7 +102,6 @@ const ReviewItem = (props: {
   const { actions, isMangoPage } = useCartStore();
   const { removeItemFromCart, removeFreeItemFromCart } = actions;
   const dispatch = useDispatch();
-  console.log(product);
   // --- REMOVED TOAST STATE ---
   // const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
   // const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);

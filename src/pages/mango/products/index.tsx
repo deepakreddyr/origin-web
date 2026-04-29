@@ -21,7 +21,7 @@ interface MangoProductsPageProps {
 
 const ProductsList = ({ hasError }: { hasError: boolean }) => {
   const products = useSelector((state: any) => state.products);
-  console.log('products', products);
+  // console.log('products', products);
 
   if (products.isProductListLoading) return <ProductCardLoader />;
 
@@ -78,7 +78,7 @@ const MangoProductsPage = ({ mainMenuItems, footerData }: MangoProductsPageProps
     dispatch(setIsProductListLoading(true));
 
     const successHandler = (data: any) => {
-      console.log('[MangoListing] response:', data);
+      // console.log('[MangoListing] response:', data);
 
       const resData = data?.data || [];
       let prodList: any[] = [];

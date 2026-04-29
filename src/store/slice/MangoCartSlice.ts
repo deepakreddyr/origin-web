@@ -184,13 +184,13 @@ const findUOMAndRipeness = (
   variantId: number,
   selectedRipenessType: string | null
 ) => {
-  const product = state.items.find((p) => p.id === productId);
+  const product = state.items.find((p) => String(p.id) === String(productId));
   if (!product) return { product: null, uom: null, ripeness: null, productIndex: -1 };
 
-  const uom = product.multiple_uoms.find((u) => u.variant_id === variantId);
+  const uom = product.multiple_uoms.find((u) => String(u.variant_id) === String(variantId));
   if (!uom) return { product, uom: null, ripeness: null, productIndex: -1 };
 
-  const productIndex = state.items.findIndex((p) => p.id === productId);
+  const productIndex = state.items.findIndex((p) => String(p.id) === String(productId));
 
   if (selectedRipenessType) {
     if (!uom.cart_ripeness) uom.cart_ripeness = [];
@@ -220,6 +220,63 @@ const updateCartQuantityInNestedStructure = (
     currentQty = Math.max(0, currentQty + amount);
     ripeness.qty = String(currentQty);
   }
+};
+
+const mergeApiItems = (items: CartProduct[]): CartProduct[] => {
+  const mergedMap = new Map<string, CartProduct>();
+
+  items.forEach((item) => {
+    const key = String(item.id || item.item_code);
+    let existingProduct = mergedMap.get(key);
+
+    if (!existingProduct) {
+      existingProduct = JSON.parse(JSON.stringify({ ...item, multiple_uoms: [] }));
+      mergedMap.set(key, existingProduct!);
+    }
+
+    if (item.multiple_uoms) {
+      item.multiple_uoms.forEach((uom) => {
+        const existingUom = existingProduct!.multiple_uoms.find((u) => String(u.variant_id) === String(uom.variant_id));
+
+        if (existingUom) {
+          if (uom.cart_ripeness && uom.cart_ripeness.length > 0) {
+            if (!existingUom.cart_ripeness) existingUom.cart_ripeness = [];
+
+            uom.cart_ripeness.forEach((r) => {
+              const existingRipeness = existingUom.cart_ripeness!.find((er) => er.ripeness_type === r.ripeness_type);
+              if (existingRipeness) {
+                // Ignore duplicates by taking the max quantity instead of summing them
+                existingRipeness.qty = String(Math.max(Number(existingRipeness.qty), Number(r.qty)));
+              } else {
+                existingUom.cart_ripeness!.push({ ...r });
+              }
+            });
+          } else {
+            existingUom.cart_quantity += uom.cart_quantity;
+          }
+        } else {
+          const newUom = JSON.parse(JSON.stringify(uom));
+          // Deep deduplicate cart_ripeness inside the new UOM
+          if (newUom.cart_ripeness && newUom.cart_ripeness.length > 0) {
+            const ripenessMap = new Map<string, any>();
+            newUom.cart_ripeness.forEach((r: any) => {
+              if (ripenessMap.has(r.ripeness_type)) {
+                const existing = ripenessMap.get(r.ripeness_type);
+                // Ignore duplicates by taking the max quantity instead of summing them
+                existing.qty = String(Math.max(Number(existing.qty), Number(r.qty)));
+              } else {
+                ripenessMap.set(r.ripeness_type, { ...r });
+              }
+            });
+            newUom.cart_ripeness = Array.from(ripenessMap.values());
+          }
+          existingProduct!.multiple_uoms.push(newUom);
+        }
+      });
+    }
+  });
+
+  return Array.from(mergedMap.values());
 };
 
 const saveCart = (state: CartState) => {
@@ -281,10 +338,12 @@ export const mangoCartSlice = createSlice({
         };
       });
 
-      const apiItemCodes = new Set(itemsFromApi.map((i) => i.item_code));
+      const mergedApiItems = mergeApiItems(itemsFromApi);
+
+      const apiItemCodes = new Set(mergedApiItems.map((i) => i.item_code));
       const finalRestoredItems = preservedFreeItems.filter((i) => !apiItemCodes.has(i.item_code));
 
-      state.items = [...finalRestoredItems, ...itemsFromApi];
+      state.items = [...finalRestoredItems, ...mergedApiItems];
       saveCart(state);
     },
 
@@ -298,7 +357,7 @@ export const mangoCartSlice = createSlice({
       const quantityToAdd = selectedUOM.stepper_quantity;
 
       const originalVariant = product.multiple_uoms.find(
-        (uom: any) => (uom.variant_id || uom.varientId) === normalizedVariantId
+        (uom: any) => String(uom.variant_id || uom.varientId) === String(normalizedVariantId)
       );
       const actualStepperQuantity = originalVariant?.stepper_quantity || 1;
 
@@ -387,7 +446,7 @@ export const mangoCartSlice = createSlice({
 
       state.items.forEach((product) => {
         product.multiple_uoms.forEach((uom) => {
-          if (uom.variant_id === varientId) {
+          if (String(uom.variant_id) === String(varientId)) {
             if (selectedRipenessType) {
               if (uom.cart_ripeness) {
                 uom.cart_ripeness = uom.cart_ripeness.filter((r) => {
@@ -414,7 +473,7 @@ export const mangoCartSlice = createSlice({
       action: PayloadAction<{ varientId: number; stepperQuantity: number; selectedRipenessType: string | null }>
     ) => {
       const { varientId, stepperQuantity, selectedRipenessType } = action.payload;
-      const product = state.items.find((p) => p.multiple_uoms.some((u) => u.variant_id === varientId));
+      const product = state.items.find((p) => p.multiple_uoms.some((u) => String(u.variant_id) === String(varientId)));
       if (!product) return;
 
       const { uom, ripeness } = findUOMAndRipeness(state, product.id, varientId, selectedRipenessType);
@@ -447,7 +506,7 @@ export const mangoCartSlice = createSlice({
       action: PayloadAction<{ varientId: number; stepperQuantity: number; selectedRipenessType: string | null }>
     ) => {
       const { varientId, stepperQuantity, selectedRipenessType } = action.payload;
-      const product = state.items.find((p) => p.multiple_uoms.some((u) => u.variant_id === varientId));
+      const product = state.items.find((p) => p.multiple_uoms.some((u) => String(u.variant_id) === String(varientId)));
       if (!product) return;
 
       const { uom, ripeness } = findUOMAndRipeness(state, product.id, varientId, selectedRipenessType);

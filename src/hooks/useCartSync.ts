@@ -5,6 +5,8 @@ import { getAddressAndStoreId, prepareCartItemsToApi } from '@/utilities/utils';
 import { protectedUrl } from '@/url';
 import { useDispatch, useSelector } from 'react-redux';
 
+let isSyncingInProgress = false;
+
 export const useCartSync = () => {
   const dispatch = useDispatch();
   const { cart, isMangoPage, actions, subscriptionCart } = useCartStore();
@@ -42,6 +44,11 @@ export const useCartSync = () => {
   };
 
   const sendItemsToApi = (force: boolean = false) => {
+    if (isSyncingInProgress) {
+      console.log('Cart sync already in progress, skipping...');
+      return;
+    }
+
     const token = localStorage.getItem('user_token');
     if (!token) return;
     if (isSubscription) return;
@@ -55,26 +62,33 @@ export const useCartSync = () => {
 
       if (cartItemFromLs) {
         const cartItemsParsed = JSON.parse(cartItemFromLs);
-        if (cartItemsParsed.length === 0 && !force) return;
+        if (cartItemsParsed.length === 0 && !force) {
+          isSyncingInProgress = false;
+          return;
+        }
 
         const cartItemsToApi = prepareCartItemsToApi(cartItemsParsed);
         const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['addToCart'];
 
         const successHandler = () => {
+          isSyncingInProgress = false;
           fetchCartItemsFromApi();
         };
 
         const failureHandler = () => {
+          isSyncingInProgress = false;
           fetchCartItemsFromApi();
         };
 
         sendDataToApi(apiUrl, cartItemsToApi, 'POST', successHandler, failureHandler, additionalHeaders);
       } else {
+        isSyncingInProgress = false;
         fetchCartItemsFromApi();
       }
     };
 
     // Clear cart first before syncing to ensure consistency
+    isSyncingInProgress = true;
     const clearApiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['clearCartItems'];
     getDataFromApi(clearApiUrl, syncLocalCartToBackend, syncLocalCartToBackend, additionalHeaders);
   };

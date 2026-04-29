@@ -113,7 +113,7 @@ const ShopPage = (props: HomeProps) => {
     lastFetchedRef.current = { url: apiUrl, storeId: String(currentStoreId) };
 
     const successHandler = (data: any) => {
-      console.log(data, 'DATA');
+      // console.log(data, 'DATA');
       dispatch(setShopCategories(data?.data));
       dispatch(setIsShopCategoriesFetched(true));
       setLoading(false);

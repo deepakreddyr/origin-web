@@ -198,6 +198,8 @@ const Cart = () => {
 
   useEffect(() => {
     if (isSubscription) return; // Skip normal cart API calls in subscription mode
+    if (!loginDetails.isSidebarOpen) return; // Only sync when cart is OPEN, not when closing
+
     const lsKey = isMangoPage ? 'mango_cart_items' : 'cart_items';
     const cartItemFromLs = localStorage.getItem(lsKey);
     if (cartItemFromLs) {
@@ -207,13 +209,8 @@ const Cart = () => {
     } else {
       fetchCartItemsFromApi();
     }
-  }, [
-    loginDetails.isSidebarOpen,
-    loginDetails.isLogin,
-    isSubscription,
-    isMangoPage,
-    address?.defaultAddress?.store_id
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loginDetails.isSidebarOpen]);
 
   useEffect(() => {
     if (!loginDetails.isSidebarOpen) {
