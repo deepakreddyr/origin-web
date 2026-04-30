@@ -100,14 +100,14 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
 
     let apiUrl =
       process.env.NEXT_PUBLIC_BACKEND_API_URL +
-      (token ? protectedUrl['mangoSearch'] : unprotectedUrl['mangoSearch']) +
+      (token && loginDetails.isLogin ? protectedUrl['mangoSearch'] : unprotectedUrl['mangoSearch']) +
       `?query=${encodeURIComponent(searchQuery)}&parent_category_id=${parentCategoryId}`;
 
     const additionalHeaders: any = {
       'parent-category-id': parentCategoryId
     };
 
-    if (token && storeId && storeId !== 'null') {
+    if (storeId && storeId !== 'null') {
       additionalHeaders['store-id'] = storeId;
     }
 
