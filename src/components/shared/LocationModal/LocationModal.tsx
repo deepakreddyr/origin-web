@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import {
   Dialog,
   Box,
@@ -34,6 +35,7 @@ import { isGMapLoadedAtom } from '@/context/global';
 import { locationAnchorAtom } from '@/features/Address/context/atoms';
 import { useAtom } from 'jotai';
 import { mainApiUrl, unprotectedUrl } from '@/url';
+import useScrollLock from '@/utilities/hooks/useScrollLock';
 
 interface LocationModalProps {
   open: boolean;
@@ -52,6 +54,9 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
   const [isGMapLoaded] = useAtom(isGMapLoadedAtom);
   const [anchorEl] = useAtom(locationAnchorAtom);
   const [dynamicPosition, setDynamicPosition] = useState({ top: '127px', left: '762px' });
+
+  // Prevent background scroll while modal is open
+  useScrollLock(open);
 
   useEffect(() => {
     const updatePosition = () => {
@@ -161,7 +166,7 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
         console.error('Geolocation error:', error);
         setPermissionError(true);
         setIsCheckingServiceability(false);
-        setErrorMessage('We do not have permission to determine your location.\nPlease enter manually.');
+        setErrorMessage('We do not have permission to determine your location. Please enter manually.');
       }
     );
   };
@@ -225,8 +230,7 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
   const renderInitialView = () => (
     <Box
       sx={{
-        p: '24px',
-        pt: '32px',
+        p: { xs: 2.5, md: 4 },
         textAlign: 'center',
         position: 'relative',
         display: 'flex',
@@ -254,12 +258,11 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
       <Typography
         sx={{
           fontWeight: 700,
-          mb: '12px',
-          fontFamily: 'SofiaPro, sans-serif',
-          width: '240px',
-          fontSize: '24px',
-          lineHeight: '1.2',
-          color: '#000'
+          fontSize: { xs: '20px', md: '24px' },
+          mb: { xs: 2, md: 3 },
+          textAlign: 'center',
+          fontFamily: 'SofiaPro',
+          width: '100%'
         }}
       >
         Select your Location
@@ -267,31 +270,38 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
       <Typography
         sx={{
           color: '#666',
-          mb: '22px',
-          fontSize: '16px',
+          mb: '18px',
+          fontSize: { xs: '15px', md: '18px' },
           fontFamily: 'SofiaPro, sans-serif',
-          width: '384px',
+          maxWidth: '100%',
+          width: { xs: '100%', md: '384px' },
           lineHeight: '1.4',
-          mx: 'auto'
+          mx: 'auto',
+          textAlign: 'center'
         }}
       >
         Allow location access to see produce from your nearest store.
       </Typography>
 
-      <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap', width: '100%' }}>
+      <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center', flexWrap: 'nowrap', width: '100%' }}>
         <Button
           variant="outlined"
           startIcon={<SearchIcon />}
           onClick={handleSearchAlternative}
           sx={{
-            borderRadius: '30px',
+            flex: 1,
+            fontSize: { xs: '13px', md: '17px' },
+            borderRadius: '32px',
             textTransform: 'none',
-            px: 3,
-            py: 1.5,
-            fontFamily: 'SofiaPro, sans-serif',
+            px: { xs: 1, md: 2 },
+            py: { xs: 1, md: 1.5 },
+            whiteSpace: 'nowrap',
+            fontFamily: 'SofiaPro',
+            fontWeight: permissionError ? 600 : 400,
             borderColor: permissionError ? '#FFC107' : '#eee',
             backgroundColor: permissionError ? '#FFC107' : 'transparent',
-            color: permissionError ? '#000' : '#333',
+            color: permissionError ? '#000' : '#6B7280',
+            height: '48px',
             '&:hover': {
               borderColor: '#FFC107',
               backgroundColor: '#FFC107',
@@ -307,16 +317,26 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
           onClick={handleUseMyLocation}
           disabled={isCheckingServiceability}
           sx={{
-            borderRadius: '30px',
+            flex: 1,
+            fontSize: { xs: '13px', md: '17px' },
+            borderRadius: '32px',
             textTransform: 'none',
-            px: 3,
-            py: 1.5,
-            fontFamily: 'SofiaPro, sans-serif',
-            backgroundColor: permissionError ? '#E6E6E6' : '#FFC107',
-            color: permissionError ? '#00000099' : '#000',
+            px: { xs: 1, md: 2 },
+            py: { xs: 1, md: 1.5 },
+            whiteSpace: 'nowrap',
+            fontFamily: 'SofiaPro',
+            fontWeight: permissionError || isCheckingServiceability ? 400 : 600,
+            backgroundColor: permissionError || isCheckingServiceability ? '#E6E6E6 !important' : '#FFC107 !important',
+            color: permissionError || isCheckingServiceability ? '#00000099 !important' : '#000 !important',
             boxShadow: 'none',
+            height: '48px',
+            '&.Mui-disabled': {
+              backgroundColor: '#E6E6E6 !important',
+              color: '#00000099 !important'
+            },
             '&:hover': {
-              backgroundColor: '#e6af06',
+              backgroundColor:
+                permissionError || isCheckingServiceability ? '#E6E6E6 !important' : '#e6af06 !important',
               boxShadow: 'none'
             }
           }}
@@ -330,8 +350,8 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
           sx={{
             mt: 2,
             color: '#d32f2f',
-            fontSize: '12px',
-            fontWeight: 500,
+            fontSize: { xs: '13px', md: '15px' },
+            fontWeight: 400,
             fontFamily: 'SofiaPro, sans-serif',
             whiteSpace: 'pre-line'
           }}
@@ -343,7 +363,7 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
   );
 
   const renderSearchView = () => (
-    <Box sx={{ p: 4, position: 'relative' }}>
+    <Box sx={{ p: { xs: 2.5, md: 4 }, position: 'relative' }}>
       {isClosable && (
         <IconButton onClick={onClose} sx={{ position: 'absolute', right: 16, top: 16, color: '#999' }}>
           <svg
@@ -361,7 +381,15 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
           </svg>
         </IconButton>
       )}
-      <Typography sx={{ fontWeight: 700, fontSize: '24px', mb: 3, textAlign: 'center', fontFamily: 'SofiaPro' }}>
+      <Typography
+        sx={{
+          fontWeight: 700,
+          fontSize: { xs: '20px', md: '24px' },
+          mb: { xs: 2, md: 3 },
+          textAlign: 'center',
+          fontFamily: 'SofiaPro'
+        }}
+      >
         Enter your Location
       </Typography>
 
@@ -372,7 +400,8 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
           display: 'flex',
           alignItems: 'center',
           backgroundColor: '#E6E6E6',
-          borderRadius: '30px'
+          borderRadius: '32px',
+          height: '48px'
         }}
       >
         <IconButton sx={{ p: '10px' }} aria-label="search">
@@ -388,19 +417,23 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
         />
       </Paper>
 
-      <List sx={{ maxHeight: '150px', overflowY: 'auto', mb: 1 }}>
+      <List sx={{ maxHeight: '150px', overflowY: 'auto', mb: 1, mx: -2 }}>
         {status === 'OK' &&
           data.map((suggestion) => (
             <ListItem
               button
               key={suggestion.place_id}
               onClick={handleSelectSuggestion(suggestion)}
-              sx={{ borderRadius: '10px', mb: 0.5, py: 1 }}
+              sx={{ borderRadius: '10px', mb: { xs: 0, md: 0.5 }, py: { xs: 0.5, md: 1 } }}
             >
-              <ListItemIcon sx={{ minWidth: '56px' }}>
-                <Box sx={{ backgroundColor: '#FFF9C4', p: 1, borderRadius: '50%', display: 'flex' }}>
-                  <LocationOnIcon sx={{ color: '#FBC02D', fontSize: '18px' }} />
-                </Box>
+              <ListItemIcon sx={{ minWidth: { xs: '48px', md: '56px' } }}>
+                <Image
+                  src="/assets/svg/searchmodalicon.svg"
+                  alt="Location"
+                  width={40}
+                  height={40}
+                  style={{ borderRadius: '50%' }}
+                />
               </ListItemIcon>
               <ListItemText
                 primary={suggestion.structured_formatting.main_text}
@@ -466,16 +499,21 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
         onClick={handleUseMyLocation}
         disabled={isCheckingServiceability}
         sx={{
-          mt: 2,
-          borderRadius: '30px',
+          mt: { xs: 0, md: 2 },
+          borderRadius: '32px',
           textTransform: 'none',
-          py: 1.5,
-          fontFamily: 'SofiaPro, sans-serif',
-          backgroundColor: permissionError ? '#eee' : '#FFC107',
-          color: permissionError ? '#999' : '#000',
+          height: '48px',
+          fontFamily: 'SofiaPro',
+          fontWeight: 600,
+          backgroundColor: permissionError || isCheckingServiceability ? '#E6E6E6 !important' : '#FFC107 !important',
+          color: permissionError || isCheckingServiceability ? '#00000099 !important' : '#000 !important',
           boxShadow: 'none',
+          '&.Mui-disabled': {
+            backgroundColor: '#E6E6E6 !important',
+            color: '#00000099 !important'
+          },
           '&:hover': {
-            backgroundColor: '#e6af06',
+            backgroundColor: permissionError || isCheckingServiceability ? '#E6E6E6 !important' : '#e6af06 !important',
             boxShadow: 'none'
           }
         }}
@@ -488,10 +526,10 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
           sx={{
             mt: 1.5,
             color: '#d32f2f',
-            fontSize: '11px',
-            fontWeight: 500,
+            fontSize: { xs: '14px', md: '14px' },
+            fontWeight: 400,
             fontFamily: 'SofiaPro, sans-serif',
-            whiteSpace: 'pre-line',
+            // whiteSpace: 'pre-line',
             textAlign: 'center'
           }}
         >
@@ -502,7 +540,7 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
   );
 
   const renderUnserviceableView = () => (
-    <Box sx={{ p: 4, textAlign: 'center', position: 'relative' }}>
+    <Box sx={{ p: { xs: 2.5, md: 4 }, textAlign: 'center', position: 'relative' }}>
       {isClosable && (
         <IconButton onClick={onClose} sx={{ position: 'absolute', right: 16, top: 16, color: '#999' }}>
           <svg
@@ -520,7 +558,17 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
           </svg>
         </IconButton>
       )}
-      <Typography sx={{ fontWeight: 700, mb: 3, fontFamily: 'SofiaPro' }}>Enter your Location</Typography>
+      <Typography
+        sx={{
+          fontWeight: 700,
+          fontSize: { xs: '20px', md: '24px' },
+          mb: { xs: 2, md: 3 },
+          textAlign: 'center',
+          fontFamily: 'SofiaPro'
+        }}
+      >
+        Enter your Location
+      </Typography>
 
       <Paper
         elevation={0}
@@ -529,25 +577,45 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
           display: 'flex',
           alignItems: 'center',
           backgroundColor: '#FFF1F1',
-          borderRadius: '30px',
+          borderRadius: '32px',
           mb: 1,
-          border: '1px solid #FFCDD2'
+          height: '48px',
+          border: '1px solid #A60000'
         }}
       >
         <IconButton sx={{ p: '10px' }} aria-label="search">
-          <SearchIcon sx={{ color: '#D32F2F' }} />
+          <SearchIcon sx={{ color: '#A60000' }} />
         </IconButton>
         <InputBase
-          sx={{ ml: 1, flex: 1, fontSize: '14px', color: '#D32F2F', fontFamily: 'SofiaPro, sans-serif' }}
+          sx={{
+            ml: 1,
+            flex: 1,
+            fontSize: '14px',
+            fontFamily: 'SofiaPro, sans-serif',
+            '& input': {
+              color: '#A60000 !important',
+              WebkitTextFillColor: '#A60000 !important'
+            },
+            '&.Mui-disabled input': {
+              color: '#A60000 !important',
+              WebkitTextFillColor: '#A60000 !important'
+            }
+          }}
           value={value || 'Indiranagar'}
           disabled
         />
       </Paper>
 
       <Typography
-        sx={{ color: '#D32F2F', fontSize: '12px', mb: 3, fontWeight: 500, fontFamily: 'SofiaPro, sans-serif' }}
+        sx={{
+          color: '#A60000',
+          fontSize: { xs: '13px', md: '16px' },
+          mb: 3,
+          fontWeight: 400,
+          fontFamily: 'SofiaPro, sans-serif'
+        }}
       >
-        We’re not available in your area yet. Please try a different location or consider pickup from store
+        We’re not available in your area yet. Please try a different location or consider pickup from store.
       </Typography>
 
       <Button
@@ -555,10 +623,12 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
         variant="contained"
         onClick={handleSearchAlternative}
         sx={{
-          borderRadius: '30px',
+          fontSize: { xs: '14px', md: '16px' },
+          borderRadius: '32px',
           textTransform: 'none',
-          py: 1.5,
-          fontFamily: 'SofiaPro, sans-serif',
+          height: '48px',
+          fontFamily: 'SofiaPro',
+          fontWeight: 600,
           backgroundColor: '#FFC107',
           color: '#000',
           boxShadow: 'none',
@@ -568,7 +638,7 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
           }
         }}
       >
-        Search Alternative Location
+        Choose Alternative Location
       </Button>
     </Box>
   );
@@ -578,6 +648,7 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
       open={open}
       onClose={handleClose}
       disableEscapeKeyDown={!isClosable}
+      disableScrollLock={false}
       TransitionComponent={Transition}
       keepMounted
       PaperProps={{
@@ -590,6 +661,7 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
           position: { xs: 'relative', md: 'absolute' },
           top: { xs: 'auto', md: dynamicPosition.top },
           left: { xs: 'auto', md: dynamicPosition.left },
+          boxShadow: { xs: '0px 34.41px 68.82px -16.52px rgba(0, 0, 0, 0.25)', md: 'none' },
           margin: { xs: 'auto', md: 0 },
           transform: shake ? 'translateX(0)' : 'none',
           animation: shake ? 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both' : 'none',
