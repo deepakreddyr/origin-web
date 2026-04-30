@@ -585,18 +585,20 @@ const ProductDetailsWrapper = () => {
       let additionalHeaders: Record<string, string> = {};
       let apiUrl: string;
 
-      if (token) {
+      if (token && loginDetails.isLogin) {
         apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['searchForProduct'] + `/${query.id}`;
         additionalHeaders = {
           'store-id': String(storeId)
         };
       } else {
         apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['searchForProduct'] + `/${query.id}`;
-        // if (addressFromLs) {
-        //   additionalHeaders = {
-        //     'store-id': addressFromLs.store_id
-        //   };
-        // }
+      }
+
+      const finalStoreId = storeId || localStorage.getItem('store-id');
+      if (finalStoreId && finalStoreId !== 'null') {
+        additionalHeaders = {
+          'store-id': String(finalStoreId)
+        };
       }
 
       const successHandler = (data: any) => {

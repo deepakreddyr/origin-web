@@ -242,16 +242,16 @@ const SearchResults = (props: HomeProps) => {
 
       let apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v5/public/skip-login/items?query=${query}`;
 
-      if (userToken) {
+      if (userToken && loginDetails.isLogin) {
         apiUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v5/user/items?query=${query}`;
         headers['Authorization'] = `Bearer ${userToken}`;
         headers['MM-Device-Type'] = 'web';
         headers['MM-Build-Version'] = '1.0.1';
+      }
 
-        const storeId = localStorage.getItem('store-id');
-        if (storeId && storeId !== 'null') {
-          headers['store-id'] = storeId;
-        }
+      const storeId = localStorage.getItem('store-id');
+      if (storeId && storeId !== 'null') {
+        headers['store-id'] = storeId;
       }
 
       const response = await fetch(apiUrl, {

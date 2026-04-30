@@ -10,7 +10,7 @@ import cartIcon from '/public/assets/icons/cartIcon.png';
 
 // --- NEW IMPORTS REQUIRED FOR LOCATION FUNCTIONALITY ---
 import { useAtom } from 'jotai';
-import { addressAtom } from '@/features/Address/context/atoms';
+import { addressAtom, isLocationModalOpen, isAddressListIsOpen } from '@/features/Address/context/atoms';
 import { profileAtom } from '@/features/AccountPage/context/atoms';
 import { couponList as couponListAtom } from '@/features/CouponPage/context/atoms';
 import whiteDropdownIcon from '/public/assets/images/whiteDropdown.png';
@@ -106,6 +106,8 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
   const [address] = useAtom(addressAtom);
   const [profile] = useAtom(profileAtom);
   const [couponsState] = useAtom(couponListAtom);
+  const [, setIsLocationModalOpen] = useAtom(isLocationModalOpen);
+  const [, setIsAddressListOpen] = useAtom(isAddressListIsOpen);
   // --------------------------
 
   const router = useRouter();
@@ -230,21 +232,12 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
   };
 
   const handleSelectAddress = () => {
-    dispatch(setIsSidebarOpen(true));
-
-    if (!loginDetails.isLogin) {
-      dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
-      return;
-    }
-
-    setRouteSourceToLs(TabTypeConstant.ACCOUNT_MAIN);
-
-    // If addresses are still loading from launch API, default to SELECT_ADDRESS
-    // so the sidebar shows a loading state rather than "no addresses found"
-    if (address.loading || (address?.address && address.address.length > 0)) {
+    if (loginDetails.isLogin) {
       dispatch(setTabType(TabTypeConstant.SELECT_ADDRESS));
+      dispatch(setIsSidebarOpen(true));
+      localStorage.setItem('tab_source', JSON.stringify(TabTypeConstant.SELECT_ADDRESS));
     } else {
-      dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
+      setIsLocationModalOpen(true);
     }
   };
 
@@ -504,6 +497,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
               {/* Location Selector */}
               {!isMobile && !search && (
                 <button
+                  id="location-header-button"
                   onClick={handleSelectAddress}
                   disabled={address.loading}
                   className={`flex items-center gap-2 px-[1.5vw] py-[0.5vw] rounded-full transition-colors max-w-[200px] ${getLocationButtonStyles()} ${address.loading ? 'opacity-50 pointer-events-none' : ''}`}
