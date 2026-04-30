@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useAtom } from 'jotai';
 import { request, header } from '@/utilities/request';
 import { mainApiUrl } from '@/url';
@@ -15,6 +15,8 @@ const GlobalLaunchListener = () => {
   const dispatch = useDispatch();
   const [, setAddress] = useAtom(addressAtom);
   const [, setProfile] = useAtom(profileAtom);
+
+  const loginDetails = useSelector((state: any) => state.loginDetails);
 
   // Restore subscription state after login/reload
   useEffect(() => {
@@ -42,7 +44,7 @@ const GlobalLaunchListener = () => {
   useEffect(() => {
     const token = localStorage.getItem('user_token');
 
-    if (token) {
+    if (token && loginDetails.isLogin) {
       // Signal that address data is being loaded so UI can show disabled/loading state
       setAddress((prev: any) => ({ ...prev, loading: true }));
 
@@ -62,7 +64,7 @@ const GlobalLaunchListener = () => {
       };
       fetchLaunch();
     }
-  }, []); // Run once on mount
+  }, [loginDetails.isLogin]); // Run when isLogin changes
 
   return null;
 };

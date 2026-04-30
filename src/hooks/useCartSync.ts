@@ -50,7 +50,7 @@ export const useCartSync = () => {
     }
 
     const token = localStorage.getItem('user_token');
-    if (!token) return;
+    if (!token || !loginDetails.isLogin) return;
     if (isSubscription) return;
 
     const addressFromLs = getAddressAndStoreId();

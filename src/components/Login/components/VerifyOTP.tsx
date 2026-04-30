@@ -92,11 +92,12 @@ const VerifyOTP = (props: Props) => {
         handleLaunchResponse(launchResponse, dispatch, setAddress, setProfileAtom, response.access_token, true);
       } else {
         // New user or incomplete registration
+        // IMPORTANT: Keep isLogin: false until registration is complete to prevent background API errors
         dispatch(setIsFreshLogin(true));
         dispatch(
           setLoginDetails({
             isSidebarOpen: true,
-            isLogin: true,
+            isLogin: false,
             user: response.access_token,
             tabType: TabTypeConstant.REGISTER
           })
@@ -110,7 +111,7 @@ const VerifyOTP = (props: Props) => {
           dispatch(
             setLoginDetails({
               isSidebarOpen: true,
-              isLogin: true,
+              isLogin: false,
               user: token,
               tabType: TabTypeConstant.REGISTER
             })
