@@ -96,7 +96,11 @@ export default function Layout({
     const isMango = router.pathname.startsWith('/mango');
     const isIncompleteAddress = !addressFromLs || !addressFromLs.address_name;
 
-    if (isReady && isIncompleteAddress && (isPlpOrPdp || isMango || router.pathname === '/')) {
+    if (
+      isReady &&
+      isIncompleteAddress &&
+      (isPlpOrPdp || isMango || router.pathname === '/' || router.pathname.startsWith('/shop'))
+    ) {
       setShowLocationModal(true);
     }
 
