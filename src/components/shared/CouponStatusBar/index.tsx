@@ -54,15 +54,21 @@ const CouponStatusBar: React.FC = () => {
 
   // Fetch coupons whenever subTotal or login status changes
   useEffect(() => {
-    // DO NOT call the API if the user is logged out
-    if (!isLogin) {
+    // DO NOT call the API if:
+    // 1. User is logged out
+    // 2. On a hidden path (like subscription)
+    // 3. Sidebar is open (registration, address, cart — any flow)
+    // 4. No store-id available (prevents 500 errors)
+    const isHiddenPath = HIDDEN_PATHS.some((p) => router.pathname.startsWith(p));
+    const addressFromLs = getAddressAndStoreId();
+
+    if (!isLogin || isHiddenPath || loginDetails.isSidebarOpen || !addressFromLs?.store_id) {
       setCouponsState((prev) => ({ ...prev, coupons: [] }));
       return;
     }
 
     const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getCoupons'] + `?sub_total=${subTotal || 0}`;
 
-    const addressFromLs = getAddressAndStoreId();
     const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
 
     const successHandler = (data: any) => {
@@ -76,7 +82,7 @@ const CouponStatusBar: React.FC = () => {
 
     setCouponsState((prev) => ({ ...prev, loading: true }));
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
-  }, [subTotal, isLogin, setCouponsState, cart.couponDetails?.code]);
+  }, [subTotal, isLogin, loginDetails.isSidebarOpen, setCouponsState, cart.couponDetails?.code]);
 
   // Memoize displayCoupons for stability
   const displayCoupons = useMemo(() => {

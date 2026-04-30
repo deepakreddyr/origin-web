@@ -121,6 +121,9 @@ export default function Layout({
         const storedItems = localStorage.getItem(lsKey);
         const productItems = storedItems ? JSON.parse(storedItems) : [];
 
+        // Do NOT make any API calls while the sidebar is open (registration, address, cart, etc.)
+        if (loginDetails.isSidebarOpen) return;
+
         if (Array.isArray(productItems) && productItems.length > 0) {
           dispatch(actions.setCartItems(productItems));
         } else if (loginDetails.isLogin && profileDetails?.data?.profile && addressFromLs) {
@@ -130,15 +133,23 @@ export default function Layout({
         console.error('Failed to parse cart items from localStorage:', error);
       }
     }
-  }, [isReady, profileDetails?.data?.profile, isMangoPage, loginDetails.isLogin]);
+  }, [isReady, profileDetails?.data?.profile, isMangoPage, loginDetails.isLogin, loginDetails.isSidebarOpen]);
 
-  // Global Sync on Login
+  // Global Sync on Login — only when sidebar is closed and store-id exists
   useEffect(() => {
-    if (loginDetails.isLogin && loginDetails.isFreshLogin) {
+    const storeId = localStorage.getItem('store-id');
+
+    if (
+      loginDetails.isLogin &&
+      loginDetails.isFreshLogin &&
+      !loginDetails.isSidebarOpen &&
+      storeId &&
+      storeId !== 'null'
+    ) {
       sendItemsToApi();
       dispatch(setIsFreshLogin(false));
     }
-  }, [loginDetails.isLogin, loginDetails.isFreshLogin]);
+  }, [loginDetails.isLogin, loginDetails.isFreshLogin, loginDetails.isSidebarOpen]);
 
   return (
     <CacheProvider value={clientSideEmotionCache}>

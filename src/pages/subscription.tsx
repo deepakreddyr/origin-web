@@ -30,6 +30,9 @@ const SubscriptionPage = ({ mainMenuItems, footerData }: SubscriptionPageProps) 
   const [address] = useAtom(addressAtom);
 
   useEffect(() => {
+    // Skip all API calls while sidebar is open (registration, address, cart, etc.)
+    if (loginDetails.isSidebarOpen) return;
+
     const userToken = localStorage.getItem('user_token');
     const isLoggedIn = !!userToken;
 
@@ -47,7 +50,7 @@ const SubscriptionPage = ({ mainMenuItems, footerData }: SubscriptionPageProps) 
       },
       {}
     );
-  }, [loginDetails.isLogin, address.defaultAddress?.store_id]);
+  }, [loginDetails.isLogin, loginDetails.isSidebarOpen, address.defaultAddress?.store_id]);
 
   return (
     <Layout isHeader={false} isHeaderSticky={true} mainMenuItems={mainMenuItems} footerData={footerData}>

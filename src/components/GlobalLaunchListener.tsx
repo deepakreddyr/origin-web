@@ -44,7 +44,8 @@ const GlobalLaunchListener = () => {
   useEffect(() => {
     const token = localStorage.getItem('user_token');
 
-    if (token && loginDetails.isLogin) {
+    // Do NOT fire launch API while sidebar is open — prevents downstream 500 errors
+    if (token && loginDetails.isLogin && !loginDetails.isSidebarOpen) {
       // Signal that address data is being loaded so UI can show disabled/loading state
       setAddress((prev: any) => ({ ...prev, loading: true }));
 
@@ -64,7 +65,7 @@ const GlobalLaunchListener = () => {
       };
       fetchLaunch();
     }
-  }, [loginDetails.isLogin]); // Run when isLogin changes
+  }, [loginDetails.isLogin, loginDetails.isSidebarOpen]); // Run when isLogin or sidebar state changes
 
   return null;
 };
