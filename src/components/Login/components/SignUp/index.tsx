@@ -17,7 +17,7 @@ import { setIsLogin, setLoginDetails, setTabType, setUser } from '@/store/slice/
 import { TabTypeConstant } from '../../constants/tabTypeContent';
 import { profileAtom } from '@/features/AccountPage/context/atoms';
 import ProfileAtom from '@/features/AccountPage/types/ProfileAtom';
-import { trackEvent, identifyUser } from '@/utilities/analytics';
+import { trackEvent, identifyUser, stopTrackTime } from '@/utilities/analytics';
 import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 const SignUp = () => {
@@ -35,6 +35,10 @@ const SignUp = () => {
   const dispatch = useDispatch();
 
   const loginDetails = useSelector((state: any) => state.loginDetails);
+
+  React.useEffect(() => {
+    trackEvent(AnalyticsEvents.USER_DETAILS);
+  }, []);
 
   const hasSpecialCharsOrNumbers = (str: string) => {
     return /[^a-zA-Z0-9\s]/.test(str);
@@ -110,6 +114,9 @@ const SignUp = () => {
           ...prev,
           data: response.data
         }));
+        trackEvent(AnalyticsEvents.REGISTRATION_SUCCESSFUL);
+        trackEvent(AnalyticsEvents.REGISTERED);
+        stopTrackTime(AnalyticsEvents.TRACK_REG_USER_DETAILS);
         const userToken = localStorage.setItem('user_token', loginDetails.user);
         // dispatch(setUser(userToken));
         dispatch(setIsLogin(true));

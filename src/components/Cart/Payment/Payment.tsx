@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAddressAndStoreId, prepareCartItemsToApi } from '@/utilities/utils';
+import { getAddressAndStoreId, prepareCartItemsToApi, getFlattenedCartItems } from '@/utilities/utils';
 import { mainApiUrl, protectedUrl } from '@/url';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { useAtom } from 'jotai';
@@ -15,7 +15,7 @@ import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 const razKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY;
 
 import { useCartStore } from '@/hooks/useCartStore';
-import { trackEvent } from '@/utilities/analytics';
+import { trackEvent, timeEvent, stopTrackTime } from '@/utilities/analytics';
 import { AnalyticsEvents, AnalyticsItem } from '@/utilities/analyticsEvents';
 
 const Payment = (props: any) => {
@@ -40,6 +40,11 @@ const Payment = (props: any) => {
   useEffect(() => {
     successAudio.current = new Audio('/assets/audio/orderAudio.mp3');
     successAudio.current.load();
+    trackEvent(AnalyticsEvents.PAYMENT_METHOD);
+    timeEvent(AnalyticsEvents.TRACK_PAYMENT_METHOD);
+    return () => {
+      stopTrackTime(AnalyticsEvents.TRACK_PAYMENT_METHOD);
+    };
   }, []);
 
   // Add ref to prevent duplicate order placement
@@ -84,17 +89,25 @@ const Payment = (props: any) => {
     clearPostPaymentItemsinLs();
 
     // Track successful purchase in Analytics
-    const purchaseItems: AnalyticsItem[] = (cart.items || []).map((item: any) => ({
-      id: item.id || item.product_id,
-      name: item.name,
-      price: Number(item.price || 0),
-      quantity: Number(item.quantity || 0)
-    }));
+    const purchaseItems = getFlattenedCartItems(cart.items);
 
     trackEvent(AnalyticsEvents.PRODUCT_PURCHASE, {
       order_id: String(orderResponse?.order_id || ''),
       amount: Number(orderResponse?.sub_total || cart.totalPrice || 0),
       items: purchaseItems
+    });
+
+    trackEvent(AnalyticsEvents.PLACED_ORDER, {
+      order_id: String(orderResponse?.order_id || ''),
+      amount: Number(orderResponse?.sub_total || cart.totalPrice || 0),
+      payment_method: paymentMethod || '',
+      items: purchaseItems
+    });
+
+    trackEvent(AnalyticsEvents.PAYMENT_SUCCESS, {
+      order_id: String(orderResponse?.order_id || ''),
+      amount: Number(orderResponse?.sub_total || cart.totalPrice || 0),
+      payment_method: paymentMethod || ''
     });
   };
 
@@ -107,6 +120,12 @@ const Payment = (props: any) => {
     });
     dispatch(setIsHeaderVisible(false));
     setPaymentFlowScreen(TabTypeConstant.PAYMENT_FAILED);
+
+    trackEvent(AnalyticsEvents.PAYMENT_FAILED, {
+      order_id: String(orderResponse?.order_id || ''),
+      amount: Number(totalAmount || cart.totalPrice || 0),
+      payment_method: paymentMethod || ''
+    });
   };
 
   const checkoutRazporpay = (orderId: any) => {
@@ -312,12 +331,7 @@ const Payment = (props: any) => {
           localStorage.setItem('total_cart', JSON.stringify(totalAmount));
 
           // Prepare items for Analytics
-          const analyticsItems: AnalyticsItem[] = (apiData.items || []).map((item: any) => ({
-            id: item.id || item.item_code,
-            name: item.name || item.item_name,
-            price: Number(item.price || item.selling_price || 0),
-            quantity: Number(item.qty || item.quantity || 1)
-          }));
+          const analyticsItems = getFlattenedCartItems(cart.items);
 
           trackEvent(AnalyticsEvents.CHECKOUT, {
             selling_amount: apiData.sub_total || 0,

@@ -12,7 +12,12 @@ import AddressAndTimeSlot from './AddressAndTimeSlot/AddressAndTimeSlot';
 import RestrictOrderInfo from './RestrictOrderInfo';
 import { TabTypeConstant } from '../Login/constants/tabTypeContent';
 import { useCartStore } from '@/hooks/useCartStore';
-import { getAddressAndStoreId, prepareCartItemsToApi, setRouteSourceToLs } from '@/utilities/utils';
+import {
+  getAddressAndStoreId,
+  prepareCartItemsToApi,
+  setRouteSourceToLs,
+  getFlattenedCartItems
+} from '@/utilities/utils';
 import { setIsHeaderVisible, setTabType } from '@/store/slice/loginSlice';
 import { protectedUrl } from '@/url';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
@@ -29,7 +34,7 @@ import { useAtom } from 'jotai';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationChangedPopup from './AddressAndTimeSlot/LocationChangedPopup';
 import { clearSubscriptionCart } from '@/store/slice/SubscriptionCartSlice';
-import { trackEvent } from '@/utilities/analytics';
+import { trackEvent, timeEvent, stopTrackTime } from '@/utilities/analytics';
 import { AnalyticsEvents, AnalyticsItem } from '@/utilities/analyticsEvents';
 // ==========================================================
 // MAX QUANTITY TOAST COMPONENT MOVED/COPIED HERE FOR GLOBAL RENDER
@@ -231,24 +236,34 @@ const Cart = () => {
       if (hasLocationChanged) {
         window.location.reload();
       }
+      stopTrackTime(AnalyticsEvents.TRACK_CART);
+      stopTrackTime(AnalyticsEvents.TRACK_CHECKOUT);
     } else {
       // Sidebar opened: check if it's the main cart and track it
       if (cart.cartTabType === TabTypeConstant.CART_MAIN || cart.cartTabType === '') {
-        const analyticsItems: AnalyticsItem[] = cart.items.map((item: any) => ({
-          id: item.id || item.product_id,
-          name: item.name,
-          price: Number(item.price || 0),
-          quantity: Number(item.quantity || 0)
-        }));
+        trackEvent(AnalyticsEvents.VIEW_CART);
+        timeEvent(AnalyticsEvents.TRACK_CART);
 
-        trackEvent(AnalyticsEvents.CART, {
+        const analyticsItems = getFlattenedCartItems(cart.items);
+
+        trackEvent(AnalyticsEvents.ALL_CART_ITEMS, {
           items: analyticsItems,
           total_price: cart.totalPrice,
           total_quantity: cart.totalQuantity
         });
       }
     }
-  }, [loginDetails.isSidebarOpen, isSubscription, dispatch, hasLocationChanged, cart.cartTabType, setCartTabType]);
+  }, [
+    loginDetails.isSidebarOpen,
+    isSubscription,
+    dispatch,
+    hasLocationChanged,
+    cart.cartTabType,
+    setCartTabType,
+    cart.items,
+    cart.totalPrice,
+    cart.totalQuantity
+  ]);
 
   // Ensure proceed button is enabled when returning to main cart view
   useEffect(() => {
@@ -261,6 +276,11 @@ const Cart = () => {
       cart.cartTabType === TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR
     ) {
       setAddressModal(true);
+      trackEvent(AnalyticsEvents.DELIVERY_TYPE);
+    }
+    if (cart.cartTabType === TabTypeConstant.PAYMENT) {
+      trackEvent(AnalyticsEvents.CHECKOUT);
+      timeEvent(AnalyticsEvents.TRACK_CHECKOUT);
     }
   }, [dispatch, cart.cartTabType, setIsProceedButtonEnabled]);
 

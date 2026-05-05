@@ -16,7 +16,7 @@ import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { removeRouteSourceFromLs } from '@/utilities/utils';
 import { handleLaunchResponse } from '@/utilities/launchHelper';
-import { trackEvent, identifyUser } from '@/utilities/analytics';
+import { trackEvent, identifyUser, stopTrackTime, timeEvent } from '@/utilities/analytics';
 import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 import { access } from 'fs';
 
@@ -37,6 +37,10 @@ const VerifyOTP = (props: Props) => {
   const [mobileNumberErrors, setMobileNumberErrors] = useState('');
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const [isLoading, setIsLoading] = useState(false);
+
+  React.useEffect(() => {
+    trackEvent(AnalyticsEvents.OTP);
+  }, []);
 
   const onSubmitOTP = async () => {
     if (!otp) {
@@ -97,8 +101,10 @@ const VerifyOTP = (props: Props) => {
         const formattedPhone = `+91${mobileNumber}`;
         identifyUser(formattedPhone);
         trackEvent(AnalyticsEvents.LOGGED_IN, {
-          user_id: formattedPhone
+          'user-id': formattedPhone
         });
+        trackEvent(AnalyticsEvents.USER_LOGIN);
+        stopTrackTime(AnalyticsEvents.TRACK_OTP);
       } else {
         // New user or incomplete registration
         // IMPORTANT: Keep isLogin: false until registration is complete to prevent background API errors
@@ -114,6 +120,8 @@ const VerifyOTP = (props: Props) => {
             tabType: TabTypeConstant.REGISTER
           })
         );
+        stopTrackTime(AnalyticsEvents.TRACK_OTP);
+        timeEvent(AnalyticsEvents.TRACK_REG_USER_DETAILS);
       }
       setMobileNumber('');
     } catch (error: any) {

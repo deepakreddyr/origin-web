@@ -4,12 +4,12 @@ import { AnalyticsEventName, EventProperties } from './analyticsEvents';
 /**
  * GENERIC ANALYTICS FACADE
  *
- * To switch or add new analytics services (e.g. Segment, Amplitude, Clevertap),
- * simply implement the AnalyticsProvider interface and add it to the 'activeProviders' list.
+ * This implementation provides a type-safe interface for tracking events across
+ * multiple analytics providers.
  */
 
-// We still use the Mixpanel token from env
 const MIXPANEL_TOKEN = process.env.NEXT_PUBLIC_MIXPANEL_TOKEN;
+const MIXPANEL_URL = process.env.NEXT_PUBLIC_MIXPANEL_URL;
 
 interface AnalyticsProvider {
   name: string;
@@ -18,6 +18,7 @@ interface AnalyticsProvider {
   setProperties: (properties: Record<string, any>) => void;
   registerSuperProperties: (properties: Record<string, any>) => void;
   track: (eventName: string, properties: Record<string, any>) => void;
+  timeEvent: (eventName: string) => void;
 }
 
 // ---- PROVIDER IMPLEMENTATIONS ----
@@ -30,7 +31,7 @@ const MixpanelProvider: AnalyticsProvider = {
         debug: process.env.NODE_ENV === 'development',
         track_pageview: false,
         persistence: 'localStorage',
-        api_host: 'https://api-eu.mixpanel.com'
+        api_host: MIXPANEL_URL
       });
     } else {
       console.warn('Mixpanel Token not found.');
@@ -39,25 +40,11 @@ const MixpanelProvider: AnalyticsProvider = {
   identify: (userId) => mixpanel.identify(userId),
   setProperties: (properties) => mixpanel.people.set(properties),
   registerSuperProperties: (properties) => mixpanel.register(properties),
-  track: (eventName, properties) => mixpanel.track(eventName, properties)
+  track: (eventName, properties) => mixpanel.track(eventName, properties),
+  timeEvent: (eventName) => mixpanel.time_event(eventName)
 };
 
-// Example of another provider
-/*
-const OtherSDKProvider: AnalyticsProvider = {
-    name: 'OtherSDK',
-    init: () => { ... },
-    identify: (userId) => { ... },
-    ...
-};
-*/
-
-// ---- ACTIVE PROVIDERS ----
-// Comment/Uncomment providers here to enable/disable them globally
-const activeProviders: AnalyticsProvider[] = [
-  MixpanelProvider
-  // OtherSDKProvider
-];
+const activeProviders: AnalyticsProvider[] = [MixpanelProvider];
 
 // ---- GENERIC ANALYTICS EXPORTS ----
 
@@ -73,6 +60,9 @@ export const initAnalytics = () => {
   }
 };
 
+/**
+ * Identifies the user by phone number or ID.
+ */
 export const identifyUser = (userId: string) => {
   if (typeof window !== 'undefined') {
     activeProviders.forEach((provider) => {
@@ -85,6 +75,9 @@ export const identifyUser = (userId: string) => {
   }
 };
 
+/**
+ * Sets user properties (People Properties in Mixpanel).
+ */
 export const setUserProperties = (properties: Record<string, any>) => {
   if (typeof window !== 'undefined') {
     activeProviders.forEach((provider) => {
@@ -110,7 +103,7 @@ export const registerSuperProperties = (properties: Record<string, any>) => {
 };
 
 /**
- * Track an event across all active analytics providers
+ * Core tracking method
  */
 export const trackEvent = <T extends AnalyticsEventName>(
   eventName: T,
@@ -129,8 +122,60 @@ export const trackEvent = <T extends AnalyticsEventName>(
       }
     });
 
-    if (activeProviders.length === 0 && process.env.NODE_ENV === 'development') {
-      console.log(`[Analytics Simulation] Tracked: ${eventName}`, properties);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[Analytics] Tracked: ${eventName}`, properties);
     }
   }
+};
+
+// ---- SPEC-COMPLIANT METHODS ----
+
+/**
+ * Track an event with no properties.
+ */
+export const updateEvent = (eventName: AnalyticsEventName) => {
+  trackEvent(eventName as any);
+};
+
+/**
+ * Track a custom event with no properties.
+ */
+export const updateCustomEvent = (eventName: string) => {
+  trackEvent(eventName as any);
+};
+
+/**
+ * Track an event with custom properties.
+ */
+export const updateEventProps = (eventName: AnalyticsEventName, properties: Record<string, any>) => {
+  trackEvent(eventName as any, properties as any);
+};
+
+/**
+ * Start timing an event.
+ */
+export const timeEvent = (eventName: AnalyticsEventName) => {
+  if (typeof window !== 'undefined') {
+    activeProviders.forEach((provider) => {
+      try {
+        provider.timeEvent(eventName);
+      } catch (error) {
+        console.error(`${provider.name} timeEvent error for ${eventName}:`, error);
+      }
+    });
+  }
+};
+
+/**
+ * Start timing a screen/session.
+ */
+export const startTrackTime = (eventName: AnalyticsEventName) => {
+  timeEvent(eventName);
+};
+
+/**
+ * Stop timing and send the timed event.
+ */
+export const stopTrackTime = (eventName: AnalyticsEventName, properties: Record<string, any> = {}) => {
+  trackEvent(eventName as any, properties as any);
 };

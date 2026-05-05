@@ -24,7 +24,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as gtag from '@/utilities/gtag';
-import { trackEvent } from '@/utilities/analytics';
+import { trackEvent, timeEvent, stopTrackTime } from '@/utilities/analytics';
 import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -119,9 +119,8 @@ const MaxQuantityToast: React.FC<{
 
   return (
     <div
-      className={`fixed top-20 left-1/2 -translate-x-1/2 z-40 transition-opacity duration-300 ease-in-out ${
-        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-      }`}
+      className={`fixed top-20 left-1/2 -translate-x-1/2 z-40 transition-opacity duration-300 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
     >
       <div className="flex items-center bg-black rounded-full shadow-xl h-10 px-4 w-full relative">
         <div className="flex items-center justify-center w-full gap-2">
@@ -157,9 +156,8 @@ const NotifyToast: React.FC<{
 
   return (
     <div
-      className={`fixed z-[100] left-1/2 bottom-10 transform -translate-x-1/2 w-[90%] max-w-sm transition-all duration-300 ease-in-out ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
-      }`}
+      className={`fixed z-[100] left-1/2 bottom-10 transform -translate-x-1/2 w-[90%] max-w-sm transition-all duration-300 ease-in-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+        }`}
     >
       <div className="flex items-center bg-black rounded-full shadow-2xl h-12 px-6 w-full relative">
         <div className="flex items-center justify-center w-full gap-3">
@@ -328,104 +326,103 @@ const ImageGallery: React.FC<{
   isDesktop,
   isMangoPage = false
 }) => {
-  const images = [mainImage, ...multipleImages].filter(Boolean);
-  const [currentIndex, setCurrentIndex] = useState(0);
+    const images = [mainImage, ...multipleImages].filter(Boolean);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
-  const handleDragEnd = (_: any, info: any) => {
-    const threshold = 30;
-    if (info.offset.x < -threshold && currentIndex < images.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else if (info.offset.x > threshold && currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
-  };
+    const handleDragEnd = (_: any, info: any) => {
+      const threshold = 30;
+      if (info.offset.x < -threshold && currentIndex < images.length - 1) {
+        setCurrentIndex(currentIndex + 1);
+      } else if (info.offset.x > threshold && currentIndex > 0) {
+        setCurrentIndex(currentIndex - 1);
+      }
+    };
 
-  if (images.length === 0) return null;
+    if (images.length === 0) return null;
 
-  return (
-    <div className="relative w-full h-full overflow-hidden group">
-      <motion.div
-        className="flex h-full w-full cursor-grab active:cursor-grabbing touch-pan-y select-none"
-        animate={{ x: `-${currentIndex * 100}%` }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        drag="x"
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.7}
-        dragMomentum={false}
-        onDragEnd={handleDragEnd}
-      >
-        {images.map((img, i) => (
-          <div key={i} className="min-w-full h-full relative">
-            <Image
-              src={img}
-              fill
-              alt={`${productName} image ${i + 1}`}
-              style={{ objectFit: 'cover' }}
-              priority={i === 0}
-              unoptimized
-            />
-          </div>
-        ))}
-      </motion.div>
-
-      {/* Pagination Dots */}
-      {images.length > 1 && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30">
-          <div className="bg-white px-2.5 py-2 rounded-full flex gap-1.5 shadow-sm border border-gray-100/50 grayscale">
-            {images.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentIndex(i)}
-                className={`transition-all duration-300 rounded-full ${
-                  i === currentIndex ? 'bg-black w-4 h-1.5' : 'bg-black/20 w-1.5 h-1.5'
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Overlays */}
-      {conversionText && (
-        <div
-          className={`absolute top-4 right-4 ${isMangoPage ? 'text-white' : 'text-[#146321]'} font-bold px-3 py-1 rounded-full z-10 font-[SofiaPro] ${isDesktop ? 'text-sm' : 'text-[10px]'}`}
+    return (
+      <div className="relative w-full h-full overflow-hidden group">
+        <motion.div
+          className="flex h-full w-full cursor-grab active:cursor-grabbing touch-pan-y select-none"
+          animate={{ x: `-${currentIndex * 100}%` }}
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.7}
+          dragMomentum={false}
+          onDragEnd={handleDragEnd}
         >
-          {conversionText}
-        </div>
-      )}
-      {hasRipenessFeature && (
-        <div className={`absolute bottom-4 right-4 z-10 p-1.5 bg-white rounded-full shadow-lg overflow-hidden`}>
-          <Image src={itemRipenessSvg} alt="Select ripeness" width={isDesktop ? 60 : 35} height={isDesktop ? 60 : 35} />
-        </div>
-      )}
-      {!isAvailable && (
-        <div className="bg-black-op-50 absolute top-0 w-full py-2 flex justify-center z-20">
-          <p className={`${isDesktop ? 'text-lg' : 'text-sm'} font-[SofiaPro] font-semibold text-white`}>
-            OUT OF STOCK
-          </p>
-        </div>
-      )}
+          {images.map((img, i) => (
+            <div key={i} className="min-w-full h-full relative">
+              <Image
+                src={img}
+                fill
+                alt={`${productName} image ${i + 1}`}
+                style={{ objectFit: 'cover' }}
+                priority={i === 0}
+                unoptimized
+              />
+            </div>
+          ))}
+        </motion.div>
 
-      {/* Navigation Arrows for Desktop */}
-      {images.length > 1 && isDesktop && (
-        <>
-          <button
-            onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
-            className={`absolute left-4 top-1/2 -translate-y-1/2 z-30 p-2 bg-white rounded-full shadow-lg border border-gray-100 transition-all duration-300 ${currentIndex === 0 ? 'opacity-0 pointer-events-none' : 'opacity-0 group-hover:opacity-100'}`}
+        {/* Pagination Dots */}
+        {images.length > 1 && (
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30">
+            <div className="bg-white px-2.5 py-2 rounded-full flex gap-1.5 shadow-sm border border-gray-100/50 grayscale">
+              {images.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentIndex(i)}
+                  className={`transition-all duration-300 rounded-full ${i === currentIndex ? 'bg-black w-4 h-1.5' : 'bg-black/20 w-1.5 h-1.5'
+                    }`}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Overlays */}
+        {conversionText && (
+          <div
+            className={`absolute top-4 right-4 ${isMangoPage ? 'text-white' : 'text-[#146321]'} font-bold px-3 py-1 rounded-full z-10 font-[SofiaPro] ${isDesktop ? 'text-sm' : 'text-[10px]'}`}
           >
-            <ChevronLeftIcon sx={{ fontSize: '24px' }} />
-          </button>
-          <button
-            onClick={() => setCurrentIndex((prev) => Math.min(images.length - 1, prev + 1))}
-            className={`absolute right-4 top-1/2 -translate-y-1/2 z-30 p-2 bg-white rounded-full shadow-lg border border-gray-100 transition-all duration-300 ${currentIndex === images.length - 1 ? 'opacity-0 pointer-events-none' : 'opacity-0 group-hover:opacity-100'}`}
-          >
-            <ChevronRightIcon sx={{ fontSize: '24px' }} />
-          </button>
-        </>
-      )}
-    </div>
-  );
-};
+            {conversionText}
+          </div>
+        )}
+        {hasRipenessFeature && (
+          <div className={`absolute bottom-4 right-4 z-10 p-1.5 bg-white rounded-full shadow-lg overflow-hidden`}>
+            <Image src={itemRipenessSvg} alt="Select ripeness" width={isDesktop ? 60 : 35} height={isDesktop ? 60 : 35} />
+          </div>
+        )}
+        {!isAvailable && (
+          <div className="bg-black-op-50 absolute top-0 w-full py-2 flex justify-center z-20">
+            <p className={`${isDesktop ? 'text-lg' : 'text-sm'} font-[SofiaPro] font-semibold text-white`}>
+              OUT OF STOCK
+            </p>
+          </div>
+        )}
+
+        {/* Navigation Arrows for Desktop */}
+        {images.length > 1 && isDesktop && (
+          <>
+            <button
+              onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
+              className={`absolute left-4 top-1/2 -translate-y-1/2 z-30 p-2 bg-white rounded-full shadow-lg border border-gray-100 transition-all duration-300 ${currentIndex === 0 ? 'opacity-0 pointer-events-none' : 'opacity-0 group-hover:opacity-100'}`}
+            >
+              <ChevronLeftIcon sx={{ fontSize: '24px' }} />
+            </button>
+            <button
+              onClick={() => setCurrentIndex((prev) => Math.min(images.length - 1, prev + 1))}
+              className={`absolute right-4 top-1/2 -translate-y-1/2 z-30 p-2 bg-white rounded-full shadow-lg border border-gray-100 transition-all duration-300 ${currentIndex === images.length - 1 ? 'opacity-0 pointer-events-none' : 'opacity-0 group-hover:opacity-100'}`}
+            >
+              <ChevronRightIcon sx={{ fontSize: '24px' }} />
+            </button>
+          </>
+        )}
+      </div>
+    );
+  };
 
 const ProductDetailsWrapper = () => {
   const mobile = useMediaQuery(768);
@@ -582,6 +579,9 @@ const ProductDetailsWrapper = () => {
         return;
       }
 
+      trackEvent(AnalyticsEvents.ITEM_DETAILS);
+      timeEvent(AnalyticsEvents.TRACK_ITEM_DETAILS);
+
       let additionalHeaders: Record<string, string> = {};
       let apiUrl: string;
 
@@ -624,12 +624,15 @@ const ProductDetailsWrapper = () => {
           });
 
           trackEvent(AnalyticsEvents.PRODUCT_VIEW, {
+            item_code: item?.item_code || '',
+            item_alias: item?.alias || item?.name || '',
+            category: item?.category_name || '',
+            // Including legacy properties for compatibility
             prid: String(item?.id || ''),
             uom: defaultUOM?.unit || '',
             image: item?.website_image || item?.image || '',
             prqt: defaultUOM?.stepper_quantity || 1,
             product_name: item?.name || '',
-            category: item?.category_name || '',
             selling_price: defaultUOM?.market_price || defaultUOM?.price || 0,
             final_price: defaultUOM?.price || 0,
             in_stock: defaultUOM?.is_available ? 'Yes' : 'No'
@@ -644,6 +647,9 @@ const ProductDetailsWrapper = () => {
 
       getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
     }
+    return () => {
+      stopTrackTime(AnalyticsEvents.TRACK_ITEM_DETAILS);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isReady, query.id, loginDetails.isLogin, address.defaultAddress?.store_id]);
 
@@ -853,9 +859,8 @@ const ProductDetailsWrapper = () => {
                             e.stopPropagation();
                             if (!isNotified) handleNotifyMe();
                           }}
-                          className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${
-                            isNotified ? 'cursor-default' : 'hover:bg-green-50'
-                          }`}
+                          className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${isNotified ? 'cursor-default' : 'hover:bg-green-50'
+                            }`}
                         >
                           {!isNotified && <span className="text-sm">Notify</span>}
                           {isNotified ? (
@@ -952,9 +957,8 @@ const ProductDetailsWrapper = () => {
                               e.stopPropagation();
                               if (!isNotified) handleNotifyMe();
                             }}
-                            className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${
-                              isNotified ? 'cursor-default' : 'hover:bg-green-50'
-                            }`}
+                            className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold px-4 py-2 rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${isNotified ? 'cursor-default' : 'hover:bg-green-50'
+                              }`}
                           >
                             {!isNotified && <span className="text-sm">Notify</span>}
                             {isNotified ? (

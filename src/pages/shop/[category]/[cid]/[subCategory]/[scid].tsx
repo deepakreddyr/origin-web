@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import * as gtag from '@/utilities/gtag';
-import { trackEvent } from '@/utilities/analytics';
+import { trackEvent, timeEvent, stopTrackTime } from '@/utilities/analytics';
 import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useAtom } from 'jotai';
@@ -181,16 +181,25 @@ const ShopDetails = (props: HomeProps) => {
       });
 
       if (query.category) {
+        trackEvent(AnalyticsEvents.CATEGORY);
+        timeEvent(AnalyticsEvents.TRACK_CATEGORY);
         trackEvent(AnalyticsEvents.CATEGORY_VIEWED, {
           category_name: String(query.category)
         });
       }
 
       if (query.subCategory && query.subCategory !== 'all-items' && query.subCategory !== 'All-Items') {
+        trackEvent(AnalyticsEvents.SUB_CATEGORY);
+        timeEvent(AnalyticsEvents.TRACK_SUB_CATEGORY);
         trackEvent(AnalyticsEvents.SUB_CATEGORY_VIEWED, {
           sub_category_name: String(query.subCategory)
         });
       }
+
+      return () => {
+        if (query.category) stopTrackTime(AnalyticsEvents.TRACK_CATEGORY);
+        if (query.subCategory) stopTrackTime(AnalyticsEvents.TRACK_SUB_CATEGORY);
+      };
     }
   }, [isReady, query, dispatch, getDataFromApi]);
 

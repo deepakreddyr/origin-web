@@ -8,6 +8,8 @@ import TermsAndConditions from '../TermsAndConditions';
 import { mainApiUrl } from '@/url';
 import { useDispatch } from 'react-redux';
 import { setTabType } from '@/store/slice/loginSlice';
+import { trackEvent, timeEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 interface Props {
   mobileNumber: string;
@@ -23,6 +25,10 @@ const RequestOTP = (props: Props) => {
   const [isNumberDisabled, setIsNumberDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    trackEvent(AnalyticsEvents.PHONE);
+  }, []);
 
   const isMobileNumberValid = (number: any) => {
     const phoneRegex = /^[0-9]\d{9}$/;
@@ -50,6 +56,7 @@ const RequestOTP = (props: Props) => {
         },
         body: formData
       });
+      timeEvent(AnalyticsEvents.TRACK_OTP);
       dispatch(setTabType(TabTypeConstant.ENTER_OTP));
 
       setMobileNumberErrors('');

@@ -33,6 +33,8 @@ import { useSelector } from 'react-redux';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { addressAtom } from '@/features/Address/context/atoms';
 import AddressListSkeleton from '@/components/skeletonLoaders/sidebar/AddressListSkeleton';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 type ScreenMapType = {
   [key in ManageAddressScreenKeys]: ReactNode;
@@ -49,6 +51,10 @@ const ManageAddress = () => {
   const [activeScreen, setActiveScreen] = useAtom(addressActiveScreenAtom);
   const [addressDetails, setAddressDetails] = useAtom(addressDetailsAtom);
   const [editingDetails, setIsEditingAddress] = useAtom(isEditingAddress);
+
+  useEffect(() => {
+    trackEvent(AnalyticsEvents.MANAGE_ADDRESS);
+  }, []);
 
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const getDataFromApi = useGetDataFromApi();

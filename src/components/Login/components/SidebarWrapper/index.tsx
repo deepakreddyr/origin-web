@@ -18,9 +18,8 @@ interface Props {
   headerTitle: string;
 }
 
-// --- NEW IMPORTS ---
-// (Integrated above)
-// -------------------
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 // Sidebar Component
 const SidebarWrapper = (props: Props) => {
@@ -62,6 +61,10 @@ const SidebarWrapper = (props: Props) => {
   useEffect(() => {
     if (loginDetails.isSidebarOpen) {
       document.body.style.overflow = 'hidden';
+      // Track Intro if this is the start of login flow
+      if (loginDetails.tabType === TabTypeConstant.ENTER_MOBILE_NUMBER || !loginDetails.tabType) {
+        trackEvent(AnalyticsEvents.INTRO);
+      }
     } else {
       document.body.style.overflow = 'auto';
       dispatch(setTabType(''));

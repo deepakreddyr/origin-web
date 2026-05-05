@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import GlobalLaunchListener from '@/components/GlobalLaunchListener';
 import * as gtag from '@/utilities/gtag';
-import { initAnalytics, trackEvent, registerSuperProperties } from '@/utilities/analytics';
+import { initAnalytics, trackEvent, registerSuperProperties, timeEvent, stopTrackTime } from '@/utilities/analytics';
 import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 const APP_VERSION = '1.1.6';
 
@@ -173,11 +173,29 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
       page_name: resolvePageName(router.asPath)
     });
 
+    // Track first_open
+    if (typeof window !== 'undefined') {
+      const isFirstOpen = localStorage.getItem('isFirstOpen');
+      if (!isFirstOpen) {
+        trackEvent(AnalyticsEvents.FIRST_OPEN);
+        localStorage.setItem('isFirstOpen', 'true');
+      }
+    }
+
+    // App Usage timing
+    timeEvent(AnalyticsEvents.TRACK_APP_USAGE);
+
     router.events.on('routeChangeComplete', handleRouteChange);
+
+    // Track offline status
+    const handleOffline = () => trackEvent(AnalyticsEvents.NO_INTERNET);
+    window.addEventListener('offline', handleOffline);
 
     return () => {
       clearTimeout(timeoutId);
       router.events.off('routeChangeComplete', handleRouteChange);
+      stopTrackTime(AnalyticsEvents.TRACK_APP_USAGE);
+      window.removeEventListener('offline', handleOffline);
     };
   }, [router]);
 

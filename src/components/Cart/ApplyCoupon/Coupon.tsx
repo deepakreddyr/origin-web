@@ -1,6 +1,8 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useCartStore } from '@/hooks/useCartStore';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 const Coupon = (props: any) => {
   const { couponDetailsFromList, validateCoupon } = props;
@@ -34,7 +36,13 @@ const Coupon = (props: any) => {
         </div>
         <button
           disabled={isButtonDisabled}
-          onClick={() => validateCoupon(code)}
+          onClick={() => {
+            trackEvent(AnalyticsEvents.COUPON_SELECTED, {
+              coupon_id: String(couponDetailsFromList.id),
+              coupon_code: code
+            });
+            validateCoupon(code);
+          }}
           className={`bg-secondary ${isButtonDisabled ? 'opacity-60' : ''} rounded-full text-white py-[.5vw] mob:py-[2vw] mob:px-[6vw] px-[1.5vw] font-[SofiaPro] font-bold mob:text-[3vw] text-[.83vw] mt-1`}
         >
           APPLY

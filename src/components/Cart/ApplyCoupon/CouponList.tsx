@@ -97,16 +97,19 @@ const CouponList = (props: any) => {
         dispatch(setDiscountAmount(Math.round(disountedAmount)));
         dispatch(setAmountToPay(finalCartAmount));
 
-        trackEvent(AnalyticsEvents.APPLY_COUPON, {
-          coupon_code: couponCode,
-          discount_amount: Math.round(disountedAmount),
-          is_success: true
+        trackEvent(AnalyticsEvents.APPLIED_COUPON, {
+          coupon_id: String(couponData.id),
+          discount_amt: Math.round(disountedAmount),
+          total_amt_to_pay: finalCartAmount,
+          order_amt: cart.totalPrice
         });
       } else {
         setError(true); // ❌ Coupon invalid
-        trackEvent(AnalyticsEvents.APPLY_COUPON, {
-          coupon_code: couponCode,
-          discount_amount: 0,
+        trackEvent(AnalyticsEvents.APPLIED_COUPON, {
+          coupon_id: couponCode,
+          discount_amt: 0,
+          total_amt_to_pay: cart.totalPrice,
+          order_amt: cart.totalPrice,
           is_success: false
         });
       }

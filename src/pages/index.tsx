@@ -23,7 +23,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
 import * as gtag from '@/utilities/gtag';
-import { trackEvent } from '@/utilities/analytics';
+import { trackEvent, timeEvent, stopTrackTime } from '@/utilities/analytics';
 import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
@@ -112,6 +112,12 @@ const Home = ({
 
     // Analytics event
     trackEvent(AnalyticsEvents.HOME);
+
+    // Timing
+    timeEvent(AnalyticsEvents.TRACK_HOME);
+    return () => {
+      stopTrackTime(AnalyticsEvents.TRACK_HOME);
+    };
   }, [loginDetails.isLogin, address.defaultAddress?.store_id, getDataFromApi]);
 
   const mainCategoryData = homepageData?.find((item: any) => item.type === 'main-category')?.data || categories || [];

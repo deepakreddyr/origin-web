@@ -191,3 +191,37 @@ export const cleanImageUrl = (url: string | null | undefined): string => {
   if (!url) return '';
   return url.replace(/([^:])\/\/+/g, '$1/');
 };
+
+/**
+ * Flattens the nested cart items structure into a list of AnalyticsItem.
+ */
+export const getFlattenedCartItems = (cartItems: any[]): any[] => {
+  const flattened: any[] = [];
+  cartItems.forEach((product: any) => {
+    product.multiple_uoms?.forEach((uom: any) => {
+      if (uom.cart_ripeness && uom.cart_ripeness.length > 0) {
+        uom.cart_ripeness.forEach((ripeness: any) => {
+          const qty = Number(ripeness.qty);
+          if (qty > 0) {
+            flattened.push({
+              id: uom.variant_id || product.id || product.product_id,
+              name: ripeness.ripeness_type ? `${product.name} (${ripeness.ripeness_type})` : product.name,
+              price: Number(uom.price || product.price || 0),
+              quantity: qty,
+              category: product.category_name || ''
+            });
+          }
+        });
+      } else if (uom.cart_quantity > 0) {
+        flattened.push({
+          id: uom.variant_id || product.id || product.product_id,
+          name: product.name,
+          price: Number(uom.price || product.price || 0),
+          quantity: Number(uom.cart_quantity),
+          category: product.category_name || ''
+        });
+      }
+    });
+  });
+  return flattened;
+};

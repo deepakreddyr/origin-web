@@ -21,6 +21,8 @@ import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { protectedUrl } from '@/url';
 import { setIsSidebarOpen, setTabType } from '@/store/slice/loginSlice';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
+import { trackEvent, timeEvent, stopTrackTime } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 // --- END ASSUMED IMPORT ---
 
 // Updated Product interface to match your API response
@@ -306,10 +308,13 @@ const SearchResults = (props: HomeProps) => {
 
   // Cleanup debounce timeout
   useEffect(() => {
+    trackEvent(AnalyticsEvents.SEARCH);
+    timeEvent(AnalyticsEvents.TRACK_SEARCH);
     return () => {
       if (debounceTimeoutRef.current) {
         clearTimeout(debounceTimeoutRef.current);
       }
+      stopTrackTime(AnalyticsEvents.TRACK_SEARCH);
     };
   }, []);
 
@@ -328,6 +333,11 @@ const SearchResults = (props: HomeProps) => {
       setTotalCount(response.data.length);
       setHasMore(response.hasMore || false);
       setNoResults(response.data.length === 0);
+
+      trackEvent(AnalyticsEvents.PRODUCT_SEARCH, {
+        keyword: query,
+        count_search_result: response.data.length
+      });
     } catch (error) {
       console.error('Search failed:', error);
       setNoResults(true);

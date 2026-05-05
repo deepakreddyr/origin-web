@@ -196,10 +196,17 @@ const AddItemBtn: FC<any> = (props) => {
     });
 
     trackEvent(AnalyticsEvents.ADD_TO_CART, {
-      product_id: normalizedProductId,
-      product_name: product.name || product.item_name,
-      product_price: Number(selectedVariant?.price) || 0,
-      quantity: quantityToAdd
+      item_name: product.name || product.item_name,
+      item_code: product.item_code,
+      product_price: Number(selectedVariant?.market_price) || Number(selectedVariant?.price) || 0,
+      prqt: quantityToAdd,
+      category: product.category_name || '',
+      selling_price: Number(selectedVariant?.market_price) || Number(selectedVariant?.price) || 0,
+      final_price: Number(selectedVariant?.price) || 0,
+      prid: normalizedProductId,
+      product_url: product.navigation?.to || '',
+      image: product.image || '',
+      from_cart: false
     });
   };
 
@@ -242,10 +249,17 @@ const AddItemBtn: FC<any> = (props) => {
     });
 
     trackEvent(AnalyticsEvents.ADD_TO_CART, {
-      product_id: normalizedProductId,
-      product_name: product.name || product.item_name,
-      product_price: Number(selectedVariant?.price) || 0,
-      quantity: finalStepQuantity
+      item_name: product.name || product.item_name,
+      item_code: product.item_code,
+      product_price: Number(selectedVariant?.market_price) || Number(selectedVariant?.price) || 0,
+      prqt: finalStepQuantity,
+      category: product.category_name || '',
+      selling_price: Number(selectedVariant?.market_price) || Number(selectedVariant?.price) || 0,
+      final_price: Number(selectedVariant?.price) || 0,
+      prid: normalizedProductId,
+      product_url: product.navigation?.to || '',
+      image: product.image || '',
+      from_cart: false
     });
   };
 
@@ -256,12 +270,34 @@ const AddItemBtn: FC<any> = (props) => {
     const itemToRemove = { varientId, selectedRipenessType };
     if (itemQuantity <= finalMinQuantity) {
       dispatch(removeItemFromCart(itemToRemove));
-      trackEvent(AnalyticsEvents.REMOVE_FROM_CART, {
-        product_id: normalizedProductId,
-        product_name: product.name || product.item_name
+      trackEvent(AnalyticsEvents.DELETE_FROM_CART, {
+        item_name: product.name || product.item_name,
+        item_code: product.item_code,
+        product_price: Number(selectedVariant?.market_price) || Number(selectedVariant?.price) || 0,
+        prqt: finalStepQuantity,
+        category: product.category_name || '',
+        selling_price: Number(selectedVariant?.market_price) || Number(selectedVariant?.price) || 0,
+        final_price: Number(selectedVariant?.price) || 0,
+        prid: normalizedProductId,
+        product_url: product.navigation?.to || '',
+        image: product.image || '',
+        from_cart: false
       });
     } else {
       dispatch(decreaseQuantity({ varientId, stepperQuantity: finalStepQuantity, selectedRipenessType }));
+      trackEvent(AnalyticsEvents.REMOVE_FROM_CART, {
+        item_name: product.name || product.item_name,
+        item_code: product.item_code,
+        product_price: Number(selectedVariant?.market_price) || Number(selectedVariant?.price) || 0,
+        prqt: finalStepQuantity,
+        category: product.category_name || '',
+        selling_price: Number(selectedVariant?.market_price) || Number(selectedVariant?.price) || 0,
+        final_price: Number(selectedVariant?.price) || 0,
+        prid: normalizedProductId,
+        product_url: product.navigation?.to || '',
+        image: product.image || '',
+        from_cart: false
+      });
     }
 
     if (loginDetails.user) {
@@ -275,9 +311,18 @@ const AddItemBtn: FC<any> = (props) => {
 
     const itemToRemove = { varientId, selectedRipenessType };
     dispatch(removeItemFromCart(itemToRemove));
-    trackEvent(AnalyticsEvents.REMOVE_FROM_CART, {
-      product_id: normalizedProductId,
-      product_name: product.name || product.item_name
+    trackEvent(AnalyticsEvents.DELETE_FROM_CART, {
+      item_name: product.name || product.item_name,
+      item_code: product.item_code,
+      product_price: Number(selectedVariant?.market_price) || Number(selectedVariant?.price) || 0,
+      prqt: itemQuantity,
+      category: product.category_name || '',
+      selling_price: Number(selectedVariant?.market_price) || Number(selectedVariant?.price) || 0,
+      final_price: Number(selectedVariant?.price) || 0,
+      prid: normalizedProductId,
+      product_url: product.navigation?.to || '',
+      image: product.image || '',
+      from_cart: false
     });
 
     if (loginDetails.user) {

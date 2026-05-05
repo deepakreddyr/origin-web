@@ -13,6 +13,7 @@ import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 import { trackEvent, identifyUser } from '@/utilities/analytics';
 import { AnalyticsEvents, AnalyticsItem } from '@/utilities/analyticsEvents';
 import { useCartStore } from '@/hooks/useCartStore';
+import { getFlattenedCartItems } from '@/utilities/utils';
 
 const GlobalLaunchListener = () => {
   const dispatch = useDispatch();
@@ -26,12 +27,7 @@ const GlobalLaunchListener = () => {
       // console.log('🚨 [Global Abandonment Check] Cart items length:', cart.items?.length);
       if (cart.items && cart.items.length > 0) {
         // console.log('✅ Firing ABANDON_CHECKOUT to Analytics from Global Listener...');
-        const analyticsItems: AnalyticsItem[] = cart.items.map((item: any) => ({
-          id: item.id || item.product_id,
-          name: item.name,
-          price: Number(item.price || 0),
-          quantity: Number(item.quantity || 0)
-        }));
+        const analyticsItems = getFlattenedCartItems(cart.items);
 
         trackEvent(AnalyticsEvents.ABANDON_CHECKOUT, {
           items: analyticsItems,

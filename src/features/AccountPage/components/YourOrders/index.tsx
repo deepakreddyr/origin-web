@@ -9,6 +9,8 @@ import { mainApiUrl } from '@/url';
 import { getAddressAndStoreId } from '@/utilities/utils';
 import OrderCard from './OrderCard';
 import OrdersSkeleton from '@/components/skeletonLoaders/sidebar/OrdersSkeleton';
+import { trackEvent, timeEvent, stopTrackTime } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 interface Order {
   loading: boolean;
@@ -64,6 +66,11 @@ const YourOrders = () => {
 
   useEffect(() => {
     fetchOrders(page);
+    trackEvent(AnalyticsEvents.ORDERS);
+    timeEvent(AnalyticsEvents.TRACK_ORDERS);
+    return () => {
+      stopTrackTime(AnalyticsEvents.TRACK_ORDERS);
+    };
   }, []);
 
   const handleScroll = () => {

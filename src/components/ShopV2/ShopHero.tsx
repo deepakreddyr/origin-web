@@ -52,7 +52,16 @@ const ShopHero = () => {
   const selectedBanner = bannerMap[section] || FruitsBanner;
 
   return (
-    <div className="relative w-full overflow-hidden mob:pt-[20vw] cursor-pointer" onClick={() => router.push('/shop')}>
+    <div
+      className="relative w-full overflow-hidden mob:pt-[20vw] cursor-pointer"
+      onClick={() => {
+        trackEvent(AnalyticsEvents.BANNER_CLICKS, {
+          banner_name: section || 'default',
+          redirection_url: '/shop'
+        });
+        router.push('/shop');
+      }}
+    >
       <div className={`relative w-full ${isMobile ? 'pt-[50px]' : 'aspect-[2.4/1]'}`}>
         <Image
           src={selectedBanner}
@@ -112,7 +121,10 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
             <button
               className="pointer-events-auto"
               onClick={() => {
-                trackEvent(AnalyticsEvents.HOME_HEROBANNER);
+                trackEvent(AnalyticsEvents.BANNER_CLICKS, {
+                  banner_name: 'The Cult Of Fresh Video',
+                  redirection_url: '/shop'
+                });
                 router.push('/shop');
               }}
               style={{
@@ -157,7 +169,11 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
     const bannerSrc = isMobile ? mobileImage || homepagebannermob1 : desktopImage || homepagebanner1;
     const navigationTo = item?.navigation?.to || '/shop';
     const handleNavigation = () => {
-      trackEvent(AnalyticsEvents.HOME_HEROBANNER);
+      trackEvent(AnalyticsEvents.BANNER_CLICKS, {
+        banner_id: index,
+        banner_name: `Hero Banner ${index}`,
+        redirection_url: navigationTo
+      });
       router.push(navigationTo);
     };
 
