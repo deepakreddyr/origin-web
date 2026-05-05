@@ -194,7 +194,7 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
         <div className="relative overflow-visible z-[10]">
           {/* Big mango hand — spans hero AND product section */}
           <div
-            className={`absolute right-0 ${loginDetails?.isLogin ? 'top-[60vw]' : 'top-[40vw]'} md:top-[8vw] w-[90vw] md:w-[52vw] h-[630px] md:h-[1300px] pointer-events-none z-[0] overflow-hidden`}
+            className={`absolute right-0 ${loginDetails?.isLogin ? 'top-[60vw]' : 'top-[60vw]'} md:top-[8vw] w-[90vw] md:w-[52vw] h-[630px] md:h-[1300px] pointer-events-none z-[0] overflow-hidden`}
           >
             <Image
               src="/assets/images/mangohero.png"

@@ -169,7 +169,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
             >
               <Image
                 // src={cleanImageUrl(itemDetails.website_image) || itemDetails.image || sampleimg}
-                src={cleanImageUrl(itemDetails.image) || sampleimg}
+                src={cleanImageUrl(itemDetails.image) || '/logo.svg'}
                 alt={itemDetails.name ? itemDetails.name : 'product image'}
                 fill
                 sizes="(max-width: 768px) 50vw, 25vw"

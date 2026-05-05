@@ -125,7 +125,7 @@ export default function Layout({
     if (isReady && query.type !== 'app' && !isMangoRoute && !isSubscriptionRoute) {
       const timer = setTimeout(() => {
         try {
-          const hasSeenInSession = sessionStorage.getItem('downloadAppPopupShown');
+          const hasSeenInSession = localStorage.getItem('downloadAppBannerSeen');
           if (!hasSeenInSession) {
             setShowDownloadApp(true);
           }
@@ -210,7 +210,7 @@ export default function Layout({
           <DownloadAppWrapper
             onClose={() => {
               setShowDownloadApp(false);
-              sessionStorage.setItem('downloadAppPopupShown', 'true');
+              localStorage.setItem('downloadAppBannerSeen', 'true');
             }}
           />
         )}

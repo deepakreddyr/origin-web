@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { useAtom } from 'jotai';
-import { addressAtom } from '@/features/Address/context/atoms';
+import { addressAtom, isLocationModalOpen } from '@/features/Address/context/atoms';
 import { setIsSidebarOpen, setTabType, setLoginDetails } from '@/store/slice/loginSlice';
 import { useCartStore } from '@/hooks/useCartStore';
 import { TabTypeConstant } from '../Login/constants/tabTypeContent';
@@ -19,6 +19,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 interface MangoHeaderProps {
   isHeaderSticky?: boolean;
+  disableSkipLogin?: boolean;
 }
 
 const getCartItemCount = (cartItems: any[]) => {
@@ -38,10 +39,11 @@ const getCartItemCount = (cartItems: any[]) => {
   return count;
 };
 
-const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
+const MangoHeader = ({ isHeaderSticky = true, disableSkipLogin = false }: MangoHeaderProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [address] = useAtom(addressAtom);
+  const [, setIsLocationModalOpen] = useAtom(isLocationModalOpen);
   const { cart, actions, isMangoPage } = useCartStore();
   const { setCartItems, setCartTabType } = actions;
   const loginDetails = useSelector((state: any) => state.loginDetails);
@@ -96,12 +98,16 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
     const token = localStorage.getItem('user_token');
     const parentCategoryId = localStorage.getItem('mango_parent_category_id') || '33';
 
-    const storeId = localStorage.getItem('store-id');
+    const storeId = address.defaultAddress?.store_id || localStorage.getItem('store-id');
 
     let apiUrl =
       process.env.NEXT_PUBLIC_BACKEND_API_URL +
       (token && loginDetails.isLogin ? protectedUrl['mangoSearch'] : unprotectedUrl['mangoSearch']) +
       `?query=${encodeURIComponent(searchQuery)}&parent_category_id=${parentCategoryId}`;
+
+    if (storeId && storeId !== 'null') {
+      apiUrl += `&store_id=${storeId}`;
+    }
 
     const additionalHeaders: any = {
       'parent-category-id': parentCategoryId
@@ -127,11 +133,16 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
   };
 
   const handleSelectAddress = () => {
-    dispatch(setIsSidebarOpen(true));
     if (!loginDetails.isLogin) {
-      dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
+      if (disableSkipLogin) {
+        dispatch(setIsSidebarOpen(true));
+        dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
+      } else {
+        setIsLocationModalOpen(true);
+      }
       return;
     }
+    dispatch(setIsSidebarOpen(true));
     setRouteSourceToLs(TabTypeConstant.ACCOUNT_MAIN);
     if (address?.address && address.address.length > 0) {
       dispatch(setTabType(TabTypeConstant.SELECT_ADDRESS));
@@ -269,20 +280,23 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
         className={`${isHeaderSticky ? 'fixed top-0' : 'absolute top-0'} left-0 w-full z-[100] bg-[#FFECA6] px-6 md:px-[7vw] py-3 flex items-center justify-between`}
       >
         <div className="flex items-center gap-1 flex-1">
-          {/* Logo - Visible on mobile Only if skip-login */}
+          {/* Logo - Visible on mobile Only if skip-login is disabled and user is not logged in */}
           <Link
             href="/mango"
-            className={`${loginDetails?.isLogin ? 'hidden md:flex' : 'flex'} relative w-32 h-8 md:w-60 md:h-16 flex-shrink-0 mt-[2px] md:mt-[5px]`}
+            className={`${!disableSkipLogin || loginDetails?.isLogin ? 'hidden md:flex' : 'flex'} relative w-32 h-8 md:w-60 md:h-16 flex-shrink-0 mt-[2px] md:mt-[5px]`}
           >
             <Image src={originLogo} alt="Origin Fresh" fill className="object-contain" priority />
           </Link>
 
           {/* Separator - Desktop only */}
-          {loginDetails?.isLogin && <div className="hidden md:block w-[1px] h-8 bg-black opacity-10 mx-2"></div>}
+          {(loginDetails?.isLogin || !disableSkipLogin) && (
+            <div className="hidden md:block w-[1px] h-8 bg-black opacity-10 mx-2"></div>
+          )}
 
           {/* Login or Address UI */}
-          {loginDetails?.isLogin && (
+          {(loginDetails?.isLogin || !disableSkipLogin) && (
             <button
+              id="location-header-button"
               onClick={handleSelectAddress}
               className="flex items-center gap-2 group text-left max-w-[200px] md:max-w-[250px]"
             >
