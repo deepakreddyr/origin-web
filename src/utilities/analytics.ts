@@ -28,7 +28,7 @@ const MixpanelProvider: AnalyticsProvider = {
     if (MIXPANEL_TOKEN) {
       mixpanel.init(MIXPANEL_TOKEN, {
         debug: process.env.NODE_ENV === 'development',
-        track_pageview: true,
+        track_pageview: false,
         persistence: 'localStorage',
         api_host: 'https://api-eu.mixpanel.com'
       });

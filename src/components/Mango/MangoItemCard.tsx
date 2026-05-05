@@ -13,6 +13,8 @@ import { protectedUrl } from '@/url';
 import { useDispatch, useSelector } from 'react-redux';
 import { addNotifiedItem } from '@/store/slice/productsSlice';
 import { motion, AnimatePresence } from 'framer-motion';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 // --- SVG IMPORTS ---
 import itemRipenessSvg from '/public/assets/svg/itemRipeness.svg';
@@ -93,6 +95,11 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
   };
 
   const handleNavigation = () => {
+    trackEvent(AnalyticsEvents.PRODUCT_CLICKED, {
+      product_id: itemDetails.id || (itemDetails as any).product_id,
+      product_name: itemDetails.name,
+      source: 'mango_shop'
+    });
     const slug = encodeURIComponent(itemDetails.name.replace(/ /g, '-').toLowerCase());
     router.push(`/mango/products/${slug}?id=${itemDetails.id}`);
   };

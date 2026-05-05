@@ -7,6 +7,9 @@ import CustomHead from '@/components/shared/CustomHead';
 import { FooterDataType, MainMenuType } from '@/utilities/types';
 import MangoHeader from '@/components/Mango/MangoHeader';
 import { Calendar } from 'lucide-react';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
+import { useEffect } from 'react';
 
 interface MangoRecipeDetailPageProps {
   slug: string;
@@ -102,6 +105,16 @@ const recipeMap: Record<
 
 const MangoRecipeDetailPage = ({ slug, mainMenuItems, footerData }: MangoRecipeDetailPageProps) => {
   const recipe = recipeMap[slug];
+
+  useEffect(() => {
+    if (recipe) {
+      trackEvent(AnalyticsEvents.MANGO_RECIPE_VIEW, {
+        recipe_name: recipe.title,
+        recipe_slug: slug
+      });
+    }
+  }, [slug, recipe?.title]);
+
   if (!recipe) return null;
 
   const otherRecipes = Object.entries(recipeMap)

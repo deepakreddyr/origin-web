@@ -16,6 +16,8 @@ import { setIsShopCategoriesFetched, setShopCategories } from '@/store/slice/sho
 import { addressAtom } from '@/features/Address/context/atoms';
 import { useAtom } from 'jotai';
 import { getAddressAndStoreId } from '@/utilities/utils';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 import MainCategorySkeleton from '@/components/skeletonLoaders/shop/MainCategorySkeleton';
 import PopularCarouselSkeleton from '@/components/skeletonLoaders/shop/PopularCarouselSkeleton';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';

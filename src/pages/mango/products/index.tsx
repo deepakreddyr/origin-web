@@ -13,6 +13,8 @@ import { Product } from '@/components/shared/UOMPopup';
 import { useEffect, useState } from 'react';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { getAddressAndStoreId } from '@/utilities/utils';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 interface MangoProductsPageProps {
   mainMenuItems: MainMenuType[];
@@ -113,6 +115,11 @@ const MangoProductsPage = ({ mainMenuItems, footerData }: MangoProductsPageProps
 
       dispatch(setProductList(prodList));
       dispatch(setIsProductListLoading(false));
+
+      // Track Mango Category View
+      trackEvent(AnalyticsEvents.CATEGORY_VIEWED, {
+        category_name: categoryName || (resData.length > 0 && resData[0].name) || 'Fresh Arrivals'
+      });
     };
 
     const failureHandler = (error: any) => {
