@@ -54,6 +54,7 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
   const [isGMapLoaded] = useAtom(isGMapLoadedAtom);
   const [anchorEl] = useAtom(locationAnchorAtom);
   const [dynamicPosition, setDynamicPosition] = useState({ top: '127px', left: '762px' });
+  const [isLeftAligned, setIsLeftAligned] = useState(false);
 
   // Prevent background scroll while modal is open
   useScrollLock(open);
@@ -63,9 +64,13 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
       const anchor = document.getElementById('location-header-button');
       if (anchor && open) {
         const rect = anchor.getBoundingClientRect();
-        // Calculate left so that the tail (at right: 40px of 448px modal) aligns with button center
         const buttonCenter = rect.left + rect.width / 2;
-        const modalLeft = buttonCenter - 408;
+
+        // If button is on the left half of the screen (e.g. Mango page), align modal to the right of it
+        const isLeft = rect.left < window.innerWidth / 2;
+        setIsLeftAligned(isLeft);
+
+        const modalLeft = isLeft ? Math.max(10, buttonCenter - 40) : buttonCenter - 408;
 
         setDynamicPosition({
           top: `${rect.bottom + 15}px`,
@@ -675,7 +680,8 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
             content: '""',
             position: 'absolute',
             top: '-8px',
-            right: '40px',
+            right: isLeftAligned ? 'auto' : '40px',
+            left: isLeftAligned ? '40px' : 'auto',
             width: '20px',
             height: '20px',
             backgroundColor: '#fff',

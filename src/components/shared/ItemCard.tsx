@@ -165,15 +165,15 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
           {/* Image Container */}
           <div className="relative bg-primary-100 flex items-center justify-center w-[16.67vw] mob:w-[40vw] h-[14.5vw] mob:h-[38vw] rounded-[1.67vw] mob:rounded-[4.1vw] overflow-hidden">
             <div
-              className={`relative w-[12.6vw] h-[12vw] mob:w-[38vw] mob:h-[38vw] transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
+              className={`relative w-full h-full transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
             >
               <Image
                 // src={cleanImageUrl(itemDetails.website_image) || itemDetails.image || sampleimg}
-                src={cleanImageUrl(itemDetails.image) || sampleimg}
+                src={cleanImageUrl(itemDetails.image) || '/logo.svg'}
                 alt={itemDetails.name ? itemDetails.name : 'product image'}
                 fill
                 sizes="(max-width: 768px) 50vw, 25vw"
-                style={{ objectFit: 'contain' }}
+                style={{ objectFit: 'cover' }}
               />
             </div>
 

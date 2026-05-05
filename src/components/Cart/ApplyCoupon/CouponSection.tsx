@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
+import { protectedUrl } from '@/url';
+import { getAddressAndStoreId } from '@/utilities/utils';
 import percentageIcon from '/public/assets/icons/percentageIcon.png';
 import gotoIcon from '/public/assets/icons/gotoIcon.png';
 import Image from 'next/image';
@@ -21,12 +24,35 @@ const CouponSection = (props: any) => {
   const { setShowCouponList } = props;
   const { cart, actions } = useCartStore();
   const { couponDetails } = cart;
-  const [couponsState] = useAtom(couponList);
+  const dispatch = useDispatch();
+  const loginDetails = useSelector((state: any) => state.loginDetails);
+  const getDataFromApi = useGetDataFromApi();
+  const [couponsState, setCouponsState] = useAtom(couponList);
   const [, setAppliedCoupon] = useAtom(isCouponApplied);
   const [cartItemsList] = useAtom(cartItems);
   const { setCartTabType, setCouponDetails, setDiscountAmount } = actions;
-  const dispatch = useDispatch();
-  const loginDetails = useSelector((state: any) => state.loginDetails);
+
+  // Fetch coupons if not already loaded and user is logged in
+  useEffect(() => {
+    if (loginDetails.isLogin && (!couponsState.coupons || couponsState.coupons.length === 0)) {
+      const apiUrl =
+        process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getCoupons'] + `?sub_total=${cart.totalPrice || 0}`;
+      const addressFromLs = getAddressAndStoreId();
+      const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
+
+      const successHandler = (data: any) => {
+        const coupons = data?.data || (Array.isArray(data) ? data : []);
+        setCouponsState((prev) => ({ ...prev, coupons, success: true, loading: false }));
+      };
+
+      const failureHandler = () => {
+        setCouponsState((prev) => ({ ...prev, coupons: [], error: true, loading: false }));
+      };
+
+      setCouponsState((prev) => ({ ...prev, loading: true }));
+      getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+    }
+  }, [loginDetails.isLogin, cart.totalPrice]);
 
   // Calculate the live discount amount based on current cart total
   const liveDiscount = React.useMemo(() => {

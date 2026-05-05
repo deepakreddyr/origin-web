@@ -565,8 +565,8 @@ const ProductDetailsWrapper = () => {
       const addressFromLs = getAddressAndStoreId();
       const storeId = addressFromLs?.store_id;
 
-      // Check for inconsistent session state: must have both or neither
-      if ((token && !storeId) || (!token && storeId)) {
+      // Check for inconsistent session state: logged in users MUST have a storeId
+      if (token && !storeId) {
         console.warn('Inconsistent session state detected on PDP. Clearing session.');
         localStorage.clear();
         sessionStorage.clear();
