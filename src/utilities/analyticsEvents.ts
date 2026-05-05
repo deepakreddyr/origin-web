@@ -71,7 +71,13 @@ export const AnalyticsEvents = {
 
   // Other utilities
   TRACK_OTP: 'track_otp',
-  TRACK_API: 'track_api'
+  TRACK_API: 'track_api',
+
+  // Mango
+  MANGO_HOME: 'mango_home',
+  MANGO_RECIPE_VIEW: 'mango_recipe_view',
+  PRODUCT_CLICKED: 'product_clicked',
+  RECIPE_CLICKED: 'recipe_clicked'
 } as const;
 
 export type AnalyticsEventName = (typeof AnalyticsEvents)[keyof typeof AnalyticsEvents];
@@ -223,4 +229,21 @@ export type EventProperties = {
 
   [AnalyticsEvents.TRACK_OTP]: Record<string, never>;
   [AnalyticsEvents.TRACK_API]: Record<string, never>;
+
+  // Mango
+  [AnalyticsEvents.MANGO_HOME]: Record<string, never>;
+  [AnalyticsEvents.MANGO_RECIPE_VIEW]: {
+    recipe_name: string;
+    recipe_slug: string;
+  };
+  [AnalyticsEvents.PRODUCT_CLICKED]: {
+    product_id: string | number;
+    product_name: string;
+    source?: string;
+  };
+  [AnalyticsEvents.RECIPE_CLICKED]: {
+    recipe_name: string;
+    recipe_slug: string;
+    source?: string;
+  };
 };

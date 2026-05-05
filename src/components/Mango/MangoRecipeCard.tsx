@@ -2,6 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Calendar } from 'lucide-react';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 interface MangoRecipeCardProps {
   slug: string;
@@ -22,6 +24,13 @@ const MangoRecipeCard: React.FC<MangoRecipeCardProps> = ({ slug, name, tag, date
   return (
     <Link
       href={`/mango/recipes/${slug}`}
+      onClick={() => {
+        trackEvent(AnalyticsEvents.RECIPE_CLICKED, {
+          recipe_name: name,
+          recipe_slug: slug,
+          source: 'mango_home'
+        });
+      }}
       className={`group block bg-white rounded-[16px] md:rounded-[16px] overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] transition-all duration-500 transform hover:-translate-y-1 ${
         isLarge ? 'h-full' : ''
       }`}

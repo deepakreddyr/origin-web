@@ -21,6 +21,8 @@ import MangoRecipeCard from '@/components/Mango/MangoRecipeCard';
 import MangoTestimonialCard from '@/components/Mango/MangoTestimonialCard';
 import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 interface MangoLandingPageProps {
   mainMenuItems: MainMenuType[];
@@ -69,6 +71,10 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
   const [address] = useAtom(addressAtom);
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const lastFetchedRef = useRef({ url: '', storeId: '' });
+
+  useEffect(() => {
+    trackEvent(AnalyticsEvents.MANGO_HOME);
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('user_token');
