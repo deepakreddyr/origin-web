@@ -19,6 +19,8 @@ import {
 // import ActiveSidebar from '../../enums/ActiveSidebar'
 import { getRecentOrders } from '../../services/recentOrder';
 import styles from '../../style.module.css';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 const HelpFaq = () => {
   // const [isOpen, setIsOpen] = useAtom(isAccountIsOpen)
@@ -82,6 +84,7 @@ const HelpFaq = () => {
                 <a
                   href={`tel:${recentOrder?.data?.[0]?.support_phone}`}
                   style={{ color: 'inherit', textDecoration: 'none' }}
+                  onClick={() => trackEvent(AnalyticsEvents.CUSTOMER_SUPPORT_PHONE)}
                 >
                   {recentOrder?.data?.[0]?.support_phone}
                 </a>
@@ -105,6 +108,7 @@ const HelpFaq = () => {
                 <a
                   href={`mailto:${recentOrder?.data?.[0]?.support_email}`}
                   style={{ color: 'inherit', textDecoration: 'none' }}
+                  onClick={() => trackEvent(AnalyticsEvents.CUSTOMER_SUPPORT_EMAIL)}
                 >
                   {recentOrder?.data?.[0]?.support_email}
                 </a>
