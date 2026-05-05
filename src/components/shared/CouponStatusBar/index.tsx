@@ -62,8 +62,12 @@ const CouponStatusBar: React.FC = () => {
     const isHiddenPath = HIDDEN_PATHS.some((p) => router.pathname.startsWith(p));
     const addressFromLs = getAddressAndStoreId();
 
-    if (!isLogin || isHiddenPath || loginDetails.isSidebarOpen || !addressFromLs?.store_id) {
+    if (!isLogin || isHiddenPath || !addressFromLs?.store_id) {
       setCouponsState((prev) => ({ ...prev, coupons: [] }));
+      return;
+    }
+
+    if (loginDetails.isSidebarOpen) {
       return;
     }
 
