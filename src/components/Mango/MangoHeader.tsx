@@ -353,7 +353,7 @@ const MangoHeader = ({ isHeaderSticky = true, disableSkipLogin = false }: MangoH
               <button
                 type="button"
                 onClick={() => setIsMobileSearchOpen(true)}
-                className="md:hidden w-9 h-9 flex items-center justify-center bg-[#FDE28A] rounded-full text-gray-700"
+                className="md:hidden w-9 h-9 flex items-center justify-center bg-[#F8F4E9] rounded-full text-gray-700 border border-[#F0ECD8]"
                 aria-label="Search"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -439,7 +439,7 @@ const MangoHeader = ({ isHeaderSticky = true, disableSkipLogin = false }: MangoH
             {/* Account Icon */}
             <button
               onClick={loginDetails.isLogin ? openAccount : handleProfileMenuOpen}
-              className="w-9 h-9 relative bg-[#FDE28A] rounded-full flex items-center justify-center transition-opacity"
+              className="w-9 h-9 relative bg-[#F8F4E9] rounded-full flex items-center justify-center transition-opacity border border-[#F0ECD8]"
               aria-label="Account"
             >
               <div className="w-5 h-5 relative opacity-70">
@@ -450,7 +450,7 @@ const MangoHeader = ({ isHeaderSticky = true, disableSkipLogin = false }: MangoH
             {/* Cart Icon */}
             <button
               onClick={handleCartOpen}
-              className="w-9 h-9 relative bg-[#FDE28A] rounded-full flex items-center justify-center transition-colors"
+              className="w-9 h-9 relative bg-[#F8F4E9] rounded-full flex items-center justify-center transition-colors border border-[#F0ECD8]"
               aria-label="Cart"
             >
               <div className="w-5 h-5 relative opacity-70 brightness-0">
@@ -520,7 +520,7 @@ const MangoHeader = ({ isHeaderSticky = true, disableSkipLogin = false }: MangoH
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search for mangoes..."
-                className="w-full bg-white rounded-[10px] pl-10 pr-12 py-3 text-[16px] outline-none border border-[#e0dbc5] font-[SofiaPro]"
+                className="w-full bg-[#F8F4E9] rounded-[10px] pl-10 pr-12 py-3 text-[16px] outline-none border border-[#F0ECD8] font-[SofiaPro]"
               />
               {/* Clear button (X) - Mobile */}
               {searchQuery && (
