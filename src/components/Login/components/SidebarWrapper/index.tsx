@@ -80,7 +80,7 @@ const SidebarWrapper = (props: Props) => {
       <div
         className={`fixed top-0 ${
           loginDetails.isSidebarOpen ? 'right-0' : '-right-full'
-        } w-[30vw] mob:w-screen h-screen bg-white shadow-md flex flex-col 
+        } w-[30vw] mob:w-screen h-[100dvh] bg-white shadow-md flex flex-col 
     transition-all duration-300 ease-in-out z-[120]`}
       >
         {loginDetails.isHeaderVisible && (
@@ -126,9 +126,7 @@ const SidebarWrapper = (props: Props) => {
           </div>
         )}
         {/* */}
-        <div className="p-[1.1vw] mob:p-[4.1vw] h-[calc(100vh-5vw)] overflow-auto flex flex-col grow gap-[1.1vw]">
-          {children}
-        </div>
+        <div className="p-[1.1vw] mob:p-[4.1vw] flex-1 overflow-y-auto flex flex-col gap-[1.1vw]">{children}</div>
       </div>
     </div>
   );
