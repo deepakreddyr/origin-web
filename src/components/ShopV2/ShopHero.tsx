@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
-import { useMediaQuery } from '@mui/material';
+import { useMediaQuery, Skeleton } from '@mui/material';
 import { useRouter } from 'next/router';
 import OriginCarousel from '../OriginCarousel';
 
@@ -50,7 +50,12 @@ const ShopHero = () => {
   const selectedBanner = bannerMap[section] || FruitsBanner;
 
   return (
-    <div className="relative w-full overflow-hidden mob:pt-[20vw] cursor-pointer" onClick={() => router.push('/shop')}>
+    <div
+      className="relative w-full overflow-hidden mob:pt-[20vw] cursor-pointer"
+      onClick={() => {
+        router.push('/shop');
+      }}
+    >
       <div className={`relative w-full ${isMobile ? 'pt-[50px]' : 'aspect-[2.4/1]'}`}>
         <Image
           src={selectedBanner}
@@ -72,65 +77,108 @@ export default ShopHero;
 export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; videoSrc?: string }) => {
   const isMobile = useMediaQuery('(max-width:768px)');
   const router = useRouter();
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current && videoRef.current.readyState >= 3) {
+      setIsVideoLoaded(true);
+    }
+  }, [videoSrc]);
 
   if (videoSrc) {
     return (
       <div className="w-full relative overflow-hidden h-[45vw] mob:h-[100vw] bg-[#f7f1dc]">
-        <video src={videoSrc} autoPlay muted loop playsInline className="w-full h-full object-cover" />
+        {/* Shimmer / Skeleton */}
+        {!isVideoLoaded && (
+          <Skeleton
+            variant="rectangular"
+            width="100%"
+            height="100%"
+            animation="wave"
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              zIndex: 5,
+              backgroundColor: 'rgba(0,0,0,0.05)'
+            }}
+          />
+        )}
+
+        <video
+          ref={videoRef}
+          src={videoSrc}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className={`w-full h-full object-cover transition-opacity duration-500 ${isVideoLoaded ? 'opacity-100' : 'opacity-0'}`}
+          onCanPlay={() => setIsVideoLoaded(true)}
+        />
 
         {/* Hero Overlay Content */}
-        <div
-          className={`absolute inset-0 flex flex-col items-center ${isMobile ? 'justify-end pb-[12vw]' : 'justify-center'} text-center p-4`}
-        >
-          <div className="flex flex-col items-center justify-center gap-4 md:gap-8 max-w-[90vw] md:max-w-4xl">
-            <h1
-              style={{
-                fontFamily: 'Recoleta',
-                fontWeight: 700,
-                color: 'white',
-                lineHeight: 1.1
-              }}
-              className="text-[10vw] md:text-[6vw] lg:text-[5.5vw]"
-            >
-              The Cult Of Fresh
-            </h1>
+        {isVideoLoaded && (
+          <div
+            className={`absolute inset-0 flex flex-col items-center ${isMobile ? 'justify-end pb-[12vw]' : 'justify-center'} text-center p-4 z-10 transition-all duration-700 ease-out`}
+            style={{
+              opacity: isVideoLoaded ? 1 : 0,
+              transform: isVideoLoaded ? 'translateY(0)' : 'translateY(20px)'
+            }}
+          >
+            <div className="flex flex-col items-center justify-center gap-4 md:gap-8 max-w-[90vw] md:max-w-4xl">
+              <h1
+                style={{
+                  fontFamily: 'Recoleta',
+                  fontWeight: 700,
+                  color: 'white',
+                  lineHeight: 1.1
+                }}
+                className="text-[10vw] md:text-[6vw] lg:text-[5.5vw]"
+              >
+                The Cult Of Fresh
+              </h1>
 
-            <p
-              style={{
-                fontFamily: 'SofiaPro',
-                fontWeight: 500,
-                color: 'white'
-              }}
-              className="text-[4.5vw] md:text-[2vw] lg:text-[1.8vw] opacity-90 max-w-[80vw] md:max-w-2xl"
-            >
-              Plating up <span style={{ fontWeight: 700 }}>150+</span>
-              <br className="md:hidden" /> authentic exotic produce
-            </p>
+              <p
+                style={{
+                  fontFamily: 'SofiaPro',
+                  fontWeight: 500,
+                  color: 'white'
+                }}
+                className="text-[4.5vw] md:text-[2vw] lg:text-[1.8vw] opacity-90 max-w-[80vw] md:max-w-2xl"
+              >
+                Plating up <span style={{ fontWeight: 700 }}>150+</span>
+                <br className="md:hidden" /> authentic exotic produce
+              </p>
 
-            <button
-              className="pointer-events-auto"
-              onClick={() => router.push('/shop')}
-              style={{
-                backgroundColor: '#fac510',
-                color: '#000',
-                padding: isMobile ? '12px 28px' : '16px 38px',
-                borderRadius: 50,
-                fontSize: isMobile ? 16 : 22,
-                fontWeight: 700,
-                fontFamily: 'SofiaPro',
-                border: 'none',
-                cursor: 'pointer',
-                marginTop: isMobile ? 12 : 24,
-                boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
-                transition: 'transform 0.2s ease'
-              }}
-              onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
-              onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-            >
-              Shop Now
-            </button>
+              <button
+                className="pointer-events-auto"
+                onClick={() => {
+                  router.push('/shop');
+                }}
+                style={{
+                  backgroundColor: '#fac510',
+                  color: '#000',
+                  padding: isMobile ? '12px 28px' : '16px 38px',
+                  borderRadius: 50,
+                  fontSize: isMobile ? 16 : 22,
+                  fontWeight: 700,
+                  fontFamily: 'SofiaPro',
+                  border: 'none',
+                  cursor: 'pointer',
+                  marginTop: isMobile ? 12 : 24,
+                  boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
+                  transition: 'transform 0.2s ease'
+                }}
+                onMouseOver={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
+                onMouseOut={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+              >
+                Shop Now
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }
