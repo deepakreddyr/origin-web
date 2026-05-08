@@ -90,7 +90,7 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
 
   if (videoSrc) {
     return (
-      <div className="w-full relative overflow-hidden h-[50vw] mob:h-[100vw] bg-[#f7f1dc]">
+      <div className="w-full relative overflow-hidden h-[45vw] mob:h-[100vw] bg-[#f7f1dc]">
         {/* Shimmer / Skeleton */}
         {!isVideoLoaded && (
           <Skeleton
@@ -157,6 +157,10 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
               <button
                 className="pointer-events-auto"
                 onClick={() => {
+                  trackEvent(AnalyticsEvents.BANNER_CLICKS, {
+                    banner_name: 'The Cult Of Fresh Video',
+                    redirection_url: '/shop'
+                  });
                   router.push('/shop');
                 }}
                 style={{
