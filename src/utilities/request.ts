@@ -56,12 +56,37 @@ export async function request(
   if (typeof window !== 'undefined') {
     headers['Delivery-Type'] = localStorage.getItem('Delivery-Type') || 'instant';
 
-    // headers['store-id'] = '1'
+    // Auto-inject store-id if not already provided by the caller
+    if (!headers['store-id']) {
+      let resolvedStoreId: string | null = null;
 
-    // const storeId = localStorage.getItem('store-id');
-    // if (storeId && storeId !== 'null') {
-    //   headers['store-id'] = storeId;
-    // }
+      // Try selected_address first (primary source)
+      try {
+        const selectedAddress = localStorage.getItem('selected_address');
+        if (selectedAddress) {
+          const parsed = JSON.parse(selectedAddress);
+          if (parsed?.store_id) {
+            resolvedStoreId = String(parsed.store_id);
+          }
+        }
+      } catch {}
+
+      // Fallback to standalone store-id (e.g. during registration)
+      if (!resolvedStoreId) {
+        const storeId = localStorage.getItem('store-id');
+        if (storeId && storeId !== 'null') {
+          try {
+            resolvedStoreId = String(JSON.parse(storeId));
+          } catch {
+            resolvedStoreId = storeId;
+          }
+        }
+      }
+
+      if (resolvedStoreId) {
+        headers['store-id'] = resolvedStoreId;
+      }
+    }
   }
 
   const fetchResponse = await fetch(requestUrl, {

@@ -14,6 +14,7 @@ import useCartCalculation from '@/features/CartPage/hooks/useCartCalculation';
 import toast from 'react-hot-toast';
 import { isAddressAndTimeSlotIsOpen } from '@/features/AddressAndTimeSlot/context/atoms';
 import { header, request } from '@/utilities/request';
+import { getAddressAndStoreId } from '@/utilities/utils';
 import { mainApiUrl } from '@/url';
 import { isCouponApplied } from '@/features/CouponPage/context/atoms';
 
@@ -76,7 +77,9 @@ const usePaymentHook = () => {
   const onInitiatePayment = async () => {
     try {
       const isCash = paymentPrefill.toLowerCase() === 'cash';
+      const addressData = getAddressAndStoreId();
       const payload: any = {
+        store_id: addressData?.store_id || null,
         items:
           cartItemsAtom?.map((e) => ({
             item_code: e.item_code,

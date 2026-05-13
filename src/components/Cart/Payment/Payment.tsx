@@ -219,7 +219,8 @@ const Payment = (props: any) => {
 
       isPlacingOrderRef.current = true;
 
-      let storeId: any = localStorage.getItem('store-id');
+      const addressForBody = getAddressAndStoreId();
+      const resolvedStoreId = addressForBody?.store_id || null;
       const { items } = isSubscription ? { items: [] } : prepareCartItemsToApi(cart.items, true);
       const subscriptionItems =
         isSubscription && subscriptionCart.item
@@ -252,7 +253,7 @@ const Payment = (props: any) => {
             tax: 0,
             total: subscriptionCart.totalPrice,
             time_slot_id: placeOrderDetails.time_slot_id,
-            store_id: JSON.parse(storeId),
+            store_id: resolvedStoreId,
             is_rewards_used: false,
             payment_method: orderType.name === 'Pay On delivery' ? 'cash' : 'razorpay',
             coupon_id: null,
@@ -270,7 +271,7 @@ const Payment = (props: any) => {
             tax: 0,
             total: cart.amountToPay === 0 ? cart.totalPrice : cart.amountToPay,
             time_slot_id: placeOrderDetails.time_slot_id,
-            store_id: JSON.parse(storeId),
+            store_id: resolvedStoreId,
             is_rewards_used: false,
             payment_method: orderType.name === 'Pay On delivery' ? 'cash' : 'razorpay',
             coupon_id: cart.couponDetails?.id ? cart.couponDetails?.id : null,

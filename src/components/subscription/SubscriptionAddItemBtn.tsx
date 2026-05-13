@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import {
   setSubscriptionItem,
   setIsSubscriptionActive,
@@ -93,7 +95,9 @@ const SubscriptionAddItemBtn: React.FC<SubscriptionAddItemBtnProps> = ({
         layout
         transition={{ type: 'spring', stiffness: 380, damping: 28 }}
         onClick={!isItemPresent ? handleAddItem : undefined}
-        className={`flex items-center h-[2.5vw] mob:h-[10vw] rounded-full border-[2px] p-[.3vw] mob:px-[.5vw] w-max min-w-[10vw] mob:min-w-[30vw] justify-center transition-colors ${
+        className={`flex items-center h-[2.2vw] mob:h-[7vw] rounded-full border-[2px] p-[.3vw] ${
+          isItemPresent ? 'mob:px-[.5vw]' : 'px-[1.2vw] mob:px-[2.5vw]'
+        } w-max min-w-[10vw] mob:min-w-[30vw] justify-center transition-colors ${
           isItemPresent ? 'border-[#F3EEDF] bg-white cursor-default' : 'border-black bg-black cursor-pointer'
         }`}
       >
@@ -104,15 +108,24 @@ const SubscriptionAddItemBtn: React.FC<SubscriptionAddItemBtnProps> = ({
             animate={{ opacity: 1 }}
             transition={{ duration: 0.15 }}
             whileTap={{ scale: 0.82 }}
-            className="h-[1.8vw] w-[1.8vw] mob:h-[8vw] mob:w-[8vw] flex-shrink-0 rounded-full bg-black text-white text-[1.2vw] mob:text-[5vw] flex items-center justify-center mr-[.8vw] mob:mr-[4vw]"
+            className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] flex-shrink-0 rounded-full bg-black text-white flex items-center justify-center mr-[.4vw] mob:mr-[2vw]"
             onClick={handleDecrease}
           >
-            –
+            <RemoveIcon
+              sx={{
+                fontSize: '1.1vw',
+                stroke: 'currentColor',
+                strokeWidth: 1,
+                '@media (max-width: 600px)': {
+                  fontSize: '3.5vw'
+                }
+              }}
+            />
           </motion.button>
         )}
 
         {/* Centre */}
-        <div className="flex items-center justify-center overflow-hidden px-2">
+        <div className="flex items-center justify-center overflow-hidden">
           <AnimatePresence mode="popLayout" initial={false}>
             {isItemPresent ? (
               <motion.p
@@ -121,7 +134,7 @@ const SubscriptionAddItemBtn: React.FC<SubscriptionAddItemBtnProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: dir * -8 }}
                 transition={{ duration: 0.15, ease: 'easeOut' }}
-                className="text-black font-semibold text-[1.1vw] mob:text-[4.5vw] select-none min-w-[1.2vw] text-center"
+                className="text-black font-semibold text-[1vw] mob:text-[3.2vw] select-none min-w-[0.8vw] text-center"
               >
                 {currentQuantity}
               </motion.p>
@@ -142,19 +155,26 @@ const SubscriptionAddItemBtn: React.FC<SubscriptionAddItemBtnProps> = ({
         </div>
 
         {/* Plus */}
-        <motion.button
-          layout
-          whileTap={{ scale: 0.82 }}
-          transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-          className={`flex-shrink-0 flex items-center justify-center rounded-full ${
-            isItemPresent
-              ? 'h-[1.8vw] w-[1.8vw] mob:h-[8vw] mob:w-[8vw] bg-black text-white text-[1.2vw] mob:text-[5vw] ml-[.8vw] mob:ml-[4vw]'
-              : 'hidden'
-          }`}
-          onClick={handleIncrease}
-        >
-          +
-        </motion.button>
+        {isItemPresent && (
+          <motion.button
+            layout
+            whileTap={{ scale: 0.82 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+            className="h-[1.5vw] w-[1.5vw] mob:h-[4.5vw] mob:w-[4.5vw] flex-shrink-0 flex items-center justify-center rounded-full bg-black text-white ml-[.4vw] mob:ml-[2vw]"
+            onClick={handleIncrease}
+          >
+            <AddIcon
+              sx={{
+                fontSize: '1.1vw',
+                stroke: 'currentColor',
+                strokeWidth: 1,
+                '@media (max-width: 600px)': {
+                  fontSize: '3.5vw'
+                }
+              }}
+            />
+          </motion.button>
+        )}
       </motion.div>
     </div>
   );

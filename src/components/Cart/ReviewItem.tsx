@@ -8,7 +8,8 @@ import { clearSubscriptionCart, updateSubscriptionQuantity } from '@/store/slice
 import { setIsSidebarOpen } from '@/store/slice/loginSlice';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { cleanImageUrl } from '@/utilities/utils';
-
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
 // --- NEW IMPORTS for Ripeness Icons ---
 import ripeSvg from '/public/assets/svg/ripe.svg';
 import semiRipeSvg from '/public/assets/svg/semiripe.svg';
@@ -231,18 +232,36 @@ const ReviewItem = (props: {
                 <div className="flex items-center h-[2.2vw] mob:h-[8vw] rounded-full border-[2px] border-[#F3EEDF] bg-white p-[.3vw] mob:px-[.5vw] w-max justify-center">
                   <button
                     onClick={handleSubscriptionDecrease}
-                    className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] flex-shrink-0 rounded-full bg-black text-white text-[1vw] mob:text-[3.5vw] flex items-center justify-center mr-[.4vw] mob:mr-[2.5vw]"
+                    className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] flex-shrink-0 rounded-full bg-black text-white flex items-center justify-center mr-[.4vw] mob:mr-[2.5vw]"
                   >
-                    –
+                    <RemoveIcon
+                      sx={{
+                        fontSize: '1vw',
+                        stroke: 'currentColor',
+                        strokeWidth: 1,
+                        '@media (max-width: 600px)': {
+                          fontSize: '3.5vw'
+                        }
+                      }}
+                    />
                   </button>
                   <span className="text-black font-semibold text-[1vw] mob:text-[3.5vw] select-none text-center">
                     {uom.cart_quantity}
                   </span>
                   <button
                     onClick={handleSubscriptionIncrease}
-                    className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] flex-shrink-0 rounded-full bg-black text-white text-[1vw] mob:text-[3.5vw] flex items-center justify-center ml-[.4vw] mob:ml-[2.5vw]"
+                    className="h-[1.5vw] w-[1.5vw] mob:h-[6vw] mob:w-[6vw] flex-shrink-0 rounded-full bg-black text-white flex items-center justify-center ml-[.4vw] mob:ml-[2.5vw]"
                   >
-                    +
+                    <AddIcon
+                      sx={{
+                        fontSize: '1vw',
+                        stroke: 'currentColor',
+                        strokeWidth: 1,
+                        '@media (max-width: 600px)': {
+                          fontSize: '3.5vw'
+                        }
+                      }}
+                    />
                   </button>
                 </div>
               </div>
