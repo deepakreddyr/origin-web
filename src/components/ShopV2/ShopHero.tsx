@@ -88,7 +88,7 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
 
   if (videoSrc) {
     return (
-      <div className="w-full relative overflow-hidden h-[45vw] mob:h-[100vw] bg-[#f7f1dc]">
+      <div className="w-full relative overflow-hidden h-[50vw] mob:h-[100vw] bg-[#f7f1dc]">
         {/* Shimmer / Skeleton */}
         {!isVideoLoaded && (
           <Skeleton
@@ -118,7 +118,7 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
           onCanPlay={() => setIsVideoLoaded(true)}
         />
 
-        {/* Hero Overlay Content */}
+        {/* Hero Overlay Content
         {isVideoLoaded && (
           <div
             className={`absolute inset-0 flex flex-col items-center ${isMobile ? 'justify-end pb-[12vw]' : 'justify-center'} text-center p-4 z-10 transition-all duration-700 ease-out`}
@@ -178,7 +178,7 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
               </button>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     );
   }
