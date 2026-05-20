@@ -165,7 +165,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
           {/* Image Container */}
           <div className="relative bg-primary-100 flex items-center justify-center w-[16.67vw] mob:w-[40vw] h-[14.5vw] mob:h-[38vw] rounded-[1.67vw] mob:rounded-[4.1vw] overflow-hidden">
             <div
-              className={`relative w-[12.6vw] h-[12vw] mob:w-[38vw] mob:h-[38vw] transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
+              className={`relative w-full h-full transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
             >
               <Image
                 // src={cleanImageUrl(itemDetails.website_image) || itemDetails.image || sampleimg}
@@ -173,12 +173,12 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
                 alt={itemDetails.name ? itemDetails.name : 'product image'}
                 fill
                 sizes="(max-width: 768px) 50vw, 25vw"
-                style={{ objectFit: 'contain' }}
+                style={{ objectFit: 'cover' }}
               />
             </div>
 
             {defaultUOM.conversion_text && (
-              <div className="absolute top-2 right-2 text-[#146321] text-[0.7vw] mob:text-[2.5vw] font-bold px-2 py-0.5 rounded-full font-[SofiaPro]">
+              <div className="absolute top-2 right-2 bg-[#008145] flex items-center justify-center text-white text-center text-[0.7vw] mob:text-[2.5vw] font-bold px-2 py-0.5 rounded-md font-[SofiaPro]">
                 {defaultUOM.conversion_text}
               </div>
             )}

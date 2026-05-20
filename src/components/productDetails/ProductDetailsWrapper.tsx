@@ -388,7 +388,11 @@ const ImageGallery: React.FC<{
       {/* Overlays */}
       {conversionText && (
         <div
-          className={`absolute top-4 right-4 ${isMangoPage ? 'text-white' : 'text-[#146321]'} font-bold px-3 py-1 rounded-full z-10 font-[SofiaPro] ${isDesktop ? 'text-sm' : 'text-[10px]'}`}
+          className={`absolute top-4 right-4 font-bold px-3 py-1 z-10 font-[SofiaPro] ${isDesktop ? 'text-sm' : 'text-[10px]'} ${
+            isMangoPage
+              ? 'text-white rounded-full'
+              : 'bg-[#008145] flex items-center justify-center text-white text-center rounded-md'
+          }`}
         >
           {conversionText}
         </div>
