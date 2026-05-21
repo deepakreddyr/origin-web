@@ -39,8 +39,8 @@ const OrderStatusIllustration = (props: any) => {
     const currentStatus = lastStatus?.status_message?.toLowerCase() || 'out for delivery';
 
     const LottieContainer = ({ children }: { children: React.ReactNode }) => (
-      <div className="w-full h-full flex items-center justify-center">
-        <div className="w-full h-full flex-shrink-0">{children}</div>
+      <div className="w-full flex items-center justify-center">
+        <div className="w-full flex-shrink-0">{children}</div>
       </div>
     );
 
@@ -111,7 +111,9 @@ const OrderStatusIllustration = (props: any) => {
   return (
     <div className="relative">
       <div className="relative z-[1]">
-        <div className="w-full mob:h-[90vw] h-full relative overflow-hidden">{renderIllustration()}</div>
+        <div className="w-full mob:h-auto mob:min-h-[90vw] h-full relative overflow-x-hidden">
+          {renderIllustration()}
+        </div>
         {!mapToggle && (
           <div className="absolute bottom-[1vw] mob:bottom-[3vw] flex items-center justify-between w-full pr-[1.1vw] mob:px-[3vw] ">
             <div className="px-[1.1vw]">

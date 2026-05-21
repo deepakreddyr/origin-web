@@ -17,7 +17,7 @@ export const DeliveryStatusDetails: any = {
     title: 'Accepted',
     text: 'ORDER Confirmed!',
     description: 'Hang tight! We will sort and pack your order.',
-    illustration: IllustrationsList.orderPlaceConfirmedLottie,
+    illustration: IllustrationsList.orderPlaceConfirmedLottie /*sent*/,
     background: '#00855B',
     color: '#fff',
     statusTitle: 'Order',
