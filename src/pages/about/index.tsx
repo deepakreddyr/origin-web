@@ -3,6 +3,9 @@ import FarmDetails from '@/components/about/FarmDetails';
 import Handpicked from '@/components/about/Handpicked';
 import OriginOfFresh from '@/components/about/OriginOfFresh';
 import Hero from '@/components/about/Hero';
+import FarmingPartners from '@/components/about/FarmingPartners';
+import FreshnessFarms from '@/components/about/FreshnessFarms';
+import AboutCta from '@/components/about/AboutCta';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import Layout from '@/components/Layout';
 import { GetServerSideProps } from 'next';
@@ -59,13 +62,22 @@ const AboutUsPage = (props: any) => {
       <div className="">
         <Hero />
         <ScrollReveal direction="up" delay={0}>
-          <Commitment />
+          <FarmingPartners />
         </ScrollReveal>
         <ScrollReveal direction="up" delay={0}>
-          <Handpicked />
+          <FreshnessFarms />
         </ScrollReveal>
+        {/* <ScrollReveal direction="up" delay={0}>
+          <Commitment />
+        </ScrollReveal> */}
+        {/* <ScrollReveal direction="up" delay={0}>
+          <Handpicked />
+        </ScrollReveal> */}
         <ScrollReveal direction="up" delay={0}>
           <OriginOfFresh />
+        </ScrollReveal>
+        <ScrollReveal direction="up" delay={0}>
+          <AboutCta />
         </ScrollReveal>
         {/* <FarmDetails /> */}
         {/* <div className="px-[10vw] pb-[10vw] mob:px-[4vw] mob:pt-[8vw] ">{!loading && <CategorySection />}</div> */}
