@@ -28,7 +28,7 @@ import {
   setShopSubCategories
 } from '@/store/slice/shopCategoriesSlice';
 import CardsWrapper from '@/components/ShopV2/shopDetails/CardsWrapper';
-import { setIsProductListLoading, setProductList } from '@/store/slice/productsSlice';
+import { setIsProductListLoading, setProductList, setPaginationDetails } from '@/store/slice/productsSlice';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import DownloadAppWrapper from '@/components/downloadApp/DownloadAppWrapper';
 import ShopHero from '@/components/ShopV2/ShopHero';
@@ -132,9 +132,9 @@ const ShopDetails = (props: HomeProps) => {
       if (token && addressFromLs) {
         apiUrl =
           process.env.NEXT_PUBLIC_BACKEND_API_URL +
-          protectedUrl['getCategories'] +
+          protectedUrl['getCategoriesV6'] +
           `/${query.cid}` +
-          `/sub-categories/${query.scid}`;
+          `/sub-categories/${query.scid}?page=1&per_page=20`;
 
         if (addressFromLs)
           additionalHeaders = {
@@ -158,7 +158,13 @@ const ShopDetails = (props: HomeProps) => {
       dispatch(setProductList([]));
       dispatch(setIsProductListLoading(true));
       const successHandler = (data: any) => {
-        dispatch(setProductList(data?.items));
+        dispatch(setProductList(data?.items?.data || data?.items || []));
+        dispatch(
+          setPaginationDetails({
+            currentPage: data?.items?.current_page || 1,
+            lastPage: data?.items?.last_page || 1
+          })
+        );
         dispatch(setIsProductListLoading(false));
 
         dispatch(setShopSubCategories(data?.sub_categories));

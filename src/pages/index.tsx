@@ -32,6 +32,7 @@ import PopularProduce from '@/components/ShopV2/PopularProduce';
 import PopularProduceMob from '@/components/ShopV2/PopularProduceMob';
 import ScrollUnderline from '@/components/shared/ScrollUnderline';
 import ScrollReveal from '@/components/shared/ScrollReveal';
+import PremiumImportedProduce from '@/components/home/PremiumImportedProduce';
 
 interface HomeProps {
   uspCardsData: UspCardsData;
@@ -129,12 +130,19 @@ const Home = ({
         />
         {/* <OriginHero /> */}
         {/* <ShopHeroSingle bannerData={heroBannerData} /> */}
-        <ShopHeroSingle videoSrc="https://cdn.originfresh.in/website/banner_1.mp4" />
+        <ShopHeroSingle videoSrc="https://cdn.originfresh.in/website/hydroherovideo.mp4" />
+
         <ScrollReveal direction="up" delay={0}>
+          <div className="w-full">
+            <PremiumImportedProduce products={popularProduceData.data} isLoading={loading} />
+          </div>
+        </ScrollReveal>
+
+        {/* <ScrollReveal direction="up" delay={0}>
           <Container maxWidth={false} className="w-full px-[3vw] mob:px-[2vw] py-8 mob:py-4 mt-10 mob:mt-4">
             <PrimaryFeature />
           </Container>
-        </ScrollReveal>
+        </ScrollReveal> */}
 
         {/* <ScrollReveal direction="up" delay={100}>
           <Container maxWidth={false} className="w-full px-[10vw] mob:px-[4vw] pt-12 pb-4 mob:pb-2">

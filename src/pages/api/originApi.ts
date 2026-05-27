@@ -12,7 +12,9 @@ import {
   CareersData,
   Blog,
   Recipe,
-  Categories
+  Categories,
+  StoreLocation,
+  CityEntry
 } from '@/utilities/types';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -45,6 +47,8 @@ type Data = {
     stars: number;
     avatar: string;
   }[];
+  stores: StoreLocation[];
+  cities: CityEntry[];
 };
 
 const data: Data = {
@@ -70,18 +74,17 @@ const data: Data = {
     {
       label: 'About Us',
       link: '/about'
+    },
+    {
+      label: 'Our Stores',
+      link: '/stores'
     }
-    // {
-    //   label: 'Our Process',
-    //   link: '/our-process'
-    // }
   ],
   footerData: {
     footerLinksPrimary: [
       { text: 'Home', href: '' },
-      // { text: 'About Us', href: 'about' },
-      { text: 'Shop All', href: 'shop' }
-      // { text: 'Contact', href: 'contact' }
+      { text: 'Shop All', href: 'shop' },
+      { text: 'Our Stores', href: 'stores' }
     ],
     footerLinksSecondary: [
       { text: 'Terms and Conditions', href: 'terms-and-conditions' },
@@ -1287,6 +1290,78 @@ const data: Data = {
       text: '“Really clean and good flavour. Got it twice for my kids who were visiting home. My personal favourite was the Sindhura Mango. Quite good.”',
       stars: 5,
       avatar: '/assets/images/recipes/mangotestimonial3.png'
+    }
+  ],
+  stores: [
+    {
+      id: 8,
+      name: 'Origin Fresh - Frazer Town',
+      slug: 'frazer-town',
+      city: 'bengaluru',
+      cityLabel: 'Bengaluru',
+      address: 'Unit 301, Milwaukee, 40, Promenade Rd, Sindhi Colony, Frazer Town, Bengaluru, Karnataka 560042',
+      phone: '+91 90350 98723',
+      lat: 12.9910938,
+      lng: 77.6162178,
+      pincode: '560042',
+      status: 'active'
+    },
+    {
+      id: 9,
+      name: 'Origin Fresh - Phoenix One',
+      slug: 'phoenix-one',
+      city: 'bengaluru',
+      cityLabel: 'Bengaluru',
+      address: 'Phoenix One Bangalore West, Doctor Rajkumar Road, Rajajinagar, Bengaluru, Karnataka 560010',
+      phone: '+91 90088 85776',
+      lat: 13.0092375,
+      lng: 77.5529444,
+      pincode: '560010',
+      status: 'active'
+    },
+    {
+      id: 10,
+      name: 'Origin Fresh - Besant Nagar',
+      slug: 'besant-nagar',
+      city: 'chennai',
+      cityLabel: 'Chennai',
+      address: '64, Rukmani Rd, Kalakshetra Colony, Besant Nagar, Chennai, Tamil Nadu 600090',
+      phone: '+91 95977 72855',
+      lat: 12.9939548,
+      lng: 80.2674553,
+      pincode: '600090',
+      status: 'active'
+    },
+    {
+      id: 11,
+      name: 'Origin Fresh - Annanagar',
+      slug: 'annanagar',
+      city: 'chennai',
+      cityLabel: 'Chennai',
+      address:
+        'Dr CM Complex, No. 30/2, Ground Floor, 9th Street, 1st Ave, R.V. Nagar, Block I, Annanagar East, Chennai, Tamil Nadu 600102',
+      phone: '+91 98800 97766',
+      lat: 13.0883667,
+      lng: 80.2231764,
+      pincode: '600102',
+      status: 'active'
+    }
+  ],
+  cities: [
+    {
+      slug: 'bengaluru',
+      label: 'Bengaluru',
+      status: 'active'
+    },
+    {
+      slug: 'chennai',
+      label: 'Chennai',
+      status: 'active'
+    },
+    {
+      slug: 'pune',
+      label: 'Pune',
+      status: 'coming-soon'
     }
   ]
 };

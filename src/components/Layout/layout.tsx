@@ -87,7 +87,7 @@ export default function Layout({
     }
 
     // Show Location Modal on first visit if no address/store is set
-    // Force it on specific high-intent routes (PLP, PDP, Mango) if address is incomplete
+    // Force it on specific high-intent routes (PLP, PDP, Mango, Stores) if address is incomplete
     const isPlpOrPdp =
       router.pathname.includes('[cid]') ||
       router.pathname.includes('[id]') ||
@@ -99,7 +99,11 @@ export default function Layout({
     if (
       isReady &&
       isIncompleteAddress &&
-      (isPlpOrPdp || isMango || router.pathname === '/' || router.pathname.startsWith('/shop'))
+      (isPlpOrPdp ||
+        isMango ||
+        router.pathname === '/' ||
+        router.pathname.startsWith('/shop') ||
+        router.pathname.startsWith('/stores'))
     ) {
       setShowLocationModal(true);
     }

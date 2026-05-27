@@ -57,7 +57,7 @@ const AboutCta = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-          className="font-[SofiaPro] font-normal text-center text-black text-[4.5vw] md:text-[24px] leading-[1.35] md:leading-[29.25px] mb-8 max-w-[841px]"
+          className="font-[SofiaPro] font-normal text-center text-black text-[4.5vw] md:text-[24px] leading-[1.35] md:leading-[29.25px] mb-8 max-w-[890px]"
           style={{ fontFamily: 'SofiaPro' }}
         >
           Join our mission to transform the way we eat and support the hands that feed us.

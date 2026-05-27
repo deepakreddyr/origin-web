@@ -22,6 +22,7 @@ export const unprotectedUrl: UrlMap = {
   getShopDetails: '/api/v5/public/skip-login/shop-all',
   searchForProduct: '/api/v5/public/skip-login/items',
   getCategories: '/api/v5/public/skip-login/categories',
+  getCategoriesV6: '/api/v6/public/skip-login/categories',
   getHomepage: '/api/v5/public/skip-login/homepage',
   getSubscriptionItems: '/api/v5/public/skip-login/subscription/items',
   getMangoHomepage: '/api/v5/public/skip-login/mango-homepage',
@@ -31,6 +32,7 @@ export const unprotectedUrl: UrlMap = {
 
 export const protectedUrl: UrlMap = {
   getCategories: '/api/v5/user/categories',
+  getCategoriesV6: '/api/v6/user/categories',
   getShopDetails: '/api/v5/user/shop-all',
   addToCart: '/api/v5/user/cart/items/add',
   getCartItems: '/api/v5/user/cart',

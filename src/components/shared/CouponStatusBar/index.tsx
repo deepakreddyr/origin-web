@@ -30,7 +30,9 @@ const HIDDEN_PATHS = [
   '/refund-policy',
   '/delete-account',
   '/invoice',
-  '/subscription'
+  '/subscription',
+  '/about',
+  '/stores'
 ];
 
 const CouponStatusBar: React.FC = () => {

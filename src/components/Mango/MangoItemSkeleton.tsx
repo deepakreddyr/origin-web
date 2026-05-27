@@ -6,7 +6,7 @@ const MangoItemSkeleton = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
 
   return (
-    <div className="bg-white border border-[#EDE6D4] flex flex-col h-full relative z-[1] w-full p-3 md:p-3 rounded-[12px] md:rounded-[24px]">
+    <div className="bg-white flex flex-col h-full relative z-[1] w-full p-3 md:p-3 rounded-[12px] md:rounded-[24px]">
       {/* Image Skeleton */}
       <div
         className="relative bg-[#F3F0E6] w-full mb-3 md:mb-4 overflow-hidden"

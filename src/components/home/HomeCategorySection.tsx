@@ -4,12 +4,37 @@ import Image from 'next/image';
 import Link from 'next/link';
 import catimg from '/public/assets/images/landingCatSampleImg.webp';
 import blends from '/public/assets/images/blendsCatimg.webp';
+
 interface HomeCategorySectionProps {
   categories: any[];
   blendsCategory?: any[];
   loading?: boolean;
   title?: string;
 }
+
+const ArrowIcon = () => (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="text-black group-hover:translate-x-0.5 transition-transform mob:w-3.5 mob:h-3.5"
+  >
+    <path d="M5 12h14M12 5l7 7-7 7" />
+  </svg>
+);
+
+const chunkArray = (arr: any[], size: number) => {
+  const chunks = [];
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size));
+  }
+  return chunks;
+};
 
 const HomeCategorySection = ({ categories, blendsCategory, loading, title }: HomeCategorySectionProps) => {
   const mobile = useMediaQuery(600);
@@ -48,33 +73,47 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
 
   const finalBlendsCategory = blendsCategory && blendsCategory.length > 0 ? blendsCategory[0] : blendsFromMain;
 
+  // Build the unified list of categories to display
+  const allCategories = mobile
+    ? [...(finalBlendsCategory ? [finalBlendsCategory] : []), ...displayedCategories]
+    : [...displayedCategories, ...(finalBlendsCategory ? [finalBlendsCategory] : [])];
+
   return (
     <div className="py-[4vw] mob:py-[8vw] relative">
-      <div className="w-[92vw] md:w-[80vw] mx-auto">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-[3vw]">
         {title && (
           <div className="w-full mb-[2.1vw] mob:mb-[2vw]">
-            <h1 className="font-Stinger text-start font-semibold text-[2.5vw] mob:text-[7vw] text-[#231F20] ">
-              {title}
-            </h1>
+            <h1 className="font-[Recoleta] text-start font-bold text-[3vw] mob:text-[7vw] text-[#231F20]">{title}</h1>
           </div>
         )}
 
         <div className={`relative w-full ${!isExpanded && hasMore ? 'pb-[4vw]' : ''}`}>
           <div
             className={`
-                    grid grid-cols-2 tabp:grid-cols-4 gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[12vw] pt-[2vw] mob:pt-[8vw]
-                    transition-all duration-500 ease-in-out
-                    ${!isExpanded && hasMore ? 'max-h-[125vw] tabp:max-h-[45vw] overflow-hidden' : 'max-h-[5000px]'}
-                `}
+              transition-all duration-500 ease-in-out overflow-hidden -mx-[4vw] px-[4vw] md:-mx-[100px] md:px-[100px]
+              ${!isExpanded && hasMore ? (mobile ? 'max-h-[150vw]' : 'max-h-[460px]') : 'max-h-[5000px]'}
+            `}
           >
-            {mobile && finalBlendsCategory && (
-              <BlendsCategoryCard category={finalBlendsCategory} generateHref={generateHref} />
-            )}
-            {displayedCategories.map((category: any) => (
-              <CategoryCard key={category.id} category={category} generateHref={generateHref} />
-            ))}
-            {!mobile && finalBlendsCategory && (
-              <BlendsCategoryCard category={finalBlendsCategory} generateHref={generateHref} />
+            {mobile ? (
+              <div className="flex flex-wrap justify-center gap-x-[4vw] gap-y-[12vw] pt-[4vw] mob:pt-[4vw]">
+                {allCategories.map((category) => (
+                  <CategoryCard key={category.id} category={category} generateHref={generateHref} mobile={mobile} />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col gap-y-[63px] pt-[2vw]">
+                {chunkArray(allCategories, 3).map((row, rowIndex) => (
+                  <div
+                    key={rowIndex}
+                    className={`flex ${row.length === 3 ? 'justify-between' : 'justify-center'}`}
+                    style={row.length < 3 ? { columnGap: 'calc((100% - 1133.16px) / 2)' } : {}}
+                  >
+                    {row.map((category) => (
+                      <CategoryCard key={category.id} category={category} generateHref={generateHref} mobile={mobile} />
+                    ))}
+                  </div>
+                ))}
+              </div>
             )}
           </div>
 
@@ -100,264 +139,132 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
   );
 };
 
-const BlendsCategoryCard = ({ category, generateHref }: { category: any; generateHref: (cat: any) => string }) => {
+const CategoryCard = ({
+  category,
+  generateHref,
+  mobile
+}: {
+  category: any;
+  generateHref: (cat: any) => string;
+  mobile: boolean;
+}) => {
+  const imageSrc = category.website_image || category.image || null;
+
   return (
     <Link
       href={generateHref(category)}
-      className="lg:col-span-2 col-span-2 relative rounded-[20px] mob:rounded-[15px] overflow-hidden group min-h-[17vw] mob:min-h-[44vw] flex flex-col items-center justify-end"
-      style={{
-        background: 'linear-gradient(180deg, #CBB270 0%, #F7E1BA 100%)'
-      }}
+      className="group relative flex-shrink-0 flex-grow-0 w-[45.98vw] md:w-[377.72px] h-[22vw] md:h-[165.36px] overflow-visible mt-[8vw] md:mt-[25px]"
     >
-      {/* Image Container - Now spans the full background */}
-      <div className="absolute inset-0 w-full h-full transition-transform duration-500 group-hover:scale-105">
-        <Image
-          src={category.website_image || category.image || blends}
-          alt={category.name}
-          fill
-          className="object-cover object-center"
-        />
+      {/* Main Rectangular Card — positioned to the right to leave space for the image */}
+      <div
+        className={`absolute top-0 right-0 w-[41.8vw] md:w-[299.77px] h-full rounded-[14px] md:rounded-[22.44px] ${!category.bg_color ? 'bg-[#FAF2DCB2]' : ''} overflow-visible transition-all duration-300`}
+        style={{
+          backdropFilter: 'blur(21.036842346191406px)',
+          WebkitBackdropFilter: 'blur(21.036842346191406px)',
+          backgroundColor: category.bg_color ? `${category.bg_color}B2` : undefined
+        }}
+      >
+        {/* Badge — overlapping divs with transparent cutout to prevent background bleed */}
+        {category.tag?.title && (
+          <div className="absolute top-0 right-0 z-20 flex items-start pointer-events-none">
+            {/* Left half: curve generator using transparent div with box-shadow to paint the red concave corner */}
+            <div className="w-[6px] md:w-[10px] h-[6px] md:h-[10px] relative overflow-hidden">
+              <div
+                className="absolute bottom-0 left-0 w-full h-full rounded-tr-[6px] md:rounded-tr-[10px]"
+                style={{ boxShadow: '10px -10px 0 10px #B60202' }}
+              ></div>
+            </div>
 
-        {/* Subtle Gradient Overlay to ensure text visibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-      </div>
+            {/* Top right corner: red div with border radius on bottom left */}
+            <div className="bg-[#B60202] h-[28px] md:h-[35px] rounded-bl-[6px] md:rounded-bl-[10px] rounded-tr-[14px] md:rounded-tr-[22.44px] flex items-center justify-center px-[12px] md:px-[15px] pointer-events-auto">
+              <span className="text-white text-[2.5vw] md:text-[12px] font-[SofiaPro] font-semibold leading-[8.96px] tracking-[0%] text-center align-middle whitespace-nowrap">
+                {category.tag.title}
+              </span>
+            </div>
+          </div>
+        )}
 
-      {/* Category Name - Styled to sit over the background */}
-      <div className="relative w-full p-[1.5vw] mob:p-[4vw] z-10">
-        <h2 className="font-[Recoleta] font-semibold text-[1.25vw] mob:text-[4vw] text-black mob:text-white text-center px-2 drop-shadow-md">
-          {/* {category.name} */}
-        </h2>
-      </div>
-    </Link>
-  );
-};
+        {/* Text Title — centered in the right-side space, vertically centered */}
+        <div
+          className="absolute top-0 right-0 h-full flex items-center justify-center"
+          style={{ width: mobile ? '58%' : '56%' }}
+        >
+          <h2 className="font-[Recoleta] font-bold text-[3.2vw] md:text-[22px] text-[#231F20] leading-tight select-none whitespace-nowrap text-center pr-[10px] md:pr-[20px]">
+            {category.name}
+          </h2>
+        </div>
 
-const CategoryCard = ({ category, generateHref }: { category: any; generateHref: (cat: any) => string }) => {
-  return (
-    // <Link
-    //   href={generateHref(category)}
-    //   /* Changed aspect-square to aspect-[4/3] for a shorter card */
-    //   className="group relative rounded-[20px] mob:rounded-[15px] aspect-[1/1] flex flex-col items-center justify-end p-[1.5vw] mob:p-[4vw] overflow-visible"
-    //   style={{
-    //     background: 'linear-gradient(180deg, #CBB270 0%, #F7E1BA 100%)'
-    //   }}
-    // >
-    <Link
-      href={generateHref(category)}
-      /* Changed aspect-square to aspect-[4/3] for a shorter card */
-      className="group relative rounded-[20px] mob:rounded-[15px] aspect-[1/1] flex flex-col items-center justify-end p-[1.5vw] mob:p-[4vw] overflow-visible bg-[#F9F7F0]"
-    >
-      {/* Image Container */}
-      <div className="absolute top-[-6vw] mob:top-[-16vw] left-0 right-0 h-[95%] flex items-start justify-center transition-transform duration-500 group-hover:scale-110 p-[2%]">
-        <div className="relative w-full h-full">
-          <Image
-            src={category.website_image || category.image || catimg}
-            alt={category.name}
-            fill
-            className="object-contain object-top"
-          />
+        {/* Arrow Button */}
+        <div
+          className="absolute bottom-[10px] right-[10px] md:bottom-[22px] md:right-[22px] w-6 h-6 md:w-8 md:h-8 rounded-full bg-white flex items-center justify-center transition-all duration-300"
+          style={{
+            boxShadow: '-10px 12px 13.46px 0px rgba(0, 0, 0, 0.14)'
+          }}
+        >
+          <ArrowIcon />
         </div>
       </div>
 
-      {/* Category Name */}
-      <div className="relative w-full mb-[0.5vw] mob:mb-[1vw]">
-        <p className="font-[Recoleta] font-semibold text-[1.25vw] mob:text-[4vw] text-[#231F20] text-center px-2">
-          {category.name}
-        </p>
+      {/* Left Circular overlapping Image — aligned to bottom, starting from the left edge of wrapper */}
+      <div
+        className="absolute z-10 transition-transform duration-500 select-none pointer-events-none"
+        style={{
+          width: mobile ? '25.08vw' : '185.82px',
+          height: mobile ? '27.17vw' : '216.79px',
+          bottom: '0px',
+          left: '0px',
+          transformOrigin: 'left bottom',
+          scale: mobile ? '1' : '1.03'
+        }}
+      >
+        {imageSrc ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={imageSrc}
+            alt={category.name || 'Category'}
+            className="w-full h-full object-contain object-bottom"
+          />
+        ) : (
+          <div className="relative w-full h-full">
+            <Image src={catimg} alt={category.name || 'Category'} fill className="object-contain object-bottom" />
+          </div>
+        )}
       </div>
     </Link>
   );
 };
 
 const SkeletonLoader = ({ mobile }: { mobile: boolean }) => {
+  const skeletonItems = Array.from({ length: 8 });
   return (
     <div className="py-[4vw] mob:py-[8vw]">
-      <div className="w-[92vw] md:w-[80vw] mx-auto">
+      <div className="max-w-[1440px] mx-auto px-4 md:px-[3vw]">
         <div className="w-full mb-[2.1vw]">
           <div className="h-[3vw] mob:h-[8vw] bg-gray-100 animate-pulse rounded w-1/3"></div>
         </div>
-        <div className="grid grid-cols-2 tabp:grid-cols-4 gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[12vw] pt-[3vw]">
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-            <div key={i} className="bg-gray-100 animate-pulse rounded-[30px] aspect-square"></div>
-          ))}
-        </div>
+        {mobile ? (
+          <div className="flex flex-wrap justify-center gap-x-[4vw] gap-y-[12vw] pt-[4vw]">
+            {skeletonItems.map((_, i) => (
+              <div
+                key={i}
+                className="bg-gray-100 animate-pulse rounded-[14px] w-[41.8vw] h-[22vw] mt-[3vw] mob:mt-[8vw]"
+              ></div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-y-[63px] pt-[2vw]">
+            {chunkArray(skeletonItems, 3).map((row, rowIndex) => (
+              <div key={rowIndex} className="flex justify-center gap-x-[63px]">
+                {row.map((_, i) => (
+                  <div key={i} className="bg-gray-100 animate-pulse rounded-[22.44px] w-[299.77px] h-[165.36px]"></div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
 export default HomeCategorySection;
-
-// import React, { useState } from 'react';
-// import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
-// import Image from 'next/image';
-// import Link from 'next/link';
-// import catimg from '/public/assets/images/landingCatSampleImg.webp';
-// import blends from '/public/assets/images/blendsCatimg.webp';
-// interface HomeCategorySectionProps {
-//   categories: any[];
-//   blendsCategory?: any[];
-//   loading?: boolean;
-//   title?: string;
-// }
-
-// const HomeCategorySection = ({ categories, blendsCategory, loading, title }: HomeCategorySectionProps) => {
-//   const mobile = useMediaQuery(600);
-//   const [isExpanded, setIsExpanded] = useState(false);
-
-//   if (loading && (!categories || categories.length === 0)) {
-//     return <SkeletonLoader mobile={mobile} />;
-//   }
-
-//   if (!categories || categories.length === 0) return null;
-
-//   const generateHref = (category: any) => {
-//     const catName = (category.name || category.title || '').replace(/ /g, '-').toLowerCase();
-//     const catId = category.id;
-//     const firstSubCategory = category?.sub_categories?.[0];
-
-//     if (firstSubCategory) {
-//       const subName = (firstSubCategory.name || firstSubCategory.title || '').replace(/ /g, '-').toLowerCase();
-//       const subId = firstSubCategory.id;
-//       return `/shop/${catName}/${catId}/${subName}/${subId}`;
-//     }
-
-//     if (catId === 15 || catName.includes('blends')) {
-//       return `/shop/blends/15/cold-press/53`;
-//     }
-
-//     return `/shop/${catName}/${catId}/${catName}/${catId}`;
-//   };
-
-//   const blendsFromMain = categories.find((cat: any) => cat.name.toLowerCase() === 'blends');
-//   const otherCategories = categories.filter((cat: any) => cat.name.toLowerCase() !== 'blends');
-
-//   const initialCount = mobile ? 4 : 8;
-//   const displayedCategories = isExpanded ? otherCategories : otherCategories.slice(0, initialCount);
-//   const hasMore = otherCategories.length > initialCount;
-
-//   const finalBlendsCategory = blendsCategory && blendsCategory.length > 0 ? blendsCategory[0] : blendsFromMain;
-
-//   return (
-//     <div className="py-[4vw] mob:py-[4vw] relative">
-//       <div className="w-[92vw] md:w-[80vw] mx-auto">
-//         {title && (
-//           <div className="w-full mb-[2.1vw] mob:pb-[2vw]">
-//             <h1 className="font-Stinger text-start font-semibold text-[2.5vw] mob:text-[7vw] text-[#231F20] ">
-//               {title}
-//             </h1>
-//           </div>
-//         )}
-
-//         <div className={`relative w-full ${!isExpanded && hasMore ? 'pb-[4vw]' : ''}`}>
-//           <div
-//             className={`
-//                     grid grid-cols-2 tabp:grid-cols-4 gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[4vw]
-//                     transition-all duration-500 ease-in-out
-//                     ${!isExpanded && hasMore ? 'max-h-[125vw] tabp:max-h-[45vw] overflow-hidden' : 'max-h-[5000px]'}
-//                 `}
-//           >
-//             {mobile && finalBlendsCategory && (
-//               <BlendsCategoryCard category={finalBlendsCategory} generateHref={generateHref} />
-//             )}
-//             {displayedCategories.map((category: any) => (
-//               <CategoryCard key={category.id} category={category} generateHref={generateHref} />
-//             ))}
-//             {!mobile && finalBlendsCategory && (
-//               <BlendsCategoryCard category={finalBlendsCategory} generateHref={generateHref} />
-//             )}
-//           </div>
-
-//           {!isExpanded && hasMore && (
-//             <div
-//               className="absolute bottom-0 left-0 right-0 h-[20vw] md:h-[15vw] flex items-end justify-center rounded-b-[20px] pointer-events-none"
-//               style={{
-//                 width: '100%',
-//                 background: 'linear-gradient(180deg, rgba(248, 244, 233, 0) 0%, rgba(237, 230, 212, 0.8) 100%)'
-//               }}
-//             >
-//               <button
-//                 onClick={() => setIsExpanded(true)}
-//                 className="mb-[2vw] mob:mb-[4vw] bg-[#fac510] text-black font-[SofiaPro] font-bold py-[1vw] px-[3vw] mob:py-[3vw] mob:px-[8vw] rounded-full text-[1.1vw] mob:text-[3.5vw] transition-colors pointer-events-auto shadow-sm hover:bg-[#f2d200]"
-//               >
-//                 Show more ({otherCategories.length})
-//               </button>
-//             </div>
-//           )}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// const BlendsCategoryCard = ({ category, generateHref }: { category: any; generateHref: (cat: any) => string }) => {
-//   return (
-//     <Link
-//       href={generateHref(category)}
-//       className="lg:col-span-2 col-span-2 relative rounded-[20px] mob:rounded-[15px] overflow-hidden group min-h-[17vw] mob:min-h-[44vw] flex flex-col items-center justify-end shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
-//     >
-//       {/* Image Container - Now spans the full background */}
-//       <div className="absolute bg-[#F9F7F0] inset-[-1px] w-[calc(100%+2px)] h-[calc(100%+2px)] transition-transform duration-500 group-hover:scale-105">
-//         <Image
-//           src={category.website_image || category.image || blends}
-//           alt={category.name}
-//           fill
-//           className="object-cover object-center"
-//         />
-//       </div>
-
-//       {/* Category Name - Styled to sit over the background */}
-//       <div className="relative w-full p-[1.5vw] mob:p-[4vw] z-10">
-//         <h2 className="font-[Recoleta] font-semibold text-[1.25vw] mob:text-[4vw] text-black mob:text-white text-center px-2 drop-shadow-md">
-//           {/* {category.name} */}
-//         </h2>
-//       </div>
-//     </Link>
-//   );
-// };
-
-// const CategoryCard = ({ category, generateHref }: { category: any; generateHref: (cat: any) => string }) => {
-//   return (
-//     <Link
-//       href={generateHref(category)}
-//       className="group relative rounded-[20px] mob:rounded-[15px] aspect-[1/1] flex flex-col items-center justify-end overflow-hidden shadow-xl hover:-translate-y-0.5"
-//     >
-//       {/* Image Container - Spans the full background */}
-//       <div className="absolute inset-[-1px] w-[calc(100%+2px)] h-[calc(100%+2px)] transition-transform duration-500 group-hover:scale-105">
-//         <Image
-//           src={category.website_image || category.image || catimg}
-//           alt={category.name}
-//           fill
-//           sizes="(max-width: 600px) 50vw, 25vw"
-//           className="object-cover object-center"
-//         />
-//       </div>
-
-//       {/* Category Name Overlay - Styled for readability over image */}
-//       <div className="relative w-full p-[1.5vw] mob:p-[4vw]">
-//         <h2 className="font-[Recoleta] font-semibold text-[1.25vw] mob:text-[4vw] text-[#231F20] text-center px-2">
-//           {category.name}
-//         </h2>
-//       </div>
-//     </Link>
-//   );
-// };
-
-// const SkeletonLoader = ({ mobile }: { mobile: boolean }) => {
-//   return (
-//     <div className="py-[4vw] mob:py-[8vw]">
-//       <div className="w-[92vw] md:w-[80vw] mx-auto">
-//         <div className="w-full mb-[2.1vw] mob:pb-[5vw]">
-//           <div className="h-[3vw] mob:h-[8vw] bg-gray-100 animate-pulse rounded w-1/3"></div>
-//         </div>
-//         <div className="grid grid-cols-2 tabp:grid-cols-4 gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[4vw] mob:pt-[8vw]">
-//           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-//             <div key={i} className="bg-gray-100 animate-pulse rounded-[30px] aspect-square"></div>
-//           ))}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default HomeCategorySection;

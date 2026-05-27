@@ -149,7 +149,7 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
 
       {/* Mango Styled Container: White background, Border, Shadow, Padding */}
       <div
-        className={`bg-white border border-[#EDE6D4] flex flex-col h-full relative z-[1] transition-all w-full p-2 md:p-3 rounded-[12px] md:rounded-[24px]`}
+        className={`bg-white flex flex-col h-full relative z-[1] transition-all w-full p-2 md:p-3 rounded-[12px] md:rounded-[24px]`}
       >
         <div onClick={handleNavigation} className="cursor-pointer w-full text-start group flex flex-col h-full">
           {/* Image Container — adjusted to precise design specs */}
