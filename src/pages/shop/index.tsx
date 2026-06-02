@@ -173,13 +173,13 @@ const ShopPage = (props: HomeProps) => {
   );
 
   const LoadedUI = () => (
-    <div className="flex flex-col items-center pb-[2vw] mob:pb-[10vw] mob:pt-[25vw] overflow-hidden">
+    <div className="flex flex-col w-full pb-[2vw] mob:pb-[10vw] pt-[25vw] md:pt-[12vw] lg:pt-[8vw] overflow-hidden">
       <div className="w-full relative overflow-hidden m-0 p-0">
         {/* <ShopHeroSingle />
         <FeatureStrip /> */}
       </div>
 
-      <ScrollReveal direction="up" delay={0}>
+      <ScrollReveal direction="up" delay={0} className="w-full">
         <div className="flex flex-col gap-[6vw] mt-[7vw] mob:pl-[0vw] w-full items-center">
           <HomeCategorySection
             categories={mainCategoryData}
@@ -190,7 +190,7 @@ const ShopPage = (props: HomeProps) => {
         </div>
       </ScrollReveal>
 
-      <ScrollReveal direction="up" delay={100}>
+      <ScrollReveal direction="up" delay={100} className="w-full">
         <div className="flex flex-col gap-[6vw] mt-[7vw] mob:pl-[0vw] w-full items-center">
           <FeatureProduct featuredItems={featureditemdata} />
         </div>
@@ -201,7 +201,7 @@ const ShopPage = (props: HomeProps) => {
 
         if (section.type === 'products-recommendation') {
           return (
-            <ScrollReveal key={index} direction="up" delay={index * 80}>
+            <ScrollReveal key={index} direction="up" delay={index * 80} className="w-full">
               <div className="w-full">
                 {isMobile ? (
                   <PopularProduceMob categoryDetail={section} />
@@ -217,13 +217,15 @@ const ShopPage = (props: HomeProps) => {
     </div>
   );
   return (
-    <Layout mainMenuItems={mainMenuItems} isHeaderSticky={true} footerData={footerData}>
-      <CustomHead
-        title="Shop Fresh Produce | Origin Fresh"
-        description="Browse our wide selection of fresh fruits, vegetables, and kitchen essentials. Handpicked and delivered fresh."
-      />
-      {loading ? <PageLoader /> : <LoadedUI />}
-    </Layout>
+    <div className="overflow-x-hidden max-w-full relative">
+      <Layout mainMenuItems={mainMenuItems} isHeaderSticky={true} footerData={footerData}>
+        <CustomHead
+          title="Shop Fresh Produce | Origin Fresh"
+          description="Browse our wide selection of fresh fruits, vegetables, and kitchen essentials. Handpicked and delivered fresh."
+        />
+        {loading ? <PageLoader /> : <LoadedUI />}
+      </Layout>
+    </div>
   );
 };
 

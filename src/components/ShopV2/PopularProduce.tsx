@@ -6,10 +6,11 @@ import OriginButton from '../OriginButton';
 
 interface categoryProp {
   categoryDetail: any;
+  alignment?: 'left' | 'center' | 'right';
 }
 
 const PopularProduce = (props: categoryProp) => {
-  const { categoryDetail } = props;
+  const { categoryDetail, alignment = 'center' } = props;
   const sliderRef = useRef<HTMLDivElement>(null);
   const scrollKey = `sliderScrollPosition_${categoryDetail.title}`;
   const [activeTab, setActiveTab] = React.useState('today');
@@ -45,9 +46,19 @@ const PopularProduce = (props: categoryProp) => {
 
   if (!categoryDetail || !categoryDetail.data || categoryDetail.data.length === 0) return null;
 
+  if (!categoryDetail || !categoryDetail.data || categoryDetail.data.length === 0) return null;
+
+  const alignmentStyles = {
+    center: 'md:w-auto md:ml-[max(6vw,calc(56vw_-_720px))] md:mr-[max(6vw,calc(56vw_-_720px))] md:rounded-[48px]',
+    left: 'md:w-auto md:ml-0 md:mr-[max(6vw,calc(56vw_-_720px))] md:rounded-none md:rounded-r-[48px] md:border-l-0',
+    right: 'md:w-auto md:ml-[max(6vw,calc(56vw_-_720px))] md:mr-0 md:rounded-none md:rounded-l-[48px] md:border-r-0'
+  };
+
+  const containerClass = `bg-white mb-[5vw] relative py-12 mob:py-10 transition-all duration-300 ease-in-out w-[92vw] mx-auto rounded-[32px] border-[#EDE6D4] border ${alignmentStyles[alignment]}`;
+
   return (
-    <div className="bg-white mb-[5vw] relative w-[92vw] md:w-[80vw] mx-auto py-12 mob:py-10 border border-[#EDE6D4] rounded-[48px] mob:rounded-[32px] transition-all duration-300 ease-in-out px-10 mob:px-2">
-      <div className="flex justify-between items-center mb-8 mob:mb-8">
+    <div className={containerClass}>
+      <div className="flex justify-between items-center mb-8 mob:mb-8 pl-[3vw] pr-10 mob:px-2">
         <h1 className="font-[Recoleta] text-[2.5vw] mob:text-[6vw] font-semibold text-black">{categoryDetail.title}</h1>
 
         {/* Toggle - Today / Tomorrow */}
@@ -73,7 +84,7 @@ const PopularProduce = (props: categoryProp) => {
 
       <div
         ref={sliderRef}
-        className="flex mob:items-stretch gap-[2.2vw] mob:gap-[5vw] overflow-x-scroll noscrollbar pb-8"
+        className="flex mob:items-stretch gap-[2.2vw] mob:gap-[5vw] overflow-x-scroll noscrollbar pb-8 pl-[3vw] pr-10 mob:px-2"
         onScroll={saveScrollPosition}
       >
         {categoryDetail.data?.map((item: any) => (
@@ -83,7 +94,7 @@ const PopularProduce = (props: categoryProp) => {
         ))}
       </div>
 
-      <Box className="flex items-center justify-end mt-8 mob:mt-6">
+      <Box className="flex items-center justify-end mt-8 mob:mt-6 pr-10 mob:pr-2">
         {/* <OriginButton
           variant="outlined"
           buttonText="Shop all products"

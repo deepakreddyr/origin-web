@@ -73,7 +73,7 @@ const PopularProduce = ({ categoryDetail }: categoryProp) => {
       {/* SCROLL CONTAINER */}
       <div
         ref={sliderRef}
-        className="overflow-x-scroll noscrollbar pb-8" // Removed flex items-stretch here to allow inner content to dictate width
+        className="overflow-x-scroll noscrollbar pb-8 mob:-mx-[4vw] mob:px-[4vw]" // Removed flex items-stretch here to allow inner content to dictate width
         onScroll={saveScrollPosition}
       >
         {/* WRAPPER: 

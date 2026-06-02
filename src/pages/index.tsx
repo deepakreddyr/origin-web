@@ -33,7 +33,6 @@ import PopularProduceMob from '@/components/ShopV2/PopularProduceMob';
 import ScrollUnderline from '@/components/shared/ScrollUnderline';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import PremiumImportedProduce from '@/components/home/PremiumImportedProduce';
-
 interface HomeProps {
   uspCardsData: UspCardsData;
   categories: Categories;
@@ -115,11 +114,24 @@ const Home = ({
 
   const mainCategoryData = homepageData?.find((item: any) => item.type === 'main-category')?.data || categories || [];
   const blendsCategoryData = homepageData?.find((item: any) => item.type === 'blends-category')?.data;
-  const popularProduceData = homepageData?.find((item: any) => item.type === 'products-recommendation') || {
-    title: 'Popular Produce',
-    data: []
-  };
+  const popularProduceSections = homepageData?.filter((item: any) => item.type === 'products-recommendation') || [];
   const heroBannerData = homepageData?.find((item: any) => item.type === 'banner-hero-web')?.data;
+
+  const renderPopularProduce = (index: number, alignment: 'left' | 'right') => {
+    const sectionData = popularProduceSections[index];
+    if (!sectionData) return null;
+    return (
+      <ScrollReveal direction="up" delay={0} key={`popular-produce-${index}`}>
+        <div className="w-full mt-[5vw] mb-[2vw]">
+          {isMobile ? (
+            <PopularProduceMob categoryDetail={sectionData} />
+          ) : (
+            <PopularProduce categoryDetail={sectionData} alignment={alignment} />
+          )}
+        </div>
+      </ScrollReveal>
+    );
+  };
 
   return (
     <div className="overflow-x-hidden max-w-full relative">
@@ -128,13 +140,12 @@ const Home = ({
           title="Origin Fresh | Fresh Produce Delivered to Your Doorstep"
           description="Shop for the freshest organic fruits, vegetables, and exotic produce at Origin Fresh. Quality guaranteed, delivered straight to your home."
         />
-        {/* <OriginHero /> */}
         {/* <ShopHeroSingle bannerData={heroBannerData} /> */}
         <ShopHeroSingle videoSrc="https://cdn.originfresh.in/website/hydroherovideo.mp4" />
 
         <ScrollReveal direction="up" delay={0}>
           <div className="w-full">
-            <PremiumImportedProduce products={popularProduceData.data} isLoading={loading} />
+            <PremiumImportedProduce products={popularProduceSections[0]?.data || []} isLoading={loading} />
           </div>
         </ScrollReveal>
 
@@ -186,21 +197,13 @@ const Home = ({
               </div>
             </ScrollReveal>
 
-            <ScrollReveal direction="up" delay={0}>
-              <div className="w-full px-[3vw]">
-                {isMobile ? (
-                  <PopularProduceMob categoryDetail={popularProduceData} />
-                ) : (
-                  <PopularProduce categoryDetail={popularProduceData} />
-                )}
-                {/* <PopularProduce categoryDetail={popularProduceData} /> */}
-              </div>
-            </ScrollReveal>
+            {/* 1st Popular Produce Section */}
+            {renderPopularProduce(1, 'right')}
           </>
         )}
 
         {/* <BeforeBox mdTopOffset={isMobile ? -90 : 50} mdBottomOffset={isMobile ? 20 : 80}> */}
-        <ScrollReveal direction="up" delay={0}>
+        {/* <ScrollReveal direction="up" delay={0}>
           <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[2]">
             <SideBySide
               variant="normal"
@@ -224,7 +227,7 @@ const Home = ({
               titleContainerClass="!pt-12 md:!py-10"
             />
           </Container>
-        </ScrollReveal>
+        </ScrollReveal> */}
 
         <ScrollReveal direction="up" delay={0}>
           <div className="mt-[5vw]">
@@ -232,9 +235,12 @@ const Home = ({
           </div>
         </ScrollReveal>
 
-        <div className="bg-[#FEF5E3]">
+        {/* 2nd Popular Produce Section */}
+        {renderPopularProduce(2, 'left')}
+
+        <div className="bg-[#FEF5E3] w-full pt-[8vw] md:pt-[104.63px]">
           <ScrollReveal direction="up" delay={0}>
-            <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[10] !overflow-visible">
+            <div className="max-w-[1440px] mx-auto w-full px-[3vw] md:pl-[73px] md:pr-[41.85px] relative z-[10] !overflow-visible">
               <SideBySide
                 variant="parallax"
                 parallaxTopImageSrc="/assets/images/parallaxImages/top-2.webp"
@@ -255,7 +261,7 @@ const Home = ({
                 descriptionClass="md:!text-[1.614vw] !leading-[1.25]"
                 // buttonText="Know more"
                 buttonVariant="tertiary"
-                rootClass="bg-[#FEF5E3] z-1 px-[10vw] mob:px-[3vw] items-center !rounded-none pb-12 !overflow-visible"
+                rootClass="items-center !rounded-none pb-12 !overflow-visible !p-0 bg-transparent"
                 reverse
                 parallaxImgContainerClass="relative py-5 lg:pt-9 lg:pb-20 !lg:w-[40%] !overflow-visible"
                 titleContainerClass="!pl-0 !lg:ps-0 !lg:pe-12 !pr-12 !lg:w-[55%]"
@@ -270,14 +276,17 @@ const Home = ({
                 parallaxMainImgClass="z-[10] relative ml-auto mr-0 lg:mr-[-4vw] scale-[1.2] lg:scale-[1.5] mob:scale-[1.1]"
                 parallaxBottomImgContainerClass="z-[1]"
               />
-              <Box className="h-8 md:h-0" />
-            </Container>
+              <div className="h-8 md:h-0" />
+            </div>
           </ScrollReveal>
         </div>
 
-        <ScrollReveal direction="up" delay={0}>
-          <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] relative z-[50] ">
-            {/* <SideBySide
+        {/* 3rd Popular Produce Section */}
+        {renderPopularProduce(3, 'right')}
+
+        {/* <ScrollReveal direction="up" delay={0}>
+          <Container maxWidth={false} className="w-full px-[2vw] mob:px-[3vw] relative z-[50] ">
+            <SideBySide
               title={`Join The Cult <br/> Of&nbsp;Fresh`}
               titleVariant={isMobile ? 'h4' : 'h2'}
               titleClass="text-black"
@@ -292,10 +301,10 @@ const Home = ({
               buttonVariant="tertiary"
               rootClass="bg-primary"
               imageClass="w-full md:max-h-[400px] max-h-[170px] object-fit"
-            /> */}
+            />
             <JoinCultSection />
           </Container>
-        </ScrollReveal>
+        </ScrollReveal> */}
 
         {/* <Container maxWidth="lg">
             <SideBySide
@@ -318,42 +327,47 @@ const Home = ({
         {/* </BeforeBox> */}
         {/* <Box className="h-8 lg:h-[52px]" /> */}
         <ScrollReveal direction="up" delay={0}>
-          <Container maxWidth={false} className="w-full px-[10vw] mob:px-[3vw] bg-[#FFFBEB]">
-            <SideBySide
-              variant="normal"
-              imageSrc="/assets/images/about/mobiledownload.webp"
-              imageAlt="Download app"
-              imageWidth={800}
-              imageHeight={1000}
-              quality={100}
-              priority
-              imageClass="object-contain md:!h-auto md:max-h-[400px] lg:!h-[500px] md:!ml-0 lg:!ml-[6vw]"
-              title={`Download <br/> the app on <br/> <span className="text-secondary">App Store</span> <span className="text-secondary">and</span> <br/> <span className="text-secondary">Play Store.</span>`}
-              titleVariant="h2"
-              titleClass="font-[Recoleta] text-black text-[4vw] md:text-[4vw] mob:text-[9vw] !font-bold !leading-[1.1] mb-8 mob:text-center"
-              imageContainerClass="flex justify-center items-center md:!pe-5"
-              titleContainerClass="flex flex-col justify-center items-center md:items-start md:!ps-12 lg:!ps-24 md:!pe-0"
-              buttonText="Download Origin Fresh"
-              buttonVariant="tertiary"
-              buttonClick1={() => {
-                const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
-                if (/android/i.test(userAgent)) {
-                  window.open(
-                    'https://play.google.com/store/apps/details?id=com.originfresh.user&hl=en_IN&pli=1',
-                    '_blank'
-                  );
-                } else if (/iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream) {
-                  window.open('https://apps.apple.com/in/app/origin-fresh-fruits-veggies/id6505096700', '_blank');
-                } else {
-                  window.open(
-                    'https://play.google.com/store/apps/details?id=com.originfresh.user&hl=en_IN&pli=1',
-                    '_blank'
-                  );
-                }
-              }}
-              rootClass="bg-[#FFFBEB] items-center py-[5vw] mob:py-[10vw]"
-            />
-          </Container>
+          <div className="w-full px-[3vw] bg-[#FEF5E3] pt-[8vw] pb-[12vw] md:pt-[5vw] md:pb-[8vw]">
+            <div className="max-w-[1440px] mx-auto w-full px-4 md:px-[3vw]">
+              <SideBySide
+                variant="normal"
+                reverse={true}
+                imageSrc="/assets/images/about/mobiledownload.webp"
+                imageAlt="Download app"
+                imageWidth={800}
+                imageHeight={1000}
+                quality={100}
+                priority
+                imageClass="object-contain w-full h-auto md:!h-auto md:!max-h-none lg:scale-110 lg:origin-right"
+                title={`Download <br/> the app now.`}
+                titleVariant="h2"
+                titleClass="font-[Recoleta] text-black text-[12vw] mob:text-[12vw] md:text-[62.78px] font-semibold md:leading-[62.78px] mb-6 md:!mb-2 mob:text-center"
+                description={`Get exclusive access to special offers, track your orders in real-time, and discover new exotic fruits weekly. Available on iOS and Android.`}
+                descriptionClass="font-[SofiaPro] !font-normal text-black text-[4vw] md:text-[23.54px] md:leading-[38.26px] md:max-w-[647px] mb-12 md:!mt-4 md:!mb-12 mob:text-center"
+                imageContainerClass="flex justify-center items-center"
+                titleContainerClass="flex flex-col justify-center items-center md:items-start md:!ps-0"
+                buttonText="Download Origin Fresh"
+                buttonVariant="tertiary"
+                buttonClick1={() => {
+                  const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+                  if (/android/i.test(userAgent)) {
+                    window.open(
+                      'https://play.google.com/store/apps/details?id=com.originfresh.user&hl=en_IN&pli=1',
+                      '_blank'
+                    );
+                  } else if (/iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream) {
+                    window.open('https://apps.apple.com/in/app/origin-fresh-fruits-veggies/id6505096700', '_blank');
+                  } else {
+                    window.open(
+                      'https://play.google.com/store/apps/details?id=com.originfresh.user&hl=en_IN&pli=1',
+                      '_blank'
+                    );
+                  }
+                }}
+                rootClass="items-center !px-0 !py-0 bg-transparent"
+              />
+            </div>
+          </div>
         </ScrollReveal>
       </Layout>
     </div>

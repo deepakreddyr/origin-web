@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import catimg from '/public/assets/images/landingCatSampleImg.webp';
 import blends from '/public/assets/images/blendsCatimg.webp';
-
+import { BlendsBanner } from './BlendsBanner';
 interface HomeCategorySectionProps {
   categories: any[];
   blendsCategory?: any[];
@@ -74,12 +74,10 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
   const finalBlendsCategory = blendsCategory && blendsCategory.length > 0 ? blendsCategory[0] : blendsFromMain;
 
   // Build the unified list of categories to display
-  const allCategories = mobile
-    ? [...(finalBlendsCategory ? [finalBlendsCategory] : []), ...displayedCategories]
-    : [...displayedCategories, ...(finalBlendsCategory ? [finalBlendsCategory] : [])];
+  const allCategories = displayedCategories;
 
   return (
-    <div className="py-[4vw] mob:py-[8vw] relative">
+    <div className="pt-[4vw] mob:pt-[8vw] relative">
       <div className="max-w-[1440px] mx-auto px-4 md:px-[3vw]">
         {title && (
           <div className="w-full mb-[2.1vw] mob:mb-[2vw]">
@@ -135,6 +133,12 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
           )}
         </div>
       </div>
+
+      {finalBlendsCategory && (
+        <div className="w-[100vw] relative left-1/2 -translate-x-1/2 mt-[8vw] md:mt-[60px]">
+          <BlendsBanner href={generateHref(finalBlendsCategory)} />
+        </div>
+      )}
     </div>
   );
 };
