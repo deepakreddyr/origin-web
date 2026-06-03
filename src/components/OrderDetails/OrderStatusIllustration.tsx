@@ -17,6 +17,8 @@ const OrderStatusIllustration = (props: any) => {
   const formattedStatus = orderDetailsData?.status_list[orderDetailsData.status_list.length - 1];
   const currentStatus = formattedStatus.status_message.toLowerCase() || 'out for delivery';
 
+  const trackingUrl = orderDetailsData?.lbsp?.tracking_url;
+
   const mapDetails = useMemo(() => {
     const isMapDetailsExist = mapToggle && driver && driver.latitude && driver.longitude && latitude && longitude;
     const driverLocation = {
@@ -45,6 +47,19 @@ const OrderStatusIllustration = (props: any) => {
     );
 
     if (currentStatus === 'on the way') {
+      // If tracking_url exists, use iframe map (handled at top-level)
+      if (trackingUrl) {
+        return (
+          <LottieContainer>
+            <Lottie
+              animationData={DeliveryStatusDetails['out for delivery'].illustration}
+              loop={true}
+              autoplay={true}
+            />
+          </LottieContainer>
+        );
+      }
+
       return (
         <div className="relative w-full h-full">
           {mapDetails.driverLocation.lat !== 0 && mapDetails.driverLocation.lng !== 0 && (
@@ -101,6 +116,10 @@ const OrderStatusIllustration = (props: any) => {
     const animationData =
       DeliveryStatusDetails[currentStatus]?.illustration || DeliveryStatusDetails['confirmed'].illustration;
 
+    const showDeliveryPartner = ['out for delivery', 'on the way', 'nearby', 'arrived at location'].includes(
+      currentStatus
+    );
+
     return (
       <LottieContainer>
         <Lottie animationData={animationData} loop={true} autoplay={true} />
@@ -108,12 +127,66 @@ const OrderStatusIllustration = (props: any) => {
     );
   };
 
+  const showDeliveryPartner = ['out for delivery', 'on the way', 'nearby', 'arrived at location'].includes(
+    currentStatus
+  );
+  const agentName = orderDetailsData?.lbsp?.agent_name || orderDetailsData?.driver?.name || 'Delivery Partner';
+  const agentPhone = orderDetailsData?.lbsp?.agent_phone || orderDetailsData?.driver?.phone;
+  const otp = orderDetailsData?.lbsp?.dcc;
+
+  // Show tracking URL map button for all statuses that have a tracking_url
+  const showTrackingMapButton = !!trackingUrl && showDeliveryPartner;
+
   return (
     <div className="relative">
       <div className="relative z-[1]">
         <div className="w-full mob:h-auto mob:min-h-[90vw] h-full relative overflow-x-hidden">
-          {renderIllustration()}
+          {/* Tracking URL iframe overlay */}
+          {showTrackingMapButton && mapToggle ? (
+            <div className="relative w-full h-full">
+              <button
+                className="absolute top-[.6vw] mob:top-[2vw] px-[1.1vw] mob:px-[6.1vw] mob:pl-[3vw] mob:py-[2vw] pl-[.6vw] py-[.3vw] mob:rounded-[1.5vw] rounded-[.5vw] left-[.6vw] mob:left-[2vw] z-[10] flex items-center bg-[white]"
+                onClick={toggleMapView}
+              >
+                <div className="relative w-[.97vw] mob:w-[3.6vw] mob:h-[3.6vw] mob:mr-[1.2vw] h-[.97vw] mr-[.4vw]">
+                  <Image src={closeIcon} alt="Close Map" />
+                </div>
+                <span className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold">Close Map</span>
+              </button>
+              <div className="relative w-full h-full mob:min-h-[90vw] min-h-[30vw]">
+                <iframe
+                  src={trackingUrl}
+                  className="w-full h-full mob:min-h-[95vw] min-h-[30vw]"
+                  style={{ border: 'none', display: 'block' }}
+                  title="Order Tracking Map"
+                />
+                {/* Cover full-width top header: "Tracking" + "POWERED BY Aarambh" */}
+                <div className="absolute top-0 left-0 right-0 h-[5vw] mob:h-[16.1vw] bg-white z-[5] pointer-events-none" />
+                {/* Cover "Leaflet" badge bottom-right */}
+                <div className="absolute bottom-0 right-0 w-full mob:w-full h-[1.2vw] mob:h-[6vw] bg-[#333333] z-[5] pointer-events-none" />
+              </div>
+            </div>
+          ) : (
+            renderIllustration()
+          )}
         </div>
+        {/* View Map button for tracking_url (shown when map is not open) */}
+        {showTrackingMapButton && !mapToggle && (
+          <button
+            className="absolute top-[.6vw] mob:top-[2vw] px-[1.1vw] mob:px-[6.1vw] mob:pl-[3vw] mob:py-[2vw] pl-[.6vw] py-[.3vw] mob:rounded-[1.5vw] rounded-[.5vw] left-[.6vw] mob:left-[2vw] z-[10] flex items-center bg-[white]"
+            onClick={toggleMapView}
+          >
+            <div className="w-[1.5vw] mob:w-[6vw] mob:h-[6vw] h-[1.5vw]">
+              <Lottie
+                animationData={MapLocator}
+                loop={true}
+                autoplay={true}
+                style={{ width: '100%', height: '100%' }}
+              />
+            </div>
+            <span className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold">Map View</span>
+          </button>
+        )}
         {!mapToggle && (
           <div className="absolute bottom-[1vw] mob:bottom-[3vw] flex items-center justify-between w-full pr-[1.1vw] mob:px-[3vw] ">
             <div className="px-[1.1vw]">
@@ -126,13 +199,86 @@ const OrderStatusIllustration = (props: any) => {
           </div>
         )}
       </div>
-      <div className="relative z-[0] top-[-1vw] bg-black p-[1.1vw] pt-[2vw] mob:pt-[5vw] mob:p-[4vw]  rounded-b-[1.1vw] mob:rounded-b-[3.6vw]">
-        <p className="font-semibold font-[SofiaPro] text-white text-[.97vw] mob:text-[3.6vw]">
-          {DeliveryStatusDetails[currentStatus]?.text}
-        </p>
-        <p className="pt-2 text-white font-[SofiaPro] text-[.83vw] mob:text-[3vw]">
-          {DeliveryStatusDetails[currentStatus]?.description}
-        </p>
+
+      <div
+        className={`relative z-[0] top-[-1vw] ${showDeliveryPartner ? 'bg-white rounded-b-[1.1vw] mob:rounded-b-[3.6vw]' : ''}`}
+      >
+        <div
+          className={`bg-[#333333] p-[1.1vw] pt-[2vw] mob:pt-[5vw] mob:p-[4vw] rounded-b-[1.1vw] mob:rounded-b-[3.6vw]`}
+        >
+          <p className="font-semibold font-[SofiaPro] text-white text-[.97vw] mob:text-[3.6vw] uppercase tracking-wide">
+            {DeliveryStatusDetails[currentStatus]?.text}
+          </p>
+          <p className="pt-2 text-[#E0E0E0] font-[SofiaPro] text-[.83vw] mob:text-[3vw]">
+            {DeliveryStatusDetails[currentStatus]?.description}
+          </p>
+        </div>
+
+        {showDeliveryPartner && (
+          <div className="">
+            <div className="p-[1.1vw] mob:p-[4vw] flex items-center justify-between">
+              <div className="flex items-center gap-[7px] w-[180px] h-[46.75px]">
+                <div className="w-[46.75px] h-[46.75px] rounded-full overflow-hidden flex-shrink-0 bg-gray-200">
+                  <Image
+                    src={'/assets/images/userIcon.png'}
+                    alt="Delivery Partner"
+                    width={46}
+                    height={46}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="flex flex-col flex-1 overflow-hidden">
+                  <span className="font-semibold font-[SofiaPro] text-[#333333] text-[15px] leading-tight truncate">
+                    {agentName}
+                  </span>
+                  <span className="font-[SofiaPro] text-gray-500 text-[12px] mt-[2px]">Delivery Partner</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-[1.5vw] mob:gap-[4vw]">
+                {otp && (
+                  <div className="flex flex-col border border-gray-300 rounded-[5px] border-[1px] overflow-hidden w-[70px] h-[44px] flex-shrink-0">
+                    <span className="bg-white text-gray-500 text-[13px] flex items-center justify-center h-[22px] font-regular tracking-wider">
+                      OTP
+                    </span>
+                    <span className="bg-[#00855B] text-white text-[17px] flex items-center justify-center h-full font-semibold font-[SofiaPro] tracking-widest">
+                      {otp}
+                    </span>
+                  </div>
+                )}
+
+                {agentPhone && (
+                  <a
+                    href={`tel:${agentPhone}`}
+                    className="w-[2.5vw] h-[2.5vw] mob:w-[10vw] mob:h-[10vw] bg-[#E8F3EF] rounded-full flex items-center justify-center flex-shrink-0"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 14 15"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-[1.2vw] h-[1.2vw] mob:w-[4.5vw] mob:h-[4.5vw]"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        clipRule="evenodd"
+                        d="M4.03271 6.21772L4.99569 4.86937C5.227 4.5458 5.26881 4.15589 5.11203 3.79005L4.03225 1.27059C3.34785 -0.327257 1.13741 0.85522 0.410743 2.14904C-2.1369 6.68217 7.81828 16.6369 12.351 14.0892C13.6448 13.3626 14.8273 11.1521 13.2294 10.4677L10.7099 9.38796C10.3441 9.23118 9.95419 9.27299 9.63062 9.5043L8.28227 10.4673C8.16411 10.5518 8.01642 10.5586 7.89099 10.4855C6.59853 9.73107 4.76846 7.901 4.01408 6.60855C3.94091 6.48312 3.94773 6.33542 4.03225 6.21727L4.03271 6.21772Z"
+                        fill="#00855B"
+                      />
+                    </svg>
+                  </a>
+                )}
+              </div>
+            </div>
+
+            <div className="bg-[#F4EED1] py-[0.8vw] mob:py-[1vw] mx-[1.1vw] mob:mx-0 mob:mb-[3vw] md:rounded-[0.5vw]">
+              <p className="text-[#333333] font-[SofiaPro] text-center text-[0.8vw] mob:text-[2.6vw] font-medium m-0">
+                For successful order handover, please provide the OTP to the delivery partner.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
