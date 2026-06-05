@@ -161,9 +161,12 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
       />
 
       <div className="w-full md:max-w-[16.67vw] mob:max-w-[40vw] text-start relative mx-auto">
-        <button onClick={handleNavigation} className="cursor-pointer w-full text-start group">
+        <div className="w-full text-start group">
           {/* Image Container */}
-          <div className="relative bg-primary-100 flex items-center justify-center w-[16.67vw] mob:w-[40vw] h-[14.5vw] mob:h-[38vw] rounded-[1.67vw] mob:rounded-[4.1vw] overflow-hidden">
+          <div
+            onClick={handleNavigation}
+            className="cursor-pointer relative bg-primary-100 flex items-center justify-center w-[16.67vw] mob:w-[40vw] h-[14.5vw] mob:h-[38vw] rounded-[1.67vw] mob:rounded-[4.1vw] overflow-hidden"
+          >
             <div
               className={`relative w-full h-full transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
             >
@@ -291,7 +294,7 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
               )}
             </div>
           </div>
-        </button>
+        </div>
 
         {requiresSelection && (
           <UOMPopup

@@ -325,7 +325,7 @@ const StoryTestimonials = () => {
                               overflow-x-auto no-scrollbar
                               snap-x snap-mandatory
                               w-full gap-[16px] md:gap-[42px]
-                              px-[8vw] md:px-[20px] lg:px-0
+                              px-[4vw] md:px-[20px] lg:px-0
                           "
               >
                 {uniqueUserStories.map((story) => {

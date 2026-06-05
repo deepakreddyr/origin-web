@@ -151,10 +151,11 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
       <div
         className={`bg-white flex flex-col h-full relative z-[1] transition-all w-full p-2 md:p-3 rounded-[12px] md:rounded-[24px]`}
       >
-        <div onClick={handleNavigation} className="cursor-pointer w-full text-start group flex flex-col h-full">
+        <div className="w-full text-start group flex flex-col h-full">
           {/* Image Container — adjusted to precise design specs */}
           <div
-            className={`relative bg-[#F3F0E6] w-full flex items-center justify-center overflow-hidden mb-3 md:mb-4`}
+            onClick={handleNavigation}
+            className={`cursor-pointer relative bg-[#F3F0E6] w-full flex items-center justify-center overflow-hidden mb-3 md:mb-4`}
             style={{
               height: isMobile ? '150px' : '230px',
               borderRadius: isMobile ? '12px' : '21.16px'
