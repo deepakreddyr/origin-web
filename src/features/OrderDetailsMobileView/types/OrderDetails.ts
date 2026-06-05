@@ -1,8 +1,8 @@
-import type { Bill } from "./Bill";
-import type { Coupon } from "./coupon";
-import type { Item } from "./Item";
-import type { Status } from "./Status";
-import type { TimeSlot } from "./TimeSlot";
+import type { Bill } from './Bill';
+import type { Coupon } from './coupon';
+import type { Item } from './Item';
+import type { Status } from './Status';
+import type { TimeSlot } from './TimeSlot';
 
 interface Driver {
   name: string;
@@ -72,4 +72,12 @@ export interface OrderDetails {
   disable_cod_for_offers: boolean;
   enable_cod_for_redemption: boolean;
   order_cancellation_time: number;
+  lbnp?: {
+    dcc?: string;
+    tracking_url?: string;
+    agent_name?: string;
+    agent_phone?: string;
+    start_time?: number;
+    end_time?: number;
+  };
 }

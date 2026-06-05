@@ -1,6 +1,7 @@
 import MapLocator from '@/assets/OrderStatusAnimations/map.json';
 import { DeliveryStatusDetails } from '@/constants/orderDetailsConstants';
 import Lottie from 'lottie-react';
+import PersonIcon from '@mui/icons-material/Person';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import MapContainer from './MapContainer';
@@ -17,7 +18,7 @@ const OrderStatusIllustration = (props: any) => {
   const formattedStatus = orderDetailsData?.status_list[orderDetailsData.status_list.length - 1];
   const currentStatus = formattedStatus.status_message.toLowerCase() || 'out for delivery';
 
-  const trackingUrl = orderDetailsData?.lbsp?.tracking_url;
+  const trackingUrl = orderDetailsData?.lbnp?.tracking_url;
 
   const mapDetails = useMemo(() => {
     const isMapDetailsExist = mapToggle && driver && driver.latitude && driver.longitude && latitude && longitude;
@@ -127,12 +128,13 @@ const OrderStatusIllustration = (props: any) => {
     );
   };
 
-  const showDeliveryPartner = ['out for delivery', 'on the way', 'nearby', 'arrived at location'].includes(
-    currentStatus
-  );
-  const agentName = orderDetailsData?.lbsp?.agent_name || orderDetailsData?.driver?.name || 'Delivery Partner';
-  const agentPhone = orderDetailsData?.lbsp?.agent_phone || orderDetailsData?.driver?.phone;
-  const otp = orderDetailsData?.lbsp?.dcc;
+  const hasLbnp = !!orderDetailsData?.lbnp;
+  // Show delivery partner section only when lbnp is available
+  const showDeliveryPartner =
+    hasLbnp && ['out for delivery', 'on the way', 'nearby', 'arrived at location'].includes(currentStatus);
+  const agentName = orderDetailsData?.lbnp?.agent_name || orderDetailsData?.driver?.name || 'Delivery Partner';
+  const agentPhone = orderDetailsData?.lbnp?.agent_phone || orderDetailsData?.driver?.phone;
+  const otp = orderDetailsData?.lbnp?.dcc;
 
   // Show tracking URL map button for all statuses that have a tracking_url
   const showTrackingMapButton = !!trackingUrl && showDeliveryPartner;
@@ -219,13 +221,7 @@ const OrderStatusIllustration = (props: any) => {
             <div className="p-[1.1vw] mob:p-[4vw] flex items-center justify-between">
               <div className="flex items-center gap-[7px] w-[180px] h-[46.75px]">
                 <div className="w-[46.75px] h-[46.75px] rounded-full overflow-hidden flex-shrink-0 bg-gray-200">
-                  <Image
-                    src={'/assets/images/userIcon.png'}
-                    alt="Delivery Partner"
-                    width={46}
-                    height={46}
-                    className="w-full h-full object-cover"
-                  />
+                  <PersonIcon sx={{ width: '100%', height: '100%', color: '#9E9E9E' }} />
                 </div>
                 <div className="flex flex-col flex-1 overflow-hidden">
                   <span className="font-semibold font-[SofiaPro] text-[#333333] text-[15px] leading-tight truncate">

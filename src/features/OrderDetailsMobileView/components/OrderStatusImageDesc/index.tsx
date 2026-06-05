@@ -1,14 +1,14 @@
-import { Box, Typography } from "@mui/material";
-import { useAtomValue } from "jotai";
-import type { Duration } from "luxon";
-import { DateTime } from "luxon";
-import React from "react";
+import { Box, Typography } from '@mui/material';
+import { useAtomValue } from 'jotai';
+import type { Duration } from 'luxon';
+import { DateTime } from 'luxon';
+import React from 'react';
 
-import { DeliveryStatus } from "../../constants/DeliveryStatus";
-import { orderDetailsAtom } from "../../context/atoms";
-import ReachingContainerWrapper from "./BannerContainerWrapper";
-import FailedContainerWrapper from "./FailledContainer";
-import NotInitiateContainerWrapper from "./NotInitiatedContainer";
+import { DeliveryStatus } from '../../constants/DeliveryStatus';
+import { orderDetailsAtom } from '../../context/atoms';
+import ReachingContainerWrapper from './BannerContainerWrapper';
+import FailedContainerWrapper from './FailledContainer';
+import NotInitiateContainerWrapper from './NotInitiatedContainer';
 
 const OrderStatusImageDesc = () => {
   const orderDetails = useAtomValue(orderDetailsAtom);
@@ -16,10 +16,7 @@ const OrderStatusImageDesc = () => {
   const counterRef: any = React.useRef(null);
   const [count, setCount]: any = React.useState(null);
 
-  const calculateETA = (
-    previousOrderStartedAt: number,
-    eta: number
-  ): Duration | null => {
+  const calculateETA = (previousOrderStartedAt: number, eta: number): Duration | null => {
     // console.log("Input - previousOrderStartedAt:", previousOrderStartedAt);
     // console.log("Input - eta:", eta);
 
@@ -43,23 +40,35 @@ const OrderStatusImageDesc = () => {
   };
 
   const updateETA = () => {
-    const eta = orderDetails.data?.driver?.eta;
-    const previousOrderStartedAt =
-      orderDetails.data?.driver?.previous_order_started_at;
-    if (eta && previousOrderStartedAt) {
-      const newETA = calculateETA(previousOrderStartedAt, eta);
+    const lbnp = orderDetails.data?.lbnp;
+    let newETA: Duration | null = null;
 
-      const minimumETA = DateTime.now()
-        .plus({ minutes: 2 })
-        .diff(DateTime.now());
+    if (lbnp?.start_time && lbnp?.end_time) {
+      const endTimeDate = new Date(lbnp.end_time * 1000);
+      const then = DateTime.fromJSDate(endTimeDate);
+      const now = DateTime.now();
 
-      if (newETA && newETA.as("seconds") < 2 * 60) {
+      if (now < then) {
+        newETA = then.diff(now);
+      }
+    } else {
+      const eta = orderDetails.data?.driver?.eta;
+      const previousOrderStartedAt = orderDetails.data?.driver?.previous_order_started_at;
+      if (eta && previousOrderStartedAt) {
+        newETA = calculateETA(previousOrderStartedAt, eta);
+      }
+    }
+
+    if (newETA) {
+      const minimumETA = DateTime.now().plus({ minutes: 2 }).diff(DateTime.now());
+
+      if (newETA.as('seconds') < 2 * 60) {
         setCount(minimumETA);
       } else {
         setCount(newETA);
       }
-
-      // console.log("Final ETA to display:", count?.toFormat("mm:ss") || "2:00");
+    } else {
+      setCount(null);
     }
   };
 
@@ -73,6 +82,8 @@ const OrderStatusImageDesc = () => {
   }, [
     orderDetails.data?.driver?.eta,
     orderDetails.data?.driver?.previous_order_started_at,
+    orderDetails.data?.lbnp?.end_time,
+    orderDetails.data?.lbnp?.start_time
   ]);
 
   const renderArrivedLocation = () => {
@@ -80,24 +91,24 @@ const OrderStatusImageDesc = () => {
       <ReachingContainerWrapper>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
           }}
         >
           <Typography
             sx={{
-              fontWeight: "500",
-              fontSize: "12px !important",
+              fontWeight: '500',
+              fontSize: '12px !important'
             }}
           >
             Order
           </Typography>
           <Typography
             sx={{
-              fontWeight: "650",
-              fontSize: "12px !important",
-              marginTop: "0.3rem",
+              fontWeight: '650',
+              fontSize: '12px !important',
+              marginTop: '0.3rem'
             }}
           >
             Arrived
@@ -112,27 +123,27 @@ const OrderStatusImageDesc = () => {
       <ReachingContainerWrapper>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
           }}
         >
           <Typography
             sx={{
-              fontWeight: "500",
-              fontSize: "12px !important",
+              fontWeight: '500',
+              fontSize: '12px !important'
             }}
           >
             Reaching in
           </Typography>
           <Typography
             sx={{
-              fontWeight: "650",
-              fontSize: "12px !important",
-              marginTop: "0.3rem",
+              fontWeight: '650',
+              fontSize: '12px !important',
+              marginTop: '0.3rem'
             }}
           >
-            {count ? count.toFormat("mm:ss") : "02:00"} minutes
+            {count ? count.toFormat('mm:ss') : '02:00'} minutes
           </Typography>
         </Box>
       </ReachingContainerWrapper>
@@ -144,24 +155,24 @@ const OrderStatusImageDesc = () => {
       <ReachingContainerWrapper>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
           }}
         >
           <Typography
             sx={{
-              fontWeight: "500",
-              fontSize: "12px !important",
+              fontWeight: '500',
+              fontSize: '12px !important'
             }}
           >
             Order
           </Typography>
           <Typography
             sx={{
-              fontWeight: "650",
-              fontSize: "12px !important",
-              marginTop: "0.3rem",
+              fontWeight: '650',
+              fontSize: '12px !important',
+              marginTop: '0.3rem'
             }}
           >
             CONFIRMED
@@ -176,24 +187,24 @@ const OrderStatusImageDesc = () => {
       <ReachingContainerWrapper>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
           }}
         >
           <Typography
             sx={{
-              fontWeight: "500",
-              fontSize: "12px !important",
+              fontWeight: '500',
+              fontSize: '12px !important'
             }}
           >
             Order
           </Typography>
           <Typography
             sx={{
-              fontWeight: "650",
-              fontSize: "12px !important",
-              marginTop: "0.3rem",
+              fontWeight: '650',
+              fontSize: '12px !important',
+              marginTop: '0.3rem'
             }}
           >
             PROCESSING
@@ -208,26 +219,26 @@ const OrderStatusImageDesc = () => {
       <NotInitiateContainerWrapper>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
           }}
         >
           <Typography
             sx={{
-              fontWeight: "500",
-              fontSize: "12px !important",
-              lineHeight: "15px !important",
+              fontWeight: '500',
+              fontSize: '12px !important',
+              lineHeight: '15px !important'
             }}
           >
             Awaiting
           </Typography>
           <Typography
             sx={{
-              fontWeight: "650",
-              fontSize: "12px !important",
-              lineHeight: "15px !important",
-              marginTop: "0.3rem",
+              fontWeight: '650',
+              fontSize: '12px !important',
+              lineHeight: '15px !important',
+              marginTop: '0.3rem'
             }}
           >
             CONFIRMATION
@@ -242,17 +253,17 @@ const OrderStatusImageDesc = () => {
       <NotInitiateContainerWrapper>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
           }}
         >
           <Typography
             sx={{
-              fontWeight: "650",
-              fontSize: "12px !important",
-              lineHeight: "15px !important",
-              marginTop: "0.3rem",
+              fontWeight: '650',
+              fontSize: '12px !important',
+              lineHeight: '15px !important',
+              marginTop: '0.3rem'
             }}
           >
             INITIATED
@@ -267,25 +278,25 @@ const OrderStatusImageDesc = () => {
       <FailedContainerWrapper>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
           }}
         >
           <Typography
             sx={{
-              fontWeight: "500",
-              fontSize: "12px !important",
-              lineHeight: "15px !important",
+              fontWeight: '500',
+              fontSize: '12px !important',
+              lineHeight: '15px !important'
             }}
           >
             Delivery
           </Typography>
           <Typography
             sx={{
-              fontWeight: "650",
-              fontSize: "12px !important",
-              lineHeight: "15px !important",
+              fontWeight: '650',
+              fontSize: '12px !important',
+              lineHeight: '15px !important'
             }}
           >
             FAILED
@@ -300,25 +311,25 @@ const OrderStatusImageDesc = () => {
       <FailedContainerWrapper>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
           }}
         >
           <Typography
             sx={{
-              fontWeight: "500",
-              fontSize: "12px !important",
-              lineHeight: "15px !important",
+              fontWeight: '500',
+              fontSize: '12px !important',
+              lineHeight: '15px !important'
             }}
           >
             Order
           </Typography>
           <Typography
             sx={{
-              fontWeight: "650",
-              fontSize: "12px !important",
-              lineHeight: "15px !important",
+              fontWeight: '650',
+              fontSize: '12px !important',
+              lineHeight: '15px !important'
             }}
           >
             FAILED
@@ -332,23 +343,23 @@ const OrderStatusImageDesc = () => {
       <ReachingContainerWrapper>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
           }}
         >
           <Typography
             sx={{
-              fontWeight: "500",
-              fontSize: "12px !important",
+              fontWeight: '500',
+              fontSize: '12px !important'
             }}
           >
             Starting
           </Typography>
           <Typography
             sx={{
-              fontWeight: "650",
-              fontSize: "12px !important",
+              fontWeight: '650',
+              fontSize: '12px !important'
             }}
           ></Typography>
         </Box>
@@ -361,24 +372,24 @@ const OrderStatusImageDesc = () => {
       <ReachingContainerWrapper>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
           }}
         >
           <Typography
             sx={{
-              fontWeight: "500",
-              fontSize: "12px !important",
+              fontWeight: '500',
+              fontSize: '12px !important'
             }}
           >
             Order
           </Typography>
           <Typography
             sx={{
-              fontWeight: "650",
-              fontSize: "12px !important",
-              marginTop: "0.3rem",
+              fontWeight: '650',
+              fontSize: '12px !important',
+              marginTop: '0.3rem'
             }}
           >
             FULFILLED
@@ -390,13 +401,11 @@ const OrderStatusImageDesc = () => {
 
   const renderETAContent = () => {
     const lastStatus =
-      !!orderDetails?.data?.status_list &&
-      orderDetails?.data?.status_list[orderDetails.data.status_list.length - 1];
+      !!orderDetails?.data?.status_list && orderDetails?.data?.status_list[orderDetails.data.status_list.length - 1];
     if (!lastStatus) {
       return renderInitiateContent();
     }
-    const currentStatus =
-      lastStatus.status_message.toLowerCase() || "out for delivery";
+    const currentStatus = lastStatus.status_message.toLowerCase() || 'out for delivery';
     switch (currentStatus) {
       case DeliveryStatus.PENDING:
         return renderNotInitiateContent();
@@ -448,9 +457,7 @@ const OrderStatusImageDesc = () => {
     // }
   };
 
-  const orderCreatedAtTimestamp = orderDetails.data
-    ? orderDetails.data.order_created_at * 1000
-    : 0;
+  const orderCreatedAtTimestamp = orderDetails.data ? orderDetails.data.order_created_at * 1000 : 0;
   const orderCreatedAtDate = new Date(orderCreatedAtTimestamp);
 
   const today = new Date();
@@ -465,29 +472,26 @@ const OrderStatusImageDesc = () => {
   let formattedOrderCreatedAt;
 
   if (isToday) {
-    formattedOrderCreatedAt = "Today";
+    formattedOrderCreatedAt = 'Today';
   } else {
     const options: Intl.DateTimeFormatOptions = {
-      month: "long",
-      day: "numeric",
-      ...(orderYear !== currentYear && { year: "numeric" }),
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      month: 'long',
+      day: 'numeric',
+      ...(orderYear !== currentYear && { year: 'numeric' }),
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
     };
 
-    formattedOrderCreatedAt = orderCreatedAtDate.toLocaleDateString(
-      "en-US",
-      options
-    );
+    formattedOrderCreatedAt = orderCreatedAtDate.toLocaleDateString('en-US', options);
   }
 
   return (
     <Box
       sx={{
-        position: "absolute",
-        bottom: "0",
-        left: "0",
-        right: "0",
-        padding: "1rem",
+        position: 'absolute',
+        bottom: '0',
+        left: '0',
+        right: '0',
+        padding: '1rem'
       }}
     >
       {orderDetails.data?.time_slot ? (
@@ -496,9 +500,9 @@ const OrderStatusImageDesc = () => {
             sx={{
               // fontFamily: 'Melts-Script-Rough',
               // fontStyle: 'italic !important',
-              fontSize: "14px !important",
-              fontWeight: "400",
-              marginBottom: "0",
+              fontSize: '14px !important',
+              fontWeight: '400',
+              marginBottom: '0'
             }}
           >
             TIME SLOT
@@ -506,10 +510,10 @@ const OrderStatusImageDesc = () => {
 
           <Typography
             sx={{
-              fontSize: "14px!important",
-              fontWeight: "600",
-              marginTop: "0.3rem",
-              lineHeight: "14px",
+              fontSize: '14px!important',
+              fontWeight: '600',
+              marginTop: '0.3rem',
+              lineHeight: '14px'
             }}
           >
             {orderDetails.data?.time_formatted}
@@ -523,9 +527,9 @@ const OrderStatusImageDesc = () => {
             sx={{
               // fontFamily: 'Melts-Script-Rough',
               // fontStyle: 'italic !important',
-              fontSize: "14px !important",
-              fontWeight: "400",
-              marginBottom: "0",
+              fontSize: '14px !important',
+              fontWeight: '400',
+              marginBottom: '0'
             }}
           >
             Dash Delivery
@@ -533,10 +537,10 @@ const OrderStatusImageDesc = () => {
 
           <Typography
             sx={{
-              fontSize: "14px!important",
-              fontWeight: "600",
-              marginTop: "0.3rem",
-              lineHeight: "14px",
+              fontSize: '14px!important',
+              fontWeight: '600',
+              marginTop: '0.3rem',
+              lineHeight: '14px'
             }}
           >
             {formattedOrderCreatedAt}

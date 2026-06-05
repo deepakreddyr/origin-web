@@ -7,10 +7,27 @@ const StatusBanner = (props: any) => {
   const lastStatus = orderDetails.status_list[orderDetails.status_list.length - 1];
   const currentStatus = lastStatus.status_message.toLowerCase() || 'out for delivery';
 
-  const [remainingEta, setRemainingEta] = useState(orderDetails?.driver?.eta || 0);
+  const getEtaInSeconds = () => {
+    if (orderDetails?.lbnp?.end_time) {
+      const nowEpoch = Math.floor(Date.now() / 1000);
+      const diff = orderDetails.lbnp.end_time - nowEpoch;
+      // If lbnp is present, use the remaining time. If it's already past, show minimum 2 mins.
+      return diff > 120 ? diff : 120;
+    }
+    // Fallback: use driver.eta (already in seconds)
+    return orderDetails?.driver?.eta || 0;
+  };
+
+  const [remainingEta, setRemainingEta] = useState(getEtaInSeconds());
+
+  const MIN_ETA_SECONDS = 120;
+  // lbnp exists but start_time or end_time is missing → hide ETA entirely
+  const lbnpExistsButNoTimes = !!orderDetails?.lbnp && (!orderDetails.lbnp.start_time || !orderDetails.lbnp.end_time);
+  const hasLbnp = !!orderDetails?.lbnp?.end_time;
 
   // Converts seconds into minutes and seconds format
   const convertEtaToMins = (eta: number): string => {
+    if (hasLbnp && eta <= MIN_ETA_SECONDS) return '2 mins';
     const minutes = Math.floor(eta / 60);
     const seconds = eta % 60;
     return `${minutes} mins ${Math.floor(seconds)}s`;
@@ -18,22 +35,24 @@ const StatusBanner = (props: any) => {
 
   useEffect(() => {
     // Start the countdown when the component mounts or when the eta changes
-    setRemainingEta(orderDetails?.driver?.eta || 0);
+    setRemainingEta(getEtaInSeconds());
 
     const timer = setInterval(() => {
       setRemainingEta((prevEta: any) => {
-        if (prevEta > 0) {
+        // If lbnp is present, never go below 2 mins (120s)
+        const minEta = hasLbnp ? MIN_ETA_SECONDS : 0;
+        if (prevEta > minEta) {
           return prevEta - 1;
         } else {
-          clearInterval(timer); // Stop the timer when it reaches 0
-          return 0;
+          if (!hasLbnp) clearInterval(timer);
+          return minEta;
         }
       });
-    }, 5000);
+    }, 1000);
 
     // Cleanup the interval on component unmount or when eta changes
     return () => clearInterval(timer);
-  }, [orderDetails?.driver?.eta]);
+  }, [orderDetails?.driver?.eta, orderDetails?.lbnp?.start_time, orderDetails?.lbnp?.end_time]);
   return (
     <div
       style={{
@@ -51,7 +70,9 @@ const StatusBanner = (props: any) => {
           </p>
           <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold ">
             {DeliveryStatusDetails[currentStatus]?.statusDesc === 'timer'
-              ? convertEtaToMins(remainingEta)
+              ? lbnpExistsButNoTimes
+                ? null
+                : convertEtaToMins(remainingEta)
               : DeliveryStatusDetails[currentStatus]?.statusDesc}
           </p>
         </div>
