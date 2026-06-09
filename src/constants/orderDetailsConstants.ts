@@ -18,6 +18,7 @@ export const DeliveryStatusDetails: any = {
     text: 'ORDER Confirmed!',
     description: 'Hang tight! We will sort and pack your order.',
     illustration: IllustrationsList.orderPlaceConfirmedLottie /*sent*/,
+    // illustration: "https://lottie.host/9ccd4381-8143-4ed3-b1e6-56a3994709a4/dSQlmkgoAA.json",
     background: '#00855B',
     color: '#fff',
     statusTitle: 'Order',

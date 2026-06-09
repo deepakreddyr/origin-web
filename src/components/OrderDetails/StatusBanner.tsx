@@ -53,22 +53,32 @@ const StatusBanner = (props: any) => {
     // Cleanup the interval on component unmount or when eta changes
     return () => clearInterval(timer);
   }, [orderDetails?.driver?.eta, orderDetails?.lbnp?.start_time, orderDetails?.lbnp?.end_time]);
+
+  // If lbnp exists but has no start/end times and status would show a timer, hide the whole banner
+  if (lbnpExistsButNoTimes && DeliveryStatusDetails[currentStatus]?.statusDesc === 'timer') {
+    return null;
+  }
+
   return (
     <div
       style={{
-        background: DeliveryStatusDetails[currentStatus].background,
-        color: DeliveryStatusDetails[currentStatus].color
+        background: '#302C2D',
+        color: '#FFF2B4',
+        border: '0.4px solid #FFFFFF66'
       }}
-      className="relative p-1 rounded-[.7vw] text-white min-w-[7vw]"
+      className="relative p-1 rounded-[.7vw] min-w-[7vw]"
     >
-      <div className="p-2 rounded-[.4vw] border border-gray-300 relative">
+      <div className="p-2 rounded-[.4vw] relative">
         <span className="absolute top-[-.5vw] mob:top-[-3vw] left-[.2vw] text-base">.</span>
         <span className="absolute top-[-.5vw] mob:top-[-3vw] right-[.2vw] text-base">.</span>
         <div className="flex flex-col items-center justify-center">
-          <p className="text-[.7vw] mob:text-[3vw] font-[SofiaPro] font-semibold pb-[.3vw]">
+          <p
+            className="text-[.7vw] mob:text-[3vw] font-[SofiaPro] font-semibold pb-[.3vw]"
+            style={{ color: '#FFF2B4' }}
+          >
             {DeliveryStatusDetails[currentStatus].statusTitle}
           </p>
-          <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold ">
+          <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold" style={{ color: '#FFF2B4' }}>
             {DeliveryStatusDetails[currentStatus]?.statusDesc === 'timer'
               ? lbnpExistsButNoTimes
                 ? null

@@ -1,6 +1,7 @@
 import MapLocator from '@/assets/OrderStatusAnimations/map.json';
 import { DeliveryStatusDetails } from '@/constants/orderDetailsConstants';
 import Lottie from 'lottie-react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import PersonIcon from '@mui/icons-material/Person';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
@@ -123,7 +124,17 @@ const OrderStatusIllustration = (props: any) => {
 
     return (
       <LottieContainer>
-        <Lottie animationData={animationData} loop={true} autoplay={true} />
+        {typeof animationData === 'string' ? (
+          <DotLottieReact
+            src={animationData}
+            loop
+            autoplay
+            className="w-full"
+            style={{ width: '100%', height: 'auto' }}
+          />
+        ) : (
+          <Lottie animationData={animationData} loop={true} autoplay={true} />
+        )}
       </LottieContainer>
     );
   };
@@ -140,9 +151,9 @@ const OrderStatusIllustration = (props: any) => {
   const showTrackingMapButton = !!trackingUrl && showDeliveryPartner;
 
   return (
-    <div className="relative">
+    <div className="relative rounded-[1.1vw] mob:rounded-[3.6vw]">
       <div className="relative z-[1]">
-        <div className="w-full mob:h-auto mob:min-h-[90vw] h-full relative overflow-x-hidden">
+        <div className="w-full mob:h-auto mob:min-h-[90vw] h-full relative overflow-hidden rounded-[1.1vw] mob:rounded-[3.6vw]">
           {/* Tracking URL iframe overlay */}
           {showTrackingMapButton && mapToggle ? (
             <div className="relative w-full h-full">
@@ -203,15 +214,19 @@ const OrderStatusIllustration = (props: any) => {
       </div>
 
       <div
-        className={`relative z-[0] top-[-1vw] ${showDeliveryPartner ? 'bg-white rounded-b-[1.1vw] mob:rounded-b-[3.6vw]' : ''}`}
+        className={`relative z-[0] mt-[-1vw] ${showDeliveryPartner ? 'bg-white rounded-b-[1.1vw] mob:rounded-b-[3.6vw]' : ''}`}
       >
         <div
-          className={`bg-[#333333] p-[1.1vw] pt-[2vw] mob:pt-[5vw] mob:p-[4vw] rounded-b-[1.1vw] mob:rounded-b-[3.6vw]`}
+          className={`p-[1.1vw] pt-[2vw] mob:pt-[5vw] mob:p-[4vw] rounded-b-[1.1vw] mob:rounded-b-[3.6vw]`}
+          style={{ background: '#231F20F0' }}
         >
-          <p className="font-semibold font-[SofiaPro] text-white text-[.97vw] mob:text-[3.6vw] uppercase tracking-wide">
+          <p
+            className="font-semibold font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] uppercase tracking-wide"
+            style={{ color: '#F8D34F' }}
+          >
             {DeliveryStatusDetails[currentStatus]?.text}
           </p>
-          <p className="pt-2 text-[#E0E0E0] font-[SofiaPro] text-[.83vw] mob:text-[3vw]">
+          <p className="pt-2 font-[SofiaPro] text-[.83vw] mob:text-[3vw]" style={{ color: '#FFFFFFCC' }}>
             {DeliveryStatusDetails[currentStatus]?.description}
           </p>
         </div>
