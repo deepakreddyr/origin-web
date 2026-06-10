@@ -153,13 +153,14 @@ const FarmingPartners = () => {
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             className="relative w-full rounded-[32px] md:rounded-[40px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.06)] aspect-[4/3] lg:aspect-auto lg:h-[675px]"
           >
-            <Image
-              src="/assets/images/about/FarmingPartners.jpg"
-              alt="Farmer holding cabbage"
-              fill
-              className="object-cover object-center scale-105 hover:scale-100 transition-transform duration-700 ease-out"
-              priority
-              sizes="(max-width: 1024px) 100vw, 50vw"
+            <video
+              src="/assets/videos/aboutvideo.mp4"
+              className="object-cover w-full h-full"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
             />
           </motion.div>
           {/* Floating Card — outside overflow-hidden, hangs off bottom-right */}

@@ -59,10 +59,10 @@ const PremiumImportedProduce = ({ products = [], isLoading = false }: PremiumImp
       <div className="relative bg-primary py-10 mob:py-6 px-16 mob:px-6 flex items-center justify-between overflow-hidden rounded-b-[60px] md:rounded-b-[230px]">
         {/* Decorative elements (hidden on mobile) */}
         <div className="absolute left-6 md:left-[10vw] top-1/2 -translate-y-1/2 hidden md:block">
-          <GlobeWithPlane />
+          {/* <GlobeWithPlane /> */}
         </div>
         <div className="absolute right-6 md:right-[10vw] top-1/2 -translate-y-1/2 hidden md:block">
-          <GlobeWithPlane />
+          {/* <GlobeWithPlane /> */}
         </div>
 
         {/* Header Title */}

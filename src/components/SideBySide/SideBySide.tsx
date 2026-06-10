@@ -23,6 +23,7 @@ type SideBySideProps = {
   rootClass?: string;
   imageContainerClass?: string;
   titleContainerClass?: string;
+  buttonContainerClass?: string;
   reverse?: boolean;
   variant?: 'parallax' | 'normal' | 'vertical' | 'hero';
   // Parallax props
@@ -90,7 +91,8 @@ const SideBySide: React.FC<SideBySideProps> = ({
   imageClass,
   quality,
   priority,
-  descriptionClass
+  descriptionClass,
+  buttonContainerClass
 }) => {
   if (variant === 'parallax') {
     return (
@@ -191,7 +193,7 @@ const SideBySide: React.FC<SideBySideProps> = ({
               {HTMLReactParser(description)}
             </Typography>
           )}
-          <Box className="flex items-center gap-5">
+          <Box className={CA('flex items-center gap-5', buttonContainerClass)}>
             {buttonText && <OriginButton handleClick={buttonClick1} variant={buttonVariant} buttonText={buttonText} />}
             {buttonText2 && (
               <Typography className="text-sm md:text-base" variant="body1">

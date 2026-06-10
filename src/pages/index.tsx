@@ -341,11 +341,12 @@ const Home = ({
                 imageClass="object-contain w-full h-auto md:!h-auto md:!max-h-none lg:scale-110 lg:origin-right"
                 title={`Download <br/> the app now.`}
                 titleVariant="h2"
-                titleClass="font-[Recoleta] text-black text-[12vw] mob:text-[12vw] md:text-[62.78px] font-semibold md:leading-[62.78px] mb-6 md:!mb-2 mob:text-center"
+                titleClass="order-1 font-[Recoleta] text-black text-[43.67px] leading-[43.67px] mob:text-[43.67px] mob:leading-[43.67px] md:text-[62.78px] font-semibold md:leading-[62.78px] mb-6 md:!mb-2 text-center mob:text-center md:text-left align-middle"
                 description={`Get exclusive access to special offers, track your orders in real-time, and discover new exotic fruits weekly. Available on iOS and Android.`}
-                descriptionClass="font-[SofiaPro] !font-normal text-black text-[4vw] md:text-[23.54px] md:leading-[38.26px] md:max-w-[647px] mb-12 md:!mt-4 md:!mb-12 mob:text-center"
+                descriptionClass="order-3 md:order-2 font-[SofiaPro] !font-normal text-black text-[23.54px] leading-[38.26px] mob:text-[23.54px] mob:leading-[38.26px] md:text-[23.54px] md:leading-[38.26px] md:max-w-[647px] mb-12 md:!mt-4 md:!mb-12 text-center mob:text-center md:text-left"
                 imageContainerClass="flex justify-center items-center"
                 titleContainerClass="flex flex-col justify-center items-center md:items-start md:!ps-0"
+                buttonContainerClass="order-2 md:order-3 mb-6 md:mb-0 justify-center md:justify-start w-full md:w-auto"
                 buttonText="Download Origin Fresh"
                 buttonVariant="tertiary"
                 buttonClick1={() => {
