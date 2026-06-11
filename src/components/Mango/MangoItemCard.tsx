@@ -101,7 +101,12 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
       source: 'mango_shop'
     });
     const slug = encodeURIComponent(itemDetails.name.replace(/ /g, '-').toLowerCase());
-    router.push(`/mango/products/${slug}?id=${itemDetails.id}`);
+
+    if (router.pathname.startsWith('/mango')) {
+      router.push(`/mango/products/${slug}?id=${itemDetails.id}`);
+    } else {
+      router.push(`/${slug}/${itemDetails.id}`);
+    }
   };
 
   const handleBasketViewClick = (e: React.MouseEvent) => {
@@ -137,6 +142,8 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
     ?.description?.find((desc) => desc.type === 'normal')?.details?.[0]?.description;
 
   const displayDescription = publicDescription || itemDetails.description;
+
+  const tagWithSvg = itemDetails?.tags?.find((tag: any) => tag.svg);
 
   return (
     <>
@@ -174,13 +181,25 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
               />
             </div>
 
-            {defaultUOM.conversion_text && (
-              <div
-                className={`absolute top-2 right-2 text-white font-bold  px-2 py-0.5 rounded-full font-[SofiaPro] text-[10px] md:text-[12px]`}
-              >
-                {defaultUOM.conversion_text}
-              </div>
-            )}
+            <div className="absolute top-2 right-2 flex items-center gap-1 z-10">
+              {tagWithSvg && (
+                <div className="bg-[#660077B2] flex items-center gap-1.5 px-2.5 py-1 rounded-[6px]">
+                  <span className="text-white text-[10px] md:text-[12px] font-[SofiaPro] font-medium leading-none tracking-wide">
+                    Imported
+                  </span>
+                  {tagWithSvg.svg && (
+                    <div className="relative w-3 h-3 md:w-4 md:h-4">
+                      <Image src={tagWithSvg.svg} alt="Imported tag" fill unoptimized className="object-contain" />
+                    </div>
+                  )}
+                </div>
+              )}
+              {defaultUOM.conversion_text && (
+                <div className="text-[#146321] font-bold px-2 py-0.5 rounded-full font-[SofiaPro] text-[10px] md:text-[12px]">
+                  {defaultUOM.conversion_text}
+                </div>
+              )}
+            </div>
 
             {hasRipenessOptions && (
               <div className={`absolute bottom-2 right-2 p-1 bg-white rounded-full shadow-lg scale-90 md:scale-100`}>

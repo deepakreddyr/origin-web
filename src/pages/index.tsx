@@ -33,6 +33,8 @@ import PopularProduceMob from '@/components/ShopV2/PopularProduceMob';
 import ScrollUnderline from '@/components/shared/ScrollUnderline';
 import ScrollReveal from '@/components/shared/ScrollReveal';
 import PremiumImportedProduce from '@/components/home/PremiumImportedProduce';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import PopularCarouselSkeleton from '@/components/skeletonLoaders/shop/PopularCarouselSkeleton';
 interface HomeProps {
   uspCardsData: UspCardsData;
   categories: Categories;
@@ -57,51 +59,41 @@ const Home = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
-  const [homepageData, setHomepageData] = useState<any>(null);
+  const [homepageData, setHomepageData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const baseUrlRef = useRef('');
+  const additionalHeadersRef = useRef<any>({});
   const getDataFromApi = useGetDataFromApi();
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const [address] = useAtom(addressAtom);
-  const lastFetchedRef = useRef({ url: '', storeId: '' });
+  const lastFetchedStoreRef = useRef('');
 
-  // Fetch homepage data
+  // Reset and refetch when login or address changes
   useEffect(() => {
     const token = localStorage.getItem('user_token');
     const addressFromLs = getAddressAndStoreId();
-    let apiUrl;
-    let additionalHeaders = {};
+    const currentStoreId = String(addressFromLs?.store_id || '');
+
+    if (lastFetchedStoreRef.current === currentStoreId) return;
+    lastFetchedStoreRef.current = currentStoreId;
 
     if (token && addressFromLs) {
-      apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getHomepage'];
-      additionalHeaders = { 'store-id': addressFromLs.store_id };
+      baseUrlRef.current = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getHomepage'];
+      additionalHeadersRef.current = { 'store-id': addressFromLs.store_id };
     } else {
-      apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['getHomepage'];
+      baseUrlRef.current = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['getHomepage'];
+      additionalHeadersRef.current = {};
     }
 
-    const currentStoreId = addressFromLs?.store_id || '';
-
-    // Prevent redundant calls if parameters haven't changed
-    if (apiUrl === lastFetchedRef.current.url && String(currentStoreId) === String(lastFetchedRef.current.storeId)) {
-      console.log('Skipping redundant homepage call');
-      return;
-    }
-
-    lastFetchedRef.current = { url: apiUrl, storeId: String(currentStoreId) };
-
-    const successHandler = (data: any) => {
-      // console.log(data);
-      setHomepageData(data?.data);
-      setLoading(false);
-    };
-
-    const failureHandler = () => {
-      setHomepageData(null);
-      setLoading(false);
-      setFetchError(true);
-    };
-
-    getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+    // Reset pagination state
+    setHomepageData([]);
+    setPage(1);
+    setHasMore(true);
+    setFetchError(false);
 
     // Track Home Page View
     gtag.event({
@@ -112,6 +104,44 @@ const Home = ({
     trackEvent(AnalyticsEvents.HOME);
   }, [loginDetails.isLogin, address.defaultAddress?.store_id]);
 
+  // Fetch page when page number changes
+  useEffect(() => {
+    if (!baseUrlRef.current) return;
+
+    const apiUrl = `${baseUrlRef.current}?page=${page}`;
+
+    const successHandler = (data: any) => {
+      const newSections: any[] = data?.data || [];
+      const meta = data?.meta;
+
+      // Use meta.has_more if available, otherwise fall back to empty-array check
+      const morePages = meta ? meta.has_more : newSections.length > 0;
+      setHasMore(morePages);
+
+      setHomepageData((prev) => (page === 1 ? newSections : [...prev, ...newSections]));
+      setLoading(false);
+      setIsFetchingMore(false);
+    };
+
+    const failureHandler = () => {
+      if (page === 1) {
+        setFetchError(true);
+      }
+      setHasMore(false);
+      setLoading(false);
+      setIsFetchingMore(false);
+    };
+
+    getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeadersRef.current);
+  }, [page, getDataFromApi]);
+
+  const fetchNextPage = () => {
+    if (hasMore && !loading && !isFetchingMore) {
+      setIsFetchingMore(true);
+      setPage((prev) => prev + 1);
+    }
+  };
+
   const mainCategoryData = homepageData?.find((item: any) => item.type === 'main-category')?.data || categories || [];
   const blendsCategoryData = homepageData?.find((item: any) => item.type === 'blends-category')?.data;
   const popularProduceSections = homepageData?.filter((item: any) => item.type === 'products-recommendation') || [];
@@ -119,7 +149,24 @@ const Home = ({
 
   const renderPopularProduce = (index: number, alignment: 'left' | 'right') => {
     const sectionData = popularProduceSections[index];
-    if (!sectionData) return null;
+
+    // If data not yet loaded but there are more pages, show alignment-aware shimmer
+    if (!sectionData) {
+      if (!hasMore) return null;
+      const shimmerAlignClass =
+        alignment === 'right'
+          ? 'md:ml-[max(6vw,calc(56vw_-_720px))] md:mr-0 md:rounded-none md:rounded-l-[48px] md:border-r-0'
+          : 'md:ml-0 md:mr-[max(6vw,calc(56vw_-_720px))] md:rounded-none md:rounded-r-[48px] md:border-l-0';
+      return (
+        <div
+          key={`shimmer-${index}`}
+          className={`w-[92vw] mx-auto mt-[5vw] mb-[2vw] bg-white border border-[#EDE6D4] rounded-[32px] py-12 mob:py-10 ${shimmerAlignClass}`}
+        >
+          <PopularCarouselSkeleton noWrapperStyles />
+        </div>
+      );
+    }
+
     return (
       <ScrollReveal direction="up" delay={0} key={`popular-produce-${index}`}>
         <div className="w-full mt-[5vw] mb-[2vw]">
@@ -283,6 +330,50 @@ const Home = ({
 
         {/* 3rd Popular Produce Section */}
         {renderPopularProduce(3, 'right')}
+
+        {/* Paginated Popular Produce Sections — driven by meta.has_more */}
+        <InfiniteScroll
+          dataLength={homepageData.length}
+          next={fetchNextPage}
+          hasMore={hasMore && !loading}
+          loader={null}
+          scrollThreshold="3000px"
+          style={{ overflow: 'visible' }}
+        >
+          {popularProduceSections.slice(3).map((section: any, idx: number) => {
+            const alignment: 'left' | 'right' = idx % 2 === 0 ? 'right' : 'left';
+            return (
+              <ScrollReveal direction="up" delay={0} key={`popular-produce-paginated-${section.title || idx}`}>
+                <div className="w-full mt-[5vw] mb-[2vw]">
+                  {isMobile ? (
+                    <PopularProduceMob categoryDetail={section} />
+                  ) : (
+                    <PopularProduce categoryDetail={section} alignment={alignment} />
+                  )}
+                </div>
+              </ScrollReveal>
+            );
+          })}
+
+          {/* Alignment-aware shimmer — mirrors the next section's left/right position */}
+          {isFetchingMore &&
+            popularProduceSections.length >= 4 &&
+            (() => {
+              const nextIdx = popularProduceSections.slice(3).length;
+              const nextAlignment = nextIdx % 2 === 0 ? 'right' : 'left';
+              const shimmerAlignClass =
+                nextAlignment === 'right'
+                  ? 'md:ml-[max(6vw,calc(56vw_-_720px))] md:mr-0 md:rounded-none md:rounded-l-[48px] md:border-r-0'
+                  : 'md:ml-0 md:mr-[max(6vw,calc(56vw_-_720px))] md:rounded-none md:rounded-r-[48px] md:border-l-0';
+              return (
+                <div
+                  className={`w-[92vw] mx-auto mt-[5vw] mb-[2vw] bg-white border border-[#EDE6D4] rounded-[32px] py-12 mob:py-10 ${shimmerAlignClass}`}
+                >
+                  <PopularCarouselSkeleton noWrapperStyles />
+                </div>
+              );
+            })()}
+        </InfiniteScroll>
 
         {/* <ScrollReveal direction="up" delay={0}>
           <Container maxWidth={false} className="w-full px-[2vw] mob:px-[3vw] relative z-[50] ">

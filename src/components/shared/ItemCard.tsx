@@ -151,6 +151,8 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
     return acc + (uom.ripeness_types?.length || 1);
   }, 0);
 
+  const tagWithSvg = itemDetails?.tags?.find((tag: any) => tag.svg);
+
   return (
     <>
       <MaxQuantityToast
@@ -180,11 +182,25 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
               />
             </div>
 
-            {defaultUOM.conversion_text && (
-              <div className="absolute top-2 right-2 bg-[#008145] flex items-center justify-center text-white text-center text-[0.7vw] mob:text-[2.5vw] font-bold px-2 py-0.5 rounded-md font-[SofiaPro]">
-                {defaultUOM.conversion_text}
-              </div>
-            )}
+            <div className="absolute top-2 right-2 flex items-center gap-1 z-10">
+              {tagWithSvg && (
+                <div className="bg-black/30 backdrop-blur-sm flex items-center gap-1.5 px-2.5 py-1 rounded-[6px]">
+                  <span className="text-white text-[2.5vw] md:text-[0.75vw] font-[SofiaPro] font-medium leading-none tracking-wide">
+                    Imported
+                  </span>
+                  {tagWithSvg.svg && (
+                    <div className="relative w-[3vw] h-[3vw] md:w-[0.9vw] md:h-[0.9vw]">
+                      <Image src={tagWithSvg.svg} alt="Imported tag" fill unoptimized className="object-contain" />
+                    </div>
+                  )}
+                </div>
+              )}
+              {defaultUOM.conversion_text && (
+                <div className="bg-[#008145] flex items-center justify-center text-white text-center text-[0.7vw] mob:text-[2.5vw] font-bold px-2 py-0.5 rounded-md font-[SofiaPro]">
+                  {defaultUOM.conversion_text}
+                </div>
+              )}
+            </div>
 
             {hasRipenessOptions && (
               <div className="absolute bottom-2 right-2 p-1 bg-white rounded-full shadow-lg border border-[#EDE6CC]/80">

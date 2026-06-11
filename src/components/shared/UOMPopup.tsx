@@ -108,6 +108,14 @@ export interface Product {
       }>;
     }>;
   }>;
+  tags?: Array<{
+    id: number;
+    name: string;
+    image?: string | null;
+    svg?: string | null;
+    bg_colour?: string | null;
+    text_colour?: string | null;
+  }>;
 }
 
 export const MaxQuantityToast: FC<{

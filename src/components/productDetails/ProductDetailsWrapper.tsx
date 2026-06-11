@@ -86,6 +86,14 @@ interface ProductItem {
     type: string;
     description: string;
   }>;
+  tags?: Array<{
+    id: number;
+    name: string;
+    image?: string | null;
+    svg?: string | null;
+    bg_colour?: string | null;
+    text_colour?: string | null;
+  }>;
 }
 
 interface ProductInfo {
@@ -318,6 +326,7 @@ const ImageGallery: React.FC<{
   hasRipenessFeature: boolean;
   isDesktop?: boolean;
   isMangoPage?: boolean;
+  tagWithSvg?: any;
 }> = ({
   mainImage,
   multipleImages = [],
@@ -326,7 +335,8 @@ const ImageGallery: React.FC<{
   conversionText,
   hasRipenessFeature,
   isDesktop,
-  isMangoPage = false
+  isMangoPage = false,
+  tagWithSvg
 }) => {
   const images = [mainImage, ...multipleImages].filter(Boolean);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -339,7 +349,6 @@ const ImageGallery: React.FC<{
       setCurrentIndex(currentIndex - 1);
     }
   };
-
   if (images.length === 0) return null;
 
   return (
@@ -386,17 +395,41 @@ const ImageGallery: React.FC<{
       )}
 
       {/* Overlays */}
-      {conversionText && (
-        <div
-          className={`absolute top-4 right-4 font-bold px-3 py-1 z-10 font-[SofiaPro] ${isDesktop ? 'text-sm' : 'text-[10px]'} ${
-            isMangoPage
-              ? 'text-white rounded-full'
-              : 'bg-[#008145] flex items-center justify-center text-white text-center rounded-md'
-          }`}
-        >
-          {conversionText}
-        </div>
-      )}
+      <div className="absolute top-4 right-4 flex items-center gap-1.5 z-10">
+        {tagWithSvg && (
+          <div
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-[6px] ${isMangoPage ? 'bg-[#660077B2]' : 'bg-black/30 backdrop-blur-sm'}`}
+          >
+            <span
+              className={`text-white font-[SofiaPro] font-medium leading-none tracking-wide ${isDesktop ? 'text-[14px]' : 'text-[12px]'}`}
+            >
+              Imported
+            </span>
+            {tagWithSvg.svg && (
+              <div className={`relative ${isDesktop ? 'w-5 h-5' : 'w-4 h-4'}`}>
+                <Image
+                  src={tagWithSvg.svg || undefined}
+                  alt="Imported tag"
+                  fill
+                  unoptimized
+                  className="object-contain"
+                />
+              </div>
+            )}
+          </div>
+        )}
+        {conversionText && (
+          <div
+            className={`font-bold px-3 py-1 font-[SofiaPro] ${isDesktop ? 'text-sm' : 'text-[10px]'} ${
+              isMangoPage
+                ? 'text-white rounded-full'
+                : 'bg-[#008145] flex items-center justify-center text-white text-center rounded-md'
+            }`}
+          >
+            {conversionText}
+          </div>
+        )}
+      </div>
       {hasRipenessFeature && (
         <div className={`absolute bottom-4 right-4 z-10 p-1.5 bg-white rounded-full shadow-lg overflow-hidden`}>
           <Image src={itemRipenessSvg} alt="Select ripeness" width={isDesktop ? 60 : 35} height={isDesktop ? 60 : 35} />
@@ -822,6 +855,7 @@ const ProductDetailsWrapper = () => {
                     conversionText={defaultUOM?.conversion_text}
                     hasRipenessFeature={hasRipenessFeature}
                     isMangoPage={isMangoPage}
+                    tagWithSvg={productDetails.item.tags?.find((tag: any) => tag.svg)}
                   />
                 </div>
 
@@ -913,6 +947,7 @@ const ProductDetailsWrapper = () => {
                       hasRipenessFeature={hasRipenessFeature}
                       isDesktop
                       isMangoPage={isMangoPage}
+                      tagWithSvg={productDetails.item.tags?.find((tag: any) => tag.svg)}
                     />
                   </div>
                 </div>

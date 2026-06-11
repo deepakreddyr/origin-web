@@ -2,29 +2,25 @@ import React from 'react';
 import Skeleton from '@mui/material/Skeleton';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 
-const PopularCarouselSkeleton = () => {
+const PopularCarouselSkeleton = ({ noWrapperStyles }: { noWrapperStyles?: boolean }) => {
   const mobile = useMediaQuery(600);
 
+  const wrapperClass = noWrapperStyles
+    ? 'pl-[3vw] pr-10 mob:px-2 overflow-hidden'
+    : 'bg-[#F2EEE433] relative border-r-0 mob:border-0 border-primary-200 w-[90.6vw] bg-white py-0 md:py-9 border pt-[72px] mob:pt-0 mob:pl-0 md:pb-0 pl-[2.7vw] lg:rounded-l-[48px] transition-all duration-50 ease-in-out';
+
   return (
-    <div className="bg-[#F2EEE433] relative border-r-0 mob:border-0 border-primary-200 w-[90.6vw] bg-white py-0 md:py-9 border pt-[72px] mob:pt-0 mob:pl-0 md:pb-0 pl-[2.7vw] lg:rounded-l-[48px] transition-all duration-50 ease-in-out">
+    <div className={wrapperClass}>
       <div>
         <Skeleton variant="rectangular" className="w-[40vw] h-[3vw] rounded-[.6vw]" />
       </div>
 
       <div className="flex gap-[1.1vw] mob:gap-[4.1vw] my-[4.2vw]">
         {Array.from({ length: mobile ? 3 : 5 }).map((_, index) => (
-          <div
-            key={`popular-skeleton-${index}`}
-            className="cursor-pointer w-[16.67vw] mob:w-[35vw] text-start"
-          >
-            <div
-              className="relative flex items-center mb-[1.1vw] mob:mb-[4.1vw] justify-center w-[16.67vw] mob:w-[35vw] mob:h-[35vw] h-[14vw] rounded-[1.67vw]"
-            >
+          <div key={`popular-skeleton-${index}`} className="cursor-pointer w-[16.67vw] mob:w-[35vw] text-start">
+            <div className="relative flex items-center mb-[1.1vw] mob:mb-[4.1vw] justify-center w-[16.67vw] mob:w-[35vw] mob:h-[35vw] h-[14vw] rounded-[1.67vw]">
               <div className="relative w-full h-[14vw] mob:h-[35vw]">
-                <Skeleton
-                  variant="rectangular"
-                  className="w-full h-full rounded-[.6vw] mob:rounded-[5vw]"
-                />
+                <Skeleton variant="rectangular" className="w-full h-full rounded-[.6vw] mob:rounded-[5vw]" />
               </div>
             </div>
 
