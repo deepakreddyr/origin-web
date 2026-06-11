@@ -1,7 +1,6 @@
 import MapLocator from '@/assets/OrderStatusAnimations/map.json';
 import { DeliveryStatusDetails } from '@/constants/orderDetailsConstants';
 import Lottie from 'lottie-react';
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import PersonIcon from '@mui/icons-material/Person';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
@@ -124,17 +123,7 @@ const OrderStatusIllustration = (props: any) => {
 
     return (
       <LottieContainer>
-        {typeof animationData === 'string' ? (
-          <DotLottieReact
-            src={animationData}
-            loop
-            autoplay
-            className="w-full"
-            style={{ width: '100%', height: 'auto' }}
-          />
-        ) : (
-          <Lottie animationData={animationData} loop={true} autoplay={true} />
-        )}
+        <Lottie animationData={animationData} loop={true} autoplay={true} />
       </LottieContainer>
     );
   };
@@ -151,9 +140,9 @@ const OrderStatusIllustration = (props: any) => {
   const showTrackingMapButton = !!trackingUrl && showDeliveryPartner;
 
   return (
-    <div className="relative rounded-[1.1vw] mob:rounded-[3.6vw]">
+    <div className="relative">
       <div className="relative z-[1]">
-        <div className="w-full mob:h-auto mob:min-h-[90vw] h-full relative overflow-hidden rounded-[1.1vw] mob:rounded-[3.6vw]">
+        <div className="w-full relative overflow-hidden">
           {/* Tracking URL iframe overlay */}
           {showTrackingMapButton && mapToggle ? (
             <div className="relative w-full h-full">
@@ -201,8 +190,8 @@ const OrderStatusIllustration = (props: any) => {
           </button>
         )}
         {!mapToggle && (
-          <div className="absolute bottom-[1vw] mob:bottom-[3vw] flex items-center justify-between w-full pr-[1.1vw] mob:px-[3vw] ">
-            <div className="px-[1.1vw]">
+          <div className="absolute bottom-0 left-0 flex items-center justify-between w-full px-[1.1vw] mob:px-[3vw] pb-[1vw] mob:pb-[2vw] z-[10]">
+            <div>
               <p className="font-semibold font-[SofiaPro] text-gray-500 pb-[.4vw] text-[.97vw] mob:text-[3.6vw]">
                 {!orderDetailsData.time_slot ? 'Dash Delivery' : 'Time Slot'}
               </p>
@@ -214,10 +203,10 @@ const OrderStatusIllustration = (props: any) => {
       </div>
 
       <div
-        className={`relative z-[0] mt-[-1vw] ${showDeliveryPartner ? 'bg-white rounded-b-[1.1vw] mob:rounded-b-[3.6vw]' : ''}`}
+        className={`relative z-[0] ${showDeliveryPartner ? 'bg-white rounded-b-[1.1vw] mob:rounded-b-[3.6vw]' : ''}`}
       >
         <div
-          className={`p-[1.1vw] pt-[2vw] mob:pt-[5vw] mob:p-[4vw] rounded-b-[1.1vw] mob:rounded-b-[3.6vw]`}
+          className={`p-[1.1vw] mob:p-[4vw] rounded-b-[1.1vw] mob:rounded-b-[3.6vw]`}
           style={{ background: '#231F20F0' }}
         >
           <p

@@ -1,3 +1,4 @@
+import arrivedLottie from './ARRIVED.json';
 import deliveryNearyLottie from './DELIVERING_NEARBY.json';
 import mapLottie from './map.json';
 import onTheWayRainingLottie from './ON_THE_WAY-RAIN.json';
@@ -14,6 +15,7 @@ import preparingForDispatch from './PREPARING_FOR_DISPATCH.json';
 // import preparingForDispatch from './Preparing Order (1).json';
 
 export const IllustrationsList = {
+  arrivedLottie,
   deliveryNearyLottie,
   mapLottie,
   onTheWayRainingLottie,

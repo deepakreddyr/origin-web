@@ -66,9 +66,9 @@ const StatusBanner = (props: any) => {
         color: '#FFF2B4',
         border: '0.4px solid #FFFFFF66'
       }}
-      className="relative p-1 rounded-[.7vw] min-w-[7vw]"
+      className="relative p-[.5vw] mob:p-[1.5vw] rounded-[.7vw] mob:rounded-[2vw] min-w-[8vw] mob:min-w-[25vw]"
     >
-      <div className="p-2 rounded-[.4vw] relative">
+      <div className="px-[1vw] py-[.5vw] mob:px-[4vw] mob:py-[2vw] rounded-[.4vw] mob:rounded-[1.2vw] relative">
         <span className="absolute top-[-.5vw] mob:top-[-3vw] left-[.2vw] text-base">.</span>
         <span className="absolute top-[-.5vw] mob:top-[-3vw] right-[.2vw] text-base">.</span>
         <div className="flex flex-col items-center justify-center">
