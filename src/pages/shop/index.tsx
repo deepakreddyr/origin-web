@@ -173,14 +173,14 @@ const ShopPage = (props: HomeProps) => {
   );
 
   const LoadedUI = () => (
-    <div className="flex flex-col w-full pb-[2vw] mob:pb-[10vw] pt-[25vw] md:pt-[12vw] lg:pt-[8vw] overflow-hidden">
+    <div className="flex flex-col w-full pb-[2vw] mob:pb-[10vw] pt-[25vw] md:pt-[12vw] lg:pt-[5vw] overflow-hidden">
       <div className="w-full relative overflow-hidden m-0 p-0">
         {/* <ShopHeroSingle />
         <FeatureStrip /> */}
       </div>
 
       <ScrollReveal direction="up" delay={0} className="w-full">
-        <div className="flex flex-col gap-[6vw] mt-[7vw] mob:pl-[0vw] w-full items-center">
+        <div className="flex flex-col gap-[6vw] mob:pl-[0vw] w-full items-center">
           <HomeCategorySection
             categories={mainCategoryData}
             blendsCategory={blendsCategoryData}

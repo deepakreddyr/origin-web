@@ -274,9 +274,28 @@ const StoryTestimonials = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const [isMounted, setIsMounted] = useState(false);
+  const [canScroll, setCanScroll] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
+
+    const checkScroll = () => {
+      if (scrollRef.current) {
+        setCanScroll(scrollRef.current.scrollWidth > scrollRef.current.clientWidth);
+      }
+    };
+
+    // Check immediately and add resize listener
+    checkScroll();
+    window.addEventListener('resize', checkScroll);
+
+    // Fallback check after fonts/images might have shifted layout
+    const timeoutId = setTimeout(checkScroll, 100);
+
+    return () => {
+      window.removeEventListener('resize', checkScroll);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   const uniqueUserStories = STORIES.filter(
@@ -390,18 +409,20 @@ const StoryTestimonials = () => {
               </div>
 
               {/* Pagination Dots */}
-              <div className="flex justify-center gap-[6px] md:gap-[8px] mt-[6vw] md:mt-[2vw]">
-                {Array.from({ length: dotCount }).map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => scrollToDot(i)}
-                    className={`
-                                      h-[8px] rounded-full transition-all duration-300
-                                      ${i === activeIndex ? 'bg-black w-[8px]' : 'bg-[#B3B3B3] w-[8px]'}
-                                  `}
-                  />
-                ))}
-              </div>
+              {canScroll && (
+                <div className="flex justify-center gap-[6px] md:gap-[8px] mt-[6vw] md:mt-[2vw]">
+                  {Array.from({ length: dotCount }).map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => scrollToDot(i)}
+                      className={`
+                                        h-[8px] rounded-full transition-all duration-300
+                                        ${i === activeIndex ? 'bg-black w-[8px]' : 'bg-[#B3B3B3] w-[8px]'}
+                                    `}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

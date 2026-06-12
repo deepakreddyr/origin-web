@@ -51,7 +51,7 @@ const GlobeWithPlane = () => (
 );
 
 const PremiumImportedProduce = ({ products = [], isLoading = false }: PremiumImportedProduceProps) => {
-  const displayProducts = products.slice(0, 4);
+  const displayProducts = products;
 
   return (
     <div className="bg-[#FCEFAEB2] w-full relative overflow-hidden pb-16 mob:pb-10">
@@ -73,15 +73,15 @@ const PremiumImportedProduce = ({ products = [], isLoading = false }: PremiumImp
 
       {/* Centered Grid / Scrollable Content */}
       <div className="max-w-[1440px] mx-auto mt-12 mob:mt-6">
-        <div className="flex md:grid md:grid-cols-4 overflow-x-auto md:overflow-x-visible noscrollbar gap-[2vw] md:gap-[1vw] px-4 md:px-[5vw] pb-4 md:pb-0">
+        <div className="flex overflow-x-auto noscrollbar gap-[4vw] md:gap-[1.5vw] px-4 md:px-[5vw] pb-4">
           {isLoading || displayProducts.length === 0
             ? Array.from({ length: 4 }).map((_, index) => (
-                <div key={index} className="flex-shrink-0 w-[78vw] md:w-auto">
+                <div key={index} className="flex-shrink-0 w-[50vw] md:w-[24vw] lg:w-[300px] xl:w-[325px]">
                   <MangoItemSkeleton />
                 </div>
               ))
             : displayProducts.map((product) => (
-                <div key={product.id} className="flex-shrink-0 w-[50vw] md:w-auto">
+                <div key={product.id} className="flex-shrink-0 w-[50vw] md:w-[24vw] lg:w-[300px] xl:w-[325px]">
                   <MangoItemCard itemDetails={product} />
                 </div>
               ))}
