@@ -25,12 +25,11 @@ const StatusBanner = (props: any) => {
   const lbnpExistsButNoTimes = !!orderDetails?.lbnp && (!orderDetails.lbnp.start_time || !orderDetails.lbnp.end_time);
   const hasLbnp = !!orderDetails?.lbnp?.end_time;
 
-  // Converts seconds into minutes and seconds format
+  // Converts seconds into minutes format
   const convertEtaToMins = (eta: number): string => {
     if (hasLbnp && eta <= MIN_ETA_SECONDS) return '2 mins';
     const minutes = Math.floor(eta / 60);
-    const seconds = eta % 60;
-    return `${minutes} mins ${Math.floor(seconds)}s`;
+    return `${minutes} mins`;
   };
 
   useEffect(() => {

@@ -143,7 +143,7 @@ const OrderStatusImageDesc = () => {
               marginTop: '0.3rem'
             }}
           >
-            {count ? count.toFormat('mm:ss') : '02:00'} minutes
+            {count ? count.toFormat('mm') : '2'} minutes
           </Typography>
         </Box>
       </ReachingContainerWrapper>

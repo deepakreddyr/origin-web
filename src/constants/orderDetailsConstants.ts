@@ -33,7 +33,7 @@ export const DeliveryStatusDetails: any = {
     background: '#854000',
     color: '#fff',
     statusTitle: 'Order',
-    statusDesc: 'Admin rejected'
+    statusDesc: 'Rejected by admin'
   },
   processing: {
     status: 'processing',
@@ -83,7 +83,7 @@ export const DeliveryStatusDetails: any = {
   nearby: {
     status: 'nearby',
     title: 'nearby',
-    text: 'ON THE WAY',
+    text: 'NEAR BY',
     description: 'Our Agent is on the way to deliver freshness to your doorstep',
     illustration: IllustrationsList.ontheWayLottie,
     background: '#00855B',
