@@ -17,6 +17,8 @@ import { setCouponId } from '@/store/slice/placeOrderDetails';
 import CouponListSkeleton from '@/components/skeletonLoaders/cart/CouponListSkeleton';
 import ApplyCouponInput from './ApplyCouponInput';
 import Coupon from './Coupon';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 const CouponList = (props: any) => {
   const { setCouponsTab, error, setError } = props;
@@ -78,10 +80,10 @@ const CouponList = (props: any) => {
         // Re-calculate to pay
         const finalAmount = Math.max(0, cart.totalPrice - discountValue);
         dispatch(setAmountToPay(finalAmount));
-        dispatch(setMangoAmountToPay(finalAmount)); // Note: Mango slice will recalc itself anyway, but good for immediate UI
+        dispatch(setMangoAmountToPay(finalAmount));
 
         props.onCouponApplied?.(couponCode);
-        setError(false); // ✅ Clear error if coupon is valid
+        setError(false);
         dispatch(setCouponId(couponData.id));
 
         const disountedAmount = calculateCouponDiscount(cart.totalPrice, couponData);
@@ -89,8 +91,14 @@ const CouponList = (props: any) => {
 
         dispatch(setDiscountAmount(Math.round(disountedAmount)));
         dispatch(setAmountToPay(finalCartAmount));
+
+        // Track applied coupon
+        trackEvent(AnalyticsEvents.APPLIED_COUPON, {
+          coupon_name: couponCode,
+          min_cart_value: couponData?.min_cart_value || 0
+        });
       } else {
-        setError(true); // ❌ Coupon invalid
+        setError(true);
       }
 
       setCouponsTab(COUPON_TABS.COUPON_APPLIED);

@@ -1,10 +1,12 @@
 import { Box, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { OtpInput } from './OtpInput';
 import ResendOTP from './ResendButton';
 import TermsAndConditions from '../TermsAndConditions';
 import PrimaryRoundedCta from '@/components/shared/PrimaryRoundedCta';
 import { mainApiUrl } from '@/url';
+import { identifyUser, setUserProperties, trackEvent, stopTrackTime } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 import { request, header } from '@/utilities/request';
 import { TabTypeConstant } from '../constants/tabTypeContent';
 import type { LoginAtom } from '../types/LoginAtom';
@@ -35,6 +37,10 @@ const VerifyOTP = (props: Props) => {
   const [mobileNumberErrors, setMobileNumberErrors] = useState('');
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    trackEvent(AnalyticsEvents.OTP);
+  }, []);
 
   const onSubmitOTP = async () => {
     if (!otp) {
@@ -90,6 +96,24 @@ const VerifyOTP = (props: Props) => {
 
         dispatch(setIsFreshLogin(true));
         handleLaunchResponse(launchResponse, dispatch, setAddress, setProfileAtom, response.access_token, true);
+
+        // Analytics identify and login tracking when user exists
+        const formattedPhone = `+91${mobileNumber}`;
+        identifyUser(formattedPhone);
+
+        // CleverTap: onUserLogin profile push
+        setUserProperties({
+          Identity: formattedPhone,
+          Phone: formattedPhone,
+          Name: userProfile?.name || '',
+          Email: userProfile?.email || ''
+        });
+
+        trackEvent(AnalyticsEvents.LOGGED_IN, {
+          'user-id': formattedPhone
+        });
+        trackEvent(AnalyticsEvents.USER_LOGIN);
+        stopTrackTime(AnalyticsEvents.TRACK_OTP);
       } else {
         // New user or incomplete registration
         // IMPORTANT: Keep isLogin: false until registration is complete to prevent background API errors

@@ -24,8 +24,8 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as gtag from '@/utilities/gtag';
-// import { trackMixpanelEvent } from '@/utilities/mixpanel';
-// import { AnalyticsEvents } from '@/utilities/mixpanelEvents';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { setLoginDetails } from '@/store/slice/loginSlice';
@@ -625,17 +625,18 @@ const ProductDetailsWrapper = () => {
             ]
           });
 
-          // trackMixpanelEvent(AnalyticsEvents.PRODUCT_VIEW, {
-          //   prid: String(item?.id || ''),
-          //   uom: defaultUOM?.unit || '',
-          //   image: item?.website_image || item?.image || '',
-          //   prqt: defaultUOM?.stepper_quantity || 1,
-          //   product_name: item?.name || '',
-          //   category: item?.category_name || '',
-          //   selling_price: defaultUOM?.market_price || defaultUOM?.price || 0,
-          //   final_price: defaultUOM?.price || 0,
-          //   in_stock: defaultUOM?.is_available ? 'Yes' : 'No'
-          // });
+          // CleverTap: product_view
+          trackEvent(AnalyticsEvents.PRODUCT_VIEW, {
+            prid: String(item?.id || ''),
+            uom: defaultUOM?.unit || '',
+            image: item?.website_image || item?.image || '',
+            prqt: defaultUOM?.stepper_quantity || 1,
+            product_name: item?.name || '',
+            category: item?.category_name || '',
+            selling_price: defaultUOM?.market_price || defaultUOM?.price || 0,
+            final_price: defaultUOM?.price || 0,
+            in_stock: defaultUOM?.is_available ? 'Yes' : 'No'
+          });
         }
       };
 
@@ -748,6 +749,7 @@ const ProductDetailsWrapper = () => {
   if (fetchError) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] py-16 px-4">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/assets/svg/somethingwentwrong.svg"
           alt="Something went wrong"

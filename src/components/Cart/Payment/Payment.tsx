@@ -15,6 +15,8 @@ import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 const razKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY;
 
 import { useCartStore } from '@/hooks/useCartStore';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 const Payment = (props: any) => {
   const [profile, setProfileAtom] = useAtom(profileAtom);
@@ -80,6 +82,24 @@ const Payment = (props: any) => {
     dispatch(actions.clearCart());
     dispatch(actions.setCartTabType(TabTypeConstant.PAYMENT));
     clearPostPaymentItemsinLs();
+
+    // Track payment success & purchase events
+    trackEvent(AnalyticsEvents.PAYMENT_SUCCESS, {
+      order_id: orderResponse.order_id || '',
+      amount: orderResponse.sub_total || 0,
+      payment_method: paymentMethod
+    });
+    trackEvent(AnalyticsEvents.PRODUCT_PURCHASE, {
+      order_id: orderResponse.order_id || '',
+      amount: orderResponse.sub_total || 0,
+      items: []
+    });
+    trackEvent(AnalyticsEvents.PLACED_ORDER, {
+      order_id: orderResponse.order_id || '',
+      amount: orderResponse.sub_total || 0,
+      payment_method: paymentMethod,
+      items: []
+    });
   };
 
   const onFailure = (totalAmount: any, orderDetails: any, paymentMethod: any, orderResponse: any) => {
@@ -91,6 +111,13 @@ const Payment = (props: any) => {
     });
     dispatch(setIsHeaderVisible(false));
     setPaymentFlowScreen(TabTypeConstant.PAYMENT_FAILED);
+
+    // Track payment failed event
+    trackEvent(AnalyticsEvents.PAYMENT_FAILED, {
+      order_id: orderResponse?.order_id || '',
+      amount: totalAmount || 0,
+      payment_method: paymentMethod
+    });
   };
 
   const checkoutRazporpay = (orderId: any) => {
@@ -301,11 +328,27 @@ const Payment = (props: any) => {
               order_id: response?.data?.order_id,
               sub_total: response.data.sub_total
             };
+            // Track checkout event
+            trackEvent(AnalyticsEvents.CHECKOUT, {
+              selling_amount: response.data.sub_total || 0,
+              amount: response.data.sub_total || 0,
+              payment_mode: 'cash',
+              order_id: response?.data?.order_id || '',
+              items: []
+            });
             onSuccess(orderResponse, orderType.name);
             isPlacingOrderRef.current = false;
             resolve(true);
           } else if (response?.data?.razorpay_order_id) {
             const order_id = response?.data?.razorpay_order_id;
+            // Track checkout event for razorpay
+            trackEvent(AnalyticsEvents.CHECKOUT, {
+              selling_amount: cart.totalPrice || 0,
+              amount: cart.amountToPay || cart.totalPrice || 0,
+              payment_mode: 'razorpay',
+              order_id: order_id || '',
+              items: []
+            });
             checkoutRazporpay(order_id);
             isPlacingOrderRef.current = false;
             resolve(true);

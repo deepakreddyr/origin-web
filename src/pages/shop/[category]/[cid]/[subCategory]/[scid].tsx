@@ -13,6 +13,8 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import * as gtag from '@/utilities/gtag';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
@@ -174,6 +176,14 @@ const ShopDetails = (props: HomeProps) => {
         category: 'Navigation',
         label: `${query.category} - ${query.subCategory}`,
         items: [] // Optionally pass items once fetched
+      });
+
+      // CleverTap events
+      trackEvent(AnalyticsEvents.CATEGORY_VIEWED, {
+        category_name: String(query.category || '')
+      });
+      trackEvent(AnalyticsEvents.SUB_CATEGORY_VIEWED, {
+        sub_category_name: String(query.subCategory || '')
       });
     }
   }, [isReady, query]);

@@ -13,7 +13,8 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import GlobalLaunchListener from '@/components/GlobalLaunchListener';
 import * as gtag from '@/utilities/gtag';
-
+import { initAnalytics, trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 const APP_VERSION = '1.1.6';
 
 // --- Cache Clearing / Version Check ---
@@ -125,19 +126,59 @@ export default function App({ Component, pageProps, ...rest }: AppProps) {
     // Clear cache if app version changed
     clearCacheAndReload();
 
+    // Initialize analytics (CleverTap)
+    initAnalytics();
+
+    // Track first open if no previous session
+    if (!sessionStorage.getItem('first_open_tracked')) {
+      trackEvent(AnalyticsEvents.FIRST_OPEN);
+      sessionStorage.setItem('first_open_tracked', 'true');
+    }
+
     // Handle invoice deep links
     const timeoutId = setTimeout(() => handleInvoiceDeepLink(router), 100);
 
     // Track page views
     const handleRouteChange = (url: string) => {
       gtag.pageview(url);
+      trackEvent(AnalyticsEvents.PAGE_VIEW, { page_path: url });
     };
 
     router.events.on('routeChangeComplete', handleRouteChange);
 
+    // Track no_internet event
+    const handleOffline = () => trackEvent(AnalyticsEvents.NO_INTERNET);
+    window.addEventListener('offline', handleOffline);
+
+    // Track abandoned_cart when user leaves the page with items in cart
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        const cartRaw = localStorage.getItem('cart_items');
+        if (cartRaw) {
+          try {
+            const cartItems = JSON.parse(cartRaw);
+            if (cartItems && cartItems.length > 0) {
+              const cartValue = cartItems.reduce((sum: number, item: any) => {
+                const uom = item.multiple_uoms?.find((u: any) => u.cart_quantity > 0);
+                return sum + (uom?.price || 0) * (uom?.cart_quantity || 0);
+              }, 0);
+              trackEvent(AnalyticsEvents.ABANDONED_CART, {
+                cart_items: cartItems,
+                cart_value: cartValue,
+                count_of_item: cartItems.length
+              });
+            }
+          } catch (e) {}
+        }
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     return () => {
       clearTimeout(timeoutId);
       router.events.off('routeChangeComplete', handleRouteChange);
+      window.removeEventListener('offline', handleOffline);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [router]);
 

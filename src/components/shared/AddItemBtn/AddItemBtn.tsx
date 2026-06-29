@@ -12,6 +12,8 @@ import { getAddressAndStoreId } from '@/utilities/utils';
 import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import * as gtag from '@/utilities/gtag';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 const AddItemBtn: FC<any> = (props) => {
   const {
@@ -192,6 +194,20 @@ const AddItemBtn: FC<any> = (props) => {
         }
       ]
     });
+
+    trackEvent(AnalyticsEvents.ADD_TO_CART, {
+      item_code: product.item_code,
+      item_name: product.name || product.item_name,
+      prid: normalizedProductId,
+      category: product.category || '',
+      uom: selectedVariant?.unit || '',
+      image: product.image || '',
+      prqt: quantityToAdd,
+      selling_price: selectedVariant?.market_price || selectedVariant?.price || 0,
+      final_price: selectedVariant?.price || 0,
+      product_price: selectedVariant?.price || 0,
+      from_cart: false
+    });
   };
 
   const handleIncrease = (e: any) => {
@@ -231,6 +247,20 @@ const AddItemBtn: FC<any> = (props) => {
         }
       ]
     });
+
+    trackEvent(AnalyticsEvents.ADD_TO_CART, {
+      item_code: product.item_code,
+      item_name: product.name || product.item_name,
+      prid: normalizedProductId,
+      category: product.category || '',
+      uom: selectedVariant?.unit || '',
+      image: product.image || '',
+      prqt: finalStepQuantity,
+      selling_price: selectedVariant?.market_price || selectedVariant?.price || 0,
+      final_price: selectedVariant?.price || 0,
+      product_price: selectedVariant?.price || 0,
+      from_cart: false
+    });
   };
 
   const handleDecrease = (e: any) => {
@@ -246,6 +276,36 @@ const AddItemBtn: FC<any> = (props) => {
 
     if (loginDetails.user) {
       addItemsToApi();
+    }
+
+    if (itemQuantity <= finalMinQuantity) {
+      trackEvent(AnalyticsEvents.DELETE_FROM_CART, {
+        item_code: product.item_code,
+        item_name: product.name || product.item_name,
+        prid: normalizedProductId,
+        category: product.category || '',
+        uom: selectedVariant?.unit || '',
+        image: product.image || '',
+        prqt: finalStepQuantity,
+        selling_price: selectedVariant?.market_price || selectedVariant?.price || 0,
+        final_price: selectedVariant?.price || 0,
+        product_price: selectedVariant?.price || 0,
+        from_cart: false
+      });
+    } else {
+      trackEvent(AnalyticsEvents.REMOVE_FROM_CART, {
+        item_code: product.item_code,
+        item_name: product.name || product.item_name,
+        prid: normalizedProductId,
+        category: product.category || '',
+        uom: selectedVariant?.unit || '',
+        image: product.image || '',
+        prqt: finalStepQuantity,
+        selling_price: selectedVariant?.market_price || selectedVariant?.price || 0,
+        final_price: selectedVariant?.price || 0,
+        product_price: selectedVariant?.price || 0,
+        from_cart: false
+      });
     }
   };
 

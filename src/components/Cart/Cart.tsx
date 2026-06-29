@@ -29,6 +29,8 @@ import { useAtom } from 'jotai';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationChangedPopup from './AddressAndTimeSlot/LocationChangedPopup';
 import { clearSubscriptionCart } from '@/store/slice/SubscriptionCartSlice';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 // ==========================================================
 // MAX QUANTITY TOAST COMPONENT MOVED/COPIED HERE FOR GLOBAL RENDER
 // ==========================================================
@@ -208,6 +210,24 @@ const Cart = () => {
       sendItemsToApi();
     } else {
       fetchCartItemsFromApi();
+    }
+
+    // Track cart view events
+    trackEvent(AnalyticsEvents.VIEW_CART);
+    const cartRaw = localStorage.getItem(lsKey);
+    if (cartRaw) {
+      try {
+        const cartItems = JSON.parse(cartRaw);
+        const cartSubTotal = cartItems.reduce((sum: number, item: any) => {
+          const uom = item.multiple_uoms?.find((u: any) => u.cart_quantity > 0);
+          return sum + (uom?.price || 0) * (uom?.cart_quantity || 0);
+        }, 0);
+        trackEvent(AnalyticsEvents.ALL_CART_ITEMS, {
+          cart_items: cartItems,
+          cart_sub_total: cartSubTotal,
+          min_cart_total: cart.cart_minimum ? Number(cart.cart_minimum) : 0
+        });
+      } catch (e) {}
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loginDetails.isSidebarOpen]);

@@ -39,6 +39,7 @@
     "axios": "^1.7.7",
     "class-variance-authority": "^0.7.1",
     "classnames": "^2.5.1",
+    "clevertap-web-sdk": "^2.7.2",
     "framer-motion": "^12.23.12",
     "html-react-parser": "^5.1.12",
     "jotai": "^2.6.0",

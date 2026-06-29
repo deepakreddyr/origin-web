@@ -10,6 +10,8 @@ import { addressAtom } from '@/features/Address/context/atoms';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { OriginCloseIcon } from '../../../../Icons/OriginIcons';
 import { useCartStore } from '@/hooks/useCartStore';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 interface Props {
   children: React.ReactNode;
@@ -62,6 +64,10 @@ const SidebarWrapper = (props: Props) => {
   useEffect(() => {
     if (loginDetails.isSidebarOpen) {
       document.body.style.overflow = 'hidden';
+      // Track intro event once per sidebar open when user is not logged in
+      if (!loginDetails.isLogin) {
+        trackEvent(AnalyticsEvents.INTRO);
+      }
     } else {
       document.body.style.overflow = 'auto';
       dispatch(setTabType(''));

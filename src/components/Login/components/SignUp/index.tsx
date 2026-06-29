@@ -6,6 +6,8 @@ import React from 'react';
 
 import Gift from '../../../../assets/svg/gift.svg';
 import { request, header } from '@/utilities/request';
+import { identifyUser, setUserProperties, trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 import { login } from '../../context/atom';
 import type { LoginAtom } from '../../types/LoginAtom';
@@ -21,6 +23,10 @@ import ProfileAtom from '@/features/AccountPage/types/ProfileAtom';
 const SignUp = () => {
   // const setLoginDetails = useSetAtom(login)
   const [profileDetails, setProfileAtom] = useAtom(profileAtom);
+
+  React.useEffect(() => {
+    trackEvent(AnalyticsEvents.USER_DETAILS);
+  }, []);
 
   const [name, setName] = React.useState('');
   const [gender, setGender] = React.useState('');
@@ -108,6 +114,31 @@ const SignUp = () => {
           ...prev,
           data: response.data
         }));
+
+        // Analytics tracking for new user registration
+        const profileInfo = response.data?.profile || response.data;
+        const userPhone = profileInfo?.mobile || profileInfo?.phone || '';
+        const formattedPhone = userPhone.startsWith('+91') ? userPhone : `+91${userPhone}`;
+
+        if (formattedPhone && formattedPhone !== '+91') {
+          identifyUser(formattedPhone);
+          setUserProperties({
+            Identity: formattedPhone,
+            Name: name,
+            Email: email,
+            Phone: formattedPhone,
+            Gender: gender
+          });
+        }
+
+        trackEvent(AnalyticsEvents.REGISTRATION_SUCCESSFUL);
+        trackEvent(AnalyticsEvents.REGISTERED);
+        trackEvent(AnalyticsEvents.USER_SIGNUP, {
+          mobile_number: userPhone,
+          user_name: name,
+          gender: gender,
+          email_id: email
+        });
         const userToken = localStorage.setItem('user_token', loginDetails.user);
         // dispatch(setUser(userToken));
         dispatch(setIsLogin(true));

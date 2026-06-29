@@ -1,6 +1,8 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useCartStore } from '@/hooks/useCartStore';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 const Coupon = (props: any) => {
   const { couponDetailsFromList, validateCoupon } = props;
@@ -13,6 +15,14 @@ const Coupon = (props: any) => {
   let balanceToBeAdded = Math.ceil(min_cart_value - cart.totalPrice);
   let isCouponValid = Boolean(isValid);
   let isButtonDisabled = !isCouponValid || !isMinvalueConditionValid;
+
+  const handleValidate = (code: string) => {
+    trackEvent(AnalyticsEvents.COUPON_SELECTED, {
+      coupon_name: code,
+      min_cart_value: min_cart_value || 0
+    });
+    validateCoupon(code);
+  };
 
   return (
     <div
@@ -34,7 +44,7 @@ const Coupon = (props: any) => {
         </div>
         <button
           disabled={isButtonDisabled}
-          onClick={() => validateCoupon(code)}
+          onClick={() => handleValidate(code)}
           className={`bg-secondary ${isButtonDisabled ? 'opacity-60' : ''} rounded-full text-white py-[.5vw] mob:py-[2vw] mob:px-[6vw] px-[1.5vw] font-[SofiaPro] font-bold mob:text-[3vw] text-[.83vw] mt-1`}
         >
           APPLY

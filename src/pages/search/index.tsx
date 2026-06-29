@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
 import * as gtag from '@/utilities/gtag';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -229,6 +231,11 @@ const SearchResults = (props: HomeProps) => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Fire search event on page load
+  useEffect(() => {
+    trackEvent(AnalyticsEvents.SEARCH);
+  }, []);
+
   // API call function
   const searchProducts = async (query: string, pageNum: number = 1): Promise<SearchResponse> => {
     try {
@@ -328,6 +335,12 @@ const SearchResults = (props: HomeProps) => {
       setTotalCount(response.data.length);
       setHasMore(response.hasMore || false);
       setNoResults(response.data.length === 0);
+
+      // Track product_search event
+      trackEvent(AnalyticsEvents.PRODUCT_SEARCH, {
+        keyword: query,
+        count_search_result: response.data.length
+      });
     } catch (error) {
       console.error('Search failed:', error);
       setNoResults(true);

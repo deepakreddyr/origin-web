@@ -8,6 +8,8 @@ import TermsAndConditions from '../TermsAndConditions';
 import { mainApiUrl } from '@/url';
 import { useDispatch } from 'react-redux';
 import { setTabType } from '@/store/slice/loginSlice';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 interface Props {
   mobileNumber: string;
@@ -51,6 +53,7 @@ const RequestOTP = (props: Props) => {
         body: formData
       });
       dispatch(setTabType(TabTypeConstant.ENTER_OTP));
+      trackEvent(AnalyticsEvents.PHONE);
 
       setMobileNumberErrors('');
     } catch (error) {

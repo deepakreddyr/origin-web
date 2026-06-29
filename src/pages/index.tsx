@@ -22,6 +22,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
 import * as gtag from '@/utilities/gtag';
+import { trackEvent } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { getAddressAndStoreId } from '@/utilities/utils';
@@ -107,6 +109,7 @@ const Home = ({
       category: 'Navigation',
       label: 'Home'
     });
+    trackEvent(AnalyticsEvents.HOME);
   }, [loginDetails.isLogin, address.defaultAddress?.store_id]);
 
   const mainCategoryData = homepageData?.find((item: any) => item.type === 'main-category')?.data || categories || [];
@@ -152,6 +155,7 @@ const Home = ({
         {/* Homepage Category Section */}
         {fetchError ? (
           <div className="flex flex-col items-center justify-center py-16 px-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/assets/svg/somethingwentwrong.svg"
               alt="Something went wrong"
