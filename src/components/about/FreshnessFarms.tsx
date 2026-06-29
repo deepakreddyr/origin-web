@@ -34,22 +34,16 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, del
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
-      className="bg-[#FEF5E3] rounded-[24px] p-6 lg:p-7 flex flex-col items-start border border-black/[0.02] hover:-translate-y-1 transition-all duration-300 select-none"
+      className="bg-[#FEF5E3] w-[149.23px] lg:w-full h-[154.93px] lg:h-auto rounded-[14.28px] lg:rounded-[24px] pt-[17.85px] lg:pt-[28px] pr-[17.85px] lg:pr-[28px] pb-[43.55px] lg:pb-[28px] pl-[17.85px] lg:pl-[28px] gap-[9.95px] lg:gap-0 flex flex-col items-start border border-black/[0.02] hover:-translate-y-1 transition-all duration-300 select-none"
       style={{ boxShadow: '0px 3.41px 3.41px 0px rgba(0, 0, 0, 0.25)' }}
     >
-      <div className="w-14 h-14 flex items-center justify-center mb-7 shrink-0 relative">
+      <div className="w-8 h-8 lg:w-14 lg:h-14 flex items-center justify-center mb-0 lg:mb-7 shrink-0 relative">
         <Image src={icon} alt="" width={60} height={60} className="object-contain" />
       </div>
-      <h3
-        className="font-[Recoleta] text-black leading-tight mb-4"
-        style={{ fontWeight: 600, fontSize: '21.53px', lineHeight: '30.14px', letterSpacing: '0px' }}
-      >
+      <h3 className="font-[Recoleta] text-black leading-tight mb-0 lg:mb-4 font-[600] text-[14px] lg:text-[21.53px] lg:leading-[30.14px]">
         {title}
       </h3>
-      <p
-        className="font-[SofiaPro] text-black max-w-[230px]"
-        style={{ fontWeight: 400, fontSize: '19.14px', lineHeight: '23.36px', letterSpacing: '0px' }}
-      >
+      <p className="font-[SofiaPro] text-black max-w-full lg:max-w-[230px] font-[400] text-[10px] lg:text-[19.14px] leading-[14px] lg:leading-[23.36px]">
         {description}
       </p>
     </motion.div>
@@ -64,12 +58,16 @@ const FloatingOrganicCard = () => {
       whileInView={{ opacity: 1, scale: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-      className="absolute bottom-6 left-6 bg-white rounded-[20px] shadow-[0_15px_45px_rgba(0,0,0,0.08)] px-5 py-3.5 flex items-center gap-3 z-10 border border-black/5 select-none"
+      className="absolute bottom-4 left-4 lg:bottom-6 lg:left-6 bg-white rounded-[12px] lg:rounded-[20px] shadow-[0_15px_45px_rgba(0,0,0,0.08)] px-3 py-2 lg:px-5 lg:py-3.5 flex items-center gap-2 lg:gap-3 z-10 border border-black/5 select-none"
     >
-      <ScallopedBadgeCheck />
+      <div className="w-5 h-5 lg:w-7 lg:h-7 shrink-0">
+        <ScallopedBadgeCheck />
+      </div>
       <div className="flex flex-col leading-none">
-        <span className="font-[Recoleta] font-bold text-[18px] text-black leading-none">100% Organic</span>
-        <span className="font-[SofiaPro] font-bold text-[9px] tracking-wider text-[#7A7570] uppercase mt-[4px]">
+        <span className="font-[Recoleta] font-bold text-[12px] lg:text-[18px] text-black leading-none">
+          100% Organic
+        </span>
+        <span className="font-[SofiaPro] font-bold text-[7px] lg:text-[9px] tracking-wider text-[#7A7570] uppercase mt-[4px]">
           Certified Quality
         </span>
       </div>
@@ -103,16 +101,15 @@ const FreshnessFarms = () => {
   ];
 
   return (
-    <section className="w-full bg-white py-[10vh] md:py-[12vh] px-[6vw] overflow-hidden">
-      <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-12 items-center">
+    <section className="w-full bg-white pt-[30px] pr-[16px] pb-[40px] pl-[16px] lg:py-[12vh] lg:px-[6vw] overflow-hidden">
+      <div className="max-w-[1280px] mx-auto flex flex-col lg:grid lg:grid-cols-[0.9fr_1.1fr] gap-[20px] lg:gap-12 items-center">
         {/* ── Left Image Box ── */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="relative rounded-[32px] md:rounded-[40px] overflow-hidden shrink-0"
-          style={{ width: '591.39px', height: '784px' }}
+          className="relative rounded-[24px] lg:rounded-[40px] overflow-hidden shrink-0 w-full h-[520px] lg:w-[591.39px] lg:h-[784px]"
         >
           <Image
             src={produceImg}
@@ -127,10 +124,7 @@ const FreshnessFarms = () => {
         </motion.div>
 
         {/* ── Right Content Box ── */}
-        <div
-          className="flex flex-col items-start justify-center"
-          style={{ width: '657px', height: '784px', gap: '21.53px' }}
-        >
+        <div className="flex flex-col items-start justify-center w-full lg:w-[657px] h-auto lg:h-[784px] gap-[20px] lg:gap-[21.53px]">
           {/* Animated Main Title */}
           <div className="overflow-hidden w-full">
             <motion.span
@@ -138,8 +132,7 @@ const FreshnessFarms = () => {
               whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="font-[Recoleta] text-[#231F20]"
-              style={{ fontWeight: 500, fontSize: '45.33px', lineHeight: '54.4px', letterSpacing: '-0.45px' }}
+              className="font-[Recoleta] text-[#231F20] font-[500] text-[24px] lg:text-[45.33px] leading-[28.8px] lg:leading-[54.4px] tracking-[-0.24px] lg:tracking-[-0.45px]"
             >
               Freshness Delivered Straight
               <br />
@@ -148,10 +141,7 @@ const FreshnessFarms = () => {
           </div>
 
           {/* Features Grid */}
-          <div
-            className="grid grid-cols-[300px_300px] justify-between w-full"
-            style={{ height: '650px', rowGap: '25.18px' }}
-          >
+          <div className="grid grid-cols-2 lg:grid-cols-[300px_300px] justify-center lg:justify-start w-[326.82px] mx-auto lg:mx-0 lg:w-full h-[323.34px] lg:h-[650px] gap-[12.53px] lg:gap-[25.18px]">
             {features.map((feature, i) => (
               <FeatureCard
                 key={feature.title}

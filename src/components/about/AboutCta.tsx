@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 const AboutCta = () => {
   return (
     <section
-      className="w-full relative overflow-hidden flex flex-col items-center justify-center border-b-[10px] border-[#FFB600]"
+      className="w-full relative overflow-hidden flex flex-col items-center justify-center"
       style={{
         backgroundColor: '#FCF9F4',
         height: '604.58px'

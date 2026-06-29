@@ -67,7 +67,7 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
   const blendsFromMain = categories.find((cat: any) => cat.name.toLowerCase() === 'blends');
   const otherCategories = categories.filter((cat: any) => cat.name.toLowerCase() !== 'blends');
 
-  const initialCount = mobile ? 4 : 8;
+  const initialCount = mobile ? 5 : 8;
   const displayedCategories = isExpanded ? otherCategories : otherCategories.slice(0, initialCount);
   const hasMore = otherCategories.length > initialCount;
 
@@ -81,22 +81,37 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
       <div className="max-w-[1440px] mx-auto px-4 md:px-[3vw]">
         {title && (
           <div className="w-full mb-[2.1vw] mob:mb-[2vw]">
-            <h1 className="font-[Recoleta] text-start font-bold text-[3vw] mob:text-[7vw] text-[#231F20]">{title}</h1>
+            <h1 className="font-[Recoleta] text-start font-bold text-[3vw] mob:text-[22px] text-[#231F20]">{title}</h1>
           </div>
         )}
 
         <div className={`relative w-full ${!isExpanded && hasMore ? 'pb-[4vw]' : ''}`}>
           <div
             className={`
-              transition-all duration-500 ease-in-out overflow-hidden -mx-[4vw] px-[4vw] md:-mx-[100px] md:px-[100px]
-              ${!isExpanded && hasMore ? (mobile ? 'max-h-[150vw]' : 'max-h-[460px]') : 'max-h-[5000px]'}
+              transition-all duration-500 ease-in-out overflow-hidden -mx-[4vw] px-[0vw] md:-mx-[100px] md:px-[100px]
+              ${!isExpanded && hasMore ? (mobile ? 'max-h-[180vw]' : 'max-h-[460px]') : 'max-h-[5000px]'}
             `}
           >
             {mobile ? (
-              <div className="flex flex-wrap justify-center gap-x-[4vw] gap-y-[12vw] pt-[4vw] mob:pt-[4vw]">
-                {allCategories.map((category) => (
-                  <CategoryCard key={category.id} category={category} generateHref={generateHref} mobile={mobile} />
-                ))}
+              <div className="pt-[4vw] mob:pt-[4vw]">
+                {/* 2-column grid for pairs — fixed gap so spacing is consistent across screen sizes */}
+                <div className="grid grid-cols-2 gap-x-[12px] gap-y-[20px]">
+                  {(allCategories.length % 2 === 0 ? allCategories : allCategories.slice(0, -1)).map(
+                    (category: any) => (
+                      <CategoryCard key={category.id} category={category} generateHref={generateHref} mobile={mobile} />
+                    )
+                  )}
+                </div>
+                {/* Centered last item if odd count */}
+                {allCategories.length % 2 !== 0 && (
+                  <div className="flex justify-center mt-[20px]">
+                    <CategoryCard
+                      category={allCategories[allCategories.length - 1]}
+                      generateHref={generateHref}
+                      mobile={mobile}
+                    />
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex flex-col gap-y-[63px] pt-[2vw]">
@@ -135,7 +150,7 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
       </div>
 
       {finalBlendsCategory && (
-        <div className="w-[100vw] relative left-1/2 -translate-x-1/2 mt-[8vw] md:mt-[60px]">
+        <div className="w-[100vw] relative left-1/2 -translate-x-1/2 mt-[32px] md:mt-[60px]">
           <BlendsBanner href={generateHref(finalBlendsCategory)} />
         </div>
       )}
@@ -157,15 +172,25 @@ const CategoryCard = ({
   return (
     <Link
       href={generateHref(category)}
-      className="group relative flex-shrink-0 flex-grow-0 w-[45.98vw] md:w-[377.72px] h-[22vw] md:h-[165.36px] overflow-visible mt-[8vw] md:mt-[25px]"
+      className="group relative flex-shrink-0 flex-grow-0 w-full md:w-[377.72px] h-[20vw] md:h-[165.36px] overflow-visible mt-[0px] md:mt-[25px]"
+      style={mobile ? { height: '92.58px', maxWidth: '175px' } : {}}
     >
       {/* Main Rectangular Card — positioned to the right to leave space for the image */}
       <div
-        className={`absolute top-0 right-0 w-[41.8vw] md:w-[299.77px] h-full rounded-[14px] md:rounded-[22.44px] ${!category.bg_color ? 'bg-[#FAF2DCB2]' : ''} overflow-visible transition-all duration-300`}
+        className={`absolute top-0 right-0 w-[calc(100%-4vw)] md:w-[299.77px] h-full rounded-[14px] md:rounded-[22.44px] ${!category.bg_color ? 'bg-[#FAF2DCB2]' : ''} overflow-visible transition-all duration-300`}
         style={{
           backdropFilter: 'blur(21.036842346191406px)',
           WebkitBackdropFilter: 'blur(21.036842346191406px)',
-          backgroundColor: category.bg_color ? `${category.bg_color}B2` : undefined
+          backgroundColor: category.bg_color ? `${category.bg_color}B2` : undefined,
+          ...(mobile
+            ? {
+                // Box fills the card minus the 31.32px image overhang on the left
+                width: 'calc(100% - 31.32px)',
+                height: '75.29px',
+                top: '17.29px',
+                borderRadius: '10.22px'
+              }
+            : {})
         }}
       >
         {/* Badge — overlapping divs with transparent cutout to prevent background bleed */}
@@ -191,9 +216,31 @@ const CategoryCard = ({
         {/* Text Title — centered in the right-side space, vertically centered */}
         <div
           className="absolute top-0 right-0 h-full flex items-center justify-center"
-          style={{ width: mobile ? '58%' : '56%' }}
+          style={{
+            ...(mobile
+              ? {
+                  // Text container occupies the right ~72% of the box (excluding image overlap zone)
+                  width: 'calc((100% - 31.32px) * 0.72)',
+                  height: '75.29px',
+                  top: 0
+                }
+              : { width: '56%' })
+          }}
         >
-          <h2 className="font-[Recoleta] font-bold text-[3.2vw] md:text-[22px] text-[#231F20] leading-tight select-none whitespace-nowrap text-center pr-[10px] md:pr-[20px]">
+          <h2
+            className="font-[Recoleta] font-bold text-[13px] md:text-[22px] text-[#231F20] leading-tight select-none whitespace-nowrap text-center pr-[10px] md:pr-[20px]"
+            style={
+              mobile
+                ? {
+                    fontSize: 'clamp(11px, 3.2vw, 13px)',
+                    lineHeight: '1.2',
+                    fontWeight: 600,
+                    paddingRight: 0,
+                    whiteSpace: 'normal'
+                  }
+                : {}
+            }
+          >
             {category.name}
           </h2>
         </div>
@@ -202,24 +249,48 @@ const CategoryCard = ({
         <div
           className="absolute bottom-[10px] right-[10px] md:bottom-[22px] md:right-[22px] w-6 h-6 md:w-8 md:h-8 rounded-full bg-white flex items-center justify-center transition-all duration-300"
           style={{
-            boxShadow: '-10px 12px 13.46px 0px rgba(0, 0, 0, 0.14)'
+            boxShadow: '-10px 12px 13.46px 0px rgba(0, 0, 0, 0.14)',
+            ...(mobile
+              ? {
+                  width: '17px',
+                  height: '17px',
+                  // Position from bottom-right of box so it stays in place as box scales
+                  bottom: '5px',
+                  right: '5px',
+                  top: 'auto',
+                  left: 'auto',
+                  borderRadius: '10px'
+                }
+              : {})
           }}
         >
-          <ArrowIcon />
+          <div className="flex items-center justify-center" style={mobile ? { transform: 'scale(0.5)' } : {}}>
+            <ArrowIcon />
+          </div>
         </div>
       </div>
 
       {/* Left Circular overlapping Image — aligned to bottom, starting from the left edge of wrapper */}
       <div
         className="absolute z-10 transition-transform duration-500 select-none pointer-events-none"
-        style={{
-          width: mobile ? '25.08vw' : '185.82px',
-          height: mobile ? '27.17vw' : '216.79px',
-          bottom: '0px',
-          left: '0px',
-          transformOrigin: 'left bottom',
-          scale: mobile ? '1' : '1.03'
-        }}
+        style={
+          mobile
+            ? {
+                width: '90.68px',
+                height: '85.96px',
+                top: '7px',
+                left: '0px', // Image always at left edge of card
+                transformOrigin: 'left top'
+              }
+            : {
+                width: '185.82px',
+                height: '216.79px',
+                bottom: '0px',
+                left: '0px',
+                transformOrigin: 'left bottom',
+                scale: '1.03'
+              }
+        }
       >
         {imageSrc ? (
           // eslint-disable-next-line @next/next/no-img-element

@@ -23,33 +23,16 @@ const StepContent: React.FC<StepContentProps> = ({ stepNumber, title, descriptio
     <div
       className={`flex flex-col ${align === 'right' ? 'items-end text-right' : 'items-start text-left'} w-full select-none`}
     >
-      <span
-        className="font-[SofiaPro] uppercase text-[#FFB600] mb-2"
-        style={{ fontWeight: 400, fontSize: '24px', lineHeight: '27.32px', letterSpacing: '0px' }}
-      >
+      <span className="font-[SofiaPro] uppercase text-[#FFB600] mb-1 md:mb-2 font-[400] text-[10px] md:text-[24px] leading-[14px] md:leading-[27.32px]">
         {stepNumber}
       </span>
       <h3
-        className="font-[Recoleta] text-[#231F20] mb-3"
-        style={{
-          fontWeight: 600,
-          fontSize: '27.32px',
-          lineHeight: '38.25px',
-          letterSpacing: '0px',
-          textAlign: align === 'right' ? 'right' : 'left'
-        }}
+        className={`font-[Recoleta] text-[#231F20] mb-2 md:mb-3 font-[600] text-[15.78px] md:text-[27.32px] leading-[22.09px] md:leading-[38.25px] ${align === 'right' ? 'text-right' : 'text-left'}`}
       >
         {title}
       </h3>
       <p
-        className="font-[SofiaPro] text-[#00000099] max-w-[800px]"
-        style={{
-          fontWeight: 400,
-          fontSize: '24px',
-          lineHeight: '29.3px',
-          letterSpacing: '0px',
-          textAlign: align === 'right' ? 'right' : 'left'
-        }}
+        className={`font-[SofiaPro] text-[#00000099] max-w-full md:max-w-[800px] font-[400] text-[13.86px] md:text-[24px] leading-[16.92px] md:leading-[29.3px] ${align === 'right' ? 'text-right' : 'text-left'}`}
       >
         {parts.map((part, index) => (
           <React.Fragment key={index}>
@@ -75,15 +58,11 @@ const StepImageNode: React.FC<StepImageNodeProps> = ({ src, alt, innerRef }) => 
     ref={innerRef}
     initial={{ opacity: 0, scale: 0.92 }}
     whileInView={{ opacity: 1, scale: 1 }}
-    viewport={{ once: true, margin: '-80px' }}
+    viewport={{ once: true, margin: '-20px' }}
     transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-    className="relative z-10 shrink-0 overflow-hidden rounded-[20px]"
-    style={{
-      width: '100px',
-      height: '100px'
-    }}
+    className="relative z-10 shrink-0 overflow-hidden rounded-[16px] md:rounded-[20px] w-[50px] h-[50px] md:w-[100px] md:h-[100px]"
   >
-    <Image src={src} alt={alt} fill className="object-cover object-center" sizes="280px" />
+    <Image src={src} alt={alt} fill className="object-cover object-center" sizes="(max-width: 768px) 50px, 100px" />
   </motion.div>
 );
 
@@ -183,6 +162,88 @@ const ScrollDot: React.FC<ScrollDotProps> = ({ containerRef, lineTop, lineBottom
     </motion.div>
   );
 };
+// ── Mobile Timeline Icons ──
+const TractorIcon = () => (
+  <svg
+    width="26"
+    height="26"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="#231F20"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="7" cy="17" r="2" />
+    <circle cx="17" cy="17" r="2" />
+    <path d="M5 17H3v-2.13a.8.8 0 0 1 .53-.75L9 12h5l3 3v2h-2" />
+    <path d="M11 12V8h4v4" />
+  </svg>
+);
+const QualityIcon = () => (
+  <svg
+    width="26"
+    height="26"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="#231F20"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M12 2l3.09 1.68 3.52-.39 1.13 3.35 2.87 2.05-1.57 3.17 1.57 3.17-2.87 2.05-1.13 3.35-3.52-.39L12 22l-3.09-1.68-3.52.39-1.13-3.35-2.87-2.05 1.57-3.17-1.57-3.17 2.87-2.05 1.13-3.35 3.52.39L12 2z" />
+    <path d="m9 12 2 2 4-4" />
+  </svg>
+);
+const BoxIcon = () => (
+  <svg
+    width="26"
+    height="26"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="#231F20"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+    <polyline points="3.29 7 12 12 20.71 7" />
+    <line x1="12" y1="22" x2="12" y2="12" />
+  </svg>
+);
+const OpenBoxIcon = () => (
+  <svg
+    width="26"
+    height="26"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="#231F20"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="21 8 21 21 3 21 3 8" />
+    <rect x="1" y="3" width="22" height="5" />
+    <line x1="10" y1="12" x2="14" y2="12" />
+  </svg>
+);
+const TruckIcon = () => (
+  <svg
+    width="26"
+    height="26"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="#231F20"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <rect x="1" y="3" width="15" height="13" />
+    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+    <circle cx="5.5" cy="18.5" r="2.5" />
+    <circle cx="18.5" cy="18.5" r="2.5" />
+  </svg>
+);
 
 // ── Main Component ──
 const OriginOfFresh = () => {
@@ -232,42 +293,47 @@ const OriginOfFresh = () => {
       title: 'Sourced at the Peak',
       description:
         'We work directly with 10,000+\nfarmers, building long-term\nrelationships focused on their growth\nand youraccess to peak produce.',
-      image: step1Img
+      image: step1Img,
+      icon: <TractorIcon />
     },
     {
       stepNumber: 'STEP 02',
       title: 'Five-Level Quality Check',
       description:
         'Every fruit and vegetable passes\nthrough five stages of inspection for\nbruising, marks, condition, and taste.',
-      image: step2Img
+      image: step2Img,
+      icon: <QualityIcon />
     },
     {
       stepNumber: 'STEP 03',
       title: 'No Warehousing',
       description:
         'Produce moves straight from farm to\nstore and is stored under the right\nconditions. No unnecessary stops.',
-      image: step3Img
+      image: step3Img,
+      icon: <BoxIcon />
     },
     {
       stepNumber: 'STEP 04',
       title: 'Packed to Order',
       description:
         'When your order comes in, it goes through\na last-mile quality check, is stacked\nmindfully and dispatched quickly.',
-      image: step4Img
+      image: step4Img,
+      icon: <OpenBoxIcon />
     },
     {
       stepNumber: 'STEP 05',
       title: 'Delivered Fresh',
       description: 'Handled with care and delivered safely\nto your door within 24 hours of harvest.',
-      image: step5Img
+      image: step5Img,
+      icon: <TruckIcon />
     }
   ];
 
   return (
-    <section className="w-full bg-white pt-[10vw] md:pt-[1vw] px-[6vw] relative overflow-hidden">
+    <section className="w-full bg-white pt-[10vw] md:pt-[1vw] px-0 md:px-[6vw] relative overflow-hidden">
       {/* Title */}
-      <div className="max-w-[1280px] mx-auto text-center mb-16 md:mb-20">
-        <h2 className="font-[Recoleta] font-bold text-[8.5vw] md:text-[5vw] lg:text-[3.8vw] leading-tight text-[#231F20]">
+      <div className="max-w-[1280px] mx-auto text-center mb-10 md:mb-20">
+        <h2 className="font-[Recoleta] font-bold text-[26px] md:text-[5vw] lg:text-[3.8vw] leading-[1.2] text-[#231F20]">
           Let&apos;s go to the <span className="text-[#137A3F]">Origin of Fresh</span>
         </h2>
       </div>
@@ -341,40 +407,37 @@ const OriginOfFresh = () => {
       </div>
 
       {/* ── Mobile Timeline ── */}
-      <div className="relative max-w-[600px] mx-auto md:hidden px-4 pb-6">
+      <div
+        className="relative w-full max-w-[589.11px] mx-auto md:hidden pb-10"
+        style={{ paddingLeft: '10.52px', paddingRight: '10.52px' }}
+      >
         {/* Black dashed line */}
         <div
-          className="absolute top-0 bottom-0 z-0"
-          style={{ left: '50%', width: '2.8px', borderLeft: '2.8px dashed #000000', transform: 'translateX(-50%)' }}
+          className="absolute top-8 bottom-12 z-0"
+          style={{ left: 'calc(10.52px + 25px)', width: '1px', borderLeft: '1px dashed #000000' }}
         />
 
-        <div className="flex flex-col gap-14">
+        <div className="flex flex-col gap-10 relative z-10">
           {steps.map((step, i) => (
             <motion.div
               key={step.stepNumber}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-35px' }}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-20px' }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: i * 0.05 }}
-              className="flex flex-col items-center gap-5 relative z-10"
+              className="flex flex-row items-center gap-12 md:gap-5"
             >
-              {/* Image centered on mobile */}
-              <div className="relative rounded-[18px] overflow-hidden w-full" style={{ height: '200px' }}>
-                <Image
-                  src={step.image}
-                  alt={step.title}
-                  fill
-                  className="object-cover object-center"
-                  sizes="(max-width: 600px) 100vw"
+              {/* Image Timeline Node */}
+              <StepImageNode src={step.image} alt={step.title} />
+              {/* Text */}
+              <div>
+                <StepContent
+                  stepNumber={step.stepNumber}
+                  title={step.title}
+                  description={step.description}
+                  align="left"
                 />
               </div>
-              {/* Text below image */}
-              <StepContent
-                stepNumber={step.stepNumber}
-                title={step.title}
-                description={step.description}
-                align="left"
-              />
             </motion.div>
           ))}
         </div>

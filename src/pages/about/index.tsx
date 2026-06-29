@@ -54,7 +54,7 @@ const AboutUsPage = (props: any) => {
   }, []);
 
   return (
-    <Layout isHeaderSticky={false} mainMenuItems={mainMenuItems} footerData={footerData}>
+    <Layout isHeaderSticky={false} mainMenuItems={mainMenuItems} footerData={footerData} transparentColor="white">
       <CustomHead
         title="About Us | Origin Fresh"
         description="Learn about our commitment to bringing fresh, high-quality produce to your table. We focus on sustainability and quality."

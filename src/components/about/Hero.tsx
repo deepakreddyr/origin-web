@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 
 const Hero = () => {
   return (
-    <section className="w-full mt-[-8vw] mob:mt-[25vw] flex flex-col">
+    <section className="w-full mt-[-8vw]  flex flex-col">
       {/* Desktop View: Show aboutNoText.webp + Text Content Overlay */}
       <div className="hidden md:block w-full relative">
         <Image
@@ -21,7 +21,7 @@ const Hero = () => {
           className="absolute inset-0 bg-[#000000B2] flex flex-col justify-center items-center text-white"
           style={{ perspective: 1000 }}
         >
-          <div className="flex flex-col items-center transform translate-y-[6vw]">
+          <div className="flex flex-col items-center transform translate-y-[10vw]">
             <div style={{ overflow: 'hidden', width: '850px', height: '141px' }}>
               <motion.h1
                 className="font-[Recoleta] font-semibold text-center select-none"
@@ -70,54 +70,63 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Mobile View: Show aboutNoText.webp + Text Content Below */}
-      <div className="md:hidden w-full flex flex-col mt-[9vw]">
-        <div className="w-full">
-          <Image
-            src={heroImgNoText}
-            alt="Hero background"
-            className="w-full h-auto object-cover"
-            priority
-            quality={100}
-          />
-        </div>
+      {/* Mobile View: Full image with centered text overlay */}
+      <div className="md:hidden w-full relative" style={{ height: '591px' }}>
+        {/* Background Image */}
+        <Image
+          src={heroImg1}
+          alt="Connecting Farms directly to your Table"
+          fill
+          className="object-cover object-center"
+          priority
+          quality={100}
+        />
 
-        {/* Mobile Description Section */}
-        <div className="w-full px-[6vw] bg-[#FFFBEB] py-[10vw] flex flex-col items-start" style={{ perspective: 1000 }}>
-          {/* Headline */}
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/60" />
+
+        {/* Centered Text Content */}
+        <div
+          className="absolute inset-0 flex flex-col items-center justify-center px-[24px] transform translate-y-[8vw]"
+          style={{ perspective: 1000 }}
+        >
+          {/* Heading */}
           <div style={{ overflow: 'hidden', width: '100%' }}>
             <motion.h1
-              className="font-[Recoleta] font-bold text-[9vw] leading-[1.1] mb-[3vw]"
+              className="font-[Recoleta] text-white text-center"
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+              style={{
+                fontWeight: 600,
+                fontSize: '36.73px',
+                lineHeight: '40.4px',
+                letterSpacing: '0.57px'
+              }}
             >
-              <span className="text-primary">Good food begins</span>
+              Connecting Farms directly
               <br />
-              <span className="text-black">at the source.</span>
+              to your Table
             </motion.h1>
           </div>
 
-          <div style={{ overflow: 'hidden', width: '100%' }}>
-            <motion.div
-              className="w-full"
+          {/* Description */}
+          <div style={{ overflow: 'hidden', width: '100%', marginTop: '16px' }}>
+            <motion.p
+              className="font-[SofiaPro] text-white text-center"
               initial={{ y: '100%' }}
               animate={{ y: 0 }}
               transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
+              style={{
+                fontWeight: 400,
+                fontSize: '13.77px',
+                lineHeight: '16.78px',
+                letterSpacing: '0px'
+              }}
             >
-              {/* Stat */}
-              <p className="font-[SofiaPro] font-semibold text-black text-[4vw] leading-[1.25]">
-                We work closely with over
-              </p>
-              <p className="font-[Recoleta] font-bold text-primary text-[9vw] leading-[1]">10,000+ farmers</p>
-
-              {/* Paragraph */}
-              <p className="font-[SofiaPro] font-semibold text-black text-[4vw] leading-[1.25]">
-                globally, building long-term partnerships rooted in transparency. By removing unnecessary
-                intermediaries, we ensure a more traceable journey from farm to table. The result is consistent quality
-                for you and fair value for the farmers.
-              </p>
-            </motion.div>
+              We believe the shortest distance between the soil and your soul is an honest harvest. Origin Fresh was
+              born to bring the vibrant vitality of organic farming directly to your home.
+            </motion.p>
           </div>
         </div>
       </div>
