@@ -1,60 +1,101 @@
 import { DeliveryStatusDetails } from '@/constants/orderDetailsConstants';
+import { DateTime } from 'luxon';
 import React, { useEffect, useState } from 'react';
 
 const StatusBanner = (props: any) => {
   const { orderDetails, children } = props;
 
-  const lastStatus = orderDetails.status_list[orderDetails.status_list.length - 1];
-  const currentStatus = lastStatus.status_message.toLowerCase() || 'out for delivery';
+  const lastStatus = orderDetails.status_list?.[orderDetails.status_list.length - 1];
+  const currentStatus = lastStatus?.status_message?.toLowerCase() || 'out for delivery';
 
-  const getEtaInSeconds = () => {
+  const getRemainingDuration = () => {
+    // 1. Primary Calculation (LBNP End Time)
     if (orderDetails?.lbnp?.end_time) {
-      const nowEpoch = Math.floor(Date.now() / 1000);
-      const diff = orderDetails.lbnp.end_time - nowEpoch;
-      // If lbnp is present, use the remaining time. If it's already past, show minimum 2 mins.
-      return diff > 120 ? diff : 120;
+      let endTime = orderDetails.lbnp.end_time;
+      // Safely handle string/number, seconds/milliseconds
+      if (typeof endTime === 'string') endTime = Number(endTime);
+      // If it's in seconds (typical epoch < 10^12), multiply by 1000
+      if (endTime < 1000000000000) endTime *= 1000;
+
+      const targetArrival = DateTime.fromMillis(endTime).setZone('Asia/Kolkata');
+      const now = DateTime.now().setZone('Asia/Kolkata');
+      return targetArrival.diff(now);
     }
-    // Fallback: use driver.eta (already in seconds)
-    return orderDetails?.driver?.eta || 0;
+
+    // 2. Fallback Calculation (Driver ETA)
+    const driverEta = orderDetails?.driver?.eta;
+    const startedAt = orderDetails?.driver?.previous_order_started_at;
+
+    if (driverEta && startedAt) {
+      let startTime = startedAt;
+      if (typeof startTime === 'string') startTime = Number(startTime);
+      if (startTime < 1000000000000) startTime *= 1000;
+
+      const targetArrival = DateTime.fromMillis(startTime)
+        .setZone('Asia/Kolkata')
+        .plus({ seconds: Number(driverEta) });
+
+      const now = DateTime.now().setZone('Asia/Kolkata');
+      return targetArrival.diff(now);
+    }
+
+    return null;
   };
 
-  const [remainingEta, setRemainingEta] = useState(getEtaInSeconds());
-
-  const MIN_ETA_SECONDS = 120;
-  // lbnp exists but start_time or end_time is missing → hide ETA entirely
-  const lbnpExistsButNoTimes = !!orderDetails?.lbnp && (!orderDetails.lbnp.start_time || !orderDetails.lbnp.end_time);
-  const hasLbnp = !!orderDetails?.lbnp?.end_time;
-
-  // Converts seconds into minutes format
-  const convertEtaToMins = (eta: number): string => {
-    if (hasLbnp && eta <= MIN_ETA_SECONDS) return '2 mins';
-    const minutes = Math.floor(eta / 60);
-    return `${minutes} mins`;
-  };
+  const [remainingDuration, setRemainingDuration] = useState(getRemainingDuration());
 
   useEffect(() => {
     // Start the countdown when the component mounts or when the eta changes
-    setRemainingEta(getEtaInSeconds());
+    setRemainingDuration(getRemainingDuration());
 
     const timer = setInterval(() => {
-      setRemainingEta((prevEta: any) => {
-        // If lbnp is present, never go below 2 mins (120s)
-        const minEta = hasLbnp ? MIN_ETA_SECONDS : 0;
-        if (prevEta > minEta) {
-          return prevEta - 1;
-        } else {
-          if (!hasLbnp) clearInterval(timer);
-          return minEta;
-        }
-      });
+      setRemainingDuration(getRemainingDuration());
     }, 1000);
 
     // Cleanup the interval on component unmount or when eta changes
     return () => clearInterval(timer);
-  }, [orderDetails?.driver?.eta, orderDetails?.lbnp?.start_time, orderDetails?.lbnp?.end_time]);
+  }, [orderDetails?.driver?.eta, orderDetails?.driver?.previous_order_started_at, orderDetails?.lbnp?.end_time]);
 
-  // If lbnp exists but has no start/end times and status would show a timer, hide the whole banner
-  if (lbnpExistsButNoTimes && DeliveryStatusDetails[currentStatus]?.statusDesc === 'timer') {
+  const isTimerStatus = DeliveryStatusDetails[currentStatus]?.statusDesc === 'timer';
+
+  // "if the eta is coming as 0 do not show the box"
+  const hasLbnp = !!orderDetails?.lbnp?.end_time;
+  const isEtaZeroOrMissing = !hasLbnp && (!orderDetails?.driver?.eta || orderDetails?.driver?.eta === 0);
+
+  if (isTimerStatus && isEtaZeroOrMissing) {
+    return null;
+  }
+
+  // 3. Display Formatting & Live Updates
+  const getFormattedETA = (): string | null => {
+    if (!remainingDuration) return '2 mins';
+
+    const totalMinutes = Math.floor(remainingDuration.as('minutes'));
+
+    // If it's over 120 minutes, it hides the timer.
+    if (totalMinutes > 120) {
+      return null;
+    }
+
+    // Graceful Fallback: If the time difference is less than zero or < 2 mins, defaults to displaying "2 minutes".
+    if (totalMinutes < 2) {
+      return '2 mins';
+    }
+
+    // Intelligently formats the countdown (e.g., "1 hr 15 mins" or "45 mins").
+    if (totalMinutes >= 60) {
+      const hours = Math.floor(totalMinutes / 60);
+      const mins = totalMinutes % 60;
+      return `${hours} hr ${mins > 0 ? `${mins} mins` : ''}`.trim();
+    }
+
+    return `${totalMinutes} mins`;
+  };
+
+  const formattedEtaText = getFormattedETA();
+
+  // If the logic dictates we hide the timer (e.g., over 120 mins)
+  if (isTimerStatus && !formattedEtaText) {
     return null;
   }
 
@@ -75,14 +116,10 @@ const StatusBanner = (props: any) => {
             className="text-[.7vw] mob:text-[3vw] font-[SofiaPro] font-semibold pb-[.3vw]"
             style={{ color: '#FFF2B4' }}
           >
-            {DeliveryStatusDetails[currentStatus].statusTitle}
+            {DeliveryStatusDetails[currentStatus]?.statusTitle || ''}
           </p>
           <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold" style={{ color: '#FFF2B4' }}>
-            {DeliveryStatusDetails[currentStatus]?.statusDesc === 'timer'
-              ? lbnpExistsButNoTimes
-                ? null
-                : convertEtaToMins(remainingEta)
-              : DeliveryStatusDetails[currentStatus]?.statusDesc}
+            {isTimerStatus ? formattedEtaText : DeliveryStatusDetails[currentStatus]?.statusDesc}
           </p>
         </div>
         <span className="absolute bottom-[0vw] left-[.2vw] text-base">.</span>
