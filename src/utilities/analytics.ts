@@ -26,43 +26,43 @@ const CleverTapProvider: AnalyticsProvider = {
   name: 'CleverTap',
   init: () => {
     if (!CleverTap) {
-      console.warn('[CleverTap] SDK not found during init');
+      // console.warn('[CleverTap] SDK not found during init');
       return;
     }
     if (CLEVERTAP_ACCOUNT_ID) {
-      console.log(`[CleverTap] Initializing with Account ID: ${CLEVERTAP_ACCOUNT_ID}, Region: ${CLEVERTAP_REGION}`);
+      // console.log(`[CleverTap] Initializing with Account ID: ${CLEVERTAP_ACCOUNT_ID}, Region: ${CLEVERTAP_REGION}`);
       CleverTap.privacy.push({ optOut: false });
       CleverTap.privacy.push({ useIP: false });
       CleverTap.init(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_REGION);
-      CleverTap.setLogLevel(3); // Set to 3 for verbose CleverTap debug logs
+      // CleverTap.setLogLevel(3); // Set to 3 for verbose CleverTap debug logs
     } else {
-      console.warn('[CleverTap] Account ID not found. Set NEXT_PUBLIC_CLEVERTAP_ACCOUNT_ID in .env.local');
+      // console.warn('[CleverTap] Account ID not found. Set NEXT_PUBLIC_CLEVERTAP_ACCOUNT_ID in .env.local');
     }
   },
   identify: (userId: string) => {
     if (!CleverTap) return;
-    console.log(`[CleverTap] Identify User: ${userId}`);
+    // console.log(`[CleverTap] Identify User: ${userId}`);
     CleverTap.onUserLogin.push({
       Site: { Identity: userId }
     });
   },
   setProperties: (properties: Record<string, any>) => {
     if (!CleverTap) return;
-    console.log('[CleverTap] Set Properties:', properties);
+    // console.log('[CleverTap] Set Properties:', properties);
     CleverTap.profile.push({
       Site: properties
     });
   },
   registerSuperProperties: (properties: Record<string, any>) => {
     if (!CleverTap) return;
-    console.log('[CleverTap] Register Super Properties:', properties);
+    // console.log('[CleverTap] Register Super Properties:', properties);
     CleverTap.profile.push({
       Site: properties
     });
   },
   track: (eventName: string, properties: Record<string, any>) => {
     if (!CleverTap) return;
-    console.log(`[CleverTap] Track Event: ${eventName}`, properties);
+    // console.log(`[CleverTap] Track Event: ${eventName}`, properties);
     if (Object.keys(properties).length > 0) {
       CleverTap.event.push(eventName, properties);
     } else {
@@ -112,11 +112,11 @@ export const trackEvent = <T extends AnalyticsEventName>(
       try {
         provider.track(eventName, properties);
       } catch (error) {
-        console.error(`${provider.name} track error for ${eventName}:`, error);
+        // console.error(`${provider.name} track error for ${eventName}:`, error);
       }
     });
 
-    console.log(`[Analytics] Tracked: ${eventName}`, properties);
+    // console.log(`[Analytics] Tracked: ${eventName}`, properties);
   }
 };
 
