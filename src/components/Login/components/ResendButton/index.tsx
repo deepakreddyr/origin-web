@@ -1,16 +1,13 @@
-import { Button, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Button, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 
 interface ResendOTPProps {
   onResend: () => void;
   cooldownTime?: number;
 }
 
-const ResendOTP: React.FC<ResendOTPProps> = ({
-  onResend,
-  cooldownTime = 30,
-}) => {
-  const [timeLeft, setTimeLeft] = useState(0);
+const ResendOTP: React.FC<ResendOTPProps> = ({ onResend, cooldownTime = 30 }) => {
+  const [timeLeft, setTimeLeft] = useState(cooldownTime);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   useEffect(() => {
@@ -41,16 +38,16 @@ const ResendOTP: React.FC<ResendOTPProps> = ({
       <Button variant="text" onClick={handleResendClick}>
         <Typography
           sx={{
-            color: "#00855b",
-            fontSize: "12px",
-            cursor: isButtonDisabled ? "not-allowed" : "pointer",
-            opacity: isButtonDisabled ? "50%" : "none",
-            textTransform: "capitalize",
-            fontFamily: "SofiaPro",
-            fontWeight: "600",
+            color: '#00855b',
+            fontSize: '12px',
+            cursor: isButtonDisabled ? 'not-allowed' : 'pointer',
+            opacity: isButtonDisabled ? '50%' : 'none',
+            textTransform: 'capitalize',
+            fontFamily: 'SofiaPro',
+            fontWeight: '600'
           }}
         >
-          {isButtonDisabled ? `Resend OTP (${timeLeft}s)` : "Resend OTP"}
+          {isButtonDisabled ? `Resend OTP (${timeLeft}s)` : 'Resend OTP'}
         </Typography>
       </Button>
     </div>

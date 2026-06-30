@@ -7,7 +7,7 @@ interface ResendOTPProps {
 }
 
 const ResendOTP: React.FC<ResendOTPProps> = ({ onResend, cooldownTime = 30 }) => {
-  const [timeLeft, setTimeLeft] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(cooldownTime);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   useEffect(() => {
@@ -26,10 +26,6 @@ const ResendOTP: React.FC<ResendOTPProps> = ({ onResend, cooldownTime = 30 }) =>
       if (timer) clearInterval(timer);
     };
   }, [timeLeft]);
-
-  React.useEffect(() => {
-    setTimeLeft(cooldownTime);
-  }, []);
 
   const handleResendClick = () => {
     if (isButtonDisabled) return;
