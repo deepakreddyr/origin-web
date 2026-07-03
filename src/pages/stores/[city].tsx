@@ -47,7 +47,7 @@ export default function StoreCityPage({
   };
 
   return (
-    <Layout isHeaderSticky={false} mainMenuItems={mainMenuItems} footerData={footerData}>
+    <Layout isHeaderSticky={true} transparentColor="white" mainMenuItems={mainMenuItems} footerData={footerData}>
       <CustomHead
         title={
           status === 'active'
@@ -65,8 +65,8 @@ export default function StoreCityPage({
 
         {/* Dynamic content area based on status */}
         {status === 'active' && (
-          <div className="max-w-[92vw] mx-auto mt-[4vw] mob:mt-[8vw]">
-            <div className="flex mob:flex-col gap-[3vw] mob:gap-[6vw]">
+          <div className="max-w-[92vw] mx-auto mt-[4vw] mob:mt-0">
+            <div className="flex mob:flex-col-reverse gap-[3vw] mob:gap-[6vw]">
               {/* Left side: List of Stores */}
               <div className="w-[40%] mob:w-full flex flex-col">
                 {/* <div className="mb-[1.5vw] mob:mb-[5vw] text-left">
@@ -81,7 +81,7 @@ export default function StoreCityPage({
               </div>
 
               {/* Right side: Map view */}
-              <div className="w-[60%] mob:w-full h-[38vw] mob:h-[75vw] self-start sticky top-[8vw] mob:static">
+              <div className="w-[60%] mob:w-screen mob:-mx-[4vw] h-[38vw] mob:h-[400px] self-start sticky top-[8vw] mob:static">
                 <StoreMap stores={cityStores} selectedStoreId={selectedStoreId} onSelectStore={handleSelectStore} />
               </div>
             </div>

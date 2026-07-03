@@ -5,10 +5,9 @@ import { motion } from 'framer-motion';
 const AboutCta = () => {
   return (
     <section
-      className="w-full relative overflow-hidden flex flex-col items-center justify-center"
+      className="w-full relative overflow-hidden flex flex-col items-center justify-center h-[400px] md:h-[604.58px]"
       style={{
-        backgroundColor: '#FCF9F4',
-        height: '604.58px'
+        backgroundColor: '#FCF9F4'
       }}
     >
       {/* Top Right Gradient */}

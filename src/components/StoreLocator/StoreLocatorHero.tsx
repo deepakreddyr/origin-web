@@ -108,7 +108,7 @@ const SearchBar = ({ stores, cities, router }: { stores: StoreLocation[]; cities
   };
 
   return (
-    <div className="w-full max-w-[650px] flex flex-col sm:flex-row gap-3 md:gap-4 items-center justify-center">
+    <div className="w-full max-w-[650px] flex flex-row gap-2 sm:gap-3 md:gap-4 items-center justify-center">
       <div className="relative w-full flex-1" ref={dropdownRef}>
         <div className="flex items-center bg-[#FDF9F3] rounded-full p-2 md:p-3 shadow-lg w-full">
           <div className="pl-4 pr-2 text-gray-500">
@@ -139,7 +139,7 @@ const SearchBar = ({ stores, cities, router }: { stores: StoreLocation[]; cities
       </div>
 
       <button
-        className="bg-[#FFB600] w-full sm:w-auto text-black font-semibold rounded-full px-8 py-3 md:px-10 md:py-[14px] text-[15px] md:text-[18px] hover:bg-[#FFC107] transition-colors shadow-lg whitespace-nowrap"
+        className="bg-[#fac510] w-auto text-black font-semibold rounded-full px-6 py-2 md:px-10 md:py-[14px] text-[14px] md:text-[18px] hover:opacity-90 transition-all shadow-lg whitespace-nowrap"
         onClick={executeSearch}
         disabled={isSearching}
       >
@@ -159,7 +159,9 @@ const StoreLocatorHero = ({ cities, activeCity, stores }: StoreLocatorHeroProps)
   return (
     <section className="w-full flex flex-col relative z-30">
       {/* Hero Image & Overlay */}
-      <div className="w-full relative h-[60vw] md:h-[40vw]">
+      {/* Mobile: fixed-size card at exact position per design spec */}
+      {/* Desktop: centered full-width card */}
+      <div className="w-full relative h-[480px] md:h-[40vw]">
         <div className="absolute inset-0 overflow-hidden">
           <Image
             src={heroBg}
@@ -170,10 +172,61 @@ const StoreLocatorHero = ({ cities, activeCity, stores }: StoreLocatorHeroProps)
           />
         </div>
 
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 md:px-8 mt-[4vw]">
-          <div className="bg-[#2B2B2B99] rounded-[20px] md:rounded-[30px] p-[6vw] md:p-[3.5vw] flex flex-col items-center max-w-[950px] w-full">
+        {/* Mobile Overlay Card */}
+        <div
+          className="md:hidden absolute flex flex-col items-center justify-center px-4 py-5"
+          style={{
+            top: '180px',
+            left: '12px',
+            width: 'calc(100% - 24px)',
+            height: 'auto',
+            borderRadius: '8.34px',
+            backgroundColor: '#2B2B2B99'
+          }}
+        >
+          <motion.h1
+            style={{
+              fontFamily: 'Recoleta',
+              fontWeight: 600,
+              fontSize: '29.87px',
+              lineHeight: '34.85px',
+              letterSpacing: '-0.6px',
+              textAlign: 'center',
+              color: '#ffffff',
+              marginBottom: '10px'
+            }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          >
+            Find an Origin Fresh Store Near You
+          </motion.h1>
+
+          <motion.p
+            className="font-[SofiaPro] text-white/90 text-center text-[13px] leading-[1.35] mb-5"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+          >
+            From the heart of the farm to your neighborhood. Discover our curated selection of exotic fruits and fresh
+            daily essentials.
+          </motion.p>
+
+          <motion.div
+            className="w-full px-1"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+          >
+            <SearchBar stores={stores || []} cities={cities} router={router} />
+          </motion.div>
+        </div>
+
+        {/* Desktop Overlay Card */}
+        <div className="hidden md:flex absolute inset-0 flex-col items-center justify-center px-8 mt-[4vw]">
+          <div className="bg-[#2B2B2B99] rounded-[30px] p-[3.5vw] flex flex-col items-center max-w-[950px] w-full">
             <motion.h1
-              className="font-[Recoleta] text-white text-center font-bold text-[6.5vw] md:text-[3.5vw] leading-[1.2] mb-[3vw] md:mb-[1vw]"
+              className="font-[Recoleta] text-white text-center font-bold text-[3.5vw] leading-[1.2] mb-[1vw]"
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -182,7 +235,7 @@ const StoreLocatorHero = ({ cities, activeCity, stores }: StoreLocatorHeroProps)
             </motion.h1>
 
             <motion.p
-              className="font-[SofiaPro] text-white/90 text-center text-[3.5vw] md:text-[1.4vw] mb-[5vw] md:mb-[2.5vw] w-full md:w-full"
+              className="font-[SofiaPro] text-white/90 text-center text-[1.4vw] mb-[2.5vw]"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
@@ -205,7 +258,7 @@ const StoreLocatorHero = ({ cities, activeCity, stores }: StoreLocatorHeroProps)
 
       {/* City Tabs */}
       <div className="w-full bg-[#FAF3E5] border-b-[1.13px] border-[#FAC51033]">
-        <div className="max-w-[92vw] mx-auto pt-6 md:pt-8 pb-4 flex flex-wrap items-center justify-start gap-[6vw] md:gap-[3vw]">
+        <div className="max-w-[92vw] mx-auto pt-6 md:pt-8 pb-4 flex flex-nowrap md:flex-wrap items-center justify-start gap-[6vw] md:gap-[3vw] overflow-x-auto scrollbar-hide">
           {cities.map((city) => {
             const isActive = activeCity === city.slug;
             const storeCount = stores?.filter((s) => s.city === city.slug).length || 0;

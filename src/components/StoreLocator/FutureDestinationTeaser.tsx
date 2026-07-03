@@ -80,21 +80,21 @@ const FutureDestinationTeaser = () => {
 
   return (
     <div className="w-full max-w-[92vw] mx-auto mt-[4vw] mob:mt-[8vw] mb-[2vw]">
-      <div className="relative bg-[#FEF5E3] rounded-[36px] mob:rounded-[5vw] py-[6vw] px-[4vw] mob:p-[8vw] flex flex-col items-center justify-center text-center overflow-hidden">
-        {/* Decorative corner graphics (approximate based on screenshot) */}
-        <div className="absolute top-0 right-0 w-[20vw] h-[20vw] bg-[#0532030D] rounded-bl-full"></div>
+      <div className="relative bg-[#FEF5E3] rounded-[36px] mob:rounded-[10.54px] py-[6vw] px-[4vw] mob:p-[16px] flex flex-col items-center justify-center text-center overflow-hidden mob:h-auto mob:min-h-[203px]">
+        {/* Decorative corner graphics */}
+        <div className="absolute top-0 right-0 w-[30vw] h-[30vw] bg-[#EADDCD] opacity-40 rounded-bl-full"></div>
         <div className="absolute bottom-0 left-0 w-[12vw] h-[12vw] bg-[#0532030D] rounded-tr-full"></div>
 
-        <div className="relative z-10 flex flex-col items-center w-full max-w-[80vw]">
-          <span className="bg-[#F8E19B] text-[#5A4E27] font-[SofiaPro] font-normal text-[15.75px] leading-[22.5px] tracking-[0.79px] uppercase px-4 py-1.5 rounded-full mb-[2vw] mob:mb-[4vw]">
+        <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-full md:max-w-[80vw] mob:gap-[11px] mob:h-full">
+          <div className="bg-[#F8E19B] text-[#5A4E27] font-[SofiaPro] font-normal text-[15.75px] mob:text-[10px] leading-[22.5px] mob:leading-[normal] tracking-[0.79px] uppercase px-4 py-1.5 mob:px-3 mob:py-1 flex items-center justify-center rounded-full mb-[2vw] mob:mb-0 text-center whitespace-nowrap w-auto">
             Future Destinations
-          </span>
+          </div>
 
-          <h2 className="font-[Recoleta] text-[#F3B600] font-semibold text-[32px] md:text-[54px] leading-tight md:leading-[63px] tracking-[-1.08px] mb-[1.5vw] mob:mb-[4vw]">
+          <h2 className="font-[Recoleta] text-[#F3B600] font-semibold text-[22px] md:text-[54px] leading-[28.76px] md:leading-[63px] tracking-[-0.49px] md:tracking-[-1.08px] mb-[1.5vw] mob:mb-0 text-center align-middle">
             Pune, We're Growing Towards You
           </h2>
 
-          <p className="font-[SofiaPro] text-[#4A4A4A] font-normal text-[16px] md:text-[20.25px] leading-[1.5] md:leading-[31.5px] tracking-[0px] mb-[3vw] mob:mb-[6vw] max-w-[750px]">
+          <p className="font-[SofiaPro] text-[#4A4A4A] font-normal text-[12px] md:text-[20.25px] leading-[14.25px] md:leading-[31.5px] tracking-[0px] mb-[3vw] mob:mb-0 max-w-[750px] text-center align-middle">
             We are currently curating the finest exotic produce sources for our upcoming flagship store in Pune. Stay
             tuned for the freshest experience in the city.
           </p>
@@ -105,12 +105,9 @@ const FutureDestinationTeaser = () => {
                 ✓ Thank you! We will notify you when we launch.
               </div>
             ) : (
-              <form
-                onSubmit={handleSubmit}
-                className="w-full flex flex-col sm:flex-row items-center justify-center gap-4"
-              >
-                <div className="relative">
-                  <div className="w-full sm:w-[432px] max-w-[432px] h-[60.75px] pt-[20.25px] pr-[27px] pb-[20.25px] pl-[27px] rounded-[11248.88px] border-[1.13px] border-[#C2C9BB] bg-white flex items-center">
+              <form onSubmit={handleSubmit} className="w-full flex flex-row items-center justify-center gap-2 sm:gap-4">
+                <div className="relative flex-1 w-full max-w-[432px]">
+                  <div className="w-full h-[40px] sm:h-[60.75px] px-3 sm:pt-[20.25px] sm:pr-[27px] sm:pb-[20.25px] sm:pl-[27px] rounded-full border-[1.13px] border-[#C2C9BB] bg-white flex items-center">
                     <input
                       type="tel"
                       required
@@ -118,16 +115,16 @@ const FutureDestinationTeaser = () => {
                       placeholder="Get notified when we launch"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
-                      className="flex-1 w-full bg-transparent outline-none text-black placeholder-gray-500 text-[14px] md:text-[18px]"
+                      className="flex-1 w-full bg-transparent outline-none text-black placeholder-gray-500 text-[11px] sm:text-[14px] md:text-[18px]"
                     />
                   </div>
                 </div>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="bg-primary w-full sm:w-auto h-[60.75px] text-black font-semibold rounded-full px-8 md:px-10 text-[15px] md:text-[18px] hover:bg-[#FFC107] transition-colors whitespace-nowrap disabled:opacity-60"
+                  className="bg-primary w-auto shrink-0 h-[40px] sm:h-[60.75px] text-black font-semibold rounded-full px-4 sm:px-8 md:px-10 text-[12px] sm:text-[15px] md:text-[18px] hover:bg-[#FFC107] transition-colors whitespace-nowrap disabled:opacity-60"
                 >
-                  {loading ? 'Submitting...' : 'Notify Me'}
+                  {loading ? 'Wait...' : 'Notify Me'}
                 </button>
               </form>
             )}

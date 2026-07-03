@@ -117,7 +117,7 @@ const NoStoresView = ({ cityLabel }: NoStoresViewProps) => {
         </p>
 
         {/* Notify Me Card - Centered */}
-        <div className="w-[490.5px] max-w-full h-[343px] rounded-[36px] border-[1.13px] border-[#E8DFD3] p-[36px] bg-[#FAF3E5] mx-auto flex flex-col justify-between text-left mb-[6vw] mob:mb-[15vw]">
+        <div className="w-[490.5px] max-w-full h-[343px] mob:h-auto rounded-[36px] border-[1.13px] border-[#E8DFD3] p-[36px] mob:p-[24px] bg-[#FAF3E5] mx-auto flex flex-col justify-between text-left mb-[6vw] mob:mb-[15vw]">
           <div>
             <span className="font-[SofiaPro] font-medium text-[27px] text-black mb-[16px] flex items-center gap-[8px]">
               <svg
@@ -171,21 +171,21 @@ const NoStoresView = ({ cityLabel }: NoStoresViewProps) => {
       </div>
 
       {/* Nearest Locations Section — outside the 70vw wrapper, using same 92vw as FutureDestinationTeaser */}
-      <div className="w-full max-w-[92vw] mx-auto border-t border-gray-200 pt-[3vw] mob:pt-[5vw]">
-        <span className="font-[SofiaPro] font-semibold text-[22px] md:text-[24px] text-black mb-[32px] text-left">
+      <div className="w-full max-w-[92vw] mx-auto border-t border-gray-200 pt-[3vw] mob:pt-[5vw] flex flex-col items-center">
+        <span className="font-[SofiaPro] font-semibold text-[22px] md:text-[24px] text-black mb-[32px] text-center w-full">
           Or visit our nearest available locations
         </span>
 
-        <div className="flex justify-start mob:flex-col gap-[24px]">
+        <div className="flex justify-center mob:justify-start gap-[24px] mob:gap-[12px] w-full mob:overflow-x-auto snap-x hide-scrollbar [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {/* Bangalore Card */}
-          <div className="w-[280px] mob:w-full bg-white rounded-[24px] border border-gray-200 overflow-hidden shadow-sm flex flex-col">
+          <div className="w-[280px] mob:w-[calc(50%-6px)] shrink-0 snap-center bg-white rounded-[24px] mob:rounded-[16px] border border-gray-200 overflow-hidden flex flex-col">
             <img
               src="https://images.unsplash.com/photo-1596176530529-78163a4f7af2?q=80&w=600&auto=format&fit=crop"
               alt="Bangalore"
-              className="w-full h-[180px] object-cover"
+              className="w-full h-[180px] mob:h-[120px] object-cover"
             />
-            <div className="p-[24px] flex flex-col items-start bg-white">
-              <h4 className="font-[SofiaPro] font-medium text-[22px] text-black">Bangalore</h4>
+            <div className="p-[24px] mob:p-[16px] flex flex-col items-start bg-white">
+              <h4 className="font-[SofiaPro] font-medium text-[22px] mob:text-[18px] text-black">Bangalore</h4>
               <p className="font-[SofiaPro] text-[15px] text-gray-700 mt-[4px]">3 Active Stores</p>
               <Link href="/stores/bengaluru" legacyBehavior>
                 <a className="font-[SofiaPro] text-[14px] font-bold text-primary mt-[24px] flex items-center gap-1 hover:underline">
@@ -203,14 +203,14 @@ const NoStoresView = ({ cityLabel }: NoStoresViewProps) => {
           </div>
 
           {/* Chennai Card */}
-          <div className="w-[280px] mob:w-full bg-white rounded-[24px] border border-gray-200 overflow-hidden shadow-sm flex flex-col">
+          <div className="w-[280px] mob:w-[calc(50%-6px)] shrink-0 snap-center bg-white rounded-[24px] mob:rounded-[16px] border border-gray-200 overflow-hidden flex flex-col">
             <img
               src="https://images.unsplash.com/photo-1582510003544-4d00b7f7415e?q=80&w=600&auto=format&fit=crop"
               alt="Chennai"
-              className="w-full h-[180px] object-cover"
+              className="w-full h-[180px] mob:h-[120px] object-cover"
             />
-            <div className="p-[24px] flex flex-col items-start bg-white">
-              <h4 className="font-[SofiaPro] font-medium text-[22px] text-black">Chennai</h4>
+            <div className="p-[24px] mob:p-[16px] flex flex-col items-start bg-white">
+              <h4 className="font-[SofiaPro] font-medium text-[22px] mob:text-[18px] text-black">Chennai</h4>
               <p className="font-[SofiaPro] text-[15px] text-gray-700 mt-[4px]">2 Active Stores</p>
               <Link href="/stores/chennai" legacyBehavior>
                 <a className="font-[SofiaPro] text-[14px] font-bold text-primary mt-[24px] flex items-center gap-1 hover:underline">

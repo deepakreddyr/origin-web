@@ -115,41 +115,13 @@ const ScrollDot: React.FC<ScrollDotProps> = ({ containerRef, lineTop, lineBottom
     }
   });
 
-  // Calculate dynamic paths for the bike parking
-  const rotateInput = [0, 1];
-  const rotateOutput = [90, 90];
-  const xInput = [0, 1];
-  const xOutput = ['-50%', '-50%'];
-
-  if (containerHeight > 0) {
-    const totalDist = containerHeight - lineBottom - lineTop;
-    const finalCenter = lineTop + totalDist;
-
-    rotateInput.length = 0;
-    rotateOutput.length = 0;
-    xInput.length = 0;
-    xOutput.length = 0;
-
-    // Build parking rotation & translation array
-    // Happens between finalCenter and finalCenter + 50 (closer to the last step)
-    rotateInput.push(0, finalCenter, finalCenter + 50);
-    rotateOutput.push(90, 90, -35);
-
-    xInput.push(0, finalCenter, finalCenter + 50);
-    xOutput.push('-50%', '-50%', '10%'); // Shifts slightly to the right side
-  }
-
-  const bikeRotate = useTransform(persistentTop, rotateInput, rotateOutput);
-  const bikeX = useTransform(persistentTop, xInput, xOutput);
-
   return (
     <motion.div
       className="absolute left-1/2 pointer-events-none z-0"
       style={{
         top: persistentTop,
-        x: bikeX,
-        translateY: '-50%',
-        rotate: bikeRotate
+        x: '-50%',
+        translateY: '-50%'
       }}
     >
       <Image
@@ -157,7 +129,72 @@ const ScrollDot: React.FC<ScrollDotProps> = ({ containerRef, lineTop, lineBottom
         alt="Origin of Fresh Bike"
         width={72}
         height={44}
-        className="object-contain"
+        className="object-contain rotate-90"
+      />
+    </motion.div>
+  );
+};
+
+// ── Mobile Bike (scroll-driven, travels down the left dashed line) ──
+interface MobileScrollDotProps {
+  containerRef: React.RefObject<HTMLDivElement>;
+  lineTop: number;
+  lineBottom: number;
+}
+
+const MobileScrollDot: React.FC<MobileScrollDotProps> = ({ containerRef, lineTop, lineBottom }) => {
+  const [containerHeight, setContainerHeight] = React.useState(0);
+
+  React.useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    setContainerHeight(el.offsetHeight);
+    const ro = new ResizeObserver(() => setContainerHeight(el.offsetHeight));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [containerRef]);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start center', 'end center']
+  });
+
+  const maxTravel = containerHeight > 0 ? lineTop + (containerHeight - lineBottom - lineTop) : containerHeight;
+  const targetTop = useTransform(scrollYProgress, [0, 1], [lineTop, maxTravel]);
+
+  const persistentTop = useMotionValue(lineTop);
+  const maxTopRef = React.useRef(lineTop);
+
+  React.useEffect(() => {
+    if (maxTopRef.current < lineTop) {
+      maxTopRef.current = lineTop;
+      persistentTop.set(lineTop);
+    }
+  }, [lineTop, persistentTop]);
+
+  useMotionValueEvent(targetTop, 'change', (latest) => {
+    if (latest > maxTopRef.current) {
+      maxTopRef.current = latest;
+      persistentTop.set(latest);
+    }
+  });
+
+  return (
+    <motion.div
+      className="absolute pointer-events-none z-0"
+      style={{
+        top: persistentTop,
+        left: 'calc(10.52px + 25px)',
+        x: '-50%',
+        translateY: '-50%'
+      }}
+    >
+      <Image
+        src="/assets/svg/originoffreshbike.svg"
+        alt="Origin of Fresh Bike"
+        width={40}
+        height={24}
+        className="object-contain rotate-90"
       />
     </motion.div>
   );
@@ -251,8 +288,14 @@ const OriginOfFresh = () => {
   const firstNodeRef = useRef<HTMLDivElement>(null);
   const lastNodeRef = useRef<HTMLDivElement>(null);
 
+  const mobileTimelineRef = useRef<HTMLDivElement>(null);
+  const mobileFirstNodeRef = useRef<HTMLDivElement>(null);
+  const mobileLastNodeRef = useRef<HTMLDivElement>(null);
+
   const [lineTop, setLineTop] = React.useState(50);
   const [lineBottom, setLineBottom] = React.useState(90);
+  const [mobileLineTop, setMobileLineTop] = React.useState(25);
+  const [mobileLineBottom, setMobileLineBottom] = React.useState(50);
 
   React.useEffect(() => {
     const measure = () => {
@@ -270,14 +313,27 @@ const OriginOfFresh = () => {
         setLineTop(topOffset);
         setLineBottom(bottomOffset);
       }
+
+      // Mobile measurements
+      const mobileEl = mobileTimelineRef.current;
+      const mFirstEl = mobileFirstNodeRef.current;
+      const mLastEl = mobileLastNodeRef.current;
+      if (mobileEl && mFirstEl && mLastEl) {
+        const mobileRect = mobileEl.getBoundingClientRect();
+        const mFirstRect = mFirstEl.getBoundingClientRect();
+        const mLastRect = mLastEl.getBoundingClientRect();
+
+        const mTopOffset = mFirstRect.top + mFirstRect.height / 2 - mobileRect.top;
+        const mBottomOffset = mobileRect.bottom - (mLastRect.top + mLastRect.height / 2);
+
+        setMobileLineTop(mTopOffset);
+        setMobileLineBottom(mBottomOffset);
+      }
     };
 
-    // Measure initially and on load/resize events
     measure();
     window.addEventListener('resize', measure);
     window.addEventListener('load', measure);
-
-    // Fallback timer to ensure layout has settled
     const timer = setTimeout(measure, 100);
 
     return () => {
@@ -408,6 +464,7 @@ const OriginOfFresh = () => {
 
       {/* ── Mobile Timeline ── */}
       <div
+        ref={mobileTimelineRef}
         className="relative w-full max-w-[589.11px] mx-auto md:hidden pb-10"
         style={{ paddingLeft: '10.52px', paddingRight: '10.52px' }}
       >
@@ -415,6 +472,13 @@ const OriginOfFresh = () => {
         <div
           className="absolute top-8 bottom-12 z-0"
           style={{ left: 'calc(10.52px + 25px)', width: '1px', borderLeft: '1px dashed #000000' }}
+        />
+
+        {/* Mobile Bike Animation */}
+        <MobileScrollDot
+          containerRef={mobileTimelineRef as React.RefObject<HTMLDivElement>}
+          lineTop={mobileLineTop}
+          lineBottom={mobileLineBottom}
         />
 
         <div className="flex flex-col gap-10 relative z-10">
@@ -428,7 +492,11 @@ const OriginOfFresh = () => {
               className="flex flex-row items-center gap-12 md:gap-5"
             >
               {/* Image Timeline Node */}
-              <StepImageNode src={step.image} alt={step.title} />
+              <StepImageNode
+                innerRef={i === 0 ? mobileFirstNodeRef : i === steps.length - 1 ? mobileLastNodeRef : undefined}
+                src={step.image}
+                alt={step.title}
+              />
               {/* Text */}
               <div>
                 <StepContent

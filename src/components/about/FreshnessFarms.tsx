@@ -34,7 +34,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, del
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
-      className="bg-[#FEF5E3] w-[149.23px] lg:w-full h-[154.93px] lg:h-auto rounded-[14.28px] lg:rounded-[24px] pt-[17.85px] lg:pt-[28px] pr-[17.85px] lg:pr-[28px] pb-[43.55px] lg:pb-[28px] pl-[17.85px] lg:pl-[28px] gap-[9.95px] lg:gap-0 flex flex-col items-start border border-black/[0.02] hover:-translate-y-1 transition-all duration-300 select-none"
+      className="bg-[#FEF5E3] w-[149.23px] lg:w-full h-[154.93px] lg:h-auto rounded-[14.28px] lg:rounded-[24px] pt-[17.85px] lg:pt-[28px] pr-[17.85px] lg:pr-[28px] pb-[43.55px] lg:pb-[28px] pl-[17.85px] lg:pl-[28px] gap-[9.95px] lg:gap-0 flex flex-col items-start border border-black/[0.02] select-none"
       style={{ boxShadow: '0px 3.41px 3.41px 0px rgba(0, 0, 0, 0.25)' }}
     >
       <div className="w-8 h-8 lg:w-14 lg:h-14 flex items-center justify-center mb-0 lg:mb-7 shrink-0 relative">

@@ -18,7 +18,7 @@ const StatCard: React.FC<StatCardProps> = ({ icon, value, label1, label2, delay 
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay }}
-      className="bg-white flex flex-col items-start shrink-0 border border-black/5 hover:-translate-y-1 transition-all duration-300 select-none rounded-[10.61px] lg:rounded-[18px] w-[82.13px] lg:w-full h-[111.95px] lg:h-[190px] pt-[21.21px] lg:pt-[36px] pr-[11.78px] lg:px-[20px] pb-[21.21px] lg:pb-[36px] pl-[11.78px] gap-[5.3px] lg:gap-[20px]"
+      className="bg-white flex flex-col items-start shrink-0 border border-black/5 select-none rounded-[10.61px] lg:rounded-[18px] w-[82.13px] lg:w-full h-[111.95px] lg:h-[190px] pt-[21.21px] lg:pt-[36px] pr-[11.78px] lg:px-[20px] pb-[21.21px] lg:pb-[36px] pl-[11.78px] gap-[5.3px] lg:gap-[20px]"
       style={{ boxShadow: '0px 3.41px 3.41px 0px rgba(0, 0, 0, 0.25)' }}
     >
       <div className={`relative w-7 h-7 shrink-0`}>

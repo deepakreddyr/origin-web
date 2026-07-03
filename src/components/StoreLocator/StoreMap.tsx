@@ -205,7 +205,7 @@ const StoreMap = ({ stores, selectedStoreId, onSelectStore }: StoreMapProps) => 
   }
 
   return (
-    <div className="w-full h-full rounded-[1.1vw] mob:rounded-[4vw] overflow-hidden shadow-md relative">
+    <div className="w-full h-full rounded-[1.1vw] mob:rounded-none overflow-hidden shadow-md relative">
       {!mapLoaded && (
         <div className="absolute inset-0 bg-[#E8F5EE] flex items-center justify-center z-10">
           <div className="flex flex-col items-center gap-3">

@@ -89,9 +89,9 @@ const ComingSoonView = ({ cityLabel }: ComingSoonViewProps) => {
 
   return (
     <div className="w-full bg-[#FFF8EF] py-[5vw] md:py-[5vw]">
-      <div className="max-w-[1340px] mx-auto px-4 grid grid-cols-1 md:grid-cols-12 gap-[36px]">
+      <div className="max-w-[1340px] mx-auto px-4 grid grid-cols-1 md:grid-cols-12 gap-[18px] md:gap-[36px]">
         {/* Grid Item 1: Main Teaser */}
-        <div className="md:col-span-8 bg-[#FAF3E5] rounded-[36px] p-[45px] flex flex-col justify-center relative overflow-hidden">
+        <div className="md:col-span-8 order-2 md:order-1 bg-[#FAF3E5] rounded-[36px] mob:rounded-[20.25px] p-[45px] mob:p-[25.31px] mob:h-[286.94px] flex flex-col justify-center relative overflow-hidden">
           {/* Decorative faint background element if needed */}
           <div className="absolute top-0 right-[10%] opacity-[0.03] pointer-events-none w-[300px] h-[300px]">
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
@@ -104,18 +104,18 @@ const ComingSoonView = ({ cityLabel }: ComingSoonViewProps) => {
               Coming Soon
             </span>
 
-            <span className="font-[SofiaPro] font-bold text-[36px] md:text-[54px] text-[#FAC510] leading-tight md:leading-[63px] tracking-[-1.08px] mb-[20px] max-w-[580px]">
+            <span className="font-[SofiaPro] font-bold text-[26px] md:text-[54px] text-[#FAC510] leading-tight md:leading-[63px] tracking-[-1.08px] mb-[12px] md:mb-[20px] max-w-[580px]">
               Origin Fresh is Coming to {cityLabel}
             </span>
 
-            <p className="font-[SofiaPro] text-[#4A4A4A] text-[16px] md:text-[21px] leading-[1.6] mb-[32px] max-w-[647px]">
+            <p className="font-[SofiaPro] text-[#4A4A4A] text-[13px] md:text-[21px] leading-[1.4] md:leading-[1.6] mb-[16px] md:mb-[32px] max-w-[647px]">
               We're bringing our farm-to-customer experience to the{' '}
               {cityLabel === 'Pune' ? 'Oxford of the East' : cityLabel}. Get ready for premium organic produce, exotic
               imports, and an elevated boutique shopping experience in Koregaon Park.
             </p>
 
             <Link href="/shop" legacyBehavior>
-              <a className="bg-primary text-black text-center font-[SofiaPro] font-semibold rounded-full py-[14px] px-[32px] text-[20px] transition-colors shadow-md">
+              <a className="bg-primary text-black text-center font-[SofiaPro] font-semibold rounded-full py-[10px] md:py-[14px] px-[24px] md:px-[32px] text-[16px] md:text-[20px] transition-colors shadow-md">
                 Shop Online Now
               </a>
             </Link>
@@ -123,7 +123,7 @@ const ComingSoonView = ({ cityLabel }: ComingSoonViewProps) => {
         </div>
 
         {/* Grid Item 2: Image */}
-        <div className="md:col-span-4 rounded-[36px] overflow-hidden min-h-[300px] md:min-h-[450px] relative">
+        <div className="md:col-span-4 order-1 md:order-2 rounded-[36px] mob:rounded-[20.25px] overflow-hidden min-h-[300px] md:min-h-[450px] mob:h-[527.87px] relative">
           <Image
             src={storeMockup}
             alt={`${cityLabel} store storefront concept`}
@@ -133,11 +133,11 @@ const ComingSoonView = ({ cityLabel }: ComingSoonViewProps) => {
         </div>
 
         {/* Grid Item 3: Notify Form */}
-        <div className="md:col-span-5 bg-primary rounded-[36px] p-[45px] flex flex-col justify-center min-h-[395px]">
-          <span className="font-[SofiaPro] font-medium text-[26px] md:text-[26px] text-black mb-[24px]">
+        <div className="md:col-span-5 order-3 bg-primary rounded-[36px] mob:rounded-[26.04px] p-[45px] mob:p-[32.55px] flex flex-col justify-center min-h-[395px] mob:min-h-0 mob:h-[283.99px]">
+          <span className="font-[SofiaPro] font-medium text-[22px] md:text-[26px] text-black mb-[16px] md:mb-[24px]">
             Get notified when we launch
           </span>
-          <p className="font-[SofiaPro] text-black font-regular text-[18px] leading-[1.5] mb-[40px]">
+          <p className="font-[SofiaPro] text-black font-regular text-[15px] md:text-[18px] leading-[1.4] md:leading-[1.5] mb-[24px] md:mb-[40px]">
             Be the first to receive an exclusive invite to our {cityLabel} private opening event and early-access
             discounts.
           </p>
@@ -172,29 +172,33 @@ const ComingSoonView = ({ cityLabel }: ComingSoonViewProps) => {
         </div>
 
         {/* Grid Item 4: Finding the perfect spot */}
-        <div className="md:col-span-7 bg-[#E8E6E0] rounded-[36px] p-[45px] relative overflow-hidden flex flex-col justify-center min-h-[395px]">
-          <div className="relative z-10 max-w-[400px]">
-            <h4 className="font-[Recoleta] font-bold text-[28px] md:text-[32px] text-black mb-[24px]">
-              Finding the perfect spot
-            </h4>
-            <p className="font-[SofiaPro] text-gray-700 text-[16px] leading-[1.5] mb-[40px]">
-              We're currently finalizing our flagship location in {cityLabel}. Want to suggest a neighborhood? We're
-              listening.
-            </p>
-            <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-white/50 px-5 py-3 rounded-full text-[15px] font-[SofiaPro] font-semibold text-gray-800 shadow-sm">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-5 h-5 text-[#F3B600]"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-2.079 3.218-4.797 3.218-8.217C19.5 6.112 16.13 3 12 3s-7.5 3.112-7.5 6.75c0 3.42 1.274 6.138 3.218 8.217a19.58 19.58 0 002.683 2.282c.387.276.792.54 1.144.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Koregaon Park / Kalyani Nagar
+        <div className="md:col-span-7 order-4 bg-[#E8E6E0] rounded-[36px] mob:rounded-[18.33px] p-[45px] mob:p-[20px] relative overflow-hidden flex flex-col justify-center min-h-[395px] mob:min-h-0 mob:h-[201.68px]">
+          <div className="relative z-10 w-full grid grid-cols-1 mob:grid-cols-2 gap-[18.33px] items-center">
+            <div className="flex flex-col">
+              <h4 className="font-[Recoleta] font-bold text-[22px] md:text-[32px] text-black mb-[12px] md:mb-[24px]">
+                Finding the perfect spot
+              </h4>
+              <p className="font-[SofiaPro] text-gray-700 text-[13px] md:text-[16px] leading-[1.4] md:leading-[1.5]">
+                We're currently finalizing our flagship location in {cityLabel}. Want to suggest a neighborhood? We're
+                listening.
+              </p>
+            </div>
+            <div className="flex mob:justify-end">
+              <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-white/50 px-3 md:px-5 py-2 md:py-3 rounded-full text-[12px] md:text-[15px] font-[SofiaPro] font-semibold text-gray-800 shadow-sm text-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-4 h-4 md:w-5 md:h-5 text-[#F3B600] shrink-0"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-2.079 3.218-4.797 3.218-8.217C19.5 6.112 16.13 3 12 3s-7.5 3.112-7.5 6.75c0 3.42 1.274 6.138 3.218 8.217a19.58 19.58 0 002.683 2.282c.387.276.792.54 1.144.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Koregaon Park / Kalyani Nagar
+              </div>
             </div>
           </div>
 
