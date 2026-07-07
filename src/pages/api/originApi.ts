@@ -1345,6 +1345,32 @@ const data: Data = {
       lng: 80.2231764,
       pincode: '600102',
       status: 'active'
+    },
+    {
+      id: 12,
+      name: 'Origin Fresh - Mysuru',
+      slug: 'mysuru',
+      city: 'mysuru',
+      cityLabel: 'Mysuru',
+      address: 'No. 2840/11, Ground Floor, 6th Main, 11th Cross Rd, Vani Vilas Mohalla, Mysuru, Karnataka 570002',
+      phone: '+91 99005 08216',
+      lat: 12.32592,
+      lng: 76.6276,
+      pincode: '570002',
+      status: 'active'
+    },
+    {
+      id: 13,
+      name: 'Origin Fresh - Pune',
+      slug: 'pune',
+      city: 'pune',
+      cityLabel: 'Pune',
+      address: 'Shop no. 5, Ground, Arth Vishwa, Suyojana Society, Kavadewadi, Koregaon Park, Pune, Maharashtra 411001',
+      phone: '+91 99005 08216',
+      lat: 18.53675,
+      lng: 73.89703,
+      pincode: '411001',
+      status: 'active'
     }
   ],
   cities: [
@@ -1361,7 +1387,12 @@ const data: Data = {
     {
       slug: 'pune',
       label: 'Pune',
-      status: 'coming-soon'
+      status: 'active'
+    },
+    {
+      slug: 'mysuru',
+      label: 'Mysuru',
+      status: 'active'
     }
   ]
 };

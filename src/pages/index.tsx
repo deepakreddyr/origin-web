@@ -160,7 +160,7 @@ const Home = ({
       return (
         <div
           key={`shimmer-${index}`}
-          className={`w-[92vw] mx-auto mt-[5vw] mb-[2vw] bg-white border border-[#EDE6D4] rounded-[32px] py-12 mob:py-10 ${shimmerAlignClass}`}
+          className={`w-[92vw] mx-auto mt-[5vw] mb-[2vw] md:bg-white md:border md:border-[#EDE6D4] md:rounded-[32px] md:py-12 mob:py-0 mob:bg-transparent mob:border-none mob:rounded-none ${shimmerAlignClass}`}
         >
           <PopularCarouselSkeleton noWrapperStyles />
         </div>
@@ -305,7 +305,7 @@ const Home = ({
                 titleVariant={isMobile ? 'h4' : 'h1'}
                 titleClass="font-[Recoleta] !font-bold !leading-[1.1] "
                 description={`Everyone has a right to fresh, authentic <br/ className="mob:hidden"> flavours. But only a few fight for it. Origin&nbsp;Fresh is for those&nbsp;who&nbsp;do.`}
-                descriptionClass="md:!text-[1.614vw] !leading-[1.25]"
+                descriptionClass="font-[SofiaPro] !font-[400] md:!text-[1.614vw] !leading-[1.25]"
                 // buttonText="Know more"
                 buttonVariant="tertiary"
                 rootClass="items-center !rounded-none pb-12 !overflow-visible !p-0 bg-transparent"
@@ -367,7 +367,7 @@ const Home = ({
                   : 'md:ml-0 md:mr-[max(6vw,calc(56vw_-_720px))] md:rounded-none md:rounded-r-[48px] md:border-l-0';
               return (
                 <div
-                  className={`w-[92vw] mx-auto mt-[5vw] mb-[2vw] bg-white border border-[#EDE6D4] rounded-[32px] py-12 mob:py-10 ${shimmerAlignClass}`}
+                  className={`w-[92vw] mx-auto mt-[5vw] mb-[2vw] md:bg-white md:border md:border-[#EDE6D4] md:rounded-[32px] md:py-12 mob:py-0 mob:bg-transparent mob:border-none mob:rounded-none ${shimmerAlignClass}`}
                 >
                   <PopularCarouselSkeleton noWrapperStyles />
                 </div>
@@ -430,14 +430,18 @@ const Home = ({
                 quality={100}
                 priority
                 imageClass="object-contain w-full h-auto md:!h-auto md:!max-h-none lg:scale-110 lg:origin-right"
-                title={`Download <br/> the app now.`}
-                titleVariant="h2"
-                titleClass="order-1 font-[Recoleta] text-black text-[43.67px] leading-[43.67px] mob:text-[43.67px] mob:leading-[43.67px] md:text-[62.78px] font-semibold md:leading-[62.78px] mb-6 md:!mb-2 text-center mob:text-center md:text-left align-middle"
+                title={
+                  <span className="text-[4vw] mob:text-[10vw]">
+                    Download <br /> the app now.
+                  </span>
+                }
+                titleVariant={isMobile ? 'h4' : 'h1'}
+                titleClass="order-1 font-[Recoleta] !font-bold !leading-[1.1] text-black mb-6 md:!mb-2 text-center mob:text-center md:text-left align-middle"
                 description={`Get exclusive access to special offers, track your orders in real-time, and discover new exotic fruits weekly. Available on iOS and Android.`}
-                descriptionClass="order-3 md:order-2 font-[SofiaPro] !font-normal text-black text-[23.54px] leading-[38.26px] mob:text-[23.54px] mob:leading-[38.26px] md:text-[23.54px] md:leading-[38.26px] md:max-w-[647px] mb-12 md:!mt-4 md:!mb-12 text-center mob:text-center md:text-left"
+                descriptionClass="order-3 md:order-2 font-[SofiaPro] !font-[400] text-black md:!text-[1.614vw] !leading-[1.25] md:max-w-[647px] mb-12 md:!mt-4 md:!mb-12 text-center mob:text-center md:text-left"
                 imageContainerClass="flex justify-center items-center"
                 titleContainerClass="flex flex-col justify-center items-center md:items-start md:!ps-0"
-                buttonContainerClass="order-2 md:order-3 mb-6 md:mb-0 justify-center md:justify-start w-full md:w-auto"
+                buttonContainerClass="order-2 md:order-3 mb-2 md:mb-0 justify-center md:justify-start w-full md:w-auto"
                 buttonText="Download Origin Fresh"
                 buttonVariant="tertiary"
                 buttonClick1={() => {

@@ -63,12 +63,12 @@ export const BlendsBanner = ({ href }: { href: string }) => {
       <div className="max-w-[1440px] mx-auto flex flex-col md:flex-row items-center justify-between w-full h-full md:px-[150px] gap-[0px] md:gap-0">
         {/* Left side text */}
         <div className="w-[350.88px] md:w-[50%] z-10 relative flex flex-col items-start px-0 gap-[21.08px] md:gap-0">
-          <span className="font-[Recoleta] font-[900] text-[#ACD0AF] text-[54px] leading-[54.14px] md:text-[67.37px] md:leading-[67.37px] md:mb-[24px]">
+          <span className="font-[Recoleta] text-[#ACD0AF] text-[4vw] mob:text-[10vw] !font-bold !leading-[1.1] md:mb-[24px]">
             Liquid
             <br />
             Alchemy.
           </span>
-          <p className="font-[SofiaPro] font-[500] text-[#ABD0AF] text-[16px] leading-[25.69px] md:text-[16.84px] md:leading-[27.37px] max-w-full md:max-w-[400px] md:mb-[32px]">
+          <p className="font-[SofiaPro] !font-[400] text-[#ABD0AF] md:!text-[1.3vw] mob:text-[4vw] !leading-[1.25] max-w-full md:max-w-[400px] md:mb-[32px]">
             Cold-pressed elixirs, botanical infusions, and morning rituals curated for holistic vitality.
           </p>
           <Link

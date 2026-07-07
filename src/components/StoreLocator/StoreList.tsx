@@ -20,11 +20,22 @@ const StoreList = ({ stores, selectedStoreId, onSelectStore }: StoreListProps) =
     return ['Exotic Fruits', 'Fresh Daily'];
   };
 
+  const getStoreImage = (slug: string) => {
+    const s = slug.toLowerCase();
+    if (s.includes('annanagar') || s.includes('anna-nagar')) return '/assets/images/store/Annanagar.webp';
+    if (s.includes('besant')) return '/assets/images/store/BesantNagar.webp';
+    if (s.includes('frazer') || s.includes('ulsoor')) return '/assets/images/store/Ulsoor.webp';
+    if (s.includes('mysuru') || s.includes('mysore')) return '/assets/images/store/Mysore.webp';
+    if (s.includes('pune')) return '/assets/images/origin_fresh_pune_store.png';
+    return locationBanner;
+  };
+
   return (
     <div className="flex flex-col gap-5">
       {stores.map((store, i) => {
         const isSelected = selectedStoreId === store.id;
         const tags = getStoreTags(store.slug);
+        const storeImage = getStoreImage(store.slug);
 
         return (
           <motion.div
@@ -44,13 +55,7 @@ const StoreList = ({ stores, selectedStoreId, onSelectStore }: StoreListProps) =
             <div className="flex flex-row gap-3 sm:gap-4 h-full">
               {/* Image Section */}
               <div className="w-[110px] sm:w-[130px] h-[110px] sm:h-[130px] shrink-0 rounded-[16px] overflow-hidden relative bg-gray-100">
-                <Image
-                  src={locationBanner}
-                  alt={store.name}
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-[16px]"
-                />
+                <Image src={storeImage} alt={store.name} layout="fill" objectFit="cover" className="rounded-[16px]" />
               </div>
 
               {/* Content Section */}

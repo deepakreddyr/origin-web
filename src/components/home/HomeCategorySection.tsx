@@ -314,17 +314,33 @@ const SkeletonLoader = ({ mobile }: { mobile: boolean }) => {
   return (
     <div className="py-[4vw] mob:py-[8vw]">
       <div className="max-w-[1440px] mx-auto px-4 md:px-[3vw]">
-        <div className="w-full mb-[2.1vw]">
-          <div className="h-[3vw] mob:h-[8vw] bg-gray-100 animate-pulse rounded w-1/3"></div>
+        {/* Title shimmer */}
+        <div className="w-full mb-[2.1vw] mob:mb-[4vw]">
+          <div className="h-[3vw] mob:h-[7vw] bg-gray-100 animate-pulse rounded-full w-2/5"></div>
         </div>
         {mobile ? (
-          <div className="flex flex-wrap justify-center gap-x-[4vw] gap-y-[12vw] pt-[4vw]">
-            {skeletonItems.map((_, i) => (
-              <div
-                key={i}
-                className="bg-gray-100 animate-pulse rounded-[14px] w-[41.8vw] h-[22vw] mt-[3vw] mob:mt-[8vw]"
-              ></div>
-            ))}
+          <div className="pt-[4vw]">
+            {/* 2-column grid — mirrors real CategoryCard grid */}
+            <div className="grid grid-cols-2 gap-x-[12px] gap-y-[20px]">
+              {skeletonItems.map((_, i) => (
+                <div
+                  key={i}
+                  className="animate-pulse rounded-[10px] bg-gray-100 overflow-hidden relative"
+                  style={{ height: '92.58px', maxWidth: '175px', width: '100%' }}
+                >
+                  {/* Image blob on the left */}
+                  <div
+                    className="absolute left-0 top-[7px] bg-gray-200 rounded-full"
+                    style={{ width: '70px', height: '79px' }}
+                  />
+                  {/* Text bar on the right */}
+                  <div
+                    className="absolute right-[10px] top-1/2 -translate-y-1/2 bg-gray-200 rounded-full"
+                    style={{ width: '55px', height: '12px' }}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         ) : (
           <div className="flex flex-col gap-y-[63px] pt-[2vw]">
