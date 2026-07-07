@@ -1942,10 +1942,10 @@ export default function ImpactPage() {
                 </p>
               </div>
               <div>
-                <div className="placeholder placeholder-on-yellow spotlight-image">
+                {/* <div className="placeholder placeholder-on-yellow spotlight-image">
                   <div className="placeholder-label">Image · Training session / workshop</div>
                   <div className="placeholder-spec">recommended: 1200×1500px (4:5)</div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -1961,10 +1961,10 @@ export default function ImpactPage() {
             <p className="yield-sub fade-up">That&apos;s not a stat. That&apos;s a season changed.</p>
 
             <div className="yield-image-block fade-up">
-              <div className="placeholder placeholder-dark">
+              {/* <div className="placeholder placeholder-dark">
                 <div className="placeholder-label">Image or short video · Wide farm shot, golden hour</div>
                 <div className="placeholder-spec">recommended: 2100×900px (21:9) · or 5-10s loop</div>
-              </div>
+              </div> */}
             </div>
 
             <p className="yield-body fade-up">
@@ -2138,10 +2138,10 @@ export default function ImpactPage() {
                 <p className="spotlight-closing fade-up">Better fruit. Less waste. Fairer farmers. One quotient.</p>
               </div>
               <div>
-                <div className="placeholder placeholder-on-yellow spotlight-image">
+                {/* <div className="placeholder placeholder-on-yellow spotlight-image">
                   <div className="placeholder-label">Image · Hand selecting ripe produce</div>
                   <div className="placeholder-spec">recommended: 1200×1500px (4:5)</div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -2229,7 +2229,7 @@ export default function ImpactPage() {
                 <p className="finale-sub fade-up">
                   For investor enquiries and partnerships, get in touch with our team.
                 </p>
-                <a href="mailto:hello@originfresh.in" className="cta-button fade-up">
+                <a href="mailto:support@originfresh.in" className="cta-button fade-up">
                   Contact us
                   <span className="cta-button-arrow">→</span>
                 </a>
