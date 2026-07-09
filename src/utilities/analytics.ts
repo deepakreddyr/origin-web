@@ -12,6 +12,34 @@ if (typeof window !== 'undefined') {
 const CLEVERTAP_ACCOUNT_ID = process.env.NEXT_PUBLIC_CLEVERTAP_ACCOUNT_ID;
 const CLEVERTAP_REGION = process.env.NEXT_PUBLIC_CLEVERTAP_REGION || '';
 
+const CLEVERTAP_MSG_PREFERENCES = {
+  'MSG-email': true,
+  'MSG-sms': true,
+  'MSG-whatsapp': true
+};
+
+const getAddressProperties = () => {
+  if (typeof window === 'undefined') return {};
+  try {
+    const addressFromLs = localStorage.getItem('selected_address');
+    if (addressFromLs) {
+      const parsed = JSON.parse(addressFromLs);
+      if (parsed) {
+        const lat = parsed.latitude !== undefined && parsed.latitude !== null ? Number(parsed.latitude) : undefined;
+        const lng = parsed.longitude !== undefined && parsed.longitude !== null ? Number(parsed.longitude) : undefined;
+        return {
+          ...(lat !== undefined && !isNaN(lat) ? { lat } : {}),
+          ...(lng !== undefined && !isNaN(lng) ? { lng } : {}),
+          ...(parsed.address ? { address: parsed.address } : {})
+        };
+      }
+    }
+  } catch (error) {
+    // console.error(error);
+  }
+  return {};
+};
+
 interface AnalyticsProvider {
   name: string;
   init: () => void;
@@ -42,22 +70,64 @@ const CleverTapProvider: AnalyticsProvider = {
   identify: (userId: string) => {
     if (!CleverTap) return;
     // console.log(`[CleverTap] Identify User: ${userId}`);
+    const addressProps = getAddressProperties();
+    if (addressProps.lat !== undefined && addressProps.lng !== undefined) {
+      try {
+        CleverTap.getLocation(addressProps.lat, addressProps.lng);
+      } catch (err) {
+        // console.error(err);
+      }
+    }
     CleverTap.onUserLogin.push({
-      Site: { Identity: userId }
+      Site: {
+        Identity: userId,
+        ...addressProps,
+        ...CLEVERTAP_MSG_PREFERENCES
+      }
     });
   },
   setProperties: (properties: Record<string, any>) => {
     if (!CleverTap) return;
     // console.log('[CleverTap] Set Properties:', properties);
+    const addressProps = getAddressProperties();
+    const mergedProps = {
+      ...addressProps,
+      ...properties
+    };
+    if (mergedProps.lat !== undefined && mergedProps.lng !== undefined) {
+      try {
+        CleverTap.getLocation(mergedProps.lat, mergedProps.lng);
+      } catch (err) {
+        // console.error(err);
+      }
+    }
     CleverTap.profile.push({
-      Site: properties
+      Site: {
+        ...mergedProps,
+        ...CLEVERTAP_MSG_PREFERENCES
+      }
     });
   },
   registerSuperProperties: (properties: Record<string, any>) => {
     if (!CleverTap) return;
     // console.log('[CleverTap] Register Super Properties:', properties);
+    const addressProps = getAddressProperties();
+    const mergedProps = {
+      ...addressProps,
+      ...properties
+    };
+    if (mergedProps.lat !== undefined && mergedProps.lng !== undefined) {
+      try {
+        CleverTap.getLocation(mergedProps.lat, mergedProps.lng);
+      } catch (err) {
+        // console.error(err);
+      }
+    }
     CleverTap.profile.push({
-      Site: properties
+      Site: {
+        ...mergedProps,
+        ...CLEVERTAP_MSG_PREFERENCES
+      }
     });
   },
   track: (eventName: string, properties: Record<string, any>) => {
