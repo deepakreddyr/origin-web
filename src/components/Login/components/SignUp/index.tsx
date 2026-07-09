@@ -118,15 +118,24 @@ const SignUp = () => {
         // Analytics tracking for new user registration
         const profileInfo = response.data?.profile || response.data;
         const userPhone = profileInfo?.mobile || profileInfo?.phone || '';
-        const formattedPhone = userPhone.startsWith('+91') ? userPhone : `+91${userPhone}`;
+        const rawPhone = userPhone.startsWith('+91')
+          ? userPhone.slice(3)
+          : userPhone.startsWith('91')
+            ? userPhone.slice(2)
+            : userPhone;
+        const phoneWithCountryCode = userPhone.startsWith('+91')
+          ? userPhone
+          : userPhone.startsWith('91')
+            ? `+${userPhone}`
+            : `+91${userPhone}`;
 
-        if (formattedPhone && formattedPhone !== '+91') {
-          identifyUser(formattedPhone);
+        if (rawPhone) {
+          identifyUser(rawPhone);
           setUserProperties({
-            Identity: formattedPhone,
+            Identity: rawPhone,
             Name: name,
             Email: email,
-            Phone: formattedPhone,
+            Phone: phoneWithCountryCode,
             Gender: gender
           });
         }
@@ -134,7 +143,7 @@ const SignUp = () => {
         trackEvent(AnalyticsEvents.REGISTRATION_SUCCESSFUL);
         trackEvent(AnalyticsEvents.REGISTERED);
         trackEvent(AnalyticsEvents.USER_SIGNUP, {
-          mobile_number: userPhone,
+          mobile_number: rawPhone,
           user_name: name,
           gender: gender,
           email_id: email

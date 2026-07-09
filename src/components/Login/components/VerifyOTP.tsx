@@ -98,19 +98,20 @@ const VerifyOTP = (props: Props) => {
         handleLaunchResponse(launchResponse, dispatch, setAddress, setProfileAtom, response.access_token, true);
 
         // Analytics identify and login tracking when user exists
-        const formattedPhone = `+91${mobileNumber}`;
-        identifyUser(formattedPhone);
+        const rawPhone = mobileNumber;
+        const phoneWithCountryCode = `+91${mobileNumber}`;
+        identifyUser(rawPhone);
 
         // CleverTap: onUserLogin profile push
         setUserProperties({
-          Identity: formattedPhone,
-          Phone: formattedPhone,
+          Identity: rawPhone,
+          Phone: phoneWithCountryCode,
           Name: userProfile?.name || '',
           Email: userProfile?.email || ''
         });
 
         trackEvent(AnalyticsEvents.LOGGED_IN, {
-          'user-id': formattedPhone
+          'user-id': rawPhone
         });
         trackEvent(AnalyticsEvents.USER_LOGIN);
         stopTrackTime(AnalyticsEvents.TRACK_OTP);
