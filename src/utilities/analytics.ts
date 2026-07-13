@@ -70,11 +70,10 @@ const CleverTapProvider: AnalyticsProvider = {
       CleverTap.privacy.push({ optOut: false });
       CleverTap.privacy.push({ useIP: false });
       CleverTap.init(CLEVERTAP_ACCOUNT_ID, CLEVERTAP_REGION);
-      if (process.env.NODE_ENV === 'development') {
-        CleverTap.setLogLevel(3); // 3 = DEBUG
-      }
+      // CleverTap.setLogLevel(3); // 3 = DEBUG
+      // console.log('[CleverTap] Initialized with Account ID:', CLEVERTAP_ACCOUNT_ID);
     } else {
-      console.warn('[CleverTap] Account ID not found. Set NEXT_PUBLIC_CLEVERTAP_ACCOUNT_ID in .env.local');
+      console.warn('[CleverTap] Account ID not found. Set NEXT_PUBLIC_CLEVERTAP_ACCOUNT_ID');
     }
   },
 
@@ -253,9 +252,8 @@ export const trackEvent = <T extends AnalyticsEventName>(
       }
     });
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`[Analytics] Tracked: ${eventName}`, properties);
-    }
+    // Console log unconditionally for debugging
+    console.log(`[Analytics] Tracked: ${eventName}`, properties);
   }
 };
 

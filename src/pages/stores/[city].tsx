@@ -9,6 +9,8 @@ import NoStoresView from '@/components/StoreLocator/NoStoresView';
 import ComingSoonView from '@/components/StoreLocator/ComingSoonView';
 import FutureDestinationTeaser from '@/components/StoreLocator/FutureDestinationTeaser';
 import { CityEntry, StoreLocation } from '@/utilities/types';
+import { trackEvent, timeEvent, stopTrackTime } from '@/utilities/analytics';
+import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 interface StoreCityPageProps {
   citySlug: string;
@@ -42,8 +44,25 @@ export default function StoreCityPage({
     }
   }, [citySlug]);
 
+  // Analytics tracking on mount and city change
+  useEffect(() => {
+    trackEvent(AnalyticsEvents.STORE_LOCATOR, { city: citySlug, status: status });
+    timeEvent(AnalyticsEvents.TRACK_STORE_LOCATOR);
+    return () => {
+      stopTrackTime(AnalyticsEvents.TRACK_STORE_LOCATOR);
+    };
+  }, [citySlug, status]);
+
   const handleSelectStore = (id: number) => {
     setSelectedStoreId(id);
+    const store = cityStores.find((s) => s.id === id);
+    if (store) {
+      trackEvent(AnalyticsEvents.STORE_SELECTED, {
+        store_id: id,
+        store_name: store.name || '',
+        city: citySlug
+      });
+    }
   };
 
   return (

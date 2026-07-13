@@ -52,6 +52,8 @@ export const AnalyticsEvents = {
   DELIVERY_TYPE: 'delivery_type',
   LOCATION_PERMISSION: 'location_permission',
   NO_INTERNET: 'no_internet',
+  STORE_LOCATOR: 'store_locator',
+  STORE_SELECTED: 'store_selected',
 
   // Cart
   ADD_TO_CART: 'add_to_cart',
@@ -129,6 +131,7 @@ export const AnalyticsEvents = {
   TRACK_NEED_HELP: 'track_need_help',
   TRACK_COUPON_LIST: 'track_coupon_list',
   TRACK_ORDERS: 'track_orders',
+  TRACK_STORE_LOCATOR: 'track_store_locator',
 
   // Legacy/Mango (Keeping for compatibility)
   MANGO_HOME: 'mango_home',
