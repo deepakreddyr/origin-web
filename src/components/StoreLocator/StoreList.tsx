@@ -26,7 +26,7 @@ const StoreList = ({ stores, selectedStoreId, onSelectStore }: StoreListProps) =
     if (s.includes('besant')) return '/assets/images/store/BesantNagar.webp';
     if (s.includes('frazer') || s.includes('ulsoor')) return '/assets/images/store/Ulsoor.webp';
     if (s.includes('mysuru') || s.includes('mysore')) return '/assets/images/store/Mysore.webp';
-    if (s.includes('pune')) return '/assets/images/origin_fresh_pune_store.png';
+    if (s.includes('pune')) return '/assets/images/store/Pune.jpeg';
     return locationBanner;
   };
 

@@ -106,7 +106,7 @@ export default function StoreCityPage({
             </div>
 
             {/* Show Pune Teaser on active city pages, but obviously not on Pune itself */}
-            {citySlug !== 'pune' && <FutureDestinationTeaser />}
+            {/* {citySlug !== 'pune' && <FutureDestinationTeaser />} */}
           </div>
         )}
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import storeMockup from '/public/assets/images/origin_fresh_pune_store.png';
+import storeMockup from '/public/assets/images/store/Pune.jpeg';
 import { request, ResponseError } from '@/utilities/request';
 
 interface ComingSoonViewProps {
