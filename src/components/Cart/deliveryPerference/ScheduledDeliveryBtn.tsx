@@ -41,7 +41,13 @@ const ScheduledDeliveryBtn = (props: any) => {
     >
       {/* Icon in top left */}
       <div className="mb-[1vw] mob:mb-[3.5vw] relative w-[1.4vw] h-[1.4vw] mob:w-[6vw] mob:h-[6vw]">
-        <Image src={clock} alt="green clock" fill className="object-contain" />
+        <Image
+          src={clock}
+          alt="green clock"
+          fill
+          className="object-contain"
+          style={!isButtonEnabled ? { filter: 'grayscale(1)', opacity: 0.3 } : {}}
+        />
       </div>
 
       <div className="flex flex-col gap-[0.4vw] mob:gap-[1.5vw]">

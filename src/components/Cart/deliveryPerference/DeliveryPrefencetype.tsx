@@ -89,7 +89,39 @@ const DeliveryPrefencetype = ({
     dispatch(setIsProceedButtonEnabled(canProceed));
   }, [placeOrderDetails.delivery_type, placeOrderDetails.time_slot_id, dispatch]);
 
-  if (loading) return <>loading</>;
+  if (loading)
+    return (
+      <div className="grid grid-cols-2 mob:gap-[2vw] gap-[0.5vw]">
+        {[0, 1].map((i) => (
+          <div
+            key={i}
+            className="rounded-[1vw] mob:rounded-[4vw] min-h-[10vw] mob:min-h-[35vw] p-[1vw] mob:p-[4vw] bg-[#F0F0F0] overflow-hidden relative"
+          >
+            {/* shimmer overlay */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%)',
+                backgroundSize: '200% 100%',
+                animation: 'deliveryShimmer 1.4s infinite'
+              }}
+            />
+            {/* icon placeholder */}
+            <div className="mb-[1vw] mob:mb-[3.5vw] w-[1.4vw] h-[1.4vw] mob:w-[6vw] mob:h-[6vw] rounded-full bg-[#D8D8D8]" />
+            {/* title placeholder */}
+            <div className="h-[1vw] mob:h-[4vw] w-[60%] rounded-full bg-[#D8D8D8] mb-[0.6vw] mob:mb-[2vw]" />
+            {/* subtitle placeholder */}
+            <div className="h-[0.75vw] mob:h-[3vw] w-[80%] rounded-full bg-[#D8D8D8]" />
+            <style>{`
+              @keyframes deliveryShimmer {
+                0%   { background-position: -200% 0; }
+                100% { background-position:  200% 0; }
+              }
+            `}</style>
+          </div>
+        ))}
+      </div>
+    );
 
   // ── SUBSCRIPTION FLOW: Show fixed timeslot card, no user selection needed ──
   if (isSubscription) {
