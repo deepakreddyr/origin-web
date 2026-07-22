@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import AddItemBtn from '../shared/AddItemBtn/AddItemBtn';
 import Image from 'next/image';
 import deleteIcon from '/public/assets/icons/deleteIcon.png';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useCartStore } from '@/hooks/useCartStore';
 import { clearSubscriptionCart, updateSubscriptionQuantity } from '@/store/slice/SubscriptionCartSlice';
 import { setIsSidebarOpen } from '@/store/slice/loginSlice';
@@ -10,6 +10,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { cleanImageUrl } from '@/utilities/utils';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
+import { useCartSync } from '@/hooks/useCartSync';
 // --- NEW IMPORTS for Ripeness Icons ---
 import ripeSvg from '/public/assets/svg/ripe.svg';
 import semiRipeSvg from '/public/assets/svg/semiripe.svg';
@@ -103,6 +104,8 @@ const ReviewItem = (props: {
   const { actions, isMangoPage } = useCartStore();
   const { removeItemFromCart, removeFreeItemFromCart } = actions;
   const dispatch = useDispatch();
+  const loginDetails = useSelector((state: any) => state.loginDetails);
+  const { sendItemsToApi } = useCartSync();
   // --- REMOVED TOAST STATE ---
   // const [showMaxQuantityToast, setShowMaxQuantityToast] = useState(false);
   // const [toastMaxQuantity, setToastMaxQuantity] = useState<number | null>(null);
@@ -303,7 +306,17 @@ const ReviewItem = (props: {
         ) : (
           <button
             onClick={() => {
+              // Remove from local Redux + LS first
               dispatch(removeItemFromCart(removeItemPayload));
+              // If logged in, sync the cleaned cart to the backend so the removed
+              // OOS item doesn't come back on the next cart open / API fetch.
+              // force=true ensures the backend is synced even if the cart becomes empty.
+              if (loginDetails.user) {
+                // Use setTimeout to let Redux + LS update settle before reading LS
+                setTimeout(() => {
+                  sendItemsToApi(true);
+                }, 0);
+              }
             }}
             className="flex items-center"
           >
