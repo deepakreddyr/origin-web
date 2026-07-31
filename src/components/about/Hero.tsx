@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import React from 'react';
 import heroImg1 from '/public/assets/images/about/about1.png';
+import heroImgMob from '/public/assets/images/about/aboutbannermob.png';
 import heroImgNoText from '/public/assets/images/about/aboutNoText.webp';
 import { motion } from 'framer-motion';
 
@@ -16,65 +17,13 @@ const Hero = () => {
           priority
           quality={100}
         />
-
-        <div
-          className="absolute inset-0 bg-[#000000B2] flex flex-col justify-center items-center text-white"
-          style={{ perspective: 1000 }}
-        >
-          <div className="flex flex-col items-center transform translate-y-[10vw]">
-            <div style={{ overflow: 'hidden', width: '850px', height: '141px' }}>
-              <motion.h1
-                className="font-[Recoleta] font-semibold text-center select-none"
-                initial={{ y: '100%' }}
-                animate={{ y: 0 }}
-                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  fontSize: '64px',
-                  lineHeight: '70.4px',
-                  letterSpacing: '1px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                Connecting Farms directly
-                <br />
-                to your Table
-              </motion.h1>
-            </div>
-            <div style={{ overflow: 'hidden', width: '841px', height: '88px', marginTop: '8.8px' }}>
-              <motion.p
-                className="font-[SofiaPro] font-normal text-center select-none"
-                initial={{ y: '100%' }}
-                animate={{ y: 0 }}
-                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
-                style={{
-                  fontFamily: 'SofiaPro',
-                  width: '100%',
-                  height: '100%',
-                  fontSize: '24px',
-                  lineHeight: '29.25px',
-                  letterSpacing: '0px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                We believe the shortest distance between the soil and your soul is an honest harvest. Origin Fresh was
-                born to bring the vibrant vitality of organic farming directly to your home.
-              </motion.p>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Mobile View: Full image with centered text overlay */}
       <div className="md:hidden w-full relative" style={{ height: '591px' }}>
         {/* Background Image */}
         <Image
-          src={heroImg1}
+          src={heroImgMob}
           alt="Connecting Farms directly to your Table"
           fill
           className="object-cover object-center"
@@ -104,9 +53,7 @@ const Hero = () => {
                 letterSpacing: '0.57px'
               }}
             >
-              Connecting Farms directly
-              <br />
-              to your Table
+              <span className="text-primary">Connecting Farms</span> directly to your Table
             </motion.h1>
           </div>
 

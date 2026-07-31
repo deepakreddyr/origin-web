@@ -27,6 +27,7 @@ const StoreList = ({ stores, selectedStoreId, onSelectStore }: StoreListProps) =
     if (s.includes('frazer') || s.includes('ulsoor')) return '/assets/images/store/Ulsoor.webp';
     if (s.includes('mysuru') || s.includes('mysore')) return '/assets/images/store/Mysore.webp';
     if (s.includes('pune')) return '/assets/images/store/Pune.jpeg';
+    if (s.includes('phoenix')) return '/assets/images/neworiginlogo.png';
     return locationBanner;
   };
 
@@ -53,9 +54,14 @@ const StoreList = ({ stores, selectedStoreId, onSelectStore }: StoreListProps) =
             }}
           >
             <div className="flex flex-row gap-3 sm:gap-4 h-full">
-              {/* Image Section */}
               <div className="w-[110px] sm:w-[130px] h-[110px] sm:h-[130px] shrink-0 rounded-[16px] overflow-hidden relative bg-gray-100">
-                <Image src={storeImage} alt={store.name} layout="fill" objectFit="cover" className="rounded-[16px]" />
+                <Image
+                  src={storeImage}
+                  alt={store.name}
+                  layout="fill"
+                  objectFit={typeof storeImage === 'string' && storeImage.includes('logo') ? 'contain' : 'cover'}
+                  className="rounded-[16px]"
+                />
               </div>
 
               {/* Content Section */}

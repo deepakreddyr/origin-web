@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import produceImg from '/public/assets/images/about/handpicked.webp';
+import produceImg from '/public/assets/images/about/handpicked.jpg';
 
 // ── Icons ──
 
