@@ -107,7 +107,6 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
             }}
           />
         )}
-
         <video
           ref={videoRef}
           src={videoSrc}
@@ -119,8 +118,7 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
           className={`w-full h-full object-cover transition-opacity duration-500 ${isVideoLoaded ? 'opacity-100' : 'opacity-0'}`}
           onCanPlay={() => setIsVideoLoaded(true)}
         />
-
-        {/* Hero Overlay Content
+        Hero Overlay Content
         {isVideoLoaded && (
           <div
             className={`absolute inset-0 flex flex-col items-center ${isMobile ? 'justify-end pb-[12vw]' : 'justify-center'} text-center p-4 z-10 transition-all duration-700 ease-out`}
@@ -129,7 +127,7 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
               transform: isVideoLoaded ? 'translateY(0)' : 'translateY(20px)'
             }}
           >
-            <div className="flex flex-col items-center justify-center gap-4 md:gap-8 max-w-[90vw] md:max-w-4xl">
+            <div className="flex flex-col items-center justify-center gap-4 md:gap-4 max-w-[90vw] md:max-w-4xl">
               <h1
                 style={{
                   fontFamily: 'Recoleta',
@@ -139,7 +137,7 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
                 }}
                 className="text-[10vw] md:text-[6vw] lg:text-[5.5vw]"
               >
-                The Cult Of Fresh
+                Hydroponics
               </h1>
 
               <p
@@ -148,16 +146,15 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
                   fontWeight: 500,
                   color: 'white'
                 }}
-                className="text-[4.5vw] md:text-[2vw] lg:text-[1.8vw] opacity-90 max-w-[80vw] md:max-w-2xl"
+                className="text-[4.5vw] md:text-[2vw] lg:text-[2.5vw] opacity-90 max-w-[80vw] md:w-full"
               >
-                Plating up <span style={{ fontWeight: 700 }}>150+</span>
-                <br className="md:hidden" /> authentic exotic produce
+                Soilless cultivation for cleaner, fresher produce.
               </p>
 
               <button
                 className="pointer-events-auto"
                 onClick={() => {
-                  router.push('/shop');
+                  router.push('/shop/hydroponics/9/hydroponics/49');
                 }}
                 style={{
                   backgroundColor: '#fac510',
@@ -180,7 +177,7 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
               </button>
             </div>
           </div>
-        )} */}
+        )}
       </div>
     );
   }
