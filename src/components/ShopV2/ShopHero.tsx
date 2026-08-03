@@ -127,7 +127,7 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
               transform: isVideoLoaded ? 'translateY(0)' : 'translateY(20px)'
             }}
           >
-            <div className="flex flex-col items-center justify-center gap-4 md:gap-4 max-w-[90vw] md:max-w-4xl">
+            <div className="flex flex-col items-center justify-center gap-4 md:gap-1 max-w-[90vw] md:max-w-4xl">
               <h1
                 style={{
                   fontFamily: 'Recoleta',
@@ -148,7 +148,7 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
                 }}
                 className="text-[4.5vw] md:text-[2vw] lg:text-[2.5vw] opacity-90 max-w-[80vw] md:w-full"
               >
-                Soilless cultivation for cleaner, fresher produce.
+                Grown only in nutrient-enriched water for exceptional flavour and quality
               </p>
 
               <button
