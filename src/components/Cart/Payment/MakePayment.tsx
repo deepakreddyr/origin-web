@@ -2,11 +2,16 @@ import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import razorpayIcon from '/public/assets/images/razorpay.png';
 import Image from 'next/image';
 import React, { useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { paymentTypeList } from '@/constants';
+import { updatePaymentMethod, updateSubPaymentMethod } from '@/store/slice/placeOrderDetails';
+import { useCartStore } from '@/hooks/useCartStore';
+import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 
 const MakePayment = (props: any) => {
-  const { placeOrderHandler, primeAudio } = props;
+  const { placeOrderHandler, primeAudio, isSelectionMode } = props;
+  const dispatch = useDispatch();
+  const { actions } = useCartStore();
   const [showCodButton, setShowCodButton] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [processingPaymentId, setProcessingPaymentId] = useState(null);
@@ -106,6 +111,13 @@ const MakePayment = (props: any) => {
                     isProcessingRef.current ||
                     (!isSubscription && !pay.sub_payment_method && !isCodEnabled)
                   ) {
+                    return;
+                  }
+
+                  if (isSelectionMode) {
+                    dispatch(updatePaymentMethod(pay.name));
+                    dispatch(updateSubPaymentMethod(pay.sub_payment_method));
+                    dispatch(actions.setCartTabType(TabTypeConstant.CART_MAIN));
                     return;
                   }
 

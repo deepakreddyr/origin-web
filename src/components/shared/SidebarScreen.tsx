@@ -111,6 +111,10 @@ const SidebarScreen = () => {
           dispatch(actions.setCartTabType(TabTypeConstant.CART_MAIN));
           break;
         }
+        if (cart.cartTabType === TabTypeConstant.PAYMENT_SELECTION) {
+          dispatch(actions.setCartTabType(TabTypeConstant.CART_MAIN));
+          break;
+        }
         if (cart.cartTabType === TabTypeConstant.CART_ADDRESS_LIST || cart.cartTabType === TabTypeConstant.PAYMENT) {
           const flowType = localStorage.getItem('FLOW_TYPE');
           if (flowType === 'retry_payment' && cart.cartTabType === TabTypeConstant.PAYMENT) {
@@ -157,7 +161,8 @@ const SidebarScreen = () => {
           cart.cartTabType === TabTypeConstant.COUPON_CODE_LIST ||
           cart.cartTabType === TabTypeConstant.CART_ADDRESS_LIST ||
           cart.cartTabType === TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR ||
-          cart.cartTabType === TabTypeConstant.PAYMENT
+          cart.cartTabType === TabTypeConstant.PAYMENT ||
+          cart.cartTabType === TabTypeConstant.PAYMENT_SELECTION
         )
           return true;
         if (cart.cartTabType === TabTypeConstant.CART_MAIN) return isMangoPage;

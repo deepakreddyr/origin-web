@@ -276,9 +276,14 @@ const Cart = () => {
 
       // If we're in the main cart view and no modal is open
       if (cart.cartTabType === TabTypeConstant.CART_MAIN && !showAddressModal) {
-        setAddressModal(true);
-        dispatch(setCartTabType(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR));
-        dispatch(setIsProceedButtonEnabled(false)); // Disable until timing is selected
+        if (cart.show_timeslot_sheet === false) {
+          setAddressModal(false);
+          dispatch(setCartTabType(TabTypeConstant.PAYMENT_PROCESSING));
+        } else {
+          setAddressModal(true);
+          dispatch(setCartTabType(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR));
+          dispatch(setIsProceedButtonEnabled(false)); // Disable until timing is selected
+        }
         return;
       }
 
@@ -371,6 +376,8 @@ const Cart = () => {
   const SCREEN_MAP: any = {
     COUPON_CODE_LIST: <CouponFlowWrapper setShowCouponList={setShowCouponList} />,
     PAYMENT: <Payment />,
+    PAYMENT_SELECTION: <Payment isSelectionMode={true} />,
+    PAYMENT_PROCESSING: <Payment autoSubmit={true} />,
     CART_MAIN: cartMainContent,
     ADDRESS_TIMESLOT_SELECTOR: cartMainContent,
     CART_ADDRESS_LIST: cartMainContent,
@@ -378,7 +385,7 @@ const Cart = () => {
   };
 
   return (
-    <div className="flex flex-col grow gap-[1.1vw] mob:gap-[4.1vw] pb-[6vw] mob:pb-[25vw]">
+    <div className="flex flex-col grow gap-[1.1vw] mob:gap-[4.1vw] pb-[15vw] mob:pb-[45vw]">
       <InfoToast
         message={maxQuantityError.message}
         isVisible={maxQuantityError.isVisible}
