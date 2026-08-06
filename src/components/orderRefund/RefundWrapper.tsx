@@ -13,17 +13,10 @@ const RefundCard = ({ refund, activeIndex, totalCards }: { refund: any; activeIn
         <p className="text-[#25874D] font-[Recoleta] font-bold text-[1.38vw] mob:text-[5vw] mb-0">Refund</p>
 
         {totalCards > 1 && (
-          <div className="flex justify-center gap-[.5vw] mob:gap-[2vw]">
-            {Array.from({ length: totalCards }).map((_, idx) => (
-              <div
-                key={idx}
-                className={`h-[.5vw] mob:h-[1.5vw] rounded-full transition-all duration-300 ${
-                  activeIndex === idx
-                    ? 'w-[1.5vw] mob:w-[4.5vw] bg-[#25874D]'
-                    : 'w-[.5vw] mob:w-[1.5vw] bg-[#25874D]/30'
-                }`}
-              />
-            ))}
+          <div className="bg-white rounded-full px-[12px] py-[4px] flex items-center justify-center border border-[#B4E0D4]">
+            <p className="text-[#25874D] font-semibold font-[sofiaPro] text-center text-[1vw] mob:text-[3.5vw] mb-0 mt-[3px]">
+              {activeIndex + 1}/{totalCards}
+            </p>
           </div>
         )}
       </div>
@@ -31,13 +24,13 @@ const RefundCard = ({ refund, activeIndex, totalCards }: { refund: any; activeIn
       {refund.refund_items && refund.refund_items.length > 0 && (
         <div className="bg-[#FBF9F6] rounded-[8px] p-[10px] flex flex-col min-h-[140px] mob:min-h-[150px]">
           <div className="flex flex-col gap-[12px]">
-            <p className="font-bold font-[SofiaPro] text-black text-[1vw] mob:text-[3.8vw] mb-0">Refund for:</p>
+            <p className="font-bold font-[sofiaPro] text-black text-[1vw] mob:text-[3.8vw] mb-0">Refund for:</p>
 
             <div className="flex flex-col gap-[8px]">
               {visibleItems.map((item: any, index: number) => (
                 <div key={index} className="flex justify-between">
-                  <p className="text-black/70 font-[SofiaPro] font-medium text-[.9vw] mob:text-[3.5vw]">{item.name}</p>
-                  <p className="text-black/70 font-[SofiaPro] font-medium text-[.9vw] mob:text-[3.5vw]">
+                  <p className="text-black/70 font-[sofiaPro] font-medium text-[.9vw] mob:text-[3.5vw]">{item.name}</p>
+                  <p className="text-black/70 font-[sofiaPro] font-medium text-[.9vw] mob:text-[3.5vw]">
                     ₹ {item.amount ? Number(item.amount).toFixed(2).replace(/\.00$/, '') : 0}
                   </p>
                 </div>
@@ -48,7 +41,7 @@ const RefundCard = ({ refund, activeIndex, totalCards }: { refund: any; activeIn
                   className="flex items-center justify-center gap-[4px] mt-[4px] cursor-pointer"
                   onClick={() => setIsExpanded(!isExpanded)}
                 >
-                  <p className="text-[#25874D] font-[SofiaPro] font-semibold text-[.9vw] mob:text-[3.5vw]">
+                  <p className="text-[#25874D] font-[sofiaPro] font-semibold text-[.9vw] mob:text-[3.5vw]">
                     {isExpanded ? 'Show less' : 'Show more'}
                   </p>
                   <svg
@@ -67,8 +60,8 @@ const RefundCard = ({ refund, activeIndex, totalCards }: { refund: any; activeIn
           <div className="flex flex-col gap-[12px] mt-auto pt-[12px]">
             <div className="border-b border-black/10"></div>
             <div className="flex justify-between">
-              <p className="font-bold font-[SofiaPro] text-black text-[1.1vw] mob:text-[4vw]">Total</p>
-              <p className="font-bold font-[SofiaPro] text-black text-[1.1vw] mob:text-[4vw]">₹ {refund.amount}</p>
+              <p className="font-bold font-[sofiaPro] text-black text-[1.1vw] mob:text-[4vw]">Total</p>
+              <p className="font-bold font-[sofiaPro] text-black text-[1.1vw] mob:text-[4vw]">₹ {refund.amount}</p>
             </div>
           </div>
         </div>
@@ -76,18 +69,18 @@ const RefundCard = ({ refund, activeIndex, totalCards }: { refund: any; activeIn
 
       {refund.refund_reason && (
         <div className="bg-white rounded-[.5vw] mob:rounded-[2vw] px-[.8vw] py-[.4vw] mob:px-[3vw] mob:py-[1.5vw] self-start">
-          <p className="text-black/70 font-semibold font-[SofiaPro] text-[.85vw] mob:text-[3.2vw]">
+          <p className="text-black/70 font-semibold font-[sofiaPro] text-[.85vw] mob:text-[3.2vw]">
             Reason: {refund.refund_reason}
           </p>
         </div>
       )}
 
       {refund.message && (
-        <p className="text-black/70 font-[SofiaPro] text-[.95vw] mob:text-[3.5vw] leading-[1.4]">{refund.message}</p>
+        <p className="text-black/70 font-[sofiaPro] text-[.95vw] mob:text-[3.5vw] leading-[1.4]">{refund.message}</p>
       )}
 
       {referenceId && (
-        <p className="text-black/70 font-[SofiaPro] text-[.95vw] mob:text-[3.5vw]">
+        <p className="text-black/70 font-[sofiaPro] text-[.95vw] mob:text-[3.5vw]">
           Reference ID: <span className="font-bold text-black">{referenceId}</span>
         </p>
       )}
