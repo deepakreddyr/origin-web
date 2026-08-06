@@ -10,6 +10,9 @@ import { setIsSubscriptionActive, setSubscriptionItem } from '@/store/slice/Subs
 import { setIsSidebarOpen, setTabType } from '@/store/slice/loginSlice';
 import { setCartTabType } from '@/store/slice/CartSlice';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
+import { setLoginDetails } from '@/store/slice/loginSlice';
+
+export const ADDRESS_NOT_DELIVERABLE_KEY = 'ADDRESS_NOT_DELIVERABLE';
 
 const GlobalLaunchListener = () => {
   const dispatch = useDispatch();
@@ -41,6 +44,22 @@ const GlobalLaunchListener = () => {
     }
   }, [dispatch]);
 
+  // On reload: if address was previously marked as not deliverable, re-open the sidebar
+  useEffect(() => {
+    const token = localStorage.getItem('user_token');
+    const notDeliverable = localStorage.getItem(ADDRESS_NOT_DELIVERABLE_KEY);
+    if (token && notDeliverable === 'true') {
+      dispatch(
+        setLoginDetails({
+          isSidebarOpen: true,
+          isLogin: true,
+          user: token,
+          tabType: TabTypeConstant.MANAGE_ADDRESS
+        })
+      );
+    }
+  }, []);
+
   useEffect(() => {
     const token = localStorage.getItem('user_token');
 
@@ -59,6 +78,55 @@ const GlobalLaunchListener = () => {
             headers: { Authorization: authHeader }
           });
           handleLaunchResponse(response, dispatch, setAddress, setProfile, token, false);
+
+          // --- Real-time deliverability check for default address ---
+          // The launch API caches the `deliverable` flag; when the delivery zone
+          // is shrunk on the backend, that flag becomes stale. We validate live.
+          const defaultAddress = response?.address?.find((a: any) => a.is_default === true);
+          if (defaultAddress?.latitude && defaultAddress?.longitude) {
+            try {
+              const deliverabilityResponse: any = await request(mainApiUrl.fetchForAddressDeliverable, {
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  latitude: defaultAddress.latitude,
+                  longitude: defaultAddress.longitude
+                })
+              });
+
+              if (!deliverabilityResponse?.deliverable) {
+                // Address is no longer in the delivery zone — update atom and clear storage
+                setAddress((prev: any) => ({
+                  ...prev,
+                  defaultAddress: null,
+                  address:
+                    prev.address?.map((a: any) =>
+                      a.address_id === defaultAddress.address_id ? { ...a, deliverable: false, store_id: null } : a
+                    ) ?? []
+                }));
+                localStorage.removeItem('selected_address');
+                localStorage.removeItem('store-id');
+                // Persist so the sidebar re-opens even after a full page reload
+                localStorage.setItem(ADDRESS_NOT_DELIVERABLE_KEY, 'true');
+
+                // Open the address management sidebar so the user can update their address
+                dispatch(
+                  setLoginDetails({
+                    isSidebarOpen: true,
+                    isLogin: true,
+                    user: token,
+                    tabType: TabTypeConstant.MANAGE_ADDRESS
+                  })
+                );
+              }
+            } catch (deliverabilityError) {
+              console.error('Deliverability check failed', deliverabilityError);
+            }
+          }
+          // ----------------------------------------------------------
         } catch (e) {
           console.error('Launch API failed', e);
         }

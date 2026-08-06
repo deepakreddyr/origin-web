@@ -36,6 +36,7 @@ import { setIsFreshLogin, setIsSidebarOpen, setTabType } from '@/store/slice/log
 import { useDispatch } from 'react-redux';
 import { removeRouteSourceFromLs } from '@/utilities/utils';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
+import { ADDRESS_NOT_DELIVERABLE_KEY } from '@/components/GlobalLaunchListener';
 
 interface Props {
   setActiveScreen: any;
@@ -123,6 +124,9 @@ export default function CompleteAddress(props: Props) {
         ...prevProps,
         tabType: TabType.ADDRESS_SELECTION
       }));
+
+      // Clear not-deliverable lock so sidebar can be closed normally
+      localStorage.removeItem(ADDRESS_NOT_DELIVERABLE_KEY);
 
       setActiveScreen(manageAddressScreens.ADDRESS_LIST);
 

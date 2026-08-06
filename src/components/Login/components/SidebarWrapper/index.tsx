@@ -12,6 +12,7 @@ import { OriginCloseIcon } from '../../../../Icons/OriginIcons';
 import { useCartStore } from '@/hooks/useCartStore';
 import { trackEvent } from '@/utilities/analytics';
 import { AnalyticsEvents } from '@/utilities/analyticsEvents';
+import { ADDRESS_NOT_DELIVERABLE_KEY } from '@/components/GlobalLaunchListener';
 
 interface Props {
   children: React.ReactNode;
@@ -31,7 +32,14 @@ const SidebarWrapper = (props: Props) => {
   const { cart } = useCartStore();
   const dispatch = useDispatch();
 
+  // Block all close/back actions while the not-deliverable flow is active
+  const isAddressNotDeliverable =
+    typeof window !== 'undefined' && localStorage.getItem(ADDRESS_NOT_DELIVERABLE_KEY) === 'true';
+
   const handleCloseAttempt = () => {
+    // Block close when user must update their non-deliverable address
+    if (isAddressNotDeliverable) return;
+
     // Prevent close if in registration map flow
     if (
       loginDetails.isFreshLogin &&
@@ -57,6 +65,8 @@ const SidebarWrapper = (props: Props) => {
   };
 
   const handleBackAttempt = () => {
+    // Block back navigation when user must update their non-deliverable address
+    if (isAddressNotDeliverable) return;
     // We allow the back button as requested, it only navigates within the sidebar/backwards
     onClickBackButton();
   };
@@ -118,8 +128,13 @@ const SidebarWrapper = (props: Props) => {
             <div className="flex-shrink-0 w-[3vw] mob:w-[10vw] flex justify-end">
               <button
                 onClick={handleCloseAttempt}
-                className="w-[2.5vw] h-[2.5vw] mob:w-[8vw] mob:h-[8vw] rounded-full flex items-center justify-center hover:bg-gray-100 active:bg-gray-100 transition-colors duration-200 text-black"
+                className={`w-[2.5vw] h-[2.5vw] mob:w-[8vw] mob:h-[8vw] rounded-full flex items-center justify-center transition-colors duration-200 text-black ${
+                  isAddressNotDeliverable
+                    ? 'opacity-0 pointer-events-none cursor-not-allowed'
+                    : 'hover:bg-gray-100 active:bg-gray-100'
+                }`}
                 aria-label="close"
+                disabled={isAddressNotDeliverable}
               >
                 <div className="w-[1vw] h-[1vw] mob:w-[4vw] mob:h-[4vw] flex items-center justify-center">
                   <OriginCloseIcon sx={{ fontSize: '0.6vw', '@media (max-width: 600px)': { fontSize: '2.5vw' } }} />

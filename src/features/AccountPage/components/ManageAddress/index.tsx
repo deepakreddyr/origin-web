@@ -33,6 +33,7 @@ import { useSelector } from 'react-redux';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { addressAtom } from '@/features/Address/context/atoms';
 import AddressListSkeleton from '@/components/skeletonLoaders/sidebar/AddressListSkeleton';
+import { ADDRESS_NOT_DELIVERABLE_KEY } from '@/components/GlobalLaunchListener';
 
 type ScreenMapType = {
   [key in ManageAddressScreenKeys]: ReactNode;
@@ -52,6 +53,9 @@ const ManageAddress = () => {
 
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const getDataFromApi = useGetDataFromApi();
+
+  const isAddressNotDeliverable =
+    typeof window !== 'undefined' && localStorage.getItem(ADDRESS_NOT_DELIVERABLE_KEY) === 'true';
 
   useEffect(() => {
     if (!address?.address || address.address.length === 0) {
@@ -158,6 +162,44 @@ const ManageAddress = () => {
   if (address.loading) return <AddressListSkeleton />;
   return (
     <>
+      {/* Not-deliverable warning banner */}
+      {isAddressNotDeliverable && (
+        <div
+          style={{
+            backgroundColor: '#FFF3CD',
+            border: '1px solid #FFCA28',
+            borderRadius: '10px',
+            padding: '12px 16px',
+            marginBottom: '12px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px'
+          }}
+        >
+          <p
+            style={{
+              fontFamily: 'SofiaPro',
+              fontWeight: 700,
+              fontSize: '14px',
+              color: '#7A4F00',
+              margin: 0
+            }}
+          >
+            Your address is no longer deliverable
+          </p>
+          <p
+            style={{
+              fontFamily: 'SofiaPro',
+              fontSize: '13px',
+              color: '#7A4F00',
+              margin: 0
+            }}
+          >
+            We&apos;re sorry, but we can&apos;t deliver to your saved address anymore. Please select or add an alternate
+            address to continue.
+          </p>
+        </div>
+      )}
       {renderContent()}
 
       {activeScreen === manageAddressScreens.ADDRESS_LIST &&
