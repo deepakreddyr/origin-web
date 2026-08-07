@@ -44,25 +44,23 @@ const OrderCard = (props: Props) => {
       <div className="flex justify-between items-center mob:pb-[2.5vw] pb-[.6vw]">
         <span className="font-bold text-[.97vw] mob:text-[3.6vw] font-[SofiaPro] ">{`ORDER ID ${order.order_code}`}</span>
 
-        <div>
-          {order.status === 'Delivered' ? (
-            <div className="bg-[#231F201A] px-[1.1vw] mob:px-[4.1vw] mob:py-[1.5vw] py-[.4vw] mob:rounded-[2vw] rounded-[.6vw]">
-              <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold text-black">DELIVERED</p>
+        {order.status && (
+          <div>
+            <div
+              className={`px-[1.1vw] mob:px-[4.1vw] mob:py-[1.5vw] py-[.4vw] mob:rounded-[2vw] rounded-[.6vw] ${
+                order.status.toLowerCase().includes('cancel') ||
+                order.status.toLowerCase().includes('reject') ||
+                order.status.toLowerCase().includes('not')
+                  ? 'bg-[#FFEBEB] text-[#C70000] border border-[#FFD6D6]'
+                  : order.status.toLowerCase().includes('deliver') || order.status.toLowerCase().includes('accept')
+                    ? 'bg-[#DCF3E8] text-[#25874D] border border-[#B4E0D4]'
+                    : 'bg-[#FFF9E6] text-[#B8860B] border border-[#FFE4B5]'
+              }`}
+            >
+              <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold uppercase">{order.status}</p>
             </div>
-          ) : order.status === 'Rejected by admin' ? (
-            <div className="bg-[#C700001A] px-[1.1vw] mob:px-[4.1vw] mob:py-[1.5vw] py-[.4vw] mob:rounded-[2vw] rounded-[.6vw]">
-              <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold text-danger">CANCELLED</p>
-            </div>
-          ) : order.status === 'Not Delivered' ? (
-            <div className="bg-[#C700001A] px-[1.1vw] mob:px-[4.1vw] mob:py-[1.5vw] py-[.4vw] mob:rounded-[2vw] rounded-[.6vw]">
-              <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold text-danger">NOT DELIVERED</p>
-            </div>
-          ) : (
-            <div className=" bg-[#25874D1A] px-[1.1vw] mob:px-[4.1vw] mob:py-[1.5vw] py-[.4vw] mob:rounded-[2vw] rounded-[.6vw] ">
-              <p className="text-[.83vw] mob:text-[3vw] font-[SofiaPro] font-semibold text-secondary">IN PROGRESS</p>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
       <p className="text-sm text-gray-700 line-clamp-2 overflow-hidden">{order.item_details}</p>
       <div className="flex justify-between text-[.83vw] mob:text-[3vw] text-gray-600 font-medium">
