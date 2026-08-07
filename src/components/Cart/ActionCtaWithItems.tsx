@@ -338,6 +338,10 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
     );
   };
 
+  if (!loginDetails.isLogin) {
+    return renderOriginalUI();
+  }
+
   if (!isSubscription && cart.cart_minimum === null) {
     return null;
   }

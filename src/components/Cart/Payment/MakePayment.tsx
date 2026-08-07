@@ -33,10 +33,12 @@ const MakePayment = (props: any) => {
   const sendDataToApi = useSendDataToApi();
 
   let deliveryType = placeOrderDetails.delivery_type === 'INSTANT' ? 'Delivered Today within' : 'Delivering Today';
-  let deliveryTime =
-    placeOrderDetails.delivery_type === 'INSTANT'
-      ? '30 mins'
-      : `${placeOrderDetails.deliverySlotDetails.from} - ${placeOrderDetails.deliverySlotDetails.to}`;
+  let deliveryTime = '';
+  if (placeOrderDetails.delivery_type === 'INSTANT') {
+    deliveryTime = '30 mins';
+  } else if (placeOrderDetails.deliverySlotDetails?.from && placeOrderDetails.deliverySlotDetails?.to) {
+    deliveryTime = `${placeOrderDetails.deliverySlotDetails.from} - ${placeOrderDetails.deliverySlotDetails.to}`;
+  }
 
   let isCodEnabled = isSubscription
     ? true
@@ -80,14 +82,16 @@ const MakePayment = (props: any) => {
               {deliveryType}
             </p>
 
-            <div className="flex">
-              <div className="">
-                <Image src={''} alt="" />
+            {deliveryTime && (
+              <div className="flex">
+                <div className="">
+                  <Image src={''} alt="" />
+                </div>
+                <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  text-[#231F20CC] ">
+                  {deliveryTime}
+                </p>
               </div>
-              <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  text-[#231F20CC] ">
-                {deliveryTime}
-              </p>
-            </div>
+            )}
           </div>
         )}
         <div>
