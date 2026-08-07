@@ -131,9 +131,9 @@ const Home = ({
         <ShopHeroSingle
           bannerData={[
             {
-              website_image: '/assets/images/websitebanner.jpg',
+              website_image: '/assets/images/websitebanner.webp',
               website_mobile_view_image: '/assets/images/websitebannermobile.webp',
-              navigation: { to: '/shop' }
+              navigation: { to: 'shop/og-thai-market/19/og-thai-market/99' }
             }
           ]}
         />
