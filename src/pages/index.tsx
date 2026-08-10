@@ -128,7 +128,7 @@ const Home = ({
           description="Shop for the freshest organic fruits, vegetables, and exotic produce at Origin Fresh. Quality guaranteed, delivered straight to your home."
         />
         {/* <OriginHero /> */}
-        <ShopHeroSingle
+        {/* <ShopHeroSingle
           bannerData={[
             {
               website_image: '/assets/images/websitebanner.webp',
@@ -136,8 +136,8 @@ const Home = ({
               navigation: { to: 'shop/og-thai-market/19/og-thai-market/99' }
             }
           ]}
-        />
-        {/* <ShopHeroSingle videoSrc="https://cdn.originfresh.in/website/hydroherovideo.mp4" /> */}
+        /> */}
+        <ShopHeroSingle videoSrc="https://cdn.originfresh.in/website/hydroherovideo.mp4" />
         <ScrollReveal direction="up" delay={0}>
           <Container maxWidth={false} className="w-full px-[3vw] mob:px-[2vw] py-8 mob:py-4 mt-10 mob:mt-4">
             <PrimaryFeature />

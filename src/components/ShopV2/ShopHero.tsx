@@ -209,10 +209,17 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
     return (
       <div
         key={index}
-        className={`relative w-full aspect-[1244/600] mob:aspect-[1081/1232] bg-[#f7f1dc] cursor-pointer`}
+        className={`relative w-full aspect-[1244/650] mob:aspect-[1081/1232] bg-[#f7f1dc] cursor-pointer`}
         onClick={handleNavigation}
       >
-        <Image src={bannerSrc} alt={`Hero Banner ${index}`} fill priority quality={100} className="object-cover" />
+        <Image
+          src={bannerSrc}
+          alt={`Hero Banner ${index}`}
+          fill
+          priority
+          quality={100}
+          className="object-cover object-top"
+        />
       </div>
     );
   });
