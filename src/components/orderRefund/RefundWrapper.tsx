@@ -48,13 +48,13 @@ const RefundCard = ({ refund, activeIndex, totalCards }: { refund: any; activeIn
 
           <div className="flex flex-col gap-[8px]">
             {visibleItems.map((item: any, index: number) => (
-              <div key={index} className="flex justify-between items-start">
+              <div key={index} className="flex items-start">
                 <p className="text-[13px] text-[#4A4A4A] font-[sofiaPro] flex-1 pr-[8px] mb-0">{item.name}</p>
-                <div className="flex items-center gap-[12px]">
-                  <span className="text-[13px] text-[#4A4A4A] whitespace-nowrap font-[sofiaPro] w-[35px] text-left">
+                <div className="flex items-center shrink-0">
+                  <span className="text-[13px] text-[#4A4A4A] whitespace-nowrap font-[sofiaPro] w-[32px] text-right">
                     {item.qty != null ? `× ${item.qty}` : ''}
                   </span>
-                  <p className="text-[13px] text-[#1B1B1B] font-medium font-[sofiaPro] min-w-[45px] text-right mb-0">
+                  <p className="text-[13px] text-[#1B1B1B] font-medium font-[sofiaPro] w-[60px] text-right mb-0 ml-[12px]">
                     ₹ {item.amount}
                   </p>
                 </div>
