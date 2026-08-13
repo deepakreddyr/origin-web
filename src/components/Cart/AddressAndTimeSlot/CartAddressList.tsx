@@ -33,8 +33,11 @@ const CartAddressList = (props: any) => {
       ...address,
       is_default: true
     };
-    await editAddress(apiData as Address, setAddress);
+
     if (cart.show_timeslot_sheet === false) {
+      if (props.setAddressModal) {
+        props.setAddressModal(false);
+      }
       setTimeSelectorOrListTab(TabTypeConstant.CART_MAIN);
       dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
       dispatch(setIsProceedButtonEnabled(true));
@@ -42,9 +45,12 @@ const CartAddressList = (props: any) => {
       setTimeSelectorOrListTab(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR);
       dispatch(setCartTabType(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR));
     }
+
     if (onAddressChanged) {
       onAddressChanged();
     }
+
+    await editAddress(apiData as Address, setAddress);
   };
 
   return (

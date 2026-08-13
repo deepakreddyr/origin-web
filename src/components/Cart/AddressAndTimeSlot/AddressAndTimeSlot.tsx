@@ -37,10 +37,21 @@ const AddressAndTimeSlot = (props: any) => {
     setShowLocationPopup(true);
   };
 
-  const activeModalTab =
+  const [internalActiveTab, setInternalActiveTab] = useState(
     cart.cartTabType === TabTypeConstant.CART_ADDRESS_LIST
       ? TabTypeConstant.CART_ADDRESS_LIST
-      : TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR;
+      : TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR
+  );
+
+  useEffect(() => {
+    if (showAddressModal) {
+      setInternalActiveTab(
+        cart.cartTabType === TabTypeConstant.CART_ADDRESS_LIST
+          ? TabTypeConstant.CART_ADDRESS_LIST
+          : TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR
+      );
+    }
+  }, [cart.cartTabType, showAddressModal]);
 
   const SCREEN_MAP: any = {
     [TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR]: (
@@ -51,7 +62,11 @@ const AddressAndTimeSlot = (props: any) => {
       />
     ),
     [TabTypeConstant.CART_ADDRESS_LIST]: (
-      <CartAddressList setTimeSelectorOrListTab={setTimeSelectorOrListTab} onAddressChanged={handleAddressChanged} />
+      <CartAddressList
+        setAddressModal={setAddressModal}
+        setTimeSelectorOrListTab={setTimeSelectorOrListTab}
+        onAddressChanged={handleAddressChanged}
+      />
     )
   };
 
@@ -83,7 +98,7 @@ const AddressAndTimeSlot = (props: any) => {
         } transition-all duration-500 ease-in-out flex flex-col`}
       >
         <ModalHeader setAddressModal={setAddressModal} setTimeSelectorOrListTab={setTimeSelectorOrListTab} />
-        <div className="flex-1 overflow-hidden min-h-0 flex flex-col">{SCREEN_MAP[activeModalTab]}</div>
+        <div className="flex-1 overflow-hidden min-h-0 flex flex-col">{SCREEN_MAP[internalActiveTab]}</div>
       </div>
     </div>
   );
