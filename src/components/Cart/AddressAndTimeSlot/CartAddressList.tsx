@@ -13,8 +13,8 @@ import { editAddress } from '@/features/AddressEditDetails/services/editAddress'
 import Address from '@/features/AccountPage/types/Address';
 
 const CartAddressList = (props: any) => {
-  const { actions } = useCartStore();
-  const { setCartTabType } = actions;
+  const { cart, actions } = useCartStore();
+  const { setCartTabType, setIsProceedButtonEnabled } = actions;
   const { setTimeSelectorOrListTab, onAddressChanged } = props;
   const [address, setAddress] = useAtom(addressAtom);
   const router = useRouter();
@@ -33,12 +33,24 @@ const CartAddressList = (props: any) => {
       ...address,
       is_default: true
     };
-    await editAddress(apiData as Address, setAddress);
-    setTimeSelectorOrListTab(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR);
-    dispatch(setCartTabType(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR));
+
+    if (cart.show_timeslot_sheet === false) {
+      if (props.setAddressModal) {
+        props.setAddressModal(false);
+      }
+      setTimeSelectorOrListTab(TabTypeConstant.CART_MAIN);
+      dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
+      dispatch(setIsProceedButtonEnabled(true));
+    } else {
+      setTimeSelectorOrListTab(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR);
+      dispatch(setCartTabType(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR));
+    }
+
     if (onAddressChanged) {
       onAddressChanged();
     }
+
+    await editAddress(apiData as Address, setAddress);
   };
 
   return (

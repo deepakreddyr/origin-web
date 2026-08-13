@@ -16,8 +16,14 @@ const ModalHeader = (props: any) => {
   const onClickBackButton = () => {
     switch (cart.cartTabType) {
       case TabTypeConstant.CART_ADDRESS_LIST: {
-        dispatch(setCartTabType(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR));
-        setTimeSelectorOrListTab(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR);
+        if (cart.show_timeslot_sheet === false) {
+          setAddressModal(false);
+          dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
+        } else {
+          dispatch(setCartTabType(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR));
+          setTimeSelectorOrListTab(TabTypeConstant.ADDRESS_TIMESLOT_SELECTOR);
+        }
+        break;
       }
     }
   };

@@ -10,7 +10,7 @@ let isSyncingInProgress = false;
 export const useCartSync = () => {
   const dispatch = useDispatch();
   const { cart, isMangoPage, actions, subscriptionCart } = useCartStore();
-  const { setCartItems, setCartMinimum, setFreeItems } = actions;
+  const { setCartItems, setCartMinimum, setFreeItems, setShowTimeslotSheet } = actions;
 
   const isSubscription = subscriptionCart?.isSubscriptionActive;
   const loginDetails = useSelector((state: any) => state.loginDetails);
@@ -27,6 +27,8 @@ export const useCartSync = () => {
       if (data.cart_minimum) {
         dispatch(setCartMinimum(data.cart_minimum));
       }
+
+      dispatch(setShowTimeslotSheet(data.show_timeslot_sheet ?? true));
 
       if (data.free_items && data.free_items.length > 0) {
         dispatch(

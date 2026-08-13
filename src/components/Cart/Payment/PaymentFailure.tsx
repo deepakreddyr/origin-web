@@ -141,12 +141,12 @@ const PaymentFailure = (props: any) => {
               >
                 Retry Payment
               </button> */}
-            <button
+            {/* <button
               onClick={() => payOnCodHandler()}
               className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold px-[1.1vw] mob:px-[4.1vw] py-[.5vw] mob:py-[1.5vw] rounded-full bg-white border border-black"
             >
               Pay on Delivery
-            </button>
+            </button> */}
             <button
               onClick={() => setActiveScreenIndex(2)}
               className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold px-[1.1vw] mob:px-[4.1vw] py-[.5vw] mob:py-[1.5vw] rounded-full bg-white border border-red-500 text-red-500"

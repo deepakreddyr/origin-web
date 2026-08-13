@@ -2,11 +2,16 @@ import { useSendDataToApi } from '@/utilities/hooks/useSendDataToApi';
 import razorpayIcon from '/public/assets/images/razorpay.png';
 import Image from 'next/image';
 import React, { useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { paymentTypeList } from '@/constants';
+import { updatePaymentMethod, updateSubPaymentMethod } from '@/store/slice/placeOrderDetails';
+import { useCartStore } from '@/hooks/useCartStore';
+import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 
 const MakePayment = (props: any) => {
-  const { placeOrderHandler, primeAudio } = props;
+  const { placeOrderHandler, primeAudio, isSelectionMode } = props;
+  const dispatch = useDispatch();
+  const { actions } = useCartStore();
   const [showCodButton, setShowCodButton] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [processingPaymentId, setProcessingPaymentId] = useState(null);
@@ -28,10 +33,12 @@ const MakePayment = (props: any) => {
   const sendDataToApi = useSendDataToApi();
 
   let deliveryType = placeOrderDetails.delivery_type === 'INSTANT' ? 'Delivered Today within' : 'Delivering Today';
-  let deliveryTime =
-    placeOrderDetails.delivery_type === 'INSTANT'
-      ? '30 mins'
-      : `${placeOrderDetails.deliverySlotDetails.from} - ${placeOrderDetails.deliverySlotDetails.to}`;
+  let deliveryTime = '';
+  if (placeOrderDetails.delivery_type === 'INSTANT') {
+    deliveryTime = '30 mins';
+  } else if (placeOrderDetails.deliverySlotDetails?.from && placeOrderDetails.deliverySlotDetails?.to) {
+    deliveryTime = `${placeOrderDetails.deliverySlotDetails.from} - ${placeOrderDetails.deliverySlotDetails.to}`;
+  }
 
   let isCodEnabled = isSubscription
     ? true
@@ -75,14 +82,16 @@ const MakePayment = (props: any) => {
               {deliveryType}
             </p>
 
-            <div className="flex">
-              <div className="">
-                <Image src={''} alt="" />
+            {deliveryTime && (
+              <div className="flex">
+                <div className="">
+                  <Image src={''} alt="" />
+                </div>
+                <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  text-[#231F20CC] ">
+                  {deliveryTime}
+                </p>
               </div>
-              <p className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold  text-[#231F20CC] ">
-                {deliveryTime}
-              </p>
-            </div>
+            )}
           </div>
         )}
         <div>
@@ -106,6 +115,13 @@ const MakePayment = (props: any) => {
                     isProcessingRef.current ||
                     (!isSubscription && !pay.sub_payment_method && !isCodEnabled)
                   ) {
+                    return;
+                  }
+
+                  if (isSelectionMode) {
+                    dispatch(updatePaymentMethod(pay.name));
+                    dispatch(updateSubPaymentMethod(pay.sub_payment_method));
+                    dispatch(actions.setCartTabType(TabTypeConstant.CART_MAIN));
                     return;
                   }
 

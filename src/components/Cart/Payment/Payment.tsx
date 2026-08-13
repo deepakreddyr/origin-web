@@ -19,6 +19,7 @@ import { trackEvent } from '@/utilities/analytics';
 import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
 const Payment = (props: any) => {
+  const { isSelectionMode, autoSubmit } = props;
   const [profile, setProfileAtom] = useAtom(profileAtom);
   const [paymentFLowScreen, setPaymentFlowScreen] = useState(TabTypeConstant.MAKE_PAYMENT);
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
@@ -229,6 +230,11 @@ const Payment = (props: any) => {
       return Promise.reject(new Error('Order already in progress'));
     }
 
+    // Guard against autoSubmit triggering too rapidly
+    if (autoSubmit && isPlacingOrderRef.current) {
+      return Promise.resolve();
+    }
+
     return new Promise((resolve, reject) => {
       let paymentFlow = localStorage.getItem('FLOW_TYPE');
 
@@ -275,7 +281,7 @@ const Payment = (props: any) => {
             delivery_fee: 0,
             delivery_type: 'subscription',
             individual_package_enabled: false,
-            delivery_date: placeOrderDetails.checkoutDetails.formatted_delivery_date[0],
+            delivery_date: placeOrderDetails?.checkoutDetails?.formatted_delivery_date?.[0] || null,
             sub_total: subscriptionCart.totalPrice,
             tax: 0,
             total: subscriptionCart.totalPrice,
@@ -293,7 +299,7 @@ const Payment = (props: any) => {
             delivery_fee: cart.deliveryFee,
             individual_package_enabled: false,
             delivery_type: 'instant',
-            delivery_date: placeOrderDetails.checkoutDetails.formatted_delivery_date[0],
+            delivery_date: placeOrderDetails?.checkoutDetails?.formatted_delivery_date?.[0] || null,
             sub_total: cart.totalPrice,
             tax: 0,
             total: cart.amountToPay === 0 ? cart.totalPrice : cart.amountToPay,
@@ -384,7 +390,16 @@ const Payment = (props: any) => {
   };
 
   const PAYMENT_SCREEN_MAP: any = {
-    MAKE_PAYMENT: <MakePayment placeOrderHandler={placeOrderHandler} primeAudio={primeAudio} />,
+    MAKE_PAYMENT: autoSubmit ? (
+      <div className="flex flex-col items-center justify-center h-full min-h-[50vh] grow">
+        <div className="w-[8vw] h-[8vw] mob:w-[24vw] mob:h-[24vw] border-4 border-[#fac510] border-t-transparent rounded-full animate-spin"></div>
+        <p className="font-[SofiaPro] text-[1.2vw] mob:text-[4.5vw] font-bold mt-[2vw] mob:mt-[6vw]">
+          Processing Payment...
+        </p>
+      </div>
+    ) : (
+      <MakePayment placeOrderHandler={placeOrderHandler} primeAudio={primeAudio} isSelectionMode={isSelectionMode} />
+    ),
     PAYMENT_SUCCESS: (
       <PaymentSuccess paymentModalDetails={paymentModalDetails} successAudio={successAudio} cart={cart} />
     ),
@@ -396,6 +411,24 @@ const Payment = (props: any) => {
       />
     )
   };
+
+  useEffect(() => {
+    if (autoSubmit) {
+      import('@/constants').then(({ paymentTypeList }) => {
+        const selectedMethod =
+          paymentTypeList.find((p: any) => p.sub_payment_method === placeOrderDetails.sub_payment_method) ||
+          paymentTypeList[0];
+
+        if (!isPlacingOrderRef.current) {
+          primeAudio();
+          placeOrderHandler(selectedMethod).catch((error) => {
+            console.error('Fast checkout order failed:', error);
+            dispatch(actions.setCartTabType(TabTypeConstant.CART_MAIN));
+          });
+        }
+      });
+    }
+  }, [autoSubmit]);
 
   return <div className="flex flex-col grow justify-between">{PAYMENT_SCREEN_MAP[paymentFLowScreen]}</div>;
 };
