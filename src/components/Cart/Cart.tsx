@@ -78,7 +78,8 @@ const Cart = () => {
     setIsProceedButtonEnabled,
     setFreeItems,
     removeFreeItemFromCart,
-    setMaxQuantityError
+    setMaxQuantityError,
+    setOrderRestrictionData
   } = actions;
 
   const isSubscription = subscriptionCart.isSubscriptionActive;
@@ -89,12 +90,7 @@ const Cart = () => {
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
   const [showAddressModal, setAddressModal] = useState(false);
   const [showCouponList, setShowCouponList] = useState(false);
-  const [orderRestrictionData, setOrderRestrictionData] = useState<null | {
-    title: string;
-    description: string;
-    until: string;
-    is_available: boolean;
-  }>(null);
+  const orderRestrictionData = cart.orderRestrictionData;
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -168,14 +164,16 @@ const Cart = () => {
       });
 
       if (data.order_restricted) {
-        setOrderRestrictionData({
-          title: data.order_restricted.title,
-          description: data.order_restricted.description,
-          until: data.order_restricted.until,
-          is_available: data.order_restricted.is_available
-        });
+        dispatch(
+          setOrderRestrictionData({
+            title: data.order_restricted.title,
+            description: data.order_restricted.description,
+            until: data.order_restricted.until,
+            is_available: data.order_restricted.is_available
+          })
+        );
       } else {
-        setOrderRestrictionData(null);
+        dispatch(setOrderRestrictionData(null));
       }
 
       // Store free items data
@@ -355,7 +353,7 @@ const Cart = () => {
         orderRestrictionData={orderRestrictionData}
         isSubscription={isSubscription}
       />
-      {cart.cartTabType !== TabTypeConstant.CART_ADDRESS_LIST && (
+      {cart.cartTabType !== TabTypeConstant.CART_ADDRESS_LIST && !orderRestrictionData && (
         <ActionCtaWithItems
           btnName={loginDetails.user ? 'PROCEED' : 'LOGIN'}
           handler={proceedButtonHandler}

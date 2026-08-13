@@ -10,7 +10,7 @@ let isSyncingInProgress = false;
 export const useCartSync = () => {
   const dispatch = useDispatch();
   const { cart, isMangoPage, actions, subscriptionCart } = useCartStore();
-  const { setCartItems, setCartMinimum, setFreeItems, setShowTimeslotSheet } = actions;
+  const { setCartItems, setCartMinimum, setFreeItems, setShowTimeslotSheet, setOrderRestrictionData } = actions;
 
   const isSubscription = subscriptionCart?.isSubscriptionActive;
   const loginDetails = useSelector((state: any) => state.loginDetails);
@@ -29,6 +29,19 @@ export const useCartSync = () => {
       }
 
       dispatch(setShowTimeslotSheet(data.show_timeslot_sheet ?? true));
+
+      if (data.order_restricted) {
+        dispatch(
+          setOrderRestrictionData({
+            title: data.order_restricted.title,
+            description: data.order_restricted.description,
+            until: data.order_restricted.until,
+            is_available: data.order_restricted.is_available
+          })
+        );
+      } else {
+        dispatch(setOrderRestrictionData(null));
+      }
 
       if (data.free_items && data.free_items.length > 0) {
         dispatch(

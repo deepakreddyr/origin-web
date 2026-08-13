@@ -63,6 +63,7 @@ interface CartState {
   freeItemsMov: number; // Minimum order value for free items
   maxQuantityError: { message: string | null; isVisible: boolean };
   show_timeslot_sheet: boolean;
+  orderRestrictionData: any | null;
 }
 
 const initialState: CartState = {
@@ -80,7 +81,8 @@ const initialState: CartState = {
   freeItems: [],
   freeItemsMov: 0,
   maxQuantityError: { message: null, isVisible: false },
-  show_timeslot_sheet: true
+  show_timeslot_sheet: true,
+  orderRestrictionData: null
 };
 
 // --- UTILITY FUNCTIONS ---
@@ -651,6 +653,10 @@ export const cartSlice = createSlice({
       state.show_timeslot_sheet = action.payload;
     },
 
+    setOrderRestrictionData: (state, action: PayloadAction<any | null>) => {
+      state.orderRestrictionData = action.payload;
+    },
+
     setCartTabType: (state, action: PayloadAction<string>) => {
       state.cartTabType = action.payload;
     },
@@ -867,6 +873,7 @@ export const {
   setCartMinimum,
   setShowTimeslotSheet,
   setDeliveryFee,
+  setOrderRestrictionData,
   validateAndCleanCart,
   setFreeItems,
   addFreeItemToCart,

@@ -63,6 +63,7 @@ interface CartState {
   freeItemsMov: number;
   maxQuantityError: { message: string | null; isVisible: boolean };
   show_timeslot_sheet: boolean;
+  orderRestrictionData: any | null;
 }
 
 const initialState: CartState = {
@@ -80,7 +81,8 @@ const initialState: CartState = {
   freeItems: [],
   freeItemsMov: 0,
   maxQuantityError: { message: null, isVisible: false },
-  show_timeslot_sheet: true
+  show_timeslot_sheet: true,
+  orderRestrictionData: null
 };
 
 // --- UTILITY FUNCTIONS ---
@@ -570,6 +572,10 @@ export const mangoCartSlice = createSlice({
       state.show_timeslot_sheet = action.payload;
     },
 
+    setOrderRestrictionData: (state, action: PayloadAction<any | null>) => {
+      state.orderRestrictionData = action.payload;
+    },
+
     setCartTabType: (state, action: PayloadAction<string>) => {
       state.cartTabType = action.payload;
     },
@@ -774,6 +780,7 @@ export const {
   setIsProceedButtonEnabled: setIsMangoProceedButtonEnabled,
   setCartMinimum: setMangoCartMinimum,
   setShowTimeslotSheet: setMangoShowTimeslotSheet,
+  setOrderRestrictionData: setMangoOrderRestrictionData,
   setDeliveryFee: setMangoDeliveryFee,
   validateAndCleanCart: validateAndCleanMangoCart,
   setFreeItems: setMangoFreeItems,
