@@ -1,37 +1,36 @@
-// src/pages/organiccertifications.tsx
+// // src/pages/organiccertifications.tsx
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import CustomHead from '@/components/shared/CustomHead';
 import { Loader2, AlertCircle, Download, ArrowLeft, ExternalLink, Eye, Printer, ShieldCheck } from 'lucide-react';
 
-const OrganicCertificationsPage: React.FC = () => {
-  return (
-    <>
-      <CustomHead
-        title="Organic Certifications | Origin Fresh"
-        description="Organic produce certification details coming soon."
-      />
-      <div className="min-h-screen bg-[#F7F5EE] flex flex-col items-center justify-center p-6 text-center">
-        <div className="bg-white p-8 sm:p-12 rounded-3xl shadow-sm border border-gray-100 max-w-md w-full flex flex-col items-center">
-          <div className="w-16 h-16 bg-[#DDEEDD] rounded-full flex items-center justify-center mb-6">
-            <ShieldCheck className="w-10 h-10 text-[#26B45F]" />
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-3 font-[SofiaPro]">Coming Soon</h1>
-          <p className="text-gray-600 text-sm font-[SofiaPro] leading-relaxed">
-            We are preparing our verified organic and residue-free certifications for you. Check back shortly!
-          </p>
-        </div>
-      </div>
-    </>
-  );
-};
+// const OrganicCertificationsPage: React.FC = () => {
+//   return (
+//     <>
+//       <CustomHead
+//         title="Organic Certifications | Origin Fresh"
+//         description="Organic produce certification details coming soon."
+//       />
+//       <div className="min-h-screen bg-[#F7F5EE] flex flex-col items-center justify-center p-6 text-center">
+//         <div className="bg-white p-8 sm:p-12 rounded-3xl shadow-sm border border-gray-100 max-w-md w-full flex flex-col items-center">
+//           <div className="w-16 h-16 bg-[#DDEEDD] rounded-full flex items-center justify-center mb-6">
+//             <ShieldCheck className="w-10 h-10 text-[#26B45F]" />
+//           </div>
+//           <h1 className="text-3xl font-bold text-gray-900 mb-3 font-[SofiaPro]">Coming Soon</h1>
+//           <p className="text-gray-600 text-sm font-[SofiaPro] leading-relaxed">
+//             We are preparing our verified organic and residue-free certifications for you. Check back shortly!
+//           </p>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
 
-export default OrganicCertificationsPage;
+// export default OrganicCertificationsPage;
 
-/* 
-================================================================================
-FULL PDF VIEWER IMPLEMENTATION (PRESERVED FOR PRODUCTION ENABLEMENT)
-================================================================================
+// ================================================================================
+// FULL PDF VIEWER IMPLEMENTATION (PRESERVED FOR PRODUCTION ENABLEMENT)
+// ================================================================================
 
 const OrganicCertificationsPDFViewer: React.FC = () => {
   const router = useRouter();
@@ -79,7 +78,7 @@ const OrganicCertificationsPDFViewer: React.FC = () => {
       }
 
       if (!targetUrl) {
-        targetUrl = 'https://cdn.originfresh.in/public-assets/website/organic-certification.pdf';
+        targetUrl = '/Farm-2-Organic-Scope-Certificate.pdf';
       }
 
       if (targetUrl.startsWith('http://') || targetUrl.startsWith('https://') || targetUrl.startsWith('/')) {
@@ -153,7 +152,9 @@ const OrganicCertificationsPDFViewer: React.FC = () => {
           <div className="text-center bg-white p-8 rounded-2xl shadow-sm border border-gray-100 max-w-sm w-full">
             <Loader2 className="w-12 h-12 text-[#26B45F] animate-spin mx-auto mb-4" />
             <h2 className="text-xl font-bold text-gray-900 mb-2 font-[SofiaPro]">Loading Certification</h2>
-            <p className="text-gray-600 text-sm font-[SofiaPro]">Please wait while we load the organic certification document...</p>
+            <p className="text-gray-600 text-sm font-[SofiaPro]">
+              Please wait while we load the organic certification document...
+            </p>
           </div>
         </div>
       </>
@@ -163,10 +164,7 @@ const OrganicCertificationsPDFViewer: React.FC = () => {
   if (error) {
     return (
       <>
-        <CustomHead
-          title="Organic Certification Error | Origin Fresh"
-          noIndex={true}
-        />
+        <CustomHead title="Organic Certification Error | Origin Fresh" noIndex={true} />
         <div className="min-h-screen bg-[#F7F5EE] flex items-center justify-center px-4">
           <div className="max-w-md mx-auto text-center p-8 bg-white rounded-2xl shadow-sm border border-gray-100">
             <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
@@ -282,7 +280,8 @@ const OrganicCertificationsPDFViewer: React.FC = () => {
                       Organic Certification Document
                     </h3>
                     <p className="text-gray-600 text-sm mb-4 font-[SofiaPro]">
-                      To view the full organic certification PDF on your device, please open it in a new tab or download the file directly.
+                      To view the full organic certification PDF on your device, please open it in a new tab or download
+                      the file directly.
                     </p>
                   </div>
 
@@ -338,4 +337,5 @@ const OrganicCertificationsPDFViewer: React.FC = () => {
     </>
   );
 };
-*/
+
+export default OrganicCertificationsPDFViewer;
