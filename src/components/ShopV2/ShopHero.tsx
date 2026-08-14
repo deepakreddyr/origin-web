@@ -118,8 +118,8 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
           className={`w-full h-full object-cover transition-opacity duration-500 ${isVideoLoaded ? 'opacity-100' : 'opacity-0'}`}
           onCanPlay={() => setIsVideoLoaded(true)}
         />
-        Hero Overlay Content
-        {isVideoLoaded && (
+        {/* Hero Overlay Content */}
+        {/* {isVideoLoaded && (
           <div
             className={`absolute inset-0 flex flex-col items-center ${isMobile ? 'justify-end pb-[12vw]' : 'justify-center'} text-center p-4 z-10 transition-all duration-700 ease-out`}
             style={{
@@ -177,7 +177,7 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
               </button>
             </div>
           </div>
-        )}
+        )} */}
       </div>
     );
   }
@@ -209,7 +209,7 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
     return (
       <div
         key={index}
-        className={`relative w-full aspect-[1244/650] mob:aspect-[1081/1232] bg-[#f7f1dc] cursor-pointer`}
+        className={`relative w-full h-[45vw] mob:h-auto mob:aspect-[643/784] bg-[#f7f1dc] cursor-pointer`}
         onClick={handleNavigation}
       >
         <Image
@@ -218,7 +218,7 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
           fill
           priority
           quality={100}
-          className="object-cover object-top"
+          className="object-fit object-top"
         />
       </div>
     );
