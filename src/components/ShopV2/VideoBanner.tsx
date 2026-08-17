@@ -72,6 +72,23 @@ const VideoBanner: React.FC<VideoBannerProps> = ({
         style={{ objectFit: 'cover', objectPosition: 'center' }}
       />
 
+      {/* Text Overlay */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 px-4">
+        <h1
+          style={{
+            fontFamily: 'Recoleta, serif',
+            fontWeight: 700,
+            color: 'white',
+            lineHeight: 1.1,
+            textShadow: '0px 4px 12px rgba(0,0,0,0.4)',
+            textAlign: 'center'
+          }}
+          className="text-[12vw] md:text-[7vw] lg:text-[6vw]"
+        >
+          The <br /> Sweetest Escape
+        </h1>
+      </div>
+
       {/* Unmute / Mute button */}
       <button
         onClick={() => setIsMuted((prev) => !prev)}
