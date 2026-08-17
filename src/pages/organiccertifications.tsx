@@ -77,8 +77,12 @@ const OrganicCertificationsPDFViewer: React.FC = () => {
         targetUrl = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/public/preview-organic-certification/${queryId}`;
       }
 
+      // if (!targetUrl) {
+      //   targetUrl = '/Farm-2-Organic-Scope-Certificate.pdf';
+      // }
+
       if (!targetUrl) {
-        targetUrl = '/Farm-2-Organic-Scope-Certificate.pdf';
+        targetUrl = 'https://cdn.originfresh.in/website/organic-certification.pdf';
       }
 
       if (targetUrl.startsWith('http://') || targetUrl.startsWith('https://') || targetUrl.startsWith('/')) {
