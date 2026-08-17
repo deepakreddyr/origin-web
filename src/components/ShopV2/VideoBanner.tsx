@@ -1,15 +1,12 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
-import { IconButton } from '@mui/material';
 
 interface VideoBannerProps {
   mobileVideoSrc: string;
   desktopVideoSrc: string;
   poster?: string;
-  autoPlay?: boolean;
-  muted?: boolean;
   loop?: boolean;
   controls?: boolean;
   className?: string;
@@ -19,36 +16,40 @@ const VideoBanner: React.FC<VideoBannerProps> = ({
   mobileVideoSrc,
   desktopVideoSrc,
   poster,
-  autoPlay = true,
-  muted = false,
   loop = true,
   controls = false,
   className = ''
 }) => {
   const isMobile = useMediaQuery(768);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isMuted, setIsMuted] = useState(muted);
+  // Always start muted so autoplay works on every hard reload (browser policy)
+  const [isMuted, setIsMuted] = useState(true);
   const [mounted, setMounted] = useState(false);
 
-  // Only determine mobile/desktop AFTER hydration to avoid SSR mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const src = mounted ? (isMobile ? mobileVideoSrc : desktopVideoSrc) : desktopVideoSrc;
 
-  // When the src changes (mobile/desktop switch), reload and play
+  // Load and play whenever src changes
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    video.muted = isMuted;
+
+    video.src = src;
+    video.muted = true; // keep muted so autoplay succeeds
     video.load();
-    video.play().catch(() => {
-      // Autoplay blocked by browser — user must interact first
-    });
+
+    const onCanPlay = () => {
+      video.play().catch(() => {});
+    };
+
+    video.addEventListener('canplay', onCanPlay, { once: true });
+    return () => video.removeEventListener('canplay', onCanPlay);
   }, [src]);
 
-  // Sync muted state to video element directly (avoids React re-render stutter)
+  // Sync muted state to DOM element directly
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.muted = isMuted;
@@ -61,11 +62,8 @@ const VideoBanner: React.FC<VideoBannerProps> = ({
     <div className={`relative w-full overflow-hidden m-0 p-0 ${className}`}>
       <video
         ref={videoRef}
-        key={src}
-        src={src}
         poster={poster}
-        autoPlay={autoPlay}
-        muted={isMuted}
+        muted
         loop={loop}
         controls={controls}
         playsInline
@@ -74,22 +72,42 @@ const VideoBanner: React.FC<VideoBannerProps> = ({
         style={{ objectFit: 'cover', objectPosition: 'center' }}
       />
 
-      {/* Mute/Unmute Toggle */}
-      <div className="absolute bottom-4 right-4 z-20">
-        <IconButton
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsMuted((prev) => !prev);
-          }}
-          sx={{
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            color: 'white',
-            '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)' }
-          }}
-        >
-          {isMuted ? <VolumeOffIcon /> : <VolumeUpIcon />}
-        </IconButton>
-      </div>
+      {/* Unmute / Mute button */}
+      <button
+        onClick={() => setIsMuted((prev) => !prev)}
+        aria-label={isMuted ? 'Unmute video' : 'Mute video'}
+        style={{
+          position: 'absolute',
+          bottom: '20px',
+          right: '20px',
+          zIndex: 20,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          backgroundColor: 'rgba(0,0,0,0.55)',
+          color: '#fff',
+          border: '1.5px solid rgba(255,255,255,0.35)',
+          borderRadius: '999px',
+          padding: '10px',
+          cursor: 'pointer',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+          fontSize: '13px',
+          fontWeight: 600,
+          fontFamily: 'SofiaPro, sans-serif',
+          letterSpacing: '0.02em',
+          transition: 'background 0.2s ease, transform 0.15s ease',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.3)'
+        }}
+        onMouseOver={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.05)';
+        }}
+        onMouseOut={(e) => {
+          (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
+        }}
+      >
+        {isMuted ? <VolumeOffIcon style={{ fontSize: 20 }} /> : <VolumeUpIcon style={{ fontSize: 20 }} />}
+      </button>
     </div>
   );
 };
