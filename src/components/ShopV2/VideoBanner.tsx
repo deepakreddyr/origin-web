@@ -1,12 +1,13 @@
-'use client';
-
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import { IconButton } from '@mui/material';
 
 interface VideoBannerProps {
-  mobileVideoSrc: string; // 9:16 aspect ratio video for mobile
-  desktopVideoSrc: string; // 16:9 aspect ratio video for desktop
-  poster?: string; // Optional poster image
+  mobileVideoSrc: string;
+  desktopVideoSrc: string;
+  poster?: string;
   autoPlay?: boolean;
   muted?: boolean;
   loop?: boolean;
@@ -19,147 +20,75 @@ const VideoBanner: React.FC<VideoBannerProps> = ({
   desktopVideoSrc,
   poster,
   autoPlay = true,
-  muted = true,
+  muted = false,
   loop = true,
   controls = false,
   className = ''
 }) => {
   const isMobile = useMediaQuery(768);
-  const mobileVideoRef = useRef<HTMLVideoElement>(null);
-  const desktopVideoRef = useRef<HTMLVideoElement>(null);
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const [playAttempted, setPlayAttempted] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isMuted, setIsMuted] = useState(muted);
+  const [mounted, setMounted] = useState(false);
 
-  // Handle video play with multiple strategies
-  const handleVideoPlay = async (videoElement: HTMLVideoElement) => {
-    if (!videoElement || playAttempted) return;
-
-    setPlayAttempted(true);
-
-    try {
-      // Ensure video is ready
-      if (videoElement.readyState >= 2) {
-        await videoElement.play();
-      } else {
-        // Wait for video to be ready
-        videoElement.addEventListener(
-          'loadeddata',
-          async () => {
-            try {
-              await videoElement.play();
-            } catch (error) {
-              // console.log('Video autoplay failed after loadeddata:', error);
-            }
-          },
-          { once: true }
-        );
-      }
-    } catch (error) {
-      // console.log('Video autoplay failed:', error);
-
-      // Fallback: Try to play on user interaction
-      const playOnInteraction = async () => {
-        try {
-          await videoElement.play();
-          document.removeEventListener('touchstart', playOnInteraction);
-          document.removeEventListener('click', playOnInteraction);
-        } catch (e) {
-          // console.log('Manual play also failed:', e);
-        }
-      };
-
-      document.addEventListener('touchstart', playOnInteraction, { once: true });
-      document.addEventListener('click', playOnInteraction, { once: true });
-    }
-  };
-
-  // Effect for mobile video
+  // Only determine mobile/desktop AFTER hydration to avoid SSR mismatch
   useEffect(() => {
-    if (isMobile && mobileVideoRef.current && autoPlay) {
-      setPlayAttempted(false);
-      handleVideoPlay(mobileVideoRef.current);
-    }
-  }, [isMobile, autoPlay]);
+    setMounted(true);
+  }, []);
 
-  // Effect for desktop video
+  const src = mounted ? (isMobile ? mobileVideoSrc : desktopVideoSrc) : desktopVideoSrc;
+
+  // When the src changes (mobile/desktop switch), reload and play
   useEffect(() => {
-    if (!isMobile && desktopVideoRef.current && autoPlay) {
-      setPlayAttempted(false);
-      handleVideoPlay(desktopVideoRef.current);
-    }
-  }, [isMobile, autoPlay]);
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = isMuted;
+    video.load();
+    video.play().catch(() => {
+      // Autoplay blocked by browser — user must interact first
+    });
+  }, [src]);
 
-  // Handle video load
-  const handleVideoLoad = () => {
-    setIsVideoLoaded(true);
-  };
+  // Sync muted state to video element directly (avoids React re-render stutter)
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = isMuted;
+    }
+  }, [isMuted]);
+
+  const heightClass = isMobile ? 'h-[75vh]' : 'h-[85vh]';
 
   return (
     <div className={`relative w-full overflow-hidden m-0 p-0 ${className}`}>
-      <div className="relative w-full overflow-hidden m-0 p-0">
-        {/* Mobile Video (9:16) */}
-        <video
-          ref={mobileVideoRef}
-          className={`w-full object-cover m-0 p-0 ${isMobile ? 'block h-[75vh]' : 'hidden'}`}
-          src={mobileVideoSrc}
-          poster={poster}
-          autoPlay={autoPlay}
-          muted={muted}
-          loop={loop}
-          controls={controls}
-          playsInline
-          preload="auto"
-          webkit-playsinline="true"
-          x5-playsinline="true"
-          x5-video-player-type="h5"
-          x5-video-player-fullscreen="true"
-          onLoadedData={handleVideoLoad}
-          onCanPlay={() => {
-            if (isMobile && mobileVideoRef.current && autoPlay && !playAttempted) {
-              handleVideoPlay(mobileVideoRef.current);
-            }
-          }}
-          style={{
-            objectFit: 'cover',
-            objectPosition: 'center'
-          }}
-        />
+      <video
+        ref={videoRef}
+        key={src}
+        src={src}
+        poster={poster}
+        autoPlay={autoPlay}
+        muted={isMuted}
+        loop={loop}
+        controls={controls}
+        playsInline
+        preload="auto"
+        className={`w-full object-cover m-0 p-0 ${heightClass}`}
+        style={{ objectFit: 'cover', objectPosition: 'center' }}
+      />
 
-        {/* Desktop Video (16:9) */}
-        <video
-          ref={desktopVideoRef}
-          className={`w-full object-cover m-0 p-0 ${isMobile ? 'hidden' : 'block h-[80vh]'}`}
-          src={desktopVideoSrc}
-          poster={poster}
-          autoPlay={autoPlay}
-          muted={muted}
-          loop={loop}
-          controls={controls}
-          playsInline
-          preload="auto"
-          onLoadedData={handleVideoLoad}
-          onCanPlay={() => {
-            if (!isMobile && desktopVideoRef.current && autoPlay && !playAttempted) {
-              handleVideoPlay(desktopVideoRef.current);
-            }
+      {/* Mute/Unmute Toggle */}
+      <div className="absolute bottom-4 right-4 z-20">
+        <IconButton
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsMuted((prev) => !prev);
           }}
-          style={{
-            objectFit: 'cover',
-            objectPosition: 'center'
+          sx={{
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            color: 'white',
+            '&:hover': { backgroundColor: 'rgba(0,0,0,0.7)' }
           }}
-        />
-      </div>
-
-      {/* Loading indicator */}
-      {!isVideoLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-        </div>
-      )}
-
-      {/* Optional overlay content */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        {/* You can add overlay content here if needed */}
+        >
+          {isMuted ? <VolumeOffIcon /> : <VolumeUpIcon />}
+        </IconButton>
       </div>
     </div>
   );

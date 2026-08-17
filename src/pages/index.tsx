@@ -17,6 +17,7 @@ import PrimaryFeature from '@/components/OriginGrids/PrimaryFeature';
 import { UspCard } from '@/components/Cards';
 import CustomHead from '@/components/shared/CustomHead';
 import { ShopHeroSingle } from '@/components/ShopV2/ShopHero';
+import VideoBanner from '@/components/ShopV2/VideoBanner';
 import { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAtom } from 'jotai';
@@ -137,7 +138,10 @@ const Home = ({
             }
           ]}
         /> */}
-        <ShopHeroSingle videoSrc="https://cdn.originfresh.in/website/hydroherovideo.mp4" />
+        <VideoBanner
+          mobileVideoSrc="https://cdn.originfresh.in/website/mobile_banner_aug_17.mp4"
+          desktopVideoSrc="https://cdn.originfresh.in/website/web_banner_aug_17.mp4"
+        />
         <ScrollReveal direction="up" delay={0}>
           <Container maxWidth={false} className="w-full px-[3vw] mob:px-[2vw] py-8 mob:py-4 mt-10 mob:mt-4">
             <PrimaryFeature />

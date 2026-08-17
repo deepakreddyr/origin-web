@@ -10,6 +10,20 @@ export default function Document() {
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
 
+        {/* Preload hero banner videos for instant playback */}
+        <link
+          rel="preload"
+          href="https://cdn.originfresh.in/website/web_banner_aug_17.mp4"
+          as="video"
+          type="video/mp4"
+        />
+        <link
+          rel="preload"
+          href="https://cdn.originfresh.in/website/mobile_banner_aug_17.mp4"
+          as="video"
+          type="video/mp4"
+        />
+
         {/* Meta Pixel */}
         <script
           dangerouslySetInnerHTML={{
@@ -24,7 +38,7 @@ export default function Document() {
               'https://connect.facebook.net/en_US/fbevents.js');
               fbq('init', '637574582695341');
               fbq('track', 'PageView');
-            `,
+            `
           }}
         />
         <noscript>
