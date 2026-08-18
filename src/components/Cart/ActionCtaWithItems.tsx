@@ -7,6 +7,7 @@ import { addressAtom } from '@/features/Address/context/atoms';
 import { ADDRESS_ICON_MAP } from '@/utilities/maps';
 import Image from 'next/image';
 import { ChevronRight, ChevronDown } from 'lucide-react';
+import usePaymentHook from '@/features/PaymentPage/hooks/usePaymentHook';
 interface OrderRestrictionData {
   title: string;
   description: string;
@@ -38,6 +39,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
   const [addressState] = useAtom(addressAtom);
   const dispatch = useDispatch();
+  const { isLoading: isOrderLoading } = usePaymentHook();
 
   const [isOrderRestricted, setIsOrderRestricted] = useState(false);
   const [shouldDisable, setShouldDisable] = useState(false);
@@ -172,7 +174,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
     return Math.round(total);
   };
 
-  const finalIsDisabled = getDisabledState();
+  const finalIsDisabled = getDisabledState() || isOrderLoading;
 
   const handleClick = () => {
     if (!finalIsDisabled && handler) {

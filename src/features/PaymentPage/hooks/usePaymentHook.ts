@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   checkoutAPI,
   FailOrSuccess,
@@ -20,6 +20,7 @@ import { isCouponApplied } from '@/features/CouponPage/context/atoms';
 
 const usePaymentHook = () => {
   const razKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY;
+  const [isLoading, setIsLoading] = useState(false);
   const [cartItemsAtom, setCartItems] = useAtom(cartItems);
   const [appliedCoupon] = useAtom(isCouponApplied);
   const [isFailOrSuccess, setFailOrSuccess] = useAtom(failOrSuccess);
@@ -75,6 +76,8 @@ const usePaymentHook = () => {
   };
 
   const onInitiatePayment = async () => {
+    if (isLoading) return; // Prevent duplicate order submissions
+    setIsLoading(true);
     try {
       const isCash = paymentPrefill.toLowerCase() === 'cash';
       const addressData = getAddressAndStoreId();
@@ -181,6 +184,8 @@ const usePaymentHook = () => {
       } else {
         console.error('Fetch failed:', err.message || err);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -190,7 +195,8 @@ const usePaymentHook = () => {
     onInitiatePayment,
     isFailOrSuccess,
     setFailOrSuccess,
-    resetPaymentStates
+    resetPaymentStates,
+    isLoading
   };
 };
 

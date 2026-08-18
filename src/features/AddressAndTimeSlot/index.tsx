@@ -35,7 +35,7 @@ const AddressAndTimeSlot = () => {
   const [, setRazorPayObject] = useAtom(razorPayObjectAtom);
   const { total } = useCartCalculation();
   const [cartDetails, setCartDetails] = useAtom(cartAtom);
-  const { isFailOrSuccess, paymentPrefill, onInitiatePayment, setFailOrSuccess } = usePaymentHook();
+  const { isFailOrSuccess, paymentPrefill, onInitiatePayment, setFailOrSuccess, isLoading } = usePaymentHook();
 
   React.useEffect(() => {
     getCheckout(setCheckout);
@@ -330,7 +330,7 @@ const AddressAndTimeSlot = () => {
           </Box>
           <Box
             sx={{
-              backgroundColor: '#fac510',
+              backgroundColor: isLoading ? '#d4a800' : '#fac510',
               border: 'none',
               borderRadius: '58px',
               ml: '1rem',
@@ -338,7 +338,9 @@ const AddressAndTimeSlot = () => {
               mb: '1rem',
               zIndex: 1000,
               padding: '0.8rem',
-              cursor: 'pointer'
+              cursor: isLoading ? 'not-allowed' : 'pointer',
+              opacity: isLoading ? 0.7 : 1,
+              pointerEvents: isLoading ? 'none' : 'auto'
             }}
             onClick={onProceed}
           >
@@ -368,7 +370,7 @@ const AddressAndTimeSlot = () => {
                   width: 'max-content'
                 }}
               >
-                {`Pay ₹ ${total}`}
+                {isLoading ? 'Placing Order...' : `Pay ₹ ${total}`}
               </Typography>
               {/* </Box> */}
               {/* <Button
