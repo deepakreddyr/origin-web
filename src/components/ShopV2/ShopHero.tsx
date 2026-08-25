@@ -209,7 +209,7 @@ export const ShopHeroSingle = ({ bannerData, videoSrc }: { bannerData?: any; vid
     return (
       <div
         key={index}
-        className={`relative w-full h-[45vw] mob:h-auto mob:aspect-[643/784] bg-[#f7f1dc] cursor-pointer`}
+        className={`relative w-full h-[50vw] mob:h-auto mob:aspect-[643/784] bg-[#f7f1dc] cursor-pointer`}
         onClick={handleNavigation}
       >
         <Image

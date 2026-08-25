@@ -129,19 +129,20 @@ const Home = ({
           description="Shop for the freshest organic fruits, vegetables, and exotic produce at Origin Fresh. Quality guaranteed, delivered straight to your home."
         />
         {/* <OriginHero /> */}
-        {/* <ShopHeroSingle
+        <ShopHeroSingle
           bannerData={[
             {
-              website_image: '/assets/images/websitebanner.png',
-              website_mobile_view_image: '/assets/images/independencedaybanner.png',
-              navigation: { to: 'shop/og-thai-market/19/og-thai-market/99' }
+              website_image: '/onam.png',
+              website_mobile_view_image:
+                'https://mm-devlopment.s3.ap-south-1.amazonaws.com/featured-files/5Dw1WM7sUwvVwQaYI82flzEVXmMPkiNh7wVCa0Ru.png?X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAX5HSPQTC4X46FOMJ%2F20260825%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20260825T051714Z&X-Amz-SignedHeaders=host&X-Amz-Expires=18000&X-Amz-Signature=79f488e95b3849657f2d8af2c1ec403e092aca7450db7078af02623dcc63e070'
+              // navigation: { to: 'shop/og-thai-market/19/og-thai-market/99' }
             }
           ]}
-        /> */}
-        <VideoBanner
+        />
+        {/* <VideoBanner
           mobileVideoSrc="https://cdn.originfresh.in/website/mobile_banner_aug_17.mp4"
           desktopVideoSrc="https://cdn.originfresh.in/website/web_banner_aug_17.mp4"
-        />
+        /> */}
         <ScrollReveal direction="up" delay={0}>
           <Container maxWidth={false} className="w-full px-[3vw] mob:px-[2vw] py-8 mob:py-4 mt-10 mob:mt-4">
             <PrimaryFeature />
