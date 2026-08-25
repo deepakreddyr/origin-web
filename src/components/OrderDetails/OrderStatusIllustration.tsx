@@ -18,20 +18,55 @@ const OrderStatusIllustration = (props: any) => {
   const formattedStatus = orderDetailsData?.status_list[orderDetailsData.status_list.length - 1];
   const currentStatus = formattedStatus.status_message.toLowerCase() || 'out for delivery';
 
+  // lbnp tracking URL — used ONLY in the map/animation area
   const trackingUrl = orderDetailsData?.lbnp?.tracking_url;
 
+  // prorouting data
+  const prorouting = orderDetailsData?.prorouting ?? null;
+  const proroutingTrackingUrl = prorouting?.order?.tracking_url ?? null;
+
+  // prorouting_track_status: live rider coordinates
+  const trackStatusRider = orderDetailsData?.prorouting_track_status?.orders?.[0]?.rider;
+  const trackStatusLocation = trackStatusRider?.last_location;
+  const hasTrackStatusCoords =
+    !!trackStatusLocation?.lat &&
+    !!trackStatusLocation?.lng &&
+    trackStatusLocation.lat !== 0 &&
+    trackStatusLocation.lng !== 0;
+
   const mapDetails = useMemo(() => {
-    const isMapDetailsExist = mapToggle && driver && driver.latitude && driver.longitude && latitude && longitude;
-    const driverLocation = {
-      lat: Number(driver?.latitude || 0),
-      lng: Number(driver?.longitude || 0)
-    };
+    // Driver location: prefer prorouting_track_status rider coords, fall back to driver
+    const driverLocation = hasTrackStatusCoords
+      ? { lat: trackStatusLocation!.lat!, lng: trackStatusLocation!.lng! }
+      : { lat: Number(driver?.latitude || 0), lng: Number(driver?.longitude || 0) };
+
     const customerLocation = {
       lat: Number(latitude || 0),
       lng: Number(longitude || 0)
     };
-    return { isMapDetailsExist, driverLocation, customerLocation };
-  }, [driver, latitude, longitude, mapToggle]);
+
+    const hasValidDriverLocation = driverLocation.lat !== 0 && driverLocation.lng !== 0;
+
+    // MAP VIEW: show when valid coordinates available
+    const isMapAvailable = hasValidDriverLocation;
+    const isMapDetailsExist = mapToggle && isMapAvailable;
+
+    // TRACK ORDER: only when no coords but a tracking URL exists
+    const isTrackUrlOnly = !isMapAvailable && !!(trackingUrl || proroutingTrackingUrl);
+    const resolvedTrackingUrl = trackingUrl || proroutingTrackingUrl;
+
+    return { isMapDetailsExist, isMapAvailable, isTrackUrlOnly, resolvedTrackingUrl, driverLocation, customerLocation };
+  }, [
+    orderDetailsData,
+    driver,
+    latitude,
+    longitude,
+    mapToggle,
+    hasTrackStatusCoords,
+    trackStatusLocation,
+    trackingUrl,
+    proroutingTrackingUrl
+  ]);
 
   const toggleMapView = () => {
     setMapToggle((prev) => !prev);
@@ -48,63 +83,11 @@ const OrderStatusIllustration = (props: any) => {
     );
 
     if (currentStatus === 'on the way') {
-      // If tracking_url exists, use iframe map (handled at top-level)
-      if (trackingUrl) {
-        return (
-          <LottieContainer>
-            <Lottie
-              animationData={DeliveryStatusDetails['out for delivery'].illustration}
-              loop={true}
-              autoplay={true}
-            />
-          </LottieContainer>
-        );
-      }
-
+      // Show animation; map button is rendered at the top level
       return (
-        <div className="relative w-full h-full">
-          {mapDetails.driverLocation.lat !== 0 && mapDetails.driverLocation.lng !== 0 && (
-            <button
-              className="absolute top-[.6vw] mob:top-[2vw] px-[1.1vw] mob:px-[6.1vw] mob:pl-[3vw] mob:py-[2vw] pl-[.6vw] py-[.3vw] mob:rounded-[1.5vw] rounded-[.5vw] left-[.6vw] mob:left-[2vw] z-[10] flex items-center bg-[white]"
-              onClick={toggleMapView}
-            >
-              {mapToggle ? (
-                <div className="relative w-[.97vw] mob:w-[3.6vw] mob:h-[3.6vw] mob:mr-[1.2vw] h-[.97vw] mr-[.4vw] ">
-                  <Image src={closeIcon} alt="Close Map" />
-                </div>
-              ) : (
-                <div className="w-[1.5vw] mob:w-[6vw] mob:h-[6vw] h-[1.5vw] ">
-                  <Lottie
-                    animationData={MapLocator}
-                    loop={true}
-                    autoplay={true}
-                    style={{ width: '100%', height: '100%' }}
-                  />
-                </div>
-              )}
-              <span className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold ">
-                {mapToggle ? 'Close Map' : 'Map View'}
-              </span>
-            </button>
-          )}
-          {mapDetails.isMapDetailsExist &&
-          mapDetails.driverLocation.lat !== 0 &&
-          mapDetails.driverLocation.lng !== 0 ? (
-            <MapContainer
-              driverLocation={mapDetails.driverLocation}
-              customerLocation={mapDetails.customerLocation}
-              fetchOrderdetails={fetchOrderdetails}
-            />
-          ) : (
-            <LottieContainer>
-              <Lottie
-                animationData={DeliveryStatusDetails['out for delivery'].illustration}
-                loop={true}
-                autoplay={true}
-              />
-            </LottieContainer>
-          )}
-        </div>
+        <LottieContainer>
+          <Lottie animationData={DeliveryStatusDetails['out for delivery'].illustration} loop={true} autoplay={true} />
+        </LottieContainer>
       );
     } else if (currentStatus === 'arrived at location') {
       return (
@@ -117,10 +100,6 @@ const OrderStatusIllustration = (props: any) => {
     const animationData =
       DeliveryStatusDetails[currentStatus]?.illustration || DeliveryStatusDetails['confirmed'].illustration;
 
-    const showDeliveryPartner = ['out for delivery', 'on the way', 'nearby', 'arrived at location'].includes(
-      currentStatus
-    );
-
     return (
       <LottieContainer>
         <Lottie animationData={animationData} loop={true} autoplay={true} />
@@ -128,22 +107,35 @@ const OrderStatusIllustration = (props: any) => {
     );
   };
 
-  const hasLbnp = !!orderDetailsData?.lbnp;
-  // Show delivery partner section only when lbnp is available
-  const showDeliveryPartner =
-    hasLbnp && ['out for delivery', 'on the way', 'nearby', 'arrived at location'].includes(currentStatus);
-  const agentName = orderDetailsData?.lbnp?.agent_name || orderDetailsData?.driver?.name || 'Delivery Partner';
-  const agentPhone = orderDetailsData?.lbnp?.agent_phone || orderDetailsData?.driver?.phone;
-  const otp = orderDetailsData?.lbnp?.dcc;
+  const lbnp = orderDetailsData?.lbnp ?? null;
+  const hasLbnp = !!lbnp;
 
-  // Show tracking URL map button for all statuses that have a tracking_url
-  const showTrackingMapButton = !!trackingUrl && showDeliveryPartner;
+  // Guard: only show when lbnp or prorouting is present (driver data is excluded)
+  const hasDeliverySource = !!(lbnp || prorouting);
+  if (!hasDeliverySource) return null;
+
+  // Resolve agent name & phone from lbnp or prorouting only (not driver)
+  const resolvedAgentName = lbnp?.agent_name || prorouting?.order?.rider?.name || null;
+  const resolvedAgentPhone = lbnp?.agent_phone || prorouting?.order?.rider?.phone || null;
+
+  // agentName is null when rider not yet assigned (prorouting early state)
+  const agentName = resolvedAgentName ?? null;
+  const agentPhone = resolvedAgentPhone;
+
+  // OTP: prefer lbnp dcc, fall back to prorouting_delivery_otp
+  const otp = lbnp?.dcc || orderDetailsData?.prorouting_delivery_otp;
+
+  // Don't show the section at all if there's neither a rider name nor an OTP
+  if (!agentName && !otp) return null;
+
+  // Show lbnp tracking map button only when lbnp.tracking_url is present
+  const showTrackingMapButton = !!trackingUrl && !!agentName && hasLbnp;
 
   return (
     <div className="relative">
       <div className="relative z-[1]">
         <div className="w-full relative overflow-hidden">
-          {/* Tracking URL iframe overlay */}
+          {/* lbnp iframe map overlay (only for lbnp tracking url) */}
           {showTrackingMapButton && mapToggle ? (
             <div className="relative w-full h-full">
               <button
@@ -162,18 +154,17 @@ const OrderStatusIllustration = (props: any) => {
                   style={{ border: 'none', display: 'block' }}
                   title="Order Tracking Map"
                 />
-                {/* Cover full-width top header: "Tracking" + "POWERED BY Aarambh" */}
                 <div className="absolute top-0 left-0 right-0 h-[5vw] mob:h-[16.1vw] bg-white z-[5] pointer-events-none" />
-                {/* Cover "Leaflet" badge bottom-right */}
                 <div className="absolute bottom-0 right-0 w-full mob:w-full h-[1.2vw] mob:h-[6vw] bg-[#333333] z-[5] pointer-events-none" />
               </div>
             </div>
-          ) : (
+          ) : !mapDetails.isMapDetailsExist ? (
             renderIllustration()
-          )}
+          ) : null}
         </div>
-        {/* View Map button for tracking_url (shown when map is not open) */}
-        {showTrackingMapButton && !mapToggle && (
+
+        {/* MAP VIEW button — when prorouting_track_status has valid coords */}
+        {mapDetails.isMapAvailable && !mapToggle && (
           <button
             className="absolute top-[.6vw] mob:top-[2vw] px-[1.1vw] mob:px-[6.1vw] mob:pl-[3vw] mob:py-[2vw] pl-[.6vw] py-[.3vw] mob:rounded-[1.5vw] rounded-[.5vw] left-[.6vw] mob:left-[2vw] z-[10] flex items-center bg-[white]"
             onClick={toggleMapView}
@@ -189,6 +180,48 @@ const OrderStatusIllustration = (props: any) => {
             <span className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold">Map View</span>
           </button>
         )}
+
+        {/* Close button when map is open */}
+        {mapDetails.isMapAvailable && mapToggle && (
+          <button
+            className="absolute top-[.6vw] mob:top-[2vw] px-[1.1vw] mob:px-[6.1vw] mob:pl-[3vw] mob:py-[2vw] pl-[.6vw] py-[.3vw] mob:rounded-[1.5vw] rounded-[.5vw] left-[.6vw] mob:left-[2vw] z-[10] flex items-center bg-[white]"
+            onClick={toggleMapView}
+          >
+            <div className="relative w-[.97vw] mob:w-[3.6vw] mob:h-[3.6vw] mob:mr-[1.2vw] h-[.97vw] mr-[.4vw]">
+              <Image src={closeIcon} alt="Close Map" />
+            </div>
+            <span className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold">Close Map</span>
+          </button>
+        )}
+
+        {/* TRACK ORDER button — no coords, but tracking URL available → opens in new tab */}
+        {mapDetails.isTrackUrlOnly && (
+          <button
+            className="absolute top-[.6vw] mob:top-[2vw] px-[1.1vw] mob:px-[6.1vw] mob:pl-[3vw] mob:py-[2vw] pl-[.6vw] py-[.3vw] mob:rounded-[1.5vw] rounded-[.5vw] left-[.6vw] mob:left-[2vw] z-[10] flex items-center bg-[white]"
+            onClick={() => window.open(mapDetails.resolvedTrackingUrl!, '_blank', 'noopener,noreferrer')}
+          >
+            <div className="w-[1.5vw] mob:w-[6vw] mob:h-[6vw] h-[1.5vw]">
+              <Lottie
+                animationData={MapLocator}
+                loop={true}
+                autoplay={true}
+                style={{ width: '100%', height: '100%' }}
+              />
+            </div>
+            <span className="font-[SofiaPro] text-[.97vw] mob:text-[3.6vw] font-semibold">Track Order</span>
+          </button>
+        )}
+
+        {/* When map is open, show MapContainer with prorouting_track_status coords */}
+        {mapDetails.isMapDetailsExist && (
+          <div className="w-full">
+            <MapContainer
+              driverLocation={mapDetails.driverLocation}
+              customerLocation={mapDetails.customerLocation}
+              fetchOrderdetails={fetchOrderdetails}
+            />
+          </div>
+        )}
         {!mapToggle && (
           <div className="absolute bottom-0 left-0 flex items-center justify-between w-full px-[1.1vw] mob:px-[3vw] pb-[1vw] mob:pb-[2vw] z-[10]">
             <div>
@@ -202,9 +235,7 @@ const OrderStatusIllustration = (props: any) => {
         )}
       </div>
 
-      <div
-        className={`relative z-[0] ${showDeliveryPartner ? 'bg-white rounded-b-[1.1vw] mob:rounded-b-[3.6vw]' : ''}`}
-      >
+      <div className={`relative z-[0] ${agentName || otp ? 'bg-white rounded-b-[1.1vw] mob:rounded-b-[3.6vw]' : ''}`}>
         <div
           className={`p-[1.1vw] mob:p-[4vw] rounded-b-[1.1vw] mob:rounded-b-[3.6vw]`}
           style={{ background: '#231F20F0' }}
@@ -220,12 +251,13 @@ const OrderStatusIllustration = (props: any) => {
           </p>
         </div>
 
-        {showDeliveryPartner && (
-          <div className="">
+        <div className="py-2">
+          {/* Agent info block — only when rider is assigned */}
+          {agentName ? (
             <div className="p-[1.1vw] mob:p-[4vw] flex items-center justify-between">
               <div className="flex items-center gap-[7px] w-[180px] h-[46.75px]">
-                <div className="w-[46.75px] h-[46.75px] rounded-full overflow-hidden flex-shrink-0 bg-gray-200">
-                  <PersonIcon sx={{ width: '100%', height: '100%', color: '#9E9E9E' }} />
+                <div className="w-[46.75px] h-[46.75px] rounded-full overflow-hidden flex-shrink-0 bg-gray-200 flex items-center justify-center">
+                  <PersonIcon sx={{ width: '80%', height: '80%', color: '#9E9E9E' }} />
                 </div>
                 <div className="flex flex-col flex-1 overflow-hidden">
                   <span className="font-semibold font-[SofiaPro] text-[#333333] text-[15px] leading-tight truncate">
@@ -236,6 +268,7 @@ const OrderStatusIllustration = (props: any) => {
               </div>
 
               <div className="flex items-center gap-[1.5vw] mob:gap-[4vw]">
+                {/* OTP box — shown next to call button when agent is assigned */}
                 {otp && (
                   <div className="flex flex-col border border-gray-300 rounded-[5px] border-[1px] overflow-hidden w-[70px] h-[44px] flex-shrink-0">
                     <span className="bg-white text-gray-500 text-[13px] flex items-center justify-center h-[22px] font-regular tracking-wider">
@@ -271,14 +304,31 @@ const OrderStatusIllustration = (props: any) => {
                 )}
               </div>
             </div>
+          ) : (
+            /* Standalone OTP box — rider not yet assigned but OTP already available */
+            otp && (
+              <div className="p-[1.1vw] mob:p-[4vw] flex items-center justify-center">
+                <div className="flex flex-col border border-gray-300 rounded-[5px] overflow-hidden w-[70px] h-[44px] flex-shrink-0">
+                  <span className="bg-white text-gray-500 text-[13px] flex items-center justify-center h-[22px] font-regular tracking-wider">
+                    OTP
+                  </span>
+                  <span className="bg-[#00855B] text-white text-[17px] flex items-center justify-center h-full font-semibold font-[SofiaPro] tracking-widest">
+                    {otp}
+                  </span>
+                </div>
+              </div>
+            )
+          )}
 
+          {/* OTP handover banner — always shown when OTP exists */}
+          {otp && (
             <div className="bg-[#F4EED1] py-[0.8vw] mob:py-[1vw] mx-[1.1vw] mob:mx-0 mob:mb-[3vw] md:rounded-[0.5vw]">
               <p className="text-[#333333] font-[SofiaPro] text-center text-[0.8vw] mob:text-[2.6vw] font-medium m-0">
                 For successful order handover, please provide the OTP to the delivery partner.
               </p>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

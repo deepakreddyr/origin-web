@@ -71,4 +71,32 @@ export interface OrderDetails {
     start_time?: number;
     end_time?: number;
   };
+  prorouting_delivery_otp?: string | null;
+  prorouting?: {
+    order?: {
+      tracking_url?: string | null;
+      rider?: {
+        name?: string;
+        phone?: string;
+      } | null;
+    };
+  } | null;
+  prorouting_track_status?: {
+    status?: number;
+    orders?: Array<{
+      id?: string;
+      url?: string;
+      rider?: {
+        name?: string;
+        phone?: string;
+        last_location?: {
+          lat?: number | null;
+          lng?: number | null;
+          updated_at?: string;
+        } | null;
+      } | null;
+      client_order_id?: string;
+      network_order_id?: string;
+    }>;
+  } | null;
 }
