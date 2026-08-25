@@ -47,9 +47,14 @@ const OrderDetailsWrapper = () => {
   }, [dispatch, getDataFromApi, query.id]);
 
   useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
     if (isReady && query.id) {
       fetchOrderdetails();
+      interval = setInterval(() => {
+        fetchOrderdetails();
+      }, 40000);
     }
+    return () => clearInterval(interval);
   }, [isReady, query.id, fetchOrderdetails]);
 
   if (!orderAndRefundDetails.orderDetailsData)

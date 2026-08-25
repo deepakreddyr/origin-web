@@ -1,15 +1,10 @@
-import {
-  DirectionsRenderer,
-  GoogleMap,
-  Marker,
-  useJsApiLoader,
-} from "@react-google-maps/api";
-import { useAtom } from "jotai";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
+import { DirectionsRenderer, GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { useAtom } from 'jotai';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 
-import { orderDetailsAtom } from "../../context/atoms";
-import { getOrderDetails } from "../../services/getOrderDetails";
+import { orderDetailsAtom } from '../../context/atoms';
+import { getOrderDetails } from '../../services/getOrderDetails';
 
 interface Location {
   lat: number;
@@ -22,23 +17,21 @@ interface Props {
 }
 
 const containerStyle = {
-  height: "400px",
-  width: "100%",
+  height: '400px',
+  width: '100%'
 };
 
 const MapContainer = (props: Props) => {
-  const { customerLocation: endingPoint, driverLocation: startingPoint } =
-    props;
+  const { customerLocation: endingPoint, driverLocation: startingPoint } = props;
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [directions, setDirections] =
-    React.useState<google.maps.DirectionsResult | null>(null);
+  const [directions, setDirections] = React.useState<google.maps.DirectionsResult | null>(null);
 
   const googleControlOptions: google.maps.MapOptions = {
     zoomControl: false,
     scaleControl: false,
     mapTypeControl: false,
     fullscreenControl: false,
-    streetViewControl: false,
+    streetViewControl: false
   };
 
   const router = useRouter();
@@ -51,7 +44,7 @@ const MapContainer = (props: Props) => {
       getOrderDetails(
         setOrderDetails,
         {
-          id: String(id),
+          id: String(id)
         },
         true
       );
@@ -59,7 +52,7 @@ const MapContainer = (props: Props) => {
   };
 
   React.useEffect(() => {
-    refreshInterval.current = setInterval(refreshDetails, 120 * 1000);
+    refreshInterval.current = setInterval(refreshDetails, 40 * 1000);
     return () => {
       if (refreshInterval.current) clearInterval(refreshInterval.current);
     };
@@ -69,17 +62,17 @@ const MapContainer = (props: Props) => {
     if (map) {
       const directionsService = new window.google.maps.DirectionsService();
       const directionsRenderer = new window.google.maps.DirectionsRenderer({
-        map,
+        map
       });
 
       const request: google.maps.DirectionsRequest = {
         origin: startingPoint,
         destination: endingPoint,
-        travelMode: google.maps.TravelMode.DRIVING,
+        travelMode: google.maps.TravelMode.DRIVING
       };
 
       directionsService.route(request, (result, status) => {
-        if (status === "OK") {
+        if (status === 'OK') {
           directionsRenderer.setDirections(result);
           setDirections(result);
         }
@@ -88,7 +81,7 @@ const MapContainer = (props: Props) => {
   }, [map]);
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_MAP_KEY as string | "",
+    googleMapsApiKey: process.env.NEXT_PUBLIC_MAP_KEY as string | ''
   });
 
   const handleMapLoad = (mapInstance: google.maps.Map | null) => {
