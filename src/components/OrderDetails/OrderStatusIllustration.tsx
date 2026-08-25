@@ -25,9 +25,9 @@ const OrderStatusIllustration = (props: any) => {
   const prorouting = orderDetailsData?.prorouting ?? null;
   const proroutingTrackingUrl = prorouting?.order?.tracking_url ?? null;
 
-  // prorouting_track_status: live rider coordinates
+  // prorouting_track_status: live rider coordinates, fallback to prorouting.order.rider.last_location
   const trackStatusRider = orderDetailsData?.prorouting_track_status?.orders?.[0]?.rider;
-  const trackStatusLocation = trackStatusRider?.last_location;
+  const trackStatusLocation = trackStatusRider?.last_location || prorouting?.order?.rider?.last_location;
   const hasTrackStatusCoords =
     !!trackStatusLocation?.lat &&
     !!trackStatusLocation?.lng &&
@@ -47,14 +47,16 @@ const OrderStatusIllustration = (props: any) => {
 
     const hasValidDriverLocation = driverLocation.lat !== 0 && driverLocation.lng !== 0;
 
-    const isDelivered = currentStatus === 'delivered' || currentStatus === 'fulfilled';
+    const isActiveTrackingStatus = ['out for delivery', 'on the way', 'nearby', 'arrived at location'].includes(
+      currentStatus
+    );
 
-    // MAP VIEW: show when valid coordinates available and order not delivered
-    const isMapAvailable = !isDelivered && hasValidDriverLocation;
+    // MAP VIEW: show when valid coordinates available and order is in active tracking state
+    const isMapAvailable = isActiveTrackingStatus && hasValidDriverLocation;
     const isMapDetailsExist = mapToggle && isMapAvailable;
 
-    // TRACK ORDER: only when no coords but a tracking URL exists and order not delivered
-    const isTrackUrlOnly = !isDelivered && !isMapAvailable && !!(trackingUrl || proroutingTrackingUrl);
+    // TRACK ORDER: only when no coords but a tracking URL exists and order is in active tracking state
+    const isTrackUrlOnly = isActiveTrackingStatus && !isMapAvailable && !!(trackingUrl || proroutingTrackingUrl);
     const resolvedTrackingUrl = trackingUrl || proroutingTrackingUrl;
 
     return {
@@ -64,7 +66,7 @@ const OrderStatusIllustration = (props: any) => {
       resolvedTrackingUrl,
       driverLocation,
       customerLocation,
-      isDelivered
+      isActiveTrackingStatus
     };
   }, [
     orderDetailsData,
@@ -131,8 +133,8 @@ const OrderStatusIllustration = (props: any) => {
   // OTP: prefer lbnp dcc, fall back to prorouting_delivery_otp
   const otp = lbnp?.dcc || orderDetailsData?.prorouting_delivery_otp;
 
-  // Show lbnp tracking map button only when lbnp.tracking_url is present and not delivered
-  const showTrackingMapButton = !mapDetails.isDelivered && !!trackingUrl && !!agentName && hasLbnp;
+  // Show lbnp tracking map button only when lbnp.tracking_url is present and active tracking status
+  const showTrackingMapButton = mapDetails.isActiveTrackingStatus && !!trackingUrl && !!agentName && hasLbnp;
 
   return (
     <div className="relative">
@@ -239,7 +241,7 @@ const OrderStatusIllustration = (props: any) => {
       </div>
 
       <div
-        className={`relative z-[0] ${!mapDetails.isDelivered && agentName ? 'bg-white rounded-b-[1.1vw] mob:rounded-b-[3.6vw]' : ''}`}
+        className={`relative z-[0] ${mapDetails.isActiveTrackingStatus && agentName ? 'bg-white rounded-b-[1.1vw] mob:rounded-b-[3.6vw]' : ''}`}
       >
         <div
           className={`p-[1.1vw] mob:p-[4vw] rounded-b-[1.1vw] mob:rounded-b-[3.6vw]`}
@@ -256,8 +258,8 @@ const OrderStatusIllustration = (props: any) => {
           </p>
         </div>
 
-        {/* Only show driver info and OTP if not delivered AND driver is assigned */}
-        {!mapDetails.isDelivered && agentName && (
+        {/* Only show driver info and OTP if in active tracking status AND driver is assigned */}
+        {mapDetails.isActiveTrackingStatus && agentName && (
           <div className="py-2">
             <div className="p-[1.1vw] mob:p-[4vw] flex items-center justify-between">
               <div className="flex items-center gap-[7px] w-[180px] h-[46.75px]">

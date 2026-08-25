@@ -22,7 +22,7 @@ import CouponFlowWrapper from './ApplyCoupon/CouponFlowWrapper';
 import BillDetailsWrapper from './billDetails/BillDetailsWrapper';
 import Payment from './Payment/Payment';
 import FreeItemSection from './FreeItemSection/FreeItemSection';
-import { updateTimeSlotId } from '@/store/slice/placeOrderDetails';
+import { updateTimeSlotId, setCheckoutDetails } from '@/store/slice/placeOrderDetails';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { useAtom } from 'jotai';
 // Import InfoOutlinedIcon to be used in the new MaxQuantityToast copy
@@ -229,6 +229,46 @@ const Cart = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loginDetails.isSidebarOpen]);
+
+  // Fetch checkout details whenever the cart opens or items change, so that any
+  // backend checkout validations run (even if the timeslot sheet is skipped).
+  useEffect(() => {
+    if (!loginDetails.isSidebarOpen) return;
+
+    const fetchCheckoutDetailsForValidation = () => {
+      const addressFromLs = getAddressAndStoreId();
+      const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
+
+      const successHandler = (data: any) => {
+        dispatch(setCheckoutDetails({ ...data }));
+      };
+
+      const failureHandler = (data: any) => {
+        if (data?.message) {
+          handleShowToast(data.message);
+        }
+      };
+
+      if (isSubscription) {
+        const apiUrl =
+          process.env.NEXT_PUBLIC_BACKEND_API_URL +
+          `/api/v5/user/web-subscription-checkout?max_qty=${subscriptionCart.totalQuantity}`;
+        getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+      } else {
+        const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['proceedToCheckout'];
+        if (addressFromLs) getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+      }
+    };
+
+    fetchCheckoutDetailsForValidation();
+  }, [
+    loginDetails.isSidebarOpen,
+    isSubscription,
+    cart.items.length,
+    dispatch,
+    getDataFromApi,
+    subscriptionCart.totalQuantity
+  ]);
 
   useEffect(() => {
     if (!loginDetails.isSidebarOpen) {
