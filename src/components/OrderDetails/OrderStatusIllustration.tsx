@@ -47,15 +47,25 @@ const OrderStatusIllustration = (props: any) => {
 
     const hasValidDriverLocation = driverLocation.lat !== 0 && driverLocation.lng !== 0;
 
-    // MAP VIEW: show when valid coordinates available
-    const isMapAvailable = hasValidDriverLocation;
+    const isDelivered = currentStatus === 'delivered' || currentStatus === 'fulfilled';
+
+    // MAP VIEW: show when valid coordinates available and order not delivered
+    const isMapAvailable = !isDelivered && hasValidDriverLocation;
     const isMapDetailsExist = mapToggle && isMapAvailable;
 
-    // TRACK ORDER: only when no coords but a tracking URL exists
-    const isTrackUrlOnly = !isMapAvailable && !!(trackingUrl || proroutingTrackingUrl);
+    // TRACK ORDER: only when no coords but a tracking URL exists and order not delivered
+    const isTrackUrlOnly = !isDelivered && !isMapAvailable && !!(trackingUrl || proroutingTrackingUrl);
     const resolvedTrackingUrl = trackingUrl || proroutingTrackingUrl;
 
-    return { isMapDetailsExist, isMapAvailable, isTrackUrlOnly, resolvedTrackingUrl, driverLocation, customerLocation };
+    return {
+      isMapDetailsExist,
+      isMapAvailable,
+      isTrackUrlOnly,
+      resolvedTrackingUrl,
+      driverLocation,
+      customerLocation,
+      isDelivered
+    };
   }, [
     orderDetailsData,
     driver,
@@ -110,10 +120,6 @@ const OrderStatusIllustration = (props: any) => {
   const lbnp = orderDetailsData?.lbnp ?? null;
   const hasLbnp = !!lbnp;
 
-  // Guard: only show when lbnp or prorouting is present (driver data is excluded)
-  const hasDeliverySource = !!(lbnp || prorouting);
-  if (!hasDeliverySource) return null;
-
   // Resolve agent name & phone from lbnp or prorouting only (not driver)
   const resolvedAgentName = lbnp?.agent_name || prorouting?.order?.rider?.name || null;
   const resolvedAgentPhone = lbnp?.agent_phone || prorouting?.order?.rider?.phone || null;
@@ -125,11 +131,8 @@ const OrderStatusIllustration = (props: any) => {
   // OTP: prefer lbnp dcc, fall back to prorouting_delivery_otp
   const otp = lbnp?.dcc || orderDetailsData?.prorouting_delivery_otp;
 
-  // Don't show the section at all if there's neither a rider name nor an OTP
-  if (!agentName && !otp) return null;
-
-  // Show lbnp tracking map button only when lbnp.tracking_url is present
-  const showTrackingMapButton = !!trackingUrl && !!agentName && hasLbnp;
+  // Show lbnp tracking map button only when lbnp.tracking_url is present and not delivered
+  const showTrackingMapButton = !mapDetails.isDelivered && !!trackingUrl && !!agentName && hasLbnp;
 
   return (
     <div className="relative">
@@ -235,7 +238,9 @@ const OrderStatusIllustration = (props: any) => {
         )}
       </div>
 
-      <div className={`relative z-[0] ${agentName || otp ? 'bg-white rounded-b-[1.1vw] mob:rounded-b-[3.6vw]' : ''}`}>
+      <div
+        className={`relative z-[0] ${!mapDetails.isDelivered && agentName ? 'bg-white rounded-b-[1.1vw] mob:rounded-b-[3.6vw]' : ''}`}
+      >
         <div
           className={`p-[1.1vw] mob:p-[4vw] rounded-b-[1.1vw] mob:rounded-b-[3.6vw]`}
           style={{ background: '#231F20F0' }}
@@ -251,9 +256,9 @@ const OrderStatusIllustration = (props: any) => {
           </p>
         </div>
 
-        <div className="py-2">
-          {/* Agent info block — only when rider is assigned */}
-          {agentName ? (
+        {/* Only show driver info and OTP if not delivered AND driver is assigned */}
+        {!mapDetails.isDelivered && agentName && (
+          <div className="py-2">
             <div className="p-[1.1vw] mob:p-[4vw] flex items-center justify-between">
               <div className="flex items-center gap-[7px] w-[180px] h-[46.75px]">
                 <div className="w-[46.75px] h-[46.75px] rounded-full overflow-hidden flex-shrink-0 bg-gray-200 flex items-center justify-center">
@@ -268,7 +273,6 @@ const OrderStatusIllustration = (props: any) => {
               </div>
 
               <div className="flex items-center gap-[1.5vw] mob:gap-[4vw]">
-                {/* OTP box — shown next to call button when agent is assigned */}
                 {otp && (
                   <div className="flex flex-col border border-gray-300 rounded-[5px] border-[1px] overflow-hidden w-[70px] h-[44px] flex-shrink-0">
                     <span className="bg-white text-gray-500 text-[13px] flex items-center justify-center h-[22px] font-regular tracking-wider">
@@ -304,31 +308,17 @@ const OrderStatusIllustration = (props: any) => {
                 )}
               </div>
             </div>
-          ) : (
-            /* Standalone OTP box — rider not yet assigned but OTP already available */
-            otp && (
-              <div className="p-[1.1vw] mob:p-[4vw] flex items-center justify-center">
-                <div className="flex flex-col border border-gray-300 rounded-[5px] overflow-hidden w-[70px] h-[44px] flex-shrink-0">
-                  <span className="bg-white text-gray-500 text-[13px] flex items-center justify-center h-[22px] font-regular tracking-wider">
-                    OTP
-                  </span>
-                  <span className="bg-[#00855B] text-white text-[17px] flex items-center justify-center h-full font-semibold font-[SofiaPro] tracking-widest">
-                    {otp}
-                  </span>
-                </div>
-              </div>
-            )
-          )}
 
-          {/* OTP handover banner — always shown when OTP exists */}
-          {otp && (
-            <div className="bg-[#F4EED1] py-[0.8vw] mob:py-[1vw] mx-[1.1vw] mob:mx-0 mob:mb-[3vw] md:rounded-[0.5vw]">
-              <p className="text-[#333333] font-[SofiaPro] text-center text-[0.8vw] mob:text-[2.6vw] font-medium m-0">
-                For successful order handover, please provide the OTP to the delivery partner.
-              </p>
-            </div>
-          )}
-        </div>
+            {/* OTP handover banner — always shown when OTP exists */}
+            {otp && (
+              <div className="bg-[#F4EED1] py-[0.8vw] mob:py-[1vw] mx-[1.1vw] mob:mx-0 mob:mb-[3vw] md:rounded-[0.5vw]">
+                <p className="text-[#333333] font-[SofiaPro] text-center text-[0.8vw] mob:text-[2.6vw] font-medium m-0">
+                  For successful order handover, please provide the OTP to the delivery partner.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
