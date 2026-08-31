@@ -352,23 +352,9 @@ const MangoLandingPage = ({ mainMenuItems, footerData, mangoRecipes, mangoTestim
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/originApi`);
-    const originApiData = await response.json();
-    const { mainMenuItems, footerData, mangoRecipes, mangoTestimonials } = originApiData;
-
-    return {
-      props: {
-        mainMenuItems: mainMenuItems || [],
-        footerData: footerData || {},
-        mangoRecipes: mangoRecipes || [],
-        mangoTestimonials: mangoTestimonials || []
-      }
-    };
-  } catch (error) {
-    console.error('Error fetching mango landing page data:', error);
-    return { props: { mainMenuItems: [], footerData: {}, mangoRecipes: [] } };
-  }
+  return {
+    notFound: true
+  };
 };
 
 export default MangoLandingPage;
