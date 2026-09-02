@@ -20,6 +20,7 @@ import { validateCoupon } from '@/features/CouponPage/services/validateCoupon';
 import { isCouponApplied } from '@/features/CouponPage/context/atoms';
 import { useCartStore } from '@/hooks/useCartStore';
 import { setMangoCouponDetails, setMangoDiscountAmount, setMangoAmountToPay } from '@/store/slice/MangoCartSlice';
+import { isAccountIsOpen } from '@/features/AccountPage/context/atoms';
 
 const HIDDEN_PATHS = [
   '/cart',
@@ -43,8 +44,9 @@ const CouponStatusBar: React.FC = () => {
   const getDataFromApi = useGetDataFromApi();
   const [, setIsCouponOpen] = useAtom(isCouponPageIsOpen);
   const [couponsState, setCouponsState] = useAtom(couponListAtom);
-  const [, setIsCartOpen] = useAtom(isCartPageIsOpen);
+  const [isCartOpen, setIsCartOpen] = useAtom(isCartPageIsOpen);
   const [, setAppliedCoupon] = useAtom(isCouponApplied);
+  const [isAccountOpen] = useAtom(isAccountIsOpen);
   const isMobile = useMediaQuery(600);
 
   const couponList = couponsState.coupons || [];
@@ -124,9 +126,9 @@ const CouponStatusBar: React.FC = () => {
     return () => clearInterval(interval);
   }, [isLogin, displayCoupons.length, handleNext]);
 
-  // Don't show on hidden paths
+  // Don't show on hidden paths, or if sidebars/cart are open
   const hiddenPath = HIDDEN_PATHS.some((p) => router.pathname.startsWith(p));
-  if (hiddenPath) return null;
+  if (hiddenPath || loginDetails.isSidebarOpen || isCartOpen || isAccountOpen) return null;
 
   // If logged in but no displayable coupons, hide the bar
   if (isLogin && displayCoupons.length === 0) return null;

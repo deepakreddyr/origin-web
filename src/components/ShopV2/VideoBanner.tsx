@@ -42,11 +42,19 @@ const VideoBanner: React.FC<VideoBannerProps> = ({
     video.load();
 
     const onCanPlay = () => {
-      video.play().catch(() => {});
+      video.play().catch((err) => console.log('Video autoplay failed:', err));
     };
 
-    video.addEventListener('canplay', onCanPlay, { once: true });
-    return () => video.removeEventListener('canplay', onCanPlay);
+    // Try playing immediately if ready
+    if (video.readyState >= 3) {
+      onCanPlay();
+    } else {
+      video.addEventListener('canplay', onCanPlay, { once: true });
+    }
+
+    return () => {
+      video.removeEventListener('canplay', onCanPlay);
+    };
   }, [src]);
 
   // Sync muted state to DOM element directly
@@ -64,6 +72,7 @@ const VideoBanner: React.FC<VideoBannerProps> = ({
         ref={videoRef}
         poster={poster}
         muted
+        autoPlay
         loop={loop}
         controls={controls}
         playsInline
