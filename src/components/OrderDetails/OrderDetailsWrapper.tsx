@@ -80,26 +80,37 @@ const OrderDetailsWrapper = () => {
             orderDetailsData={orderAndRefundDetails.orderDetailsData}
             fetchOrderdetails={fetchOrderdetails}
           />
-          <div className="w-full mob:block hidden mob:px-[4.1vw] ">
+          {/* Mobile-only: Retry + Refund + ItemsList */}
+          <div className="w-full mob:block hidden mob:px-[4.1vw] mob:flex mob:flex-col mob:gap-[4.1vw] mob:mt-[4.1vw]">
             {orderAndRefundDetails.orderDetailsData.status?.toLowerCase() !== 'cancelled by user' &&
               !(
                 orderAndRefundDetails.orderDetailsData.status?.toLowerCase() === 'rejected by admin' &&
                 (orderAndRefundDetails.orderDetailsData.payment_method === 'COD' ||
                   orderAndRefundDetails.orderDetailsData.payment_method === 'Cash')
               ) && <RetryOrPayonlineWrapper fetchOrderdetails={fetchOrderdetails} />}
-            <ItemsList orderDetailsData={orderAndRefundDetails.orderDetailsData} />
-          </div>
-          <div className="mob:px-[4.1vw] flex flex-col gap-[1.671vw] mob:mt-[4.1vw] mob:gap-[4.1vw] ">
             {orderAndRefundDetails.refundList.length > 0 && (
               <RefundWrapper
                 orderDetailsData={orderAndRefundDetails.orderDetailsData}
                 refundList={orderAndRefundDetails.refundList}
               />
             )}
+            <ItemsList orderDetailsData={orderAndRefundDetails.orderDetailsData} />
+          </div>
+          {/* Desktop-only: Refund below illustration, before Bill Details */}
+          {orderAndRefundDetails.refundList.length > 0 && (
+            <div className="mob:hidden">
+              <RefundWrapper
+                orderDetailsData={orderAndRefundDetails.orderDetailsData}
+                refundList={orderAndRefundDetails.refundList}
+              />
+            </div>
+          )}
+          <div className="mob:px-[4.1vw] flex flex-col gap-[1.671vw] mob:mt-[4.1vw] mob:gap-[4.1vw] ">
             <BillDetails orderDetails={orderAndRefundDetails.orderDetailsData} />
             <DeliveryAddress orderDetailsData={orderAndRefundDetails.orderDetailsData} />
           </div>
         </div>
+        {/* Desktop right column: RetryOrPayonline + ItemsList only */}
         <div className="w-full flex flex-col mob:hidden gap-[1.67vw]">
           {orderAndRefundDetails.orderDetailsData.status?.toLowerCase() !== 'cancelled by user' &&
             !(

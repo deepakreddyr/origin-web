@@ -5,8 +5,8 @@ const RefundCard = ({ refund, activeIndex, totalCards }: { refund: any; activeIn
   const [isExpanded, setIsExpanded] = useState(false);
 
   const hasRefundItems = refund.refund_items && refund.refund_items.length > 0;
-  const hasMoreItems = hasRefundItems && refund.refund_items.length > 3;
-  const visibleItems = isExpanded ? refund.refund_items : refund.refund_items?.slice(0, 3);
+  const hasMoreItems = hasRefundItems && refund.refund_items.length > 2;
+  const visibleItems = isExpanded ? refund.refund_items : refund.refund_items?.slice(0, 2);
 
   if (!hasRefundItems) {
     return (
@@ -24,7 +24,7 @@ const RefundCard = ({ refund, activeIndex, totalCards }: { refund: any; activeIn
   }
 
   return (
-    <div className="bg-[#DCF3E8] flex flex-col border border-[#B4E0D4] rounded-[16px] p-[16px] gap-[14px] w-full h-full box-border">
+    <div className="bg-[#DCF3E8] flex flex-col border border-[#B4E0D4] rounded-[16px] p-[16px] gap-[10px] w-full h-full box-border">
       <div className="flex justify-between items-center mb-0">
         <p className="text-[#25874D] font-[Recoleta] font-bold text-[1.38vw] mob:text-[5vw] mb-0">Refund</p>
 
@@ -43,18 +43,20 @@ const RefundCard = ({ refund, activeIndex, totalCards }: { refund: any; activeIn
       </div>
 
       {hasRefundItems && (
-        <div className="bg-[#FBF9F6] rounded-[8px] p-[10px] flex flex-col min-h-[150px] grow">
+        <div className="bg-[#FBF9F6] rounded-[8px] p-[8px] flex flex-col">
           <p className="font-semibold text-[14px] text-[#1B1B1B] mb-[8px] font-[sofiaPro]">Refund for:</p>
 
-          <div className="flex flex-col gap-[8px]">
+          <div className="flex flex-col gap-[6px] min-h-[46px]">
             {visibleItems.map((item: any, index: number) => (
-              <div key={index} className="flex items-start">
-                <p className="text-[13px] text-[#4A4A4A] font-[sofiaPro] flex-1 pr-[8px] mb-0">{item.name}</p>
-                <div className="flex items-center shrink-0">
-                  <span className="text-[13px] text-[#4A4A4A] whitespace-nowrap font-[sofiaPro] w-[32px] text-right">
+              <div key={index} className="flex items-center">
+                <p className="text-[13px] text-[#4A4A4A] font-[sofiaPro] flex-1 pr-[8px] mb-0 min-w-0 truncate">
+                  {item.name}
+                </p>
+                <div className="flex items-center shrink-0 gap-[8px]">
+                  <span className="text-[13px] text-[#4A4A4A] whitespace-nowrap font-[sofiaPro] text-right">
                     {item.qty != null ? `× ${item.qty}` : ''}
                   </span>
-                  <p className="text-[13px] text-[#1B1B1B] font-medium font-[sofiaPro] w-[60px] text-right mb-0 ml-[12px]">
+                  <p className="text-[13px] text-[#1B1B1B] font-medium font-[sofiaPro] w-[60px] text-right mb-0">
                     ₹ {item.amount}
                   </p>
                 </div>
@@ -78,7 +80,7 @@ const RefundCard = ({ refund, activeIndex, totalCards }: { refund: any; activeIn
             </div>
           )}
 
-          <div className="mt-auto pt-[16px]">
+          <div className="pt-[8px]">
             <div className="h-[1px] bg-[#E0E0E0] mb-[8px]" />
             <div className="flex justify-between items-center">
               <p className="font-bold text-[14px] text-[#1B1B1B] font-[sofiaPro] mb-0">Total</p>
