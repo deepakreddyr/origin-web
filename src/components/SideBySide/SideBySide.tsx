@@ -20,6 +20,8 @@ type SideBySideProps = {
   buttonVariant?: 'primary' | 'secondary' | 'tertiary' | 'textOnly';
   buttonText2?: string;
   buttonVariant2?: 'primary' | 'secondary' | 'tertiary' | 'textOnly';
+  button1Icon?: React.ComponentType<any>;
+  button2Icon?: React.ComponentType<any>;
   rootClass?: string;
   imageContainerClass?: string;
   titleContainerClass?: string;
@@ -83,6 +85,8 @@ const SideBySide: React.FC<SideBySideProps> = ({
   buttonVariant,
   buttonText2,
   buttonVariant2,
+  button1Icon,
+  button2Icon,
   rootClass = 'bg-secondary-200',
   imageContainerClass,
   titleContainerClass,
@@ -191,13 +195,28 @@ const SideBySide: React.FC<SideBySideProps> = ({
               {HTMLReactParser(description)}
             </Typography>
           )}
-          <Box className="flex items-center gap-5">
-            {buttonText && <OriginButton handleClick={buttonClick1} variant={buttonVariant} buttonText={buttonText} />}
-            {buttonText2 && (
-              <Typography className="text-sm md:text-base" variant="body1">
-                {buttonText2}
-              </Typography>
+          <Box className="flex items-center gap-5 mt-6 md:mt-0">
+            {buttonText && (
+              <OriginButton
+                handleClick={buttonClick1}
+                variant={buttonVariant}
+                buttonText={buttonText}
+                IconOne={button1Icon}
+              />
             )}
+            {buttonText2 &&
+              (buttonClick2 || buttonVariant2 ? (
+                <OriginButton
+                  handleClick={buttonClick2}
+                  variant={buttonVariant2 || buttonVariant}
+                  buttonText={buttonText2}
+                  IconOne={button2Icon}
+                />
+              ) : (
+                <Typography className="text-sm md:text-base" variant="body1">
+                  {buttonText2}
+                </Typography>
+              ))}
           </Box>
         </Box>
       </TwoRowFlex>

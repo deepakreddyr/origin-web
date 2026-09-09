@@ -48,14 +48,13 @@ const buttonTypeClasses: Record<ButtonVariants, string> = {
     'flex justify-between items-center gap-2.5 border-2 border-primary bg-primary px-6 py-2 border-solid rounded-[85px] w-full h-min text-black',
   iconPrimary:
     'flex justify-between items-center border-2 border-primary bg-primary p-1 border-solid rounded-[85px] w-min h-auto text-black',
-  iconOnly:
-    'flex justify-between items-center rounded-[85px] w-auto h-min transition-all duration-200 ease-in-out',
+  iconOnly: 'flex justify-between items-center rounded-[85px] w-auto h-min transition-all duration-200 ease-in-out',
   capsuleBtn:
     'flex items-center hover:text-black flex-row-reverse gap-2 py-2 md:py-3 transition ease-in-out duration-200 first-of-type:rounded-s-[85px] first-of-type:ps-8 ps-5 last-of-type:rounded-e-[85px] last-of-type:pe-8 pe-5 ',
   outlined:
     'flex justify-between items-center gap-2.5 border-2 transition duration-200 ease-in-out border-black bg-white border-solid rounded-[85px] text-black hover:shadow-origin hover:shadow-black active:shadow-none transition-all active:translate-y-[5px] duration-200 ease-in-out',
   tertiary:
-    'bg-black px-8 py-2 md:px-8 md:py-4 text-base text-white transition ease-in-out duration-200 hover:bg-primary border-2 border-solid border-black hover:border-black hover:text-black rounded-[45px] font-medium hover:shadow-origin hover:shadow-black active:shadow-none transition-all active:translate-y-[5px] duration-200 ease-in-out',
+    'flex justify-center items-center gap-2.5 bg-black px-8 py-2 md:px-8 md:py-4 text-base text-white transition ease-in-out duration-200 hover:bg-primary border-2 border-solid border-black hover:border-black hover:text-black rounded-[45px] font-medium hover:shadow-origin hover:shadow-black active:shadow-none transition-all active:translate-y-[5px] duration-200 ease-in-out',
   disabled:
     'flex flex-col justify-center items-center bg-oGrey px-4 py-2 rounded-full text-sm text-white cursor-not-allowed',
   textOnly: 'text-base'

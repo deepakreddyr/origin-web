@@ -1,5 +1,7 @@
 import { Box, Container, Typography, useMediaQuery, useTheme } from '@mui/material';
 import Layout from '@/components/Layout';
+import AppleIcon from '@mui/icons-material/Apple';
+import AndroidIcon from '@mui/icons-material/Android';
 import { GetServerSideProps } from 'next';
 import { Blog, Categories, FooterDataType, MainMenuType, Products, Testimonial, UspCardsData } from '@/utilities/types';
 import {
@@ -338,23 +340,20 @@ const Home = ({
               titleClass="font-[Recoleta] text-black text-[4vw] md:text-[4vw] mob:text-[9vw] !font-bold !leading-[1.1] mb-8 mob:text-center"
               imageContainerClass="flex justify-center items-center md:!pe-5"
               titleContainerClass="flex flex-col justify-center items-center md:items-start md:!ps-12 lg:!ps-24 md:!pe-0"
-              buttonText="Download Origin Fresh"
+              buttonText="App Store"
               buttonVariant="tertiary"
+              button1Icon={AppleIcon}
               buttonClick1={() => {
-                const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
-                if (/android/i.test(userAgent)) {
-                  window.open(
-                    'https://play.google.com/store/apps/details?id=com.originfresh.user&hl=en_IN&pli=1',
-                    '_blank'
-                  );
-                } else if (/iPad|iPhone|iPod/.test(userAgent) && !(window as any).MSStream) {
-                  window.open('https://apps.apple.com/in/app/origin-fresh-fruits-veggies/id6505096700', '_blank');
-                } else {
-                  window.open(
-                    'https://play.google.com/store/apps/details?id=com.originfresh.user&hl=en_IN&pli=1',
-                    '_blank'
-                  );
-                }
+                window.open('https://apps.apple.com/in/app/origin-fresh-fruits-veggies/id6505096700', '_blank');
+              }}
+              buttonText2="Play Store"
+              buttonVariant2="tertiary"
+              button2Icon={AndroidIcon}
+              buttonClick2={() => {
+                window.open(
+                  'https://play.google.com/store/apps/details?id=com.originfresh.user&hl=en_IN&pli=1',
+                  '_blank'
+                );
               }}
               rootClass="bg-[#FFFBEB] items-center py-[5vw] mob:py-[10vw]"
             />
