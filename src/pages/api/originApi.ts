@@ -70,6 +70,10 @@ const data: Data = {
     {
       label: 'About Us',
       link: '/about'
+    },
+    {
+      label: 'Events',
+      link: '/events'
     }
     // {
     //   label: 'Our Process',

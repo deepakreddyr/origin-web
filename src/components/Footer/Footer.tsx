@@ -1,340 +1,108 @@
-import { Box, Container, Grid, Typography } from '@mui/material';
 import React from 'react';
-import { OriginLogoWhite } from '../../Icons/OriginIcons';
-import SocialLinks from './SocialLinks';
-import FooterNav from './FooterNav';
-import { FooterDataType } from '../../utilities/types';
-import PhoneIcon from '@mui/icons-material/Phone';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import { Mail } from '@mui/icons-material';
+import Link from 'next/link';
 import Image from 'next/image';
-import originLogo from '/public/assets/images/neworiginlogo.png';
-import { useCartStore } from '@/hooks/useCartStore';
+import { FooterDataType } from '../../utilities/types';
+import SocialLinks from './SocialLinks';
 
 type FooterProps = {
   footerData?: FooterDataType;
 };
 
 const Footer: React.FC<FooterProps> = ({ footerData }) => {
-  const { isMangoPage } = useCartStore();
   if (!footerData) return null;
 
   const { footerLinksPrimary, footerLinksSecondary } = footerData;
 
-  // Mango Page Specific Data Mapping (matching images)
-  const quickLinks = [
-    { text: 'How It Works', href: 'about' },
-    { text: 'Subscribe', href: 'subscription' }
-  ];
-
-  const supportLinks = [
-    { text: 'Delivery Info', href: 'delivery-info' },
-    { text: 'Returns', href: 'returns' },
-    { text: 'Terms & Conditions', href: 'terms-condition' },
-    { text: 'Privacy Policy', href: 'privacy-policy' }
-  ];
-
-  if (isMangoPage) {
-    return (
-      <Box
-        component="footer"
-        className="bg-[#1a1a1a] text-white py-12 md:py-16 mob:rounded-t-[40px] shadow-[0_-10px_30px_rgba(0,0,0,0.1)]"
-        sx={{ fontFamily: 'SofiaPro' }}
-      >
-        <Container maxWidth="lg">
-          {/* Desktop View */}
-          <Box className="mob:hidden">
-            <Grid container spacing={4}>
-              {/* Logo & Social Links */}
-              <Grid item xs={12} md={3.5}>
-                <Box className="flex flex-col gap-3 items-start">
-                  <Box className="w-[180px] h-[50px] relative overflow-visible">
-                    <Image
-                      src={originLogo}
-                      alt="Origin Logo"
-                      width={400}
-                      height={75}
-                      className="object-contain invert"
-                    />
-                  </Box>
-                  <Box className="flex flex-col gap-8 mt-2">
-                    <div className="filter brightness-0 invert opacity-80 mt-2">
-                      <SocialLinks />
-                    </div>
-                  </Box>
-                </Box>
-              </Grid>
-
-              {/* Navigation */}
-              <Grid item xs={12} md={2.5}>
-                <Typography className="text-white text-[16px] font-semibold uppercase tracking-wider mb-6">
-                  Navigation
-                </Typography>
-                <Box className="flex flex-col gap-4">
-                  <FooterNav xs={12} links={footerLinksPrimary} isDark={true} />
-                </Box>
-              </Grid>
-
-              {/* Contact Us */}
-              <Grid item xs={12} md={3.5}>
-                <Typography className="text-white text-[16px] font-semibold uppercase tracking-wider mb-6">
-                  Contact Us
-                </Typography>
-                <Box className="flex flex-col gap-4 text-[#A0A0A0] text-[16px]">
-                  <Typography
-                    component="a"
-                    href="tel:+919900508216"
-                    className="text-[#A0A0A0] no-underline flex items-center gap-2 hover:text-white transition-colors"
-                  >
-                    <PhoneIcon fontSize="small" /> +91 9900508216
-                  </Typography>
-
-                  <Typography
-                    component="a"
-                    href="mailto:support@originfresh.in"
-                    className="text-[#A0A0A0] no-underline flex items-center gap-2 hover:text-white transition-colors"
-                  >
-                    <Mail fontSize="small" /> support@originfresh.in
-                  </Typography>
-
-                  <Typography
-                    component="a"
-                    href="https://wa.me/919900507318"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#A0A0A0] no-underline flex items-center gap-2 hover:text-white transition-colors"
-                  >
-                    <WhatsAppIcon fontSize="small" /> +91 9900507318
-                  </Typography>
-                </Box>
-              </Grid>
-
-              {/* Terms/Policy Links */}
-              <Grid item xs={12} md={2.5}>
-                <Box className="flex flex-col items-start space-y-4 mt-6 md:mt-10">
-                  <FooterNav xs={12} links={footerLinksSecondary} isDark={true} />
-                </Box>
-              </Grid>
-            </Grid>
-          </Box>
-
-          {/* Mobile View */}
-          <Box className="hidden mob:flex flex-col items-center">
-            {/* Logo Wrapper */}
-            <Box className="w-[180px] h-[40px] relative mb-4">
-              <Image src={originLogo} alt="Origin Logo" width={400} height={75} className="object-contain invert" />
-            </Box>
-
-            <Grid container spacing={4} className="mb-12">
-              <Grid item xs={6}>
-                <Typography className="text-white text-[16px] font-semibold uppercase tracking-wider mb-6">
-                  Navigation
-                </Typography>
-                <Box className="flex flex-col gap-3">
-                  <FooterNav xs={12} links={footerLinksPrimary} isDark={true} />
-                </Box>
-              </Grid>
-              <Grid item xs={6}>
-                <p className="text-white text-[16px] font-semibold uppercase tracking-wider mb-6 font-[SofiaPro]">
-                  Contact us
-                </p>
-                <div className="flex flex-col gap-4 mb-8">
-                  <a
-                    href="tel:+919900508216"
-                    className="text-[#A0A0A0] no-underline flex items-center gap-2 text-[12.5px] font-[SofiaPro]"
-                  >
-                    <PhoneIcon style={{ fontSize: '14px' }} /> +91 9900508216
-                  </a>
-                  <a
-                    href="mailto:support@originfresh.in"
-                    className="text-[#A0A0A0] no-underline flex items-center gap-2 text-[12.5px] font-[SofiaPro]"
-                  >
-                    <Mail style={{ fontSize: '14px' }} /> support@originfresh.in
-                  </a>
-                  <a
-                    href="https://wa.me/919900507318"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#A0A0A0] no-underline flex items-center gap-2 text-[12.5px] font-[SofiaPro]"
-                  >
-                    <WhatsAppIcon style={{ fontSize: '14px' }} /> +91 9900507318
-                  </a>
-                </div>
-              </Grid>
-            </Grid>
-
-            {/* Social Links Mobile */}
-            <div className="filter brightness-0 invert opacity-70 mb-12">
-              <SocialLinks />
-            </div>
-
-            {/* Bottom Links */}
-            <Box className="flex flex-col items-start w-full gap-4 mb-12 border-t border-[#333] pt-8">
-              <FooterNav xs={12} links={footerLinksSecondary} isDark={true} />
-            </Box>
-          </Box>
-
-          {/* Copyright */}
-          <Box className="border-t border-[#333] mt-8 pt-8 text-center mob:border-none mob:pt-0">
-            <Typography className="text-[#A0A0A0] text-[14px]">
-              © {new Date().getFullYear()} Origin Fresh. All rights reserved.
-            </Typography>
-          </Box>
-        </Container>
-      </Box>
-    );
-  }
-
   return (
-    <>
-      {/* Footer main */}
-      <Box className="bg-primary py-[60px] md:pt-[20px] mob:py-[40px] mob:rounded-t-[40px] shadow-[0_-10px_30px_rgba(0,0,0,0.1)]">
-        <Container maxWidth="lg">
-          {/* Desktop View */}
-          <Box className="mob:hidden">
-            <Box className="min-h-[240px] flex items-center">
-              <Grid container spacing={3}>
-                {/* Logo + Social Links */}
-                <Grid item xs={12} md={3.5}>
-                  <Box className="h-full flex flex-col items-start justify-center space-y-6">
-                    <Box className="mt-[50px] pr-[100px]">
-                      <Image src={originLogo} alt="Origin Logo" width={400} height={75} className="object-contain" />
-                    </Box>
-                    <SocialLinks />
-                  </Box>
-                </Grid>
+    <footer className="bg-ink text-cream relative overflow-hidden section-pad pb-[40px] w-full">
+      <div className="wrap relative z-10 flex flex-col md:flex-row gap-[60px] md:gap-[120px]">
+        {/* Left side: Newsletter / Logo */}
+        <div className="flex flex-col gap-[20px] max-w-[360px]">
+          <div className="w-[140px] h-[36px] relative mb-[4px]">
+            <Image
+              src="/assets/images/neworiginlogo.png"
+              alt="Origin Fresh"
+              fill
+              className="object-contain object-left invert"
+            />
+          </div>
+          <p className="font-Recoleta text-[24px] text-brand-yellow-200 m-0 leading-tight">
+            Stay Fresh: Join Our Newsletter
+          </p>
+          <p className="text-[14px] text-cream/60 m-0 leading-[1.6]">
+            First access to seasonal drops, market events, and OG-only offers.
+          </p>
+          <form className="flex gap-[10px] mt-[10px]" onSubmit={(e) => e.preventDefault()}>
+            <input
+              type="email"
+              placeholder="Your email"
+              className="flex-1 py-[13px] px-[18px] rounded-full border border-cream/25 bg-transparent text-paper placeholder:text-cream/40 focus:outline-none focus:border-brand-yellow-200 transition-colors text-[14px]"
+            />
+            <button className="btn btn-yellow px-[24px]" type="submit">
+              Subscribe
+            </button>
+          </form>
 
-                {/* Navigation */}
-                <Grid item xs={12} md={2.5}>
-                  <Box className="flex flex-col items-start space-y-4 mt-6 md:mt-10">
-                    <Typography
-                      variant="body2"
-                      className="text-black text-sm font-semibold uppercase tracking-wider mb-2"
-                    >
-                      Navigation
-                    </Typography>
-                    <FooterNav xs={12} links={footerLinksPrimary} />
-                  </Box>
-                </Grid>
+          <div className="mt-4">
+            <SocialLinks />
+          </div>
+        </div>
 
-                {/* Contact Us */}
-                <Grid item xs={12} md={3.5}>
-                  <Box className="flex flex-col items-start space-y-4 mt-6 md:mt-10">
-                    <Typography
-                      variant="body2"
-                      className="text-black text-sm font-semibold uppercase tracking-wider mb-2"
-                    >
-                      Contact Us
-                    </Typography>
+        {/* Right side: Navigation columns */}
+        <div className="flex flex-wrap gap-[40px] md:gap-[80px] flex-1 md:justify-end">
+          <div className="flex flex-col gap-[12px]">
+            <h4 className="font-Recoleta text-[18px] text-brand-yellow-200 m-0 mb-[8px]">Shop</h4>
+            <Link href="/shop" className="text-cream/70 hover:text-brand-yellow-200 transition-colors text-[14px]">
+              All Products
+            </Link>
+            <Link href="/shop" className="text-cream/70 hover:text-brand-yellow-200 transition-colors text-[14px]">
+              Just Landed
+            </Link>
+            <Link href="/shop" className="text-cream/70 hover:text-brand-yellow-200 transition-colors text-[14px]">
+              In Season
+            </Link>
+          </div>
 
-                    {/* Phone */}
-                    <Typography
-                      component="a"
-                      href="tel:+919900508216"
-                      className="text-black text-base no-underline flex items-center gap-2"
-                    >
-                      <PhoneIcon fontSize="small" /> +91 9900508216
-                    </Typography>
+          <div className="flex flex-col gap-[12px]">
+            <h4 className="font-Recoleta text-[18px] text-brand-yellow-200 m-0 mb-[8px]">Origin Fresh</h4>
+            <Link href="/about" className="text-cream/70 hover:text-brand-yellow-200 transition-colors text-[14px]">
+              Our Story
+            </Link>
+            <Link href="/events" className="text-cream/70 hover:text-brand-yellow-200 transition-colors text-[14px]">
+              Events
+            </Link>
+            {footerLinksPrimary?.map((link, i) => (
+              <Link
+                key={i}
+                href={`/${link.href}`}
+                className="text-cream/70 hover:text-brand-yellow-200 transition-colors text-[14px]"
+              >
+                {link.text}
+              </Link>
+            ))}
+          </div>
 
-                    <Typography
-                      component="a"
-                      href="mailto:support@originfresh.in"
-                      className="text-black text-base no-underline flex items-center gap-2"
-                    >
-                      <Mail fontSize="small" /> support@originfresh.in
-                    </Typography>
+          <div className="flex flex-col gap-[12px]">
+            <h4 className="font-Recoleta text-[18px] text-brand-yellow-200 m-0 mb-[8px]">Support</h4>
+            {footerLinksSecondary?.map((link, i) => (
+              <Link
+                key={i}
+                href={`/${link.href}`}
+                className="text-cream/70 hover:text-brand-yellow-200 transition-colors text-[14px]"
+              >
+                {link.text}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
 
-                    {/* WhatsApp */}
-                    <Typography
-                      component="a"
-                      href="https://wa.me/919900507318"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-black text-base no-underline flex items-center gap-2"
-                    >
-                      <WhatsAppIcon fontSize="small" /> +91 9900507318
-                    </Typography>
-                  </Box>
-                </Grid>
-
-                {/* Terms and Policy Links */}
-                <Grid item xs={12} md={2.5}>
-                  <Box className="flex flex-col items-start space-y-4 mt-6 md:mt-10">
-                    <FooterNav xs={12} links={footerLinksSecondary} />
-                  </Box>
-                </Grid>
-              </Grid>
-            </Box>
-          </Box>
-
-          {/* Mobile View - Matching Mango Layout */}
-          <Box className="hidden mob:flex flex-col items-center">
-            {/* Logo Wrapper */}
-            <Box className="w-[180px] h-[40px] relative mb-4">
-              <Image src={originLogo} alt="Origin Logo" width={400} height={75} className="object-contain" />
-            </Box>
-
-            <Grid container spacing={4} className="">
-              <Grid item xs={6}>
-                <Typography className="text-black text-[16px] font-semibold uppercase tracking-wider mb-6">
-                  Navigation
-                </Typography>
-                <Box className="flex flex-col gap-3">
-                  <FooterNav xs={12} links={footerLinksPrimary} />
-                </Box>
-              </Grid>
-              <Grid item xs={6}>
-                <p className="text-black text-[16px] font-semibold uppercase tracking-wider mb-6 font-[SofiaPro]">
-                  Contact us
-                </p>
-                <div className="flex flex-col gap-4 mb-8 opacity-70">
-                  <a
-                    href="tel:+919900508216"
-                    className="text-black no-underline flex items-center gap-2 text-[13px] font-[SofiaPro]"
-                  >
-                    <PhoneIcon style={{ fontSize: '14px' }} /> +91 9900508216
-                  </a>
-                  <a
-                    href="mailto:support@originfresh.in"
-                    className="text-black no-underline flex items-center gap-2 text-[12.4px] font-[SofiaPro]"
-                  >
-                    <Mail style={{ fontSize: '14px' }} /> support@originfresh.in
-                  </a>
-                  <a
-                    href="https://wa.me/919900507318"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-black no-underline flex items-center gap-2 text-[13px] font-[SofiaPro]"
-                  >
-                    <WhatsAppIcon style={{ fontSize: '14px' }} /> +91 9900507318
-                  </a>
-                </div>
-              </Grid>
-            </Grid>
-
-            {/* Social Links Mobile */}
-            <div className="mb-12">
-              <SocialLinks />
-            </div>
-
-            {/* Bottom Links */}
-            <Box className="flex flex-col items-start w-full gap-4 mb-12 border-t border-black border-opacity-10 pt-8">
-              <FooterNav xs={12} links={footerLinksSecondary} />
-            </Box>
-          </Box>
-
-          {/* Copyright Section */}
-          <Box className="border-t border-black border-opacity-10 mt-8 pt-8 text-center mob:border-none mob:pt-0">
-            <Typography className="text-black opacity-60 text-[14px]">
-              © {new Date().getFullYear()} Origin Fresh. All rights reserved.
-            </Typography>
-          </Box>
-        </Container>
-      </Box>
-    </>
+      <div className="wrap relative z-10 mt-[80px] pt-[30px] border-t border-cream/10 flex flex-col md:flex-row gap-[12px] text-[14px] text-cream/40 justify-between">
+        <span>© {new Date().getFullYear()} Origin Fresh. Ethically Sourced. 60 Minute Delivery.</span>
+        {/* <span>Anna Nagar · Besant Nagar · Chennai</span> */}
+      </div>
+    </footer>
   );
 };
 
 export default Footer;
-
-// export default Footer;

@@ -160,13 +160,16 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
         itemName={itemDetails.name}
       />
 
-      <div className="w-full md:max-w-[16.67vw] mob:max-w-[40vw] text-start relative mx-auto">
-        <button onClick={handleNavigation} className="cursor-pointer w-full text-start group">
+      <div className="w-full md:max-w-[16.67vw] mob:max-w-[40vw] text-start relative mx-auto h-full flex flex-col">
+        <div
+          onClick={handleNavigation}
+          className="cursor-pointer w-full text-start group flex flex-col flex-1 border border-[rgba(25,23,18,0.12)] rounded-[16px] overflow-hidden"
+          role="button"
+          tabIndex={0}
+        >
           {/* Image Container */}
-          <div className="relative bg-primary-100 flex items-center justify-center w-[16.67vw] mob:w-[40vw] h-[14.5vw] mob:h-[38vw] rounded-[1.67vw] mob:rounded-[4.1vw] overflow-hidden">
-            <div
-              className={`relative w-full h-full transition-transform duration-500 group-hover:scale-105 ${!selectedUOM.is_available ? 'grayscale' : ''}`}
-            >
+          <div className="relative bg-primary-100 flex items-center justify-center w-full h-[14.5vw] mob:h-[38vw] rounded-[16px] overflow-hidden">
+            <div className={`relative w-full h-full ${!selectedUOM.is_available ? 'grayscale' : ''}`}>
               <Image
                 // src={cleanImageUrl(itemDetails.website_image) || itemDetails.image || sampleimg}
                 src={cleanImageUrl(itemDetails.image) || sampleimg}
@@ -196,102 +199,103 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
             )}
           </div>
 
-          {/* Name Area */}
-          <div className="h-[5.5vw] mob:h-[15vw] overflow-hidden">
-            <p className="font-[SofiaPro] font-semibold text-[1.25vw] mob:text-[3.6vw] pt-[1.389vw] mob:pt-4 line-clamp-2">
-              {itemDetails.name}
-            </p>
-          </div>
+          {/* Card Body */}
+          <div className="px-[12px] mob:px-[10px] pt-[14px] pb-[14px] flex flex-col flex-1">
+            {/* Name Area */}
+            <div className="mb-[8px] min-h-[36px] mob:min-h-[30px]">
+              <p className="font-Recoleta text-[17px] mob:text-[13px] leading-[1.2] text-ink line-clamp-2">
+                {itemDetails.name}
+              </p>
+            </div>
 
-          {/* Price and Action Area */}
-          <div className="flex items-end justify-between">
-            <div>
-              <p className="font-[SofiaPro] text-[.97vw] mob:text-[2.8vw] text-black-op-50">{selectedUOM.unit}</p>
-              <div className="flex items-center gap-1 mob:pt-[01vw] pt-[.4vw]">
-                {selectedUOM.market_price > 0 && selectedUOM.market_price > selectedUOM.price && (
-                  <p className="text-gray-400 line-through text-[0.8vw] mob:text-[2.2vw] font-[SofiaPro]">
-                    ₹{selectedUOM.market_price}
-                  </p>
+            {/* Price and Action Area */}
+            <div className="flex items-center justify-between mt-auto gap-1">
+              <div>
+                <p className="text-[12px] mob:text-[10px] text-gray-500">{selectedUOM.unit}</p>
+                <div className="flex items-center gap-1 pt-0.5">
+                  {selectedUOM.market_price > 0 && selectedUOM.market_price > selectedUOM.price && (
+                    <p className="text-[11px] mob:text-[10px] text-gray-400 line-through">
+                      ₹{selectedUOM.market_price}
+                    </p>
+                  )}
+                  <p className="text-[12px] mob:text-[11px] text-gray-700 font-semibold">₹{selectedUOM.price}</p>
+                </div>
+              </div>
+
+              <div className="flex-shrink-0">
+                {!selectedUOM.is_available ? (
+                  <button
+                    type="button"
+                    disabled={isNotified}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!isNotified) handleNotifyMe();
+                    }}
+                    className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold h-[2.5vw] mob:h-[8.5vw] px-[1.5vw] mob:px-[3vw] rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${
+                      isNotified ? 'cursor-default' : 'hover:bg-green-50'
+                    }`}
+                  >
+                    {!isNotified && <span className="text-[.97vw] mob:text-[3.2vw]">Notify</span>}
+                    {isNotified ? (
+                      <NotificationsActiveIcon sx={{ fontSize: isMobile ? '4vw' : '1.2vw' }} />
+                    ) : (
+                      <NotificationsIcon sx={{ fontSize: isMobile ? '4vw' : '1.2vw' }} />
+                    )}
+                  </button>
+                ) : isBasketItem ? (
+                  <button
+                    type="button"
+                    onClick={handleBasketViewClick}
+                    className="bg-primary flex items-center justify-center h-[2.5vw] mob:h-[8.5vw] rounded-full px-[1.5vw] mob:px-[3vw] py-[.4vw] font-[SofiaPro] text-[.97vw] font-bold mob:text-[3.6vw] text-black hover:bg-yellow-400 transition-colors shadow-sm"
+                  >
+                    VIEW
+                  </button>
+                ) : requiresSelection ? (
+                  <div className="w-full flex justify-center">
+                    <WhiteBtn
+                      isItemPresent={totalQuantityAcrossProduct > 0}
+                      quantity={totalQuantityAcrossProduct}
+                      isMangoPage={isMangoPage}
+                      hasRipeness={hasRipenessOptions}
+                      hasOptions={requiresSelection}
+                      handleAddItem={(e: any) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        setQuantityDir(1);
+                        setIsPopupOpen(true);
+                      }}
+                      handleIncrease={(e: any) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        setQuantityDir(1);
+                        setIsPopupOpen(true);
+                      }}
+                      handleDecrease={(e: any) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        setQuantityDir(-1);
+                        setIsPopupOpen(true);
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="w-[80px] mob:w-auto flex justify-end">
+                    <AddItemBtn
+                      product={itemDetails}
+                      varientId={selectedUOM.variant_id}
+                      varientPrice={selectedUOM.price}
+                      stepperQuantity={selectedUOM.stepper_quantity}
+                      minimumQuantity={selectedUOM.minimum_quantity}
+                      buttonType="white"
+                      selectedRipenessType={selectedRipeness}
+                      onMaxQuantityExceeded={handleMaxQuantityExceeded}
+                    />
+                  </div>
                 )}
-                <p className="font-[SofiaPro] font-medium text-[1.25vw] mob:text-[3vw] text-black">
-                  ₹{selectedUOM.price}
-                </p>
               </div>
             </div>
-
-            <div className="mb-1">
-              {!selectedUOM.is_available ? (
-                <button
-                  type="button"
-                  disabled={isNotified}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (!isNotified) handleNotifyMe();
-                  }}
-                  className={`flex items-center justify-center border-[1.5px] font-[SofiaPro] font-bold h-[2.5vw] mob:h-[8.5vw] px-[1.5vw] mob:px-[3vw] rounded-full transition-colors whitespace-nowrap gap-2 border-[#146321] text-[#146321] ${
-                    isNotified ? 'cursor-default' : 'hover:bg-green-50'
-                  }`}
-                >
-                  {!isNotified && <span className="text-[.97vw] mob:text-[3.2vw]">Notify</span>}
-                  {isNotified ? (
-                    <NotificationsActiveIcon sx={{ fontSize: isMobile ? '4vw' : '1.2vw' }} />
-                  ) : (
-                    <NotificationsIcon sx={{ fontSize: isMobile ? '4vw' : '1.2vw' }} />
-                  )}
-                </button>
-              ) : isBasketItem ? (
-                <button
-                  type="button"
-                  onClick={handleBasketViewClick}
-                  className="bg-primary flex items-center justify-center h-[2.5vw] mob:h-[8.5vw] rounded-full px-[1.5vw] mob:px-[3vw] py-[.4vw] font-[SofiaPro] text-[.97vw] font-bold mob:text-[3.6vw] text-black hover:bg-yellow-400 transition-colors shadow-sm"
-                >
-                  VIEW
-                </button>
-              ) : requiresSelection ? (
-                <div className="w-full flex justify-center">
-                  <WhiteBtn
-                    isItemPresent={totalQuantityAcrossProduct > 0}
-                    quantity={totalQuantityAcrossProduct}
-                    isMangoPage={isMangoPage}
-                    hasRipeness={hasRipenessOptions}
-                    hasOptions={requiresSelection}
-                    handleAddItem={(e: any) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      setQuantityDir(1);
-                      setIsPopupOpen(true);
-                    }}
-                    handleIncrease={(e: any) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      setQuantityDir(1);
-                      setIsPopupOpen(true);
-                    }}
-                    handleDecrease={(e: any) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      setQuantityDir(-1);
-                      setIsPopupOpen(true);
-                    }}
-                  />
-                </div>
-              ) : (
-                <div className="w-[80px] mob:w-auto flex justify-end">
-                  <AddItemBtn
-                    product={itemDetails}
-                    varientId={selectedUOM.variant_id}
-                    varientPrice={selectedUOM.price}
-                    stepperQuantity={selectedUOM.stepper_quantity}
-                    minimumQuantity={selectedUOM.minimum_quantity}
-                    buttonType="white"
-                    selectedRipenessType={selectedRipeness}
-                    onMaxQuantityExceeded={handleMaxQuantityExceeded}
-                  />
-                </div>
-              )}
-            </div>
           </div>
-        </button>
+        </div>
 
         {requiresSelection && (
           <UOMPopup

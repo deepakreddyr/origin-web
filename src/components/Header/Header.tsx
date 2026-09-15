@@ -17,6 +17,7 @@ import whiteDropdownIcon from '/public/assets/images/whiteDropdown.png';
 import { setRouteSourceToLs } from '@/utilities/utils';
 // --------------------------------------------------------
 
+import { MapPin, ChevronDown } from 'lucide-react';
 import { MobileDrawer, Submenu } from '.';
 import OffersRibbon from './OffersRibbon';
 import { setCartItems, setCartTabType } from '@/store/slice/CartSlice';
@@ -81,7 +82,7 @@ const AnimatedPlaceholder = () => {
   );
 };
 
-const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColor }: Props) => {
+const Header = ({ mainMenuItems, isHeaderSticky = true, search = false, transparentColor }: Props) => {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [topBarTransition, setTopBarTransition] = useState(false);
@@ -329,326 +330,207 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
   }, [isMobile, search]);
 
   return (
-    <div
+    <header
       ref={menuRef}
-      className={`${isHeaderSticky ? 'fixed top-0' : 'absolute top-0'} flex items-center flex-col w-full z-[100] ${isMobile && loginDetails.isSidebarOpen ? 'hidden' : ''}`}
+      className={`sticky top-0 z-[70] bg-[rgba(250,246,236,0.86)] backdrop-blur-[14px] backdrop-saturate-[1.4] border-b border-black/10 w-full transition-all duration-300 ${
+        isMobile && loginDetails.isSidebarOpen ? 'hidden' : ''
+      }`}
     >
-      {/* <OffersRibbon /> */}
-
-      <div
-        className={`z-50 w-[92vw] lg:w-[80vw] mob:w-full transition-all duration-300 ${
-          isMobile
-            ? isTransparentHeader
-              ? 'bg-gradient-to-b from-black/70 via-black/30 to-transparent px-[5vw] py-[2vw]'
-              : // : 'bg-[#FFF9E5] px-[5vw] py-[2vw]'
-                'bg-white px-[5vw] py-[2vw] shadow-[0_4px_20px_rgba(0,0,0,0.05)]'
-            : !search && isTransparentHeader
-              ? 'bg-gradient-to-b from-black/70 via-black/40 to-transparent w-full px-[2vw] mt-[1vw] max-w-[1920px]'
-              : search
-                ? 'bg-transparent w-full px-[2vw] mt-[1vw] max-w-[1920px]'
-                : 'bg-white rounded-full shadow-md'
-        } ${'mt-[1.1vw] mob:mt-0'} flex flex-col`}
-      >
-        <div className="flex items-center justify-between w-full">
-          <div className={`flex items-center gap-[2vw] mob:gap-[3vw] ${isMobile ? 'flex-1' : ''}`}>
-            {isMobile && (
-              <button onClick={() => setDrawerOpen(!drawerOpen)} className="w-[6vw] h-[6vw] relative flex-shrink-0">
-                <Image src={hamburger} alt="Menu" fill className={`object-contain ${getIconFilter()}`} />
-              </button>
-            )}
-
+      <div className="max-w-[1240px] mx-auto px-[clamp(24px,5vw,72px)] flex items-center justify-between py-[28px] mob:py-[20px] relative">
+        {/* Logo & Mobile Menu Toggle */}
+        <div className="flex items-center gap-4">
+          {isMobile && (
             <button
-              onClick={() => router.push('/')}
-              className={`relative flex-shrink-0 ${isMobile ? 'flex-1 flex justify-center' : ''}`}
+              onClick={() => setDrawerOpen(!drawerOpen)}
+              className="block md:hidden text-[24px] leading-none -mt-2"
             >
-              <div
-                className={`${search ? 'w-[12vw] h-[4vw] mt-0' : 'w-[10vw] h-[5vw] mt-2'} ml-[2vw] mob:w-[35vw] mob:h-[12vw] mob:ml-0 mr-[1vw] mob:mr-2 relative`}
-              >
-                <Image src={originLogo} alt="logo" fill className={`object-contain ${getIconFilter()}`} priority />
-              </div>
+              ☰
             </button>
-
-            {/* --- MOBILE LOCATION & CART --- */}
-            {isMobile && (
-              <div className="flex items-center gap-[3vw]">
-                <button
-                  onClick={handleSelectAddress}
-                  disabled={address.loading}
-                  className={`flex items-center gap-[1vw] px-[2vw] py-[1.5vw] rounded-full ${getLocationButtonStyles()} text-[3vw] font-medium font-[SofiaPro] max-w-[25vw] ${address.loading ? 'opacity-50 pointer-events-none' : ''}`}
-                  aria-label="Select Delivery Address"
-                >
-                  <svg
-                    className={`w-[4vw] h-[4vw] flex-shrink-0 ${getLocationIconColor()}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                  <span className="truncate flex-1">{address.defaultAddress?.address_name || 'Select'}</span>
-                  <svg
-                    className={`w-[2vw] h-[2vw] ${getDropdownIconColor()}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-
-                <button
-                  onClick={isLoggedIn ? openAccount : handleProfileMenuOpen}
-                  className="relative p-[1vw]"
-                  aria-label="Account"
-                >
-                  <div className="w-[6vw] h-[6vw] relative">
-                    <Image src={userIcon} alt="Account" fill className={`object-contain ${getIconFilter()}`} />
-                  </div>
-                </button>
-              </div>
-            )}
-            {/* ------------------------------------------------------------------ */}
-          </div>
-
-          {/* Desktop New Layout */}
-          <div className={`flex items-center flex-1 mob:hidden`}>
-            {/* 1. Search Bar (Moved First) */}
-            <div className={`flex-1 ${search ? 'mx-[1.5vw]' : 'ml-[1vw] max-w-[20vw] mr-[2.9vw]'}`}>
-              <form onSubmit={handleSearchSubmit} className="relative">
-                <div className="relative">
-                  <input
-                    ref={searchInputRef}
-                    type="text"
-                    value={searchQuery}
-                    onChange={handleSearchInputChange}
-                    onClick={handleSearchFieldClick}
-                    onFocus={handleSearchFocus}
-                    onBlur={handleSearchBlur}
-                    placeholder={search ? 'Search here' : ''}
-                    className={`w-full ${search ? 'h-[3.5vw] bg-white border border-gray-200' : `h-[3vw] ${getSearchBarStyles()}`} pl-[1.5vw] pr-[3.5vw] 
-                                rounded-full 
-                                text-[1.1vw] font-[SofiaPro] cursor-pointer 
-                                focus:outline-none focus:ring-0 transition-all duration-200`}
-                  />
-
-                  {!searchQuery && !search && (
-                    <div
-                      className={`absolute left-[1.5vw] top-1/2 transform -translate-y-1/2 pointer-events-none text-[1.1vw] font-[SofiaPro] truncate max-w-[14vw] ${getSearchPlaceholderColor()}`}
-                    >
-                      <AnimatedPlaceholder />
-                    </div>
-                  )}
-
-                  {/* Search Icon inside Input */}
-                  <button
-                    type="submit"
-                    className="absolute right-[1.5vw] top-1/2 transform -translate-y-1/2 bg-transparent w-[1.6vw] h-[1.6vw] flex items-center justify-center"
-                  >
-                    <svg
-                      className={`w-[1.2vw] h-[1.2vw] ${getSearchIconColor()}`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </form>
+          )}
+          <Link
+            href="/"
+            className="font-Recoleta font-semibold text-[21px] flex items-center tracking-[0.01em] mob:mt-2 mt-3"
+          >
+            <div className="relative w-[120px] h-[26px]">
+              <Image src={originLogo} alt="Origin Fresh" fill className="object-contain object-left" priority />
             </div>
-
-            {/* 2. Navigation Links */}
-            {!search && (
-              <div className="flex items-center gap-[1vw]">
-                <Link
-                  href="/shop"
-                  className={`h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full text-[1.1vw] font-medium font-[SofiaPro] transition-colors ${
-                    router.pathname.startsWith('/shop')
-                      ? 'bg-primary text-black'
-                      : `hover:bg-gray-100 ${getTextColor()}`
-                  }`}
-                >
-                  Shop All
-                </Link>
-                <Link
-                  href="/about"
-                  className={`h-[2.4vw] px-[2vw] flex items-center justify-center rounded-full text-[1.1vw] font-medium font-[SofiaPro] transition-colors ${
-                    router.pathname === '/about' ? 'bg-primary text-black' : `hover:bg-gray-100 ${getTextColor()}`
-                  }`}
-                >
-                  About Us
-                </Link>
-
-                {/* Stores button explicitely removed */}
-              </div>
-            )}
-
-            {/* 3. Location Selector & Icons */}
-            <div className="flex items-center gap-[1.5vw] ml-auto mr-[2vw]">
-              {/* Location Selector */}
-              {!isMobile && !search && (
-                <button
-                  onClick={handleSelectAddress}
-                  disabled={address.loading}
-                  className={`flex items-center gap-2 px-[1.5vw] py-[0.5vw] rounded-full transition-colors max-w-[200px] ${getLocationButtonStyles()} ${address.loading ? 'opacity-50 pointer-events-none' : ''}`}
-                  aria-label="Select Delivery Address"
-                >
-                  <svg
-                    className={`w-[1vw] h-[1vw] flex-shrink-0 ${getLocationIconColor()}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                  {address.defaultAddress?.address_name ? (
-                    <div className="flex-1 overflow-hidden relative">
-                      <div className={`animate-marquee whitespace-nowrap text-[1vw] ${getTextColor()}`}>
-                        <span className="font-bold">{address.defaultAddress?.address_name}</span>
-                        <span className="mx-[0.5vw]">•</span>
-                        <span className="font-light">{address.defaultAddress.address}</span>
-                        {/* Duplicate for seamless loop */}
-                        <span className="font-bold ml-[2vw]">{address.defaultAddress?.address_name}</span>
-                        <span className="mx-[0.5vw]">•</span>
-                        <span className="font-light">{address.defaultAddress.address}</span>
-                      </div>
-                    </div>
-                  ) : (
-                    <span className={`font-bold text-[1vw] whitespace-nowrap ${getTextColor()}`}>Select Address</span>
-                  )}
-                  <svg
-                    className={`w-[0.6vw] h-[0.6vw] flex-shrink-0 ${getDropdownIconColor()}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-              )}
-
-              {/* Account Icon */}
-              {loginDetails.isLogin ? (
-                <button onClick={openAccount}>
-                  <div className="w-[1.5vw] h-[1.5vw] relative">
-                    <Image src={userIcon} alt="account icon" fill className={`object-contain ${getIconFilter()}`} />
-                  </div>
-                </button>
-              ) : (
-                <button onClick={handleProfileMenuOpen}>
-                  <div className="w-[1.5vw] h-[1.5vw] relative">
-                    <Image src={userIcon} alt="account icon" fill className={`object-contain ${getIconFilter()}`} />
-                  </div>
-                </button>
-              )}
-
-              {/* Separator */}
-              <div className={`h-[1.5vw] w-[1px] ${getSeparatorColor()}`}></div>
-
-              {/* Cart Icon */}
-              <button onClick={handleCartOpen} className="relative">
-                {cartItemCount > 0 && (
-                  <div className="absolute top-[-0.5vw] -right-[0.5vw] w-[1.1vw] h-[1.1vw] text-[0.7vw] rounded-full bg-[#27ae60] border border-white text-white font-[sofiaPro] flex items-center justify-center z-[10]">
-                    {cartItemCount > 99 ? '99+' : cartItemCount}
-                  </div>
-                )}
-                <div className="relative w-[1.5vw] h-[1.5vw]">
-                  <Image src={cartIcon} alt="cart-icon" fill className={`object-contain ${getIconFilter()}`} />
-                </div>
-              </button>
-            </div>
-          </div>
+          </Link>
         </div>
 
-        {/* Mobile Search Bar Row */}
-        {isMobile && (
-          <div className="mt-[3vw] px-[0vw]">
-            <form onSubmit={handleSearchSubmit} className="relative">
-              <div className="relative ">
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  value={searchQuery}
-                  onChange={handleSearchInputChange}
-                  onClick={handleSearchFieldClick}
-                  onFocus={handleSearchFocus}
-                  onBlur={handleSearchBlur}
-                  className={`w-full h-[12vw] pl-[12vw] pr-[4vw] rounded-full text-[4vw] font-[SofiaPro] transition-all duration-300 outline-none ${getSearchBarStyles()}`}
-                />
-                {!searchQuery && (
-                  <div
-                    className={`absolute left-[12vw] top-1/2 -translate-y-1/2  pointer-events-none text-[4vw] font-[SofiaPro] ${getSearchPlaceholderColor()}`}
-                  >
-                    <AnimatedPlaceholder />
-                  </div>
-                )}
-                <div className="absolute left-[4vw] top-1/2 -translate-y-1/2">
-                  <svg
-                    className={`w-[5vw] h-[5vw] ${getSearchIconColor()}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </form>
+        {/* Desktop Nav Links */}
+        {!isMobile && !search && (
+          <nav className="flex items-center gap-[34px] text-[14px] font-semibold text-ink-soft absolute left-1/2 -translate-x-1/2">
+            <Link
+              href="/"
+              className={`relative py-1 after:absolute after:bottom-[-2px] after:left-0 after:h-[2px] after:bg-brand-yellow-400 after:transition-all after:duration-300 ${router.pathname === '/' ? 'after:right-0' : 'after:right-[100%] hover:after:right-0'}`}
+            >
+              Home
+            </Link>
+            <Link
+              href="/shop"
+              className={`relative py-1 after:absolute after:bottom-[-2px] after:left-0 after:h-[2px] after:bg-brand-yellow-400 after:transition-all after:duration-300 ${router.pathname === '/shop' ? 'after:right-0' : 'after:right-[100%] hover:after:right-0'}`}
+            >
+              Shop
+            </Link>
+            <Link
+              href="/about"
+              className={`relative py-1 after:absolute after:bottom-[-2px] after:left-0 after:h-[2px] after:bg-brand-yellow-400 after:transition-all after:duration-300 ${router.pathname === '/about' ? 'after:right-0' : 'after:right-[100%] hover:after:right-0'}`}
+            >
+              About
+            </Link>
+            <Link
+              href="/events"
+              className={`relative py-1 after:absolute after:bottom-[-2px] after:left-0 after:h-[2px] after:bg-brand-yellow-400 after:transition-all after:duration-300 ${router.pathname === '/events' ? 'after:right-0' : 'after:right-[100%] hover:after:right-0'}`}
+            >
+              Events
+            </Link>
+          </nav>
+        )}
+
+        {/* Desktop Search Bar (only on search page) */}
+        {!isMobile && search && (
+          <div className="flex-1 flex justify-center max-w-[600px] mx-auto px-4 relative">
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={handleSearchInputChange}
+              className="w-full bg-white border border-[rgba(25,23,18,0.12)] rounded-full py-[12px] pl-[44px] pr-[20px] focus:outline-none focus:border-black font-Recoleta text-[16px] text-black shadow-sm"
+            />
+            <div className="absolute left-[28px] top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            {searchQuery && (
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  if (search) setCurrentSearchQuery('');
+                  debouncedSearch('');
+                  searchInputRef.current?.focus();
+                }}
+                className="absolute right-[28px] top-1/2 -translate-y-1/2 text-gray-400 hover:text-black transition-colors"
+                aria-label="Clear search"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            )}
           </div>
         )}
+
+        {/* Right Actions */}
+        <div className="flex items-center gap-[14px]">
+          {/* Desktop Address Selector */}
+          {!isMobile && (
+            <button
+              onClick={handleSelectAddress}
+              disabled={address.loading}
+              className={`flex items-center gap-[6px] px-3 py-1.5 rounded-full bg-cream hover:bg-[#F2EEE4] transition-colors border border-black/5 ${address.loading ? 'opacity-50 pointer-events-none' : ''}`}
+              aria-label="Select Delivery Address"
+            >
+              <MapPin size={16} className="text-brand-yellow-500" />
+              <span className="truncate max-w-[120px] text-[13px] font-semibold text-ink">
+                {address.defaultAddress?.address_name || 'Select Location'}
+              </span>
+              <ChevronDown size={14} className="text-gray-500" />
+            </button>
+          )}
+
+          {/* Search Icon */}
+          {!search && (
+            <button
+              onClick={handleSearchFieldClick}
+              className="relative w-[22px] h-[22px] text-ink hover:text-brand-yellow-400 transition-colors ml-2"
+            >
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </button>
+          )}
+
+          {/* User Account */}
+          <button
+            onClick={isLoggedIn ? openAccount : handleProfileMenuOpen}
+            className="relative w-[22px] h-[22px] ml-[4px]"
+          >
+            <Image src={userIcon} alt="Account" fill className="object-contain" />
+          </button>
+
+          {/* Cart */}
+          <button onClick={handleCartOpen} className="relative w-[24px] h-[24px] ml-[4px]">
+            {cartItemCount > 0 && (
+              <div className="absolute top-[-6px] right-[-8px] w-[16px] h-[16px] text-[10px] rounded-full bg-[#27ae60] text-white flex items-center justify-center z-10 font-bold border border-white">
+                {cartItemCount > 99 ? '99+' : cartItemCount}
+              </div>
+            )}
+            <Image src={cartIcon} alt="Cart" fill className="object-contain" />
+          </button>
+        </div>
       </div>
 
-      {isMobile && cartItemCount > 0 && (
-        <button
-          onClick={handleCartOpen}
-          className={`fixed ${
-            (!loginDetails.isLogin || (couponsState.coupons && couponsState.coupons.length > 0)) &&
-            !['/cart', '/checkout'].some((p) => router.pathname.startsWith(p))
-              ? 'bottom-[22vw]'
-              : 'bottom-[5vw]'
-          } right-[5vw] z-[99] bg-white p-[4vw] rounded-full shadow-xl border border-gray-200 transition-all duration-300`}
-        >
-          <div className="absolute top-[-2vw] left-[7vw] w-[6vw] h-[6vw] text-[3vw] rounded-full bg-secondary-300 z-[1] text-white flex items-center justify-center">
-            {cartItemCount > 99 ? '99+' : cartItemCount}
-          </div>
-          <div className="relative w-[6vw] h-[6vw]">
-            <Image src={cartIcon} alt="cart-icon" fill className="object-contain" />
-          </div>
-        </button>
+      {/* Mobile Search Bar Row (if mobile and search is needed, or just let them click search icon) */}
+      {isMobile && search && (
+        <div className="px-[5vw] pb-[3vw]">
+          <form onSubmit={handleSearchSubmit} className="relative">
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchQuery}
+              onChange={handleSearchInputChange}
+              onClick={handleSearchFieldClick}
+              onFocus={handleSearchFocus}
+              onBlur={handleSearchBlur}
+              className="w-full h-[12vw] pl-[12vw] pr-[4vw] rounded-full text-[4vw] font-SofiaPro bg-white border border-black/10 outline-none"
+            />
+            {!searchQuery && (
+              <div className="absolute left-[12vw] top-1/2 -translate-y-1/2 pointer-events-none text-[4vw] text-gray-400 font-SofiaPro">
+                <AnimatedPlaceholder />
+              </div>
+            )}
+            <div className="absolute left-[4vw] top-1/2 -translate-y-1/2 text-gray-400">
+              <svg className="w-[5vw] h-[5vw]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+          </form>
+        </div>
       )}
 
+      {/* Mobile Drawer & Submenus */}
       <MobileDrawer
         drawerOpen={drawerOpen}
         handleMobileMenuOpen={() => setDrawerOpen(!drawerOpen)}
@@ -672,7 +554,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
               />
             )
         )}
-    </div>
+    </header>
   );
 };
 

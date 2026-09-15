@@ -1,16 +1,8 @@
 @import './sofia-style.css';
 @import './stinger-style.css';
 @import './recoleta.css';
+@import './revamp-styles.css';
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: 'Recoleta', sans-serif !important;
-  font-weight: 600 !important;
-}
 
 /* @import './SofiaPro-style.css'; */
 
@@ -196,7 +188,6 @@ div[style*='animation: scroll'] {
 
 html,
 body {
-  overflow-x: hidden;
   touch-action: manipulation;
 }
 
@@ -242,4 +233,83 @@ body {
 
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+/* ============================================================
+   ORIGIN FRESH REVAMP — Design System Utilities
+   ============================================================ */
+@layer components {
+  .eyebrow {
+    @apply font-SofiaPro font-bold text-[12px] tracking-[0.14em] uppercase text-brand-yellow-600 inline-flex items-center gap-[10px] mb-[18px];
+  }
+  .eyebrow::before {
+    content: '';
+    @apply w-[28px] h-[1px] bg-current;
+  }
+  .section-dark .eyebrow, .texture-ink .eyebrow { @apply text-brand-yellow-200; }
+
+  .h-xl { @apply text-[clamp(40px,6.4vw,84px)] font-Recoleta font-medium leading-[1.08] m-0 tracking-[-0.01em]; }
+  .h-lg { @apply text-[clamp(32px,4.4vw,56px)] font-Recoleta font-medium leading-[1.08] m-0 tracking-[-0.01em]; }
+  .h-md { @apply text-[clamp(24px,3vw,36px)] font-Recoleta font-medium leading-[1.08] m-0 tracking-[-0.01em]; }
+  .h-sm { @apply text-[clamp(19px,2.1vw,24px)] font-Recoleta font-medium leading-[1.08] m-0 tracking-[-0.01em]; }
+
+  .lede {
+    @apply text-[clamp(17px,1.6vw,20px)] text-og-grey max-w-[640px] leading-[1.6];
+  }
+  .texture-ink .lede, .section-dark .lede { color: rgba(250, 246, 236, 0.7); }
+
+  .body-copy {
+    @apply text-[16px] text-ink-soft max-w-[620px] leading-[1.7];
+  }
+  .texture-ink .body-copy { color: rgba(250, 246, 236, 0.82); }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-[10px] py-[15px] px-[30px] rounded-full font-SofiaPro font-semibold text-[14px] tracking-[0.02em] border border-transparent transition-all duration-300 ease-in-out whitespace-nowrap;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary { @apply bg-ink text-cream; }
+  .btn-primary:hover { @apply bg-brand-yellow-300 text-ink; }
+  .btn-light { @apply bg-cream text-ink; }
+  .btn-light:hover { @apply bg-ink text-cream; }
+  .btn-outline { @apply bg-transparent border-current; }
+  .btn-outline:hover { @apply bg-ink text-cream border-ink; }
+  .btn-yellow { @apply bg-brand-yellow-200 text-ink; }
+  .btn-yellow:hover { @apply bg-ink text-brand-yellow-200; }
+
+  .texture-cream { @apply bg-cream; }
+  .texture-paper { @apply bg-paper; }
+  .texture-ink { @apply bg-ink text-cream; }
+  .texture-yellow {
+    background: linear-gradient(135deg, theme('colors.brand-yellow.200'), theme('colors.brand-yellow.500'));
+    @apply text-ink;
+  }
+  
+  .section-pad { padding: clamp(64px, 9vw, 132px) 0; }
+  .section-pad-sm { padding: clamp(40px, 6vw, 72px) 0; }
+  .section-pad--tight-b { padding-bottom: clamp(24px, 3vw, 40px); }
+  .section-pad--tight-t { padding-top: clamp(24px, 3vw, 40px); }
+  .section-pad-sm--tight-t { padding-top: clamp(16px, 2vw, 28px); }
+  .section-pad-sm--tight-b { padding-bottom: clamp(16px, 2vw, 28px); }
+  
+  .wrap {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding-left: clamp(24px, 5vw, 72px);
+    padding-right: clamp(24px, 5vw, 72px);
+  }
+}
+
+@layer utilities {
+  .animate-fade-in-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .animate-fade-in-up.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .delay-100 { transition-delay: 100ms; }
+  .delay-200 { transition-delay: 200ms; }
+  .delay-300 { transition-delay: 300ms; }
 }

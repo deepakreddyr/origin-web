@@ -9,9 +9,9 @@ const CardsWrapper = () => {
   if (products.isProductListLoading) return <ProductCardLoader />;
 
   return (
-    <div className="grid grid-cols-4 md:grid-cols-4 sm:grid-cols-3 mob:grid-cols-2 gap-[3.5vw] md:gap-[5vw] mob:gap-[5vw] w-full justify-items-center">
+    <div className="grid grid-cols-4 md:grid-cols-4 sm:grid-cols-3 mob:grid-cols-2 gap-[3.5vw] md:gap-[5vw] mob:gap-[5vw] w-full">
       {products.productsList?.map((item: any) => (
-        <div key={item.id}>
+        <div key={item.id} className="w-full h-full">
           <ItemCard itemDetails={item} />
         </div>
       ))}

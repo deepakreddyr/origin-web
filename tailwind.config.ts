@@ -10,8 +10,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        SofiaPro: ['"Sofia Pro"'],
-        Stinger: ['"Stinger"']
+        SofiaPro: ['"SofiaPro"'],
+        Stinger: ['"Stinger"'],
+        Recoleta: ['"Recoleta"', 'Georgia', 'serif']
       },
       colors: {
         danger: '#C70000',
@@ -49,6 +50,27 @@ const config: Config = {
           'op-30': '#231F204d',
           'op-80': '#231F20CC',
           'op-70': '#231F20B2'
+        },
+        'brand-yellow': {
+          100: '#f9db5a',
+          200: '#ffdd00',
+          300: '#ffd000',
+          400: '#fac510',
+          500: '#febe10',
+          600: '#fbab18'
+        },
+        ink: {
+          DEFAULT: '#191712',
+          soft: '#2c281f'
+        },
+        cream: {
+          DEFAULT: '#faf6ec',
+          dim: '#f3ecdc'
+        },
+        paper: '#fffdf8',
+        'og-grey': {
+          DEFAULT: '#6b6558',
+          light: '#a39d8c'
         }
       },
       boxShadow: {
@@ -75,12 +97,17 @@ const config: Config = {
         noise: "url('/assets/noise-texture.png')"
       },
       animation: {
-        'infinite-scroll': 'infinite-scroll 50s linear infinite'
+        'infinite-scroll': 'infinite-scroll 50s linear infinite',
+        'marquee-left': 'marquee-left var(--duration, 30s) linear infinite'
       },
       keyframes: {
         'infinite-scroll': {
           from: { transform: 'translateX(0)' },
           to: { transform: 'translateX(-100%)' }
+        },
+        'marquee-left': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' }
         }
       }
     }

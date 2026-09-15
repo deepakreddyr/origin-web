@@ -1,53 +1,41 @@
-import Commitment from '@/components/about/Commitment';
-import FarmDetails from '@/components/about/FarmDetails';
-import Handpicked from '@/components/about/Handpicked';
-import OriginOfFresh from '@/components/about/OriginOfFresh';
-import Hero from '@/components/about/Hero';
-import ScrollReveal from '@/components/shared/ScrollReveal';
+import React, { useEffect } from 'react';
 import Layout from '@/components/Layout';
-import { GetServerSideProps } from 'next';
-import React, { useEffect, useState } from 'react';
-import CategorySection from '@/components/ShopV2/CategorySection';
-import { getAddressAndStoreId } from '@/utilities/utils';
-import { protectedUrl, unprotectedUrl } from '@/url';
-import { setIsShopCategoriesFetched, setShopCategories } from '@/store/slice/shopCategoriesSlice';
-import { useDispatch } from 'react-redux';
-import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import CustomHead from '@/components/shared/CustomHead';
+import { GetServerSideProps } from 'next';
+
+import AboutHeroBanner from '@/components/RevampedAbout/AboutHeroBanner';
+import AboutStatement from '@/components/RevampedAbout/AboutStatement';
+import AboutFarmers from '@/components/RevampedAbout/AboutFarmers';
+import AboutStores from '@/components/RevampedAbout/AboutStores';
+import AboutHowItWorks from '@/components/RevampedAbout/AboutHowItWorks';
+import AboutValues from '@/components/RevampedAbout/AboutValues';
+import AboutWhyChooseUs from '@/components/RevampedAbout/AboutWhyChooseUs';
+import AboutClosingBanner from '@/components/RevampedAbout/AboutClosingBanner';
 
 const AboutUsPage = (props: any) => {
   const { mainMenuItems, footerData } = props;
-  const [loading, setLoading] = useState(true);
 
-  const dispatch = useDispatch();
-  const getDataFromApi = useGetDataFromApi();
-
+  // Add scroll-reveal effect for all components
   useEffect(() => {
-    const token = localStorage.getItem('user_token');
-    const addressFromLs = getAddressAndStoreId();
-    let apiUrl;
-    let additionalHeaders = {};
-    if (token) {
-      apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getShopDetails'];
-      if (addressFromLs)
-        additionalHeaders = {
-          'store-id': addressFromLs.store_id
-        };
-    } else {
-      apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['getShopDetails'];
-    }
-    const successHandler = (data: any) => {
-      dispatch(setShopCategories(data?.data));
-      dispatch(setIsShopCategoriesFetched(true));
-      setLoading(false);
-    };
-    const failureHandler = (data: any) => {
-      dispatch(setShopCategories([]));
-      dispatch(setIsShopCategoriesFetched(true));
-      setLoading(false);
-    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
 
-    getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+    // Slight delay to ensure DOM is painted
+    setTimeout(() => {
+      document
+        .querySelectorAll('[data-reveal], [data-reveal="true"], .animate-fade-in-up')
+        .forEach((el) => observer.observe(el));
+    }, 100);
+
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -56,23 +44,21 @@ const AboutUsPage = (props: any) => {
         title="About Us | Origin Fresh"
         description="Learn about our commitment to bringing fresh, high-quality produce to your table. We focus on sustainability and quality."
       />
-      <div className="">
-        <Hero />
-        <ScrollReveal direction="up" delay={0}>
-          <Commitment />
-        </ScrollReveal>
-        <ScrollReveal direction="up" delay={0}>
-          <Handpicked />
-        </ScrollReveal>
-        <ScrollReveal direction="up" delay={0}>
-          <OriginOfFresh />
-        </ScrollReveal>
-        {/* <FarmDetails /> */}
-        {/* <div className="px-[10vw] pb-[10vw] mob:px-[4vw] mob:pt-[8vw] ">{!loading && <CategorySection />}</div> */}
+
+      <div className="flex flex-col w-full bg-[#fffdf8]">
+        <AboutHeroBanner />
+        <AboutStatement />
+        <AboutFarmers />
+        <AboutStores />
+        <AboutHowItWorks />
+        <AboutValues />
+        <AboutWhyChooseUs />
+        <AboutClosingBanner />
       </div>
     </Layout>
   );
 };
+
 export const getServerSideProps: GetServerSideProps = async () => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/originApi`);
@@ -86,7 +72,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       }
     };
   } catch (error) {
-    console.error('Error fetching USP card data:', error);
+    console.error('Error fetching API data:', error);
     return {
       props: {
         mainMenuItems: [],
@@ -95,4 +81,5 @@ export const getServerSideProps: GetServerSideProps = async () => {
     };
   }
 };
+
 export default AboutUsPage;

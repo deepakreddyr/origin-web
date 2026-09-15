@@ -13,7 +13,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useAtom } from 'jotai';
 
 import { cartItems, isCartPageIsOpen } from '@/features/CartPage/context/atoms';
-import { setIsHeaderVisible, setTabType, setLoginDetails, setIsFreshLogin } from '@/store/slice/loginSlice';
+import {
+  setIsHeaderVisible,
+  setTabType,
+  setLoginDetails,
+  setIsFreshLogin,
+  setIsSidebarOpen
+} from '@/store/slice/loginSlice';
 import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 import { isAccountIsOpen, profileAtom } from '@/features/AccountPage/context/atoms';
 const clientSideEmotionCache = createEmotionCache();
@@ -22,7 +28,7 @@ import SidebarScreen from '../shared/SidebarScreen';
 import CouponStatusBar from '../shared/CouponStatusBar';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { protectedUrl } from '@/url';
-import { clearPostPaymentItemsinLs, getAddressAndStoreId } from '@/utilities/utils';
+import { clearPostPaymentItemsinLs, getAddressAndStoreId, setRouteSourceToLs } from '@/utilities/utils';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import DownloadAppWrapper from '../downloadApp/DownloadAppWrapper';
 import { useState } from 'react';
@@ -151,6 +157,23 @@ export default function Layout({
     }
   }, [loginDetails.isLogin, loginDetails.isFreshLogin, loginDetails.isSidebarOpen]);
 
+  const handleSelectAddress = () => {
+    dispatch(setIsSidebarOpen(true));
+
+    if (!loginDetails.isLogin) {
+      dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
+      return;
+    }
+
+    setRouteSourceToLs(TabTypeConstant.ACCOUNT_MAIN);
+
+    if (address.loading || (address?.address && address.address.length > 0)) {
+      dispatch(setTabType(TabTypeConstant.SELECT_ADDRESS));
+    } else {
+      dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
+    }
+  };
+
   return (
     <CacheProvider value={clientSideEmotionCache}>
       <ThemeProvider theme={theme}>
@@ -163,8 +186,8 @@ export default function Layout({
           />
         )}
         <SidebarScreen />
-        <main className={`${useTopPadding ? 'pt-[22vw] mob:pt-[35vw] md:pt-[6vw]' : ''}`}>{children}</main>
-        {query.type !== 'app' && <CouponStatusBar />}
+        <main className={`${useTopPadding ? 'pt-[0vw] mob:pt-[0vw] md:pt-[0vw]' : ''}`}>{children}</main>
+        {/* {query.type !== 'app' && <CouponStatusBar />} */}
         {showDownloadApp && (
           <DownloadAppWrapper
             onClose={() => {
@@ -173,6 +196,21 @@ export default function Layout({
             }}
           />
         )}
+
+        {/* Floating Address Pill */}
+        {/* {query.type !== 'app' && (
+          <button
+            onClick={handleSelectAddress}
+            disabled={address.loading}
+            className={`fixed bottom-[24px] left-[24px] z-[90] flex items-center gap-[8px] bg-ink text-brand-yellow-200 px-[18px] py-[10px] rounded-full text-[13px] font-bold shadow-lg transition-transform hover:-translate-y-1 ${address.loading ? 'opacity-50 pointer-events-none' : ''}`}
+            aria-label="Select Delivery Address"
+          >
+            <svg className="w-[14px] h-[14px] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0L6.343 16.657a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            <span className="truncate max-w-[120px] md:max-w-[160px]">{address.defaultAddress?.address_name || 'Select'}</span>
+            <span className="text-[10px]">▼</span>
+          </button>
+        )} */}
+
         {query.type !== 'app' && <Footer footerData={footerData} />}
       </ThemeProvider>
     </CacheProvider>

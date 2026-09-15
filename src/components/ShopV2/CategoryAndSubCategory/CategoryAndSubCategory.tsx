@@ -81,7 +81,7 @@ const CategoryAndSubCategory = (props: Props) => {
   return (
     // <div className="sticky top-0 pt-10 md:pt-[4vw] pb-3 md:pb-[1.2vw] mb-0 px-4 md:p-[1.1vw] flex flex-col gap-3 md:gap-[1.1vw] bg-[#FFF9E5] z-[1]">
     <div
-      className="sticky top-[22vw] md:top-[6.5vw] mb-0 z-[9] bg-white"
+      className="sticky top-[22vw] bg-paper md:top-[6.5vw] mb-0 z-[9]"
       style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)', marginRight: 'calc(-50vw + 50%)' }}
     >
       <div className="w-[80.7vw] mob:w-full mob:px-[4vw] mx-auto pt-4 md:pt-[1.1vw] pb-3 md:pb-[1.2vw] flex flex-col gap-3 md:gap-[1.1vw]">

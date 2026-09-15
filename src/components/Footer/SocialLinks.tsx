@@ -9,38 +9,36 @@ import LinkedInIcon from '/public/assets/icons/linkedinicon.svg';
 
 const SocialLinks = () => {
   return (
-    <Grid item xs={12} className="flex gap-5 sm:gap-6">
+    <div className="flex gap-[16px]">
       <a
         href="https://www.instagram.com/originfresh.in?igsh=ZXYxNnFvYXR4cWd5"
         target="_blank"
         rel="noopener noreferrer"
-        className="rounded-lg p-1"
+        className="rounded-lg p-1 hover:bg-white/10 transition-colors"
       >
-        <Image src={InstagramIcon} alt="Instagram" width={32} height={32} className="w-8 h-8 filter invert" />
+        <Image
+          src={InstagramIcon}
+          alt="Instagram"
+          width={24}
+          height={24}
+          className="w-[24px] h-[24px] filter invert opacity-70 hover:opacity-100 transition-opacity"
+        />
       </a>
       <a
         href="https://www.linkedin.com/company/origin-fresh-tech/"
         target="_blank"
         rel="noopener noreferrer"
-        className="rounded-lg p-1"
-      >
-        <Image src={LinkedInIcon} alt="LinkedIn" width={32} height={32} className="w-8 h-8 filter invert" />
-      </a>
-      {/* <a
-        href="#"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="bg-secondary-200 rounded-lg p-1"
+        className="rounded-lg p-1 hover:bg-white/10 transition-colors"
       >
         <Image
-          src={FacebookIcon}
-          alt="Facebook"
-          width={32}
-          height={32}
-          className="w-8 h-8"
+          src={LinkedInIcon}
+          alt="LinkedIn"
+          width={24}
+          height={24}
+          className="w-[24px] h-[24px] filter invert opacity-70 hover:opacity-100 transition-opacity"
         />
-      </a> */}
-    </Grid>
+      </a>
+    </div>
   );
 };
 

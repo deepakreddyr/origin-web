@@ -51,7 +51,7 @@ export default function Document() {
         </noscript>
         {/* End Meta Pixel */}
       </Head>
-      <body>
+      <body className="antialiased font-Outfit">
         <Main />
         <NextScript />
       </body>

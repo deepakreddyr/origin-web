@@ -225,7 +225,7 @@ const ShopDetails = (props: HomeProps) => {
       />
       {/* <ShopHero /> */}
       {/* <FeatureStrip /> */}
-      <div className="flex flex-col items-center justify-center mob:pt-[25vw] mt-[7vw]">
+      <div className="flex flex-col items-center justify-center pt-2 md:pt-[1vw]">
         <div className="flex flex-col gap-[2.2vw] w-[80.7vw] mob:w-full  mob:px-[4vw] pb-[10vw] relative ">
           {filters.category ? <CategoryAndSubCategory filters={filters} setFilters={setFilters} /> : null}
           {/* {featuredItem && <FeaturedProduct featuredItem={featuredItem} />} */}
