@@ -260,7 +260,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
     return (
       <div className="relative">
         {showMinOrderBanner && (
-          <div className="fixed z-[131] mob:z-[10000] bottom-[15vw] mob:bottom-[42vw] right-[1.1vw] mob:right-[4.1vw] w-[calc(30vw-2.2vw)] mob:w-[calc(100vw-8.2vw)] animate-in slide-in-from-bottom-2 duration-300">
+          <div className="fixed z-[131] mob:z-[10000] bottom-[12vw] mob:bottom-[42vw] right-[1.1vw] mob:right-[4.1vw] w-[calc(30vw-2.2vw)] mob:w-[calc(100vw-8.2vw)] animate-in slide-in-from-bottom-2 duration-300">
             <div className="bg-[#E7F5E9] border border-[#C3E6CB] rounded-[1vw] mob:rounded-[4vw] p-[0.8vw] mob:p-[3vw] shadow-lg mb-2">
               <p className="font-[SofiaPro] font-bold text-[#1B5E20] text-[.83vw] mob:text-[3.2vw] text-center">
                 Add <span className="font-bold text-[#1B5E20]">₹{remainingAmount}</span> more to reach the minimum
