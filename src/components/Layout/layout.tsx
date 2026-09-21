@@ -26,7 +26,7 @@ const clientSideEmotionCache = createEmotionCache();
 import { login as loginAtom } from '@/components/Login/context/atom';
 import SidebarScreen from '../shared/SidebarScreen';
 import CouponStatusBar from '../shared/CouponStatusBar';
-import { addressAtom } from '@/features/Address/context/atoms';
+import { addressAtom, isLocationModalOpen } from '@/features/Address/context/atoms';
 import { protectedUrl } from '@/url';
 import { clearPostPaymentItemsinLs, getAddressAndStoreId, setRouteSourceToLs } from '@/utilities/utils';
 import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
@@ -34,6 +34,8 @@ import DownloadAppWrapper from '../downloadApp/DownloadAppWrapper';
 import { useState } from 'react';
 import { useCartStore } from '@/hooks/useCartStore';
 import { useCartSync } from '@/hooks/useCartSync';
+
+import LocationModal from '../shared/LocationModal/LocationModal';
 
 export default function Layout({
   children,
@@ -57,6 +59,7 @@ export default function Layout({
   const router = useRouter();
   const dispatch = useDispatch();
   const [showDownloadApp, setShowDownloadApp] = useState(false);
+  const [showLocationModal, setShowLocationModal] = useAtom(isLocationModalOpen);
   const { isReady, query } = router;
   const [address, setAddressAtom] = useAtom(addressAtom);
   const [, setCartDetails] = useAtom(cartItems);
@@ -82,6 +85,34 @@ export default function Layout({
       }
     }
     const addressFromLs = getAddressAndStoreId();
+    if (addressFromLs && !address.defaultAddress) {
+      setAddressAtom((prev) => ({
+        ...prev,
+        defaultAddress: addressFromLs
+      }));
+    }
+
+    // Show Location Modal on first visit if no address/store is set
+    // Force it on specific high-intent routes (PLP, PDP, Mango, Stores) if address is incomplete
+    const isPlpOrPdp =
+      router.pathname.includes('[cid]') ||
+      router.pathname.includes('[id]') ||
+      router.pathname.includes('[itemName]') ||
+      router.pathname.includes('[slug]');
+    const isMango = router.pathname.startsWith('/mango');
+    const isIncompleteAddress = !addressFromLs || !addressFromLs.address_name;
+
+    if (
+      isReady &&
+      isIncompleteAddress &&
+      (isPlpOrPdp ||
+        isMango ||
+        router.pathname === '/' ||
+        router.pathname.startsWith('/shop') ||
+        router.pathname.startsWith('/stores'))
+    ) {
+      setShowLocationModal(true);
+    }
 
     const userToken = localStorage.getItem('user_token');
     if (userToken && addressFromLs) {
@@ -115,6 +146,20 @@ export default function Layout({
       return () => clearTimeout(timer);
     }
   }, [setCartDetails, setAddressAtom, setLoginInfo, setProfileAtom, isReady, query.type]);
+
+  const handleLocationSelect = (locationData: any) => {
+    localStorage.setItem('selected_address', JSON.stringify(locationData));
+    localStorage.setItem('store-id', locationData.store_id);
+
+    // Update atom to reflect changes in UI (Header, etc.)
+    setAddressAtom((prev) => ({
+      ...prev,
+      defaultAddress: locationData
+    }));
+
+    // Trigger a refresh or re-fetch of data
+    window.location.reload();
+  };
 
   useEffect(() => {
     if (isReady) {
@@ -210,7 +255,12 @@ export default function Layout({
             <span className="text-[10px]">▼</span>
           </button>
         )} */}
-
+        <LocationModal
+          open={showLocationModal}
+          onClose={() => setShowLocationModal(false)}
+          onLocationSelect={handleLocationSelect}
+          isClosable={!!getAddressAndStoreId()}
+        />
         {query.type !== 'app' && <Footer footerData={footerData} />}
       </ThemeProvider>
     </CacheProvider>

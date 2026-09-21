@@ -233,7 +233,7 @@ const Cart = () => {
   // Fetch checkout details whenever the cart opens or items change, so that any
   // backend checkout validations run (even if the timeslot sheet is skipped).
   useEffect(() => {
-    if (!loginDetails.isSidebarOpen) return;
+    if (!loginDetails.isSidebarOpen || !loginDetails.isLogin) return;
 
     const fetchCheckoutDetailsForValidation = () => {
       const addressFromLs = getAddressAndStoreId();
@@ -267,7 +267,8 @@ const Cart = () => {
     cart.items.length,
     dispatch,
     getDataFromApi,
-    subscriptionCart.totalQuantity
+    subscriptionCart.totalQuantity,
+    loginDetails.isLogin
   ]);
 
   useEffect(() => {

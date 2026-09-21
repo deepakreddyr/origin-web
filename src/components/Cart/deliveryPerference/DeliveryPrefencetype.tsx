@@ -29,6 +29,7 @@ const DeliveryPrefencetype = ({
   const [activeDeliveryType, setActiveDeliveryType] = useState<DeliveryType>(undefined);
   const dispatch = useDispatch();
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
+  const loginDetails = useSelector((state: any) => state.loginDetails);
 
   const fetchCheckoutDetails = () => {
     const addressFromLs = getAddressAndStoreId();
@@ -57,8 +58,9 @@ const DeliveryPrefencetype = ({
   };
 
   useEffect(() => {
+    if (!loginDetails.isLogin) return;
     fetchCheckoutDetails();
-  }, [isSubscription]);
+  }, [cart?.items, loginDetails.isLogin, isSubscription]);
 
   useEffect(() => {
     if (loading) {

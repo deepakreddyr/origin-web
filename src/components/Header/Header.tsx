@@ -10,7 +10,7 @@ import cartIcon from '/public/assets/icons/cartIcon.png';
 
 // --- NEW IMPORTS REQUIRED FOR LOCATION FUNCTIONALITY ---
 import { useAtom } from 'jotai';
-import { addressAtom } from '@/features/Address/context/atoms';
+import { addressAtom, isLocationModalOpen } from '@/features/Address/context/atoms';
 import { profileAtom } from '@/features/AccountPage/context/atoms';
 import { couponList as couponListAtom } from '@/features/CouponPage/context/atoms';
 import whiteDropdownIcon from '/public/assets/images/whiteDropdown.png';
@@ -107,6 +107,7 @@ const Header = ({ mainMenuItems, isHeaderSticky = true, search = false, transpar
   const [address] = useAtom(addressAtom);
   const [profile] = useAtom(profileAtom);
   const [couponsState] = useAtom(couponListAtom);
+  const [, setIsLocationModalOpen] = useAtom(isLocationModalOpen);
   // --------------------------
 
   const router = useRouter();
@@ -231,13 +232,12 @@ const Header = ({ mainMenuItems, isHeaderSticky = true, search = false, transpar
   };
 
   const handleSelectAddress = () => {
-    dispatch(setIsSidebarOpen(true));
-
     if (!loginDetails.isLogin) {
-      dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
+      setIsLocationModalOpen(true);
       return;
     }
 
+    dispatch(setIsSidebarOpen(true));
     setRouteSourceToLs(TabTypeConstant.ACCOUNT_MAIN);
 
     // If addresses are still loading from launch API, default to SELECT_ADDRESS
@@ -447,13 +447,14 @@ const Header = ({ mainMenuItems, isHeaderSticky = true, search = false, transpar
           {/* Desktop Address Selector */}
           {!isMobile && (
             <button
+              id="location-header-button"
               onClick={handleSelectAddress}
               disabled={address.loading}
               className={`flex items-center gap-[6px] px-3 py-1.5 rounded-full bg-cream hover:bg-[#F2EEE4] transition-colors border border-black/5 ${address.loading ? 'opacity-50 pointer-events-none' : ''}`}
               aria-label="Select Delivery Address"
             >
               <MapPin size={16} className="text-brand-yellow-500" />
-              <span className="truncate max-w-[120px] text-[13px] font-semibold text-ink">
+              <span className="truncate max-w-[180px] text-[13px] font-semibold text-ink">
                 {address.defaultAddress?.address_name || 'Select Location'}
               </span>
               <ChevronDown size={14} className="text-gray-500" />
