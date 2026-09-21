@@ -34,7 +34,8 @@ export const useCartStore = () => {
         setFreeItems: mangoCartActions.setMangoFreeItems,
         addFreeItemToCart: mangoCartActions.addFreeMangoItemToCart,
         removeFreeItemFromCart: mangoCartActions.removeFreeMangoItemFromCart,
-        setMaxQuantityError: mangoCartActions.setMangoMaxQuantityError
+        setMaxQuantityError: mangoCartActions.setMangoMaxQuantityError,
+        setInstantMessage: mangoCartActions.setMangoInstantMessage
       }
     : {
         addItemToCart: cartActions.addItemToCart,
@@ -58,7 +59,8 @@ export const useCartStore = () => {
         setFreeItems: cartActions.setFreeItems,
         addFreeItemToCart: cartActions.addFreeItemToCart,
         removeFreeItemFromCart: cartActions.removeFreeItemFromCart,
-        setMaxQuantityError: cartActions.setMaxQuantityError
+        setMaxQuantityError: cartActions.setMaxQuantityError,
+        setInstantMessage: cartActions.setInstantMessage
       };
 
   return {

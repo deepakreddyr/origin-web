@@ -153,7 +153,9 @@ const Cart = () => {
     const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
 
     const successHandler = (data: any) => {
-      dispatch(setCartItems(data.data));
+      if (loginDetails.isLogin) {
+        dispatch(setCartItems(data.data));
+      }
       dispatch(setCartMinimum(data.cart_minimum));
       setBillDetails({
         cart_minimum: data.cart_minimum,
@@ -187,6 +189,9 @@ const Cart = () => {
       } else {
         dispatch(setFreeItems({ freeItems: [], freeItemsMov: 0 }));
       }
+
+      // Store instant_message if available
+      dispatch(actions.setInstantMessage(data.instant_message || null));
     };
 
     const failureHandler = (err: any) => {
@@ -204,8 +209,13 @@ const Cart = () => {
     const cartItemFromLs = localStorage.getItem(lsKey);
     if (cartItemFromLs) {
       const cartItemsParsed = JSON.parse(cartItemFromLs);
-      if (cartItemsParsed.length === 0) return;
-      sendItemsToApi();
+      if (cartItemsParsed.length > 0) {
+        if (loginDetails.isLogin) {
+          sendItemsToApi();
+        } else {
+          fetchCartItemsFromApi();
+        }
+      }
     } else {
       fetchCartItemsFromApi();
     }
@@ -234,6 +244,7 @@ const Cart = () => {
   // backend checkout validations run (even if the timeslot sheet is skipped).
   useEffect(() => {
     if (!loginDetails.isSidebarOpen) return;
+    if (!loginDetails.user) return; // Skip calling checkout API for non-logged in (skip login) users
 
     const fetchCheckoutDetailsForValidation = () => {
       const addressFromLs = getAddressAndStoreId();
@@ -263,6 +274,7 @@ const Cart = () => {
     fetchCheckoutDetailsForValidation();
   }, [
     loginDetails.isSidebarOpen,
+    loginDetails.user,
     isSubscription,
     cart.items.length,
     dispatch,

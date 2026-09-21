@@ -53,6 +53,8 @@ export const useCartSync = () => {
       } else {
         dispatch(setFreeItems({ freeItems: [], freeItemsMov: 0 }));
       }
+
+      dispatch(actions.setInstantMessage(data.instant_message || null));
     };
 
     if (addressFromLs) getDataFromApi(apiUrl, successHandler, () => {}, additionalHeaders);

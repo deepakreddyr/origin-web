@@ -6,7 +6,7 @@ import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
 import { ADDRESS_ICON_MAP } from '@/utilities/maps';
 import Image from 'next/image';
-import { ChevronRight, ChevronDown } from 'lucide-react';
+import { ChevronRight, ChevronDown, ChevronUp } from 'lucide-react';
 import usePaymentHook from '@/features/PaymentPage/hooks/usePaymentHook';
 interface OrderRestrictionData {
   title: string;
@@ -260,7 +260,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
     return (
       <div className="relative">
         {showMinOrderBanner && (
-          <div className="fixed z-[131] mob:z-[10000] bottom-[10vw] mob:bottom-[28vw] right-[1.1vw] mob:right-[4.1vw] w-[calc(30vw-2.2vw)] mob:w-[calc(100vw-8.2vw)] animate-in slide-in-from-bottom-2 duration-300">
+          <div className="fixed z-[131] mob:z-[10000] bottom-[15vw] mob:bottom-[42vw] right-[1.1vw] mob:right-[4.1vw] w-[calc(30vw-2.2vw)] mob:w-[calc(100vw-8.2vw)] animate-in slide-in-from-bottom-2 duration-300">
             <div className="bg-[#E7F5E9] border border-[#C3E6CB] rounded-[1vw] mob:rounded-[4vw] p-[0.8vw] mob:p-[3vw] shadow-lg mb-2">
               <p className="font-[SofiaPro] font-bold text-[#1B5E20] text-[.83vw] mob:text-[3.2vw] text-center">
                 Add <span className="font-bold text-[#1B5E20]">₹{remainingAmount}</span> more to reach the minimum
@@ -272,21 +272,21 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
 
         <div
           style={{ transform: 'translateZ(0)' }}
-          className="fixed flex flex-col justify-between bg-[#fac510] font-[SofiaPro] z-[130] mob:z-[9999] bottom-[1.67vw] mob:bottom-[5vw] right-[1.1vw] mob:right-[4.1vw] w-[calc(30vw-2.2vw)] mob:w-[calc(100vw-8.2vw)] p-[0.7vw] mob:p-[3vw] rounded-[1.1vw] mob:rounded-[4vw] shadow-xl transition-all duration-300 border border-black"
+          className="fixed flex flex-col z-[130] mob:z-[9999] bottom-0 right-0 w-[30vw] mob:w-[100vw]"
         >
           {/* Top Half: Address */}
-          <div className="flex items-center justify-between pb-[1vw] mob:pb-[3vw] border-b border-black/10">
-            <div className="flex items-center gap-[0.5vw] mob:gap-[2vw]">
+          <div className="flex items-center justify-between px-[1vw] mob:px-[3.5vw] py-[0.8vw] mob:py-[2.5vw] border-t border-[#00000080] bg-white">
+            <div className="flex items-start gap-[0.8vw] mob:gap-[2.5vw]">
               {addressIcon && (
-                <div className="w-[1.5vw] h-[1.5vw] mob:w-[6vw] mob:h-[6vw] relative shrink-0">
+                <div className="w-[1.6vw] h-[1.6vw] mob:w-[6.5vw] mob:h-[6.5vw] relative shrink-0 mt-[0.2vw] mob:mt-[0.5vw]">
                   <Image src={addressIcon} fill className="object-contain" alt="home-icon" />
                 </div>
               )}
-              <div className="flex flex-col overflow-hidden max-w-[15vw] mob:max-w-[50vw]">
-                <p className="font-[SofiaPro] text-[0.9vw] mob:text-[3.5vw] font-bold text-black truncate">
-                  Delivering to {defaultAddress?.address_name || 'Home'}
+              <div className="flex flex-col overflow-hidden max-w-[18vw] mob:max-w-[55vw]">
+                <p className="font-[SofiaPro] text-[1.1vw] mob:text-[4.2vw] font-bold text-[#1F2937] truncate leading-tight">
+                  {defaultAddress?.address_name || 'Home'}
                 </p>
-                <p className="font-[SofiaPro] text-[0.8vw] mob:text-[3vw] text-black/70 truncate">
+                <p className="font-[SofiaPro] text-[0.8vw] mob:text-[3.2vw] text-[#6B7280] truncate mt-[0.1vw] mob:mt-[0.5vw]">
                   {defaultAddress?.address || 'Set your delivery location'}
                 </p>
               </div>
@@ -295,43 +295,78 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
               onClick={() => {
                 dispatch(actions.setCartTabType(TabTypeConstant.CART_ADDRESS_LIST));
               }}
-              className="font-[SofiaPro] text-[0.9vw] mob:text-[3.5vw] font-medium text-[#1B5E20] underline hover:opacity-80 shrink-0"
+              className="font-[SofiaPro] text-[1vw] mob:text-[3.5vw] font-normal text-[#059669] underline hover:opacity-80 shrink-0 self-start mt-[1vw]"
             >
               Change
             </button>
           </div>
 
+          {/* Red banner ETA */}
+          {cart.instant_message && (
+            <div className="w-full bg-[#FFF0FF] text-center border-t border-b border-black/5">
+              <span className="text-[#98449A] font-[SofiaPro] font-medium text-[0.9vw] mob:text-[3.2vw]">
+                {cart.instant_message}
+              </span>
+            </div>
+          )}
+
           {/* Bottom Half: Payment and Place Order */}
-          <div className="flex items-center justify-between pt-[0.5vw] mob:pt-[3vw]">
+          <div className="flex items-center justify-between px-[1vw] mob:px-[3.5vw] py-[1.2vw] mob:py-[4vw] bg-white">
             <div
-              className="flex flex-col cursor-pointer"
+              className="flex flex-col cursor-pointer gap-[0.3vw] mob:gap-[1vw]"
               onClick={() => dispatch(actions.setCartTabType(TabTypeConstant.PAYMENT_SELECTION))}
             >
-              <p className="flex items-center pb-1 gap-[0.2vw] mob:gap-[0.5vw] font-[SofiaPro] text-[0.8vw] mob:text-[3vw] text-black font-medium">
-                Paying With <ChevronDown className="w-[0.8vw] h-[0.8vw] mob:w-[3vw] mob:h-[3vw]" strokeWidth={3} />
+              <p className="flex items-center gap-[0.2vw] mob:gap-[0.5vw] font-[SofiaPro] text-[1vw] mob:text-[3.8vw] text-[#4B5563] font-medium font-[SofiaPro]">
+                Pay Using
+                <svg
+                  className="w-[1.2vw] h-[1.2vw] mob:w-[4.5vw] mob:h-[4.5vw] text-black rotate-90"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
               </p>
-              <p className="font-[SofiaPro] text-[1vw] mob:text-[4vw] font-semibold text-black">{paymentDisplayName}</p>
+              <p className="font-[SofiaPro] text-[1.1vw] mob:text-[4vw] font-bold text-[#1F2937] italic mt-[0.2vw] mob:mt-[0.5vw]">
+                {paymentDisplayName}
+              </p>
             </div>
 
             <button
               disabled={finalIsDisabled}
-              onClick={handleClick}
-              className={`flex items-center text-[1vw] mob:text-[4vw] font-[SofiaPro] ${
-                finalIsDisabled
-                  ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
-                  : 'bg-black text-white hover:opacity-90'
-              } rounded-[0.5vw] mob:rounded-[2vw] overflow-hidden transition-all duration-200`}
+              className={`flex items-center justify-between bg-[#FDE047] border-[#FDE047] ${
+                finalIsDisabled ? 'cursor-not-allowed opacity-80' : 'hover:opacity-90'
+              } w-[192px] mob:w-[55vw] h-[45px] mob:h-[13vw] rounded-[10px] border transition-all duration-200 px-[10px] mob:px-[3vw]`}
             >
-              <div className="flex flex-col items-center justify-center pl-[0.8vw] pr-[0.5vw] mob:pl-[2vw] mob:pr-[1vw] py-[0.8vw] mob:py-[2.5vw]">
-                <span className="font-bold leading-none">₹{getTotalAmount()}</span>
-                <span className="text-[0.6vw] mob:text-[2.5vw] text-white/70 mt-[0.2vw] mob:mt-[0.5vw]">TOTAL</span>
+              <div className="flex flex-col items-start justify-center pl-[6px]">
+                <span className="text-[11px] mob:text-[3.5vw] text-black font-[SofiaPro] font-medium leading-none">
+                  Total
+                </span>
+                <span className="text-[14px] mob:text-[4vw] font-bold text-[#1F2937] leading-none mt-[3px]">
+                  ₹{getTotalAmount().toLocaleString()}
+                </span>
               </div>
-              <div className="flex flex-1 items-center justify-center gap-[0.3vw] mob:gap-[1vw] pl-[0.5vw] pr-[0.8vw] mob:pl-[1vw] mob:pr-[2vw] py-[0.8vw] mob:py-[2.5vw] font-medium leading-none">
+              <div
+                onClick={handleClick}
+                className={`font-[SofiaPro] flex items-center justify-center gap-[6px] mob:gap-[1.5vw] ${
+                  finalIsDisabled ? 'bg-[#737373]' : 'bg-black'
+                } text-white rounded-[8px] w-[101px] mob:w-[28vw] h-[28px] mob:h-[8vw] font-semibold text-[12px] mob:text-[3.5vw]`}
+              >
                 <span>Place Order</span>
-                <ChevronRight
-                  className="w-[1.1vw] h-[1.1vw] mob:w-[4vw] mob:h-[4vw] mt-[0.1vw] mob:mt-[0.4vw]"
-                  strokeWidth={2.5}
-                />
+                <svg
+                  className="w-[12px] h-[12px] mob:w-[3.5vw] mob:h-[3.5vw]"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinejoin="round"
+                  strokeLinecap="round"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
               </div>
             </button>
           </div>

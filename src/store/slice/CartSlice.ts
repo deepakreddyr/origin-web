@@ -64,6 +64,7 @@ interface CartState {
   maxQuantityError: { message: string | null; isVisible: boolean };
   show_timeslot_sheet: boolean;
   orderRestrictionData: any | null;
+  instant_message?: string | null;
 }
 
 const initialState: CartState = {
@@ -82,7 +83,8 @@ const initialState: CartState = {
   freeItemsMov: 0,
   maxQuantityError: { message: null, isVisible: false },
   show_timeslot_sheet: true,
-  orderRestrictionData: null
+  orderRestrictionData: null,
+  instant_message: null
 };
 
 // --- UTILITY FUNCTIONS ---
@@ -847,6 +849,10 @@ export const cartSlice = createSlice({
       clearPersistentFreeItems();
     },
 
+    setInstantMessage: (state, action: PayloadAction<string | null>) => {
+      state.instant_message = action.payload;
+    },
+
     setMaxQuantityError: (state, action: PayloadAction<string | null>) => {
       state.maxQuantityError = {
         message: action.payload,
@@ -878,7 +884,8 @@ export const {
   setFreeItems,
   addFreeItemToCart,
   removeFreeItemFromCart,
-  setMaxQuantityError
+  setMaxQuantityError,
+  setInstantMessage
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
