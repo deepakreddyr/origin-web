@@ -266,7 +266,7 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
   return (
     <>
       <header
-        className={`${isHeaderSticky ? 'fixed top-0' : 'absolute top-0'} left-0 w-full z-[100] bg-[#FFECA6] px-6 md:px-[7vw] py-3 flex items-center justify-between`}
+        className={`${isHeaderSticky ? 'fixed top-0' : 'absolute top-0'} left-0 w-full z-[100] bg-[#FBF9F4] px-6 md:px-[7vw] py-3 flex items-center justify-between`}
       >
         <div className="flex items-center gap-1 flex-1">
           {/* Logo - Visible on mobile Only if skip-login */}
