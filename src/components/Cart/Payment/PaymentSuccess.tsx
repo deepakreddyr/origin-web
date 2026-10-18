@@ -9,6 +9,8 @@ import * as gtag from '@/utilities/gtag';
 import { useCartStore } from '@/hooks/useCartStore';
 import { clearCart } from '@/store/slice/CartSlice';
 import { clearMangoCart } from '@/store/slice/MangoCartSlice';
+import { clearSubscriptionCart } from '@/store/slice/SubscriptionCartSlice';
+import { clearSubscriptionBoxCart } from '@/store/slice/SubscriptionBoxCartSlice';
 
 const PaymentSuccess = (props: any) => {
   const { isMangoPage } = useCartStore();
@@ -89,6 +91,8 @@ const PaymentSuccess = (props: any) => {
       dispatch(resetOrderDetails());
       dispatch(clearCart());
       dispatch(clearMangoCart());
+      dispatch(clearSubscriptionCart());
+      dispatch(clearSubscriptionBoxCart());
 
       if (flowType === 'retry_payment') {
         window.location.href = targetUrl;

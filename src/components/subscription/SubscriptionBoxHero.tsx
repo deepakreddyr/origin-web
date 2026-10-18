@@ -34,9 +34,9 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
   subtitle = 'Every week, we curate seasonal organic produce directly from certified regenerative micro-farms and deliver to your kitchen within 18 hours of harvest.',
   ctaText = 'Explore Baskets',
   onCtaClick,
-  trustBadge1 = '100% Certified Organic',
+  // trustBadge1 = '100% Certified Organic',
   trustBadge2 = 'Picked & Shipped in 18h',
-  imagePillText = '100% Certified Regenerative Soil',
+  // imagePillText = '100% Certified Regenerative Soil',
   cardBadgeHours = '18h',
   cardBadgeTitle = 'FARM-TO-DOOR',
   cardBadgeSubtitle = 'Harvested fresh at sunrise'
@@ -137,12 +137,12 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 <path d="m9 12 2 2 4-4" />
               </svg>
-              <span
+              {/* <span
                 className="text-[#243328] font-medium text-[13px] md:text-[14px]"
                 style={{ fontFamily: 'SofiaPro' }}
               >
                 {trustBadge1}
-              </span>
+              </span> */}
             </div>
 
             {/* Badge 2: Picked & Shipped in 18h */}
@@ -197,9 +197,9 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
               <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
               <path d="M2 21c0-3 1.85-5.36 5.08-6" />
             </svg>
-            <span className="text-[#233327] text-[12px] font-semibold" style={{ fontFamily: 'SofiaPro' }}>
+            {/* <span className="text-[#233327] text-[12px] font-semibold" style={{ fontFamily: 'SofiaPro' }}>
               {imagePillText}
-            </span>
+            </span> */}
           </div>
 
           {/* Bottom-Right Floating Card */}

@@ -15,6 +15,7 @@ import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 const razKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY;
 
 import { useCartStore } from '@/hooks/useCartStore';
+import { clearSubscriptionBoxCart } from '@/store/slice/SubscriptionBoxCartSlice';
 import { trackEvent } from '@/utilities/analytics';
 import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 
@@ -23,8 +24,10 @@ const Payment = (props: any) => {
   const [profile, setProfileAtom] = useAtom(profileAtom);
   const [paymentFLowScreen, setPaymentFlowScreen] = useState(TabTypeConstant.MAKE_PAYMENT);
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
-  const { cart, subscriptionCart, isMangoPage, actions } = useCartStore();
+  const { cart, subscriptionCart, subscriptionBoxCart, isMangoPage, actions } = useCartStore();
   const isSubscription = subscriptionCart.isSubscriptionActive;
+  const isSubscriptionBox = subscriptionBoxCart?.isSubscriptionBoxActive;
+  const isAnySubscription = isSubscription || isSubscriptionBox;
   const sendDataToApi = useSendDataToApi();
   const [paymentModalDetails, setPaymentModalDetails] = useState({
     cartValue: '',
@@ -60,7 +63,7 @@ const Payment = (props: any) => {
     if (addressFromLs) {
       additionalHeaders = {
         'store-id': addressFromLs.store_id,
-        'delivery-type': isSubscription ? 'subscription' : 'instant'
+        'delivery-type': isAnySubscription ? 'subscription' : 'instant'
       };
     }
 
@@ -254,7 +257,7 @@ const Payment = (props: any) => {
 
       const addressForBody = getAddressAndStoreId();
       const resolvedStoreId = addressForBody?.store_id || null;
-      const { items } = isSubscription ? { items: [] } : prepareCartItemsToApi(cart.items, true);
+      const { items } = isAnySubscription ? { items: [] } : prepareCartItemsToApi(cart.items, true);
       const subscriptionItems =
         isSubscription && subscriptionCart.item
           ? [
@@ -270,21 +273,46 @@ const Payment = (props: any) => {
                 ]
               }
             ]
-          : [];
+          : isSubscriptionBox && subscriptionBoxCart?.item
+            ? [
+                {
+                  id: subscriptionBoxCart.item.variant_id,
+                  item_code: subscriptionBoxCart.item.item_code,
+                  uom: [
+                    {
+                      id: subscriptionBoxCart.item.variant_id,
+                      uom_id: subscriptionBoxCart.item.uom_id,
+                      qty: subscriptionBoxCart.totalQuantity
+                    }
+                  ]
+                }
+              ]
+            : [];
       let apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + mainApiUrl['ordersActions'];
       const addressFromLs = getAddressAndStoreId();
 
+      const subTotal = isSubscriptionBox
+        ? subscriptionBoxCart?.totalPrice || 0
+        : isSubscription
+          ? subscriptionCart.totalPrice
+          : cart.totalPrice;
+      const subQty = isSubscriptionBox
+        ? subscriptionBoxCart?.totalQuantity || 1
+        : isSubscription
+          ? subscriptionCart.totalQuantity
+          : 0;
+
       let additionalHeaders = {};
-      const apiData = isSubscription
+      const apiData = isAnySubscription
         ? {
             items: subscriptionItems,
             delivery_fee: 0,
             delivery_type: 'subscription',
             individual_package_enabled: false,
             delivery_date: placeOrderDetails?.checkoutDetails?.formatted_delivery_date?.[0] || null,
-            sub_total: subscriptionCart.totalPrice,
+            sub_total: subTotal,
             tax: 0,
-            total: subscriptionCart.totalPrice,
+            total: subTotal,
             time_slot_id: placeOrderDetails.time_slot_id,
             store_id: resolvedStoreId,
             is_rewards_used: false,
@@ -292,7 +320,7 @@ const Payment = (props: any) => {
             coupon_id: null,
             sub_payment_method: orderType.sub_payment_method,
             uuid: uuidv4(),
-            max_qty: subscriptionCart.totalQuantity
+            max_qty: subQty
           }
         : {
             items,
@@ -313,7 +341,7 @@ const Payment = (props: any) => {
           };
       additionalHeaders = {
         ...(addressFromLs && { 'store-id': addressFromLs.store_id }),
-        'delivery-type': isSubscription ? 'subscription' : 'instant',
+        'delivery-type': isAnySubscription ? 'subscription' : 'instant',
         'mm-build-version': '1.0.0',
         'mm-device-type': 'web'
       };
@@ -322,11 +350,7 @@ const Payment = (props: any) => {
         if (response?.data) {
           localStorage.setItem('razorpay_response', JSON.stringify(response?.data));
           localStorage.setItem('order_type', JSON.stringify(orderType));
-          let totalAmount = isSubscription
-            ? subscriptionCart.totalPrice
-            : cart.amountToPay === 0
-              ? cart.totalPrice
-              : cart.amountToPay;
+          let totalAmount = isAnySubscription ? subTotal : cart.amountToPay === 0 ? cart.totalPrice : cart.amountToPay;
           localStorage.setItem('total_cart', JSON.stringify(totalAmount));
 
           if (orderType.name === 'Pay On delivery') {
@@ -349,8 +373,8 @@ const Payment = (props: any) => {
             const order_id = response?.data?.razorpay_order_id;
             // Track checkout event for razorpay
             trackEvent(AnalyticsEvents.CHECKOUT, {
-              selling_amount: cart.totalPrice || 0,
-              amount: cart.amountToPay || cart.totalPrice || 0,
+              selling_amount: isAnySubscription ? subTotal : cart.totalPrice || 0,
+              amount: isAnySubscription ? subTotal : cart.amountToPay || cart.totalPrice || 0,
               payment_mode: 'razorpay',
               order_id: order_id || '',
               items: []

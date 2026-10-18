@@ -3,12 +3,16 @@ import { useSelector } from 'react-redux';
 import * as cartActions from '@/store/slice/CartSlice';
 import * as mangoCartActions from '@/store/slice/MangoCartSlice';
 
+import * as subscriptionBoxCartActions from '@/store/slice/SubscriptionBoxCartSlice';
+
 export const useCartStore = () => {
   const router = useRouter();
   const isMangoPage = router.pathname.startsWith('/mango');
+  const isSubscriptionBoxPage = router.pathname.startsWith('/subscriptionbox');
 
   const cart = useSelector((state: any) => (isMangoPage ? state.mangoCart : state.cart));
   const subscriptionCart = useSelector((state: any) => state.subscriptionCart);
+  const subscriptionBoxCart = useSelector((state: any) => state.subscriptionBoxCart);
 
   // Return the appropriate actions based on the current page
   const actions = isMangoPage
@@ -66,7 +70,10 @@ export const useCartStore = () => {
   return {
     cart,
     subscriptionCart,
+    subscriptionBoxCart,
     isMangoPage,
-    actions
+    isSubscriptionBoxPage,
+    actions,
+    subscriptionBoxCartActions
   };
 };

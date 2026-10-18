@@ -6,10 +6,13 @@ import Layout from '@/components/Layout';
 import { GetServerSideProps } from 'next';
 import { FooterDataType, MainMenuType } from '@/utilities/types';
 import CustomHead from '@/components/shared/CustomHead';
-import MangoHeader from '@/components/Mango/MangoHeader';
+import SubscriptionBoxHeader from '@/components/subscription/SubscriptionBoxHeader';
 import SubscriptionBoxHero from '@/components/subscription/SubscriptionBoxHero';
 import SubscriptionFeatures from '@/components/subscription/SubscriptionFeatures';
 import SubscriptionPlansSection from '@/components/subscription/SubscriptionPlansSection';
+import SubscriptionEthicalAlliance from '@/components/subscription/SubscriptionEthicalAlliance';
+import SubscriptionGrowerSpotlight from '@/components/subscription/SubscriptionGrowerSpotlight';
+import SubscriptionFeedbackSection from '@/components/subscription/SubscriptionFeedbackSection';
 import SubscriptionHero from '@/components/subscription/SubscriptionHero';
 import SubscriptionSplit from '@/components/subscription/SubscriptionSplit';
 import SubscriptionChallenge from '@/components/subscription/SubscriptionChallenge';
@@ -33,10 +36,13 @@ const SubscriptionPage = ({ mainMenuItems, footerData }: SubscriptionPageProps) 
         description="Join the fruit revolution. 7 days, 7 fruits, zero junk. Accept the challenge today!"
       />
       <main className="bg-[#FBF9F4]">
-        <MangoHeader />
+        <SubscriptionBoxHeader />
         <SubscriptionBoxHero />
         <SubscriptionFeatures />
         <SubscriptionPlansSection />
+        <SubscriptionEthicalAlliance />
+        <SubscriptionGrowerSpotlight />
+        <SubscriptionFeedbackSection />
       </main>
     </Layout>
   );

@@ -34,7 +34,8 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
   isSubscription = false,
   cartMinimum = 0
 }) => {
-  const { cart, subscriptionCart, isMangoPage, actions } = useCartStore();
+  const { cart, subscriptionCart, subscriptionBoxCart, isMangoPage, actions } = useCartStore();
+  const isSubscriptionBox = subscriptionBoxCart?.isSubscriptionBoxActive;
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
   const [addressState] = useAtom(addressAtom);
@@ -159,6 +160,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
 
   // Calculate total amount including instant delivery fee
   const getTotalAmount = () => {
+    if (isSubscriptionBox) return Math.round(subscriptionBoxCart?.totalPrice || 0);
     if (isSubscription) return Math.round(subscriptionCart.totalPrice);
 
     let total = parseFloat(cart.amountToPay) || 0;
@@ -216,8 +218,15 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
       >
         <div className="pl-[1vw] mob:pl-[2.1vw]">
           <p className="font-[SofiaPro] text-[.83vw] mob:text-[3vw] text-black-op-60 font-medium">
-            {isSubscription ? (subscriptionCart.item ? 1 : 0) : cart.totalQuantity}{' '}
-            {isSubscription ? (subscriptionCart.item ? 'Item' : 'Items') : cart.totalQuantity === 1 ? 'Item' : 'Items'}
+            {isSubscriptionBox
+              ? subscriptionBoxCart?.item
+                ? '1 Item'
+                : '0 Items'
+              : isSubscription
+                ? subscriptionCart.item
+                  ? '1 Item'
+                  : '0 Items'
+                : `${cart.totalQuantity} ${cart.totalQuantity === 1 ? 'Item' : 'Items'}`}
           </p>
           <p className="font-[SofiaPro] font-semibold text-[1.1vw] mob:text-[4.1vw] text-black mob:pt-[.6vw]">
             ₹{getTotalAmount()}

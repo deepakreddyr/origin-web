@@ -70,7 +70,7 @@ const InfoToast: React.FC<{
 // ==========================================================
 
 const Cart = () => {
-  const { cart, subscriptionCart, isMangoPage, actions } = useCartStore();
+  const { cart, subscriptionCart, subscriptionBoxCart, isMangoPage, actions } = useCartStore();
   const {
     setCartItems,
     setCartMinimum,
@@ -83,9 +83,11 @@ const Cart = () => {
   } = actions;
 
   const isSubscription = subscriptionCart.isSubscriptionActive;
+  const isSubscriptionBox = subscriptionBoxCart?.isSubscriptionBoxActive;
+  const isAnySubscription = isSubscription || isSubscriptionBox;
 
-  // Use subscription cart data if active, otherwise normal cart (which is now dynamically selected)
-  const currentCart = isSubscription ? subscriptionCart : cart;
+  // Use subscription box / subscription cart data if active, otherwise normal cart
+  const currentCart = isSubscriptionBox ? subscriptionBoxCart : isSubscription ? subscriptionCart : cart;
 
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
   const [showAddressModal, setAddressModal] = useState(false);
@@ -373,29 +375,41 @@ const Cart = () => {
 
   useEffect(() => {
     const paymentFlow = localStorage.getItem('FLOW_TYPE');
-    const isCartEmpty = isSubscription ? !subscriptionCart.item : cart.items.length === 0;
+    const isCartEmpty = isSubscriptionBox
+      ? !subscriptionBoxCart?.item
+      : isSubscription
+        ? !subscriptionCart.item
+        : cart.items.length === 0;
 
     if (isCartEmpty && !paymentFlow && cart.cartTabType !== TabTypeConstant.PAYMENT) {
       dispatch(setCartTabType(TabTypeConstant.EMPTY_CART));
     } else if (!isCartEmpty && (cart.cartTabType === TabTypeConstant.EMPTY_CART || cart.cartTabType === '')) {
       dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
     }
-  }, [cart.items.length, subscriptionCart.item, isSubscription, cart.cartTabType, dispatch]);
+  }, [
+    cart.items.length,
+    subscriptionCart.item,
+    subscriptionBoxCart?.item,
+    isSubscription,
+    isSubscriptionBox,
+    cart.cartTabType,
+    dispatch
+  ]);
 
   const cartMainContent = (
     <>
       {orderRestrictionData && <RestrictOrderInfo orderRestrictionData={orderRestrictionData} />}
-      {!isSubscription && <CouponSection setShowCouponList={setShowCouponList} onShowToast={handleShowToast} />}
-      {!isSubscription && <FreeItemSection onShowToast={handleShowToast} />}
+      {!isAnySubscription && <CouponSection setShowCouponList={setShowCouponList} onShowToast={handleShowToast} />}
+      {!isAnySubscription && <FreeItemSection onShowToast={handleShowToast} />}
       <ReviewList onShowMaxQuantityToast={handleMaxQuantityExceededGlobal} />
-      {!isSubscription && <DeliveryInstruction />}
+      {!isAnySubscription && <DeliveryInstruction />}
       {showAddressModal && (
         <div className="w-[30vw] flex items-end relative justify-end">
           <AddressAndTimeSlot
             showAddressModal={showAddressModal}
             setAddressModal={setAddressModal}
             setShowLocationPopup={setShowLocationPopup}
-            isSubscription={isSubscription}
+            isSubscription={isAnySubscription}
             onShowToast={handleShowToast}
           />
         </div>
@@ -403,20 +417,23 @@ const Cart = () => {
       <BillDetailsWrapper
         billDetails={billDetails}
         orderRestrictionData={orderRestrictionData}
-        isSubscription={isSubscription}
+        isSubscription={isAnySubscription}
+        isSubscriptionBox={isSubscriptionBox}
       />
       {cart.cartTabType !== TabTypeConstant.CART_ADDRESS_LIST && !orderRestrictionData && (
         <ActionCtaWithItems
           btnName={loginDetails.user ? 'PROCEED' : 'LOGIN'}
           handler={proceedButtonHandler}
           isDisabled={
-            isSubscription
-              ? subscriptionCart.item?.quantity > subscriptionCart.item?.max_qty
-              : !cart.isProceedBtnEnabled
+            isSubscriptionBox
+              ? !subscriptionBoxCart?.item
+              : isSubscription
+                ? subscriptionCart.item?.quantity > subscriptionCart.item?.max_qty
+                : !cart.isProceedBtnEnabled
           }
           orderRestrictionData={orderRestrictionData}
           showAddressModal={showAddressModal}
-          isSubscription={isSubscription}
+          isSubscription={isAnySubscription}
           cartMinimum={Number(cart.cart_minimum)}
         />
       )}

@@ -7,8 +7,8 @@ import { calculateCouponDiscount } from '@/utilities/utils';
 import { useCartStore } from '@/hooks/useCartStore';
 
 const BillDetailsWrapper = (props: any) => {
-  const { billDetails, isSubscription = false } = props;
-  const { cart, subscriptionCart, actions, isMangoPage } = useCartStore();
+  const { billDetails, isSubscription = false, isSubscriptionBox = false } = props;
+  const { cart, subscriptionCart, subscriptionBoxCart, actions, isMangoPage } = useCartStore();
   const { setAmountToPay, setCouponDetails, setDiscountAmount, setIsProceedButtonEnabled, setDeliveryFee } = actions;
   const { couponDetails } = cart;
   const dispatch = useDispatch();
@@ -77,7 +77,7 @@ const BillDetailsWrapper = (props: any) => {
   }, []);
 
   useEffect(() => {
-    if (isSubscription) return; // Skip updating normal cart state in subscription mode
+    if (isSubscription || isSubscriptionBox) return; // Skip updating normal cart state in subscription mode
 
     let amountTobePaid;
     const { totalPrice, amountToPay, discountAmount } = cart;
@@ -162,7 +162,12 @@ const BillDetailsWrapper = (props: any) => {
               Item total
             </p>
             <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
-              ₹{isSubscription ? subscriptionCart.totalPrice : cart.totalOriginalPrice}
+              ₹
+              {isSubscriptionBox
+                ? subscriptionBoxCart?.totalPrice
+                : isSubscription
+                  ? subscriptionCart.totalPrice
+                  : cart.totalOriginalPrice}
             </p>
           </div>
         </li>
@@ -189,84 +194,98 @@ const BillDetailsWrapper = (props: any) => {
           </li>
         )}
 
-        {isLoggedIn && (
+        {isSubscription || isSubscriptionBox ? (
           <li>
             <div className="flex items-center text-secondary justify-between">
-              <div className="flex items-center gap-[0.3vw] mob:gap-[1vw]">
-                <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">Delivery fee</p>
-                {shouldShowInfo && (
-                  <Tooltip
-                    title={
-                      <div className="p-[0.5vw] mob:p-[2vw]">
-                        <p className="font-[SofiaPro] font-semibold text-[0.9vw] mob:text-[3.5vw] mb-[0.3vw] mob:mb-[1vw]">
-                          Details
-                        </p>
-                        <p className="font-[SofiaPro] font-bold text-[0.85vw] mob:text-[3.2vw] mb-[0.2vw] mob:mb-[0.8vw]">
-                          You're outside our free delivery zone.
-                        </p>
-                        <p className="font-[SofiaPro] text-[0.8vw] mob:text-[3vw] opacity-80">
-                          Order for ₹{freeDeliveryThreshold} or more for free delivery.
-                        </p>
-                      </div>
-                    }
-                    open={tooltipOpen}
-                    onClose={handleTooltipClose}
-                    onOpen={handleTooltipOpen}
-                    arrow
-                    placement="top"
-                    componentsProps={{
-                      tooltip: {
-                        sx: {
-                          bgcolor: '#231F20',
-                          color: 'white',
-                          fontSize: isMobile ? '3vw' : '0.8vw',
-                          borderRadius: isMobile ? '2vw' : '0.5vw',
-                          padding: isMobile ? '2vw' : '0.8vw',
-                          maxWidth: isMobile ? '70vw' : '18vw',
-                          '& .MuiTooltip-arrow': {
-                            color: '#231F20'
-                          }
-                        }
+              <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">Sunday Delivery</p>
+              <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw] text-secondary">FREE</p>
+            </div>
+          </li>
+        ) : (
+          isLoggedIn && (
+            <li>
+              <div className="flex items-center text-secondary justify-between">
+                <div className="flex items-center gap-[0.3vw] mob:gap-[1vw]">
+                  <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">Delivery fee</p>
+                  {shouldShowInfo && (
+                    <Tooltip
+                      title={
+                        <div className="p-[0.5vw] mob:p-[2vw]">
+                          <p className="font-[SofiaPro] font-semibold text-[0.9vw] mob:text-[3.5vw] mb-[0.3vw] mob:mb-[1vw]">
+                            Details
+                          </p>
+                          <p className="font-[SofiaPro] font-bold text-[0.85vw] mob:text-[3.2vw] mb-[0.2vw] mob:mb-[0.8vw]">
+                            You're outside our free delivery zone.
+                          </p>
+                          <p className="font-[SofiaPro] text-[0.8vw] mob:text-[3vw] opacity-80">
+                            Order for ₹{freeDeliveryThreshold} or more for free delivery.
+                          </p>
+                        </div>
                       }
-                    }}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={handleTooltipToggle}
-                      sx={{
-                        padding: isMobile ? '1vw' : '0.2vw',
-                        '&:hover': {
-                          backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                      open={tooltipOpen}
+                      onClose={handleTooltipClose}
+                      onOpen={handleTooltipOpen}
+                      arrow
+                      placement="top"
+                      componentsProps={{
+                        tooltip: {
+                          sx: {
+                            bgcolor: '#231F20',
+                            color: 'white',
+                            fontSize: isMobile ? '3vw' : '0.8vw',
+                            borderRadius: isMobile ? '2vw' : '0.5vw',
+                            padding: isMobile ? '2vw' : '0.8vw',
+                            maxWidth: isMobile ? '70vw' : '18vw',
+                            '& .MuiTooltip-arrow': {
+                              color: '#231F20'
+                            }
+                          }
                         }
                       }}
                     >
-                      <InfoOutlinedIcon
+                      <IconButton
+                        size="small"
+                        onClick={handleTooltipToggle}
                         sx={{
-                          fontSize: isMobile ? '4vw' : '1.1vw',
-                          color: '#231F20CC'
+                          padding: isMobile ? '1vw' : '0.2vw',
+                          '&:hover': {
+                            backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                          }
                         }}
-                      />
-                    </IconButton>
-                  </Tooltip>
-                )}
+                      >
+                        <InfoOutlinedIcon
+                          sx={{
+                            fontSize: isMobile ? '4vw' : '1.1vw',
+                            color: '#231F20CC'
+                          }}
+                        />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                </div>
+                <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
+                  {billDetails.free_delivery_charge && currentDeliveryFee > 0 && (
+                    <span className="text-black-op-60 font-regular line-through mr-[0.3vw]">
+                      ₹{billDetails.free_delivery_charge}
+                    </span>
+                  )}
+                  {currentDeliveryFee === 0 ? <span className="text-secondary">FREE</span> : `₹${currentDeliveryFee}`}
+                </p>
               </div>
-              <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
-                {billDetails.free_delivery_charge && currentDeliveryFee > 0 && (
-                  <span className="text-black-op-60 font-regular line-through mr-[0.3vw]">
-                    ₹{billDetails.free_delivery_charge}
-                  </span>
-                )}
-                {currentDeliveryFee === 0 ? <span className="text-secondary">FREE</span> : `₹${currentDeliveryFee}`}
-              </p>
-            </div>
-          </li>
+            </li>
+          )
         )}
 
         <li>
           <div className="flex items-center text-black justify-between">
             <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">To Pay</p>
             <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">
-              ₹{isSubscription ? subscriptionCart.totalPrice : cart.amountToPay}
+              ₹
+              {isSubscriptionBox
+                ? subscriptionBoxCart?.totalPrice
+                : isSubscription
+                  ? subscriptionCart.totalPrice
+                  : cart.amountToPay}
             </p>
           </div>
         </li>
