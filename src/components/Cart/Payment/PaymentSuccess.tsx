@@ -13,7 +13,7 @@ import { clearSubscriptionCart } from '@/store/slice/SubscriptionCartSlice';
 import { clearSubscriptionBoxCart } from '@/store/slice/SubscriptionBoxCartSlice';
 
 const PaymentSuccess = (props: any) => {
-  const { isMangoPage } = useCartStore();
+  const { isMangoPage, isSubscriptionBoxPage, isSubscriptionPage } = useCartStore();
   const { paymentModalDetails, cart } = props;
   const [timer, setTimer] = useState(5);
   const router = useRouter();
@@ -58,12 +58,17 @@ const PaymentSuccess = (props: any) => {
         content_type: 'product',
         num_items: cart?.totalQuantity || 0
       });
-      localStorage.removeItem('total_to_pay');
-      localStorage.removeItem('mango_total_to_pay');
-      localStorage.removeItem('cart_items');
-      localStorage.removeItem('mango_cart_items');
-      localStorage.removeItem('added_free_items');
-      localStorage.removeItem('mango_added_free_items');
+      if (isSubscriptionBoxPage) {
+        localStorage.removeItem('subscription_box_cart');
+      } else if (isMangoPage) {
+        localStorage.removeItem('mango_total_to_pay');
+        localStorage.removeItem('mango_cart_items');
+        localStorage.removeItem('mango_added_free_items');
+      } else {
+        localStorage.removeItem('total_to_pay');
+        localStorage.removeItem('cart_items');
+        localStorage.removeItem('added_free_items');
+      }
     }
 
     // Play success audio only once using the primed audio from props
@@ -73,7 +78,7 @@ const PaymentSuccess = (props: any) => {
       });
       hasPlayedAudio.current = true;
     }
-  }, [paymentModalDetails, total_to_pay, props.successAudio, cart]);
+  }, [paymentModalDetails, total_to_pay, props.successAudio, cart, isSubscriptionBoxPage, isMangoPage]);
 
   useEffect(() => {
     if (timer > 0) {
@@ -89,10 +94,15 @@ const PaymentSuccess = (props: any) => {
 
       dispatch(setIsSidebarOpen(false));
       dispatch(resetOrderDetails());
-      dispatch(clearCart());
-      dispatch(clearMangoCart());
-      dispatch(clearSubscriptionCart());
-      dispatch(clearSubscriptionBoxCart());
+      if (isSubscriptionBoxPage) {
+        dispatch(clearSubscriptionBoxCart());
+      } else if (isMangoPage) {
+        dispatch(clearMangoCart());
+      } else if (isSubscriptionPage) {
+        dispatch(clearSubscriptionCart());
+      } else {
+        dispatch(clearCart());
+      }
 
       if (flowType === 'retry_payment') {
         window.location.href = targetUrl;

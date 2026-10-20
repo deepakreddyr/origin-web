@@ -29,6 +29,7 @@ import { useAtom } from 'jotai';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import LocationChangedPopup from './AddressAndTimeSlot/LocationChangedPopup';
 import { clearSubscriptionCart } from '@/store/slice/SubscriptionCartSlice';
+import { hydrateSubscriptionBoxCart } from '@/store/slice/SubscriptionBoxCartSlice';
 import { trackEvent } from '@/utilities/analytics';
 import { AnalyticsEvents } from '@/utilities/analyticsEvents';
 // ==========================================================
@@ -70,7 +71,15 @@ const InfoToast: React.FC<{
 // ==========================================================
 
 const Cart = () => {
-  const { cart, subscriptionCart, subscriptionBoxCart, isMangoPage, actions } = useCartStore();
+  const {
+    cart,
+    subscriptionCart,
+    subscriptionBoxCart,
+    isMangoPage,
+    isSubscriptionBoxPage,
+    isSubscriptionPage,
+    actions
+  } = useCartStore();
   const {
     setCartItems,
     setCartMinimum,
@@ -82,8 +91,8 @@ const Cart = () => {
     setOrderRestrictionData
   } = actions;
 
-  const isSubscription = subscriptionCart.isSubscriptionActive;
-  const isSubscriptionBox = subscriptionBoxCart?.isSubscriptionBoxActive;
+  const isSubscription = isSubscriptionPage && Boolean(subscriptionCart?.isSubscriptionActive);
+  const isSubscriptionBox = isSubscriptionBoxPage;
   const isAnySubscription = isSubscription || isSubscriptionBox;
 
   // Use subscription box / subscription cart data if active, otherwise normal cart
@@ -110,6 +119,10 @@ const Cart = () => {
 
   // ✅ HYDRATION: LOAD CART FROM LS ON MOUNT
   useEffect(() => {
+    if (isSubscriptionBoxPage) {
+      dispatch(hydrateSubscriptionBoxCart());
+      return;
+    }
     const lsKey = isMangoPage ? 'mango_cart_items' : 'cart_items';
     const savedCart = localStorage.getItem(lsKey);
     if (savedCart) {
@@ -122,7 +135,7 @@ const Cart = () => {
         console.error('Failed to parse cart from LS:', err);
       }
     }
-  }, [dispatch]);
+  }, [dispatch, isSubscriptionBoxPage, isMangoPage]);
 
   // --- TOAST/POPUP STATE ---
   const maxQuantityError = cart.maxQuantityError;
@@ -134,13 +147,13 @@ const Cart = () => {
 
   // ✅ TRIGGER: AUTO-REMOVE FREE ITEMS IF MOV NOT MET
   useEffect(() => {
-    if (!isSubscription && cart.freeItemsMov > 0 && cart.totalPrice < cart.freeItemsMov) {
+    if (!isAnySubscription && cart.freeItemsMov > 0 && cart.totalPrice < cart.freeItemsMov) {
       const freeItem = cart.items.find((item: any) => item.isFreeItem || item.free);
       if (freeItem) {
         dispatch(removeFreeItemFromCart(freeItem.item_code));
       }
     }
-  }, [cart.totalPrice, cart.freeItemsMov, cart.items, dispatch, isSubscription]);
+  }, [cart.totalPrice, cart.freeItemsMov, cart.items, dispatch, isAnySubscription]);
 
   const { sendItemsToApi, fetchCartItemsFromApi: syncFetch } = useCartSync();
 
@@ -204,7 +217,7 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    if (isSubscription) return; // Skip normal cart API calls in subscription mode
+    if (isAnySubscription) return; // Skip normal cart API calls in subscription mode
     if (!loginDetails.isSidebarOpen) return; // Only sync when cart is OPEN, not when closing
 
     const lsKey = isMangoPage ? 'mango_cart_items' : 'cart_items';
@@ -240,7 +253,7 @@ const Cart = () => {
       } catch (e) {}
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loginDetails.isSidebarOpen]);
+  }, [loginDetails.isSidebarOpen, isAnySubscription]);
 
   // Fetch checkout details whenever the cart opens or items change, so that any
   // backend checkout validations run (even if the timeslot sheet is skipped).
@@ -262,10 +275,12 @@ const Cart = () => {
         }
       };
 
-      if (isSubscription) {
+      if (isAnySubscription) {
+        const maxQty = isSubscriptionBox
+          ? subscriptionBoxCart?.totalQuantity || 1
+          : subscriptionCart?.totalQuantity || 1;
         const apiUrl =
-          process.env.NEXT_PUBLIC_BACKEND_API_URL +
-          `/api/v5/user/web-subscription-checkout?max_qty=${subscriptionCart.totalQuantity}`;
+          process.env.NEXT_PUBLIC_BACKEND_API_URL + `/api/v5/user/web-subscription-checkout?max_qty=${maxQty}`;
         getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
       } else {
         const apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['proceedToCheckout'];
@@ -278,10 +293,13 @@ const Cart = () => {
     loginDetails.isSidebarOpen,
     loginDetails.user,
     isSubscription,
+    isSubscriptionBox,
+    isAnySubscription,
     cart.items.length,
     dispatch,
     getDataFromApi,
-    subscriptionCart.totalQuantity
+    subscriptionCart.totalQuantity,
+    subscriptionBoxCart?.totalQuantity
   ]);
 
   useEffect(() => {
@@ -366,6 +384,9 @@ const Cart = () => {
       if (isSubscription && subscriptionCart.item) {
         localStorage.setItem('SUBSCRIPTION_LOGIN_PENDING', 'true');
         localStorage.setItem('PENDING_SUBSCRIPTION_ITEM', JSON.stringify(subscriptionCart.item));
+      } else if (isSubscriptionBox && subscriptionBoxCart?.item) {
+        localStorage.setItem('SUBSCRIPTION_BOX_LOGIN_PENDING', 'true');
+        localStorage.setItem('PENDING_SUBSCRIPTION_BOX_ITEM', JSON.stringify(subscriptionBoxCart.item));
       }
       setRouteSourceToLs(TabTypeConstant.CART);
       dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));

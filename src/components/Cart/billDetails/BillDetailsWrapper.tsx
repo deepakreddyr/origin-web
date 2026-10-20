@@ -7,11 +7,27 @@ import { calculateCouponDiscount } from '@/utilities/utils';
 import { useCartStore } from '@/hooks/useCartStore';
 
 const BillDetailsWrapper = (props: any) => {
-  const { billDetails, isSubscription = false, isSubscriptionBox = false } = props;
-  const { cart, subscriptionCart, subscriptionBoxCart, actions, isMangoPage } = useCartStore();
+  const {
+    billDetails,
+    isSubscription: propIsSubscription = false,
+    isSubscriptionBox: propIsSubscriptionBox = false
+  } = props;
+  const {
+    cart,
+    subscriptionCart,
+    subscriptionBoxCart,
+    actions,
+    isMangoPage,
+    isSubscriptionBoxPage,
+    isSubscriptionPage
+  } = useCartStore();
   const { setAmountToPay, setCouponDetails, setDiscountAmount, setIsProceedButtonEnabled, setDeliveryFee } = actions;
   const { couponDetails } = cart;
   const dispatch = useDispatch();
+
+  const isSubscriptionBox = propIsSubscriptionBox || isSubscriptionBoxPage;
+  const isSubscription = propIsSubscription || (isSubscriptionPage && Boolean(subscriptionCart?.isSubscriptionActive));
+  const isAnySubscription = isSubscription || isSubscriptionBox;
 
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -77,7 +93,7 @@ const BillDetailsWrapper = (props: any) => {
   }, []);
 
   useEffect(() => {
-    if (isSubscription || isSubscriptionBox) return; // Skip updating normal cart state in subscription mode
+    if (isAnySubscription) return; // Skip updating normal cart state in subscription mode
 
     let amountTobePaid;
     const { totalPrice, amountToPay, discountAmount } = cart;
@@ -122,7 +138,7 @@ const BillDetailsWrapper = (props: any) => {
       const lsTotalKey = isMangoPage ? 'mango_total_to_pay' : 'total_to_pay';
       localStorage.setItem(lsTotalKey, String(finalAmountToPay));
     }
-  }, [couponDetails, cart, billDetails, dispatch, isSubscription]);
+  }, [couponDetails, cart, billDetails, dispatch, isAnySubscription]);
 
   const remainingAmount = cart.cart_minimum ? Number(cart.cart_minimum) - cart.amountToPay : 0;
 
@@ -172,7 +188,7 @@ const BillDetailsWrapper = (props: any) => {
           </div>
         </li>
 
-        {cart.totalOriginalPrice - cart.totalPrice > 0 && (
+        {!isAnySubscription && cart.totalOriginalPrice - cart.totalPrice > 0 && (
           <li>
             <div className="flex items-center text-secondary justify-between">
               <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">Savings</p>
@@ -183,7 +199,7 @@ const BillDetailsWrapper = (props: any) => {
           </li>
         )}
 
-        {cart.discountAmount > 0 && (
+        {!isAnySubscription && cart.discountAmount > 0 && (
           <li>
             <div className="flex items-center text-secondary justify-between">
               <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">Coupon used</p>
@@ -194,7 +210,7 @@ const BillDetailsWrapper = (props: any) => {
           </li>
         )}
 
-        {isSubscription || isSubscriptionBox ? (
+        {isAnySubscription ? (
           <li>
             <div className="flex items-center text-secondary justify-between">
               <p className="font-[SofiaPro] font-bold mob:text-[3.6vw] text-[.97vw]">Sunday Delivery</p>

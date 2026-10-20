@@ -4,12 +4,14 @@ import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
 import { protectedUrl, unprotectedUrl } from '@/url';
 import { getAddressAndStoreId, cleanImageUrl } from '@/utilities/utils';
 
-type FamilySize = 2 | 3 | 5;
+type FamilySize = 2 | 3 | 4 | 5;
 
 interface PlanDetails {
   weight: string;
-  priceMonth: number;
-  perDelivery: number;
+  price: number;
+  marketPrice?: number | null;
+  priceMonth?: number;
+  perDelivery?: number;
   selection: string;
 }
 
@@ -31,179 +33,146 @@ interface ProductCardData {
   plans?: Record<FamilySize, PlanDetails>;
 }
 
-const PRODUCTS_DATA: ProductCardData[] = [
-  {
-    id: 236,
-    tag: 'MOST POPULAR',
-    tagColor: 'orange',
-    rating: 4.9,
-    reviews: '1.2k',
-    title: 'Mixed Harvest Basket',
-    description: 'A curated weekly harmony of staple cooking greens, root crops, aromatics, and orchard snacks.',
-    image: '/onam.png',
-    plans: {
-      2: {
-        weight: '~3.2 kg',
-        priceMonth: 4200,
-        perDelivery: 1050,
-        selection: '500g Red Onion, 500g Pahari Potato, 500g Vine Tomatoes, Spinach bunches, 750g Royal...'
-      },
-      3: {
-        weight: '~4.8 kg',
-        priceMonth: 5800,
-        perDelivery: 1450,
-        selection: '750g Red Onion, 1kg Pahari Potato, 750g Vine Tomatoes, 2x Spinach bunches, 1kg Royal Gala Apples...'
-      },
-      5: {
-        weight: '~7.5 kg',
-        priceMonth: 8600,
-        perDelivery: 2150,
-        selection:
-          '1.5kg Red Onion, 2kg Pahari Potato, 1.5kg Vine Tomatoes, 3x Spinach bunches, 1.5kg Royal Gala Apples...'
-      }
-    }
-  },
-  {
-    id: 'orchard-fruit',
-    tag: 'SWEET HARVEST',
-    tagColor: 'green',
-    rating: 4.8,
-    reviews: '680',
-    title: 'Orchard Fruit Box',
-    description: '100% naturally tree-ripened local orchard fruits, hand-checked for blemish-free sweetness.',
-    image: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=800&q=80',
-    plans: {
-      2: {
-        weight: '~2.5 kg',
-        priceMonth: 3400,
-        perDelivery: 850,
-        selection: 'Himachal Golden Delicious Apples, Robusta Bananas, Nagpur Sweet Oranges, and Seasonal'
-      },
-      3: {
-        weight: '~3.8 kg',
-        priceMonth: 4800,
-        perDelivery: 1200,
-        selection: 'Himachal Golden Delicious Apples, Robusta Bananas, Nagpur Sweet Oranges, Grapes & Seasonal'
-      },
-      5: {
-        weight: '~6.0 kg',
-        priceMonth: 7200,
-        perDelivery: 1800,
-        selection: 'Himachal Golden Delicious Apples, Robusta Bananas, Nagpur Oranges, Kiwi, Grapes & Exotic Fruits'
-      }
-    }
-  },
-  {
-    id: 'pure-veggie',
-    tag: 'DAILY STAPLES',
-    tagColor: 'green',
-    rating: 5.0,
-    reviews: '940',
-    title: 'Pure Veggie Basket',
-    description: 'High-density culinary greens, robust root stocks, and tender cooking essentials without fruit items.',
-    image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=80',
-    plans: {
-      2: {
-        weight: '~4.0 kg',
-        priceMonth: 3800,
-        perDelivery: 950,
-        selection: 'Crisp Lettuce, Methi Greens, 1kg Golden Potatoes, Cauliflower, Capsicum, Green Chillies'
-      },
-      3: {
-        weight: '~6.0 kg',
-        priceMonth: 5400,
-        perDelivery: 1350,
-        selection: 'Crisp Lettuce, Methi Greens, 1.5kg Golden Potatoes, 2x Cauliflower, Capsicum, Green Chillies'
-      },
-      5: {
-        weight: '~9.5 kg',
-        priceMonth: 8200,
-        perDelivery: 2050,
-        selection:
-          'Crisp Lettuce, Methi, 2.5kg Golden Potatoes, 2x Cauliflower, Broccoli, Capsicum, Green Chillies & Herbs'
-      }
+/**
+ * Checks whether a given UOM's unit/name matches the requested family size.
+ * Handles patterns such as:
+ * - "Family 2", "Family of 2", "Family-2", "family2"
+ * - Ranges: "family 2-3", "family2-3", "family 3-4", "family 4-5"
+ * - Variations: "2 members", "for 2", "4 person", etc.
+ */
+const matchesFamilyText = (rawStr: string, targetFamily: number): boolean => {
+  if (!rawStr) return false;
+
+  // 1. Strip weight/volume specifications (e.g. 3.5kg, 500g, 5kg) to avoid false-positive digit matching
+  const cleanStr = rawStr
+    .replace(/\d+(\.\d+)?\s*(kg|kgs|g|gm|gms|gram|grams|ml|l|ltr|litres?|pound|lbs?)\b/gi, '')
+    .trim();
+
+  if (!cleanStr) return false;
+
+  // 2. Check for ranges like "2-3", "3-4", "4-5", "2 to 3", "2 - 3", "2-4", "2 or 3"
+  const rangeMatch = cleanStr.match(/(\d+)\s*(?:[-–—/]|to|or)\s*(\d+)/i);
+  if (rangeMatch) {
+    const min = parseInt(rangeMatch[1], 10);
+    const max = parseInt(rangeMatch[2], 10);
+    if (!isNaN(min) && !isNaN(max) && min <= max) {
+      return targetFamily >= min && targetFamily <= max;
     }
   }
-];
+
+  // 3. Check for "family of X", "family X", "family-X", "familyX", "family: X"
+  const familyMatch = cleanStr.match(/family\s*(?:of|size)?\s*[:#-]?\s*(\d+)/i);
+  if (familyMatch) {
+    const num = parseInt(familyMatch[1], 10);
+    return num === targetFamily;
+  }
+
+  // 4. Check for "X person", "X people", "X members", "for X", "X pack", "X pax"
+  const peopleMatch = cleanStr.match(/(?:for\s*)?(\d+)\s*(?:person|people|members?|pax|pack)/i);
+  if (peopleMatch) {
+    const num = parseInt(peopleMatch[1], 10);
+    return num === targetFamily;
+  }
+
+  // 5. If "family" is anywhere in the string, look for targetFamily as a standalone or bound digit
+  if (cleanStr.includes('family') || cleanStr.includes('fam')) {
+    const digits = cleanStr.match(/\b\d+\b/g);
+    if (digits && digits.some((d) => parseInt(d, 10) === targetFamily)) {
+      return true;
+    }
+    const gluedMatch = cleanStr.match(new RegExp(`fam(?:ily)?\\s*${targetFamily}\\b`, 'i'));
+    if (gluedMatch) {
+      return true;
+    }
+  }
+
+  // 6. If the entire cleaned string is just the number (e.g. "2" or "4")
+  const trimmedDigitsOnly = cleanStr.replace(/[^\d]/g, '');
+  if (trimmedDigitsOnly === String(targetFamily)) {
+    return true;
+  }
+
+  return false;
+};
+
+const checkUomMatchesFamily = (uom: any, targetFamily: number): boolean => {
+  if (!uom) return false;
+
+  const textCandidates = [uom.unit, uom.name, uom.title, uom.conversion_text]
+    .filter(Boolean)
+    .map((s) => String(s).toLowerCase().trim());
+
+  if (textCandidates.length === 0) return false;
+
+  return textCandidates.some((str) => matchesFamilyText(str, targetFamily));
+};
+
+const findMatchingUom = (product: any, family: FamilySize) => {
+  const uoms = product.multiple_uoms || product.uom;
+  if (Array.isArray(uoms) && uoms.length > 0) {
+    const matching = uoms.filter((u: any) => checkUomMatchesFamily(u, family));
+    if (matching.length === 0) return null;
+    if (matching.length === 1) return matching[0];
+    return matching.find((u: any) => u.is_default) || matching.find((u: any) => u.is_available) || matching[0];
+  }
+  if (checkUomMatchesFamily(product, family)) {
+    return product;
+  }
+  return null;
+};
 
 const getPlanForFamily = (product: any, family: FamilySize): PlanDetails => {
-  if (product.plans && product.plans[family]) {
-    return product.plans[family];
-  }
-
-  const uoms = product.multiple_uoms || [];
-  // Try to find UOM matching family size (e.g. unit contains "2", "3", "5" or "Family 2")
-  const matchedUom =
-    uoms.find((u: any) => {
-      const unitStr = String(u.unit || '').toLowerCase();
-      return unitStr.includes(String(family));
-    }) ||
-    // Fallback by index: 2 -> uoms[0], 3 -> uoms[1], 5 -> uoms[2] || last
-    (family === 2 ? uoms[0] : family === 3 ? uoms[1] || uoms[0] : uoms[2] || uoms[uoms.length - 1] || uoms[0]);
+  const matchedUom = findMatchingUom(product, family);
 
   if (matchedUom) {
-    const rawPrice = Number(matchedUom.price || matchedUom.market_price || 1000);
-    // If price is monthly (> 2000), use as priceMonth. Otherwise per-delivery x 4
-    const priceMonth = rawPrice > 2000 ? rawPrice : rawPrice * 4;
-    const perDelivery = matchedUom.per_delivery ? Number(matchedUom.per_delivery) : Math.round(priceMonth / 4);
-    const weight =
-      matchedUom.weight ||
-      matchedUom.conversion_text ||
-      matchedUom.unit ||
-      (family === 2 ? '~3.2 kg' : family === 3 ? '~4.8 kg' : '~7.5 kg');
+    const rawPrice = Number(matchedUom.price ?? 0);
+    const rawMarketPrice = matchedUom.market_price ? Number(matchedUom.market_price) : null;
+    const marketPrice = rawMarketPrice && rawMarketPrice > rawPrice ? rawMarketPrice : null;
+    const weight = matchedUom.conversion_text || matchedUom.weight || matchedUom.unit || '';
 
     let selection = '';
     if (Array.isArray(matchedUom.harvest_items) && matchedUom.harvest_items.length > 0) {
       selection = matchedUom.harvest_items.map((h: any) => `${h.weight ? h.weight + ' ' : ''}${h.title}`).join(', ');
     } else {
-      selection =
-        product.description ||
-        product.item_description ||
-        'Staple cooking greens, root crops, aromatics, and orchard snacks.';
+      selection = product.description || product.item_description || '';
     }
 
     return {
       weight,
-      priceMonth,
-      perDelivery,
+      price: rawPrice,
+      marketPrice,
+      priceMonth: rawPrice,
+      perDelivery: rawPrice,
       selection
     };
   }
 
-  // Fallback default plans
-  const baseWeight = family === 2 ? '~3.2 kg' : family === 3 ? '~4.8 kg' : '~7.5 kg';
-  const basePrice = family === 2 ? 4200 : family === 3 ? 5800 : 8600;
+  const rawPrice = Number(product.price ?? 0);
+  const rawMarketPrice = product.market_price ? Number(product.market_price) : null;
+  const marketPrice = rawMarketPrice && rawMarketPrice > rawPrice ? rawMarketPrice : null;
   return {
-    weight: baseWeight,
-    priceMonth: basePrice,
-    perDelivery: Math.round(basePrice / 4),
-    selection: product.description || product.item_description || 'Curated weekly farm harvest'
+    weight: product.conversion_text || product.weight || '',
+    price: rawPrice,
+    marketPrice,
+    priceMonth: rawPrice,
+    perDelivery: rawPrice,
+    selection: product.description || product.item_description || ''
   };
 };
 
 const getProductDisplayData = (product: any, index: number, selectedFamily: FamilySize) => {
   const plan = getPlanForFamily(product, selectedFamily);
-  const title = product.display_title || product.title || product.name || 'Harvest Basket';
-  const description =
-    product.description ||
-    product.item_description ||
-    'A curated weekly harmony of staple cooking greens, root crops, aromatics, and orchard snacks.';
+  const title = product.item_name || product.display_title || product.title || product.name || 'Subscription Box';
+  const description = product.description || product.item_description || '';
   const image =
-    cleanImageUrl(product.image || product.website_image || product.multiple_images?.[0]) ||
-    (index === 0
-      ? '/onam.png'
-      : index === 1
-        ? 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=800&q=80'
-        : 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=80');
+    cleanImageUrl(product.image || product.website_image || product.logo || product.multiple_images?.[0]) ||
+    '/onam.png';
 
-  const tag =
-    product.tag ||
-    (product.tags && product.tags[0]) ||
-    (index === 0 ? 'MOST POPULAR' : index === 1 ? 'SWEET HARVEST' : 'DAILY STAPLES');
+  const tag = product.tag_text || product.tag || (product.tags && product.tags[0]) || '';
 
-  const tagColor: 'orange' | 'green' = product.tagColor || (index === 0 ? 'orange' : 'green');
-  const rating = Number(product.rating || (index === 0 ? 4.9 : index === 1 ? 4.8 : 5.0));
-  const reviews = product.reviews || (index === 0 ? '1.2k' : index === 1 ? '680' : '940');
+  const tagColor: 'orange' | 'green' = product.tagColor || (index % 2 === 0 ? 'orange' : 'green');
+  const rating = Number(product.rating || 4.9);
+  const reviews = product.reviews ? String(product.reviews) : '1.2k';
 
   return {
     id: product.id,
@@ -216,6 +185,99 @@ const getProductDisplayData = (product: any, index: number, selectedFamily: Fami
     reviews,
     plan
   };
+};
+
+/* ── High-Fidelity Responsive Skeleton Loader ── */
+const SubscriptionPlansSkeleton: React.FC<{ className?: string }> = ({ className = '' }) => {
+  return (
+    <section className={`w-full px-4 sm:px-6 lg:px-8 py-8 lg:py-12 ${className} animate-pulse`}>
+      {/* ── Section 1 Skeleton: Rhythm Filter Bar (Mobile & Desktop) ── */}
+      <div
+        className="w-full max-w-[1332px] mx-auto bg-[#EAE6DE]/80 rounded-[13.5px] p-[27px] mob:p-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 mob:gap-4 sm:gap-6 shadow-sm"
+        style={{
+          borderRadius: '13.5px',
+          minHeight: '113.125px'
+        }}
+      >
+        {/* Left: Icon & Title Placeholders */}
+        <div className="flex items-center gap-3.5 sm:gap-4 w-full sm:w-auto">
+          <div className="w-11 h-11 mob:w-10 mob:h-10 sm:w-12 sm:h-12 rounded-[14px] bg-[#D6D0C4] flex-shrink-0" />
+          <div className="flex flex-col gap-2 flex-1">
+            <div className="h-2.5 w-36 mob:w-28 bg-[#D0C9BC] rounded" />
+            <div className="h-5 mob:h-4 w-64 mob:w-48 bg-[#C5BEB0] rounded" />
+          </div>
+        </div>
+
+        {/* Right: Frequency Pill, Family Selector & Delivery Info Placeholders */}
+        <div className="flex flex-wrap items-center gap-3.5 sm:gap-5 w-full lg:w-auto justify-between lg:justify-end mob:w-full mob:pt-3 mob:border-t mob:border-black/5 mob:pl-0">
+          <div className="w-[92px] h-[37px] rounded-full bg-white/70" />
+          <div className="w-[180px] mob:w-44 h-[37px] rounded-full bg-white/70" />
+          <div className="flex flex-col gap-1.5 mob:w-full sm:pl-5 sm:border-l sm:border-black/10">
+            <div className="h-2.5 w-20 bg-[#D0C9BC] rounded" />
+            <div className="h-3.5 w-36 bg-[#C5BEB0] rounded" />
+          </div>
+        </div>
+      </div>
+
+      {/* ── Section 2 Skeleton: Header & Product Cards (Mobile & Desktop) ── */}
+      <div className="w-full max-w-[1332px] mx-auto mt-10 lg:mt-14">
+        {/* Section Header Placeholder */}
+        <div className="text-left mb-8 flex flex-col gap-2.5">
+          <div className="h-3 w-44 mob:w-32 bg-[#D8D2C6] rounded" />
+          <div className="h-9 mob:h-7 w-80 mob:w-60 bg-[#C5BEB0] rounded" />
+          <div className="h-4 mob:h-3.5 w-full max-w-[560px] bg-[#E0DCD3] rounded" />
+        </div>
+
+        {/* Product Cards Grid: 1 col on mobile, 3 cols on desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
+          {[1, 2, 3].map((skeletonId) => (
+            <div
+              key={skeletonId}
+              className="bg-white rounded-[22px] overflow-hidden border border-[#EBE8E0] shadow-sm flex flex-col justify-between"
+            >
+              {/* Card Image Area Placeholder */}
+              <div className="relative w-full aspect-[4/3] bg-[#EAE7DF] p-3 flex justify-between items-start">
+                <div className="h-5 w-24 bg-black/10 rounded-full" />
+                <div className="h-5 w-14 bg-white/80 rounded-full self-end" />
+              </div>
+
+              {/* Card Body Placeholder */}
+              <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between gap-4 text-left">
+                <div className="flex flex-col gap-2.5">
+                  {/* Title & Weight */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="h-6 w-3/5 bg-[#D8D2C6] rounded" />
+                    <div className="h-4 w-12 bg-[#E2DBD0] rounded" />
+                  </div>
+
+                  {/* Description lines */}
+                  <div className="flex flex-col gap-1.5 pt-1">
+                    <div className="h-3.5 w-full bg-[#EFECE6] rounded" />
+                    <div className="h-3.5 w-4/5 bg-[#EFECE6] rounded" />
+                  </div>
+
+                  {/* Selection Box */}
+                  <div className="bg-[#F9F8F5] rounded-[12px] p-3 border border-[#EFECE6] mt-1 flex flex-col gap-1.5">
+                    <div className="h-2.5 w-28 bg-[#DFDAD0] rounded" />
+                    <div className="h-3 w-full bg-[#EAE6DE] rounded" />
+                  </div>
+                </div>
+
+                {/* Bottom Price & Button */}
+                <div className="pt-2">
+                  <div className="flex items-baseline gap-2 mb-3">
+                    <div className="h-6 w-24 bg-[#D0C9BC] rounded" />
+                    <div className="h-4 w-14 bg-[#DFDAD0] rounded" />
+                  </div>
+                  <div className="h-11 w-full bg-[#F5A623]/35 rounded-full" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 };
 
 interface SubscriptionPlansSectionProps {
@@ -231,9 +293,13 @@ const SubscriptionPlansSection: React.FC<SubscriptionPlansSectionProps> = ({
 }) => {
   const router = useRouter();
   const [selectedFamily, setSelectedFamily] = useState<FamilySize>(2);
-  const [productsList, setProductsList] = useState<any[]>(initialProducts || PRODUCTS_DATA);
+  const [productsList, setProductsList] = useState<any[]>(initialProducts || []);
   const [isLoading, setIsLoading] = useState<boolean>(!initialProducts);
-  const familyOptions: FamilySize[] = [2, 3, 5];
+  const familyOptions: FamilySize[] = [2, 3, 4, 5];
+
+  const filteredProducts = productsList.filter((rawProduct) => {
+    return Boolean(findMatchingUom(rawProduct, selectedFamily));
+  });
 
   const getDataFromApi = useGetDataFromApi();
 
@@ -260,24 +326,29 @@ const SubscriptionPlansSection: React.FC<SubscriptionPlansSectionProps> = ({
       if (items && Array.isArray(items) && items.length > 0) {
         setProductsList(items);
       } else {
-        setProductsList(PRODUCTS_DATA);
+        setProductsList([]);
       }
       setIsLoading(false);
     };
 
-    const failureHandler = (data: any) => {
-      setProductsList(PRODUCTS_DATA);
+    const failureHandler = () => {
+      setProductsList([]);
       setIsLoading(false);
     };
 
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
   }, []);
 
+  /* ── Display Skeleton Loader before the sections appear ── */
+  if (isLoading) {
+    return <SubscriptionPlansSkeleton className={className} />;
+  }
+
   return (
     <section className={`w-full px-4 sm:px-6 lg:px-8 py-8 lg:py-12 ${className}`}>
       {/* ── Section 1: Customize Subscription Rhythm Filter Bar ── */}
       <div
-        className="w-full max-w-[1332px] mx-auto bg-[#EAE6DE] rounded-[13.5px] p-[27px] flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 sm:gap-6 shadow-sm"
+        className="w-full max-w-[1332px] mx-auto bg-[#EAE6DE] rounded-[13.5px] p-[27px] mob:p-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 mob:gap-4 sm:gap-6 shadow-sm"
         style={{
           borderRadius: '13.5px',
           minHeight: '113.125px',
@@ -287,7 +358,7 @@ const SubscriptionPlansSection: React.FC<SubscriptionPlansSectionProps> = ({
       >
         {/* Left: Icon & Title */}
         <div className="flex items-center gap-3.5 sm:gap-4">
-          <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-[14px] bg-[#EA5824] flex items-center justify-center flex-shrink-0 text-white shadow-sm">
+          <div className="w-11 h-11 mob:w-10 mob:h-10 sm:w-12 sm:h-12 rounded-[14px] bg-[#EA5824] flex items-center justify-center flex-shrink-0 text-white shadow-sm">
             <svg
               width="22"
               height="22"
@@ -318,12 +389,10 @@ const SubscriptionPlansSection: React.FC<SubscriptionPlansSectionProps> = ({
               CUSTOMIZE SUBSCRIPTION RHYTHM
             </span>
             <h2
-              className="text-[#132B1E] font-semibold text-[19px] sm:text-[22.5px] leading-[31.5px]"
+              className="text-[#132B1E] font-semibold text-[22.5px] mob:text-[18px] leading-[31.5px] mob:leading-[1.3]"
               style={{
                 fontFamily: 'Recoleta',
                 fontWeight: 600,
-                fontSize: '22.5px',
-                lineHeight: '31.5px',
                 letterSpacing: '0px'
               }}
             >
@@ -383,7 +452,7 @@ const SubscriptionPlansSection: React.FC<SubscriptionPlansSectionProps> = ({
           </div>
 
           {/* Free Delivery Info */}
-          <div className="flex flex-col text-left sm:text-right pl-2 sm:pl-0 sm:border-l sm:border-black/10 sm:pl-5">
+          <div className="flex flex-col text-left sm:text-right pl-2 sm:pl-0 sm:border-l sm:border-black/10 sm:pl-5 mob:w-full mob:pt-3 mob:border-t mob:border-black/10 mob:pl-0">
             <span
               className="text-[#7A837A] uppercase font-bold text-[10px] tracking-wider leading-none mb-1"
               style={{ fontFamily: 'SofiaPro' }}
@@ -408,7 +477,7 @@ const SubscriptionPlansSection: React.FC<SubscriptionPlansSectionProps> = ({
             FIND YOUR WEEKLY FAVOURITES
           </span>
           <h2
-            className="text-[#132B1E] font-semibold text-[32px] sm:text-[38px] lg:text-[42px] leading-[1.1] mb-2.5"
+            className="text-[#132B1E] font-semibold text-[32px] mob:text-[26px] sm:text-[38px] lg:text-[42px] leading-[1.1] mb-2.5"
             style={{ fontFamily: 'Recoleta' }}
           >
             Three ways to fill your kitchen.
@@ -418,35 +487,28 @@ const SubscriptionPlansSection: React.FC<SubscriptionPlansSectionProps> = ({
           </p>
         </div>
 
-        {/* 3 Product Cards Grid */}
-        {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
-            {[1, 2, 3].map((skeletonId) => (
-              <div
-                key={skeletonId}
-                className="bg-white rounded-[22px] overflow-hidden border border-[#EBE8E0] shadow-sm flex flex-col justify-between animate-pulse"
-              >
-                <div className="w-full aspect-[4/3] bg-gray-200" />
-                <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between gap-4">
-                  <div className="flex flex-col gap-2">
-                    <div className="h-6 bg-gray-200 rounded w-3/4" />
-                    <div className="h-4 bg-gray-100 rounded w-full" />
-                    <div className="h-4 bg-gray-100 rounded w-5/6" />
-                    <div className="h-16 bg-[#F9F8F5] rounded-[12px] border border-[#EFECE6] mt-1" />
-                  </div>
-                  <div className="pt-2">
-                    <div className="h-8 bg-gray-200 rounded w-1/2 mb-3" />
-                    <div className="h-11 bg-gray-200 rounded-full w-full" />
-                  </div>
-                </div>
-              </div>
-            ))}
+        {/* Product Cards Grid or Empty State */}
+        {filteredProducts.length === 0 ? (
+          <div className="w-full bg-white rounded-[22px] border border-[#EBE8E0] p-10 text-center shadow-xs">
+            <p className="text-[#556057] text-[15px]" style={{ fontFamily: 'SofiaPro' }}>
+              {productsList.length === 0
+                ? 'No subscription boxes are currently available for this delivery area.'
+                : `No subscription boxes are currently available for Family of ${selectedFamily}.`}
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
-            {productsList.map((rawProduct, idx) => {
+            {filteredProducts.map((rawProduct, idx) => {
               const product = getProductDisplayData(rawProduct, idx, selectedFamily);
               const currentPlan = product.plan;
+              const matchedUom = findMatchingUom(rawProduct, selectedFamily);
+
+              const handleNavigate = () => {
+                const query = matchedUom?.variant_id
+                  ? `?variant=${matchedUom.variant_id}&family=${selectedFamily}`
+                  : `?family=${selectedFamily}`;
+                router.push(`/subscriptionbox/${product.id || 236}${query}`);
+              };
 
               return (
                 <div
@@ -454,7 +516,10 @@ const SubscriptionPlansSection: React.FC<SubscriptionPlansSectionProps> = ({
                   className="bg-white rounded-[22px] overflow-hidden border border-[#EBE8E0] shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between"
                 >
                   {/* Top Image + Badges */}
-                  <div className="relative w-full aspect-[4/3] overflow-hidden bg-[#F2EEE7]">
+                  <div
+                    onClick={handleNavigate}
+                    className="relative w-full aspect-[4/3] overflow-hidden bg-[#F2EEE7] cursor-pointer"
+                  >
                     <img
                       src={product.image}
                       alt={product.title}
@@ -463,14 +528,16 @@ const SubscriptionPlansSection: React.FC<SubscriptionPlansSectionProps> = ({
 
                     {/* Top-Left Floating Badges */}
                     <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
-                      <span
-                        className={`text-white text-[10px] uppercase font-bold px-2.5 py-1 rounded-full shadow-xs tracking-wider ${
-                          product.tagColor === 'orange' ? 'bg-[#EA5824]' : 'bg-[#1E3F2F]'
-                        }`}
-                        style={{ fontFamily: 'SofiaPro' }}
-                      >
-                        {product.tag}
-                      </span>
+                      {product.tag ? (
+                        <span
+                          className={`text-white text-[10px] uppercase font-bold px-2.5 py-1 rounded-full shadow-xs tracking-wider ${
+                            product.tagColor === 'orange' ? 'bg-[#EA5824]' : 'bg-[#1E3F2F]'
+                          }`}
+                          style={{ fontFamily: 'SofiaPro' }}
+                        >
+                          {product.tag}
+                        </span>
+                      ) : null}
 
                       <span
                         className="bg-[#132B1E]/90 backdrop-blur-md text-white text-[10px] uppercase font-bold px-2.5 py-1 rounded-full shadow-xs tracking-wider"
@@ -497,7 +564,7 @@ const SubscriptionPlansSection: React.FC<SubscriptionPlansSectionProps> = ({
                       {/* Title and Weight */}
                       <div className="flex items-start justify-between gap-2">
                         <h3
-                          onClick={() => router.push(`/subscriptionbox/${product.id || 236}`)}
+                          onClick={handleNavigate}
                           className="text-[#132B1E] hover:text-[#8D4320] transition-colors cursor-pointer font-semibold text-[20px] leading-tight"
                           style={{ fontFamily: 'Recoleta' }}
                         >
@@ -520,42 +587,43 @@ const SubscriptionPlansSection: React.FC<SubscriptionPlansSectionProps> = ({
                       </p>
 
                       {/* This Week's Selection Box */}
-                      <div className="bg-[#F9F8F5] rounded-[12px] p-3 border border-[#EFECE6] mt-1">
-                        <span
-                          className="text-[#7A837A] uppercase font-bold text-[10px] tracking-wider mb-1 block"
-                          style={{ fontFamily: 'SofiaPro' }}
-                        >
-                          THIS WEEK&apos;S SELECTION:
-                        </span>
-                        <p
-                          className="text-[#2C3830] text-[12px] leading-snug line-clamp-2"
-                          style={{ fontFamily: 'SofiaPro' }}
-                        >
-                          {currentPlan.selection}
-                        </p>
-                      </div>
+                      {currentPlan.selection ? (
+                        <div className="bg-[#F9F8F5] rounded-[12px] p-3 border border-[#EFECE6] mt-1">
+                          <span
+                            className="text-[#7A837A] uppercase font-bold text-[10px] tracking-wider mb-1 block"
+                            style={{ fontFamily: 'SofiaPro' }}
+                          >
+                            THIS WEEK&apos;S SELECTION:
+                          </span>
+                          <p
+                            className="text-[#2C3830] text-[12px] leading-snug line-clamp-2"
+                            style={{ fontFamily: 'SofiaPro' }}
+                          >
+                            {currentPlan.selection}
+                          </p>
+                        </div>
+                      ) : null}
                     </div>
 
                     {/* Bottom Price & Subscribe Button */}
                     <div className="pt-2">
                       <div className="flex items-baseline justify-between mb-3">
-                        <div className="flex items-baseline">
+                        <div className="flex items-baseline gap-2">
                           <span
-                            className="text-[#132B1E] font-bold text-[24px] leading-none"
+                            className="text-[#132B1E] font-bold text-[24px] mob:text-[22px] leading-none"
                             style={{ fontFamily: 'Recoleta' }}
                           >
-                            ₹{currentPlan.priceMonth.toLocaleString()}
+                            ₹{currentPlan.price.toLocaleString()}
                           </span>
-                          <span
-                            className="text-[#7A837A] text-[13px] font-normal ml-1"
-                            style={{ fontFamily: 'SofiaPro' }}
-                          >
-                            / month
-                          </span>
+                          {currentPlan.marketPrice && currentPlan.marketPrice > currentPlan.price ? (
+                            <span
+                              className="text-[#9BA39B] line-through text-[15px] mob:text-[13.5px] font-normal"
+                              style={{ fontFamily: 'SofiaPro' }}
+                            >
+                              ₹{currentPlan.marketPrice.toLocaleString()}
+                            </span>
+                          ) : null}
                         </div>
-                        <span className="text-[#7A837A] text-[12px]" style={{ fontFamily: 'SofiaPro' }}>
-                          ₹{currentPlan.perDelivery.toLocaleString()} per harvest delivery
-                        </span>
                       </div>
 
                       <button
@@ -564,7 +632,7 @@ const SubscriptionPlansSection: React.FC<SubscriptionPlansSectionProps> = ({
                           if (onSubscribe) {
                             onSubscribe(rawProduct, selectedFamily);
                           } else {
-                            router.push(`/subscriptionbox/${product.id || 236}`);
+                            handleNavigate();
                           }
                         }}
                         className="w-full bg-[#F5A623] hover:bg-[#EAA01E] active:scale-[0.98] text-[#132B1E] font-semibold text-[14px] py-3 rounded-full flex items-center justify-center gap-1.5 shadow-sm transition-all cursor-pointer"

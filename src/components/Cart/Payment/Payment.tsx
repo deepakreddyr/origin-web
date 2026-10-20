@@ -24,9 +24,17 @@ const Payment = (props: any) => {
   const [profile, setProfileAtom] = useAtom(profileAtom);
   const [paymentFLowScreen, setPaymentFlowScreen] = useState(TabTypeConstant.MAKE_PAYMENT);
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
-  const { cart, subscriptionCart, subscriptionBoxCart, isMangoPage, actions } = useCartStore();
-  const isSubscription = subscriptionCart.isSubscriptionActive;
-  const isSubscriptionBox = subscriptionBoxCart?.isSubscriptionBoxActive;
+  const {
+    cart,
+    subscriptionCart,
+    subscriptionBoxCart,
+    isMangoPage,
+    isSubscriptionBoxPage,
+    isSubscriptionPage,
+    actions
+  } = useCartStore();
+  const isSubscription = isSubscriptionPage && Boolean(subscriptionCart?.isSubscriptionActive);
+  const isSubscriptionBox = isSubscriptionBoxPage;
   const isAnySubscription = isSubscription || isSubscriptionBox;
   const sendDataToApi = useSendDataToApi();
   const [paymentModalDetails, setPaymentModalDetails] = useState({
@@ -82,10 +90,14 @@ const Payment = (props: any) => {
     });
     setPaymentFlowScreen(TabTypeConstant.PAYMENT_SUCCESS);
     dispatch(setIsHeaderVisible(false));
-    clearBackendCart();
-    dispatch(actions.clearCart());
+    if (isSubscriptionBox) {
+      dispatch(clearSubscriptionBoxCart());
+    } else {
+      clearBackendCart();
+      dispatch(actions.clearCart());
+      clearPostPaymentItemsinLs();
+    }
     dispatch(actions.setCartTabType(TabTypeConstant.PAYMENT));
-    clearPostPaymentItemsinLs();
 
     // Track payment success & purchase events
     trackEvent(AnalyticsEvents.PAYMENT_SUCCESS, {

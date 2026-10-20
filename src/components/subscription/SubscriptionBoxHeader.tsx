@@ -13,47 +13,51 @@ import cartIcon from '/public/assets/icons/cartIcon.png';
 import locationArrow from '/public/assets/svg/locationarrow.svg';
 import userIcon from '/public/assets/images/userIcon.png';
 
+import { hydrateSubscriptionBoxCart } from '@/store/slice/SubscriptionBoxCartSlice';
+import { setRouteSourceToLs } from '@/utilities/utils';
+
 interface SubscriptionBoxHeaderProps {
   isHeaderSticky?: boolean;
 }
 
-const getCartItemCount = (cartItems: any[]) => {
-  let count = 0;
-  cartItems?.forEach((product: any) => {
-    product.multiple_uoms?.forEach((uom: any) => {
-      if (uom.cart_ripeness && uom.cart_ripeness.length > 0) {
-        uom.cart_ripeness.forEach((ripeness: any) => {
-          const qty = Number(ripeness.qty);
-          if (qty > 0) count++;
-        });
-      } else if (uom.cart_quantity > 0) {
-        count++;
-      }
-    });
-  });
-  return count;
-};
-
 const SubscriptionBoxHeader: React.FC<SubscriptionBoxHeaderProps> = ({ isHeaderSticky = true }) => {
   const dispatch = useDispatch();
   const [address] = useAtom(addressAtom);
-  const { cart, subscriptionBoxCart } = useCartStore();
+  const { subscriptionBoxCart } = useCartStore();
   const loginDetails = useSelector((state: any) => state.loginDetails);
 
-  const cartBadgeCount =
-    subscriptionBoxCart?.isSubscriptionBoxActive && subscriptionBoxCart?.item
-      ? subscriptionBoxCart.totalQuantity || 1
-      : getCartItemCount(cart?.items || []);
+  React.useEffect(() => {
+    dispatch(hydrateSubscriptionBoxCart());
+  }, [dispatch]);
+
+  const cartBadgeCount = subscriptionBoxCart?.item ? subscriptionBoxCart.totalQuantity || 1 : 0;
 
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSelectAddress = () => {
-    dispatch(setCartTabType(TabTypeConstant.CART_ADDRESS_LIST));
     dispatch(setIsSidebarOpen(true));
+
+    const token = typeof window !== 'undefined' ? localStorage.getItem('user_token') : null;
+    const isLoggedIn = Boolean(loginDetails?.isLogin || token);
+
+    if (!isLoggedIn) {
+      dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
+      return;
+    }
+
+    setRouteSourceToLs(TabTypeConstant.ACCOUNT_MAIN);
+
+    if (address.loading || (address?.address && address.address.length > 0)) {
+      dispatch(setTabType(TabTypeConstant.SELECT_ADDRESS));
+    } else {
+      dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));
+    }
   };
 
   const handleAccountClick = () => {
-    if (loginDetails?.isLogin) {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('user_token') : null;
+    const isLoggedIn = Boolean(loginDetails?.isLogin || token);
+    if (isLoggedIn) {
       dispatch(setTabType(TabTypeConstant.ACCOUNT_MAIN));
     } else {
       dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
@@ -68,7 +72,11 @@ const SubscriptionBoxHeader: React.FC<SubscriptionBoxHeaderProps> = ({ isHeaderS
         tabType: TabTypeConstant.CART
       })
     );
-    dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
+    if (!subscriptionBoxCart?.item) {
+      dispatch(setCartTabType(TabTypeConstant.EMPTY_CART));
+    } else {
+      dispatch(setCartTabType(TabTypeConstant.CART_MAIN));
+    }
   };
 
   return (
@@ -94,7 +102,7 @@ const SubscriptionBoxHeader: React.FC<SubscriptionBoxHeaderProps> = ({ isHeaderS
         <button
           type="button"
           onClick={handleSelectAddress}
-          className="flex items-center gap-2 group text-left max-w-[180px] sm:max-w-[220px] md:max-w-[280px] cursor-pointer"
+          className="flex items-center gap-2 group text-left max-w-[180px] mob:max-w-[125px] xs:max-w-[170px] sm:max-w-[220px] md:max-w-[280px] cursor-pointer"
         >
           <div className="relative w-3.5 h-3.5 flex-shrink-0 mt-0.5">
             <Image src={locationArrow} alt="Location" fill className="object-contain" />

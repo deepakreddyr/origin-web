@@ -7,8 +7,12 @@ import * as subscriptionBoxCartActions from '@/store/slice/SubscriptionBoxCartSl
 
 export const useCartStore = () => {
   const router = useRouter();
-  const isMangoPage = router.pathname.startsWith('/mango');
-  const isSubscriptionBoxPage = router.pathname.startsWith('/subscriptionbox');
+  const currentPath = router?.pathname || (typeof window !== 'undefined' ? window.location.pathname : '');
+  const isMangoPage = Boolean(currentPath?.startsWith('/mango') || router?.asPath?.startsWith('/mango'));
+  const isSubscriptionBoxPage = Boolean(
+    currentPath?.startsWith('/subscriptionbox') || router?.asPath?.startsWith('/subscriptionbox')
+  );
+  const isSubscriptionPage = Boolean(currentPath === '/subscription' || router?.asPath?.startsWith('/subscription'));
 
   const cart = useSelector((state: any) => (isMangoPage ? state.mangoCart : state.cart));
   const subscriptionCart = useSelector((state: any) => state.subscriptionCart);
@@ -73,6 +77,7 @@ export const useCartStore = () => {
     subscriptionBoxCart,
     isMangoPage,
     isSubscriptionBoxPage,
+    isSubscriptionPage,
     actions,
     subscriptionBoxCartActions
   };

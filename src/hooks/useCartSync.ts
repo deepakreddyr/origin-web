@@ -9,7 +9,7 @@ let isSyncingInProgress = false;
 
 export const useCartSync = () => {
   const dispatch = useDispatch();
-  const { cart, isMangoPage, actions, subscriptionCart } = useCartStore();
+  const { cart, isMangoPage, isSubscriptionBoxPage, actions, subscriptionCart } = useCartStore();
   const { setCartItems, setCartMinimum, setFreeItems, setShowTimeslotSheet, setOrderRestrictionData } = actions;
 
   const isSubscription = subscriptionCart?.isSubscriptionActive;
@@ -68,7 +68,7 @@ export const useCartSync = () => {
 
     const token = localStorage.getItem('user_token');
     if (!token || !loginDetails.isLogin) return;
-    if (isSubscription) return;
+    if (isSubscription || isSubscriptionBoxPage) return;
 
     const addressFromLs = getAddressAndStoreId();
     const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};

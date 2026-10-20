@@ -128,12 +128,18 @@ const MangoHeader = ({ isHeaderSticky = true }: MangoHeaderProps) => {
 
   const handleSelectAddress = () => {
     dispatch(setIsSidebarOpen(true));
-    if (!loginDetails.isLogin) {
+
+    const token = typeof window !== 'undefined' ? localStorage.getItem('user_token') : null;
+    const isLoggedIn = Boolean(loginDetails?.isLogin || token);
+
+    if (!isLoggedIn) {
       dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
       return;
     }
+
     setRouteSourceToLs(TabTypeConstant.ACCOUNT_MAIN);
-    if (address?.address && address.address.length > 0) {
+
+    if (address.loading || (address?.address && address.address.length > 0)) {
       dispatch(setTabType(TabTypeConstant.SELECT_ADDRESS));
     } else {
       dispatch(setTabType(TabTypeConstant.MANAGE_ADDRESS));

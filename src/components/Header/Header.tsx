@@ -232,7 +232,10 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
   const handleSelectAddress = () => {
     dispatch(setIsSidebarOpen(true));
 
-    if (!loginDetails.isLogin) {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('user_token') : null;
+    const isLoggedIn = Boolean(loginDetails?.isLogin || token);
+
+    if (!isLoggedIn) {
       dispatch(setTabType(TabTypeConstant.ENTER_MOBILE_NUMBER));
       return;
     }

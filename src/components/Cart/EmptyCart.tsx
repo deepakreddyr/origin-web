@@ -8,7 +8,7 @@ import { useCartStore } from '@/hooks/useCartStore';
 
 const EmptyCart = () => {
   const router = useRouter();
-  const { isMangoPage } = useCartStore();
+  const { isMangoPage, isSubscriptionBoxPage } = useCartStore();
   const dispatch = useDispatch();
 
   return (
@@ -21,13 +21,13 @@ const EmptyCart = () => {
       <div className="mt-5 sm:mt-4 md:mt-[1.25vw] flex flex-col items-center">
         {/* 📝 Text */}
         <p className="font-[SofiaPro] text-[4vw] sm:text-[2.5vw] md:text-[.97vw] font-semibold text-center">
-          Your Cart is Empty
+          {isSubscriptionBoxPage ? 'Your Subscription Box Cart is Empty' : 'Your Cart is Empty'}
         </p>
 
         {/* 🔘 Button */}
         <button
           onClick={() => {
-            const targetUrl = isMangoPage ? '/mango' : '/shop';
+            const targetUrl = isSubscriptionBoxPage ? '/subscriptionbox' : isMangoPage ? '/mango' : '/shop';
             router.push(targetUrl);
             dispatch(setIsSidebarOpen(false));
           }}
@@ -36,7 +36,7 @@ const EmptyCart = () => {
                      px-5 sm:px-7 md:px-[2vw] py-2.5 sm:py-2 md:py-[.6vw] 
                      rounded-full"
         >
-          Add Items now
+          {isSubscriptionBoxPage ? 'Explore Subscription Boxes' : 'Add Items now'}
         </button>
       </div>
     </div>

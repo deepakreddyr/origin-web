@@ -21,7 +21,7 @@ import { addressAtom } from '@/features/Address/context/atoms';
 
 const SidebarScreen = () => {
   const router = useRouter();
-  const { cart, isMangoPage, actions } = useCartStore();
+  const { cart, isMangoPage, isSubscriptionBoxPage, actions } = useCartStore();
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const [activeScreen, setActiveScreen] = useAtom(addressActiveScreenAtom);
   const [isCartOpen] = useAtom(isCartPageIsOpen);
@@ -129,7 +129,7 @@ const SidebarScreen = () => {
           dispatch(actions.setCartTabType(TabTypeConstant.CART_MAIN));
           break;
         }
-        if (isMangoPage && cart.cartTabType === TabTypeConstant.CART_MAIN) {
+        if ((isMangoPage || isSubscriptionBoxPage) && cart.cartTabType === TabTypeConstant.CART_MAIN) {
           dispatch(setIsSidebarOpen(false));
           break;
         }
@@ -165,7 +165,7 @@ const SidebarScreen = () => {
           cart.cartTabType === TabTypeConstant.PAYMENT_SELECTION
         )
           return true;
-        if (cart.cartTabType === TabTypeConstant.CART_MAIN) return isMangoPage;
+        if (cart.cartTabType === TabTypeConstant.CART_MAIN) return isMangoPage || isSubscriptionBoxPage;
         return false;
 
       case TabTypeConstant.EMPTY_CART:

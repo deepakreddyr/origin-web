@@ -33,6 +33,22 @@ export interface SubscriptionBoxCartState {
   isSubscriptionBoxActive: boolean;
 }
 
+export const SUBSCRIPTION_BOX_CART_LS_KEY = 'subscription_box_cart';
+
+const saveSubscriptionBoxCartToLs = (state: SubscriptionBoxCartState) => {
+  if (typeof window !== 'undefined') {
+    try {
+      if (state.item) {
+        localStorage.setItem(SUBSCRIPTION_BOX_CART_LS_KEY, JSON.stringify(state));
+      } else {
+        localStorage.removeItem(SUBSCRIPTION_BOX_CART_LS_KEY);
+      }
+    } catch (e) {
+      console.error('Failed to save subscription box cart to localStorage:', e);
+    }
+  }
+};
+
 const initialState: SubscriptionBoxCartState = {
   item: null,
   totalQuantity: 0,
@@ -44,20 +60,41 @@ export const subscriptionBoxCartSlice = createSlice({
   name: 'subscriptionBoxCart',
   initialState,
   reducers: {
+    hydrateSubscriptionBoxCart: (state) => {
+      if (typeof window !== 'undefined') {
+        try {
+          const stored = localStorage.getItem(SUBSCRIPTION_BOX_CART_LS_KEY);
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (parsed && parsed.item) {
+              state.item = parsed.item;
+              state.totalQuantity = parsed.totalQuantity || parsed.item.quantity || 1;
+              state.totalPrice = parsed.totalPrice || parsed.item.price * (parsed.item.quantity || 1);
+              state.isSubscriptionBoxActive = true;
+            }
+          }
+        } catch (e) {
+          console.error('Failed to hydrate subscription box cart from localStorage:', e);
+        }
+      }
+    },
     setSubscriptionBoxItem: (state, action: PayloadAction<SubscriptionBoxItem>) => {
       state.item = action.payload;
       state.totalQuantity = action.payload.quantity;
       state.totalPrice = action.payload.price * action.payload.quantity;
       state.isSubscriptionBoxActive = true;
+      saveSubscriptionBoxCartToLs(state);
     },
     setIsSubscriptionBoxActive: (state, action: PayloadAction<boolean>) => {
       state.isSubscriptionBoxActive = action.payload;
+      saveSubscriptionBoxCartToLs(state);
     },
     clearSubscriptionBoxCart: (state) => {
       state.item = null;
       state.totalQuantity = 0;
       state.totalPrice = 0;
       state.isSubscriptionBoxActive = false;
+      saveSubscriptionBoxCartToLs(state);
     },
     updateSubscriptionBoxQuantity: (state, action: PayloadAction<number>) => {
       if (state.item) {
@@ -65,11 +102,13 @@ export const subscriptionBoxCartSlice = createSlice({
         state.totalQuantity = action.payload;
         state.totalPrice = state.item.price * action.payload;
       }
+      saveSubscriptionBoxCartToLs(state);
     }
   }
 });
 
 export const {
+  hydrateSubscriptionBoxCart,
   setSubscriptionBoxItem,
   setIsSubscriptionBoxActive,
   clearSubscriptionBoxCart,

@@ -42,7 +42,7 @@ const SubscriptionPage = ({ mainMenuItems, footerData }: SubscriptionPageProps) 
         <SubscriptionPlansSection />
         <SubscriptionEthicalAlliance />
         <SubscriptionGrowerSpotlight />
-        <SubscriptionFeedbackSection />
+        {/* <SubscriptionFeedbackSection /> */}
       </main>
     </Layout>
   );

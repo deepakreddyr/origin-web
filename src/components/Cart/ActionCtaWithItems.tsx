@@ -31,11 +31,21 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
   isDisabled,
   orderRestrictionData,
   showAddressModal = false,
-  isSubscription = false,
+  isSubscription: propIsSubscription = false,
   cartMinimum = 0
 }) => {
-  const { cart, subscriptionCart, subscriptionBoxCart, isMangoPage, actions } = useCartStore();
-  const isSubscriptionBox = subscriptionBoxCart?.isSubscriptionBoxActive;
+  const {
+    cart,
+    subscriptionCart,
+    subscriptionBoxCart,
+    isMangoPage,
+    isSubscriptionBoxPage,
+    isSubscriptionPage,
+    actions
+  } = useCartStore();
+  const isSubscriptionBox = isSubscriptionBoxPage;
+  const isSubscription = propIsSubscription || (isSubscriptionPage && Boolean(subscriptionCart?.isSubscriptionActive));
+  const isAnySubscription = isSubscription || isSubscriptionBox;
   const loginDetails = useSelector((state: any) => state.loginDetails);
   const placeOrderDetails = useSelector((state: any) => state.placeOrderDetails);
   const [addressState] = useAtom(addressAtom);
@@ -55,7 +65,11 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
 
     let disabled = false;
 
-    if (isSubscription) {
+    if (isSubscriptionBox) {
+      if (!subscriptionBoxCart?.item) {
+        disabled = true;
+      }
+    } else if (isSubscription) {
       if (subscriptionCart?.item) {
         const item = subscriptionCart.item;
         if (item.quantity > item.max_qty) {
@@ -93,11 +107,11 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
     }
 
     setShouldDisable(disabled);
-  }, [cart, isSubscription, subscriptionCart]);
+  }, [cart, isSubscription, isSubscriptionBox, subscriptionCart, subscriptionBoxCart]);
 
   useEffect(() => {
     recalcDisableState();
-  }, [cart, subscriptionCart, recalcDisableState, isSubscription]);
+  }, [cart, subscriptionCart, subscriptionBoxCart, recalcDisableState, isSubscription, isSubscriptionBox]);
 
   // Listen to custom event triggered after removal
   useEffect(() => {
@@ -196,7 +210,7 @@ const ActionCtaWithItems: React.FC<ActionCtaWithItemsProps> = ({
 
   const remainingAmount = cartMinimum > 0 ? (cartMinimum - parseFloat(cart.totalPrice)).toFixed(2) : 0;
   const showMinOrderBanner =
-    !isSubscription && cart.items.length > 0 && cartMinimum > 0 && parseFloat(cart.totalPrice) < cartMinimum;
+    !isAnySubscription && cart.items.length > 0 && cartMinimum > 0 && parseFloat(cart.totalPrice) < cartMinimum;
 
   const renderOriginalUI = () => (
     <div className="relative">

@@ -20,7 +20,7 @@ const SubscriptionEthicalAlliance: React.FC<SubscriptionEthicalAllianceProps> = 
         }}
       >
         {/* Left Column (spans 6 of 12 columns) */}
-        <div className="lg:col-span-6 w-full h-[360px] sm:h-[420px] lg:h-[502.4182434082031px] relative rounded-[24px] overflow-hidden shadow-sm bg-[#EAE6DE]">
+        <div className="lg:col-span-6 w-full h-[360px] mob:h-[260px] sm:h-[420px] lg:h-[502.4182434082031px] relative rounded-[24px] overflow-hidden shadow-sm bg-[#EAE6DE]">
           {/* Farm Photograph */}
           <img
             src="https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=1400&q=85"
@@ -30,7 +30,7 @@ const SubscriptionEthicalAlliance: React.FC<SubscriptionEthicalAllianceProps> = 
           />
 
           {/* Top-Left Floating Badge */}
-          <div className="absolute top-4 left-4 sm:top-5 sm:left-5 z-10 flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-white/60">
+          <div className="absolute top-4 left-4 sm:top-5 sm:left-5 z-10 flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-white/60 max-w-[calc(100%-32px)]">
             {/* Rosette Certificate Icon */}
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-[#8D4320] flex-shrink-0">
               <path
@@ -49,7 +49,7 @@ const SubscriptionEthicalAlliance: React.FC<SubscriptionEthicalAllianceProps> = 
               />
             </svg>
             <span
-              className="text-[#132B1E] font-semibold text-[12px] sm:text-[13px] whitespace-nowrap"
+              className="text-[#132B1E] font-semibold text-[12px] sm:text-[13px] whitespace-nowrap mob:truncate"
               style={{ fontFamily: 'SofiaPro' }}
             >
               Direct from certified heirloom growers
@@ -62,7 +62,7 @@ const SubscriptionEthicalAlliance: React.FC<SubscriptionEthicalAllianceProps> = 
             style={{
               width: 'calc(100% - 32px)',
               maxWidth: '607.5px',
-              height: '57.71249771118164px',
+              minHeight: '57.71249771118164px',
               paddingTop: '9px',
               paddingRight: '9px',
               paddingBottom: '9px',
@@ -119,12 +119,10 @@ const SubscriptionEthicalAlliance: React.FC<SubscriptionEthicalAllianceProps> = 
 
             {/* Main Headline */}
             <h2
-              className="text-[#132B1E] font-semibold text-[30px] sm:text-[38px] lg:text-[45px] mb-3 sm:mb-4 tracking-tight"
+              className="text-[#132B1E] font-semibold text-[45px] mob:text-[26px] mob:leading-[1.15] sm:text-[36px] sm:leading-[1.2] lg:text-[45px] lg:leading-[56.25px] mb-3 sm:mb-4 tracking-tight"
               style={{
                 fontFamily: 'Recoleta',
                 fontWeight: 600,
-                fontSize: '45px',
-                lineHeight: '56.25px',
                 letterSpacing: '-0.68px',
                 verticalAlign: 'middle'
               }}
@@ -134,12 +132,10 @@ const SubscriptionEthicalAlliance: React.FC<SubscriptionEthicalAllianceProps> = 
 
             {/* Description Paragraph */}
             <p
-              className="text-[#556057] mb-6 max-w-[560px]"
+              className="text-[#556057] text-[18px] leading-[27px] mob:text-[15px] mob:leading-[22px] mb-6 max-w-[560px]"
               style={{
                 fontFamily: 'SofiaPro',
                 fontWeight: 400,
-                fontSize: '18px',
-                lineHeight: '27px',
                 letterSpacing: '0px',
                 verticalAlign: 'middle'
               }}

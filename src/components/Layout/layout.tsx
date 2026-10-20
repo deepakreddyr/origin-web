@@ -29,6 +29,8 @@ import { useState } from 'react';
 import { useCartStore } from '@/hooks/useCartStore';
 import { useCartSync } from '@/hooks/useCartSync';
 
+import { hydrateSubscriptionBoxCart } from '@/store/slice/SubscriptionBoxCartSlice';
+
 export default function Layout({
   children,
   mainMenuItems,
@@ -58,11 +60,15 @@ export default function Layout({
   const [, setLoginInfo] = useAtom(loginAtom); // Jotai atom for login info
   const getDataFromApi = useGetDataFromApi();
 
-  const { isMangoPage, actions } = useCartStore();
+  const { isMangoPage, isSubscriptionBoxPage, actions } = useCartStore();
   const { sendItemsToApi, fetchCartItemsFromApi } = useCartSync();
   const loginDetails = useSelector((state: any) => state.loginDetails);
 
   useEffect(() => {
+    if (isSubscriptionBoxPage) {
+      dispatch(hydrateSubscriptionBoxCart());
+      return;
+    }
     const lsKey = isMangoPage ? 'mango_cart_items' : 'cart_items';
     const cart = localStorage.getItem(lsKey);
     if (cart) {

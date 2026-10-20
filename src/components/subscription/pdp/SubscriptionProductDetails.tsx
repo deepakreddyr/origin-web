@@ -141,7 +141,20 @@ const SubscriptionProductDetails: React.FC<SubscriptionProductDetailsProps> = ({
             };
 
             if (updatedItem.multiple_uoms && updatedItem.multiple_uoms.length > 0) {
-              setSelectedUom(updatedItem.multiple_uoms[0]);
+              const targetVariantId = query.variant ? Number(query.variant) : null;
+              const targetFamily = query.family ? String(query.family) : null;
+              let matchedUom = null;
+              if (targetVariantId) {
+                matchedUom = updatedItem.multiple_uoms.find((u: any) => u.variant_id === targetVariantId);
+              }
+              if (!matchedUom && targetFamily) {
+                matchedUom = updatedItem.multiple_uoms.find((u: any) =>
+                  String(u.unit || u.name || '')
+                    .toLowerCase()
+                    .includes(targetFamily.toLowerCase())
+                );
+              }
+              setSelectedUom(matchedUom || updatedItem.multiple_uoms[0]);
             }
             return updatedItem;
           });
@@ -196,7 +209,7 @@ const SubscriptionProductDetails: React.FC<SubscriptionProductDetailsProps> = ({
     <div className="w-full bg-white min-h-screen pt-4 pb-16">
       <div className="w-full max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-[54px]">
         {/* Top Breadcrumb & Next Harvest Dispatch Ribbon */}
-        <div className="flex flex-wrap items-center justify-between gap-3 py-3 mb-4 text-[12.5px] border-b border-black/5">
+        <div className="flex flex-wrap items-center justify-between gap-3 py-3 mb-6 text-[12.5px] border-b border-black/5">
           {/* Breadcrumbs */}
           <div className="flex items-center gap-2 text-[#7A837A]" style={{ fontFamily: 'SofiaPro' }}>
             <Link href="/" className="hover:text-[#132B1E] flex items-center gap-1">
@@ -222,37 +235,44 @@ const SubscriptionProductDetails: React.FC<SubscriptionProductDetailsProps> = ({
         </div>
 
         {/* Main 2-Column Product Configurator & Details */}
-        <div className="flex flex-col lg:flex-row items-start justify-between gap-6 lg:gap-8 xl:gap-[40px] mb-16">
-          {/* Left Column: Gallery + Dispatch Manifest + Provenance Banner (Same size all the way down) */}
-          <div className="w-full lg:flex-1 lg:max-w-[758.25px] flex flex-col gap-6">
-            <SubscriptionGallery
-              images={
-                itemData.multiple_images && itemData.multiple_images.length > 0
-                  ? itemData.multiple_images
-                  : [itemData.image]
-              }
-              // harvestWeek="Harvest Week #42"
-              portionSuitability={
-                selectedUom?.unit?.includes('2')
-                  ? 'Ideal for 2–4 Persons'
-                  : selectedUom?.unit?.includes('3')
-                    ? 'Ideal for 3–5 Persons'
-                    : 'Ideal for 4–6 Persons'
-              }
-            />
+        <div className="flex flex-col lg:flex-row items-start justify-between gap-6 lg:gap-8 xl:gap-[40px] mb-6 lg:mb-16">
+          {/* Left Column: Gallery + Dispatch Manifest + Provenance Banner */}
+          <div className="contents lg:flex lg:flex-col lg:flex-1 lg:max-w-[758.25px] lg:gap-8">
+            {/* Section 1: Gallery */}
+            <div className="order-1 lg:order-none w-full">
+              <SubscriptionGallery
+                images={
+                  itemData.multiple_images && itemData.multiple_images.length > 0
+                    ? itemData.multiple_images
+                    : [itemData.image]
+                }
+                // harvestWeek="Harvest Week #42"
+                portionSuitability={
+                  selectedUom?.unit?.includes('2')
+                    ? 'Ideal for 2–4 Persons'
+                    : selectedUom?.unit?.includes('3')
+                      ? 'Ideal for 3–5 Persons'
+                      : 'Ideal for 4–6 Persons'
+                }
+              />
+            </div>
 
             {/* Section 2: Dispatch Manifest (What's in this Sunday's Harvest Box) */}
-            <SubscriptionDispatchManifest
-              harvestItems={selectedUom?.harvest_items || []}
-              totalWeight={selectedUom?.weight || '~3.2 kg'}
-            />
+            <div className="order-3 lg:order-none w-full">
+              <SubscriptionDispatchManifest
+                harvestItems={selectedUom?.harvest_items || []}
+                totalWeight={selectedUom?.weight || '~3.2 kg'}
+              />
+            </div>
 
             {/* Section 3: Provenance Banner (Green Earth Organics) */}
-            <SubscriptionProvenanceBanner />
+            <div className="order-4 lg:order-none w-full">
+              <SubscriptionProvenanceBanner />
+            </div>
           </div>
 
-          {/* Right Column: Sticky Buy Box */}
-          <div className="w-full lg:w-[480px] xl:w-[528.75px] shrink-0 lg:sticky lg:top-[90px]">
+          {/* Right Column: Sticky Buy Box (Appears as order-2 on mobile, right below Gallery and before Dispatch Manifest) */}
+          <div className="order-2 lg:order-none w-full lg:w-[480px] xl:w-[528.75px] shrink-0 lg:sticky lg:top-[90px]">
             <SubscriptionBuyBox itemData={itemData} onSelectUom={(uom) => setSelectedUom(uom)} />
           </div>
         </div>

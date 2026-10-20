@@ -34,7 +34,7 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
   subtitle = 'Every week, we curate seasonal organic produce directly from certified regenerative micro-farms and deliver to your kitchen within 18 hours of harvest.',
   ctaText = 'Explore Baskets',
   onCtaClick,
-  // trustBadge1 = '100% Certified Organic',
+  trustBadge1 = '100% Certified Organic',
   trustBadge2 = 'Picked & Shipped in 18h',
   // imagePillText = '100% Certified Regenerative Soil',
   cardBadgeHours = '18h',
@@ -45,14 +45,9 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
     <section
       className={`w-full bg-[#F5F3EE] pt-[84px] md:pt-[110px] pb-10 lg:pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden ${className}`}
     >
-      <div
-        className="w-full max-w-[1332px] mx-auto min-h-[652.5px] grid grid-cols-1 lg:grid-cols-12 gap-[32px] lg:gap-[45px] items-center"
-        style={{
-          minHeight: '652.5px'
-        }}
-      >
+      <div className="w-full max-w-[1332px] mx-auto min-h-[652.5px] mob:min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-[32px] lg:gap-[45px] items-center">
         {/* Left Column (spans 6 of 12 columns, 643.5px width) */}
-        <div className="lg:col-span-6 w-full max-w-[643.5px] py-[18px] flex flex-col justify-center items-start text-left gap-[22px]">
+        <div className="lg:col-span-6 w-full max-w-[643.5px] py-[18px] mob:py-2 flex flex-col justify-center items-start text-left gap-[22px] mob:gap-4">
           {/* Eyebrow / Tag */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EFE9DC] border border-[#E2DBD0]">
             <span className="w-2 h-2 rounded-full bg-[#A85125]" />
@@ -66,7 +61,7 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
 
           {/* Heading */}
           <h1
-            className="text-[#132B1E] font-semibold text-[38px] sm:text-[46px] lg:text-[54px] xl:text-[56px] leading-[1.08] tracking-[-0.02em]"
+            className="text-[#132B1E] font-semibold text-[38px] mob:text-[30px] sm:text-[46px] lg:text-[54px] xl:text-[56px] leading-[1.08] tracking-[-0.02em]"
             style={{ fontFamily: 'Recoleta' }}
           >
             {title}
@@ -74,11 +69,10 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
 
           {/* Description */}
           <p
-            className="text-[#4F5952] text-[16px] sm:text-[17px] md:text-[1.3vw] leading-[1.6] w-full max-w-[648px] lg:w-[628.91px] min-h-[99px] pr-0 sm:pr-[24px] lg:pr-[53.91px]"
+            className="text-[#4F5952] text-[16px] mob:text-[14.5px] sm:text-[17px] md:text-[1.3vw] leading-[1.6] w-full max-w-[648px] lg:w-[628.91px] min-h-[99px] mob:min-h-0 pr-0 sm:pr-[24px] lg:pr-[53.91px]"
             style={{
               fontFamily: 'SofiaPro',
-              maxWidth: '648px',
-              minHeight: '99px'
+              maxWidth: '648px'
             }}
           >
             {subtitle}
@@ -116,7 +110,7 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
 
           {/* Trust Badges Row */}
           <div
-            className="w-[380px] flex flex-wrap items-center gap-6 pt-5 mt-2"
+            className="w-[380px] mob:w-full flex flex-wrap items-center gap-6 mob:gap-4 pt-5 mt-2"
             style={{
               borderTop: '1.13px solid #E4E2DD'
             }}
@@ -137,12 +131,12 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 <path d="m9 12 2 2 4-4" />
               </svg>
-              {/* <span
+              <span
                 className="text-[#243328] font-medium text-[13px] md:text-[14px]"
                 style={{ fontFamily: 'SofiaPro' }}
               >
                 {trustBadge1}
-              </span> */}
+              </span>
             </div>
 
             {/* Badge 2: Picked & Shipped in 18h */}
@@ -173,7 +167,7 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
 
         {/* Right Column (spans 6 of 12 columns, 643.5px width x 585px height) */}
         <div
-          className="lg:col-span-6 w-full max-w-[643.5px] h-[380px] sm:h-[480px] lg:h-[585px] rounded-[18px] overflow-hidden relative shadow-md"
+          className="lg:col-span-6 w-full max-w-[643.5px] h-[380px] mob:h-[280px] sm:h-[480px] lg:h-[585px] rounded-[18px] overflow-hidden relative shadow-md"
           style={{
             borderRadius: '18px'
           }}

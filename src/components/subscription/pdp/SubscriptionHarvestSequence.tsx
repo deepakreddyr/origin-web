@@ -40,7 +40,7 @@ interface SubscriptionHarvestSequenceProps {
 
 const SubscriptionHarvestSequence: React.FC<SubscriptionHarvestSequenceProps> = ({ className = '' }) => {
   return (
-    <section className={`w-full py-12 lg:py-16 text-left ${className}`}>
+    <section className={`w-full pt-0 pb-12 lg:py-16 text-left ${className}`}>
       {/* Header Block */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>

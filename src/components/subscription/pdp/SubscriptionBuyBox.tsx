@@ -129,14 +129,14 @@ const SubscriptionBuyBox: React.FC<SubscriptionBuyBoxProps> = ({ itemData, onSel
                 : 'bg-[#F9F7F2] border-[#E8E4DA] hover:bg-white'
             }`}
           >
-            {itemData.subscription_details?.discount_label && (
+            {/* {itemData.subscription_details?.discount_label && (
               <span
                 className="absolute top-2.5 right-2.5 bg-[#EA5824] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-[4px] uppercase tracking-wider"
                 style={{ fontFamily: 'SofiaPro' }}
               >
                 {itemData.subscription_details.discount_label}
               </span>
-            )}
+            )} */}
             <span className="text-[#132B1E] font-bold text-[14.5px] block mb-0.5" style={{ fontFamily: 'SofiaPro' }}>
               {itemData.subscription_details?.title || 'Monthly Crate'}
             </span>
@@ -202,10 +202,11 @@ const SubscriptionBuyBox: React.FC<SubscriptionBuyBoxProps> = ({ itemData, onSel
                 }`}
                 style={{ fontFamily: 'SofiaPro' }}
               >
-                <span className="font-bold text-[13px]">{numLabel}</span>
-                <span className={`text-[12px] ${isSelected ? 'text-white/80' : 'text-[#7A837A]'}`}>{textLabel}</span>
-                {isFamily3 && <span className="text-[12px] leading-none">🧺</span>}
-                {isFamily4 && (
+                {/* <span className="font-bold text-[13px]">{numLabel}</span> */}
+                <span className={`text-[12px] ${isSelected ? 'text-white/80' : 'text-[#7A837A]'}`}>{uom.unit}</span>
+                {/* <span className={`text-[12px] ${isSelected ? 'text-white/80' : 'text-[#7A837A]'}`}>{textLabel}</span> */}
+                {/* {isFamily3 && <span className="text-[12px] leading-none">🧺</span>} */}
+                {/* {isFamily4 && (
                   <svg
                     width="13"
                     height="13"
@@ -220,7 +221,7 @@ const SubscriptionBuyBox: React.FC<SubscriptionBuyBoxProps> = ({ itemData, onSel
                     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                   </svg>
-                )}
+                )} */}
               </button>
             );
           })}

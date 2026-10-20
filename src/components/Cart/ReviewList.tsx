@@ -5,10 +5,11 @@ import { clearSubscriptionBoxCart } from '@/store/slice/SubscriptionBoxCartSlice
 import ReviewItem from './ReviewItem';
 
 const ReviewList = ({ onShowMaxQuantityToast }: { onShowMaxQuantityToast: (maxQty: number) => void }) => {
-  const { cart, subscriptionCart, subscriptionBoxCart, actions } = useCartStore();
+  const { cart, subscriptionCart, subscriptionBoxCart, isSubscriptionBoxPage, isSubscriptionPage, actions } =
+    useCartStore();
   const { validateAndCleanCart } = actions;
-  const isSubscription = subscriptionCart.isSubscriptionActive;
-  const isSubscriptionBox = subscriptionBoxCart?.isSubscriptionBoxActive;
+  const isSubscription = isSubscriptionPage && Boolean(subscriptionCart?.isSubscriptionActive);
+  const isSubscriptionBox = isSubscriptionBoxPage;
   const dispatch = useDispatch();
 
   // ✅ VALIDATE AND CLEAN CART ON MOUNT

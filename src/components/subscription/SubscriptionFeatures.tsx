@@ -112,11 +112,9 @@ const SubscriptionFeatures: React.FC<SubscriptionFeaturesProps> = ({ className =
         {features.map((item, index) => (
           <div
             key={index}
-            className="w-full max-w-[312.75px] min-h-[247px] bg-[#FFFFFF] rounded-[13.5px] p-[27px] pb-[36px] lg:pb-[58.5px] flex flex-col items-start text-left transition-all duration-200 hover:shadow-md"
+            className="w-full max-w-[312.75px] mob:max-w-full min-h-[247px] mob:min-h-0 bg-[#FFFFFF] rounded-[13.5px] p-[27px] mob:p-5 pb-[36px] mob:pb-6 lg:pb-[58.5px] flex flex-col items-start text-left transition-all duration-200 hover:shadow-md"
             style={{
               width: '100%',
-              maxWidth: '312.75px',
-              minHeight: '247px',
               borderRadius: '13.5px',
               backgroundColor: '#FFFFFF',
               boxShadow: '0px 1.13px 2.25px 0px rgba(0, 0, 0, 0.05)',
@@ -131,12 +129,11 @@ const SubscriptionFeatures: React.FC<SubscriptionFeaturesProps> = ({ className =
 
             {/* Card Heading */}
             <h3
-              className="text-[#132B1E] font-semibold text-[18px] sm:text-[19px] leading-[1.2] w-full max-w-[258.75px] pt-[4.5px] mb-2"
+              className="text-[#132B1E] font-semibold text-[18px] sm:text-[19px] leading-[1.2] w-full max-w-[258.75px] mob:max-w-full pt-[4.5px] mb-2"
               style={{
                 fontFamily: 'Recoleta',
                 fontWeight: 600,
-                color: '#132B1E',
-                maxWidth: '258.75px'
+                color: '#132B1E'
               }}
             >
               {item.title}
@@ -144,15 +141,14 @@ const SubscriptionFeatures: React.FC<SubscriptionFeaturesProps> = ({ className =
 
             {/* Card Description */}
             <p
-              className="text-[#4F5952] w-full max-w-[258.75px]"
+              className="text-[#4F5952] w-full max-w-[258.75px] mob:max-w-full"
               style={{
                 fontFamily: 'SofiaPro',
                 fontWeight: 400,
                 fontSize: '15.75px',
                 lineHeight: '23.63px',
                 letterSpacing: '0px',
-                color: '#4F5952',
-                maxWidth: '258.75px'
+                color: '#4F5952'
               }}
             >
               {item.description}

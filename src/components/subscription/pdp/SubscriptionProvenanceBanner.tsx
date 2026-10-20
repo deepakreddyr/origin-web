@@ -6,7 +6,7 @@ interface SubscriptionProvenanceBannerProps {
 
 const SubscriptionProvenanceBanner: React.FC<SubscriptionProvenanceBannerProps> = ({ className = '' }) => {
   return (
-    <section className={`w-full py-4 ${className}`}>
+    <section className={`w-full ${className}`}>
       <div className="w-full bg-[#1A3828] text-white rounded-[20px] p-5 sm:p-6 lg:p-7 flex flex-col md:flex-row items-center gap-6 shadow-md text-left">
         {/* Farm Photo */}
         <div className="w-full md:w-[220px] h-[160px] sm:h-[180px] rounded-[14px] overflow-hidden flex-shrink-0 bg-[#0F2218]">

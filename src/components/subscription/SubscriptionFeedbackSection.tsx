@@ -24,12 +24,10 @@ const SubscriptionFeedbackSection: React.FC<SubscriptionFeedbackSectionProps> = 
     <section className={`w-full bg-[#FBF9F4] py-12 lg:py-16 px-4 sm:px-6 lg:px-[54px] ${className}`}>
       {/* Main Container (1332px x 488.5px layout, gap: 27px) */}
       <div
-        className="w-full max-w-[1332px] mx-auto flex flex-col justify-start text-left"
+        className="w-full max-w-[1332px] mx-auto min-h-[488.5px] mob:min-h-0 flex flex-col justify-start text-left gap-[27px] mob:gap-6"
         style={{
           width: '100%',
           maxWidth: '1332px',
-          minHeight: '488.5px',
-          gap: '27px',
           opacity: 1,
           transform: 'rotate(0deg)'
         }}
@@ -46,12 +44,10 @@ const SubscriptionFeedbackSection: React.FC<SubscriptionFeedbackSectionProps> = 
 
           {/* Heading */}
           <h2
-            className="text-[#132B1E] font-semibold text-[30px] sm:text-[38px] lg:text-[45px] mb-2 sm:mb-3 tracking-tight"
+            className="text-[#132B1E] font-semibold text-[45px] mob:text-[26px] mob:leading-[1.15] sm:text-[36px] sm:leading-[1.2] lg:text-[45px] lg:leading-[56.25px] mb-2 sm:mb-3 tracking-tight"
             style={{
               fontFamily: 'Recoleta',
               fontWeight: 600,
-              fontSize: '45px',
-              lineHeight: '56.25px',
               letterSpacing: '-0.68px',
               verticalAlign: 'middle'
             }}
@@ -61,12 +57,10 @@ const SubscriptionFeedbackSection: React.FC<SubscriptionFeedbackSectionProps> = 
 
           {/* Description */}
           <p
-            className="text-[#556057] max-w-[900px] m-0"
+            className="text-[#556057] text-[18px] leading-[27px] mob:text-[15px] mob:leading-[22px] max-w-[900px] m-0"
             style={{
               fontFamily: 'SofiaPro',
               fontWeight: 400,
-              fontSize: '18px',
-              lineHeight: '27px',
               letterSpacing: '0%',
               verticalAlign: 'middle'
             }}

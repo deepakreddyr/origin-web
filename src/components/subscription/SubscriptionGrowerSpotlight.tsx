@@ -7,15 +7,10 @@ interface SubscriptionGrowerSpotlightProps {
 const SubscriptionGrowerSpotlight: React.FC<SubscriptionGrowerSpotlightProps> = ({ className = '' }) => {
   return (
     <section
-      className={`w-full flex justify-center items-center ${className}`}
+      className={`w-full max-w-[1440px] min-h-[396px] mob:min-h-0 py-[45px] mob:py-8 px-[54px] mob:px-4 sm:px-6 mx-auto flex justify-center items-center ${className}`}
       style={{
         width: '100%',
         maxWidth: '1440px',
-        minHeight: '396px',
-        paddingTop: '45px',
-        paddingRight: '54px',
-        paddingBottom: '45px',
-        paddingLeft: '54px',
         opacity: 1,
         transform: 'rotate(0deg)',
         margin: '0 auto'
@@ -23,33 +18,26 @@ const SubscriptionGrowerSpotlight: React.FC<SubscriptionGrowerSpotlightProps> = 
     >
       {/* 3-Column Grid Container (1332px x 306px) */}
       <div
-        className="w-full grid grid-cols-1 lg:grid-cols-3 items-stretch"
+        className="w-full max-w-[1332px] min-h-[306px] mob:min-h-0 grid grid-cols-1 lg:grid-cols-3 items-stretch gap-[27px] mob:gap-5"
         style={{
           width: '100%',
           maxWidth: '1332px',
-          minHeight: '306px',
-          rowGap: '27px',
-          columnGap: '27px',
           opacity: 1,
           transform: 'rotate(0deg)'
         }}
       >
         {/* Left Div: Grower Spotlight (Columns 1-2, 879px x 306px) */}
         <div
-          className="lg:col-span-2 w-full bg-[#F4F1EA] rounded-[13.5px] p-[27px] flex flex-col sm:flex-row gap-[27px] items-center transition-shadow duration-200"
+          className="lg:col-span-2 w-full max-w-[879px] mob:max-w-full min-h-[306px] mob:min-h-0 bg-[#F4F1EA] rounded-[13.5px] p-[27px] mob:p-5 flex flex-col sm:flex-row gap-[27px] mob:gap-5 items-center transition-shadow duration-200"
           style={{
-            maxWidth: '879px',
-            minHeight: '306px',
             borderRadius: '13.5px',
-            padding: '27px',
-            gap: '27px',
             backgroundColor: '#F4F1EA',
             opacity: 1,
             transform: 'rotate(0deg)'
           }}
         >
           {/* Farmer Photo Container with Verified Badge */}
-          <div className="relative w-full sm:w-[252px] h-[220px] sm:h-[252px] rounded-[12px] overflow-hidden flex-shrink-0 bg-[#E8E4DA]">
+          <div className="relative w-full sm:w-[252px] h-[220px] mob:h-[200px] sm:h-[252px] rounded-[12px] overflow-hidden flex-shrink-0 bg-[#E8E4DA]">
             <img
               src="https://images.unsplash.com/photo-1597916829826-02e5bb4a54e0?auto=format&fit=crop&w=600&q=85"
               alt="Master Grower Anand Shinde"
@@ -66,11 +54,8 @@ const SubscriptionGrowerSpotlight: React.FC<SubscriptionGrowerSpotlightProps> = 
           <div className="flex flex-col justify-center text-left flex-grow max-w-[533px]">
             {/* Rameshwar Orchards Section (width: 533px, gap: 4.5px) */}
             <div
-              className="flex flex-col text-left justify-center"
+              className="flex flex-col text-left justify-center w-full max-w-[533px] gap-[4.5px]"
               style={{
-                width: '100%',
-                maxWidth: '533px',
-                gap: '4.5px',
                 opacity: 1,
                 transform: 'rotate(0deg)'
               }}
@@ -101,12 +86,10 @@ const SubscriptionGrowerSpotlight: React.FC<SubscriptionGrowerSpotlightProps> = 
 
               {/* Quote / Heading */}
               <h3
-                className="text-[#132B1E] font-semibold tracking-normal m-0"
+                className="text-[#132B1E] font-semibold text-[22.5px] mob:text-[18px] leading-[31.5px] mob:leading-[1.3] tracking-normal m-0"
                 style={{
                   fontFamily: 'Recoleta',
                   fontWeight: 600,
-                  fontSize: '22.5px',
-                  lineHeight: '31.5px',
                   letterSpacing: '0px',
                   verticalAlign: 'middle',
                   color: '#132B1E'
@@ -117,12 +100,10 @@ const SubscriptionGrowerSpotlight: React.FC<SubscriptionGrowerSpotlightProps> = 
 
               {/* Bio Paragraph */}
               <p
-                className="text-[#556057] m-0"
+                className="text-[#556057] text-[15.75px] mob:text-[14px] leading-[23.63px] mob:leading-[1.5] m-0"
                 style={{
                   fontFamily: 'SofiaPro',
                   fontWeight: 400,
-                  fontSize: '15.75px',
-                  lineHeight: '23.63px',
                   letterSpacing: '0px',
                   verticalAlign: 'middle'
                 }}
@@ -142,12 +123,9 @@ const SubscriptionGrowerSpotlight: React.FC<SubscriptionGrowerSpotlightProps> = 
 
         {/* Right Div: Customer Testimonial (Column 3, 426px x 301.3px) */}
         <div
-          className="lg:col-span-1 w-full bg-[#FFFFFF] rounded-[13.5px] p-[27px] flex flex-col justify-between text-left shadow-[0px_1.13px_2.25px_0px_rgba(0,0,0,0.05)] border border-[#EBE8E0]/70 transition-shadow duration-200"
+          className="lg:col-span-1 w-full max-w-[426px] mob:max-w-full min-h-[301.3125px] mob:min-h-0 bg-[#FFFFFF] rounded-[13.5px] p-[27px] mob:p-5 flex flex-col justify-between text-left shadow-[0px_1.13px_2.25px_0px_rgba(0,0,0,0.05)] border border-[#EBE8E0]/70 transition-shadow duration-200"
           style={{
-            maxWidth: '426px',
-            minHeight: '301.3125px',
             borderRadius: '13.5px',
-            padding: '27px',
             gap: '24px',
             backgroundColor: '#FFFFFF',
             opacity: 1,
