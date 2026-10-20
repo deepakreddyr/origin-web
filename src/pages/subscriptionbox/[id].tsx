@@ -4,7 +4,6 @@ import Layout from '@/components/Layout';
 import CustomHead from '@/components/shared/CustomHead';
 import { FooterDataType, MainMenuType } from '@/utilities/types';
 import SubscriptionProductDetails from '@/components/subscription/pdp/SubscriptionProductDetails';
-import { MOCK_SUBSCRIPTION_ITEM } from '@/components/subscription/pdp/mockSubscriptionData';
 import SubscriptionBoxHeader from '@/components/subscription/SubscriptionBoxHeader';
 
 interface SubscriptionPDPPageProps {
@@ -27,7 +26,7 @@ const SubscriptionPDPPage = ({ mainMenuItems, footerData }: SubscriptionPDPPageP
       />
       <SubscriptionBoxHeader isHeaderSticky={true} />
       <main className="bg-white pt-[65px] md:pt-[72px]">
-        <SubscriptionProductDetails initialData={MOCK_SUBSCRIPTION_ITEM} />
+        <SubscriptionProductDetails />
       </main>
     </Layout>
   );

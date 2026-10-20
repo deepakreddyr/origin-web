@@ -14,7 +14,8 @@ const SubscriptionGallery: React.FC<SubscriptionGalleryProps> = ({
   className = ''
 }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const activeImage = images[selectedImageIndex] || images[0];
+  const safeImages = Array.isArray(images) && images.length > 0 ? images.filter(Boolean) : ['/onam.png'];
+  const activeImage = safeImages[selectedImageIndex] || safeImages[0] || '/onam.png';
 
   return (
     <div
@@ -59,11 +60,14 @@ const SubscriptionGallery: React.FC<SubscriptionGalleryProps> = ({
         </div> */}
       </div>
 
-      {/* Multiple Images Section: 90x90 thumbnails with 13.5px border-radius + 100% Certified Regenerative Soil */}
-      <div className="w-full bg-[#F5F3EE] p-4 sm:p-5 lg:px-6 lg:py-[18px] flex flex-wrap items-center justify-between gap-4">
+      <div
+        className={`w-full bg-[#F5F3EE] p-4 sm:p-5 lg:px-6 lg:py-[18px] flex flex-wrap items-center justify-between gap-4 ${
+          safeImages.length <= 1 ? 'hidden' : ''
+        }`}
+      >
         {/* Thumbnails Row */}
         <div className="flex items-center gap-3 sm:gap-3.5 overflow-x-auto no-scrollbar">
-          {images.slice(0, 3).map((thumb, index) => {
+          {safeImages.slice(0, 5).map((thumb, index) => {
             const isActive = selectedImageIndex === index;
             return (
               <button

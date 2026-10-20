@@ -55,71 +55,84 @@ const SubscriptionDispatchManifest: React.FC<SubscriptionDispatchManifestProps> 
           </p>
         </div>
 
-        {/* 6 Category Cards in #F5F3EE */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5">
-          {(harvestItems || []).map((item, index) => {
-            return (
-              <div
-                key={index}
-                className="bg-[#F5F3EE] rounded-[16px] p-5 flex flex-col justify-between text-left border border-[#E8E4DA] shadow-xs"
-              >
-                <div>
-                  {/* Header: Title + Weight */}
-                  <div className="flex items-center justify-between mb-2">
-                    <h3
-                      className="text-[#132B1E] font-bold text-[16px] leading-tight m-0"
-                      style={{ fontFamily: 'SofiaPro' }}
-                    >
-                      {item.title}
-                    </h3>
+        {/* Category Cards in #F5F3EE */}
+        {harvestItems && harvestItems.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5">
+            {harvestItems.map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  className="bg-[#F5F3EE] rounded-[16px] p-5 flex flex-col justify-between text-left border border-[#E8E4DA] shadow-xs"
+                >
+                  <div>
+                    {/* Header: Title + Weight */}
+                    <div className="flex items-center justify-between mb-2">
+                      <h3
+                        className="text-[#132B1E] font-bold text-[16px] leading-tight m-0"
+                        style={{ fontFamily: 'SofiaPro' }}
+                      >
+                        {item.title}
+                      </h3>
 
-                    {/* Weight Badge */}
-                    <span
-                      className="text-[#132B1E] font-bold text-[12px] bg-[#E8E4DA] px-2.5 py-1 rounded-full"
-                      style={{ fontFamily: 'SofiaPro' }}
-                    >
-                      {item.weight}
-                    </span>
+                      {/* Weight Badge */}
+                      {item.weight && (
+                        <span
+                          className="text-[#132B1E] font-bold text-[12px] bg-[#E8E4DA] px-2.5 py-1 rounded-full"
+                          style={{ fontFamily: 'SofiaPro' }}
+                        >
+                          {item.weight}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Description */}
+                    {item.description && (
+                      <p
+                        className="text-[#556057] text-[13px] sm:text-[13.5px] leading-[20px] mb-4"
+                        style={{ fontFamily: 'SofiaPro' }}
+                      >
+                        {item.description}
+                      </p>
+                    )}
                   </div>
 
-                  {/* Description */}
-                  <p
-                    className="text-[#556057] text-[13px] sm:text-[13.5px] leading-[20px] mb-4"
-                    style={{ fontFamily: 'SofiaPro' }}
-                  >
-                    {item.description}
-                  </p>
+                  {/* Bottom Tag */}
+                  <div className="flex items-center gap-1.5 pt-1">
+                    {item.isSwappable ? (
+                      <>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.5">
+                          <polyline points="17 1 21 5 17 9" />
+                          <path d="M3 11V9a4 4 0 0 1 4-4h14" />
+                          <polyline points="7 23 3 19 7 15" />
+                          <path d="M21 13v2a4 4 0 0 1-4 4H3" />
+                        </svg>
+                        <span className="text-[#8D4320] font-semibold text-[11.5px]" style={{ fontFamily: 'SofiaPro' }}>
+                          {item.tag || 'Swappable for Red Amaranth'}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2.5">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        <span className="text-[#1E3F2F] font-semibold text-[11.5px]" style={{ fontFamily: 'SofiaPro' }}>
+                          {item.tag || 'Always Included'}
+                        </span>
+                      </>
+                    )}
+                  </div>
                 </div>
-
-                {/* Bottom Tag */}
-                <div className="flex items-center gap-1.5 pt-1">
-                  {item.isSwappable ? (
-                    <>
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.5">
-                        <polyline points="17 1 21 5 17 9" />
-                        <path d="M3 11V9a4 4 0 0 1 4-4h14" />
-                        <polyline points="7 23 3 19 7 15" />
-                        <path d="M21 13v2a4 4 0 0 1-4 4H3" />
-                      </svg>
-                      <span className="text-[#8D4320] font-semibold text-[11.5px]" style={{ fontFamily: 'SofiaPro' }}>
-                        {item.tag || 'Swappable for Red Amaranth'}
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2.5">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                      <span className="text-[#1E3F2F] font-semibold text-[11.5px]" style={{ fontFamily: 'SofiaPro' }}>
-                        {item.tag || 'Always Included'}
-                      </span>
-                    </>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="bg-[#F5F3EE] rounded-[16px] p-6 text-left border border-[#E8E4DA]">
+            <p className="text-[#556057] text-[14px] leading-relaxed" style={{ fontFamily: 'SofiaPro' }}>
+              Specific crop allocations are updated by the farm collective after the morning harvest inspection. Every
+              box is curated with certified organic staples, fresh greens, and seasonal specialties.
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );

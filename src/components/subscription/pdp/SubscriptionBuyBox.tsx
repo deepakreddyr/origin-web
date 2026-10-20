@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { MOCK_SUBSCRIPTION_ITEM, SubscriptionItemData, SubscriptionUOM } from './mockSubscriptionData';
+import { SubscriptionItemData, SubscriptionUOM } from './mockSubscriptionData';
 import { setSubscriptionBoxItem } from '@/store/slice/SubscriptionBoxCartSlice';
 import { setLoginDetails } from '@/store/slice/loginSlice';
 import { setCartTabType } from '@/store/slice/CartSlice';
@@ -8,11 +8,17 @@ import { TabTypeConstant } from '@/components/Login/constants/tabTypeContent';
 
 interface SubscriptionBuyBoxProps {
   itemData: SubscriptionItemData;
+  selectedUom?: SubscriptionUOM | null;
   onSelectUom?: (uom: SubscriptionUOM) => void;
   className?: string;
 }
 
-const SubscriptionBuyBox: React.FC<SubscriptionBuyBoxProps> = ({ itemData, onSelectUom, className = '' }) => {
+const SubscriptionBuyBox: React.FC<SubscriptionBuyBoxProps> = ({
+  itemData,
+  selectedUom: selectedUomProp,
+  onSelectUom,
+  className = ''
+}) => {
   const dispatch = useDispatch();
 
   // State: Plan type ('monthly' vs 'trial')
@@ -21,10 +27,19 @@ const SubscriptionBuyBox: React.FC<SubscriptionBuyBoxProps> = ({ itemData, onSel
   // State: Portion size index (matches multiple_uoms: 0 = Family 2, 1 = Family 3, 2 = Family 4)
   const [selectedUomIndex, setSelectedUomIndex] = useState<number>(0);
 
+  useEffect(() => {
+    if (selectedUomProp && Array.isArray(itemData?.multiple_uoms)) {
+      const idx = itemData.multiple_uoms.findIndex(
+        (u) => u.variant_id === selectedUomProp.variant_id || u.uom_id === selectedUomProp.uom_id
+      );
+      if (idx !== -1) {
+        setSelectedUomIndex(idx);
+      }
+    }
+  }, [selectedUomProp, itemData]);
+
   const selectedUom =
-    itemData.multiple_uoms?.[selectedUomIndex] ||
-    itemData.multiple_uoms?.[0] ||
-    MOCK_SUBSCRIPTION_ITEM.multiple_uoms[0];
+    itemData?.multiple_uoms?.[selectedUomIndex] || selectedUomProp || itemData?.multiple_uoms?.[0] || null;
 
   // Resolve price based on plan type and portion size
   const isMonthly = selectedPlanType === 'monthly';
