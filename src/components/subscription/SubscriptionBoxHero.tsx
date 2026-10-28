@@ -41,13 +41,24 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
   cardBadgeTitle = 'FARM-TO-DOOR',
   cardBadgeSubtitle = 'Harvested fresh at sunrise'
 }) => {
+  const handleCtaClick = () => {
+    if (onCtaClick) {
+      onCtaClick();
+      return;
+    }
+    const target = document.getElementById('three-ways-to-fill-your-kitchen');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section
       className={`w-full bg-[#F5F3EE] pt-[84px] md:pt-[110px] pb-10 lg:pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden ${className}`}
     >
       <div className="w-full max-w-[1332px] mx-auto min-h-[652.5px] mob:min-h-0 grid grid-cols-1 lg:grid-cols-12 gap-[32px] lg:gap-[45px] items-center">
         {/* Left Column (spans 6 of 12 columns, 643.5px width) */}
-        <div className="lg:col-span-6 w-full max-w-[643.5px] py-[18px] mob:py-2 flex flex-col justify-center items-start text-left gap-[22px] mob:gap-4">
+        <div className="order-2 lg:order-1 lg:col-span-6 w-full max-w-[643.5px] py-[18px] mob:py-2 flex flex-col justify-center items-start text-left gap-[22px] mob:gap-4">
           {/* Eyebrow / Tag */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EFE9DC] border border-[#E2DBD0]">
             <span className="w-2 h-2 rounded-full bg-[#A85125]" />
@@ -81,7 +92,7 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
           {/* CTA Button */}
           <button
             type="button"
-            onClick={onCtaClick}
+            onClick={handleCtaClick}
             className="inline-flex items-center justify-center gap-2 bg-[#F5A623] hover:bg-[#EAA01E] active:scale-[0.98] text-[#1C2520] font-semibold text-[14px] rounded-full transition-all duration-200 shadow-[0_8px_20px_-4px_rgba(245,166,35,0.4)] cursor-pointer mt-1"
             style={{
               width: '196.84px',
@@ -167,7 +178,7 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
 
         {/* Right Column (spans 6 of 12 columns, 643.5px width x 585px height) */}
         <div
-          className="lg:col-span-6 w-full max-w-[643.5px] h-[380px] mob:h-[280px] sm:h-[480px] lg:h-[585px] rounded-[18px] overflow-hidden relative shadow-md"
+          className="order-1 lg:order-2 lg:col-span-6 w-full max-w-[643.5px] h-[380px] mob:h-[280px] sm:h-[480px] lg:h-[585px] rounded-[18px] overflow-hidden relative shadow-md"
           style={{
             borderRadius: '18px'
           }}
@@ -176,7 +187,7 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
           <img src={backgroundImage} alt="Farm Fresh Harvest" className="w-full h-full object-cover" />
 
           {/* Top-Left Floating Pill */}
-          <div className="absolute top-4 left-4 z-10 bg-white/85 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-sm border border-white/60 flex items-center gap-2">
+          {/* <div className="absolute top-4 left-4 z-10 bg-white/85 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-sm border border-white/60 flex items-center gap-2">
             <svg
               width="14"
               height="14"
@@ -191,13 +202,13 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
               <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
               <path d="M2 21c0-3 1.85-5.36 5.08-6" />
             </svg>
-            {/* <span className="text-[#233327] text-[12px] font-semibold" style={{ fontFamily: 'SofiaPro' }}>
+            <span className="text-[#233327] text-[12px] font-semibold" style={{ fontFamily: 'SofiaPro' }}>
               {imagePillText}
-            </span> */}
-          </div>
+            </span>
+          </div> */}
 
           {/* Bottom-Right Floating Card */}
-          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 z-10 bg-white rounded-[16px] px-4 py-3 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.18)] flex items-center gap-3 border border-black/5">
+          {/* <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 z-10 bg-white rounded-[16px] px-4 py-3 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.18)] flex items-center gap-3 border border-black/5">
             <div className="w-11 h-11 rounded-full bg-[#0E2919] text-white flex items-center justify-center font-bold text-[15px] flex-shrink-0">
               {cardBadgeHours}
             </div>
@@ -212,7 +223,7 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
                 {cardBadgeSubtitle}
               </span>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 

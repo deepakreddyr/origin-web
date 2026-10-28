@@ -467,7 +467,10 @@ const SubscriptionPlansSection: React.FC<SubscriptionPlansSectionProps> = ({
       </div>
 
       {/* ── Section 2: Three ways to fill your kitchen ── */}
-      <div className="w-full max-w-[1332px] mx-auto mt-10 lg:mt-14">
+      <div
+        id="three-ways-to-fill-your-kitchen"
+        className="w-full max-w-[1332px] mx-auto mt-10 lg:mt-14 scroll-mt-24 sm:scroll-mt-28"
+      >
         {/* Section Header */}
         <div className="text-left mb-8">
           <span
