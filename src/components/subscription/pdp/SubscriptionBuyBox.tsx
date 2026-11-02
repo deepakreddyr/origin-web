@@ -189,9 +189,11 @@ const SubscriptionBuyBox: React.FC<SubscriptionBuyBoxProps> = ({
           >
             PORTION SIZE
           </span>
-          <span className="text-[#C25E2E] font-medium text-[12px]" style={{ fontFamily: 'SofiaPro' }}>
-            Yields ~{selectedUom?.weight || '3.2 kg'} / week
-          </span>
+          {selectedUom?.weight && (
+            <span className="text-[#C25E2E] font-medium text-[12px]" style={{ fontFamily: 'SofiaPro' }}>
+              Yields ~{selectedUom?.weight}
+            </span>
+          )}
         </div>
 
         {/* Portion Buttons */}

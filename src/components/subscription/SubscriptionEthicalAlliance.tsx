@@ -23,7 +23,7 @@ const SubscriptionEthicalAlliance: React.FC<SubscriptionEthicalAllianceProps> = 
         <div className="lg:col-span-6 w-full h-[360px] mob:h-[260px] sm:h-[420px] lg:h-[502.4182434082031px] relative rounded-[24px] overflow-hidden shadow-sm bg-[#EAE6DE]">
           {/* Farm Photograph */}
           <img
-            src="https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=1400&q=85"
+            src="/assets/images/subbox2.jpg"
             alt="Growers harvesting organic produce"
             className="w-full h-full object-cover"
             loading="lazy"
@@ -31,28 +31,25 @@ const SubscriptionEthicalAlliance: React.FC<SubscriptionEthicalAllianceProps> = 
 
           {/* Top-Left Floating Badge */}
           <div className="absolute top-4 left-4 sm:top-5 sm:left-5 z-10 flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-white/60 max-w-[calc(100%-32px)]">
-            {/* Rosette Certificate Icon */}
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-[#8D4320] flex-shrink-0">
-              <path
-                d="M12 2l2.3 2.1 3.1-.3 1.2 2.9 3 1.4-.4 3.1 2 2.6-2 2.6.4 3.1-3 1.4-1.2 2.9-3.1-.3L12 22l-2.3-2.1-3.1.3-1.2-2.9-3-1.4.4-3.1-2-2.6 2-2.6-.4-3.1 3-1.4 1.2-2.9 3.1.3L12 2z"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M9 12l2 2 4-4"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#8D4320"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="flex-shrink-0"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="9 12 11 14 15 10" />
             </svg>
             <span
               className="text-[#132B1E] font-semibold text-[12px] sm:text-[13px] whitespace-nowrap mob:truncate"
               style={{ fontFamily: 'SofiaPro' }}
             >
-              Direct from certified heirloom growers
+              Direct from certified growers
             </span>
           </div>
 
@@ -82,7 +79,7 @@ const SubscriptionEthicalAlliance: React.FC<SubscriptionEthicalAllianceProps> = 
               className="text-[#132B1E] text-[12px] sm:text-[13.5px] font-medium leading-none m-0 truncate"
               style={{ fontFamily: 'SofiaPro' }}
             >
-              Picked at sunrise, delivered by twilight within 90 miles.
+              Picked at sunrise and delivered as soon as possible to your homes.
             </p>
           </div>
         </div>

@@ -91,7 +91,7 @@ const features: FeatureItem[] = [
       </svg>
     ),
     title: 'Direct From Soil',
-    description: 'Fair trade farmgate pay guarantees sustainable stewardship and non-degraded living compost.'
+    description: 'We pay farmers fairly and use healthy compost, so the land stays in good shape.'
   }
 ];
 

@@ -39,7 +39,7 @@ const SubscriptionGrowerSpotlight: React.FC<SubscriptionGrowerSpotlightProps> = 
           {/* Farmer Photo Container with Verified Badge */}
           <div className="relative w-full sm:w-[252px] h-[220px] mob:h-[200px] sm:h-[252px] rounded-[12px] overflow-hidden flex-shrink-0 bg-[#E8E4DA]">
             <img
-              src="https://images.unsplash.com/photo-1597916829826-02e5bb4a54e0?auto=format&fit=crop&w=600&q=85"
+              src="/assets/images/subbox3.jpg"
               alt="Master Grower Anand Shinde"
               className="w-full h-full object-cover object-top"
               loading="lazy"
@@ -135,9 +135,9 @@ const SubscriptionGrowerSpotlight: React.FC<SubscriptionGrowerSpotlightProps> = 
           {/* Top: 5 Stars + Testimonial Quote */}
           <div>
             {/* 5 Filled Stars */}
-            <div className="flex items-center gap-1.5 mb-3 text-[#A04A1E]">
+            <div className="flex items-center gap-1.5 mb-3 text-[#F5A623]">
               {[...Array(5)].map((_, i) => (
-                <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="#A04A1E" stroke="#A04A1E" strokeWidth="1">
+                <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="#F5A623" stroke="#F5A623" strokeWidth="1">
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                 </svg>
               ))}

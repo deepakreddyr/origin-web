@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DEFAULT_BANNER_IMAGE = '/onam.png';
+const DEFAULT_BANNER_IMAGE = '/assets/images/subbox1.jpg';
 
 interface SubscriptionBoxHeroProps {
   children?: React.ReactNode;
@@ -36,7 +36,7 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
   onCtaClick,
   trustBadge1 = '100% Certified Organic',
   trustBadge2 = 'Picked & Shipped in 18h',
-  // imagePillText = '100% Certified Regenerative Soil',
+  imagePillText = 'Direct from Certified Regenerative Soil',
   cardBadgeHours = '18h',
   cardBadgeTitle = 'FARM-TO-DOOR',
   cardBadgeSubtitle = 'Harvested fresh at sunrise'
@@ -46,7 +46,9 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
       onCtaClick();
       return;
     }
-    const target = document.getElementById('three-ways-to-fill-your-kitchen');
+    const target =
+      document.getElementById('three-ways-to-stock-up-your-kitchen') ||
+      document.getElementById('three-ways-to-fill-your-kitchen');
     if (target) {
       target.scrollIntoView({ behavior: 'smooth' });
     }
@@ -187,28 +189,15 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
           <img src={backgroundImage} alt="Farm Fresh Harvest" className="w-full h-full object-cover" />
 
           {/* Top-Left Floating Pill */}
-          {/* <div className="absolute top-4 left-4 z-10 bg-white/85 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-sm border border-white/60 flex items-center gap-2">
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#A85125"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="flex-shrink-0"
-            >
-              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
-              <path d="M2 21c0-3 1.85-5.36 5.08-6" />
-            </svg>
+          <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-sm border border-white/60 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#A85125] flex-shrink-0" />
             <span className="text-[#233327] text-[12px] font-semibold" style={{ fontFamily: 'SofiaPro' }}>
               {imagePillText}
             </span>
-          </div> */}
+          </div>
 
           {/* Bottom-Right Floating Card */}
-          {/* <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 z-10 bg-white rounded-[16px] px-4 py-3 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.18)] flex items-center gap-3 border border-black/5">
+          <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 z-10 bg-white rounded-[16px] px-4 py-3 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.18)] flex items-center gap-3 border border-black/5">
             <div className="w-11 h-11 rounded-full bg-[#0E2919] text-white flex items-center justify-center font-bold text-[15px] flex-shrink-0">
               {cardBadgeHours}
             </div>
@@ -223,7 +212,7 @@ const SubscriptionBoxHero: React.FC<SubscriptionBoxHeroProps> = ({
                 {cardBadgeSubtitle}
               </span>
             </div>
-          </div> */}
+          </div>
         </div>
       </div>
 

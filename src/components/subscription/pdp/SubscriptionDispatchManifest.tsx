@@ -40,12 +40,14 @@ const SubscriptionDispatchManifest: React.FC<SubscriptionDispatchManifestProps> 
             >
               What&apos;s in this Sunday&apos;s Harvest Box
             </h2>
-            <span
-              className="bg-[#EFE9DC] text-[#132B1E] font-bold text-[11.5px] px-3 py-1 rounded-full shadow-xs"
-              style={{ fontFamily: 'SofiaPro' }}
-            >
-              Total Weight: ~{totalWeight}
-            </span>
+            {totalWeight && (
+              <span
+                className="bg-[#EFE9DC] text-[#132B1E] font-bold text-[11.5px] px-3 py-1 rounded-full shadow-xs"
+                style={{ fontFamily: 'SofiaPro' }}
+              >
+                Total Weight: ~{totalWeight}
+              </span>
+            )}
           </div>
 
           {/* Description */}

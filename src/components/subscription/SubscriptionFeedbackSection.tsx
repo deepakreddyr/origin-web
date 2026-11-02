@@ -52,7 +52,7 @@ const SubscriptionFeedbackSection: React.FC<SubscriptionFeedbackSectionProps> = 
               verticalAlign: 'middle'
             }}
           >
-            Help us improve your harvest experience
+            Help us improve your experience
           </h2>
 
           {/* Description */}
@@ -65,8 +65,7 @@ const SubscriptionFeedbackSection: React.FC<SubscriptionFeedbackSectionProps> = 
               verticalAlign: 'middle'
             }}
           >
-            Whether you purchased today or decided to explore later, your feedback helps us refine our seasonal
-            curation, delivery timing, and product quality.
+            Your feedback helps us refine our seasonal curation, delivery timings, and product quality.
           </p>
         </div>
 

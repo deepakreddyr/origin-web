@@ -386,7 +386,7 @@ const SubscriptionPlansSection: React.FC<SubscriptionPlansSectionProps> = ({
               className="text-[#8D4320] font-bold text-[10px] sm:text-[11px] tracking-[0.12em] uppercase leading-none mb-1.5"
               style={{ fontFamily: 'SofiaPro' }}
             >
-              CUSTOMIZE SUBSCRIPTION RHYTHM
+              CUSTOMISE YOUR SUBSCRIPTION
             </span>
             <h2
               className="text-[#132B1E] font-semibold text-[22.5px] mob:text-[18px] leading-[31.5px] mob:leading-[1.3]"
@@ -396,7 +396,7 @@ const SubscriptionPlansSection: React.FC<SubscriptionPlansSectionProps> = ({
                 letterSpacing: '0px'
               }}
             >
-              Tailor frequency to your cooking habits
+              Create a box just for yourself
             </h2>
           </div>
         </div>
@@ -466,9 +466,9 @@ const SubscriptionPlansSection: React.FC<SubscriptionPlansSectionProps> = ({
         </div>
       </div>
 
-      {/* ── Section 2: Three ways to fill your kitchen ── */}
+      {/* ── Section 2: Three ways to stock up your kitchen ── */}
       <div
-        id="three-ways-to-fill-your-kitchen"
+        id="three-ways-to-stock-up-your-kitchen"
         className="w-full max-w-[1332px] mx-auto mt-10 lg:mt-14 scroll-mt-24 sm:scroll-mt-28"
       >
         {/* Section Header */}
@@ -483,10 +483,10 @@ const SubscriptionPlansSection: React.FC<SubscriptionPlansSectionProps> = ({
             className="text-[#132B1E] font-semibold text-[32px] mob:text-[26px] sm:text-[38px] lg:text-[42px] leading-[1.1] mb-2.5"
             style={{ fontFamily: 'Recoleta' }}
           >
-            Three ways to fill your kitchen.
+            Three ways to stock up your kitchen.
           </h2>
           <p className="text-[#556057] text-[14px] sm:text-[17px]" style={{ fontFamily: 'SofiaPro' }}>
-            Every box comes fresh from verified regenerative plots in recyclable thermal insulation.
+            Fresh produce from farms that care for their soil, delivered in recyclable insulated packaging
           </p>
         </div>
 
