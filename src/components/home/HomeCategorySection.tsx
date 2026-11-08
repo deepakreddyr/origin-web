@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
 import Image from 'next/image';
 import Link from 'next/link';
 import catimg from '/public/assets/images/landingCatSampleImg.webp';
 import blends from '/public/assets/images/blendsCatimg.webp';
+
 interface HomeCategorySectionProps {
   categories: any[];
   blendsCategory?: any[];
@@ -13,7 +14,6 @@ interface HomeCategorySectionProps {
 
 const HomeCategorySection = ({ categories, blendsCategory, loading, title }: HomeCategorySectionProps) => {
   const mobile = useMediaQuery(600);
-  const [isExpanded, setIsExpanded] = useState(false);
 
   if (loading && (!categories || categories.length === 0)) {
     return <SkeletonLoader mobile={mobile} />;
@@ -23,12 +23,15 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
 
   const generateHref = (category: any) => {
     const catName = (category.name || category.title || '').replace(/ /g, '-').toLowerCase();
+
     const catId = category.id;
     const firstSubCategory = category?.sub_categories?.[0];
 
     if (firstSubCategory) {
       const subName = (firstSubCategory.name || firstSubCategory.title || '').replace(/ /g, '-').toLowerCase();
+
       const subId = firstSubCategory.id;
+
       return `/shop/${catName}/${catId}/${subName}/${subId}`;
     }
 
@@ -40,11 +43,8 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
   };
 
   const blendsFromMain = categories.find((cat: any) => cat.name.toLowerCase() === 'blends');
-  const otherCategories = categories.filter((cat: any) => cat.name.toLowerCase() !== 'blends');
 
-  const initialCount = mobile ? 4 : 8;
-  const displayedCategories = isExpanded ? otherCategories : otherCategories.slice(0, initialCount);
-  const hasMore = otherCategories.length > initialCount;
+  const otherCategories = categories.filter((cat: any) => cat.name.toLowerCase() !== 'blends');
 
   const finalBlendsCategory = blendsCategory && blendsCategory.length > 0 ? blendsCategory[0] : blendsFromMain;
 
@@ -53,46 +53,29 @@ const HomeCategorySection = ({ categories, blendsCategory, loading, title }: Hom
       <div className="w-[92vw] md:w-[80vw] mx-auto">
         {title && (
           <div className="w-full mb-[2.1vw] mob:mb-[4vw]">
-            <h1 className="font-Stinger text-start font-semibold text-[2.5vw] mob:text-[7vw] text-[#231F20] ">
+            <h1 className="font-Stinger text-start font-semibold text-[2.5vw] mob:text-[7vw] text-[#231F20]">
               {title}
             </h1>
           </div>
         )}
 
-        <div className={`relative w-full ${!isExpanded && hasMore ? 'pb-[4vw]' : ''}`}>
-          <div
-            className={`
-                    grid grid-cols-2 tabp:grid-cols-4 gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[12vw] pt-[4vw] mob:pt-[14vw]
-                    transition-all duration-500 ease-in-out
-                    ${!isExpanded && hasMore ? 'max-h-[125vw] tabp:max-h-[45vw]' : 'max-h-[5000px]'}
-                `}
-          >
-            {mobile && finalBlendsCategory && (
-              <BlendsCategoryCard category={finalBlendsCategory} generateHref={generateHref} />
-            )}
-            {displayedCategories.map((category: any) => (
-              <CategoryCard key={category.id} category={category} generateHref={generateHref} />
-            ))}
-            {!mobile && finalBlendsCategory && (
-              <BlendsCategoryCard category={finalBlendsCategory} generateHref={generateHref} />
-            )}
-          </div>
+        <div
+          className="
+          grid grid-cols-2 tabp:grid-cols-4
+          gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[12vw]
+          pt-[4vw] mob:pt-[14vw]
+        "
+        >
+          {mobile && finalBlendsCategory && (
+            <BlendsCategoryCard category={finalBlendsCategory} generateHref={generateHref} />
+          )}
 
-          {!isExpanded && hasMore && (
-            <div
-              className="absolute bottom-0 left-0 right-0 h-[20vw] md:h-[15vw] flex items-end justify-center rounded-b-[20px] pointer-events-none"
-              style={{
-                width: '100%',
-                background: 'linear-gradient(180deg, rgba(248, 244, 233, 0) 0%, rgba(237, 230, 212, 0.8) 100%)'
-              }}
-            >
-              <button
-                onClick={() => setIsExpanded(true)}
-                className="mb-[2vw] bg-[#fac510] text-black font-[SofiaPro] font-bold py-[1vw] px-[3vw] mob:py-[3vw] mob:px-[8vw] rounded-full text-[1.1vw] mob:text-[3.5vw] transition-colors pointer-events-auto shadow-sm hover:bg-[#f2d200]"
-              >
-                Show more ({otherCategories.length})
-              </button>
-            </div>
+          {otherCategories.map((category: any) => (
+            <CategoryCard key={category.id} category={category} generateHref={generateHref} />
+          ))}
+
+          {!mobile && finalBlendsCategory && (
+            <BlendsCategoryCard category={finalBlendsCategory} generateHref={generateHref} />
           )}
         </div>
       </div>
@@ -104,13 +87,22 @@ const BlendsCategoryCard = ({ category, generateHref }: { category: any; generat
   return (
     <Link
       href={generateHref(category)}
-      className="lg:col-span-2 col-span-2 relative rounded-[20px] mob:rounded-[15px] overflow-hidden group min-h-[17vw] mob:min-h-[44vw] flex flex-col items-center justify-end"
+      className="
+        lg:col-span-2 col-span-2 relative
+        rounded-[20px] mob:rounded-[15px]
+        overflow-hidden group min-h-[17vw] mob:min-h-[44vw]
+        flex flex-col items-center justify-end
+      "
       style={{
         background: 'linear-gradient(180deg, #CBB270 0%, #F7E1BA 100%)'
       }}
     >
-      {/* Image Container - Now spans the full background */}
-      <div className="absolute inset-0 w-full h-full transition-transform duration-500 group-hover:scale-105">
+      <div
+        className="
+        absolute inset-0 w-full h-full
+        transition-transform duration-500 group-hover:scale-105
+      "
+      >
         <Image
           src={category.website_image || category.image || blends}
           alt={category.name}
@@ -118,13 +110,22 @@ const BlendsCategoryCard = ({ category, generateHref }: { category: any; generat
           className="object-cover object-center"
         />
 
-        {/* Subtle Gradient Overlay to ensure text visibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+        <div
+          className="
+          absolute inset-0
+          bg-gradient-to-t from-black/40 via-transparent to-transparent
+        "
+        />
       </div>
 
-      {/* Category Name - Styled to sit over the background */}
       <div className="relative w-full p-[1.5vw] mob:p-[4vw] z-10">
-        <h2 className="font-[Recoleta] font-semibold text-[1.25vw] mob:text-[4vw] text-black mob:text-white text-center px-2 drop-shadow-md">
+        <h2
+          className="
+          font-[Recoleta] font-semibold
+          text-[1.25vw] mob:text-[4vw]
+          text-black mob:text-white text-center px-2 drop-shadow-md
+        "
+        >
           {/* {category.name} */}
         </h2>
       </div>
@@ -134,21 +135,22 @@ const BlendsCategoryCard = ({ category, generateHref }: { category: any; generat
 
 const CategoryCard = ({ category, generateHref }: { category: any; generateHref: (cat: any) => string }) => {
   return (
-    // <Link
-    //   href={generateHref(category)}
-    //   /* Changed aspect-square to aspect-[4/3] for a shorter card */
-    //   className="group relative rounded-[20px] mob:rounded-[15px] aspect-[1/1] flex flex-col items-center justify-end p-[1.5vw] mob:p-[4vw] overflow-visible"
-    //   style={{
-    //     background: 'linear-gradient(180deg, #CBB270 0%, #F7E1BA 100%)'
-    //   }}
-    // >
     <Link
       href={generateHref(category)}
-      /* Changed aspect-square to aspect-[4/3] for a shorter card */
-      className="group relative rounded-[20px] mob:rounded-[15px] aspect-[1/1] flex flex-col items-center justify-end p-[1.5vw] mob:p-[4vw] overflow-visible bg-[#F9F7F0]"
+      className="
+        group relative rounded-[20px] mob:rounded-[15px]
+        aspect-[1/1] flex flex-col items-center justify-end
+        p-[1.5vw] mob:p-[4vw] overflow-visible bg-[#F9F7F0]
+      "
     >
-      {/* Image Container */}
-      <div className="absolute top-[-6vw] mob:top-[-16vw] left-0 right-0 h-[95%] flex items-start justify-center transition-transform duration-500 group-hover:scale-110 p-[2%]">
+      <div
+        className="
+        absolute top-[-6vw] mob:top-[-16vw]
+        left-0 right-0 h-[95%]
+        flex items-start justify-center
+        transition-transform duration-500 group-hover:scale-110 p-[2%]
+      "
+      >
         <div className="relative w-full h-full">
           <Image
             src={category.website_image || category.image || catimg}
@@ -159,9 +161,14 @@ const CategoryCard = ({ category, generateHref }: { category: any; generateHref:
         </div>
       </div>
 
-      {/* Category Name */}
       <div className="relative w-full mb-[0.5vw] mob:mb-[1vw]">
-        <p className="font-[Recoleta] font-semibold text-[1.25vw] mob:text-[4vw] text-[#231F20] text-center px-2">
+        <p
+          className="
+          font-[Recoleta] font-semibold
+          text-[1.25vw] mob:text-[4vw]
+          text-[#231F20] text-center px-2
+        "
+        >
           {category.name}
         </p>
       </div>
@@ -174,11 +181,23 @@ const SkeletonLoader = ({ mobile }: { mobile: boolean }) => {
     <div className="py-[4vw] mob:py-[8vw]">
       <div className="w-[92vw] md:w-[80vw] mx-auto">
         <div className="w-full mb-[2.1vw]">
-          <div className="h-[3vw] mob:h-[8vw] bg-gray-100 animate-pulse rounded w-1/3"></div>
+          <div
+            className="
+            h-[3vw] mob:h-[8vw]
+            bg-gray-100 animate-pulse rounded w-1/3
+          "
+          />
         </div>
-        <div className="grid grid-cols-2 tabp:grid-cols-4 gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[12vw] pt-[3vw]">
+
+        <div
+          className="
+          grid grid-cols-2 tabp:grid-cols-4
+          gap-[4vw] mob:gap-x-[4vw] mob:gap-y-[12vw]
+          pt-[3vw]
+        "
+        >
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-            <div key={i} className="bg-gray-100 animate-pulse rounded-[30px] aspect-square"></div>
+            <div key={i} className="bg-gray-100 animate-pulse rounded-[30px] aspect-square" />
           ))}
         </div>
       </div>
