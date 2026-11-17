@@ -10,6 +10,7 @@ interface VideoBannerProps {
   loop?: boolean;
   controls?: boolean;
   className?: string;
+  onEnded?: () => void;
 }
 
 const VideoBanner: React.FC<VideoBannerProps> = ({
@@ -18,7 +19,8 @@ const VideoBanner: React.FC<VideoBannerProps> = ({
   poster,
   loop = true,
   controls = false,
-  className = ''
+  className = '',
+  onEnded
 }) => {
   const isMobile = useMediaQuery(768);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -76,6 +78,7 @@ const VideoBanner: React.FC<VideoBannerProps> = ({
         loop={loop}
         controls={controls}
         playsInline
+        onEnded={onEnded}
         preload="auto"
         className={`w-full object-cover m-0 p-0 ${heightClass}`}
         style={{ objectFit: 'cover', objectPosition: 'center' }}
