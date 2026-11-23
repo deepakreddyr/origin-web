@@ -37,7 +37,8 @@ export default function Layout({
   search = false,
   useTopPadding = false,
   isHeader = true,
-  transparentColor
+  transparentColor,
+  hideOnScroll = false
 }: {
   children: React.ReactNode;
   mainMenuItems: MainMenuType[];
@@ -47,6 +48,7 @@ export default function Layout({
   useTopPadding?: boolean;
   isHeader?: boolean;
   transparentColor?: 'white' | 'black';
+  hideOnScroll?: boolean;
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -160,6 +162,7 @@ export default function Layout({
             mainMenuItems={mainMenuItems}
             search={search}
             transparentColor={transparentColor}
+            hideOnScroll={hideOnScroll}
           />
         )}
         <SidebarScreen />

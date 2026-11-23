@@ -30,6 +30,7 @@ type Props = {
   isHeaderSticky: any;
   search?: boolean;
   transparentColor?: 'black' | 'white';
+  hideOnScroll?: boolean;
 };
 
 // HELPER FUNCTION: Calculate total cart line items from nested structure
@@ -81,7 +82,7 @@ const AnimatedPlaceholder = () => {
   );
 };
 
-const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColor }: Props) => {
+const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColor, hideOnScroll = false }: Props) => {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [topBarTransition, setTopBarTransition] = useState(false);
@@ -90,6 +91,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
   const [currentSearchQuery, setCurrentSearchQuery] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOpaque, setIsOpaque] = useState(false);
+  const [isHiddenOnScroll, setIsHiddenOnScroll] = useState(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -300,6 +302,20 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
     }, 150);
   };
 
+  // Opt-in: hide the header when scrolling down, bring it back on scroll up
+  useEffect(() => {
+    if (!hideOnScroll) return;
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (Math.abs(y - lastY) < 6) return;
+      setIsHiddenOnScroll(y > lastY && y > 80);
+      lastY = y;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [hideOnScroll]);
+
   useEffect(() => {
     const handleScroll = () => {
       const position = window.scrollY;
@@ -331,7 +347,7 @@ const Header = ({ mainMenuItems, isHeaderSticky, search = false, transparentColo
   return (
     <div
       ref={menuRef}
-      className={`${isHeaderSticky ? 'fixed top-0' : 'absolute top-0'} flex items-center flex-col w-full z-[100] ${isMobile && loginDetails.isSidebarOpen ? 'hidden' : ''}`}
+      className={`${isHeaderSticky ? 'fixed top-0' : 'absolute top-0'} flex items-center flex-col w-full z-[100] ${hideOnScroll ? 'transition-transform duration-300' : ''} ${hideOnScroll && isHiddenOnScroll && !drawerOpen ? '-translate-y-full' : ''} ${isMobile && loginDetails.isSidebarOpen ? 'hidden' : ''}`}
     >
       {/* <OffersRibbon /> */}
 
