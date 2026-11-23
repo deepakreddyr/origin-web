@@ -15,7 +15,6 @@ const formSchema = z.object({
     .length(10, { message: 'Must be exactly 10 characters long' })
     .refine((value) => !/^[0-5]/.test(value), { message: 'Enter a valid contact number' }),
   handle: z.string().min(1, { message: 'Share your Instagram or YouTube handle.' }),
-  tier: z.enum(['nano', 'micro', 'macro'], { errorMap: () => ({ message: 'Select your follower range.' }) }),
   interests: z.array(z.string()).min(1, { message: 'Pick at least one option.' }),
   message: z.string().optional()
 });
@@ -124,16 +123,6 @@ const CreatorApplyForm = () => {
               </div>
               <Field label="Instagram / YouTube handle" error={errors.handle?.message}>
                 <input {...register('handle')} className={inputClass} placeholder="@yourhandle" />
-              </Field>
-              <Field label="Follower range" error={errors.tier?.message}>
-                <select {...register('tier')} defaultValue="" className={inputClass}>
-                  <option value="" disabled>
-                    Select
-                  </option>
-                  <option value="nano">Nano (1K – 10K)</option>
-                  <option value="micro">Micro (10K – 100K)</option>
-                  <option value="macro">Macro (100K+)</option>
-                </select>
               </Field>
 
               <fieldset style={body}>
