@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useSpring } from 'framer-motion';
+import { motion, MotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
 import SectionHeading from './SectionHeading';
 import { body, heading } from './constants';
 import { pop, stagger, viewport } from './motion';
@@ -10,6 +10,25 @@ const steps = [
   { title: 'Create & share', text: 'Share on your socials, or collaborate via barter.' },
   { title: 'Earn & unwrap', text: 'Earn commission on sales and get weekly goodies.' }
 ];
+
+// Connector from this step's circle centre to the next one; fills as the section scrolls into view.
+const Connector = ({ progress, index }: { progress: MotionValue<number>; index: number }) => {
+  const fill = useTransform(progress, [index / (steps.length - 1), (index + 1) / (steps.length - 1)], [0, 1]);
+  return (
+    <>
+      <span className="md:hidden absolute z-0 left-[21px] top-[22px] -bottom-10 w-[2px] bg-[#231f20]/15" />
+      <motion.span
+        style={{ scaleY: fill }}
+        className="md:hidden absolute z-0 left-[21px] top-[22px] -bottom-10 w-[2px] bg-[#619269] origin-top"
+      />
+      <span className="hidden md:block absolute z-0 top-[21px] left-[22px] w-[calc(100%+24px)] h-[2px] bg-[#231f20]/15" />
+      <motion.span
+        style={{ scaleX: fill }}
+        className="hidden md:block absolute z-0 top-[21px] left-[22px] w-[calc(100%+24px)] h-[2px] bg-[#619269] origin-left"
+      />
+    </>
+  );
+};
 
 const CreatorHowItWorks = () => {
   const ref = useRef<HTMLOListElement>(null);
@@ -28,18 +47,9 @@ const CreatorHowItWorks = () => {
           viewport={viewport}
           className="relative mt-14 grid gap-10 md:grid-cols-4 md:gap-6"
         >
-          <span className="hidden md:block absolute top-[22px] left-[22px] right-[calc(25%-22px)] h-px bg-[#231f20]/15" />
-          <motion.span
-            style={{ scaleX: progress }}
-            className="hidden md:block absolute top-[22px] left-[22px] right-[calc(25%-22px)] h-[2px] -mt-px bg-[#619269] origin-left"
-          />
-          <span className="md:hidden absolute left-[22px] top-[22px] bottom-[22px] w-px bg-[#231f20]/15" />
-          <motion.span
-            style={{ scaleY: progress }}
-            className="md:hidden absolute left-[21px] top-[22px] bottom-[22px] w-[2px] bg-[#619269] origin-top"
-          />
           {steps.map((step, i) => (
             <li key={step.title} className="relative flex md:block gap-5">
+              {i < steps.length - 1 && <Connector progress={progress} index={i} />}
               <motion.span
                 variants={pop}
                 whileHover={{ scale: 1.2, rotate: 8 }}
