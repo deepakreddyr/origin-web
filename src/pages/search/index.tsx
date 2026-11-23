@@ -55,6 +55,8 @@ interface Product {
   }[];
   bg_color: string;
   is_available: boolean;
+  is_waitlist?: boolean;
+  show_waitlist_button?: boolean;
   is_greyed: boolean;
   is_orderable: boolean;
   navigation: {

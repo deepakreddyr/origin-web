@@ -47,6 +47,7 @@ export const protectedUrl: UrlMap = {
   updatePayment: '/api/v3/user/order/update/payment-method',
   getHomepage: '/api/v5/user/homepage',
   notifyMe: '/api/v5/user/items/notify-me',
+  waitlist: '/api/v1/user/waitlist',
   requestItems: '/api/v3/user/request-items',
   getSubscriptionItems: '/api/v5/user/subscription/items',
   getMangoHomepage: '/api/v5/user/mango-homepage',

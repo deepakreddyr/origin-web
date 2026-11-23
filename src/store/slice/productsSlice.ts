@@ -3,7 +3,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 const initialState = {
   productsList: [] as any[],
   isProductListLoading: true,
-  notifiedItems: [] as number[]
+  notifiedItems: [] as number[],
+  waitlistedItems: [] as number[]
 };
 
 export const productsSlice = createSlice({
@@ -20,9 +21,14 @@ export const productsSlice = createSlice({
       if (!state.notifiedItems.includes(action.payload)) {
         state.notifiedItems.push(action.payload);
       }
+    },
+    addWaitlistedItem(state, action: PayloadAction<number>) {
+      if (!state.waitlistedItems.includes(action.payload)) {
+        state.waitlistedItems.push(action.payload);
+      }
     }
   }
 });
 
-export const { setProductList, setIsProductListLoading, addNotifiedItem } = productsSlice.actions;
+export const { setProductList, setIsProductListLoading, addNotifiedItem, addWaitlistedItem } = productsSlice.actions;
 export default productsSlice.reducer;

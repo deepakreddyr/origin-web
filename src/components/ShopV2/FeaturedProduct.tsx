@@ -13,6 +13,7 @@ import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { UOMPopup, NotifyToast, MaxQuantityToast, Product, UOM } from '../shared/UOMPopup';
+import WaitlistButton from '../shared/WaitlistButton';
 import itemRipenessSvg from '/public/assets/svg/itemRipeness.svg';
 
 interface FeaturedItemType {
@@ -267,7 +268,9 @@ const FeaturedProductCard = ({ featuredItem }: { featuredItem: FeaturedItemType 
 
           {/* Button Section */}
           <div className="flex-shrink-0">
-            {!item.is_available ? (
+            {item.show_waitlist_button ? (
+              <WaitlistButton itemId={item.id} isWaitlist={item.is_waitlist} />
+            ) : !item.is_available ? (
               <button
                 type="button"
                 disabled={isNotified}

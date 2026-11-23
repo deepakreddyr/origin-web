@@ -13,7 +13,8 @@ export const NotifyToast: FC<{
   isVisible: boolean;
   onClose: () => void;
   type: 'success' | 'error';
-}> = ({ message, isVisible, onClose, type }) => {
+  compact?: boolean;
+}> = ({ message, isVisible, onClose, type, compact = false }) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -33,11 +34,15 @@ export const NotifyToast: FC<{
 
   return createPortal(
     <div
-      className={`fixed z-[10000] left-1/2 bottom-10 transform -translate-x-1/2 w-[90%] max-w-sm transition-all duration-300 ease-in-out ${
+      className={`fixed z-[10000] left-1/2 bottom-10 transform -translate-x-1/2 ${
+        compact ? 'w-max max-w-[90%]' : 'w-[90%] max-w-sm'
+      } transition-all duration-300 ease-in-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
       }`}
     >
-      <div className="flex items-center bg-black rounded-full shadow-2xl h-12 px-6 w-full relative">
+      <div
+        className={`flex items-center bg-black rounded-full shadow-2xl h-12 w-full relative ${compact ? 'px-8' : 'px-6'}`}
+      >
         <div className="flex items-center justify-center w-full gap-3">
           {type === 'error' && <InfoOutlinedIcon sx={{ color: '#fac510', fontSize: '1.2rem' }} />}
           <p className="text-[0.80rem] font-medium text-white text-center leading-tight font-[SofiaPro]">{message}</p>
@@ -91,6 +96,8 @@ export interface Product {
   is_available: boolean;
   is_greyed: boolean;
   is_orderable: boolean;
+  is_waitlist?: boolean;
+  show_waitlist_button?: boolean;
   navigation: {
     to: string;
   };

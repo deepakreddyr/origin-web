@@ -10,6 +10,7 @@ import { useAtom } from 'jotai';
 import { addressAtom } from '@/features/Address/context/atoms';
 import ItemCard from '../shared/ItemCard';
 import AddItemBtn from '../shared/AddItemBtn/AddItemBtn';
+import WaitlistButton from '../shared/WaitlistButton';
 import AboutTheProduct from './AboutTheProduct';
 import ProductDetailsPageLoader from '../skeletonLoaders/shop/ProductDetailsPageLoader';
 import { useMediaQuery } from '@/utilities/hooks/useMediaQuery';
@@ -77,6 +78,8 @@ interface ProductItem {
   };
   is_greyed: boolean;
   is_available: boolean;
+  is_waitlist?: boolean;
+  show_waitlist_button?: boolean;
   is_orderable: boolean;
   multiple_uoms: UOM[];
   category_name?: string;
@@ -847,7 +850,13 @@ const ProductDetailsWrapper = () => {
                     <div
                       className={`${!defaultUOM?.is_available || !productDetails.item.is_available ? 'w-auto' : ''} rounded-full`}
                     >
-                      {!defaultUOM?.is_available || !productDetails.item.is_available ? (
+                      {productDetails.item.show_waitlist_button ? (
+                        <WaitlistButton
+                          itemId={productDetails.item.id}
+                          isWaitlist={productDetails.item.is_waitlist}
+                          size="pdp"
+                        />
+                      ) : !defaultUOM?.is_available || !productDetails.item.is_available ? (
                         <button
                           type="button"
                           disabled={isNotified}
@@ -946,7 +955,13 @@ const ProductDetailsWrapper = () => {
                       <div
                         className={`${!defaultUOM?.is_available || !productDetails.item.is_available ? 'w-auto' : ''} rounded-full`}
                       >
-                        {!defaultUOM?.is_available || !productDetails.item.is_available ? (
+                        {productDetails.item.show_waitlist_button ? (
+                          <WaitlistButton
+                            itemId={productDetails.item.id}
+                            isWaitlist={productDetails.item.is_waitlist}
+                            size="pdp"
+                          />
+                        ) : !defaultUOM?.is_available || !productDetails.item.is_available ? (
                           <button
                             type="button"
                             disabled={isNotified}

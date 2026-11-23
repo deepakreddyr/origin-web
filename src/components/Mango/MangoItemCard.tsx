@@ -19,6 +19,7 @@ import itemRipenessSvg from '/public/assets/svg/itemRipeness.svg';
 import logo from '/public/logo.svg';
 
 import { UOMPopup, MaxQuantityToast, Product, UOM, NotifyToast } from '../shared/UOMPopup';
+import WaitlistButton from '../shared/WaitlistButton';
 
 interface MangoItemCardProps {
   itemDetails: Product;
@@ -232,7 +233,9 @@ const MangoItemCard = ({ itemDetails }: MangoItemCardProps) => {
             </div>
 
             <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
-              {!selectedUOM.is_available ? (
+              {itemDetails.show_waitlist_button ? (
+                <WaitlistButton itemId={itemDetails.id} isWaitlist={itemDetails.is_waitlist} />
+              ) : !selectedUOM.is_available ? (
                 <button
                   type="button"
                   disabled={isNotified}

@@ -24,6 +24,7 @@ import infoicon2 from '/public/assets/svg/infoicon2.svg';
 import itemRipenessSvg from '/public/assets/svg/itemRipeness.svg';
 import { useCartStore } from '@/hooks/useCartStore';
 import WhiteBtn from './AddItemBtn/WhiteBtn';
+import WaitlistButton from './WaitlistButton';
 
 import { UOMPopup, MaxQuantityToast, Product, UOM, NotifyToast } from './UOMPopup';
 
@@ -220,7 +221,9 @@ const ItemCard = ({ itemDetails }: { itemDetails: Product }) => {
             </div>
 
             <div className="mb-1">
-              {!selectedUOM.is_available ? (
+              {itemDetails.show_waitlist_button ? (
+                <WaitlistButton itemId={itemDetails.id} isWaitlist={itemDetails.is_waitlist} />
+              ) : !selectedUOM.is_available ? (
                 <button
                   type="button"
                   disabled={isNotified}
