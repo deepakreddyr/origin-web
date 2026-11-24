@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useGetDataFromApi } from '@/utilities/hooks/useGetDataFromApi';
+import { protectedUrl } from '@/url';
+import { getAddressAndStoreId } from '@/utilities/utils';
 import percentageIcon from '/public/assets/icons/percentageIcon.png';
 import gotoIcon from '/public/assets/icons/gotoIcon.png';
 import Image from 'next/image';
@@ -21,12 +24,37 @@ const CouponSection = (props: any) => {
   const { setShowCouponList } = props;
   const { cart, actions } = useCartStore();
   const { couponDetails } = cart;
-  const [couponsState] = useAtom(couponList);
+  const dispatch = useDispatch();
+  const loginDetails = useSelector((state: any) => state.loginDetails);
+  const getDataFromApi = useGetDataFromApi();
+  const [couponsState, setCouponsState] = useAtom(couponList);
   const [, setAppliedCoupon] = useAtom(isCouponApplied);
   const [cartItemsList] = useAtom(cartItems);
   const { setCartTabType, setCouponDetails, setDiscountAmount } = actions;
-  const dispatch = useDispatch();
-  const loginDetails = useSelector((state: any) => state.loginDetails);
+
+  // Fetch coupons if not already loaded and user is logged in
+  useEffect(() => {
+    if (loginDetails.isLogin) {
+      const apiUrl =
+        process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getCoupons'] + `?sub_total=${cart.totalPrice || 0}`;
+      const addressFromLs = getAddressAndStoreId();
+      const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
+
+      const successHandler = (data: any) => {
+        const coupons = data?.data || (Array.isArray(data) ? data : []);
+        setCouponsState((prev) => ({ ...prev, coupons, success: true, loading: false }));
+      };
+
+      const failureHandler = () => {
+        setCouponsState((prev) => ({ ...prev, coupons: [], error: true, loading: false }));
+      };
+
+      if (!couponsState.coupons || couponsState.coupons.length === 0) {
+        setCouponsState((prev) => ({ ...prev, loading: true }));
+      }
+      getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
+    }
+  }, [loginDetails.isLogin, cart.totalPrice, cart.couponDetails?.code]);
 
   // Calculate the live discount amount based on current cart total
   const liveDiscount = React.useMemo(() => {
@@ -72,11 +100,8 @@ const CouponSection = (props: any) => {
     );
 
     if (validCoupons.length > 0) {
-      return validCoupons.reduce((best: any, current: any) => {
-        const currentDiscount = calculateCouponDiscount(cart.totalPrice, current) || 0;
-        const bestDiscount = calculateCouponDiscount(cart.totalPrice, best) || 0;
-        return currentDiscount > bestDiscount ? current : best;
-      }, validCoupons[0]);
+      // Show the first coupon that is unlocked, as requested
+      return validCoupons[0];
     }
 
     // 2. If no valid coupons, find the one with the smallest gap to unlock
@@ -98,7 +123,7 @@ const CouponSection = (props: any) => {
     const g = (bestCoupon.min_cart_value || 0) - (cart.totalPrice || 0);
     return {
       gap: g,
-      isUnlocked: g <= 0
+      isUnlocked: g <= 0 || bestCoupon.isValid === 1
     };
   }, [bestCoupon, cart.totalPrice]);
 
@@ -139,7 +164,6 @@ const CouponSection = (props: any) => {
   };
 
   return (
-    // <></>
     <div className=" bg-[#F2EEE44D]  flex flex-col border border-[#F2EEE4] p-[1.1vw] mob:p-[4vw] mob:rounded-[4.1vw] rounded-[1.1vw]">
       <h3 className="font-[SofiaPro] text-[1.1vw] mob:text-[4.1vw] mob:pb-[2vw] pb-[.6vw] font-bold text-black">
         Save with coupons

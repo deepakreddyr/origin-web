@@ -22,3 +22,5 @@ export const addressAtom = atom<AddressAtomI>({
 //h1
 
 export const suggestionsList = atom<AutocompletePrediction[]>([]);
+export const isLocationModalOpen = atom<boolean>(false);
+export const locationAnchorAtom = atom<HTMLElement | null>(null);

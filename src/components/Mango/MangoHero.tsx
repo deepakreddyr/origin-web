@@ -1,12 +1,16 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useAtom } from 'jotai';
+import { addressAtom } from '@/features/Address/context/atoms';
 import originLogo from '/public/assets/images/neworiginlogo.png';
 
 const MangoHero = () => {
   const loginDetails = useSelector((state: any) => state.loginDetails);
+  const [address] = useAtom(addressAtom);
   const isLogin = loginDetails?.isLogin;
+  const isSkipLogin = !isLogin && address.defaultAddress?.store_id;
 
   return (
     <section
@@ -14,19 +18,17 @@ const MangoHero = () => {
     >
       {/* Left Content only — image is rendered in parent wrapper */}
       <div className="relative w-full">
-        {/* Mobile Logo - Only for logged in */}
-        {loginDetails?.isLogin && (
-          <div className="md:hidden mb-8 flex justify-center -ml-4">
-            <Image
-              src={originLogo}
-              alt="Origin Fresh"
-              width={160}
-              height={600}
-              className="object-contain scale-125"
-              priority
-            />
-          </div>
-        )}
+        {/* Mobile Logo - Visible for all users in MangoHero */}
+        <div className="md:hidden mb-8 flex justify-center -ml-4">
+          <Image
+            src={originLogo}
+            alt="Origin Fresh"
+            width={160}
+            height={600}
+            className="object-contain scale-125"
+            priority
+          />
+        </div>
 
         <div className="flex items-center gap-2 mb-4">
           <div className="w-4 h-4 rounded-full border-[1.5px] border-[#000000] flex items-center justify-center">

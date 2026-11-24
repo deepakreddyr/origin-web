@@ -135,17 +135,19 @@ const ShopDetails = (props: HomeProps) => {
           protectedUrl['getCategories'] +
           `/${query.cid}` +
           `/sub-categories/${query.scid}`;
-
-        if (addressFromLs)
-          additionalHeaders = {
-            'store-id': addressFromLs.store_id
-          };
       } else {
         apiUrl =
           process.env.NEXT_PUBLIC_BACKEND_API_URL +
           unprotectedUrl['getCategories'] +
           `/${query.cid}` +
           `/sub-categories/${query.scid}`;
+      }
+
+      const storeId = localStorage.getItem('store-id');
+      if (storeId && storeId !== 'null') {
+        additionalHeaders = {
+          'store-id': storeId
+        };
       }
       const { category, cid, subCategory, scid } = query;
       setFilters({
@@ -196,12 +198,15 @@ const ShopDetails = (props: HomeProps) => {
       let additionalHeaders = {};
       if (token && addressFromLs) {
         apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + protectedUrl['getShopDetails'];
-
-        additionalHeaders = {
-          'store-id': addressFromLs.store_id
-        };
       } else {
         apiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL + unprotectedUrl['getShopDetails'];
+      }
+
+      const storeId = localStorage.getItem('store-id');
+      if (storeId && storeId !== 'null') {
+        additionalHeaders = {
+          'store-id': storeId
+        };
       }
       const successHandler = (data: any) => {
         // console.log(data,"data")

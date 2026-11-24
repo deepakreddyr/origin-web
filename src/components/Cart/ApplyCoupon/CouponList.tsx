@@ -16,6 +16,8 @@ import { COUPON_TABS, couponDetailsInitialState } from '@/constants';
 import { setCouponId } from '@/store/slice/placeOrderDetails';
 import CouponListSkeleton from '@/components/skeletonLoaders/cart/CouponListSkeleton';
 import ApplyCouponInput from './ApplyCouponInput';
+import { useAtom } from 'jotai';
+import { couponList } from '@/features/CouponPage/context/atoms';
 import Coupon from './Coupon';
 import { trackEvent } from '@/utilities/analytics';
 import { AnalyticsEvents } from '@/utilities/analyticsEvents';
@@ -26,8 +28,9 @@ const CouponList = (props: any) => {
   const { setAmountToPay, setCouponDetails, setDiscountAmount, setTotalPrice } = actions;
 
   const getDataFromApi = useGetDataFromApi();
-  const [couponList, setCouponList] = useState([]);
-  const [loading, setIsLoading] = useState(true);
+  const [couponsState, setCouponsState] = useAtom(couponList);
+  const couponListItems = couponsState.coupons || [];
+  const loading = couponsState.loading;
   const sendDataToApi = useSendDataToApi();
   const dispatch = useDispatch();
   const [manuallyAppliedCoupon, setManuallyAppliedCoupon] = useState('');
@@ -40,16 +43,18 @@ const CouponList = (props: any) => {
     const additionalHeaders = addressFromLs ? { 'store-id': addressFromLs.store_id } : {};
 
     const successHandler = (data: any) => {
-      setCouponList(data.data);
-      setIsLoading(false);
+      setCouponsState((prev) => ({ ...prev, coupons: data.data, success: true, loading: false }));
     };
 
     const failureHandler = () => {
-      setIsLoading(false);
+      setCouponsState((prev) => ({ ...prev, coupons: [], error: true, loading: false }));
     };
 
+    if (!couponsState.coupons || couponsState.coupons.length === 0) {
+      setCouponsState((prev) => ({ ...prev, loading: true }));
+    }
     getDataFromApi(apiUrl, successHandler, failureHandler, additionalHeaders);
-  }, []);
+  }, [cart.totalPrice, cart.couponDetails?.code]);
 
   const validateCoupon = (couponCode: string) => {
     const hasFreeItem = cart.items.some((item: any) => item.isFreeItem);
@@ -130,9 +135,9 @@ const CouponList = (props: any) => {
         />
       </div>
       <ul className="pl-0">
-        {couponList.length > 0 && (
+        {couponListItems.length > 0 && (
           <li className="flex flex-col gap-[1.1vw] mob:gap-[4.1vw] border-t mt-[1.1vw] mob:mt-[4.1vw] mob:first:pt-[4.1vw] first:pt-[1.1vw]">
-            {couponList.map((data: any) => (
+            {couponListItems.map((data: any) => (
               <Coupon
                 key={data.id}
                 validateCoupon={validateCoupon}

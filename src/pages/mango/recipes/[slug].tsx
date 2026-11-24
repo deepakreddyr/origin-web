@@ -111,7 +111,7 @@ const MangoRecipeDetailPage = ({ slug, mainMenuItems, footerData }: MangoRecipeD
   return (
     <Layout isHeader={false} mainMenuItems={mainMenuItems} footerData={footerData} isHeaderSticky={true}>
       <CustomHead title={`${recipe.title} | Origin Fresh`} description={recipe.description} />
-      <MangoHeader />
+      <MangoHeader disableSkipLogin={true} />
       <main className="min-h-screen bg-white pb-[50px]">
         {/* Mobile Header Overlap Fix - Only for mobile */}
         <div className="md:hidden h-[60px] bg-[#FFECA6]" />
