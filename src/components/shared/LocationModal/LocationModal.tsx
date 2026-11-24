@@ -46,6 +46,7 @@ interface LocationModalProps {
 
 const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocationSelect, isClosable = false }) => {
   const [view, setView] = useState<'initial' | 'search' | 'unserviceable'>('initial');
+  const [attemptedLocation, setAttemptedLocation] = useState('');
   const [permissionError, setPermissionError] = useState(false);
   const [isCheckingServiceability, setIsCheckingServiceability] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -178,6 +179,7 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
 
   const checkServiceability = async (lat: number, lng: number, addressName: string, formattedAddress?: string) => {
     setIsCheckingServiceability(true);
+    setAttemptedLocation(formattedAddress || addressName);
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}${mainApiUrl.fetchForAddressDeliverable || '/api/v5/public/check-deliverable'}`,
@@ -227,6 +229,7 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
 
   const handleSearchAlternative = () => {
     setValue('');
+    setAttemptedLocation('');
     clearSuggestions();
     setPermissionError(false);
     setView('search');
@@ -417,6 +420,10 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
           placeholder={ready || isGMapLoaded ? 'Enter Your Location' : 'Initializing search...'}
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          onFocus={(e) => {
+            const end = e.target.value.length;
+            e.target.setSelectionRange(end, end);
+          }}
           disabled={!(ready || isGMapLoaded)}
           autoFocus
         />
@@ -606,8 +613,12 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, onClose, onLocation
               WebkitTextFillColor: '#A60000 !important'
             }
           }}
-          value={value || 'Indiranagar'}
-          disabled
+          value={attemptedLocation || value}
+          onChange={(e) => {
+            setAttemptedLocation('');
+            setValue(e.target.value);
+            setView('search');
+          }}
         />
       </Paper>
 
